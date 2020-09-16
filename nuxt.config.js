@@ -1,8 +1,24 @@
-const pkg = require('./package')
+import pkg from './package'
+import buildAppList from './helpers/build-app-list'
 
-module.exports = {
+export default {
     mode: 'universal',
     target: 'static',
+
+    generate: {
+        routes() {
+            return buildAppList()
+                .then((appList) => {
+
+                    // console.log('result', result)
+
+                    return appList.map(app => ({
+                        route: '/app/' + app.slug,
+                        payload: appList
+                    }))
+                })
+        }
+    },
 
     /*
     ** Headers of the page
