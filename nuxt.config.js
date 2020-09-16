@@ -5,8 +5,8 @@ module.exports = {
     target: 'static',
 
     /*
-  ** Headers of the page
-  */
+    ** Headers of the page
+    */
     head: {
         title: pkg.name,
         meta: [
@@ -25,28 +25,28 @@ module.exports = {
     },
 
     /*
-  ** Customize the progress-bar color
-  */
+    ** Customize the progress-bar color
+    */
     loading: { color: '#fff' },
 
     /*
-  ** Global CSS
-  */
+    ** Global CSS
+    */
     css: ['~/assets/css/tailwind.css'],
 
     /*
-  ** Plugins to load before mounting the App
-  */
+    ** Plugins to load before mounting the App
+    */
     plugins: [],
 
     /*
-  ** Nuxt.js modules
-  */
+    ** Nuxt.js modules
+    */
     modules: [],
 
     /*
-  ** Build configuration
-  */
+    ** Build configuration
+    */
     build: {
         /*
     ** You can extend webpack config here
