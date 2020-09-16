@@ -9,12 +9,12 @@ module.exports = {
   },
   extends: [
     'plugin:vue/recommended',
-    'plugin:prettier/recommended'
+    // 'plugin:prettier/recommended'
   ],
   // required to lint *.vue files
   plugins: [
     'vue',
-    'prettier'
+    // 'prettier'
   ],
   // add your custom rules here
   rules: {
