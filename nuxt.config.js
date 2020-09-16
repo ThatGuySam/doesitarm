@@ -8,7 +8,7 @@ module.exports = {
     ** Headers of the page
     */
     head: {
-        title: pkg.name,
+        title: 'Does it ARM',
         meta: [
             { charset: 'utf-8' },
             {
