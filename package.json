@@ -1,7 +1,7 @@
 {
   "name": "doesitarm",
   "version": "1.0.0",
-  "description": "Apps that support ARM on MacOs",
+  "description": "Apps that support ARM on macOS",
   "author": "Sam Carlton",
   "private": true,
   "scripts": {
