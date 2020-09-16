@@ -1,22 +1,20 @@
-# doesitarm
+Does it ARM
+----
 
-> Apps that support ARM on MacOs
+Lists of reported app support for macOS on ARM so far. 
 
-## Build Setup
+Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
-``` bash
-# install dependencies
-$ yarn install
 
-# serve with hot reload at localhost:3000
-$ yarn run dev
+## The Apps
 
-# build for production and launch server
-$ yarn run build
-$ yarn start
+#### Developer Tools
 
-# generate static project
-$ yarn run generate
-```
+* [Homebrew](https://brew.sh/) - ✳️ Yes, with caveats and some troubleshooting. - [Issue](https://github.com/Homebrew/brew/issues/7857). 
+* [VS Code](https://code.visualstudio.com/) - 🚫 No, not yet. - [Issue](https://github.com/microsoft/vscode/issues/101724). 
 
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+
+#### Entertainment
+
+* [Spotify](https://www.spotify.com/us/download/mac/) - 🚫 No, not yet.
+
