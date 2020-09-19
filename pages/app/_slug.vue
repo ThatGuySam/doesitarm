@@ -19,25 +19,25 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
-import buildAppList from '~/helpers/build-app-list'
+import appList from '~/assets/app-list.json'
+// import buildAppList from '~/helpers/build-app-list'
+
+console.log('appList', appList)
 
 export default {
     components: {
         Logo
     },
-    async asyncData ({ params: { slug }, error, payload }) {
-
-        const appList = (payload) ? payload : await buildAppList()
+    async asyncData ({ params: { slug } }) {
 
         return {
-            slug,
-            appList
+            slug
         }
     },
     computed: {
         app () {
             // console.log('context', this.slug)
-            return this.appList.find(app => (app.slug === this.slug))
+            return appList.find(app => (app.slug === this.slug))
         }
     }
 }
