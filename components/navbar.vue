@@ -51,17 +51,16 @@
                     </div>
                     <div class="hidden md:ml-6 md:flex md:items-center">
                         <a
-                            href="#"
-                            class="px-3 py-2 rounded-md text-sm font-medium leading-5 text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Dashboard</a>
-                        <a
-                            href="#"
-                            class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Team</a>
-                        <a
-                            href="#"
-                            class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Projects</a>
-                        <a
-                            href="#"
-                            class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Calendar</a>
+                            v-for="(item, index) in items"
+                            :key="index"
+                            :href="item.url"
+                            :class="[
+                                'px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                                ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
+                            ]"
+                        >
+                            {{ item.label }}
+                        </a>
                     </div>
                 </div>
                 <div class="flex items-center">
@@ -125,7 +124,7 @@
                                 Leaving: "transition ease-in duration-75"
                                 From: "transform opacity-100 scale-100"
                                 To: "transform opacity-0 scale-95"
-                                -->
+                            -->
                             <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
                                 <div
                                     class="py-1 rounded-md bg-white shadow-xs"
@@ -155,7 +154,7 @@
             Mobile menu, toggle classes based on menu state.
 
             Menu open: "block", Menu closed: "hidden"
-            -->
+        -->
         <div class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 sm:px-3">
                 <a
@@ -205,3 +204,28 @@
     </nav>
 
 </template>
+
+<script>
+
+export default {
+    props: {
+        items: {
+            type: Array,
+            default: () => ([
+                {
+                    label: 'Home',
+                    url: '/',
+                },
+                // {
+                //     label: 'Categories',
+                //     url: '/categories',
+                // },
+                // {
+                //     label: 'Contact',
+                //     url: '/contact',
+                // },
+            ])
+        }
+    }
+}
+</script>
