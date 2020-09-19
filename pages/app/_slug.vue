@@ -32,13 +32,21 @@ export default {
     async asyncData ({ params: { slug } }) {
 
         return {
-            slug
+            slug,
+            app: appList.find(app => (app.slug === slug))
         }
     },
-    computed: {
-        app () {
-            // console.log('context', this.slug)
-            return appList.find(app => (app.slug === this.slug))
+    head() {
+        return {
+            title: `Does ${this.app.name} work on Apple Silicon?`,
+            // meta: [
+            //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+            //     {
+            //         hid: 'description',
+            //         name: 'description',
+            //         content: 'My custom description'
+            //     }
+            // ]
         }
     }
 }
