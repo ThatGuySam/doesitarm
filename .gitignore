@@ -79,3 +79,7 @@ dist
 
 # IDE
 .idea
+
+
+# Other
+/assets/app-list.json
