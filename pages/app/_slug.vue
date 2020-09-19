@@ -1,30 +1,31 @@
 <template>
     <section class="container">
-        <div>
-            <h1 class="title">
-                {{ app.name }}
+        <div class="flex flex-col items-center">
+            <h1 class="title text-2xl font-bold">
+                Does {{ app.name }} work on ARM on macOS?
             </h1>
-            <h2 class="subtitle">
+            <h2 class="subtitle text-6xl font-bold py-6">
                 {{ app.text }}
             </h2>
             <div class="links">
-                <a
+                <LinkButton
                     :href="app.url"
                     target="_blank"
-                    class="button--green">Download</a>
+                    class=""
+                >Download</LinkButton>
             </div>
         </div>
     </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import LinkButton from '~/components/link-button.vue'
 import appList from '~/assets/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {
     components: {
-        Logo
+        LinkButton
     },
     async asyncData ({ params: { slug } }) {
 
@@ -40,42 +41,3 @@ export default {
     }
 }
 </script>
-
-<style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-  @apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-
-.container {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.title {
-    font-family: 'Quicksand', 'Source Sans Pro', -apple-system,
-        BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-        sans-serif;
-    display: block;
-    font-weight: 300;
-    font-size: 100px;
-    color: #35495e;
-    letter-spacing: 1px;
-}
-
-.subtitle {
-    font-weight: 300;
-    font-size: 42px;
-    color: #526488;
-    word-spacing: 5px;
-    padding-bottom: 15px;
-}
-
-.links {
-    padding-top: 15px;
-}
-</style>
