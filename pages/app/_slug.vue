@@ -1,18 +1,20 @@
 <template>
     <section class="container">
-        <div class="flex flex-col items-center">
-            <h1 class="title text-2xl font-bold">
+        <div class="flex flex-col items-center text-center">
+            <h1 class="title text-sm md:text-2xl font-semibold">
                 Does {{ app.name }} work on Apple Silicon?
             </h1>
-            <h2 class="subtitle text-6xl font-bold py-6">
+            <h2 class="subtitle text-2xl md:text-6xl font-bold py-6">
                 {{ app.text }}
             </h2>
-            <div class="links">
+            <div class="links space-x-6">
                 <LinkButton
-                    :href="app.url"
+                    v-for="(link, i) in app.relatedLinks"
+                    :key="i"
+                    :href="link.href"
                     target="_blank"
                     class=""
-                >Download</LinkButton>
+                >{{ (i === 0) ? 'Download' : link.label }}</LinkButton>
             </div>
         </div>
     </section>
