@@ -6,6 +6,45 @@ import slugify from 'slugify'
 
 const md = new MarkdownIt()
 
+const getTokenLinks = function ( childTokens ) {
+
+    const tokenList = []
+
+    let isLink = false
+
+    for (const token of childTokens) {
+
+        // On link_ switch link mode
+        // link_open = true
+        // link_close = false
+        if (token.type.includes('link_')) isLink = !isLink
+
+        // For link_open create a new related link in our list
+        // and store thee attributes into it
+        if ( isLink && token.type === 'link_open' ) {
+            tokenList.push({
+                ...Object.fromEntries(token.attrs)
+            })
+        }
+
+        // For the text inside the link
+        // store that text as the label for the link we're inside
+        if ( isLink && token.type === 'text' ) {
+            // Get the last pushed link
+            const currentLink = tokenList[tokenList.length-1]
+
+            // Add our text to it as a label
+            tokenList[tokenList.length-1] = {
+                ...currentLink,
+                label: token.content
+            }
+        }
+
+    }
+
+    return tokenList
+}
+
 export default async function () {
 
     const readmeContent = await fs.readFile('./README.md', 'utf8')
@@ -49,6 +88,8 @@ export default async function () {
         if ( isParagraph && token.type === 'inline' && token.content.includes('-') ) {
             const [ link, text ] = token.content.split('-').map(string => string.trim())
 
+            const relatedLinks = getTokenLinks(token.children)
+
             const [ name, url ] = link.substring(1, link.length-1).split('](')
 
             const appSlug = slugify(name, {
@@ -61,7 +102,8 @@ export default async function () {
                 text,
                 slug: appSlug,
                 sectionName,
-                content: token.content
+                content: token.content,
+                relatedLinks
             })
         }
 
