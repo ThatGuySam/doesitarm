@@ -52,8 +52,8 @@ module.exports = {
 
             },
             fontFamily: {
-                primary: 'Trueno, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-                secondary: '"Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif',
+                primary: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                secondary: 'Inter, Georgia, Cambria, "Times New Roman", Times, serif',
             },
             letterSpacing: {
                 wide: '0.3em',
