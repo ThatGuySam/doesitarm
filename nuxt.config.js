@@ -32,9 +32,10 @@ export default {
 
     generate: {
         routes() {
-            return buildAppList()
-                .then((appList) => {
-                    // console.log('result', result)
+            return import('./assets/app-list.json')//buildAppList()
+                .then((importedAppList) => {
+                    const appList = importedAppList.default
+                    // console.log('appList', appList)
 
                     return appList.map(app => ({
                         route: '/app/' + app.slug,
