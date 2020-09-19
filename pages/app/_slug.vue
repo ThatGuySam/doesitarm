@@ -1,28 +1,26 @@
 <template>
-  <section class="container">
-    <div>
-      <h1 class="title">
-        {{ app.name }}
-      </h1>
-      <h2 class="subtitle">
-        {{ app.text }}
-      </h2>
-      <div class="links">
-        <a
-          :href="app.url"
-          target="_blank"
-          class="button--green">Download</a>
-      </div>
-    </div>
-  </section>
+    <section class="container">
+        <div>
+            <h1 class="title">
+                {{ app.name }}
+            </h1>
+            <h2 class="subtitle">
+                {{ app.text }}
+            </h2>
+            <div class="links">
+                <a
+                    :href="app.url"
+                    target="_blank"
+                    class="button--green">Download</a>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
 import Logo from '~/components/Logo.vue'
 import appList from '~/assets/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'
-
-console.log('appList', appList)
 
 export default {
     components: {
