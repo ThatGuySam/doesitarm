@@ -46,15 +46,8 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="flex-shrink-0 flex items-center">
-                        <img
-                            class="block lg:hidden h-8 w-auto"
-                            src="https://tailwindui.com/img/logos/workflow-mark-on-dark.svg"
-                            alt="Workflow logo">
-                        <img
-                            class="hidden lg:block h-8 w-auto"
-                            src="https://tailwindui.com/img/logos/workflow-logo-on-dark.svg"
-                            alt="Workflow logo">
+                    <div class="flex-shrink-0 flex items-center text-4xl md:text-5xl py-3">
+                        <div>🦾</div>
                     </div>
                     <div class="hidden md:ml-6 md:flex md:items-center">
                         <a
