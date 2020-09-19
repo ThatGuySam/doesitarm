@@ -1,15 +1,39 @@
+import { promises as fs } from 'fs'
+import path from 'path'
+
 import pkg from './package'
 import buildAppList from './helpers/build-app-list'
+
 
 export default {
     mode: 'universal',
     target: 'static',
 
+    /*
+    ** Hooks
+    * https://nuxtjs.org/api/configuration-hooks/
+    */
+    hooks: {
+        build: {
+            before: async function (builder) {
+                const appListPath = path.join(
+                    // builder.nuxt.options.buildDir,
+                    builder.nuxt.options.srcDir,
+                    '/assets/app-list.json'
+                )
+
+                const appList = await buildAppList()
+
+                // console.log('builder.nuxt.options', builder.nuxt.options)
+                await fs.writeFile(appListPath, JSON.stringify(appList))
+            }
+        }
+    },
+
     generate: {
         routes() {
             return buildAppList()
                 .then((appList) => {
-
                     // console.log('result', result)
 
                     return appList.map(app => ({
@@ -65,8 +89,8 @@ export default {
     */
     build: {
         /*
-    ** You can extend webpack config here
-    */
+        ** You can extend webpack config here
+        */
         extend(config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
