@@ -6,7 +6,7 @@
                 Does it ARM
             </h1>
             <h2 class="subtitle">
-                Apps that are reported to support ARM on macOS
+                Apps that are reported to support Apple Silicon
             </h2>
             <div class="apps">
                 <div

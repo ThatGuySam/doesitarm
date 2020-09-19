@@ -2,7 +2,7 @@
     <section class="container">
         <div class="flex flex-col items-center">
             <h1 class="title text-2xl font-bold">
-                Does {{ app.name }} work on ARM on macOS?
+                Does {{ app.name }} work on Apple Silicon?
             </h1>
             <h2 class="subtitle text-6xl font-bold py-6">
                 {{ app.text }}
