@@ -85,8 +85,8 @@ export default async function () {
         }
 
 
-        if ( isParagraph && token.type === 'inline' && token.content.includes('-') ) {
-            const [ link, text ] = token.content.split('-').map(string => string.trim())
+        if ( isParagraph && token.type === 'inline' && token.content.includes(' - ') ) {
+            const [ link, text ] = token.content.split(' - ').map(string => string.trim())
 
             const relatedLinks = getTokenLinks(token.children)
 
