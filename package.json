@@ -17,6 +17,7 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "cross-env": "^5.2.0",
     "markdown-it": "^11.0.1",
+    "scroll-into-view-if-needed": "^2.2.26",
     "slugify": "^1.4.5",
     "typeface-inter": "^3.15.0"
   },
