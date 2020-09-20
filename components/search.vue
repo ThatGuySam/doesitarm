@@ -12,6 +12,7 @@
                 autofocus
                 autocomplete="off"
                 @keyup="queryResults(query)"
+                @focus="scrollInputToTop()"
             >
             <div class="search-input-separator border-white border-t-2" />
         </div>
@@ -93,6 +94,8 @@
 </template>
 
 <script>
+import scrollIntoView from 'scroll-into-view-if-needed'
+
 import appList from '~/assets/app-list.json'
 
 // import overlayStore from './mixins/store'
@@ -172,6 +175,12 @@ export default {
             const pluckedItem = array[index]
             array.splice(index, 1)
             return pluckedItem
+        },
+        scrollInputToTop () {
+            scrollIntoView(this.$refs['search'], {
+                block: 'start', 
+                behavior: 'smooth'
+            })
         },
         queryResults (rawQuery) {
             // Clear any results from before
