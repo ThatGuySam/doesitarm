@@ -25,7 +25,7 @@
     "@nuxtjs/tailwindcss": "^3.0.2",
     "autoprefixer": "^8.6.4",
     "babel-eslint": "^8.2.1",
-    "eslint": "^5.0.1",
+    "eslint": "^5.16.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-prettier": "2.6.2",
