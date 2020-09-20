@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col items-center">
-        <div class="search-input container relative">
+    <div class="search w-full">
+        <div class="search-input relative">
             <input
                 id="search"
                 ref="search"
@@ -20,7 +20,7 @@
             class="search-container relative w-full"
         >
             <div class="search-wrapper flex justify-center pb-32">
-                <div class="search-scroller container w-full relative px-5">
+                <div class="search-scroller w-full relative">
 
                     <div class="search-results py-8">
 
@@ -46,7 +46,7 @@
                                                 <div>
                                                     <div class="text-sm leading-5 font-light truncate">{{ app.name }}</div>
                                                     <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
-                                                        <span class="truncate">{{ app.text }}</span>
+                                                        <span class="">{{ app.text }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="hidden md:block">
