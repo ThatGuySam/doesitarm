@@ -13,7 +13,7 @@
                 autocomplete="off"
                 @keyup="queryResults(query)"
             >
-            <div class="search-input-separator border-white border-t-4" />
+            <div class="search-input-separator border-white border-t-2" />
         </div>
         <div
             ref="search-container"
