@@ -32,7 +32,7 @@ html {
     -webkit-font-smoothing: antialiased;
     box-sizing: border-box;
 
-    /* background: #3e3d42; */
+    background: #191a1d;
 }
 
 *,
