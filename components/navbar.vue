@@ -50,7 +50,7 @@
                             :href="item.url"
                             :class="[
                                 'px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
+                                ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
                         >
                             {{ item.label }}

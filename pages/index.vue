@@ -1,10 +1,10 @@
 <template>
     <section class="container">
         <div class="flex flex-col items-center">
-            <h1 class="title text-6xl font-bold text-center">
-                Does it 🦾ARM?
+            <h1 class="title text-6xl font-hairline text-center">
+                Does it ARM?
             </h1>
-            <h2 class="subtitle text-xl font-bold text-center">
+            <h2 class="subtitle text-xl font-light text-center">
                 Apps that are reported to support Apple Silicon
             </h2>
 

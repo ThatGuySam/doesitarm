@@ -1,5 +1,5 @@
 <template>
-    <div class="app-wrapper text-gray-300 bg-gray-800">
+    <div class="app-wrapper text-gray-300 bg-gradient-to-bl from-dark to-darker bg-fixed">
         <Navbar />
         <div class="app-main min-h-screen flex items-center">
             <nuxt />
@@ -31,6 +31,8 @@ html {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     box-sizing: border-box;
+
+    /* background: #3e3d42; */
 }
 
 *,
