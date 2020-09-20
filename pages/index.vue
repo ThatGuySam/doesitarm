@@ -7,6 +7,8 @@
             <h2 class="subtitle text-xl font-bold">
                 Apps that are reported to support Apple Silicon
             </h2>
+
+            <Search />
             <div class="apps">
                 <div
                     v-for="app in appList"
@@ -18,27 +20,19 @@
                         </div>
                     </a>
                 </div>
-                <a
-                    href="https://nuxtjs.org/"
-                    target="_blank"
-                    class="button--green">Documentation</a>
-                <a
-                    href="https://github.com/nuxt/nuxt.js"
-                    target="_blank"
-                    class="button--grey">GitHub</a>
             </div>
         </div>
     </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import Search from '~/components/search.vue'
 
 import appList from '~/assets/app-list.json'
 
 export default {
     components: {
-        Logo
+        Search
     },
     computed: {
         appList() {
