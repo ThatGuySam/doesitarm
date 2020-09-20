@@ -5,6 +5,20 @@ import pkg from './package'
 import buildAppList from './helpers/build-app-list'
 
 
+const storeAppList = async function (builder) {
+    const appListPath = path.join(
+        // builder.nuxt.options.buildDir,
+        builder.nuxt.options.srcDir,
+        '/assets/app-list.json'
+    )
+
+    const appList = await buildAppList()
+
+    // console.log('builder.nuxt.options', builder.nuxt.options)
+    await fs.writeFile(appListPath, JSON.stringify(appList))
+} 
+
+
 export default {
     mode: 'universal',
     target: 'static',
@@ -15,18 +29,10 @@ export default {
     */
     hooks: {
         build: {
-            before: async function (builder) {
-                const appListPath = path.join(
-                    // builder.nuxt.options.buildDir,
-                    builder.nuxt.options.srcDir,
-                    '/assets/app-list.json'
-                )
-
-                const appList = await buildAppList()
-
-                // console.log('builder.nuxt.options', builder.nuxt.options)
-                await fs.writeFile(appListPath, JSON.stringify(appList))
-            }
+            before: storeAppList
+        },
+        generate: {
+            before: storeAppList
         }
     },
 
