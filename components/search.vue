@@ -19,12 +19,18 @@
             ref="search-container"
             class="search-container relative w-full"
         >
-            <div class="search-wrapper flex justify-center pb-32">
+            <div class="search-wrapper flex justify-center">
                 <div class="search-scroller w-full relative">
 
                     <div class="search-results py-8">
 
                         <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 neumorphic-shadow px-5">
+                            <li
+                                v-if="results.length === 0"
+                                class="text-center py-4"
+                            >
+                                No apps found
+                            </li>
                             <li
                                 v-for="(app, i) in results"
                                 :key="`${app.slug}-${i}`"

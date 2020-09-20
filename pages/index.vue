@@ -9,18 +9,26 @@
             </h2>
 
             <Search />
+
+            <LinkButton
+                href="https://github.com/ThatGuySam/doesitarm/issues"
+            >
+                Request an App
+            </LinkButton>
         </div>
     </section>
 </template>
 
 <script>
 import Search from '~/components/search.vue'
+import LinkButton from '~/components/link-button.vue'
 
 import appList from '~/assets/app-list.json'
 
 export default {
     components: {
-        Search
+        Search,
+        LinkButton
     },
     computed: {
         appList() {
