@@ -14,7 +14,7 @@
                     :href="link.href"
                     target="_blank"
                     class=""
-                >{{ (i === 0) ? 'Download' : link.label }}</LinkButton>
+                >{{ (i === 0) ? 'View' : link.label }}</LinkButton>
             </div>
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
