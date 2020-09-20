@@ -111,7 +111,7 @@ export default {
             // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
-            descriptionContainsResults: [],
+            sectionNameContainsResults: [],
             // store: overlayStore.state
         }
     },
@@ -122,7 +122,7 @@ export default {
             return [
                 ...this.titleStartsWithResults,
                 ...this.titleContainsResults,
-                ...this.descriptionContainsResults
+                ...this.sectionNameContainsResults
             ]
         },
         hasSearchInputText () {
@@ -160,10 +160,10 @@ export default {
             }
             return matches
         },
-        descriptionContains (query, app) {
-            const matches = app.description.toLowerCase().includes(query)
+        sectionNameContains (query, app) {
+            const matches = app.sectionName.toLowerCase().includes(query)
             if (matches) {
-                this.descriptionContainsResults.push(app)
+                this.sectionNameContainsResults.push(app)
             }
             return matches
         },
@@ -177,7 +177,7 @@ export default {
             // Clear any results from before
             this.titleStartsWithResults = []
             this.titleContainsResults = []
-            this.descriptionContainsResults = []
+            this.sectionNameContainsResults = []
 
 
             // Snap results scroll position back to top
@@ -195,7 +195,7 @@ export default {
                 const matchers = [
                     this.titleStartsWith,
                     this.titleContains,
-                    // this.descriptionContains
+                    this.sectionNameContains
                 ]
 
                 // Run through our search priorities
