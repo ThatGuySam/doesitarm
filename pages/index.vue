@@ -1,5 +1,5 @@
 <template>
-    <section class="container">
+    <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-6xl font-hairline text-center">
                 Does it ARM?
@@ -9,18 +9,6 @@
             </h2>
 
             <Search />
-            <div class="apps">
-                <div
-                    v-for="app in appList"
-                    :key="app.slug"
-                >
-                    <a :href="`/app/${app.slug}`">
-                        <div>
-                            {{ app.name }}
-                        </div>
-                    </a>
-                </div>
-            </div>
         </div>
     </section>
 </template>
