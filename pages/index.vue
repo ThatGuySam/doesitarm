@@ -1,10 +1,10 @@
 <template>
     <section class="container py-24">
         <div class="flex flex-col items-center">
-            <h1 class="title text-6xl font-hairline leading-tight text-center">
+            <h1 class="title text-4xl md:text-6xl font-hairline leading-tight text-center">
                 Does it ARM?
             </h1>
-            <h2 class="subtitle text-xl font-light text-center">
+            <h2 class="subtitle md:text-xl font-light text-center">
                 Apps that are reported to support Apple Silicon
             </h2>
 
