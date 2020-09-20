@@ -15,6 +15,14 @@
                 @focus="scrollInputToTop()"
             >
             <div class="search-input-separator border-white border-t-2" />
+            <div class="quick-buttons overflow-x-auto whitespace-no-wrap py-2 space-x-2">
+                <button
+                    v-for="button in quickButtons"
+                    :key="button.query"
+                    class="inline-block text-xs neumorphic-shadow-inner rounded-lg py-1 px-2"
+                    @click="query = button.query; queryResults(query)"
+                >{{ button.label }}</button>
+            </div>
         </div>
         <div
             ref="search-container"
@@ -107,6 +115,33 @@ import appList from '~/assets/app-list.json'
 // import PlayCircle from '~/assets/svg/play-circle.svg?inline'
 
 export default {
+    props: {
+        quickButtons: {
+            type: Array,
+            default: () => [
+                {
+                    label: 'Music Tools',
+                    query: 'Music'
+                },
+                {
+                    label: 'Developer Tools',
+                    query: 'Developer'
+                },
+                {
+                    label: 'Photo Tools',
+                    query: 'Photo'
+                },
+                {
+                    label: 'Video Tools',
+                    query: 'Video'
+                },
+                {
+                    label: 'Productivity Tools',
+                    query: 'Productivity'
+                },
+            ]
+        }
+    },
     data: function () {
         return {
             appList,
