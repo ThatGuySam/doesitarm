@@ -43,7 +43,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 * [Microsoft Office 365](https://www.microsoft.com/en-us/microsoft-365/office-365) - ✳️ Reportedly it's already supported - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator.). 
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
-* [Chrome](https://www.google.com/chrome/) - ⏹⏹⏹⏹⏹⏹⏹⏹⏹*️⃣⏸ Reportedly it's already supported, but yet to be released - [Article](https://www.neowin.net/news/chrome-for-windows-on-arm-is-ready-but-google-isnt-releasing-it/)
+* [Chrome](https://www.google.com/chrome/) - ⏹ Reportedly it's already supported, but yet to be released - [Article](https://www.neowin.net/news/chrome-for-windows-on-arm-is-ready-but-google-isnt-releasing-it/)
 
 
 #### Entertainment
