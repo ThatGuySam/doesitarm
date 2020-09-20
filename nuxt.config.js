@@ -87,6 +87,15 @@ export default {
     /*
     ** Nuxt.js modules
     */
+
+    modules: [
+        '@nuxtjs/sitemap'
+    ],
+
+    sitemap: {
+        hostname: 'https://doesitarm.com'
+    },
+
     buildModules: [
         '@nuxtjs/tailwindcss'
     ],
