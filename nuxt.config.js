@@ -49,6 +49,10 @@ export default {
     ** Headers of the page
     */
     head: {
+        // this htmlAttrs you need
+        htmlAttrs: {
+            lang: 'en',
+        },
         title: 'Does it ARM',
         meta: [
             { charset: 'utf-8' },
