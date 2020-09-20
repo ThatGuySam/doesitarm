@@ -24,14 +24,15 @@
 
                     <div class="search-results py-8">
 
-                        <ul class="results-container rounded-lg border neumorphic-shadow">
+                        <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 neumorphic-shadow px-5">
                             <li
                                 v-for="(app, i) in results"
                                 :key="`${app.slug}-${i}`"
                             >
                                 <a
                                     :href="`/app/${ app.slug }`"
-                                    class="block hover:neumorphic-shadow hover:bg-gradient-to-tr from-darkest to-darker focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg">
+                                    class="block hover:neumorphic-shadow hover:bg-gradient-to-br from-darkest to-dark focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg -mx-5"
+                                >
                                     <div class="flex items-center px-4 py-4 sm:px-6">
                                         <div class="min-w-0 flex-1 flex items-center">
                                             <div class="flex-shrink-0">
