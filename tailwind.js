@@ -21,9 +21,9 @@ module.exports = {
                 'red': 'rgb(245, 47, 87)', // More Vibrant
 
                 // 'dark': '#75413a',
-                'dark': 'rgb(95, 68, 75)',
+                'dark': '#34393f',
 
-                'darker': 'rgb(54, 41, 50)',
+                'darker': '#191a1d',
 
                 // 'gold': '#d78649',
                 'gold': 'rgb(255, 167, 102)',
