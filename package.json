@@ -21,15 +21,16 @@
     "typeface-inter": "^3.15.0"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0",
+    "@nuxtjs/tailwindcss": "^3.0.2",
+    "autoprefixer": "^8.6.4",
     "babel-eslint": "^8.2.1",
     "eslint": "^5.0.1",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-vue": "^4.0.0",
     "eslint-config-prettier": "^3.1.0",
+    "eslint-loader": "^2.0.0",
     "eslint-plugin-prettier": "2.6.2",
+    "eslint-plugin-vue": "^4.0.0",
+    "nodemon": "^1.11.0",
     "prettier": "1.14.3",
-    "autoprefixer": "^8.6.4",
     "tailwindcss": "^1.0.0"
   }
 }
