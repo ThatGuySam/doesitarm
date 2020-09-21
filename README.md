@@ -45,7 +45,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Microsoft Word](https://www.microsoft.com/en-us/microsoft-365/office-365) - ✅ Yes, it was shown at WWDC - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5749)
 * [Microsoft Excel](https://www.microsoft.com/en-us/microsoft-365/office-365) - ✅ Yes, it was shown at WWDC - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5758)
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
-* [Chrome](https://www.google.com/chrome/) - ⏹ Reportedly it's already supported, but yet to be released - [Article](https://www.neowin.net/news/chrome-for-windows-on-arm-is-ready-but-google-isnt-releasing-it/)
+* [Chrome](https://www.google.com/chrome/) - 🚫 No, not yet - [Apple Forums Issue](https://developer.apple.com/forums/thread/657657) [Google Forums Issue](https://support.google.com/chrome/thread/64355557?hl=en)
 
 
 #### Entertainment
