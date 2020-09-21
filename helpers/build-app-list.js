@@ -6,6 +6,14 @@ import slugify from 'slugify'
 
 const md = new MarkdownIt()
 
+
+const statuses = {
+    '✅': 'yes',
+    '✳️': 'yes-but',
+    '⏹': 'in-progress',
+    '🚫': 'no'
+}
+
 const getTokenLinks = function ( childTokens ) {
 
     const tokenList = []
@@ -98,8 +106,19 @@ export default async function () {
                 lower: true
             })
 
+            let status = 'unknown'
+
+            for (const statusKey in statuses) {
+                if (text.includes(statusKey)) {
+                    status = statuses[statusKey]
+                    break
+                }
+            }
+
+
             appList.push({
                 name,
+                status,
                 url,
                 text,
                 slug: appSlug,
