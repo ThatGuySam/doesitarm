@@ -149,7 +149,7 @@ export default {
             // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
-            sectionNameContainsResults: [],
+            sectionContainsResults: [],
             // store: overlayStore.state
         }
     },
@@ -160,7 +160,7 @@ export default {
             return [
                 ...this.titleStartsWithResults,
                 ...this.titleContainsResults,
-                ...this.sectionNameContainsResults
+                ...this.sectionContainsResults
             ]
         },
         hasSearchInputText () {
@@ -198,10 +198,10 @@ export default {
             }
             return matches
         },
-        sectionNameContains (query, app) {
-            const matches = app.sectionName.toLowerCase().includes(query)
+        sectionContains (query, app) {
+            const matches = app.section.label.toLowerCase().includes(query)
             if (matches) {
-                this.sectionNameContainsResults.push(app)
+                this.sectionContainsResults.push(app)
             }
             return matches
         },
@@ -239,7 +239,7 @@ export default {
                 const matchers = [
                     this.titleStartsWith,
                     this.titleContains,
-                    this.sectionNameContains
+                    this.sectionContains
                 ]
 
                 // Run through our search priorities

@@ -63,7 +63,8 @@ export default async function () {
 
     const appList = []
 
-    let sectionName = 'start'
+    let sectionSlug = 'start'
+    let sectionTitle = 'Start'
     let isHeading = false
     let isParagraph = false
 
@@ -77,11 +78,12 @@ export default async function () {
 
 
         if (isHeading && token.type === 'inline') {
-            sectionName = slugify(token.content, {
+            sectionTitle = token.content
+            sectionSlug = slugify(token.content, {
                 lower: true
             })
 
-            // appList[sectionName] = []
+            // appList[sectionSlug] = []
         }
 
 
@@ -101,13 +103,16 @@ export default async function () {
                 url,
                 text,
                 slug: appSlug,
-                sectionName,
+                section: {
+                    label: sectionTitle,
+                    slug: sectionSlug
+                },
                 content: token.content,
                 relatedLinks
             })
         }
 
-        // appList[sectionName]
+        // appList[sectionSlug]
 
 
         // console.log('token', token)
