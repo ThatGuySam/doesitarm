@@ -116,6 +116,10 @@ import appList from '~/assets/app-list.json'
 
 export default {
     props: {
+        appList: {
+            type: Array,
+            default: () => appList
+        },
         quickButtons: {
             type: Array,
             default: () => [
@@ -144,7 +148,7 @@ export default {
     },
     data: function () {
         return {
-            appList,
+            // appList,
             query: '',
             // results: [],
             titleStartsWithResults: [],
@@ -155,7 +159,7 @@ export default {
     },
     computed: {
         results () {
-            if (!this.hasSearchInputText) return appList
+            if (!this.hasSearchInputText) return this.appList
 
             return [
                 ...this.titleStartsWithResults,
@@ -213,7 +217,7 @@ export default {
         },
         scrollInputToTop () {
             scrollIntoView(this.$refs['search'], {
-                block: 'start', 
+                block: 'start',
                 behavior: 'smooth'
             })
         },
@@ -221,7 +225,7 @@ export default {
             // Clear any results from before
             this.titleStartsWithResults = []
             this.titleContainsResults = []
-            this.sectionNameContainsResults = []
+            this.sectionContainsResults = []
 
 
             // Snap results scroll position back to top
