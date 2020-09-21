@@ -43,7 +43,7 @@
                     <div class="flex-shrink-0 flex items-center text-4xl md:text-5xl py-3">
                         <div>🦾</div>
                     </div>
-                    <div class="hidden md:ml-6 md:flex md:items-center">
+                    <div class="hidden md:ml-6 md:flex md:items-center space-x-4">
                         <a
                             v-for="(item, index) in items"
                             :key="index"
@@ -126,14 +126,26 @@ export default {
                     label: 'Home',
                     url: '/',
                 },
-                // {
-                //     label: 'Categories',
-                //     url: '/categories',
-                // },
-                // {
-                //     label: 'Contact',
-                //     url: '/contact',
-                // },
+                {
+                    label: 'Developer Tools',
+                    url: '/kind/developer-tools',
+                },
+                {
+                    label: 'Music Tools',
+                    url: '/kind/music-and-audio-tools',
+                },
+                {
+                    label: 'Video and Motion Tools',
+                    url: '/kind/video-and-motion-tools',
+                },
+                {
+                    label: 'Photo Tools',
+                    url: '/kind/photo-tools',
+                },
+                {
+                    label: 'Entertainment',
+                    url: '/kind/entertainment',
+                },
             ])
         }
     },
