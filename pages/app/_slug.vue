@@ -22,6 +22,7 @@
                     :href="`https://github.com/ThatGuySam/doesitarm/issues/new?title=Update%20on%20${app.name}%20Support&body=Here's%20a%20link%20about%20it:&labels[]=App%20Update`"
                     target="_blank"
                     class="text-xs"
+                    rel="noopener"
                 >Report Update</a>
             </div>
         </div>
