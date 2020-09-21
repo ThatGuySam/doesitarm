@@ -16,7 +16,7 @@ const storeAppList = async function (builder) {
 
     // console.log('builder.nuxt.options', builder.nuxt.options)
     await fs.writeFile(appListPath, JSON.stringify(appList))
-} 
+}
 
 
 export default {
@@ -43,10 +43,28 @@ export default {
                     const appList = importedAppList.default
                     // console.log('appList', appList)
 
-                    return appList.map(app => ({
+                    const appRoutes = appList.map(app => ({
                         route: '/app/' + app.slug,
-                        payload: appList
+                        // payload: appList
                     }))
+
+                    const sectionList = []
+
+                    appList.forEach(app => {
+                        if (sectionList.includes(app.section.slug)) return
+
+                        sectionList.push(app.section.slug)
+                    })
+
+                    const sectionRoutes = sectionList.map(slug => ({
+                        route: '/kind/' + slug,
+                        // payload: appList
+                    }))
+
+                    return [
+                        ...appRoutes,
+                        ...sectionRoutes
+                    ]
                 })
         }
     },
