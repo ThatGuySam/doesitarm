@@ -11,8 +11,7 @@
                 placeholder="Type to Search"
                 autofocus
                 autocomplete="off"
-                @keyup="queryResults(query)"
-                @focus="scrollInputToTop()"
+                @keyup="queryResults(query); scrollInputToTop()"
             >
             <div class="search-input-separator border-white border-t-2" />
             <div class="quick-buttons overflow-x-auto whitespace-no-wrap py-2 space-x-2">
