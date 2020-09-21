@@ -36,6 +36,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [After Effects](https://www.adobe.com/products/aftereffects.html) - ⏹ Reportedly it's already supported - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator.). 
 * [Cinema 4D](https://www.maxon.net/en-us/products/cinema-4d/overview/) - ⏹ Reportedly it's already supported - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator.). 
 * [Autodesk Maya](https://www.autodesk.com/products/maya/overview) - ✅ Yes, it was shown at WWDC running via Rosetta 2 - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=6036)
+* [OBS](https://obsproject.com/) - ⏹ No official word yet, but there has been some preparation for it. - [Mention in Issue](https://github.com/obsproject/obs-studio/pull/3444#issuecomment-690216403)
 
 
 
