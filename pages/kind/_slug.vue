@@ -4,9 +4,12 @@
             <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
                 {{ section.label }} that are reported to support Apple Silicon
             </h1>
-            <!-- <h2 class="subtitle md:text-xl font-light text-center">
-                {{ section.label }} that are reported to support Apple Silicon
-            </h2> -->
+            <h2
+                v-if="supportedAppList.length !== 0"
+                class="subtitle md:text-xl font-light text-center"
+            >
+                Supported apps include {{ supportedAppList.join(', ') }}.
+            </h2>
 
             <Search
                 :app-list="sectionAppList"
@@ -41,15 +44,21 @@ export default {
         LinkButton
     },
     computed: {
-        section() {
+        section () {
             return appList.find(app => {
                 return app.section.slug === this.slug
             }).section
         },
-        sectionAppList() {
+        sectionAppList () {
             return appList.filter(app => {
                 return app.section.slug === this.slug
             })
+        },
+        supportedAppList () {
+            return this.sectionAppList.filter(app => {
+                console.log('app.status', app.status)
+                return app.status.includes('yes')
+            }).map(app => app.name)
         },
     }
 }
