@@ -56,10 +56,27 @@ export default {
         },
         supportedAppList () {
             return this.sectionAppList.filter(app => {
-                console.log('app.status', app.status)
                 return app.status.includes('yes')
             }).map(app => app.name)
         },
+        title () {
+            if (!this.section.label.includes('Tools')) return `List of ${this.section.label} Apps that work on Apple Silicon?`
+
+            return `List of ${this.section.label} that work on Apple Silicon?`
+        }
+    },
+    head() {
+        return {
+            title: this.title,
+            // meta: [
+            //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+            //     {
+            //         hid: 'description',
+            //         name: 'description',
+            //         content: 'My custom description'
+            //     }
+            // ]
+        }
     }
 }
 </script>
