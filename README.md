@@ -58,8 +58,12 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ⏹ Not yet, but it's currently in development. - [Bugzilla Tracker](https://bugzilla.mozilla.org/show_bug.cgi?id=1648496)
 
 
-#### Entertainment
+#### Entertainment and Media Apps
 
 * [Spotify](https://www.spotify.com/us/download/mac/) - 🚫 No, not yet.
 * [VLC](https://www.videolan.org/index.html) - ⏹ No official word yet. - [VLC Forums](https://forum.videolan.org/viewtopic.php?f=32&t=154539&p=507398&hilit=apple+silicon#p507398)
+* [IINA](https://iina.io/download/) - ✅ Yes, works via Rosetta with native support on the way - [Github Issue](https://github.com/iina/iina/issues/3067#issuecomment-671804703)
+
+
+
 
