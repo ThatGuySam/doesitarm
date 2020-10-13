@@ -1,3 +1,10 @@
 [build]
   publish = "dist/"
   command = "npm run generate"
+
+
+# https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
+[[redirects]]
+  from = "/kind/entertainment"
+  to = "/kind/entertainment-and-media-apps/"
+  status = 301
