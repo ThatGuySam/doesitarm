@@ -23,6 +23,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Music and Audio Tools
 
+* [Audacity](https://www.audacityteam.org/download/) - ✅ Yes, it works via Rosetta 2 with no reported issues - [Github Issue Comment](https://github.com/audacity/audacity/issues/684#issuecomment-710726323)
 * [Logic Pro](https://www.apple.com/logic-pro/) - ⏹ Mostly likely it's already supported since it's made by Apple.
 * [Avid Pro Tools](https://www.avid.com/pro-tools) - ⏹ No official word yet.
 * [Garageband](https://www.apple.com/mac/garageband/) - ⏹ Mostly likely it's already supported since it's made by Apple.
