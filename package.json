@@ -32,7 +32,7 @@
     "eslint-plugin-vue": "^4.0.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^1.11.0",
-    "nuxt": "^2.14.5",
+    "nuxt": "^2.14.7",
     "prettier": "1.14.3",
     "tailwindcss": "^1.9.6"
   }
