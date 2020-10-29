@@ -7,6 +7,14 @@
 			"problemMatcher": [],
 			"label": "npm: dev",
 			"detail": "nuxt",
+			"group": "build"
+		},
+		{
+			"type": "npm",
+			"script": "generate",
+			"problemMatcher": [],
+			"label": "npm: generate",
+			"detail": "nuxt generate",
 			"group": {
 				"kind": "build",
 				"isDefault": true
