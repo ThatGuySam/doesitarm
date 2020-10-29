@@ -20,7 +20,6 @@ const storeAppList = async function (builder) {
 
 
 export default {
-    mode: 'universal',
     target: 'static',
 
     /*
