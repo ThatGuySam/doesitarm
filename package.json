@@ -22,7 +22,7 @@
     "typeface-inter": "^3.15.0"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^3.0.2",
+    "@nuxtjs/tailwindcss": "^3.2.0",
     "autoprefixer": "^8.6.4",
     "babel-eslint": "^8.2.1",
     "eslint": "^5.16.0",
@@ -34,6 +34,6 @@
     "nodemon": "^1.11.0",
     "nuxt": "^2.14.5",
     "prettier": "1.14.3",
-    "tailwindcss": "^1.0.0"
+    "tailwindcss": "^1.9.6"
   }
 }
