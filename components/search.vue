@@ -32,7 +32,7 @@
 
                     <div class="search-results py-8">
 
-                        <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 neumorphic-shadow px-5">
+                        <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 bg-gradient-to-br from-darker to-dark neumorphic-shadow-outer px-5">
                             <li
                                 v-if="results.length === 0"
                                 class="text-center py-4"
@@ -51,7 +51,7 @@
                                         <div class="min-w-0 flex-1 flex items-center">
                                             <div class="flex-shrink-0">
                                                 <div
-                                                    class="h-12 w-12 rounded-full flex items-center justify-center neumorphic-shadow-inner"
+                                                    class="h-12 w-12 rounded-full flex items-center justify-center"
                                                 >
                                                     <div>{{ app.name.charAt(0) }}</div>
                                                 </div>
