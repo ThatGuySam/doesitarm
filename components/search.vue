@@ -51,7 +51,7 @@
                                         <div class="min-w-0 flex-1 flex items-center">
                                             <div class="flex-shrink-0">
                                                 <div
-                                                    class="h-12 w-12 rounded-full flex items-center justify-center"
+                                                    class="h-12 w-12 rounded-full flex items-center justify-center bg-darker"
                                                 >
                                                     <div>{{ app.name.charAt(0) }}</div>
                                                 </div>
