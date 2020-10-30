@@ -149,7 +149,7 @@ export default {
                 },
                 {
                     label: 'Entertainment',
-                    url: '/kind/entertainment',
+                    url: '/kind/entertainment-and-media-apps',
                 },
             ])
         }
