@@ -4,7 +4,7 @@
             <h1 class="title text-sm md:text-2xl font-semibold">
                 Does {{ app.name }} work on Apple Silicon?
             </h1>
-            <h2 class="subtitle text-2xl md:text-6xl font-bold py-6">
+            <h2 class="subtitle text-2xl md:text-5xl font-bold py-6">
                 {{ app.text }}
             </h2>
             <div class="links space-y-6 sm:space-x-6">
