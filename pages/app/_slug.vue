@@ -1,5 +1,5 @@
 <template>
-    <section class="container">
+    <section class="container py-32">
         <div class="flex flex-col items-center text-center">
             <h1 class="title text-sm md:text-2xl font-semibold">
                 Does {{ app.name }} work on Apple Silicon?
