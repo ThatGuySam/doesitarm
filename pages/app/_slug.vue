@@ -7,7 +7,7 @@
             <h2 class="subtitle text-2xl md:text-6xl font-bold py-6">
                 {{ app.text }}
             </h2>
-            <div class="links space-x-6">
+            <div class="links space-y-6 sm:space-x-6">
                 <LinkButton
                     v-for="(link, i) in app.relatedLinks"
                     :key="i"
