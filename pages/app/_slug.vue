@@ -8,7 +8,7 @@
                 {{ app.text }}
             </h2>
 
-            <div class="subscribe space-y-6 sm:space-x-6 my-4">
+            <div class="subscribe space-y-6 sm:space-x-6 mb-4">
                 <EmailSubscribe
                     :app-name="app.name"
                 />
