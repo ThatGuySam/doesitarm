@@ -21,6 +21,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Docker](https://www.docker.com/products#/mac) - ⏹ Expected to be supported at Apple Silicon launch - [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
 * [Node](https://nodejs.org/en/) - ⏹ Listed as supported during Apple's Platforms State of the Union - [Platforms State of the Union Clip](https://twitter.com/blendertoday/status/1275417203303727104?lang=en)
 * [OpenJDK](https://openjdk.java.net/install/) - 🚫 Not yet, but it's currently in development. - [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
+* [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta with native support currently in development. - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
 
 
 #### Music and Audio Tools
