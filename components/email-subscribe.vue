@@ -39,6 +39,8 @@
                         ]"
                         :placeholder="isFocused ? 'me@email.com' : 'Tell me when this changes'"
                         style="width: 230px;"
+                        type="email"
+                        required
                         @focus="isFocused = true"
                         @blur="isFocused = false"
                     >
