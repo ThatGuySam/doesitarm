@@ -38,6 +38,7 @@
                             isFocused ? 'pl-10' : 'placeholder-white text-center border border-transparent px-3'
                         ]"
                         :placeholder="isFocused ? 'me@email.com' : 'Tell me when this changes'"
+                        name="email-subscribe"
                         style="width: 230px;"
                         type="email"
                         required
