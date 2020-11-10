@@ -145,7 +145,7 @@ export default {
                 },
                 {
                     label: 'Photo Tools',
-                    url: '/kind/photo-tools',
+                    url: '/kind/photo-and-graphic-tools',
                 },
                 {
                     label: 'Entertainment',

@@ -8,3 +8,8 @@
   from = "/kind/entertainment"
   to = "/kind/entertainment-and-media-apps/"
   status = 301
+
+[[redirects]]
+  from = "/kind/photo-tools"
+  to = "/kind/photo-and-graphic-tools/"
+  status = 301
