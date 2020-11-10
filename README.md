@@ -24,6 +24,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta with native support currently in development. - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
 * [Go](https://golang.org/) - 🚫 Not yet, but it's currently in development. - [Issue](https://github.com/golang/go/issues/38485)
 * [OCaml](https://ocaml.org/) - 🚫 Not yet, but it's currently in beta. - [Pull Status](https://github.com/ocaml/ocaml/pull/9699)
+* [CocoaPods](https://cocoapods.org/) - ✅ Yes, it works via Rosetta 2 - [Issue](https://github.com/CocoaPods/CocoaPods/issues/9907)
 
 
 
