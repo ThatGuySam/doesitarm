@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 
-For a great example issue check out #31
+For a great example issue check out https://github.com/ThatGuySam/doesitarm/issues/31
 
 
 **The official name of the app**
