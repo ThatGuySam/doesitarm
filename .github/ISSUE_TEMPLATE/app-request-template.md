@@ -7,6 +7,10 @@ assignees: ''
 
 ---
 
+
+For a great example issue check out #31
+
+
 **The official name of the app**
 What's the full official name of the app
 
@@ -22,3 +26,6 @@ This is so that when the App is ready for Apple SIlicon users can quickly downlo
 
 **Additional context**
 Add any other context or screenshots about the app request here.
+
+
+
