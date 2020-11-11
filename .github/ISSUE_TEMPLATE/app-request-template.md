@@ -1,6 +1,6 @@
 ---
 name: App Request Template
-about: Describe this issue template's purpose here.
+about: Propose an app to add to the site
 title: ''
 labels: New App Request
 assignees: ''
