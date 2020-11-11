@@ -5,6 +5,12 @@ Lists of reported app support for macOS on ARM so far.
 
 Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
+## Legend
+* ✅ Full Native Apple Silicon Support
+* ✳️ Can run well enough via Rosetta or some other caveat
+* ⏹ Expected to be supported when Apple Silicon is available
+* 🚫 Not yet supported only works on Intel-based Macs
+
 
 ## The Apps
 
