@@ -84,6 +84,9 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Chrome](https://www.google.com/chrome/) - 🚫 No, not yet - [Apple Forums Issue](https://developer.apple.com/forums/thread/657657) [Google Forums Issue](https://support.google.com/chrome/thread/64355557?hl=en)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ⏹ Not yet, but it's currently in development. - [Bugzilla Tracker](https://bugzilla.mozilla.org/show_bug.cgi?id=1648496)
 * [1Password](https://1password.com/) - ✳️ Runs via Rosetta with native support currently in development. - [Forum Discussion](https://1password.community/discussion/114181/will-1password-run-on-apple-silicon-based-mac)
+* [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported  - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
+
+
 
 
 #### Entertainment and Media Apps
