@@ -22,7 +22,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Go](https://golang.org/) - 🚫 Not yet, but it's currently in development. - [Issue](https://github.com/golang/go/issues/38485)
 * [Homebrew](https://brew.sh/) - ✳️ Yes, with caveats and some troubleshooting. - [Issue](https://github.com/Homebrew/brew/issues/7857). 
 * [IntelliJ Idea](https://www.jetbrains.com/idea/download/#section=mac) - ✳️ Runs via Rosetta with native support currently in development - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526)
-* [iTerm](https://iterm2.com/downloads.html) ✅ Should be working [PR](https://github.com/gnachman/iTerm2/pull/421)
+* [iTerm](https://iterm2.com/downloads.html) ✅ Yes, fully supported as of v3.4.0 [PR](https://github.com/gnachman/iTerm2/pull/421)
 * [Node](https://nodejs.org/en/) - ⏹ Working on v15 with patches to previous versions in the pipeline - [Platforms State of the Union Clip](https://twitter.com/blendertoday/status/1275417203303727104?lang=en)
 * [OCaml](https://ocaml.org/) - 🚫 Not yet, but it's currently in beta. - [Pull Status](https://github.com/ocaml/ocaml/pull/9699)
 * [OpenJDK](https://openjdk.java.net/install/) - 🚫 Not yet, but it's currently in development. - [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
