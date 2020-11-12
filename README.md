@@ -19,7 +19,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Atom](https://atom.io/) - 🚫 No, not yet. - [Issue](https://github.com/atom/atom/issues/21078). 
 * [CocoaPods](https://cocoapods.org/) - ✅ Yes, it works via Rosetta 2 - [Issue](https://github.com/CocoaPods/CocoaPods/issues/9907)
 * [Docker](https://www.docker.com/products#/mac) - ⏹ Expected to be supported at Apple Silicon launch - [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
-* [Go](https://golang.org/) - 🚫 Not yet, but it's currently in development. - [Issue](https://github.com/golang/go/issues/38485)
+* [Go](https://golang.org/) - ✳️ Runs via Rosetta with native builds being tested - [Issue](https://github.com/golang/go/issues/38485)
 * [Homebrew](https://brew.sh/) - ✳️ Yes, with caveats and some troubleshooting. - [Issue](https://github.com/Homebrew/brew/issues/7857). 
 * [IntelliJ Idea](https://www.jetbrains.com/idea/download/#section=mac) - ✳️ Runs via Rosetta with native support currently in development - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526)
 * [iTerm](https://iterm2.com/downloads.html) ✅ Yes, fully supported as of v3.4.0 [PR](https://github.com/gnachman/iTerm2/pull/421)
