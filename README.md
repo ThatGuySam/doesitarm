@@ -48,7 +48,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Photo and Graphic Tools
 
-* [Photoshop](https://www.adobe.com/products/photoshop.html) - 🚫 Not yet, reported avialable early 2021 - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5813)
+* [Photoshop](https://www.adobe.com/products/photoshop.html) - 🚫 Not yet, reported available early 2021 - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5813)
 * [Lightroom](https://www.adobe.com/products/photoshop-lightroom.html) - ✅ Yes, it was shown at WWDC - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5783)
 * [Affinity Designer](https://affinity.serif.com/en-us/designer/) - ✅ Yes, reportedly was ported in a day - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1219)
 * [Affinity Publisher](https://affinity.serif.com/en-us/publisher/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1286)
