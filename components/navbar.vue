@@ -62,7 +62,8 @@
                         </a>
                     </div>
                 </div>
-                <div class="flex items-center">
+
+                <!-- <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <span class="rounded-md shadow-sm">
                             <LinkButton
@@ -83,7 +84,8 @@
 
                         </span>
                     </div>
-                </div>
+                </div> -->
+
             </div>
         </div>
         <!--
