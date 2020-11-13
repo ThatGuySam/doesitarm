@@ -10,14 +10,14 @@
             >
                 <label
                     v-show="isFocused"
-                    for="email-subscribe"
+                    :for="inputId"
                     class="block font-medium absolute"
                     style="top: -2em;"
                 >Email</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
                     <div
                         v-show="isFocused"
-                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                        class="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none"
                     >
                         <!-- Heroicon name: mail -->
                         <svg
@@ -31,12 +31,9 @@
                         </svg>
                     </div>
                     <input
-                        id="email-subscribe"
+                        :id="inputId"
                         v-model="email"
-                        :class="[
-                            'form-input block w-full rounded-md bg-darker neumorphic-shadow py-1',
-                            isFocused ? 'pl-10' : 'placeholder-white text-center border border-transparent px-3'
-                        ]"
+                        :class="inputClasslist"
                         :placeholder="isFocused ? 'me@email.com' : 'Tell me when this changes'"
                         name="email-subscribe"
                         style="width: 230px;"
@@ -72,6 +69,10 @@ export default {
         notes: {
             type: String,
             default: ''
+        },
+        inputClassGroups: {
+            type: Object,
+            default: () => {}
         }
     },
     data: function () {
@@ -80,6 +81,33 @@ export default {
 
             isFocused: false,
             feedbackMessage: null,
+        }
+    },
+    computed: {
+        inputId () {
+            return `email-subscribe-${this._uid}`
+        },
+        inputClasslist () {
+            const defaultClassGroups = {
+                general: 'form-input block w-full rounded-md py-1',
+                shadow: 'neumorphic-shadow',
+                bg: 'bg-darker',
+                focus: 'pl-8',
+                blur: 'placeholder-white text-center border border-transparent px-3',
+            }
+
+            const mergedClassGroups = {
+                ...defaultClassGroups,
+                ...this.inputClassGroups
+            }
+
+            if (this.isFocused) {
+                delete mergedClassGroups.blur
+            } else {
+                delete mergedClassGroups.focus
+            }
+
+            return Object.values(mergedClassGroups)
         }
     },
     methods: {
