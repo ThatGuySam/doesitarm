@@ -88,7 +88,8 @@ export default async function () {
         if (isHeading && token.type === 'inline') {
             sectionTitle = token.content
             sectionSlug = slugify(token.content, {
-                lower: true
+                lower: true,
+                strict: true
             })
 
             // appList[sectionSlug] = []
@@ -103,7 +104,8 @@ export default async function () {
             const [ name, url ] = link.substring(1, link.length-1).split('](')
 
             const appSlug = slugify(name, {
-                lower: true
+                lower: true,
+                strict: true
             })
 
             let status = 'unknown'
