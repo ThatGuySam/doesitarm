@@ -230,6 +230,8 @@ export default {
             // Snap results scroll position back to top
             this.$refs['search-container'].scrollTop = 0
 
+            this.$emit('update:query', rawQuery)
+
 
             // If our query is empty
             // then bail

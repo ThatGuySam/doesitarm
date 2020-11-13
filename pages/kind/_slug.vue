@@ -14,10 +14,11 @@
             <Search
                 :app-list="sectionAppList"
                 :quick-buttons="[]"
+                @update:query="query = $event"
             />
 
             <LinkButton
-                href="https://github.com/ThatGuySam/doesitarm/issues"
+                :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${this.query}`"
             >
                 Request an App
             </LinkButton>
@@ -42,6 +43,11 @@ export default {
     components: {
         Search,
         LinkButton
+    },
+    data: function () {
+        return {
+            query: ''
+        }
     },
     computed: {
         section () {
