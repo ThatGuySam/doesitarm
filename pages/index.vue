@@ -13,7 +13,7 @@
             />
 
             <LinkButton
-                :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${this.query}`"
+                :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
             >
                 Request an App
             </LinkButton>
