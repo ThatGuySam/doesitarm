@@ -84,7 +84,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 * [1Password](https://1password.com/) - ✳️ Runs via Rosetta with native support currently in development. - [Forum Discussion](https://1password.community/discussion/114181/will-1password-run-on-apple-silicon-based-mac)
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported  - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
-* [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502- [Issue Tracker](https://community.folivora.ai/)
+* [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502 - [Issue Tracker](https://community.folivora.ai/)
 * [Chrome](https://www.google.com/chrome/) - ⏹ No, not yet but reportedly Chrome beta is working. - [Apple Forums Issue](https://developer.apple.com/forums/thread/657657) [Google Forums Issue](https://support.google.com/chrome/thread/64355557?hl=en)
 * [Coloban](https://www.coloban.com) - ⏹ Not yet, but it's currently in development. - [Coloban Forum Issue](https://forum.coloban.com/index.php?u=/topic/21/new-arm-based-apple-computers)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ⏹ Not yet, but it's currently in development. - [Bugzilla Tracker](https://bugzilla.mozilla.org/show_bug.cgi?id=1648496)
