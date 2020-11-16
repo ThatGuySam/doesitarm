@@ -57,13 +57,21 @@ export default {
             twitterScript.setAttribute('async','true')
             twitterScript.setAttribute('src','https://platform.twitter.com/widgets.js')
 
+            twitterScript.onload = () => {
+
+                // Delay reveal for dom update
+                setInterval(() => {
+                    this.visible = true
+                }, 850)
+            }
+
             document.head.appendChild(twitterScript)
 
 
             // Reveal after 200ms
-            setInterval(() => {
-                this.visible = true
-            }, 750)
+            // setInterval(() => {
+            //     this.visible = true
+            // }, 750)
         }
     }
 }
