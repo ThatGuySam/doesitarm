@@ -9,14 +9,14 @@
                 @submit.prevent="trySubmit"
             >
                 <label
-                    v-show="isFocused"
+                    v-if="isFocused"
                     :for="inputId"
                     class="block font-medium absolute"
                     style="top: -2em;"
                 >Email</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
                     <div
-                        v-show="isFocused"
+                        v-if="isFocused"
                         class="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none"
                     >
                         <!-- Heroicon name: mail -->
@@ -47,7 +47,7 @@
         </div>
 
         <div
-            v-show="feedbackMessage"
+            v-if="feedbackMessage"
             class="text-center p-4"
         >
             {{ feedbackMessage }}
