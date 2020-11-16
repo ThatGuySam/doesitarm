@@ -19,6 +19,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Atom](https://atom.io/) - 🚫 No, not yet. - [Issue](https://github.com/atom/atom/issues/21078). 
 * [BBEdit](https://www.barebones.com/products/bbedit/download.html) - ✅ Yes, full native support as of v13.5 - [Release Notes](https://www.barebones.com/support/bbedit/notes-13.5.html)
 * [CocoaPods](https://cocoapods.org/) - ✅ Yes, it works via Rosetta 2 - [Issue](https://github.com/CocoaPods/CocoaPods/issues/9907)
+* [CotEditor](https://coteditor.com) - ✅ Yes, full native support as of 4.0.0 - [App Store](https://itunes.apple.com/app/coteditor/id1024640650)
 * [Deno](https://deno.land/) - 🚫 Not yet supported only works on Intel-based Macs - [Issue](https://github.com/denoland/deno/issues/8346)
 * [Docker](https://www.docker.com/products#/mac) - ⏹ Expected to be supported at Apple Silicon launch - [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
 * [Go](https://golang.org/) - ✳️ Runs via Rosetta with native builds being tested - [Issue](https://github.com/golang/go/issues/38485)
