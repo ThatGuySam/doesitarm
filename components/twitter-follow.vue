@@ -31,6 +31,12 @@ export default {
     mounted () {
         // https://platform.twitter.com/widgets.js
 
+
+        // Fallback reveal
+        setInterval(() => {
+            this.visible = true
+        }, 5000)
+
         // the returned function, when called, stops tracking the target element in the
         // given viewport
         const unobserve = observeElementInViewport(this.$refs.follow, async (_, unobserve, expandZoneElem) => {
