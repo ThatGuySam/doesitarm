@@ -124,3 +124,10 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 
+## Social and communication
+
+- [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
+- [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/)  - ✳️ Runs via Rosetta 2 
+
+
+
