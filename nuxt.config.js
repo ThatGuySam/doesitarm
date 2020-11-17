@@ -36,6 +36,12 @@ export default {
     },
 
     generate: {
+        cache: {
+            ignore: [
+                // When something changed in the docs folder, do not re-build via webpack
+                'assets'
+            ]
+        },
         routes() {
             return import('./assets/app-list.json')//buildAppList()
                 .then((importedAppList) => {
