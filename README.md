@@ -38,7 +38,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Proxyman](https://proxyman.io) - ✅ Yes, fully supported ARM and Intel Chip - [Issue](https://github.com/ProxymanApp/Proxyman/issues/686)
 * [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac) - ✳️ Runs via Rosetta with native support currently in development - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526) 
 * [Python](https://www.python.org/) - ✅ Yes, reported working for v2.7.16, v3.8.2, and v3.9 - [Python Tracker](https://bugs.python.org/issue41100) [Github Issue](https://github.com/python/cpython/pull/22855) [Github Issue #2](https://github.com/ThatGuySam/doesitarm/issues/111)
-* [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta with native support currently in development. - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
+* [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta 2 with native builds being tested - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
 * [Sublime Text](https://www.sublimetext.com/) - ✳️ Runs via Rosetta with native builds being tested - [Forum Discussion](https://forum.sublimetext.com/t/arm-build/5882/97)
 * [Tower](https://www.git-tower.com/mac) - ✅ Yes, fully supported as of v6 - [Release Notes](https://www.git-tower.com/blog/tower-mac-6/)
 * [Transmit](https://panic.com/transmit/) - ✅ Yes, Full Native Apple Silicon Support as of v5.7 - [Official Tweet](https://twitter.com/panic/status/1326978002576666624?s=20)
