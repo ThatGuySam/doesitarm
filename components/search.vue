@@ -120,7 +120,7 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
-import appList from '~/dist/app-list.json'
+import appList from '~/app-list.json'
 
 import EmailSubscribe from '~/components/email-subscribe.vue'
 

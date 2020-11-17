@@ -25,7 +25,7 @@
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
-import appList from '~/dist/app-list.json'
+import appList from '~/app-list.json'
 
 export default {
     components: {
