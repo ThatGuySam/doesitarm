@@ -138,6 +138,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 - [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
 - [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/)  - ✳️ Runs via Rosetta 2 
+- [Slack](https://slack.com/) - 🚫 Not yet, but it's currently in beta. - [Official Tweet](https://twitter.com/SlackEng/status/1326237727667314688)
 
 
 
