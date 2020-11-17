@@ -9,7 +9,7 @@ const storeAppList = async function (builder) {
     const appListPath = path.join(
         // builder.nuxt.options.buildDir,
         builder.nuxt.options.srcDir,
-        '/assets/app-list.json'
+        '/dist/app-list.json'
     )
 
     const appList = await buildAppList()
@@ -43,7 +43,7 @@ export default {
             ]
         },
         routes() {
-            return import('./assets/app-list.json')//buildAppList()
+            return import('./dist/app-list.json')//buildAppList()
                 .then((importedAppList) => {
                     const appList = importedAppList.default
                     // console.log('appList', appList)

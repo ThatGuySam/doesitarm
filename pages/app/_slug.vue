@@ -40,7 +40,7 @@
 <script>
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
-import appList from '~/assets/app-list.json'
+import appList from '~/dist/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {
