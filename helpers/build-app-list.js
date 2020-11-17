@@ -55,7 +55,7 @@ const getTokenLinks = function ( childTokens ) {
 
 export default async function () {
 
-    const readmeContent = await fs.readFile('./README.md', 'utf8')
+    const readmeContent = await fs.readFile('./README-temp.md', 'utf8')
 
     // console.log('readmeContent', readmeContent)
 

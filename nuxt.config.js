@@ -2,7 +2,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 
 import pkg from './package'
-import buildAppList from './helpers/build-app-list'
+import buildAppList from './helpers/build-app-list.js'
 
 
 const storeAppList = async function (builder) {
