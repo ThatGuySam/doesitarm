@@ -27,7 +27,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Docker](https://www.docker.com/products#/mac) - 🚫 Not yet, but it’s in development - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
 * [Fork](https://git-fork.com/) - ✳️ Yes, works via Rosetta 2 - [Release notes](https://git-fork.com/releasenotes)
 * [Go](https://golang.org/) - ✳️ Runs via Rosetta with native builds being tested - [Issue](https://github.com/golang/go/issues/38485)
-* [Godot Engine](https://godotengine.org/) - ⏹ No official binaries yet, but can be compiled from source - [`master` PR](https://github.com/godotengine/godot/pull/39788), [`3.2` PR](https://github.com/godotengine/godot/pull/39943)
+* [Godot Engine](https://godotengine.org/) - ⏹ No official binaries yet, but can be compiled from source - [Master PR](https://github.com/godotengine/godot/pull/39788), [v3.2 PR](https://github.com/godotengine/godot/pull/39943)
 * [Haskell](https://www.haskell.org/platform/mac.html) - 🚫 Not yet supported only works on Intel-based Macs - [Gitlab Issue](https://gitlab.haskell.org/ghc/ghc/-/issues/18664)
 * [Homebrew](https://brew.sh/) - ✳️ Yes, with caveats and some troubleshooting. - [Issue](https://github.com/Homebrew/brew/issues/7857). 
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
