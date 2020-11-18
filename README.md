@@ -107,7 +107,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Bear](https://bear.app/) - 🚫 Not yet, but it's in development - [Bear Twitter](https://twitter.com/BearNotesApp/status/1328271208748638213)
 * [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502 - [Issue Tracker](https://community.folivora.ai/)
 * [Bitwarden](https://bitwarden.com/) - ⏹ Not yet, but a patch is in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
-* [Chrome](https://www.google.com/chrome/) - ⏹ No, not yet but reportedly Chrome beta is working. - [Apple Forums Issue](https://developer.apple.com/forums/thread/657657) [Google Forums Issue](https://support.google.com/chrome/thread/64355557?hl=en)
+* [Chrome](https://www.google.com/chrome/) - ✅ Yes, fully supported as of v87 - [Article](https://9to5google.com/2020/11/17/chrome-mac-apple-silicon/)
 * [Coloban](https://www.coloban.com) - ⏹ Not yet, but it's currently in development. - [Coloban Forum Issue](https://forum.coloban.com/index.php?u=/topic/21/new-arm-based-apple-computers)
 * [CrossOver](https://www.codeweavers.com/) - ✳️ Runs via Rosetta 2 - [Official Blog](https://www.codeweavers.com/blog/jwhite/2020/11/10/its-great-to-live-in-interesting-times)
 * [DEVONthink](https://www.devontechnologies.com/download/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.2 - [Release Notes](https://www.devontechnologies.com/blog/20200814-devonthink-352)
