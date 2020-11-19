@@ -120,7 +120,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
 * [Bear](https://bear.app/) - ✅ Yes, fully supported as v1.8.2 - [Bear Blog Post](https://blog.bear.app/2020/11/bear-gets-new-widgets-and-ready-for-big-sur/)
 * [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502 - [Issue Tracker](https://community.folivora.ai/)
-* [Bitwarden](https://bitwarden.com/) - ⏹ Not yet, but a patch is in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
+* [Bitwarden](https://bitwarden.com/) - ✳️ Yes, works via Rosetta 2 with a patch in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
 * [Chrome](https://www.google.com/chrome/) - ✅ Yes, fully supported as of v87 - [Article](https://9to5google.com/2020/11/17/chrome-mac-apple-silicon/)
 * [Coloban](https://www.coloban.com) - ⏹ Not yet, but it's currently in development. - [Coloban Forum Issue](https://forum.coloban.com/index.php?u=/topic/21/new-arm-based-apple-computers)
 * [CrossOver](https://www.codeweavers.com/) - ✳️ Runs via Rosetta 2 - [Official Blog](https://www.codeweavers.com/blog/jwhite/2020/11/10/its-great-to-live-in-interesting-times)
