@@ -63,9 +63,9 @@
                     </div>
                 </div>
 
-                <!-- <div class="flex items-center">
+                <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <span class="rounded-md shadow-sm">
+                        <!-- <span class="rounded-md shadow-sm">
                             <LinkButton
                                 href="https://github.com/ThatGuySam/doesitarm/issues"
                                 class="relative inline-flex items-center border-indigo-500"
@@ -82,9 +82,18 @@
                                 <span>Submit App</span>
                             </LinkButton>
 
-                        </span>
+                        </span> -->
+                        <a
+                            :class="[
+                                'px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                                'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                            ]"
+                            href="https://twitter.com/DoesItARM"
+                        >
+                            Twitter Updates
+                        </a>
                     </div>
-                </div> -->
+                </div>
 
             </div>
         </div>
