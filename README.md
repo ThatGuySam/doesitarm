@@ -48,6 +48,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta 2 with native builds being tested - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
 * [SubEthaEdit](https://subethaedit.net/) - ✅ Yes, full native Apple Silicon Support as of v5.1.5 - [Release Notes](https://github.com/subethaedit/SubEthaEdit/releases/tag/SubEthaEdit-MacFull-5.1.5)
 * [Sublime Text](https://www.sublimetext.com/) - ✳️ Runs via Rosetta with native builds being tested - [Forum Discussion](https://forum.sublimetext.com/t/arm-build/5882/97)
+* [TensorFlow](https://www.tensorflow.org/) - ⏹ Not yet, but a supported pre-release is available - [Pre-Release](https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html)
 * [Tower](https://www.git-tower.com/mac) - ✅ Yes, fully supported as of v6 - [Release Notes](https://www.git-tower.com/blog/tower-mac-6/)
 * [Transmit](https://panic.com/transmit/) - ✅ Yes, Full Native Apple Silicon Support as of v5.7 - [Official Tweet](https://twitter.com/panic/status/1326978002576666624?s=20)
 * [Unity](https://store.unity.com/download) - ✳️ Runs via Rosetta with native support currently in development - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator)
