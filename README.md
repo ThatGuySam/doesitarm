@@ -98,7 +98,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) - ✳️ Yes, it was shown at the November 10th event running via Rosetta 2 - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1114)
 * [Autodesk Maya](https://www.autodesk.com/products/maya/overview) - ✳️ Yes, it was shown at WWDC running via Rosetta 2 - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=6036)
 * [Blender](https://www.blender.org/download/) - ✳️ Runs via Rosetta with native support currently in development - [Issue Tracker](https://developer.blender.org/T78710) [Platforms State of the Union Clip](https://twitter.com/blendertoday/status/1275417203303727104?lang=en)
-* [Cinema 4D](https://www.maxon.net/en-us/products/cinema-4d/overview/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=924)
+* [Cinema 4D](https://www.maxon.net/en/downloads) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.maxon.net/en/article/cinema-4d-r23-sp1-now-available) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=924)
 * [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=950)
 * [Final Cut Pro](https://www.apple.com/final-cut-pro/) - ✅ Yes, it will available on Apple Silicon launch - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1173) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5844)
 * [Handbrake](https://handbrake.fr/) - ✅ Yes, natively supported as of v1.4.0  - [Github Issue](https://github.com/HandBrake/HandBrake/issues/2951)
