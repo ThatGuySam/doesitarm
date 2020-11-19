@@ -61,6 +61,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Music and Audio Tools
 
+* [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
 * [Audacity](https://www.audacityteam.org/download/) - ✳️ Yes, it works via Rosetta 2 with no reported issues - [Github Issue Comment](https://github.com/audacity/audacity/issues/684#issuecomment-710726323)
 * [Avid Pro Tools](https://www.avid.com/pro-tools) - 🚫 No official word yet.
 * [Garageband](https://www.apple.com/mac/garageband/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1033)
