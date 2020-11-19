@@ -144,7 +144,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [OmniPlan](https://www.omnigroup.com/omniplan) - ✅ Yes, Full Native Apple Silicon Support as of v4.2 - [Release Notes](https://www.omnigroup.com/releasenotes/omniplan)
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [Stata](https://www.stata.com/) - ✅ Yes, Full Native Apple Silicon Support as of v15 - [Blog Post](https://blog.stata.com/2020/11/10/stata-for-mac-with-apple-silicon/)
-* [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2
+* [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 
 
 
