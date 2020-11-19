@@ -32,7 +32,7 @@ You can check the different statused here: https://github.com/ThatGuySam/doesita
 
 
 **Screenshot with Activity Monitor(if self reporting)**
-{As screenshot with Activity Monitor open showing the Apps architecture type}
+{As screenshot with Activity Monitor open showing the App's architecture type}
 
 
 
