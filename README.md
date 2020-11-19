@@ -126,7 +126,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [DEVONthink](https://www.devontechnologies.com/download/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.2 - [Release Notes](https://www.devontechnologies.com/blog/20200814-devonthink-352)
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ✳️ Yes, works via Rosetta 2 as of v83 - [Release Notes](https://www.mozilla.org/en-US/firefox/83.0/releasenotes/) 
-* [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 [Release Notes](http://grandperspectiv.sourceforge.net/)
+* [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [IA Writer](https://apps.apple.com/us/app/ia-writer/id775737172) - ✅ Yes, Full Native Apple Silicon Support - [Official Twitter](https://twitter.com/iawriter/status/1326284671005696009?s=21)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
