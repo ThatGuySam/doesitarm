@@ -179,6 +179,9 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Zoom](https://zoom.us/download)  - ✳️ Yes, runs via Rosetta 2 - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/134)
 
 
+<!--- end-of-list -->
+
+
 
 ## More Apple Silicon Lists
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status

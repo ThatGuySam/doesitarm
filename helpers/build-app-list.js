@@ -62,12 +62,23 @@ export default async function () {
     // Parse markdown
     const result = md.parse(readmeContent)
 
-    // .map(token => {
-
-    // })
-
     // console.log('results', result.length)
     // console.log('results', result)
+
+
+    // Finf the end of our list
+    const endOfListIndex = result.findIndex((Token) => {
+        // JSON.stringify(Token).includes('end-of-list')
+        const matches = Token.content.includes('end-of-list')
+
+        if (matches) {
+            console.log('Token', Token)
+        }
+
+        return matches
+    })
+
+    const appListTokens = result.slice(0, endOfListIndex)
 
     const appList = []
 
@@ -76,7 +87,7 @@ export default async function () {
     let isHeading = false
     let isParagraph = false
 
-    for (const token of result) {
+    for (const token of appListTokens) {
         // On heading close switch off heading mode
         if (token.type.includes('heading_')) isHeading = !isHeading
 
