@@ -27,6 +27,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [DBeaver](https://dbeaver.io/) - 🚫 No, only works on Intel-based Macs - [Issue Tracking](https://github.com/dbeaver/dbeaver/issues/8525)
 * [Deno](https://deno.land/) - ✳️ Yes, works via Rosetta 2 - [Issue](https://github.com/denoland/deno/issues/8346)
 * [Docker](https://www.docker.com/products#/mac) - 🚫 Not yet, but it’s in development - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
+* [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
 * [Fork](https://git-fork.com/) - ✳️ Yes, works via Rosetta 2 - [Release notes](https://git-fork.com/releasenotes)
 * [Go](https://golang.org/) - ✳️ Runs via Rosetta with native builds being tested - [Issue](https://github.com/golang/go/issues/38485)
