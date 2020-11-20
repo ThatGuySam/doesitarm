@@ -44,6 +44,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Nova](https://nova.app) - ✅ Yes, Full Native Apple Silicon Support as of v3 - [Official Tweet](https://twitter.com/panic/status/1326977997732134912?s=20)
 * [OCaml](https://ocaml.org/) - 🚫 Not yet, but it's currently in beta. - [Pull Status](https://github.com/ocaml/ocaml/pull/9699)
 * [OpenJDK](https://openjdk.java.net/install/) - ⏹ Not yet, but there is an early build available. - [Early Access Build](https://github.com/microsoft/openjdk-aarch64/releases/tag/16-ea%2B10-macos) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
+* [Parallels Desktop](https://www.parallels.com/) - ⏹ No, not working at all but support is in development - [Blog Post](https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/)
 * [PHPStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✳️ Runs via Rosetta with native support currently in development - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526)
 * [Proxyman](https://proxyman.io) - ✅ Yes, fully supported ARM and Intel Chip - [Issue](https://github.com/ProxymanApp/Proxyman/issues/686)
 * [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac) - ✳️ Runs via Rosetta with native support currently in development - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526) 
