@@ -7,10 +7,10 @@ import slugify from 'slugify'
 const md = new MarkdownIt()
 
 
-const statuses = {
-    '✅': 'yes',
-    '✳️': 'yes-but',
-    '⏹': 'in-progress',
+export const statuses = {
+    '✅': 'native',
+    '✳️': 'rosetta',
+    '⏹': 'no-in-progress',
     '🚫': 'no'
 }
 

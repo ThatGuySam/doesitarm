@@ -136,6 +136,18 @@ export default {
             type: Array,
             default: () => [
                 {
+                    label: '✅ Full Native Support',
+                    query: 'status:native'
+                },
+                {
+                    label: '✳️ Rosetta',
+                    query: 'status:rosetta'
+                },
+                {
+                    label: '🚫 Unsupported',
+                    query: 'status:no'
+                },
+                {
                     label: 'Music Tools',
                     query: 'Music'
                 },
@@ -166,6 +178,7 @@ export default {
             titleStartsWithResults: [],
             titleContainsResults: [],
             sectionContainsResults: [],
+            statusResults: [],
             // store: overlayStore.state
         }
     },
@@ -176,7 +189,8 @@ export default {
             return [
                 ...this.titleStartsWithResults,
                 ...this.titleContainsResults,
-                ...this.sectionContainsResults
+                ...this.sectionContainsResults,
+                ...this.statusResults
             ]
         },
         hasSearchInputText () {
@@ -221,6 +235,19 @@ export default {
             }
             return matches
         },
+        statusIs (query, app) {
+            if (!query.includes('status:')) return
+
+            const [_, status] = query.split(':')
+
+            const matches = app.status.includes(status)
+
+            if (matches) {
+                this.statusResults.push(app)
+            }
+
+            return matches
+        },
         // Search tools
         pluck (array, index) {
             const pluckedItem = array[index]
@@ -238,6 +265,7 @@ export default {
             this.titleStartsWithResults = []
             this.titleContainsResults = []
             this.sectionContainsResults = []
+            this.statusResults = []
 
 
             // Snap results scroll position back to top
@@ -257,7 +285,8 @@ export default {
                 const matchers = [
                     this.titleStartsWith,
                     this.titleContains,
-                    this.sectionContains
+                    this.sectionContains,
+                    this.statusIs
                 ]
 
                 // Run through our search priorities
