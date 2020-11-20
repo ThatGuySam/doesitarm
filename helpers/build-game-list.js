@@ -95,6 +95,7 @@ export default async function () {
             url: `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
             text: statusesMessages[status],
             slug,
+            endpoint: `/game/${slug}`,
             section: {
                 label: 'Games',
                 slug: 'games'
