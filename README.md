@@ -51,6 +51,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta 2 with native builds being tested - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
 * [SubEthaEdit](https://subethaedit.net/) - ✅ Yes, full native Apple Silicon Support as of v5.1.5 - [Release Notes](https://github.com/subethaedit/SubEthaEdit/releases/tag/SubEthaEdit-MacFull-5.1.5)
 * [Sublime Text](https://www.sublimetext.com/) - ✳️ Runs via Rosetta with native builds being tested - [Forum Discussion](https://forum.sublimetext.com/t/arm-build/5882/97)
+* [Surge](https://nssurge.com/) - ✅ Yes, full native Apple Silicon Support as of v4.0.0 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/157)
 * [TensorFlow](https://www.tensorflow.org/) - ⏹ Not yet, but a supported pre-release is available - [Pre-Release](https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html)
 * [TablePlus](https://tableplus.com/)  - ✅ Yes, fully supported as of Build 352 - [Release Notes](https://twitter.com/TablePlus/status/1327650704295489536)
 * [Tower](https://www.git-tower.com/mac) - ✅ Yes, fully supported as of v6 - [Release Notes](https://www.git-tower.com/blog/tower-mac-6/)
