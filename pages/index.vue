@@ -9,6 +9,7 @@
             </h2>
 
             <Search
+                :app-list="appList"
                 @update:query="query = $event"
             />
 
