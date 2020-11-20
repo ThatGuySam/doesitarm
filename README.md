@@ -178,3 +178,10 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Slack](https://slack.com/) - 🚫 Not yet, but it's currently in beta. - [Official Tweet](https://twitter.com/SlackEng/status/1326237727667314688)
 * [Zoom](https://zoom.us/download)  - ✳️ Yes, runs via Rosetta 2 - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/134)
 
+
+
+## More Apple Silicon Lists
+* [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
+* [Games and Apps on Apple Silicon](https://docs.google.com/spreadsheets/d/1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs/edit) - List of reported Games support including performance info. 
+* [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
+
