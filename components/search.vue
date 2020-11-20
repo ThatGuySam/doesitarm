@@ -56,14 +56,19 @@
                                 class="relative"
                             >
                                 <a
-                                    :href="`/app/${ app.slug }`"
+                                    :href="app.endpoint"
                                     class="flex items-center hover:neumorphic-shadow hover:bg-gradient-to-br from-darkest to-dark focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
                                 >
                                     <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
                                         {{ app.name.charAt(0) }}
                                     </div>
                                     <div class="min-w-0 flex-1 px-4 md:mr-48">
-                                        <div class="text-sm leading-5 font-light truncate">{{ app.name }}</div>
+                                        <div class="text-sm leading-5 font-light truncate">
+                                            <span v-if="app.endpoint.includes('/game/')">
+                                                🕹
+                                            </span>
+                                            {{ app.name }}
+                                        </div>
                                         <div class="mt-2 flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
                                             {{ app.text }}
                                         </div>
@@ -82,7 +87,10 @@
 
                                     <div class="search-item-options-container h-full flex justify-center md:justify-end items-center py-4 md:px-12">
 
-                                        <div class="subscribe space-y-6 sm:space-x-6">
+                                        <div
+                                            v-if="noEmailSubscribe !== false"
+                                            class="subscribe space-y-6 sm:space-x-6"
+                                        >
                                             <EmailSubscribe
                                                 :app-name="app.name"
                                                 :input-class-groups="{
@@ -111,7 +119,7 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
-import appList from '~/app-list.json'
+// import appList from '~/app-list.json'
 
 import EmailSubscribe from '~/components/email-subscribe.vue'
 
@@ -130,7 +138,11 @@ export default {
     props: {
         appList: {
             type: Array,
-            default: () => appList
+            required: true
+        },
+        noEmailSubscribe: {
+            type: Boolean,
+            default: false
         },
         quickButtons: {
             type: Array,
@@ -236,11 +248,18 @@ export default {
             return matches
         },
         statusIs (query, app) {
+
+            // if (typeof app.status !== 'string') {
+            //     console.log('app', app)
+            //     console.log('status', status)
+            //     console.log('app.status.includes(status)', app.status.includes(status))
+            // }
+
             if (!query.includes('status:')) return
 
             const [_, status] = query.split(':')
 
-            const matches = app.status.includes(status)
+            const matches = app.status.includes(status) || app.status === status
 
             if (matches) {
                 this.statusResults.push(app)

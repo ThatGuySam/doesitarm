@@ -135,6 +135,7 @@ export default async function () {
                 url,
                 text,
                 slug: appSlug,
+                endpoint: `/app/${appSlug}`,
                 section: {
                     label: sectionTitle,
                     slug: sectionSlug

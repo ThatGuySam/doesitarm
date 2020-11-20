@@ -9,6 +9,7 @@
             </h2>
 
             <Search
+                :app-list="appList"
                 @update:query="query = $event"
             />
 
@@ -26,6 +27,7 @@ import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
 import appList from '~/app-list.json'
+import gameList from '~/game-list.json'
 
 export default {
     components: {
@@ -34,12 +36,15 @@ export default {
     },
     data: function () {
         return {
-            query: ''
+            query: '',
         }
     },
     computed: {
         appList() {
-            return appList
+            return [
+                ...appList,
+                ...gameList
+            ]
         }
     }
 }

@@ -162,6 +162,10 @@ export default {
                     label: 'Entertainment',
                     url: '/kind/entertainment-and-media-apps',
                 },
+                {
+                    label: 'Games',
+                    url: '/games',
+                },
             ])
         }
     },
