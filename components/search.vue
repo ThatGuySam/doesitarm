@@ -56,7 +56,7 @@
                                             <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                                 <div>
                                                     <div class="text-sm leading-5 font-light truncate">{{ app.name }}</div>
-                                                    <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
+                                                    <div class="mt-2 flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
                                                         <span class="">{{ app.text }}</span>
                                                     </div>
                                                 </div>
