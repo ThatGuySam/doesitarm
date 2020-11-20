@@ -35,6 +35,7 @@
                         v-model="email"
                         :class="inputClasslist"
                         :placeholder="isFocused ? 'me@email.com' : 'Tell me when this changes'"
+                        aria-label="Email Address"
                         name="email-subscribe"
                         style="width: 230px;"
                         type="email"
