@@ -25,7 +25,7 @@
                 <span>via</span>
                 <span>
                     <a
-                        href="https://docs.google.com/spreadsheets/d/1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs/edit#gid=0"
+                        href="https://twitter.com/__tosh/status/1329099180476928002"
                         class="font-bold"
                     >Games and Apps on Apple Silicon</a>
                 </span>
@@ -105,7 +105,7 @@
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                 <a
-                    :href="`https://docs.google.com/spreadsheets/d/1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs/edit#gid=0`"
+                    :href="`https://twitter.com/__tosh/status/1329099180476928002`"
                     target="_blank"
                     class="text-xs"
                     rel="noopener"
