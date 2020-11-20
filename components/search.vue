@@ -50,12 +50,8 @@
                                 >
                                     <div class="flex items-center px-4 py-4 sm:px-6">
                                         <div class="min-w-0 flex-1 flex items-center">
-                                            <div class="flex-shrink-0">
-                                                <div
-                                                    class="h-12 w-12 rounded-full flex items-center justify-center bg-darker"
-                                                >
-                                                    <div>{{ app.name.charAt(0) }}</div>
-                                                </div>
+                                            <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
+                                                {{ app.name.charAt(0) }}
                                             </div>
                                             <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                                 <div>
