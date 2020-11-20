@@ -3,21 +3,34 @@ import path from 'path'
 
 import pkg from './package'
 import buildAppList from './helpers/build-app-list.js'
+import buildGamesList from './helpers/build-game-list.js'
 
 
 const storeAppList = async function (builder) {
+    // TODO: Make DRY
+
     const appListPath = path.join(
         // builder.nuxt.options.buildDir,
         builder.nuxt.options.srcDir,
         '/app-list.json'
     )
 
+    const gamesListPath = path.join(
+        // builder.nuxt.options.buildDir,
+        builder.nuxt.options.srcDir,
+        '/game-list.json'
+    )
+
     const appList = await buildAppList()
+    const gamesList = await buildGamesList()
 
     // console.log('builder.nuxt.options', builder.nuxt.options)
     await fs.writeFile(appListPath, JSON.stringify(appList))
+    await fs.writeFile(gamesListPath, JSON.stringify(gamesList))
 }
 
+
+// console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
 
 export default {
     target: 'static',
@@ -43,13 +56,25 @@ export default {
             ]
         },
         routes() {
-            return import('./app-list.json')//buildAppList()
-                .then((importedAppList) => {
+            return Promise.all([
+                import('./app-list.json'),
+                import('./game-list.json')
+            ])
+                .then(([
+                    importedAppList,
+                    importedGameList
+                ]) => {
                     const appList = importedAppList.default
+                    const gameList = importedGameList.default
                     // console.log('appList', appList)
 
                     const appRoutes = appList.map(app => ({
                         route: '/app/' + app.slug,
+                        // payload: appList
+                    }))
+
+                    const gameRoutes = gameList.map(game => ({
+                        route: '/game/' + game.slug,
                         // payload: appList
                     }))
 
@@ -68,6 +93,7 @@ export default {
 
                     return [
                         ...appRoutes,
+                        ...gameRoutes,
                         ...sectionRoutes
                     ]
                 })
