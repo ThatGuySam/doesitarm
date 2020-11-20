@@ -71,9 +71,9 @@ export default async function () {
         // JSON.stringify(Token).includes('end-of-list')
         const matches = Token.content.includes('end-of-list')
 
-        if (matches) {
-            console.log('Token', Token)
-        }
+        // if (matches) {
+        //     console.log('Token', Token)
+        // }
 
         return matches
     })
