@@ -84,6 +84,8 @@ export default async function () {
         // Game already has entry
         if (gameIndex !== -1) {
 
+            // console.log('Existing Game', game)
+
             gameList[gameIndex].reports.push(game)
 
             continue
@@ -110,7 +112,12 @@ export default async function () {
                 slug: 'games'
             },
             content: '',
-            relatedLinks: [],
+            relatedLinks: [
+                {
+                    "href": `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
+                    "label": "View"
+                }
+            ],
             reports: [
                 game
             ]
