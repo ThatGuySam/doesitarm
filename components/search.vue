@@ -57,32 +57,24 @@
                             >
                                 <a
                                     :href="`/app/${ app.slug }`"
-                                    class="block hover:neumorphic-shadow hover:bg-gradient-to-br from-darkest to-dark focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg -mx-5"
+                                    class="flex items-center hover:neumorphic-shadow hover:bg-gradient-to-br from-darkest to-dark focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
                                 >
-                                    <div class="flex items-center px-4 py-4 sm:px-6">
-                                        <div class="min-w-0 flex-1 flex items-center">
-                                            <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
-                                                {{ app.name.charAt(0) }}
-                                            </div>
-                                            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                                                <div>
-                                                    <div class="text-sm leading-5 font-light truncate">{{ app.name }}</div>
-                                                    <div class="mt-2 flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
-                                                        <span class="">{{ app.text }}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <svg
-                                                class="h-5 w-5 text-gray-400"
-                                                viewBox="0 0 20 20"
-                                                fill="currentColor"
-                                            >
-                                                <use href="#chevron-right" />
-                                            </svg>
+                                    <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
+                                        {{ app.name.charAt(0) }}
+                                    </div>
+                                    <div class="min-w-0 flex-1 px-4 md:mr-48">
+                                        <div class="text-sm leading-5 font-light truncate">{{ app.name }}</div>
+                                        <div class="mt-2 flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
+                                            {{ app.text }}
                                         </div>
                                     </div>
+                                    <svg
+                                        class="h-5 w-5 text-gray-400"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <use href="#chevron-right" />
+                                    </svg>
                                 </a>
                                 <div
                                     class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
