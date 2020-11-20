@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import slugify from 'slugify'
 import axios from 'axios'
 
-import { statuses } from './build-app-list'
+// import { statuses } from './build-app-list'
 
 
 // console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
@@ -82,12 +82,21 @@ export default async function () {
         })
 
         // Game already has entry
-        if (gameIndex !== -1) continue
+        if (gameIndex !== -1) {
+
+            gameList[gameIndex].reports.push(game)
+
+            continue
+        }
 
 
         const status = parseStatus(game)
 
-        // console.log('status', status)
+        if (typeof status !== 'string') {
+            console.warn('Non-string status', game)
+
+            continue
+        }
 
         gameList.push({
             name: game.Games,
