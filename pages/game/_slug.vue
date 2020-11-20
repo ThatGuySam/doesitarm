@@ -24,7 +24,7 @@
                 >{{ (i === 0) ? 'View' : link.label }}</LinkButton>
             </div>
 
-            <small>
+            <small class="test-sm opacity-75">
                 <span>Data generously provided by </span>
                 <span>
                     <a
