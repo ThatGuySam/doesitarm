@@ -90,31 +90,34 @@
                                         <use href="#chevron-right" />
                                     </svg>
                                 </a>
-                                <div
-                                    class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
-                                >
 
-                                    <div class="search-item-options-container h-full flex justify-center md:justify-end items-center py-4 md:px-12">
+                                <client-only>
+                                    <div
+                                        class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
+                                    >
 
-                                        <div
-                                            v-if="!app.endpoint.includes('/game/')"
-                                            class="subscribe space-y-6 sm:space-x-6"
-                                        >
-                                            <EmailSubscribe
-                                                :app-name="app.name"
-                                                :input-class-groups="{
-                                                    shadow: 'hover:neumorphic-shadow',
-                                                    bg: '',
-                                                    focus: 'bg-transparent neumorphic-shadow pl-8',
-                                                    blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
-                                                }"
-                                                class="pointer-events-auto"
-                                            />
+                                        <div class="search-item-options-container h-full flex justify-center md:justify-end items-center py-4 md:px-12">
+
+                                            <div
+                                                v-if="!app.endpoint.includes('/game/')"
+                                                class="subscribe space-y-6 sm:space-x-6"
+                                            >
+                                                <EmailSubscribe
+                                                    :app-name="app.name"
+                                                    :input-class-groups="{
+                                                        shadow: 'hover:neumorphic-shadow',
+                                                        bg: '',
+                                                        focus: 'bg-transparent neumorphic-shadow pl-8',
+                                                        blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
+                                                    }"
+                                                    class="pointer-events-auto"
+                                                />
+                                            </div>
+
                                         </div>
 
                                     </div>
-
-                                </div>
+                                </client-only>
                             </li>
                         </ul>
                     </div>
