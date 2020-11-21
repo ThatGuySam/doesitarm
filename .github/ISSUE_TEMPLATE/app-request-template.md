@@ -14,6 +14,9 @@ For a great example issue check out https://github.com/ThatGuySam/doesitarm/issu
 **The official name of the app**
 {What's the full official name of the app}
 
+**Is there a supported build avialable on a public/release channel?**
+{Yes/No}
+
 **Proposed App Status**
 {What's the current app status based off of current discussion or testing
 You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend}
