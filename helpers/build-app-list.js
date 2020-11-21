@@ -108,7 +108,7 @@ export default async function () {
     // console.log('commits', commits)
 
     // Save commits to file just in case
-    await fs.writeFile('./commits-data.json', JSON.stringify(commits))
+    // await fs.writeFile('./commits-data.json', JSON.stringify(commits))
 
 
     // Parse markdown
