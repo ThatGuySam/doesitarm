@@ -139,6 +139,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [Fantastical](https://flexibits.com/fantastical) - ✅ Yes, Full Native Apple Silicon Support - [Media Post](https://www.macrumors.com/2020/11/12/fantastical-update-for-macos-big-sur-apple-silicon/)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ✳️ Yes, works via Rosetta 2 as of v83 - [Release Notes](https://www.mozilla.org/en-US/firefox/83.0/releasenotes/) 
+* [flickery](https://eternalstorms.at/flickery) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.48 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [Glimpses](https://eternalstorms.at/glimpses) - ✅ Yes, Full Native Apple Silicon Support as of v2.2.3 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [IA Writer](https://apps.apple.com/us/app/ia-writer/id775737172) - ✅ Yes, Full Native Apple Silicon Support - [Official Twitter](https://twitter.com/iawriter/status/1326284671005696009?s=21)
 * [iStat Menus](https://bjango.com/mac/istatmenus/) - ✅ Yes, Full Native Apple Silicon Support as of v6.51 - [Official Twitter](https://twitter.com/bjango/status/1328863648270356482)
@@ -155,9 +157,13 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [OmniOutliner](https://www.omnigroup.com/omnioutliner) - ✅ Yes, Full Native Apple Silicon Support as of v5.8 - [Release Notes](https://www.omnigroup.com/releasenotes/omnioutliner)
 * [OmniPlan](https://www.omnigroup.com/omniplan) - ✅ Yes, Full Native Apple Silicon Support as of v4.2 - [Release Notes](https://www.omnigroup.com/releasenotes/omniplan)
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
+* [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Stata](https://www.stata.com/) - ✅ Yes, Full Native Apple Silicon Support as of v16, update level 10 Nov 2020 - [Blog Post](https://blog.stata.com/2020/11/10/stata-for-mac-with-apple-silicon/)
+* [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Ulysses](https://ulysses.app/) - ✅ Yes, Full Native Apple Silicon Support as of v21 - [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/)
+* [Yoink](https://eternalstorms.at/yoink/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.11 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 
 
 
