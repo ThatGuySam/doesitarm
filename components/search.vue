@@ -88,7 +88,7 @@
                                     <div class="search-item-options-container h-full flex justify-center md:justify-end items-center py-4 md:px-12">
 
                                         <div
-                                            v-if="noEmailSubscribe !== false"
+                                            v-if="!app.endpoint.includes('/game/')"
                                             class="subscribe space-y-6 sm:space-x-6"
                                         >
                                             <EmailSubscribe
