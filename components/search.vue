@@ -62,16 +62,25 @@
                                     <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
                                         {{ app.name.charAt(0) }}
                                     </div>
-                                    <div class="min-w-0 flex-1 px-4 md:mr-48">
+                                    <div class="min-w-0 flex-1 px-4 md:mr-48 space-y-2">
                                         <div class="text-sm leading-5 font-light truncate">
                                             <span v-if="app.endpoint.includes('/game/')">
                                                 🕹
                                             </span>
                                             {{ app.name }}
                                         </div>
-                                        <div class="mt-2 flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
+                                        <div class="flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
                                             {{ app.text }}
                                         </div>
+                                        <!-- app.lastUpdated: {{ app.lastUpdated }} -->
+                                        <client-only
+                                            v-if="app.lastUpdated"
+                                            placeholder="Loading..."
+                                        >
+                                            <small class="text-xs opacity-50">
+                                                <RelativeTime :timestamp="app.lastUpdated.timestamp" />
+                                            </small>
+                                        </client-only>
                                     </div>
                                     <svg
                                         class="h-5 w-5 text-gray-400"
@@ -122,6 +131,7 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 // import appList from '~/app-list.json'
 
 import EmailSubscribe from '~/components/email-subscribe.vue'
+import RelativeTime from '~/components/relative-time.vue'
 
 // import overlayStore from './mixins/store'
 // import modalRouter from '~/components/modals/mixins/router'
@@ -133,7 +143,8 @@ import EmailSubscribe from '~/components/email-subscribe.vue'
 
 export default {
     components: {
-        EmailSubscribe
+        EmailSubscribe,
+        RelativeTime
     },
     props: {
         appList: {
