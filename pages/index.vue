@@ -44,7 +44,7 @@ import gameList from '~/game-list.json'
 // console.log('gameList.length', gameList.length)
 
 function byTimeThenNull (appA, appB) {
-    console.log('appA.lastUpdated', appA.lastUpdated)
+    // console.log('appA.lastUpdated', appA.lastUpdated)
 
     // equal items sort equally
     if (appA.lastUpdated === appB.lastUpdated) {
