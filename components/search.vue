@@ -43,6 +43,8 @@
                             </defs>
                         </svg>
 
+                        <!-- seenItems: {{ seenItems }} -->
+
                         <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 bg-gradient-to-br from-darker to-dark neumorphic-shadow-outer px-5">
                             <li
                                 v-if="results.length === 0"
@@ -53,6 +55,8 @@
                             <li
                                 v-for="(app, i) in results"
                                 :key="`${app.slug}-${i}`"
+                                :ref="`${app.slug}-row`"
+                                :data-app-slug="app.slug"
                                 class="relative"
                             >
                                 <a
@@ -75,10 +79,20 @@
                                         <!-- app.lastUpdated: {{ app.lastUpdated }} -->
                                         <client-only
                                             v-if="app.lastUpdated"
-                                            placeholder="Loading..."
                                         >
-                                            <small class="text-xs opacity-50">
-                                                <RelativeTime :timestamp="app.lastUpdated.timestamp" />
+                                            <small
+                                                class="text-xs opacity-50"
+                                            >
+                                                <RelativeTime
+                                                    :timestamp="app.lastUpdated.timestamp"
+                                                    class="text-xs opacity-50"
+                                                />
+                                            </small>
+                                            <small
+                                                slot="placeholder"
+                                                class="text-xs opacity-50"
+                                            >
+                                                ⏳
                                             </small>
                                         </client-only>
                                     </div>
@@ -91,7 +105,7 @@
                                     </svg>
                                 </a>
 
-                                <client-only>
+                                <client-only v-if="seenItems[app.slug]">
                                     <div
                                         class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
                                     >
@@ -200,6 +214,10 @@ export default {
         return {
             // appList,
             query: '',
+            observer: null,
+            seenItems: Object.fromEntries(this.appList.map(app => {
+                return [app.slug, false]
+            })),
             // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
@@ -223,6 +241,9 @@ export default {
             return this.query.length > 0
         },
     },
+    beforeDestroy() {
+        this.observer.disconnect()
+    },
     // watch: {
     //     'store.mode': function (newMode) {
     //         // If we're showing the search
@@ -236,8 +257,20 @@ export default {
     //         }
     //     }
     // },
-    // mounted () {
-    // },
+    mounted () {
+        // console.log(this.$el)
+
+        this.observer = new IntersectionObserver(this.onElementObserved, {
+            // root: this.$el,
+            threshold: 1.0,
+        })
+
+        // Start observing all search rows
+        this.appList.forEach(app => {
+            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`][0])
+            this.observer.observe(this.$refs[`${app.slug}-row`][0])
+        })
+    },
     methods: {
         // Search priorities
         titleStartsWith (query, app) {
@@ -292,6 +325,21 @@ export default {
                 block: 'start',
                 behavior: 'smooth'
             })
+        },
+        onElementObserved(entries) {
+            entries.forEach(({ target, isIntersecting }) => {
+                if (!isIntersecting) {
+                    return
+                }
+
+                this.observer.unobserve(target)
+
+                // console.log('Observed target', target)
+
+                const appSlug = target.getAttribute('data-app-slug')
+
+                this.seenItems[appSlug] = true
+            });
         },
         queryResults (rawQuery) {
             // Clear any results from before
