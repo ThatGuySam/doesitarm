@@ -156,6 +156,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [OmniGraffle](https://www.omnigroup.com/omnigraffle) - ✅ Yes, Full Native Apple Silicon Support as of v7.18 - [Release Notes](https://www.omnigroup.com/releasenotes/omnigraffle)
 * [OmniOutliner](https://www.omnigroup.com/omnioutliner) - ✅ Yes, Full Native Apple Silicon Support as of v5.8 - [Release Notes](https://www.omnigroup.com/releasenotes/omnioutliner)
 * [OmniPlan](https://www.omnigroup.com/omniplan) - ✅ Yes, Full Native Apple Silicon Support as of v4.2 - [Release Notes](https://www.omnigroup.com/releasenotes/omniplan)
+* [PDF Viewer](https://pdfviewer.io/) - ✅ Yes, Full Native Apple Silicon Support as of v5.1 - [Blog Post](https://pdfviewer.io/blog/2020/pdf-viewer-5-1-for-ipad-iphone-mac/)
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
