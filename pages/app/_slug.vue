@@ -27,7 +27,7 @@
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                 <a
-                    :href="`https://github.com/ThatGuySam/doesitarm/issues/new?title=Update%20on%20${app.name}%20Support&body=Here's%20a%20link%20about%20it:&labels[]=App%20Update`"
+                    :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+${app.name}`"
                     target="_blank"
                     class="text-xs"
                     rel="noopener"
