@@ -61,6 +61,13 @@ function byTimeThenNull (appA, appB) {
     return appB.lastUpdated.timestamp - appA.lastUpdated.timestamp
 }
 
+const sortedAppList = appList.sort(byTimeThenNull)
+
+const mergedList = [
+    ...sortedAppList,
+    ...gameList
+]
+
 export default {
     components: {
         Search,
@@ -73,10 +80,7 @@ export default {
     },
     computed: {
         appList() {
-            return [
-                ...appList.sort(byTimeThenNull),
-                ...gameList
-            ]
+            return mergedList
         }
     }
 }
