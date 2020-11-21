@@ -11,7 +11,7 @@ assignees: ''
 **The official name of the app**
 {What's the full official name of the app}
 
-**Is there a supported build avialable on a public/release channel?**
+**Is there a supported build available on a public/release channel?**
 {Yes/No}
 
 **Proposed New App Status**
