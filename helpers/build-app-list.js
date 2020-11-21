@@ -2,6 +2,9 @@
 import { promises as fs } from 'fs'
 import MarkdownIt from 'markdown-it'
 import slugify from 'slugify'
+import axios from 'axios'
+
+import parseGithubDate from './parse-github-date'
 
 
 const md = new MarkdownIt()
@@ -13,6 +16,7 @@ export const statuses = {
     '⏹': 'no-in-progress',
     '🚫': 'no'
 }
+
 
 const getTokenLinks = function ( childTokens ) {
 
@@ -53,11 +57,59 @@ const getTokenLinks = function ( childTokens ) {
     return tokenList
 }
 
+
+const lookForLastUpdated = function (app, commits) {
+
+    for (const { node: commit } of commits) {
+
+        // console.log('commit', commit)
+
+        // $$ If message body contains endpoint
+        if (commit.messageBody.includes(app.endpoint)) {
+            // console.log('Found', app.name ,commit.committedDate)
+            return commit.committedDate
+        }
+
+        // $$ If message body contains App Name
+        if (commit.messageBody.includes(app.name)) {
+            // console.log('Found', app.name ,commit.committedDate)
+            return commit.committedDate
+        }
+
+        // $$ If message headline contains App Name
+        if (commit.messageHeadline.includes(app.name)) {
+            // console.log('Found', app.name ,commit.committedDate)
+            return commit.committedDate
+        }
+
+        // $$$ If commits comments contains endpoint
+        for (const { node: comment } of commit.comments.edges) {
+            if (comment.body.includes(app.endpoint)) {
+                // console.log('Found', app.name ,commit.committedDate)
+                return commit.committedDate
+            }
+        }
+
+    }
+
+    return null
+}
+
+
 export default async function () {
 
     const readmeContent = await fs.readFile('./README-temp.md', 'utf8')
-
     // console.log('readmeContent', readmeContent)
+
+    // Fetch Commits
+    const response = await axios.get(process.env.COMMITS_SOURCE)
+    // Extract commit from response data
+    const commits = response.data.data.viewer.repository.defaultBranchRef.target.history.edges
+    // console.log('commits', commits)
+
+    // Save commits to file just in case
+    await fs.writeFile('./commits-data.json', JSON.stringify(commits))
+
 
     // Parse markdown
     const result = md.parse(readmeContent)
@@ -119,6 +171,8 @@ export default async function () {
                 strict: true
             })
 
+            const endpoint = `/app/${appSlug}`
+
             let status = 'unknown'
 
             for (const statusKey in statuses) {
@@ -128,14 +182,22 @@ export default async function () {
                 }
             }
 
+            const lastUpdatedRaw = lookForLastUpdated({ name, endpoint }, commits)
+
+            const lastUpdated = (lastUpdatedRaw) ? {
+                raw: lastUpdatedRaw,
+                timestamp: parseGithubDate(lastUpdatedRaw).timestamp,
+            } : null
+
 
             appList.push({
                 name,
                 status,
+                lastUpdated,
                 url,
                 text,
                 slug: appSlug,
-                endpoint: `/app/${appSlug}`,
+                endpoint,
                 section: {
                     label: sectionTitle,
                     slug: sectionSlug

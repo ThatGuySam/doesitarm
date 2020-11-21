@@ -86,3 +86,4 @@ dist
 /README-temp.md
 /game-list.json
 .DS_Store
+/commits-data.json

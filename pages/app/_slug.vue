@@ -24,12 +24,19 @@
                 >{{ (i === 0) ? 'View' : link.label }}</LinkButton>
             </div>
 
-            <div class="report-links py-24 shadow-none">
+            <div class="report-links py-24 text-xs shadow-none">
+                <div v-if="app.lastUpdated">
+                    <time
+                        :datetime="app.lastUpdated.raw"
+                    >
+                        Last Updated {{ lastUpdatedFriendly }}
+                    </time>
+                </div>
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                 <a
                     :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+${app.name}`"
                     target="_blank"
-                    class="text-xs"
+                    class="underline"
                     rel="noopener"
                 >Report Update</a>
             </div>
@@ -38,6 +45,7 @@
 </template>
 
 <script>
+import parseGithubDate from '~/helpers/parse-github-date'
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
 import appList from '~/app-list.json'
@@ -53,6 +61,18 @@ export default {
         return {
             slug,
             app: appList.find(app => (app.slug === slug))
+        }
+    },
+    computed: {
+        lastUpdatedFriendly () {
+
+            if (this.app.lastUpdated === null) return
+
+            const options = { month: "long", day: "numeric", year: "numeric" }
+            const date = new Date(this.app.lastUpdated.raw)
+            const americanDate = new Intl.DateTimeFormat("en-US", options).format(date)
+
+            return americanDate
         }
     },
     head() {
