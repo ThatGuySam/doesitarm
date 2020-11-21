@@ -133,8 +133,8 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 
 // import appList from '~/app-list.json'
 
-import EmailSubscribe from '~/components/email-subscribe.vue'
-import RelativeTime from '~/components/relative-time.vue'
+// import EmailSubscribe from '~/components/email-subscribe.vue'
+// import RelativeTime from '~/components/relative-time.vue'
 
 // import overlayStore from './mixins/store'
 // import modalRouter from '~/components/modals/mixins/router'
@@ -146,8 +146,8 @@ import RelativeTime from '~/components/relative-time.vue'
 
 export default {
     components: {
-        EmailSubscribe,
-        RelativeTime
+        EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
+        RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
     },
     props: {
         appList: {
