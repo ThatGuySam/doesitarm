@@ -85,3 +85,4 @@ dist
 /app-list.json
 /README-temp.md
 /game-list.json
+.DS_Store
