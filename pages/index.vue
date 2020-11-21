@@ -13,11 +13,22 @@
                 @update:query="query = $event"
             />
 
-            <LinkButton
-                :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
-            >
-                Request an App
-            </LinkButton>
+            <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+                <LinkButton
+                    :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
+                    class="text-xs"
+                >
+                    Request an App with Github
+                </LinkButton>
+
+                <LinkButton
+                    :href="`https://twitter.com/DoesItARM/status/1330027384041508865`"
+                    class="text-xs"
+                >
+                    Request an App with Twitter
+                </LinkButton>
+            </div>
+
         </div>
     </section>
 </template>
