@@ -5,7 +5,7 @@ Lists of reported app support for macOS on ARM so far.
 
 Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
-[Twitter Updates](https://twitter.com/DoesItARM)
+[Twitter Updates](https://twitter.com/DoesItARM) [Do you have an M1?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
 
 ## Legend
 * ✅ Yes, Full Native Apple Silicon Support
