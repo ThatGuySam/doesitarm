@@ -25,7 +25,7 @@
         </div>
         <div
             ref="search-container"
-            class="search-container relative w-full py-8"
+            class="search-container relative w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark neumorphic-shadow-outer my-8"
         >
 
             <svg style="display: none;">
@@ -41,13 +41,18 @@
 
             <!-- seenItems: {{ seenItems }} -->
 
-            <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 bg-gradient-to-br from-darker to-dark neumorphic-shadow-outer px-5">
-                <li
-                    v-if="results.length === 0"
-                    class="text-center py-4"
-                >
-                    No apps found
-                </li>
+            <div
+                v-if="chunkedResults.length === 0"
+                class="text-center py-4"
+            >
+                No apps found
+            </div>
+
+            <ul
+                v-for="(results, i) in chunkedResults"
+                :key="`results-chunk-${i}`"
+                class="results-container divide-y divide-gray-700 px-5"
+            >
                 <li
                     v-for="(app, i) in results"
                     :key="`${app.slug}-${i}`"
@@ -234,6 +239,21 @@ export default {
                 ...this.sectionContainsResults,
                 ...this.statusResults
             ]
+        },
+        // Chunk results to avoid having a parent node with more than 60 child nodes.
+        chunkedResults () {
+
+            const results = [
+                ...this.results
+            ]
+
+            const size = 50
+            const chunks = []
+
+            while (results.length > 0)
+                chunks.push(results.splice(0, size))
+
+            return chunks
         },
         hasSearchInputText () {
             return this.query.length > 0
