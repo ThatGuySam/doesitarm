@@ -60,10 +60,12 @@
                         class="flex items-center hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
                         style="transition-property: border;"
                     >
-                        <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
-                            {{ app.name.charAt(0) }}
-                        </div>
-                        <div class="min-w-0 flex-1 px-4 md:mr-48 space-y-2">
+                        <client-only v-if="seenItems[app.slug]">
+                            <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                                {{ app.name.charAt(0) }}
+                            </div>
+                        </client-only>
+                        <div class="min-w-0 flex-1 px-4 md:ml-12 md:mr-48 pt-4 md:pt-0 space-y-2">
                             <div class="text-sm leading-5 font-light truncate">
                                 <template v-if="app.endpoint.includes('/game/')">
                                     🕹
@@ -93,13 +95,15 @@
                                 </small>
                             </client-only>
                         </div>
-                        <svg
-                            class="h-5 w-5 text-gray-400"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <use href="#chevron-right" />
-                        </svg>
+                        <client-only v-if="seenItems[app.slug]">
+                            <svg
+                                class="absolute right-0 h-5 w-5 text-gray-400"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <use href="#chevron-right" />
+                            </svg>
+                        </client-only>
                     </a>
 
                     <client-only v-if="seenItems[app.slug]">
@@ -107,7 +111,7 @@
                             class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
                         >
 
-                            <div class="search-item-options-container h-full flex justify-center md:justify-end items-center py-4 md:px-12">
+                            <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-12">
 
                                 <div
                                     v-if="!app.endpoint.includes('/game/')"
