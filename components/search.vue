@@ -25,7 +25,7 @@
         </div>
         <div
             ref="search-container"
-            class="search-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark neumorphic-shadow-outer my-8 px-5"
+            class="search-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark my-8 px-5"
         >
 
             <svg style="display: none;">
