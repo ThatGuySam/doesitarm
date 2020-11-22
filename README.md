@@ -33,6 +33,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
 * [Fork](https://git-fork.com/) - ✳️ Yes, works via Rosetta 2 - [Release notes](https://git-fork.com/releasenotes)
+* [Git](https://git-scm.com/download/mac) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/54#issuecomment-730568063)
 * [Go](https://golang.org/) - ✳️ Runs via Rosetta with native builds being tested - [Issue](https://github.com/golang/go/issues/38485)
 * [Godot Engine](https://godotengine.org/) - ⏹ No official binaries yet, but can be compiled from source - [Master PR](https://github.com/godotengine/godot/pull/39788), [v3.2 PR](https://github.com/godotengine/godot/pull/39943)
 * [Haskell](https://www.haskell.org/platform/mac.html) - 🚫 Not yet supported only works on Intel-based Macs - [Gitlab Issue](https://gitlab.haskell.org/ghc/ghc/-/issues/18664)
