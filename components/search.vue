@@ -70,16 +70,9 @@
                                 {{ app.name.charAt(0) }}
                             </div>
                         </client-only>
-                        <div class="min-w-0 flex-1 px-4 md:ml-12 md:mr-48 pt-4 md:pt-0 space-y-2">
-                            <div class="text-sm leading-5 font-light truncate">
-                                <template v-if="app.endpoint.includes('/game/')">
-                                    🕹
-                                </template>
-                                {{ app.name }}
-                            </div>
-                            <div class="flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
-                                {{ app.text }}
-                            </div>
+                        <div class="min-w-0 flex-1 text-sm whitespace-pre-line leading-7 md:ml-12 md:mr-48 pt-4 md:pt-0 pr-6 pl-4 md:px-4 space-y-2">
+                            <template v-if="app.endpoint.includes('/game/')">🕹</template> {{ app.name }}
+                            {{ app.text }}
                             <!-- app.lastUpdated: {{ app.lastUpdated }} -->
                             <client-only
                                 v-if="app.lastUpdated"
