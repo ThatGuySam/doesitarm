@@ -247,7 +247,7 @@ export default {
                 ...this.results
             ]
 
-            const size = 50
+            const size = 25
             const chunks = []
 
             while (results.length > 0)
