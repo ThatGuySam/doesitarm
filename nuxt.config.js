@@ -27,6 +27,8 @@ const storeAppList = async function (builder) {
     // console.log('builder.nuxt.options', builder.nuxt.options)
     await fs.writeFile(appListPath, JSON.stringify(appList))
     await fs.writeFile(gamesListPath, JSON.stringify(gamesList))
+
+    return
 }
 
 

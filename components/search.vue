@@ -25,105 +25,124 @@
         </div>
         <div
             ref="search-container"
-            class="search-container relative w-full"
+            class="search-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark my-8 px-5"
         >
-            <div class="search-wrapper flex justify-center">
-                <div class="search-scroller w-full relative">
 
-                    <div class="search-results py-8">
+            <svg style="display: none;">
+                <defs>
+                    <path
+                        id="chevron-right"
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                    />
+                </defs>
+            </svg>
 
-                        <svg style="display: none;">
-                            <defs>
-                                <path
-                                    id="chevron-right"
-                                    fill-rule="evenodd"
-                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                    clip-rule="evenodd"
-                                />
-                            </defs>
-                        </svg>
+            <!-- seenItems: {{ seenItems }} -->
 
-                        <ul class="results-container rounded-lg border border-gray-700 divide-y divide-gray-700 bg-gradient-to-br from-darker to-dark neumorphic-shadow-outer px-5">
-                            <li
-                                v-if="results.length === 0"
-                                class="text-center py-4"
-                            >
-                                No apps found
-                            </li>
-                            <li
-                                v-for="(app, i) in results"
-                                :key="`${app.slug}-${i}`"
-                                class="relative"
-                            >
-                                <a
-                                    :href="app.endpoint"
-                                    class="flex items-center hover:neumorphic-shadow hover:bg-gradient-to-br from-darkest to-dark focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
-                                >
-                                    <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
-                                        {{ app.name.charAt(0) }}
-                                    </div>
-                                    <div class="min-w-0 flex-1 px-4 md:mr-48 space-y-2">
-                                        <div class="text-sm leading-5 font-light truncate">
-                                            <span v-if="app.endpoint.includes('/game/')">
-                                                🕹
-                                            </span>
-                                            {{ app.name }}
-                                        </div>
-                                        <div class="flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
-                                            {{ app.text }}
-                                        </div>
-                                        <!-- app.lastUpdated: {{ app.lastUpdated }} -->
-                                        <client-only
-                                            v-if="app.lastUpdated"
-                                            placeholder="Loading..."
-                                        >
-                                            <small class="text-xs opacity-50">
-                                                <RelativeTime :timestamp="app.lastUpdated.timestamp" />
-                                            </small>
-                                        </client-only>
-                                    </div>
-                                    <svg
-                                        class="h-5 w-5 text-gray-400"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <use href="#chevron-right" />
-                                    </svg>
-                                </a>
-
-                                <client-only>
-                                    <div
-                                        class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
-                                    >
-
-                                        <div class="search-item-options-container h-full flex justify-center md:justify-end items-center py-4 md:px-12">
-
-                                            <div
-                                                v-if="!app.endpoint.includes('/game/')"
-                                                class="subscribe space-y-6 sm:space-x-6"
-                                            >
-                                                <EmailSubscribe
-                                                    :app-name="app.name"
-                                                    :input-class-groups="{
-                                                        shadow: 'hover:neumorphic-shadow',
-                                                        bg: '',
-                                                        focus: 'bg-transparent neumorphic-shadow pl-8',
-                                                        blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
-                                                    }"
-                                                    class="pointer-events-auto"
-                                                />
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </client-only>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
+            <div
+                v-if="chunkedResults.length === 0"
+                class="text-center py-4"
+            >
+                No apps found
             </div>
+
+            <ul
+                v-for="(results, i) in chunkedResults"
+                :key="`results-chunk-${i}`"
+                class="results-container divide-y divide-gray-700"
+            >
+                <li
+                    v-for="(app, i) in results"
+                    :key="`${app.slug}-${i}`"
+                    :ref="`${app.slug}-row`"
+                    :data-app-slug="app.slug"
+                    class="relative"
+                >
+                    <a
+                        :href="app.endpoint"
+                        class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-6 "
+                        style="transition-property: border;"
+                    >
+                        <template v-if="!seenItems[app.slug]">
+                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            <div class="text-sm leading-5 font-bold">
+                                {{ app.text }}
+                            </div>
+                        </template>
+                        <template v-else>
+                            <client-only>
+                                <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                                    {{ app.name.charAt(0) }}
+                                </div>
+                            </client-only>
+
+                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            <div class="text-sm leading-5 font-bold">
+                                {{ app.text }}
+                            </div>
+                            <!-- app.lastUpdated: {{ app.lastUpdated }} -->
+                            <client-only v-if="app.lastUpdated">
+                                <small
+                                    class="text-xs opacity-50"
+                                >
+                                    <RelativeTime
+                                        :timestamp="app.lastUpdated.timestamp"
+                                        class="text-xs opacity-50"
+                                    />
+                                </small>
+                                <small
+                                    slot="placeholder"
+                                    class="text-xs opacity-50"
+                                >
+                                    ⏳
+                                </small>
+                            </client-only>
+
+                            <client-only>
+                                <svg
+                                    class="absolute right-0 h-5 w-5 text-gray-400"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <use href="#chevron-right" />
+                                </svg>
+                            </client-only>
+                        </template>
+
+                    </a>
+
+                    <client-only v-if="seenItems[app.slug]">
+                        <div
+                            class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
+                        >
+
+                            <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-12">
+
+                                <div
+                                    v-if="!app.endpoint.includes('/game/')"
+                                    class="subscribe space-y-6 sm:space-x-6"
+                                >
+                                    <EmailSubscribe
+                                        :app-name="app.name"
+                                        :input-class-groups="{
+                                            shadow: 'hover:neumorphic-shadow',
+                                            bg: '',
+                                            focus: 'bg-transparent neumorphic-shadow pl-8',
+                                            blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
+                                        }"
+                                        class="pointer-events-auto"
+                                    />
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </client-only>
+                </li>
+            </ul>
+
         </div>
     </div>
 </template>
@@ -200,6 +219,10 @@ export default {
         return {
             // appList,
             query: '',
+            observer: null,
+            seenItems: Object.fromEntries(this.appList.map(app => {
+                return [app.slug, false]
+            })),
             // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
@@ -219,9 +242,27 @@ export default {
                 ...this.statusResults
             ]
         },
+        // Chunk results to avoid having a parent node with more than 60 child nodes.
+        chunkedResults () {
+
+            const results = [
+                ...this.results
+            ]
+
+            const size = 25
+            const chunks = []
+
+            while (results.length > 0)
+                chunks.push(results.splice(0, size))
+
+            return chunks
+        },
         hasSearchInputText () {
             return this.query.length > 0
         },
+    },
+    beforeDestroy() {
+        this.observer.disconnect()
     },
     // watch: {
     //     'store.mode': function (newMode) {
@@ -236,8 +277,20 @@ export default {
     //         }
     //     }
     // },
-    // mounted () {
-    // },
+    mounted () {
+        // console.log(this.$el)
+
+        this.observer = new IntersectionObserver(this.onElementObserved, {
+            // root: this.$el,
+            threshold: 1.0,
+        })
+
+        // Start observing all search rows
+        this.appList.forEach(app => {
+            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`][0])
+            this.observer.observe(this.$refs[`${app.slug}-row`][0])
+        })
+    },
     methods: {
         // Search priorities
         titleStartsWith (query, app) {
@@ -292,6 +345,21 @@ export default {
                 block: 'start',
                 behavior: 'smooth'
             })
+        },
+        onElementObserved(entries) {
+            entries.forEach(({ target, isIntersecting }) => {
+                if (!isIntersecting) {
+                    return
+                }
+
+                this.observer.unobserve(target)
+
+                // console.log('Observed target', target)
+
+                const appSlug = target.getAttribute('data-app-slug')
+
+                this.seenItems[appSlug] = true
+            });
         },
         queryResults (rawQuery) {
             // Clear any results from before
