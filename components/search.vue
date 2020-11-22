@@ -57,7 +57,8 @@
                 >
                     <a
                         :href="app.endpoint"
-                        class="flex items-center hover:neumorphic-shadow hover:bg-gradient-to-br from-darkest to-dark focus:outline-none focus:bg-gray-50 transition duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
+                        class="flex items-center hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
+                        style="transition-property: border;"
                     >
                         <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-darker">
                             {{ app.name.charAt(0) }}
