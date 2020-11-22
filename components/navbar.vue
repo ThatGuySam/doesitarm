@@ -6,10 +6,10 @@
             isOpen ? 'bg-blur' : ''
         ]"
     >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex">
-                    <div class="-ml-2 mr-2 flex items-center md:hidden">
+                    <div class="-ml-2 mr-2 flex items-center lg:hidden">
                         <!-- Mobile menu button -->
                         <button
                             :aria-expanded="isOpen ? 'true' : 'false'"
@@ -45,10 +45,10 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="flex-shrink-0 flex items-center text-4xl md:text-5xl py-3">
+                    <div class="flex-shrink-0 flex items-center text-4xl lg:text-5xl py-3">
                         <div>🦾</div>
                     </div>
-                    <div class="hidden md:ml-6 md:flex md:items-center space-x-4">
+                    <div class="hidden lg:ml-6 lg:flex lg:items-center space-x-4">
                         <a
                             v-for="(item, index) in items"
                             :key="index"
@@ -104,11 +104,11 @@
         -->
         <div
             :class="[
-                'md:hidden',
+                'lg:hidden',
                 isOpen ? 'block' : 'hidden'
             ]"
         >
-            <div class="px-2 pt-2 pb-3 sm:px-3">
+            <div class="px-2 pt-2 pb-3 lg:px-3">
                 <a
                     v-for="(item, index) in items"
                     :key="index"
