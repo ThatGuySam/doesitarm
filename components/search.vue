@@ -250,7 +250,7 @@ export default {
             while (results.length > 0)
                 chunks.push(results.splice(0, size))
 
-            return []
+            return chunks
         },
         hasSearchInputText () {
             return this.query.length > 0
