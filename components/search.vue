@@ -65,9 +65,9 @@
                         </div>
                         <div class="min-w-0 flex-1 px-4 md:mr-48 space-y-2">
                             <div class="text-sm leading-5 font-light truncate">
-                                <span v-if="app.endpoint.includes('/game/')">
+                                <template v-if="app.endpoint.includes('/game/')">
                                     🕹
-                                </span>
+                                </template>
                                 {{ app.name }}
                             </div>
                             <div class="flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
