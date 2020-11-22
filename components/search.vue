@@ -62,25 +62,28 @@
                 >
                     <a
                         :href="app.endpoint"
-                        class="flex items-center hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg -mx-5 px-4 py-4 sm:px-6"
+                        class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-6 "
                         style="transition-property: border;"
                     >
-                        <client-only v-if="seenItems[app.slug]">
-                            <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
-                                {{ app.name.charAt(0) }}
+                        <template v-if="!seenItems[app.slug]">
+                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            <div class="text-sm leading-5 font-bold">
+                                {{ app.text }}
                             </div>
-                        </client-only>
-                        <div class="min-w-0 flex-1 px-4 md:ml-12 md:mr-48 pt-4 md:pt-0 space-y-2">
-                            <div class="text-sm leading-5 font-light truncate">
-                                {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
-                            </div>
-                            <div class="flex items-center text-sm leading-5 text-gray-500 overflow-hidden">
+                        </template>
+                        <template v-else>
+                            <client-only>
+                                <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                                    {{ app.name.charAt(0) }}
+                                </div>
+                            </client-only>
+
+                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
                             <!-- app.lastUpdated: {{ app.lastUpdated }} -->
-                            <client-only
-                                v-if="app.lastUpdated"
-                            >
+                            <client-only v-if="app.lastUpdated">
                                 <small
                                     class="text-xs opacity-50"
                                 >
@@ -96,16 +99,18 @@
                                     ⏳
                                 </small>
                             </client-only>
-                        </div>
-                        <client-only v-if="seenItems[app.slug]">
-                            <svg
-                                class="absolute right-0 h-5 w-5 text-gray-400"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <use href="#chevron-right" />
-                            </svg>
-                        </client-only>
+
+                            <client-only>
+                                <svg
+                                    class="absolute right-0 h-5 w-5 text-gray-400"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <use href="#chevron-right" />
+                                </svg>
+                            </client-only>
+                        </template>
+
                     </a>
 
                     <client-only v-if="seenItems[app.slug]">
