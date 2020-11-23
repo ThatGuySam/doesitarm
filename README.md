@@ -82,10 +82,17 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 #### Music and Audio Tools
 
 * [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
+* [Airfoil](https://rogueamoeba.com/airfoil/mac/) - ⏹ No, not yet but support is in development - [Release Notes](https://rogueamoeba.com/airfoil/mac/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Audacity](https://www.audacityteam.org/download/) - ✳️ Yes, it works via Rosetta 2 with no reported issues - [Github Issue Comment](https://github.com/audacity/audacity/issues/684#issuecomment-710726323)
+* [Audio Hijack](https://rogueamoeba.com/audiohijack/) - ⏹ No, not yet but support is in development - [Release Notes](https://rogueamoeba.com/audiohijack/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Avid Pro Tools](https://www.avid.com/pro-tools) - 🚫 No official word yet.
+* [Farrago](https://rogueamoeba.com/farrago/) - ✳️ Yes, works via Rosetta 2 as of v1.5.3 - [Release Notes](https://rogueamoeba.com/farrago/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
+* [Fission](https://rogueamoeba.com/fission/) - ✳️ Yes, works via Rosetta 2 as of v2.6 - [Release Notes](https://rogueamoeba.com/fission/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Garageband](https://www.apple.com/mac/garageband/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1033)
 * [Logic Pro](https://www.apple.com/logic-pro/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1037)
+* [Loopback](https://rogueamoeba.com/loopback/) - ⏹ No, not yet but support is in development - [Release Notes](https://rogueamoeba.com/loopback/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
+* [Piezo](https://rogueamoeba.com/piezo/) - ⏹ No, not yet but support is in development - [Release Notes](https://rogueamoeba.com/piezo/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
+* [SoundSource](https://rogueamoeba.com/soundsource/) - ⏹ No, not yet but support is in development - [Release Notes](https://rogueamoeba.com/soundsource/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 
 
 
