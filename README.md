@@ -108,6 +108,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Inkscape](https://inkscape.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/11#issuecomment-731507162)
 * [Lightroom](https://www.adobe.com/products/photoshop-lightroom.html) - ✅ Yes, it was shown at WWDC - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5783)
 * [MacTeX](https://www.tug.org/mactex/mactex-download.html) - ✳️ Runs via Rosetta with native support currently in development - [Article](https://www.tug.org/mactex/aboutarm.html)
+* [Mail Designer 365](https://maildesigner365.com) -  ✅ Yes, fully native support as of v2.0 - [Official page](https://www.maildesigner365.com/new-mail-designer-365-2-0-with-big-sur-optimization/)
 * [Pixelmator Pro](https://pixelmator.com/pro) -  ✅ Yes, full native support as of v2.0
 * [Photoshop](https://www.adobe.com/products/photoshop.html) - ⏹ Not yet, but native support is in beta - [Beta Post](https://feedback.photoshop.com/conversations/photoshop-beta/photoshop-for-mac-arm-is-here/5fb359d3ca9d527a59c4677e) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5813)
 * [Textify](https://apps.apple.com/app/id1522041836) - ✅ Yes, full native support as of v2.0.1 - [Macrumors Thread](https://forums.macrumors.com/threads/textify-text-recognition-ocr-made-easy-and-accurate-1-product-of-the-day-ph.2245225/page-2?post=29016938#post-29016938)
@@ -186,6 +187,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Ulysses](https://ulysses.app/) - ✅ Yes, Full Native Apple Silicon Support as of v21 - [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/)
 * [VMWare Horizon Client](https://my.vmware.com/en/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_horizon_clients/horizon_8) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/297)
+* [VPN Tracker 365](https://www.vpntracker.com) - ✅ Yes, fully native IPsec, L2TP, OpenVPN, SonicWALL SSL VPN support as of v 21.0 - [Official page](https://www.vpntracker.com/us/VPN-Client-for-macOS-Big-Sur.html)
 * [Yoink](https://eternalstorms.at/yoink/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.11 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 
 
