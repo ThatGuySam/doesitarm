@@ -50,7 +50,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [MySQL Community Server](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
 * [MySQL Workbench](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
 * [NixOS](https://nixos.org/download.html) - 🚫 Not yet, but it’s in development - [Github Issue](https://github.com/NixOS/nixpkgs/issues/95903)
-* [NodeJS](https://nodejs.org/en/) - ✅ Working on v15 with patches to previous versions in the pipeline - [Platforms State of the Union Clip](https://twitter.com/blendertoday/status/1275417203303727104?lang=en)
+* [NodeJS](https://nodejs.org/en/) - ✳️ Yes, works via Rosetta 2 for Active LTS - [Version Support](https://github.com/ThatGuySam/doesitarm/issues/299#issuecomment-733210648) [Github Issue](https://github.com/nodejs/TSC/issues/886)
 * [Nova](https://nova.app) - ✅ Yes, Full Native Apple Silicon Support as of v3 - [Official Tweet](https://twitter.com/panic/status/1326977997732134912?s=20)
 * [OCaml](https://ocaml.org/) - 🚫 Not yet, but it's currently in beta. - [Pull Status](https://github.com/ocaml/ocaml/pull/9699)
 * [OpenJDK](https://openjdk.java.net/install/) - ⏹ Not yet, but there is an early build available. - [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
