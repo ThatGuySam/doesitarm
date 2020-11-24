@@ -197,6 +197,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [TeamViewer](https://www.teamviewer.com/en-us/) - ✅ Yes, Full Native Apple Silicon Support as of v15.12.4 - [Release Notes](https://community.teamviewer.com/t5/Change-Logs-EN/macOS-v15-12-4-Full-Change-Log/m-p/107706)
+
 * [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Ulysses](https://ulysses.app/) - ✅ Yes, Full Native Apple Silicon Support as of v21 - [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/)
