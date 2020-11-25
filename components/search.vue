@@ -290,6 +290,8 @@ export default {
             // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`][0])
             this.observer.observe(this.$refs[`${app.slug}-row`][0])
         })
+
+        console.log('appList', appList.length)
     },
     methods: {
         // Search priorities
