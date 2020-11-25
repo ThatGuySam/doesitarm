@@ -39,7 +39,7 @@
                 </defs>
             </svg>
 
-            <!-- seenItems: {{ seenItems }} -->
+            <!-- hasStartedAnyQuery: {{ hasStartedAnyQuery }} -->
 
             <div
                 v-if="chunkedResults.length === 0"
@@ -65,7 +65,7 @@
                         class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-6 "
                         style="transition-property: border;"
                     >
-                        <template v-if="!seenItems[app.slug]">
+                        <template v-if="seenItems[app.slug] === false && hasStartedAnyQuery === false">
                             {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
@@ -113,7 +113,7 @@
 
                     </a>
 
-                    <client-only v-if="seenItems[app.slug]">
+                    <client-only v-if="seenItems[app.slug] || hasStartedAnyQuery">
                         <div
                             class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
                         >
@@ -219,6 +219,7 @@ export default {
         return {
             // appList,
             query: '',
+            hasStartedAnyQuery: false,
             observer: null,
             seenItems: Object.fromEntries(this.appList.map(app => {
                 return [app.slug, false]
@@ -291,6 +292,7 @@ export default {
             this.observer.observe(this.$refs[`${app.slug}-row`][0])
         })
 
+        console.log('appList', this.appList.length)
     },
     methods: {
         // Search priorities
@@ -380,6 +382,8 @@ export default {
             // then bail
             if (rawQuery.length === 0) return
             const query = rawQuery.toLowerCase()
+
+            this.hasStartedAnyQuery = true
 
 
             // Search App List
