@@ -34,7 +34,7 @@ You can check the different statused here: https://github.com/ThatGuySam/doesita
 {Add any other context or screenshots about the app request here.}
 
 
-**Screenshot with Activity Monitor(if self reporting)**
+**Full Screenshot with the App and Activity Monitor(if self reporting)**
 {As screenshot with Activity Monitor open showing the App's architecture type}
 
 
