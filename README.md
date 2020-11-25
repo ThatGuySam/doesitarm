@@ -187,6 +187,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Highland 2](https://quoteunquoteapps.com/highland-2/) - ✅ Yes, Full Native Apple Silicon Support as of v2.9 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [IA Writer](https://apps.apple.com/us/app/ia-writer/id775737172) - ✅ Yes, Full Native Apple Silicon Support - [Official Twitter](https://twitter.com/iawriter/status/1326284671005696009?s=21)
 * [iStat Menus](https://bjango.com/mac/istatmenus/) - ✅ Yes, Full Native Apple Silicon Support as of v6.51 - [Official Twitter](https://twitter.com/bjango/status/1328863648270356482)
+* [IVPN](https://www.ivpn.net/apps-macos/) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/315)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
 * [Microsoft Excel](https://www.microsoft.com/en-us/microsoft-365/office-365) - ✅ Yes, it was shown at WWDC - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5758)
@@ -222,6 +223,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.11 - [Blog Post](https://betamagic.nl/news/2020/2020_09.html)
 * [Spotify](https://www.spotify.com/us/download/mac/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/172)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
+* [Tidal](https://tidal.com/download) - ✳️ Yes, working via Rosetta 2 but with occasional force quits as of 2.23.0.488 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/314)
 * [Vienna](https://github.com/ViennaRSS/vienna-rss/releases/latest) - ✅ Yes, Full Native Apple Silicon Support as of v3.6 - [Release Notes](https://github.com/ViennaRSS/vienna-rss/releases/tag/v/3.6.0)
 * [VLC](https://www.videolan.org/index.html) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/21#issuecomment-728969937) [VLC Forums](https://forum.videolan.org/viewtopic.php?f=32&t=154539&p=507398&hilit=apple+silicon#p507398)
 
