@@ -48,7 +48,7 @@
 import parseGithubDate from '~/helpers/parse-github-date'
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
-import appList from '~/app-list.json'
+import appList from '~/static/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {

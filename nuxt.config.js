@@ -12,7 +12,7 @@ const storeAppList = async function (builder) {
     const appListPath = path.join(
         // builder.nuxt.options.buildDir,
         builder.nuxt.options.srcDir,
-        '/app-list.json'
+        '/static/app-list.json'
     )
 
     const gamesListPath = path.join(
@@ -59,7 +59,7 @@ export default {
         },
         routes() {
             return Promise.all([
-                import('./app-list.json'),
+                import('./static/app-list.json'),
                 import('./game-list.json')
             ])
                 .then(([

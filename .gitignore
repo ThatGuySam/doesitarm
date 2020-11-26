@@ -82,7 +82,7 @@ dist
 
 
 # Other
-/app-list.json
+/static/app-list.json
 /README-temp.md
 /game-list.json
 .DS_Store
