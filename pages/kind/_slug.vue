@@ -41,14 +41,16 @@
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
+import { byTimeThenNull } from '~/helpers/sort-list.js'
+
 import appList from '~/static/app-list.json'
 
 export default {
     async asyncData ({ params: { slug } }) {
-
+        // Maybe I could import() here to reduce client script size
         return {
             slug,
-            app: appList.find(app => (app.slug === slug))
+            // app: appList.find(app => (app.slug === slug))
         }
     },
     components: {
@@ -67,9 +69,14 @@ export default {
             }).section
         },
         sectionAppList () {
-            return appList.filter(app => {
+
+            const list = appList.filter(app => {
                 return app.section.slug === this.slug
             })
+
+            const sortedList  = list.sort(byTimeThenNull)
+
+            return sortedList
         },
         supportedAppList () {
             return this.sectionAppList.filter(app => {
