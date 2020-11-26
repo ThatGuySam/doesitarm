@@ -1,5 +1,14 @@
 <template>
     <div class="search w-full">
+        <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
+
+            <ListSummary
+                :app-list="appList"
+                class="max-w-4xl"
+            />
+
+        </div>
+
         <div class="search-input relative">
             <input
                 id="search"
@@ -150,10 +159,11 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
-// import appList from '~/app-list.json'
+// import appList from '~/static/app-list.json'
 
 // import EmailSubscribe from '~/components/email-subscribe.vue'
 // import RelativeTime from '~/components/relative-time.vue'
+import ListSummary from '~/components/list-summary.vue'
 
 // import overlayStore from './mixins/store'
 // import modalRouter from '~/components/modals/mixins/router'
@@ -166,6 +176,7 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 export default {
     components: {
         EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
+        ListSummary,
         RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
     },
     props: {
