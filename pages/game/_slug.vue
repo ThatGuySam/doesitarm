@@ -14,7 +14,7 @@
                 />
             </div> -->
 
-            <small class="test-sm opacity-75 mb-4">
+            <small class="text-sm data-credit opacity-75 text-center mb-4">
                 <span>Data generously provided by </span>
                 <span>
                     <a

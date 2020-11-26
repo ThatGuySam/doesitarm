@@ -8,7 +8,7 @@
                 Games that are reported to support Apple Silicon
             </h2>
 
-            <small class="opacity-75">
+            <small class="data-credit opacity-75 text-center">
                 <span>Data generously provided by </span>
                 <span>
                     <a
