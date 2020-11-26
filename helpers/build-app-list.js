@@ -4,18 +4,12 @@ import MarkdownIt from 'markdown-it'
 import slugify from 'slugify'
 import axios from 'axios'
 
+import statuses from './statuses'
 import parseGithubDate from './parse-github-date'
 
 
 const md = new MarkdownIt()
 
-
-export const statuses = {
-    '✅': 'native',
-    '✳️': 'rosetta',
-    '⏹': 'no-in-progress',
-    '🚫': 'no'
-}
 
 
 const getTokenLinks = function ( childTokens ) {
