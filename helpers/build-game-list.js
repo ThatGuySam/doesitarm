@@ -32,11 +32,11 @@ function parseStatus(game) {
     if (game.Playable === 'no') return 'no'
 
     // Match status to Sheet Status
-    return statusesTranslations[game['Native/Rosetta']]
+    return statusesTranslations[game['Environment']]
     // for (const statusKey in statusesTranslations) {
-    //     console.log("game['Native/Rosetta']", game['Native/Rosetta'])
-    //     console.log('statuses[statusKey]', statusesTranslations[game['Native/Rosetta']])
-    //     if (game['Native/Rosetta'].includes(statusKey)) {
+    //     console.log("game['Environment']", game['Environment'])
+    //     console.log('statuses[statusKey]', statusesTranslations[game['Environment']])
+    //     if (game['Environment'].includes(statusKey)) {
     //         return statusesTranslations[statusKey]
     //     }
     // }
@@ -66,9 +66,9 @@ export default async function () {
         // then stop
         if (game.Games.length === 0) continue
 
-        // If there's no 'Native/Rosetta' status
+        // If there's no 'Environment' status
         // then stop
-        if (game['Native/Rosetta'].length === 0) continue
+        if (game['Environment'].length === 0) continue
 
         // Generate slug
         const slug = slugify(game.Games, {
