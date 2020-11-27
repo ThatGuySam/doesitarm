@@ -9,6 +9,8 @@ import buildGamesList from './helpers/build-game-list.js'
 const storeAppList = async function (builder) {
     // TODO: Make DRY
 
+    console.log('Build Lists started')
+
     const appListPath = path.join(
         // builder.nuxt.options.buildDir,
         builder.nuxt.options.srcDir,
@@ -21,12 +23,23 @@ const storeAppList = async function (builder) {
         '/static/game-list.json'
     )
 
-    const appList = await buildAppList()
-    const gamesList = await buildGamesList()
+    // const appList = await buildAppList()
+    // const gamesList = await buildGamesList()
 
-    // console.log('builder.nuxt.options', builder.nuxt.options)
-    await fs.writeFile(appListPath, JSON.stringify(appList))
-    await fs.writeFile(gamesListPath, JSON.stringify(gamesList))
+    const [
+        appList,
+        gamesList
+    ] = await Promise.all([
+        buildAppList(),
+        buildGamesList()
+    ])
+
+    await Promise.all([
+        fs.writeFile(appListPath, JSON.stringify(appList)),
+        fs.writeFile(gamesListPath, JSON.stringify(gamesList))
+    ])
+
+    console.log('Finished building JSON Lists')
 
     return
 }
