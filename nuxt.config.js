@@ -6,46 +6,53 @@ import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
 
 
-const storeAppList = async function (builder) {
-    // TODO: Make DRY
+const listsOptions = [
+    {
+        buildMethod: buildAppList,
+        path: '/static/app-list.json',
+        route: app => '/app/' + app.slug
+    },
+    {
+        buildMethod: buildGamesList,
+        path: '/static/game-list.json',
+        route: app => '/game/' + app.slug
+    }
+]
+
+
+const storeAppLists = async function (builder) {
 
     console.log('Build Lists started')
 
-    const appListPath = path.join(
-        // builder.nuxt.options.buildDir,
-        builder.nuxt.options.srcDir,
-        '/static/app-list.json'
-    )
+    const savedLists = await Promise.all(listsOptions.map(async list => {
 
-    const gamesListPath = path.join(
-        // builder.nuxt.options.buildDir,
-        builder.nuxt.options.srcDir,
-        '/static/game-list.json'
-    )
+        // Run the build method
+        const builtList = await list.buildMethod()
 
-    // const appList = await buildAppList()
-    // const gamesList = await buildGamesList()
+        // Make the relative path for our new JSON file
+        const listFullPath = `.${list.path}`
 
-    const [
-        appList,
-        gamesList
-    ] = await Promise.all([
-        buildAppList(),
-        buildGamesList()
-    ])
+        // console.log('listFullPath', listFullPath)
 
-    await Promise.all([
-        fs.writeFile(appListPath, JSON.stringify(appList)),
-        fs.writeFile(gamesListPath, JSON.stringify(gamesList))
-    ])
+        // Write the list to JSON
+        await fs.writeFile(listFullPath, JSON.stringify(builtList))
 
-    console.log('Finished building JSON Lists')
+        // Read back the JSON we just wrote to ensure it exists
+        const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
 
-    return
+        // console.log('savedListJSON', savedListJSON)
+
+        const savedList = JSON.parse(savedListJSON)
+
+        // Import the created JSON File
+        return savedList
+    }))
+
+    console.log('Build Lists finished')
+
+    return savedLists
 }
 
-
-// console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
 
 export default {
     target: 'static',
@@ -56,10 +63,10 @@ export default {
     */
     hooks: {
         build: {
-            before: storeAppList
+            before: storeAppLists
         },
         generate: {
-            before: storeAppList
+            before: storeAppLists
         }
     },
 
@@ -71,34 +78,45 @@ export default {
             ]
         },
         routes() {
-            return Promise.all([
-                import('./static/app-list.json'),
-                import('./static/game-list.json')
-            ])
-                .then(([
-                    importedAppList,
-                    importedGameList
-                ]) => {
-                    const appList = importedAppList.default
-                    const gameList = importedGameList.default
+            return Promise.all(listsOptions.map(async list => {
+                const listPath = `.${list.path}`
+
+                // Read JSON to ensure it exists
+                const savedListJSON = await fs.readFile(listPath, 'utf-8')
+
+                // Parse the saved JSON into a variable
+                const savedList = JSON.parse(savedListJSON)
+
+                // Pass on the variable
+                return savedList
+            }))
+                .then(( lists ) => {
                     // console.log('appList', appList)
 
-                    const appRoutes = appList.map(app => ({
-                        route: '/app/' + app.slug,
-                        // payload: appList
-                    }))
+                    // const appRoutes = appList.map(app => ({
+                    //     route: '/app/' + app.slug,
+                    //     // payload: appList
+                    // }))
 
-                    const gameRoutes = gameList.map(game => ({
-                        route: '/game/' + game.slug,
-                        // payload: appList
-                    }))
+                    // const gameRoutes = gameList.map(game => ({
+                    //     route: '/game/' + game.slug,
+                    //     // payload: appList
+                    // }))
 
                     const sectionList = []
 
-                    appList.forEach(app => {
-                        if (sectionList.includes(app.section.slug)) return
+                    const [
+                        appRoutes,
+                        gameRoutes
+                    ] = lists.map((list, listI) => {
+                        return list.map( app => {
+                            // Find and store all sections
+                            if (sectionList.includes(app.section.slug) == false) {
+                                sectionList.push(app.section.slug)
+                            }
 
-                        sectionList.push(app.section.slug)
+                            return app.endpoint
+                        })
                     })
 
                     const sectionRoutes = sectionList.map(slug => ({
