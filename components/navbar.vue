@@ -143,24 +143,8 @@ export default {
                     url: '/',
                 },
                 {
-                    label: 'Developer Tools',
-                    url: '/kind/developer-tools',
-                },
-                {
-                    label: 'Music Tools',
-                    url: '/kind/music-and-audio-tools',
-                },
-                {
-                    label: 'Video and Motion Tools',
-                    url: '/kind/video-and-motion-tools',
-                },
-                {
-                    label: 'Photo Tools',
-                    url: '/kind/photo-and-graphic-tools',
-                },
-                {
-                    label: 'Entertainment',
-                    url: '/kind/entertainment-and-media-apps',
+                    label: 'Categories',
+                    url: '/categories',
                 },
                 {
                     label: 'Games',

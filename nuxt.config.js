@@ -10,12 +10,10 @@ const listsOptions = [
     {
         buildMethod: buildAppList,
         path: '/static/app-list.json',
-        route: app => '/app/' + app.slug
     },
     {
         buildMethod: buildGamesList,
         path: '/static/game-list.json',
-        route: app => '/game/' + app.slug
     }
 ]
 
