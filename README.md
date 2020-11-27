@@ -269,7 +269,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 ## More Apple Silicon Lists
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
-* [Games on Apple Silicon](https://twitter.com/__tosh/status/1329099180476928002) - List of reported Games support including performance info. 
+* [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
 * [MacRumors List](https://forums.macrumors.com/threads/universal-and-native-apple-silicon-apps.2267176/) - List of Universal and Native Apple Silicon Apps
 * [RoaringApps](https://roaringapps.com/collections/list-of-apple-silicon-native-apps) - List of apps ready for Apple Silicon M1 chip Macs
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA

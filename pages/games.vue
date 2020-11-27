@@ -8,22 +8,7 @@
                 Games that are reported to support Apple Silicon
             </h2>
 
-            <small class="data-credit opacity-75 text-center">
-                <span>Data generously provided by </span>
-                <span>
-                    <a
-                        href="https://twitter.com/__tosh"
-                        class="font-bold"
-                    >Thomas Schranz</a>
-                </span>
-                <span>via</span>
-                <span>
-                    <a
-                        href="https://twitter.com/__tosh/status/1329099180476928002"
-                        class="font-bold"
-                    >Games and Apps on Apple Silicon</a>
-                </span>
-            </small>
+            <ThomasCredit />
 
             <Search
                 :app-list="gameList"
@@ -33,7 +18,7 @@
             />
 
             <LinkButton
-                :href="`https://twitter.com/__tosh/status/1329099180476928002`"
+                :href="`https://forms.gle/29GWt85i1G1L7Ttj8`"
             >
                 Report a Game
             </LinkButton>
@@ -44,13 +29,15 @@
 <script>
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
+import ThomasCredit from '~/components/thomas-credit.vue'
 
 import gameList from '~/static/game-list.json'
 
 export default {
     components: {
         Search,
-        LinkButton
+        LinkButton,
+        ThomasCredit
     },
     data: function () {
         return {

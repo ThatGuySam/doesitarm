@@ -14,22 +14,7 @@
                 />
             </div> -->
 
-            <small class="text-sm data-credit opacity-75 text-center mb-4">
-                <span>Data generously provided by </span>
-                <span>
-                    <a
-                        href="https://twitter.com/__tosh"
-                        class="font-bold"
-                    >Thomas Schranz</a>
-                </span>
-                <span>via</span>
-                <span>
-                    <a
-                        href="https://twitter.com/__tosh/status/1329099180476928002"
-                        class="font-bold"
-                    >Games and Apps on Apple Silicon</a>
-                </span>
-            </small>
+            <ThomasCredit />
 
             <div class="links space-y-6 sm:space-x-6 mb-8">
                 <LinkButton
@@ -105,7 +90,7 @@
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                 <a
-                    :href="`https://twitter.com/__tosh/status/1329099180476928002`"
+                    :href="`https://forms.gle/29GWt85i1G1L7Ttj8`"
                     target="_blank"
                     class="text-xs"
                     rel="noopener"
@@ -118,13 +103,17 @@
 <script>
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
+import ThomasCredit from '~/components/thomas-credit.vue'
+
 import gameList from '~/static/game-list.json'
+
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {
     components: {
         LinkButton,
-        EmailSubscribe
+        EmailSubscribe,
+        ThomasCredit
     },
     async asyncData ({ params: { slug } }) {
 
