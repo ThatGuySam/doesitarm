@@ -217,6 +217,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Parcel](https://parcelapp.net/) - ✅ Yes, Full Native Apple Silicon Support as of 6.6 - [Tweet](https://twitter.com/parcel_app/status/1325751301322362880)
 * [PDF Viewer](https://pdfviewer.io/) - ✅ Yes, Full Native Apple Silicon Support as of v5.1 - [Blog Post](https://pdfviewer.io/blog/2020/pdf-viewer-5-1-for-ipad-iphone-mac/)
 * [Planny 4](https://www.kevinreutter.de/planny-4/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
+* [Post-it®](https://apps.apple.com/app/post-it/id1475777828) - ✳️ Yes, runs via Rosetta 2, with native support coming soon - [Source](https://github.com/ThatGuySam/doesitarm/issues/197#issuecomment-732100064)
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
