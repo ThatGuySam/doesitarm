@@ -118,7 +118,7 @@
 <script>
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
-import gameList from '~/game-list.json'
+import gameList from '~/static/game-list.json'
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {

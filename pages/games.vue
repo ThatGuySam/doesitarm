@@ -45,7 +45,7 @@
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
-import gameList from '~/game-list.json'
+import gameList from '~/static/game-list.json'
 
 export default {
     components: {

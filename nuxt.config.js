@@ -18,7 +18,7 @@ const storeAppList = async function (builder) {
     const gamesListPath = path.join(
         // builder.nuxt.options.buildDir,
         builder.nuxt.options.srcDir,
-        '/game-list.json'
+        '/static/game-list.json'
     )
 
     const appList = await buildAppList()
@@ -60,7 +60,7 @@ export default {
         routes() {
             return Promise.all([
                 import('./static/app-list.json'),
-                import('./game-list.json')
+                import('./static/game-list.json')
             ])
                 .then(([
                     importedAppList,

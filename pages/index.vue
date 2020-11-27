@@ -40,7 +40,7 @@ import LinkButton from '~/components/link-button.vue'
 import { byTimeThenNull } from '~/helpers/sort-list.js'
 
 import appList from '~/static/app-list.json'
-import gameList from '~/game-list.json'
+import gameList from '~/static/game-list.json'
 
 // console.log('appList.length', appList.length)
 // console.log('gameList.length', gameList.length)
