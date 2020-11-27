@@ -44,6 +44,12 @@ import LinkButton from '~/components/link-button.vue'
 import { byTimeThenNull } from '~/helpers/sort-list.js'
 
 import appList from '~/static/app-list.json'
+import gamelist from '~/static/game-list.json'
+
+const allList = [
+    ...appList.sort(byTimeThenNull),
+    ...gamelist,
+]
 
 export default {
     async asyncData ({ params: { slug } }) {
@@ -64,19 +70,19 @@ export default {
     },
     computed: {
         section () {
-            return appList.find(app => {
+            return allList.find(app => {
                 return app.section.slug === this.slug
             }).section
         },
         sectionAppList () {
 
-            const list = appList.filter(app => {
+            const filteredList = allList.filter(app => {
                 return app.section.slug === this.slug
             })
 
-            const sortedList  = list.sort(byTimeThenNull)
+            // const sortedList = list.sort(byTimeThenNull)
 
-            return sortedList
+            return filteredList
         },
         supportedAppList () {
             return this.sectionAppList.filter(app => {
