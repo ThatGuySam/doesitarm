@@ -143,6 +143,10 @@ export default {
                     url: '/',
                 },
                 {
+                    label: 'Categories',
+                    url: '/categories',
+                },
+                {
                     label: 'Developer Tools',
                     url: '/kind/developer-tools',
                 },
