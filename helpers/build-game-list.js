@@ -18,28 +18,39 @@ import axios from 'axios'
 const statusesTranslations = {
     'Native': 'native',
     'Rosetta': 'rosetta',
+    // 'CrossOver': 'rosetta',
     // '': 'no'
 }
 
 const statusesMessages = {
-    'native': '✅ Yes, Full Native Apple Silicon Support',
-    'rosetta': '✳️ Yes, works via Rosetta 2',
-    'no': '🚫 No, not yet supported only works on Intel-based Macs'
+    'Native': '✅ Yes, Full Native Apple Silicon Support',
+    'Rosetta': '✳️ Yes, works via Rosetta 2',
+    // 'CrossOver': '✳️ Yes, works via Rosetta 2',
+    // 'no': '🚫 No, not yet supported only works on Intel-based Macs'
+}
+
+function isPlayable(game) {
+    return game.Playable.toLowerCase() === 'yes'
+}
+
+function environmentName(game) {
+    return game['Environment'].trim()
+}
+
+
+function getStatusText(game) {
+    if (isPlayable(game) === false) return '🚫 No, not yet supported only works on Intel-based Macs'
+
+    // Match status to Sheet Status
+    return statusesMessages[environmentName(game)]
 }
 
 
 function parseStatus(game) {
-    if (game.Playable === 'no') return 'no'
+    if (isPlayable(game) === false) return 'no'
 
     // Match status to Sheet Status
-    return statusesTranslations[game['Environment']]
-    // for (const statusKey in statusesTranslations) {
-    //     console.log("game['Environment']", game['Environment'])
-    //     console.log('statuses[statusKey]', statusesTranslations[game['Environment']])
-    //     if (game['Environment'].includes(statusKey)) {
-    //         return statusesTranslations[statusKey]
-    //     }
-    // }
+    return statusesTranslations[environmentName(game)]
 }
 
 export default async function () {
@@ -63,12 +74,17 @@ export default async function () {
     for (const game of gamesSheet) {
 
         // If there's no title
-        // then stop
+        // then skip this report
         if (game.Games.length === 0) continue
 
         // If there's no 'Environment' status
-        // then stop
-        if (game['Environment'].length === 0) continue
+        // then skip this report
+        if (environmentName(game).length === 0) continue
+
+        // If this game is playable
+        // BUT it's 'Environment' status is not in statusesTranslations
+        // then skip this report
+        if (isPlayable(game) && statusesTranslations.hasOwnProperty(environmentName(game)) === false) continue
 
         // Generate slug
         const slug = slugify(game.Games, {
@@ -104,7 +120,7 @@ export default async function () {
             name: game.Games,
             status,
             url: `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
-            text: statusesMessages[status],
+            text: getStatusText(game),
             slug,
             endpoint: `/game/${slug}`,
             section: {
