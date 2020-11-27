@@ -17,12 +17,12 @@
                     <!-- section.endpoint: {{ section.endpoint }} -->
                     <a
                         :href="`/kind/${section.slug}`"
-                        class="flex justify-start items-center inset-x-0 text-3xl md:text-4xl hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-x-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-6"
+                        class="flex justify-start items-center inset-x-0 text-3xl md:text-4xl hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-x-3 -mx-5 px-5 md:pr-64 py-3"
                         style="transition-property: border;"
                     >
                         <div class="font-hairline">
                             <div>{{ section.label }}</div>
-                            <div>{{ section.label }}</div>
+                            <div class="text-xs opacity-75 mb-3">{{ section.appNames.slice(0, 25).join(', ') }}, etc...</div>
                         </div>
                         <div>➔</div>
                     </a>
@@ -61,9 +61,16 @@ export default {
 
             // console.log('app.section.slug', app.section.slug)
 
-            if (sectionList.hasOwnProperty(app.section.slug)) return
+            if (sectionList.hasOwnProperty(app.section.slug)) {
+                sectionList[app.section.slug].appNames.push(app.name)
 
-            sectionList[app.section.slug] = app.section
+                return
+            }
+
+            sectionList[app.section.slug] = {
+                ...app.section,
+                appNames: [ app.name ]
+            }
         })
 
         return {
