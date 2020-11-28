@@ -9,7 +9,8 @@
             </h2>
 
             <Search
-                :app-list="appList"
+                :app-list="allList"
+                :initial-limit="200"
                 @update:query="query = $event"
             />
 
@@ -37,22 +38,17 @@
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
-import { byTimeThenNull } from '~/helpers/sort-list.js'
-
-import appList from '~/static/app-list.json'
-import gameList from '~/static/game-list.json'
-
-// console.log('appList.length', appList.length)
-// console.log('gameList.length', gameList.length)
-
-const sortedAppList = appList.sort(byTimeThenNull)
-
-const mergedList = [
-    ...sortedAppList,
-    ...gameList
-]
-
 export default {
+    async asyncData () {
+        // const { default: appList } = await import('~/static/app-list.json')
+        // const { default: gamelist } = await import('~/static/game-list.json')
+
+        const { allList } = await import('~/helpers/get-list.js')
+
+        return {
+            allList
+        }
+    },
     components: {
         Search,
         LinkButton
@@ -60,11 +56,6 @@ export default {
     data: function () {
         return {
             query: '',
-        }
-    },
-    computed: {
-        appList() {
-            return mergedList
         }
     }
 }
