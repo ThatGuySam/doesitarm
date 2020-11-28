@@ -194,7 +194,8 @@ export default async function () {
                 endpoint,
                 section: {
                     label: sectionTitle,
-                    slug: sectionSlug
+                    slug: sectionSlug,
+                    icon: ''
                 },
                 content: token.content,
                 relatedLinks

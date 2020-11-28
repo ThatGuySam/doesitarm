@@ -76,7 +76,7 @@
                         style="transition-property: border;"
                     >
                         <template v-if="seenItems[app.slug] === false && hasStartedAnyQuery === false">
-                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            {{ app.section.icon.length !== 0 ? `${app.section.icon} ${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
@@ -89,7 +89,7 @@
                                 </div>
                             </client-only>
 
-                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            {{ app.section.icon.length !== 0 ? `${app.section.icon} ${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
