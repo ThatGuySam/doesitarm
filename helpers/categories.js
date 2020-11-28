@@ -72,7 +72,13 @@ export const categories = {
         label: 'Games',
         pluralLabel: 'Games',
         slug: 'games',
-        icon: '🎮'
+        icon: '🎮',
+        requestLinks: [
+            {
+                href: 'https://forms.gle/29GWt85i1G1L7Ttj8',
+                label: 'Request a Game'
+            }
+        ]
     },
     'homebrew': {
         ...categoryTemplate,

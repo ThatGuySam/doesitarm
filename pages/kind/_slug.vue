@@ -18,20 +18,33 @@
                 @update:query="query = $event"
             />
 
-            <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
-                <LinkButton
-                    :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
-                    class="text-xs"
-                >
-                    Request an App with Github
-                </LinkButton>
 
-                <LinkButton
-                    :href="`https://twitter.com/DoesItARM/status/1330027384041508865`"
-                    class="text-xs"
-                >
-                    Request an App with Twitter
-                </LinkButton>
+            <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+                <template v-if="category.requestLinks">
+                    <LinkButton
+                        v-for="link in category.requestLinks"
+                        :key="link.label"
+                        :href="link.href"
+                        class="text-xs"
+                    >
+                        {{ link.label }}
+                    </LinkButton>
+                </template>
+                <template v-else>
+                    <LinkButton
+                        :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
+                        class="text-xs"
+                    >
+                        Request an App with Github
+                    </LinkButton>
+
+                    <LinkButton
+                        :href="`https://twitter.com/DoesItARM/status/1330027384041508865`"
+                        class="text-xs"
+                    >
+                        Request an App with Twitter
+                    </LinkButton>
+                </template>
             </div>
 
         </div>
