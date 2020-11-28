@@ -150,9 +150,7 @@ export default async function () {
             slug,
             endpoint: `/formula/${slug}`,
             section: {
-                label: 'Homebrew',
-                slug: 'homebrew',
-                icon: '🍺'
+                slug: 'homebrew'
             },
             content: formulae.comments,
             relatedLinks: [

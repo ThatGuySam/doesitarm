@@ -7,6 +7,8 @@
 
             <div class="line-separator border-white border-t-2 mb-12" />
 
+            <!-- sectionList: {{ sectionList }} -->
+
             <ul class="categories-list space-y-3">
                 <li
                     v-for="(section, i) in sectionList"
@@ -22,7 +24,7 @@
                     >
                         <div class="font-hairline">
                             <div>{{ section.label }}</div>
-                            <div class="text-xs opacity-75 mb-3">{{ section.appNames.slice(0, 25).join(', ') }}, etc...</div>
+                            <div class="text-xs opacity-75 mb-3">{{ section.appNames }}</div>
                         </div>
                         <div>➔</div>
                     </a>
@@ -48,6 +50,7 @@ export default {
         // const { default: gamelist } = await import('~/static/game-list.json')
 
         const { allList } = await import('~/helpers/get-list.js')
+        const { categories } = await import('~/helpers/categories.js')
 
         const sectionList = {}
 
@@ -57,16 +60,25 @@ export default {
             // console.log('app.section.slug', app.section.slug)
 
             if (sectionList.hasOwnProperty(app.section.slug)) {
-                sectionList[app.section.slug].appNames.push(app.name)
+                sectionList[app.section.slug].appNamesList.push(app.name)
 
                 return
             }
 
             sectionList[app.section.slug] = {
-                ...app.section,
-                appNames: [ app.name ]
+                ...categories[app.section.slug],
+                appNamesList: [ app.name ]
             }
         })
+
+        // Add App Names Text into sectionList
+        Object.keys(sectionList).map(function(key, index) {
+            const section = sectionList[key]
+            sectionList[key] = {
+                ...section,
+                appNames: section.appNamesList.slice(0, 25).join(', ') + ', etc...'
+            }
+        });
 
         return {
             sectionList

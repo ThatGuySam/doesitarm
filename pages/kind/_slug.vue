@@ -2,8 +2,9 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
-                {{ section.label }} that are reported to support Apple Silicon
+                {{ section.pluralLabel || section.label }} that are reported to support Apple Silicon
             </h1>
+
             <h2
                 v-if="supportedAppList.length !== 0"
                 class="subtitle md:text-xl font-light text-center"
@@ -43,6 +44,8 @@ import LinkButton from '~/components/link-button.vue'
 
 import { byTimeThenNull } from '~/helpers/sort-list.js'
 
+import { categories } from '~/helpers/categories.js'
+
 import appList from '~/static/app-list.json'
 import gamelist from '~/static/game-list.json'
 import homebrewList from '~/static/homebrew-list.json'
@@ -72,9 +75,7 @@ export default {
     },
     computed: {
         section () {
-            return allList.find(app => {
-                return app.section.slug === this.slug
-            }).section
+            return categories[this.slug]
         },
         sectionAppList () {
 
@@ -92,9 +93,7 @@ export default {
             }).map(app => app.name)
         },
         title () {
-            if (!this.section.label.includes('Tools')) return `List of ${this.section.label} Apps that work on Apple Silicon?`
-
-            return `List of ${this.section.label} that work on Apple Silicon?`
+            return `List of ${this.section.pluralLabel || this.section.label} that work on Apple Silicon?`
         }
     },
     head() {

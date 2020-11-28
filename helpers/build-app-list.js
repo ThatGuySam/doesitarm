@@ -193,9 +193,7 @@ export default async function () {
                 slug: appSlug,
                 endpoint,
                 section: {
-                    label: sectionTitle,
-                    slug: sectionSlug,
-                    icon: ''
+                    slug: sectionSlug
                 },
                 content: token.content,
                 relatedLinks
