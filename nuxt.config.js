@@ -1,9 +1,10 @@
 import { promises as fs } from 'fs'
-import path from 'path'
+// import path from 'path'
 
 import pkg from './package'
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
+import buildHomebrewList from './helpers/build-homebrew-list.js'
 
 
 const listsOptions = [
@@ -14,6 +15,10 @@ const listsOptions = [
     {
         buildMethod: buildGamesList,
         path: '/static/game-list.json',
+    },
+    {
+        buildMethod: buildHomebrewList,
+        path: '/static/homebrew-list.json',
     }
 ]
 
@@ -91,21 +96,12 @@ export default {
                 .then(( lists ) => {
                     // console.log('appList', appList)
 
-                    // const appRoutes = appList.map(app => ({
-                    //     route: '/app/' + app.slug,
-                    //     // payload: appList
-                    // }))
-
-                    // const gameRoutes = gameList.map(game => ({
-                    //     route: '/game/' + game.slug,
-                    //     // payload: appList
-                    // }))
-
                     const sectionList = []
 
                     const [
                         appRoutes,
-                        gameRoutes
+                        gameRoutes,
+                        homebrewRoutes
                     ] = lists.map((list, listI) => {
                         return list.map( app => {
                             // Find and store all sections
@@ -117,6 +113,8 @@ export default {
                         })
                     })
 
+                    // console.log('homebrewRoutes', homebrewRoutes)
+
                     const sectionRoutes = sectionList.map(slug => ({
                         route: '/kind/' + slug,
                         // payload: appList
@@ -125,6 +123,7 @@ export default {
                     return [
                         ...appRoutes,
                         ...gameRoutes,
+                        ...homebrewRoutes,
                         ...sectionRoutes
                     ]
                 })
