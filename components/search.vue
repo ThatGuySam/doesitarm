@@ -246,10 +246,11 @@ export default {
         }
     },
     computed: {
+        initialList () {
+            return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
+        },
         results () {
-            if (!this.hasSearchInputText) {
-                return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
-            }
+            if (!this.hasSearchInputText) return this.initialList
 
             return [
                 ...this.titleStartsWithResults,
@@ -302,12 +303,17 @@ export default {
         })
 
         // Start observing all search rows
-        this.appList.forEach(app => {
-            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`][0])
+        this.initialList.forEach(app => {
+            if (this.$refs.hasOwnProperty(`${app.slug}-row`) === false) {
+                console.log('App Row not found', app)
+                return
+            }
+
+            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`])
             this.observer.observe(this.$refs[`${app.slug}-row`][0])
         })
 
-        console.log('appList', this.appList.length)
+        console.log('this.initialList', this.initialList.length)
     },
     methods: {
         getAppCategory,
