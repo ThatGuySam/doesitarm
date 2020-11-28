@@ -188,14 +188,14 @@ export default async function () {
                 name,
                 status,
                 lastUpdated,
-                url,
+                // url,
                 text,
                 slug: appSlug,
                 endpoint,
                 category: {
                     slug: categorySlug
                 },
-                content: token.content,
+                // content: token.content,
                 relatedLinks
             })
         }

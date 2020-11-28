@@ -119,7 +119,7 @@ export default async function () {
         gameList.push({
             name: game.Games,
             status,
-            url: `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
+            // url: `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
             text: getStatusText(game),
             slug,
             endpoint: `/game/${slug}`,

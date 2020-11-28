@@ -145,7 +145,7 @@ export default async function () {
         formulaeList.push({
             name: formulae.name,
             status: parseStatus(formulae),
-            url: `https://formulae.brew.sh/formula/${formulae.name}`,
+            // url: `https://formulae.brew.sh/formula/${formulae.name}`,
             text: getStatusText(formulae),
             slug,
             endpoint: `/formula/${slug}`,
