@@ -181,7 +181,7 @@ export default {
             },
             {
                 'property':  'twitter:image',
-                'content': `${process.env.URL}/images/og-image.png`
+                'content': `${process.env.URL}/images/mark.png`
             }
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
