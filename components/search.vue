@@ -192,6 +192,10 @@ export default {
             type: Boolean,
             default: false
         },
+        initialLimit: {
+            type: Number,
+            default: null
+        },
         quickButtons: {
             type: Array,
             default: () => [
@@ -249,7 +253,9 @@ export default {
     },
     computed: {
         results () {
-            if (!this.hasSearchInputText) return this.appList
+            if (!this.hasSearchInputText) {
+                return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
+            }
 
             return [
                 ...this.titleStartsWithResults,
