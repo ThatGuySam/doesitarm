@@ -76,7 +76,7 @@
                         style="transition-property: border;"
                     >
                         <template v-if="seenItems[app.slug] === false && hasStartedAnyQuery === false">
-                            {{ app.section.icon.length !== 0 ? `${app.section.icon} ${app.name}` : app.name }}
+                            {{ getAppCategory(app).icon ? `${getAppCategory(app).icon} ${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
@@ -89,7 +89,7 @@
                                 </div>
                             </client-only>
 
-                            {{ app.section.icon.length !== 0 ? `${app.section.icon} ${app.name}` : app.name }}
+                            {{ getAppCategory(app).icon ? `${getAppCategory(app).icon} ${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
@@ -163,19 +163,13 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
+import { getAppCategory } from '~/helpers/categories.js'
 // import appList from '~/static/app-list.json'
 
 // import EmailSubscribe from '~/components/email-subscribe.vue'
 // import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
 
-// import overlayStore from './mixins/store'
-// import modalRouter from '~/components/modals/mixins/router'
-// import Card from '~/components/cards/Default.vue'
-// import CardsRow from '~/components/cards/Row.vue'
-// import ComingSoonImage from '~/components/partials/ComingSoonImage.vue'
-// import InfoCircle from '~/assets/svg/info-circle.svg?inline'
-// import PlayCircle from '~/assets/svg/play-circle.svg?inline'
 
 export default {
     components: {
@@ -246,21 +240,22 @@ export default {
             // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
-            sectionContainsResults: [],
+            categoryContainsResults: [],
             statusResults: [],
             // store: overlayStore.state
         }
     },
     computed: {
+        initialList () {
+            return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
+        },
         results () {
-            if (!this.hasSearchInputText) {
-                return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
-            }
+            if (!this.hasSearchInputText) return this.initialList
 
             return [
                 ...this.titleStartsWithResults,
                 ...this.titleContainsResults,
-                ...this.sectionContainsResults,
+                ...this.categoryContainsResults,
                 ...this.statusResults
             ]
         },
@@ -308,14 +303,20 @@ export default {
         })
 
         // Start observing all search rows
-        this.appList.forEach(app => {
-            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`][0])
+        this.initialList.forEach(app => {
+            if (this.$refs.hasOwnProperty(`${app.slug}-row`) === false) {
+                console.log('App Row not found', app)
+                return
+            }
+
+            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`])
             this.observer.observe(this.$refs[`${app.slug}-row`][0])
         })
 
-        console.log('appList', this.appList.length)
+        console.log('this.initialList', this.initialList.length)
     },
     methods: {
+        getAppCategory,
         // Search priorities
         titleStartsWith (query, app) {
             const matches = app.name.toLowerCase().startsWith(query)
@@ -331,10 +332,10 @@ export default {
             }
             return matches
         },
-        sectionContains (query, app) {
-            const matches = app.section.label.toLowerCase().includes(query)
+        categoryContains (query, app) {
+            const matches = getAppCategory(app).label.toLowerCase().includes(query)
             if (matches) {
-                this.sectionContainsResults.push(app)
+                this.categoryContainsResults.push(app)
             }
             return matches
         },
@@ -389,7 +390,7 @@ export default {
             // Clear any results from before
             this.titleStartsWithResults = []
             this.titleContainsResults = []
-            this.sectionContainsResults = []
+            this.categoryContainsResults = []
             this.statusResults = []
 
 
@@ -412,7 +413,7 @@ export default {
                 const matchers = [
                     this.titleStartsWith,
                     this.titleContains,
-                    this.sectionContains,
+                    this.categoryContains,
                     this.statusIs
                 ]
 

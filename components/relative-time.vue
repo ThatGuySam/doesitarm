@@ -10,7 +10,7 @@ import parseGithubDate from '~/helpers/parse-github-date'
 export default {
     props: {
         timestamp: {
-            type: String,
+            type: Number,
             required: true
         }
     },

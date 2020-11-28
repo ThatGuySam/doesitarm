@@ -7,22 +7,24 @@
 
             <div class="line-separator border-white border-t-2 mb-12" />
 
+            <!-- categoryList: {{ categoryList }} -->
+
             <ul class="categories-list space-y-3">
                 <li
-                    v-for="(section, i) in sectionList"
-                    :key="`${section.slug}-${i}`"
-                    :ref="`${section.slug}-row`"
+                    v-for="(category, i) in categoryList"
+                    :key="`${category.slug}-${i}`"
+                    :ref="`${category.slug}-row`"
                     class="relative"
                 >
-                    <!-- section.endpoint: {{ section.endpoint }} -->
+                    <!-- category.endpoint: {{ category.endpoint }} -->
                     <a
-                        :href="`/kind/${section.slug}`"
+                        :href="`/kind/${category.slug}`"
                         class="flex justify-start items-center inset-x-0 text-3xl md:text-4xl hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-x-3 -mx-5 px-5 md:pr-64 py-3"
                         style="transition-property: border;"
                     >
                         <div class="font-hairline">
-                            <div>{{ section.label }}</div>
-                            <div class="text-xs opacity-75 mb-3">{{ section.appNames.slice(0, 25).join(', ') }}, etc...</div>
+                            <div>{{ category.label }}</div>
+                            <div class="text-xs opacity-75 mb-3">{{ category.appNames }}</div>
                         </div>
                         <div>➔</div>
                     </a>
@@ -48,28 +50,38 @@ export default {
         // const { default: gamelist } = await import('~/static/game-list.json')
 
         const { allList } = await import('~/helpers/get-list.js')
+        const { categories } = await import('~/helpers/categories.js')
 
-        const sectionList = {}
+        const categoryList = {}
 
         allList.forEach( app => {
-            // Find and store all sections
+            // Find and store all categorys
 
-            // console.log('app.section.slug', app.section.slug)
+            // console.log('app.category.slug', app.category.slug)
 
-            if (sectionList.hasOwnProperty(app.section.slug)) {
-                sectionList[app.section.slug].appNames.push(app.name)
+            if (categoryList.hasOwnProperty(app.category.slug)) {
+                categoryList[app.category.slug].appNamesList.push(app.name)
 
                 return
             }
 
-            sectionList[app.section.slug] = {
-                ...app.section,
-                appNames: [ app.name ]
+            categoryList[app.category.slug] = {
+                ...categories[app.category.slug],
+                appNamesList: [ app.name ]
             }
         })
 
+        // Add App Names Text into categoryList
+        Object.keys(categoryList).map(function(key, index) {
+            const category = categoryList[key]
+            categoryList[key] = {
+                ...category,
+                appNames: category.appNamesList.slice(0, 25).join(', ') + ', etc...'
+            }
+        });
+
         return {
-            sectionList
+            categoryList
         }
     },
     components: {
@@ -80,8 +92,8 @@ export default {
         return {}
     },
     // computed: {
-    //     sectionList () {
-    //         return sectionList
+    //     categoryList () {
+    //         return categoryList
     //     }
     // },
     head() {

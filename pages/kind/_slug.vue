@@ -2,8 +2,9 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
-                {{ section.label }} that are reported to support Apple Silicon
+                {{ category.pluralLabel || category.label }} that are reported to support Apple Silicon
             </h1>
+
             <h2
                 v-if="supportedAppList.length !== 0"
                 class="subtitle md:text-xl font-light text-center"
@@ -12,7 +13,7 @@
             </h2>
 
             <Search
-                :app-list="sectionAppList"
+                :app-list="categoryAppList"
                 :quick-buttons="[]"
                 @update:query="query = $event"
             />
@@ -43,6 +44,8 @@ import LinkButton from '~/components/link-button.vue'
 
 import { byTimeThenNull } from '~/helpers/sort-list.js'
 
+import { categories, getAppCategory } from '~/helpers/categories.js'
+
 import appList from '~/static/app-list.json'
 import gamelist from '~/static/game-list.json'
 import homebrewList from '~/static/homebrew-list.json'
@@ -71,15 +74,13 @@ export default {
         }
     },
     computed: {
-        section () {
-            return allList.find(app => {
-                return app.section.slug === this.slug
-            }).section
+        category () {
+            return categories[this.slug]
         },
-        sectionAppList () {
+        categoryAppList () {
 
             const filteredList = allList.filter(app => {
-                return app.section.slug === this.slug
+                return app.category.slug === this.slug
             })
 
             // const sortedList = list.sort(byTimeThenNull)
@@ -87,14 +88,12 @@ export default {
             return filteredList
         },
         supportedAppList () {
-            return this.sectionAppList.filter(app => {
+            return this.categoryAppList.filter(app => {
                 return app.status.includes('yes')
             }).map(app => app.name)
         },
         title () {
-            if (!this.section.label.includes('Tools')) return `List of ${this.section.label} Apps that work on Apple Silicon?`
-
-            return `List of ${this.section.label} that work on Apple Silicon?`
+            return `List of ${this.category.pluralLabel || this.category.label} that work on Apple Silicon?`
         }
     },
     head() {

@@ -6,6 +6,8 @@ import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 
+import { categories } from './helpers/categories.js'
+
 
 const listsOptions = [
     {
@@ -96,26 +98,19 @@ export default {
                 .then(( lists ) => {
                     // console.log('appList', appList)
 
-                    const sectionList = []
-
                     const [
                         appRoutes,
                         gameRoutes,
                         homebrewRoutes
                     ] = lists.map((list, listI) => {
                         return list.map( app => {
-                            // Find and store all sections
-                            if (sectionList.includes(app.section.slug) == false) {
-                                sectionList.push(app.section.slug)
-                            }
-
                             return app.endpoint
                         })
                     })
 
                     // console.log('homebrewRoutes', homebrewRoutes)
 
-                    const sectionRoutes = sectionList.map(slug => ({
+                    const categoryRoutes = Object.keys(categories).map( slug => ({
                         route: '/kind/' + slug,
                         // payload: appList
                     }))
@@ -124,7 +119,7 @@ export default {
                         ...appRoutes,
                         ...gameRoutes,
                         ...homebrewRoutes,
-                        ...sectionRoutes
+                        ...categoryRoutes
                     ]
                 })
         }
