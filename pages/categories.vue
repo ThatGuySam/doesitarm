@@ -38,21 +38,16 @@
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
-import { byTimeThenNull } from '~/helpers/sort-list.js'
-
 // import appList from '~/static/app-list.json'
 // import gamelist from '~/static/game-list.json'
 
 export default {
     async asyncData () {
 
-        const { default: appList } = await import('~/static/app-list.json')
-        const { default: gamelist } = await import('~/static/game-list.json')
+        // const { default: appList } = await import('~/static/app-list.json')
+        // const { default: gamelist } = await import('~/static/game-list.json')
 
-        const allList = [
-            ...appList.sort(byTimeThenNull),
-            ...gamelist,
-        ]
+        const { allList } = await import('~/helpers/get-list.js')
 
         const sectionList = {}
 

@@ -19,6 +19,8 @@
     "axios": "^0.21.0",
     "cross-env": "^5.2.0",
     "markdown-it": "^11.0.1",
+    "marked": "^1.2.5",
+    "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
     "scroll-into-view-if-needed": "^2.2.26",
     "slugify": "^1.4.5",

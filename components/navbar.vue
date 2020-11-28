@@ -147,6 +147,10 @@ export default {
                     url: '/categories',
                 },
                 {
+                    label: 'Homebrew',
+                    url: '/kind/homebrew',
+                },
+                {
                     label: 'Games',
                     url: '/games',
                 },

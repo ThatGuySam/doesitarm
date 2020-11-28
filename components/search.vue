@@ -76,7 +76,7 @@
                         style="transition-property: border;"
                     >
                         <template v-if="seenItems[app.slug] === false && hasStartedAnyQuery === false">
-                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            {{ app.section.icon.length !== 0 ? `${app.section.icon} ${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
@@ -89,7 +89,7 @@
                                 </div>
                             </client-only>
 
-                            {{ app.endpoint.includes('/game/') ? `🕹${app.name}` : app.name }}
+                            {{ app.section.icon.length !== 0 ? `${app.section.icon} ${app.name}` : app.name }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ app.text }}
                             </div>
@@ -192,6 +192,10 @@ export default {
             type: Boolean,
             default: false
         },
+        initialLimit: {
+            type: Number,
+            default: null
+        },
         quickButtons: {
             type: Array,
             default: () => [
@@ -249,7 +253,9 @@ export default {
     },
     computed: {
         results () {
-            if (!this.hasSearchInputText) return this.appList
+            if (!this.hasSearchInputText) {
+                return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
+            }
 
             return [
                 ...this.titleStartsWithResults,

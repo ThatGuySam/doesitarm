@@ -85,5 +85,6 @@ dist
 /static/app-list.json
 /README-temp.md
 /static/game-list.json
+/static/homebrew-list.json
 .DS_Store
 /commits-data.json

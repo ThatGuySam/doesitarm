@@ -125,7 +125,8 @@ export default async function () {
             endpoint: `/game/${slug}`,
             section: {
                 label: 'Games',
-                slug: 'games'
+                slug: 'games',
+                icon: '🎮'
             },
             content: '',
             relatedLinks: [

@@ -45,9 +45,11 @@ import { byTimeThenNull } from '~/helpers/sort-list.js'
 
 import appList from '~/static/app-list.json'
 import gamelist from '~/static/game-list.json'
+import homebrewList from '~/static/homebrew-list.json'
 
 const allList = [
     ...appList.sort(byTimeThenNull),
+    ...homebrewList,
     ...gamelist,
 ]
 
