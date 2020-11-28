@@ -144,6 +144,26 @@ export default {
                 hid: 'description',
                 name: 'description',
                 content: pkg.description
+            },
+            {
+                'property':  'og:image',
+                'content': `${process.env.URL}/images/og-image.png`
+            },
+            {
+                'property':  'og:image:width',
+                'content': '1200'
+            },
+            {
+                'property':  'og:image:height',
+                'content': '627'
+            },
+            {
+                'property':  'og:image:alt',
+                'content': 'Does It ARM Logo'
+            },
+            {
+                'property':  'twitter:image',
+                'content': `${process.env.URL}/images/og-image.png`
             }
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
