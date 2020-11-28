@@ -123,7 +123,7 @@ export default async function () {
             text: getStatusText(game),
             slug,
             endpoint: `/game/${slug}`,
-            section: {
+            category: {
                 slug: 'games'
             },
             content: '',

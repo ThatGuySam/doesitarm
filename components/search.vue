@@ -240,7 +240,7 @@ export default {
             // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
-            sectionContainsResults: [],
+            categoryContainsResults: [],
             statusResults: [],
             // store: overlayStore.state
         }
@@ -254,7 +254,7 @@ export default {
             return [
                 ...this.titleStartsWithResults,
                 ...this.titleContainsResults,
-                ...this.sectionContainsResults,
+                ...this.categoryContainsResults,
                 ...this.statusResults
             ]
         },
@@ -326,10 +326,10 @@ export default {
             }
             return matches
         },
-        sectionContains (query, app) {
+        categoryContains (query, app) {
             const matches = getAppCategory(app).label.toLowerCase().includes(query)
             if (matches) {
-                this.sectionContainsResults.push(app)
+                this.categoryContainsResults.push(app)
             }
             return matches
         },
@@ -384,7 +384,7 @@ export default {
             // Clear any results from before
             this.titleStartsWithResults = []
             this.titleContainsResults = []
-            this.sectionContainsResults = []
+            this.categoryContainsResults = []
             this.statusResults = []
 
 
@@ -407,7 +407,7 @@ export default {
                 const matchers = [
                     this.titleStartsWith,
                     this.titleContains,
-                    this.sectionContains,
+                    this.categoryContains,
                     this.statusIs
                 ]
 

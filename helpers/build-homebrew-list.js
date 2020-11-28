@@ -149,7 +149,7 @@ export default async function () {
             text: getStatusText(formulae),
             slug,
             endpoint: `/formula/${slug}`,
-            section: {
+            category: {
                 slug: 'homebrew'
             },
             content: formulae.comments,

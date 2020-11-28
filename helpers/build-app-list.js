@@ -128,8 +128,8 @@ export default async function () {
 
     const appList = []
 
-    let sectionSlug = 'start'
-    let sectionTitle = 'Start'
+    let categorySlug = 'start'
+    let categoryTitle = 'Start'
     let isHeading = false
     let isParagraph = false
 
@@ -143,13 +143,13 @@ export default async function () {
 
 
         if (isHeading && token.type === 'inline') {
-            sectionTitle = token.content
-            sectionSlug = slugify(token.content, {
+            categoryTitle = token.content
+            categorySlug = slugify(token.content, {
                 lower: true,
                 strict: true
             })
 
-            // appList[sectionSlug] = []
+            // appList[categorySlug] = []
         }
 
 
@@ -192,15 +192,15 @@ export default async function () {
                 text,
                 slug: appSlug,
                 endpoint,
-                section: {
-                    slug: sectionSlug
+                category: {
+                    slug: categorySlug
                 },
                 content: token.content,
                 relatedLinks
             })
         }
 
-        // appList[sectionSlug]
+        // appList[categorySlug]
 
 
         // console.log('token', token)

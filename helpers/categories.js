@@ -86,5 +86,8 @@ export const categories = {
 
 
 export function getAppCategory (app) {
-    return categories[app.section.slug]
+    if (typeof app.category === 'undefined') {
+        console.log('app', app)
+    }
+    return categories[app.category.slug]
 }
