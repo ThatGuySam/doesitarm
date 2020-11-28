@@ -33,7 +33,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Cyberduck](https://cyberduck.io/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/333)
 * [DBeaver](https://dbeaver.io/) - 🚫 No, only works on Intel-based Macs - [Issue Tracking](https://github.com/dbeaver/dbeaver/issues/8525)
 * [Deno](https://deno.land/) - ✳️ Yes, works via Rosetta 2 - [Issue](https://github.com/denoland/deno/issues/8346)
-* [Docker](https://www.docker.com/products#/mac) - 🚫 Not yet, but it’s in development - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
+* [Docker](https://www.docker.com/products#/mac) - 🚫 Not yet, but it’s in development - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409) [Workaround](https://finestructure.co/blog/2020/11/27/running-docker-on-apple-silicon-m1)
 * [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
 * [Flutter](https://flutter.dev/docs/get-started/install/macos) - ✳️ Yes, works via Rosetta 2 with native support in development - [Github Issue](https://github.com/flutter/flutter/issues/60118#issuecomment-695341296)
@@ -272,5 +272,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
 * [MacRumors List](https://forums.macrumors.com/threads/universal-and-native-apple-silicon-apps.2267176/) - List of Universal and Native Apple Silicon Apps
 * [RoaringApps](https://roaringapps.com/collections/list-of-apple-silicon-native-apps) - List of apps ready for Apple Silicon M1 chip Macs
+* [Laravel Supported Apps](https://laravelm1.tighten.co/) - List of Laravel-related apps and their status on Apple SIlicon
+* [Big List](https://airtable.com/shribWFi8yrG9B1nh/tbl6aypsMfuofEaJi) - An Airtable List of over 400 apps and their support on Big Sur and Apple Silicon
+* [Awais Mirza Video Tests](https://www.youtube.com/playlist?list=PLz5rnvLVJX5XF8cXAOQuarPIeP8Xr7b1_) - A series of videos demonstrating M1 support on various popular apps
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
 
