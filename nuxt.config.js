@@ -161,6 +161,24 @@ export default {
                 'property':  'og:image:alt',
                 'content': 'Does It ARM Logo'
             },
+
+            // Twitter Card
+            {
+                'property':  'twitter:card',
+                'content': 'summary'
+            },
+            {
+                'property':  'twitter:title',
+                'content': 'Does It ARM'
+            },
+            {
+                'property':  'twitter:description',
+                'content': pkg.description
+            },
+            {
+                'property':  'twitter:url',
+                'content': `${process.env.URL}`
+            },
             {
                 'property':  'twitter:image',
                 'content': `${process.env.URL}/images/og-image.png`
