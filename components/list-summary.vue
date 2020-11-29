@@ -85,7 +85,15 @@ export default {
                     percent: this.unsupportedPercent,
                     verbiage: `are not working. `
                 },
-            ]
+            ].filter( percentage => {
+                const isZero = (percentage.percent === 0)
+                const isUnreported = (percentage.emoji === '🔶')
+
+                // Filter out
+                if (isUnreported && isZero) return false
+
+                return true
+            })
         },
         nonEmptyPercentages () {
             return this.percentages.filter(percentage => {
