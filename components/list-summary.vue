@@ -76,7 +76,7 @@ export default {
                     bgColor: 'bg-orange-500',
                     emoji: '🔶',
                     percent: this.unreportedPercent,
-                    verbiage: `are not yet reported, `
+                    verbiage: `need more info, `
                 },
                 {
                     textColor: 'text-red',
