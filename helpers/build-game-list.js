@@ -18,6 +18,7 @@ import axios from 'axios'
 const statusesTranslations = {
     'Native': 'native',
     'Rosetta': 'rosetta',
+    '': 'unreported'
     // 'CrossOver': 'rosetta',
     // '': 'no'
 }
@@ -27,6 +28,14 @@ const statusesMessages = {
     'Rosetta': '✳️ Yes, works via Rosetta 2',
     // 'CrossOver': '✳️ Yes, works via Rosetta 2',
     // 'no': '🚫 No, not yet supported only works on Intel-based Macs'
+}
+
+function isUnknown(game) {
+    const playableStatus = game.Playable.toLowerCase()
+    return ![
+        'yes',
+        'no'
+    ].includes(playableStatus)
 }
 
 function isPlayable(game) {
@@ -39,6 +48,8 @@ function environmentName(game) {
 
 
 function getStatusText(game) {
+    if (isUnknown(game)) return '🔶 Unknown, more info needed'
+
     if (isPlayable(game) === false) return '🚫 No, not yet supported only works on Intel-based Macs'
 
     // Match status to Sheet Status
@@ -47,6 +58,8 @@ function getStatusText(game) {
 
 
 function parseStatus(game) {
+    if (isUnknown(game)) return 'unreported'
+
     if (isPlayable(game) === false) return 'no'
 
     // Match status to Sheet Status
