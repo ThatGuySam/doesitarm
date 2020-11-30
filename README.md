@@ -14,6 +14,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * ✳️ Yes, works via Rosetta 2
 * ⏹ No, not working at all but support is in development
 * 🚫 No, not yet supported only works on Intel-based Macs
+* 🔶 Unknown, more info needed
 
 
 ## The Apps
