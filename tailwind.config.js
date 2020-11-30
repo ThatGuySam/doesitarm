@@ -40,7 +40,7 @@ module.exports = {
                 'gold': 'rgb(255, 167, 102)',
                 // 'gold': 'rgb(222, 115, 90)',
 
-                'orange': 'rgb(222, 115, 90)',
+                // 'orange': '#ed8936',
 
                 'off_white': '#ecebe6',
 

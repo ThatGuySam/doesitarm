@@ -47,6 +47,7 @@ export default {
         return {
             nativePercent: null,
             rosettaPercent: null,
+            unreportedPercent: null,
             unsupportedPercent: null
         }
     },
@@ -71,13 +72,28 @@ export default {
                     verbiage: `run via Rosetta 2, `
                 },
                 {
+                    textColor: 'text-orange-500',
+                    bgColor: 'bg-orange-500',
+                    emoji: '🔶',
+                    percent: this.unreportedPercent,
+                    verbiage: `need more info, `
+                },
+                {
                     textColor: 'text-red',
                     bgColor: 'bg-red',
                     emoji: '🚫',
                     percent: this.unsupportedPercent,
                     verbiage: `are not working. `
                 },
-            ]
+            ].filter( percentage => {
+                const isZero = (percentage.percent === 0)
+                const isUnreported = (percentage.emoji === '🔶')
+
+                // Filter out
+                if (isUnreported && isZero) return false
+
+                return true
+            })
         },
         nonEmptyPercentages () {
             return this.percentages.filter(percentage => {
@@ -113,7 +129,9 @@ export default {
 
         this.nativePercent = Number((( totals['native'] / this.total ) * 100).toFixed(1))
         this.rosettaPercent = Number((( totals['rosetta'] / this.total ) * 100).toFixed(1))
-        this.unsupportedPercent = Number((100 - (this.nativePercent + this.rosettaPercent)).toFixed(1))
+        this.unreportedPercent = Number((( totals['unreported'] / this.total ) * 100).toFixed(1))
+
+        this.unsupportedPercent = Number((100 - (this.nativePercent + this.rosettaPercent + this.unreportedPercent)).toFixed(1))
 
         // console.log('this.nativePercent', this.nativePercent)
         // console.log('this.unsupportedPercent', this.unsupportedPercent)
