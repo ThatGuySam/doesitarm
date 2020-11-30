@@ -126,7 +126,7 @@
 
                     </a>
 
-                    <client-only v-if="seenItems[app.slug] || hasStartedAnyQuery">
+                    <!-- <client-only v-if="seenItems[app.slug] || hasStartedAnyQuery">
                         <div
                             class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
                         >
@@ -152,7 +152,7 @@
                             </div>
 
                         </div>
-                    </client-only>
+                    </client-only> -->
                 </li>
             </ul>
 
@@ -173,7 +173,7 @@ import ListSummary from '~/components/list-summary.vue'
 
 export default {
     components: {
-        EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
+        // EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
         ListSummary,
         RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
     },
