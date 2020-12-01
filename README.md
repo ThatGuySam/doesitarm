@@ -246,6 +246,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 #### Entertainment and Media Apps
 
 * [DOSBox](https://sourceforge.net/projects/dosbox/) - ✳️ Yes, it works via Rosetta 2 - [Project Ticket 149](https://sourceforge.net/p/dosbox/feature-requests/149/)
+* [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
 * [IINA](https://iina.io/download/) - ✳️ Yes, works via Rosetta with native support on the way - [Github Issue](https://github.com/iina/iina/issues/3067#issuecomment-671804703)
 * [Movist](https://movistprime.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.6 - [Changelog](https://movistprime.com/changelog.html)
 * [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.11 - [Blog Post](https://betamagic.nl/news/2020/2020_09.html)
