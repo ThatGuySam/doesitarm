@@ -14,7 +14,7 @@
 
             <Search
                 :app-list="categoryAppList"
-                :quick-buttons="[]"
+                :quick-buttons="quickButtons"
                 @update:query="query = $event"
             />
 
@@ -83,7 +83,21 @@ export default {
     },
     data: function () {
         return {
-            query: ''
+            query: '',
+            quickButtons: [
+                {
+                    label: '✅ Full Native Support',
+                    query: 'status:native'
+                },
+                {
+                    label: '✳️ Rosetta',
+                    query: 'status:rosetta'
+                },
+                {
+                    label: '🚫 Unsupported',
+                    query: 'status:no'
+                },
+            ]
         }
     },
     computed: {
