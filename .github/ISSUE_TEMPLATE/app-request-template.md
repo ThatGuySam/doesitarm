@@ -8,7 +8,10 @@ assignees: ''
 ---
 
 
-For a great example issue check out https://github.com/ThatGuySam/doesitarm/issues/31
+Replace the text inside the {}'s with your own. 
+
+For a great example issue check out https://github.com/ThatGuySam/doesitarm/issues/358
+
 
 
 **The official name of the app**

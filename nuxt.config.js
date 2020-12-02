@@ -31,6 +31,9 @@ const storeAppLists = async function (builder) {
 
     const savedLists = await Promise.all(listsOptions.map(async list => {
 
+        const methodName = `Building ${list.path}`
+        console.time(methodName)
+
         // Run the build method
         const builtList = await list.buildMethod()
 
@@ -48,6 +51,9 @@ const storeAppLists = async function (builder) {
         // console.log('savedListJSON', savedListJSON)
 
         const savedList = JSON.parse(savedListJSON)
+
+
+        console.timeEnd(methodName)
 
         // Import the created JSON File
         return savedList
@@ -84,6 +90,9 @@ export default {
         },
         routes() {
             return Promise.all(listsOptions.map(async list => {
+                const methodName = `Reading ${list.path}`
+                console.time(methodName)
+
                 const listPath = `.${list.path}`
 
                 // Read JSON to ensure it exists
@@ -91,6 +100,8 @@ export default {
 
                 // Parse the saved JSON into a variable
                 const savedList = JSON.parse(savedListJSON)
+
+                console.timeEnd(methodName)
 
                 // Pass on the variable
                 return savedList
