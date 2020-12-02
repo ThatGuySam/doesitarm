@@ -10,6 +10,7 @@
 
             <Search
                 :app-list="allList"
+                :quick-buttons="quickButtons"
                 :initial-limit="200"
                 @update:query="query = $event"
             />
@@ -68,6 +69,48 @@ export default {
     data: function () {
         return {
             query: '',
+            quickButtons: [
+                {
+                    label: '✅ Full Native Support',
+                    query: 'status:native'
+                },
+                {
+                    label: '✳️ Rosetta',
+                    query: 'status:rosetta'
+                },
+                {
+                    label: '🚫 Unsupported',
+                    query: 'status:no'
+                },
+                {
+                    label: '🎮 Games',
+                    query: 'Games'
+                },
+                {
+                    label: '🍺 Homebrew Formulae',
+                    query: 'Homebrew'
+                },
+                {
+                    label: 'Music Tools',
+                    query: 'Music'
+                },
+                {
+                    label: 'Developer Tools',
+                    query: 'Developer'
+                },
+                {
+                    label: 'Photo Tools',
+                    query: 'Photo'
+                },
+                {
+                    label: 'Video Tools',
+                    query: 'Video'
+                },
+                {
+                    label: 'Productivity Tools',
+                    query: 'Productivity'
+                },
+            ]
         }
     }
 }
