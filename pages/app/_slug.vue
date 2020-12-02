@@ -9,7 +9,7 @@
             </h2>
 
             <div class="subscribe space-y-6 sm:space-x-6 mb-4">
-                <EmailSubscribe
+                <AllUpdatesSubscribe
                     :app-name="app.name"
                 />
             </div>
@@ -47,14 +47,14 @@
 <script>
 import parseGithubDate from '~/helpers/parse-github-date'
 import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import appList from '~/static/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {
     components: {
         LinkButton,
-        EmailSubscribe
+        AllUpdatesSubscribe
     },
     async asyncData ({ params: { slug } }) {
 

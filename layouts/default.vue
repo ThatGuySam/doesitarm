@@ -21,8 +21,7 @@
                 </nav> -->
                 <div class="mt-8 flex justify-center space-x-6">
                     <div class="flex flex-col items-center space-y-4">
-                        <div>Get Twitter Updates</div>
-                        <TwitterFollow />
+                        <AllUpdatesSubscribe />
                     </div>
                 </div>
                 <p class="mt-8 text-center text-base leading-6 text-gray-400">
@@ -38,12 +37,13 @@
 import 'typeface-inter/inter.css'
 
 import Navbar from '~/components/navbar.vue'
-import TwitterFollow from '~/components/twitter-follow.vue'
+// import TwitterFollow from '~/components/twitter-follow.vue'
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
 export default {
     components: {
         Navbar,
-        TwitterFollow
+        AllUpdatesSubscribe
     }
 }
 

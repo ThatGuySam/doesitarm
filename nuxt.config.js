@@ -62,6 +62,10 @@ const storeAppLists = async function (builder) {
 export default {
     target: 'static',
 
+    publicRuntimeConfig: {
+        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE
+    },
+
     /*
     ** Hooks
     * https://nuxtjs.org/api/configuration-hooks/
