@@ -63,10 +63,10 @@ import axios from 'axios'
 
 export default {
     props: {
-        appName: {
-            type: String,
-            required: true
-        },
+        // appName: {
+        //     type: String,
+        //     required: true
+        // },
         placeholder: {
             type: String,
             default: 'Send me regular app updates'
