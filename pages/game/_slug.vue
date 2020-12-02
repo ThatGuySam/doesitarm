@@ -8,12 +8,6 @@
                 {{ app.text }}
             </h2>
 
-            <!-- <div class="subscribe space-y-6 sm:space-x-6 mb-4">
-                <EmailSubscribe
-                    :app-name="app.name"
-                />
-            </div> -->
-
             <ThomasCredit />
 
             <div class="links space-y-6 sm:space-x-6 mb-8">
@@ -102,7 +96,6 @@
 
 <script>
 import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
 
 import gameList from '~/static/game-list.json'
@@ -112,7 +105,6 @@ import gameList from '~/static/game-list.json'
 export default {
     components: {
         LinkButton,
-        EmailSubscribe,
         ThomasCredit
     },
     async asyncData ({ params: { slug } }) {
@@ -125,14 +117,30 @@ export default {
     head() {
         return {
             title: `Does ${this.app.name} work on Apple Silicon?`,
-            // meta: [
-            //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-            //     {
-            //         hid: 'description',
-            //         name: 'description',
-            //         content: 'My custom description'
-            //     }
-            // ]
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                {
+                    'hid': 'description',
+                    'name': 'description',
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors for gaming. `
+                },
+
+                // Twitter Card
+                {
+                    'hid': 'twitter:title',
+                    'property':  'twitter:title',
+                    'content': `Does ${this.app.name} work on Apple Silicon?`
+                },
+                {
+                    'hid': 'twitter:description',
+                    'property':  'twitter:description',
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors for gaming. `
+                },
+                {
+                    'property':  'twitter:url',
+                    'content': `${process.env.URL}${this.$nuxt.$route.path}`
+                },
+            ]
         }
     }
 }

@@ -9,7 +9,7 @@
             </h2>
 
             <div class="subscribe space-y-6 sm:space-x-6 mb-4">
-                <EmailSubscribe
+                <AllUpdatesSubscribe
                     :app-name="app.name"
                 />
             </div>
@@ -47,14 +47,14 @@
 <script>
 import parseGithubDate from '~/helpers/parse-github-date'
 import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import appList from '~/static/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'
 
 export default {
     components: {
         LinkButton,
-        EmailSubscribe
+        AllUpdatesSubscribe
     },
     async asyncData ({ params: { slug } }) {
 
@@ -78,14 +78,30 @@ export default {
     head() {
         return {
             title: `Does ${this.app.name} work on Apple Silicon?`,
-            // meta: [
-            //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-            //     {
-            //         hid: 'description',
-            //         name: 'description',
-            //         content: 'My custom description'
-            //     }
-            // ]
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                {
+                    'hid': 'description',
+                    'name': 'description',
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors`
+                },
+
+                // Twitter Card
+                {
+                    'hid': 'twitter:title',
+                    'property':  'twitter:title',
+                    'content': `Does ${this.app.name} work on Apple Silicon?`
+                },
+                {
+                    'hid': 'twitter:description',
+                    'property':  'twitter:description',
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors`
+                },
+                {
+                    'property':  'twitter:url',
+                    'content': `${process.env.URL}${this.$nuxt.$route.path}`
+                },
+            ]
         }
     }
 }

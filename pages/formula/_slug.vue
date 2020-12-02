@@ -56,14 +56,30 @@ export default {
     head() {
         return {
             title: `Does ${this.app.name} work on Apple Silicon?`,
-            // meta: [
-            //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-            //     {
-            //         hid: 'description',
-            //         name: 'description',
-            //         content: 'My custom description'
-            //     }
-            // ]
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                {
+                    'hid': 'description',
+                    'name': 'description',
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors when installed via Homebrew. `
+                },
+
+                // Twitter Card
+                {
+                    'hid': 'twitter:title',
+                    'property':  'twitter:title',
+                    'content': `Does ${this.app.name} work on Apple Silicon?`
+                },
+                {
+                    'hid': 'twitter:description',
+                    'property':  'twitter:description',
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors when installed via Homebrew. `
+                },
+                {
+                    'property':  'twitter:url',
+                    'content': `${process.env.URL}${this.$nuxt.$route.path}`
+                },
+            ]
         }
     }
 }

@@ -30,6 +30,16 @@
                 </LinkButton>
             </div>
 
+            <AllUpdatesSubscribe
+                :input-class-groups="{
+                    shadow: 'hover:neumorphic-shadow',
+                    bg: '',
+                    focus: 'bg-transparent neumorphic-shadow pl-8',
+                    blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
+                }"
+                class="my-12"
+            />
+
         </div>
     </section>
 </template>
@@ -37,6 +47,7 @@
 <script>
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
 export default {
     async asyncData () {
@@ -51,7 +62,8 @@ export default {
     },
     components: {
         Search,
-        LinkButton
+        LinkButton,
+        AllUpdatesSubscribe
     },
     data: function () {
         return {

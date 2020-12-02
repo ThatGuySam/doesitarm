@@ -107,19 +107,38 @@ export default {
         },
         title () {
             return `List of ${this.category.pluralLabel || this.category.label} that work on Apple Silicon?`
-        }
+        },
+        description () {
+            return `Check the the latest reported support status of ${this.category.pluralLabel || this.category.label} on Apple Silicon and Apple M1 Processors. `
+        },
     },
     head() {
         return {
             title: this.title,
-            // meta: [
-            //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-            //     {
-            //         hid: 'description',
-            //         name: 'description',
-            //         content: 'My custom description'
-            //     }
-            // ]
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                {
+                    'hid': 'description',
+                    'name': 'description',
+                    'content': this.description
+                },
+
+                // Twitter Card
+                {
+                    'hid': 'twitter:title',
+                    'property':  'twitter:title',
+                    'content': this.title
+                },
+                {
+                    'hid': 'twitter:description',
+                    'property':  'twitter:description',
+                    'content': this.description
+                },
+                {
+                    'property':  'twitter:url',
+                    'content': `${process.env.URL}${this.$nuxt.$route.path}`
+                },
+            ]
         }
     }
 }
