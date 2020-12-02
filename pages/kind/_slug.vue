@@ -98,9 +98,9 @@ export default {
 
             // const sortedList = list.sort(byTimeThenNull)
 
-            if (this.category.slug === 'homebrew') {
-                return filteredList.slice(0, 300)
-            }
+            // if (this.category.slug === 'homebrew') {
+            //     return filteredList.slice(0, 300)
+            // }
 
             return filteredList
         },
