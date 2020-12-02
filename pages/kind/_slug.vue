@@ -98,6 +98,10 @@ export default {
 
             // const sortedList = list.sort(byTimeThenNull)
 
+            if (this.category.slug === 'homebrew') {
+                return filteredList.slice(0, 200)
+            }
+
             return filteredList
         },
         supportedAppList () {
