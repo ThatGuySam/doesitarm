@@ -8,12 +8,6 @@
                 {{ app.text }}
             </h2>
 
-            <!-- <div class="subscribe space-y-6 sm:space-x-6 mb-4">
-                <EmailSubscribe
-                    :app-name="app.name"
-                />
-            </div> -->
-
             <ThomasCredit />
 
             <div class="links space-y-6 sm:space-x-6 mb-8">
@@ -102,7 +96,6 @@
 
 <script>
 import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
 
 import gameList from '~/static/game-list.json'
@@ -112,7 +105,6 @@ import gameList from '~/static/game-list.json'
 export default {
     components: {
         LinkButton,
-        EmailSubscribe,
         ThomasCredit
     },
     async asyncData ({ params: { slug } }) {
