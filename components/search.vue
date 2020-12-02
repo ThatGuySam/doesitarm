@@ -27,8 +27,12 @@
                 <button
                     v-for="button in quickButtons"
                     :key="button.query"
-                    class="inline-block text-xs neumorphic-shadow-inner rounded-lg py-1 px-2"
-                    @click="query = button.query; queryResults(query)"
+                    :class="[
+                        'inline-block text-xs rounded-lg py-1 px-2',
+                        'border-2 border-white focus:outline-none',
+                        query.includes(button.query) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
+                    ]"
+                    @click="toggleFilter(button.query); queryResults(query)"
                 >{{ button.label }}</button>
             </div>
         </div>
@@ -313,7 +317,6 @@ export default {
             this.observer.observe(this.$refs[`${app.slug}-row`][0])
         })
 
-        console.log('this.initialList', this.initialList.length)
     },
     methods: {
         getAppCategory,
@@ -341,11 +344,7 @@ export default {
         },
         statusIs (query, app) {
 
-            // if (typeof app.status !== 'string') {
-            //     console.log('app', app)
-            //     console.log('status', status)
-            //     console.log('app.status.includes(status)', app.status.includes(status))
-            // }
+            // console.log('query', query)
 
             if (!query.includes('status:')) return
 
@@ -353,9 +352,9 @@ export default {
 
             const matches = app.status.includes(status) || app.status === status
 
-            if (matches) {
-                this.statusResults.push(app)
-            }
+            // if (matches) {
+            //     this.statusResults.push(app)
+            // }
 
             return matches
         },
@@ -364,6 +363,107 @@ export default {
             const pluckedItem = array[index]
             array.splice(index, 1)
             return pluckedItem
+        },
+        toggleFilter ( newFilterQuery ) {
+
+            // Get the key and value from our filter
+            const [
+                newFilterKey, // This will always have a value
+                newFilterValue = null
+            ] = newFilterQuery.split(':')
+
+            const oldQueryWords = this.query.split(' ')
+
+            let oldHasStatus = false
+            let oldHasWords = false
+
+            oldQueryWords.forEach( word => {
+                if (word.includes('status:')) {
+                    oldHasStatus = true
+                    return
+                }
+
+                if (word.trim().length !== 0) oldHasWords = true
+            })
+
+            // If this filter is already present
+            // then remove it
+            if (this.query.includes(newFilterQuery)) {
+                this.query = this.query.replace(newFilterQuery, '').trim()
+
+                return
+            }
+
+            // If there is only an existing status and we're adding a plain words
+            // and the newQuery is not
+            // then prepend the words to the existing status
+            if (oldHasStatus && !oldHasWords && newFilterValue === null) {
+                this.query = [
+                    newFilterQuery,
+                    this.query.trim()
+                ].join(' ')
+
+                return
+            }
+
+            // There is no filter key
+            // then update the whole query
+            if (newFilterValue === null) {
+                this.query = newFilterQuery
+
+                return
+            }
+
+            // However, if the query already has a status
+            // then update the existing status
+            if (this.query.includes(newFilterKey)) {
+
+                const queryWords = this.query.split(' ')
+
+                this.query = queryWords.map( word => {
+                    // If this the filter word
+                    // then update it to the new one
+                    if (word.includes(newFilterKey)) return newFilterQuery
+
+                    return word.trim()
+                }).join(' ')
+
+                return
+
+
+            // Otherwise add to the end of our current query
+            } else {
+                const queryWords = []
+
+                // If the query is not empty
+                // then add it to our updated query
+                if (this.query.trim().length) queryWords.push(this.query.trim())
+
+                // Append the new filter
+                queryWords.push(newFilterQuery)
+
+                // Update the query
+                this.query = queryWords.join(' ')
+            }
+        },
+        filterStatusFromText (rawQuery) {
+            const statusText = []
+            const searchWords = []
+
+            // Look through each word and separate the status words from the normal query words
+            rawQuery.split(' ').forEach(word => {
+                if (word.includes('status:')) {
+                    statusText.push(word)
+                    return
+                }
+
+                searchWords.push(word)
+            })
+
+            return [
+                statusText.join(' '),
+                searchWords.join(' ').trim()
+            ]
         },
         scrollInputToTop () {
             scrollIntoView(this.$refs['search'], {
@@ -403,24 +503,61 @@ export default {
             // If our query is empty
             // then bail
             if (rawQuery.length === 0) return
-            const query = rawQuery.toLowerCase()
 
+            // Separate status filters from the actual query text
+            const [
+                statusText,
+                query
+            ] = this.filterStatusFromText(rawQuery.toLowerCase())
+
+
+            // Declare that at least one query has been made
             this.hasStartedAnyQuery = true
 
 
             // Search App List
-            this.appList.forEach(app => {
+            this.appList.filter( app => {
+                const filters = [
+                    {
+                        key: 'status',
+                        method: this.statusIs,
+                        queryArg: statusText
+                    }
+                ]
+
+                // Does this app match every active filter
+                const filtersMatched = filters.every( ({ key, method, queryArg }) => {
+                    // If the query does not contain the key for the filter
+                    // then filter automatically passes
+                    if (queryArg.includes(key) === false) return true
+
+                    // console.log(queryArg, 'method', method)
+                    return method(queryArg, app)
+                })
+
+                return filtersMatched
+            }).forEach(app => {
+                // console.log('app', app)
+
                 const matchers = [
-                    this.titleStartsWith,
-                    this.titleContains,
-                    this.categoryContains,
-                    this.statusIs
+                    {
+                        method: this.titleStartsWith,
+                        queryArg: query
+                    },
+                    {
+                        method: this.titleContains,
+                        queryArg: query
+                    },
+                    {
+                        method: this.categoryContains,
+                        queryArg: query
+                    }
                 ]
 
                 // Run through our search priorities
-                for (const method of matchers){
+                for (const { method, queryArg } of matchers){
                     // iterations++
-                    const appMatches = method(query, app)
+                    const appMatches = method(queryArg, app)
                     if (appMatches) {
                         // We've found a match for this app
                         // so let's stop trying match methods
