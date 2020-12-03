@@ -17,7 +17,7 @@ import axios from 'axios'
 
 const statusesTranslations = {
     'Native': 'native',
-    'Rosetta': 'rosetta',
+    'Rosetta 2': 'rosetta',
     '': 'unreported'
     // 'CrossOver': 'rosetta',
     // '': 'no'
@@ -25,7 +25,7 @@ const statusesTranslations = {
 
 const statusesMessages = {
     'Native': '✅ Yes, Full Native Apple Silicon Support',
-    'Rosetta': '✳️ Yes, works via Rosetta 2',
+    'Rosetta 2': '✳️ Yes, works via Rosetta 2',
     // 'CrossOver': '✳️ Yes, works via Rosetta 2',
     // 'no': '🚫 No, not yet supported only works on Intel-based Macs'
 }
