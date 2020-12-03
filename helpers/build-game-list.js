@@ -140,12 +140,7 @@ export default async function () {
                 slug: 'games'
             },
             content: '',
-            relatedLinks: [
-                {
-                    "href": `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
-                    "label": "View"
-                }
-            ],
+            // relatedLinks: [],
             reports: [
                 game
             ]
