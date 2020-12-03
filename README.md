@@ -252,6 +252,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [IINA](https://iina.io/download/) - ✳️ Yes, works via Rosetta with native support on the way - [Github Issue](https://github.com/iina/iina/issues/3067#issuecomment-671804703)
 * [Movist](https://movistprime.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.6 - [Changelog](https://movistprime.com/changelog.html)
 * [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.11 - [Blog Post](https://betamagic.nl/news/2020/2020_09.html)
+* [PPSSPP](https://build.ppsspp.org/?page/downloads#osx) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/347)
+* [RetroArch](https://www.retroarch.com/?page=platforms) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/348)
 * [Spotify](https://www.spotify.com/us/download/mac/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/172)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
 * [Tidal](https://tidal.com/download) - ✳️ Yes, working via Rosetta 2 but with occasional force quits as of 2.23.0.488 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/314)
