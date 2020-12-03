@@ -177,6 +177,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Agenda](https://agenda.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Airmail](https://airmailapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v4.5.1 - [Release History](https://apps.apple.com/app/apple-store/id918858936)
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported  - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
+* [AmorphousDiskMark](https://apps.apple.com/us/app/amorphousdiskmark/id1168254295) - ✅ Yes, full native Apple Silicon support as of v3.1
 * [Amphetamine](https://apps.apple.com/app/amphetamine/id937984704) - ✅ Yes, full native Apple Silicon support from 5.1 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/295)
 * [Axure RP 9](https://www.axure.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/38)
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
