@@ -50,6 +50,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [iTerm](https://iterm2.com/downloads.html) - ✅ Yes, fully supported as of v3.4.0 - [PR](https://github.com/gnachman/iTerm2/pull/421)
 * [Julia Language](https://julialang.org/downloads/) - ✳️ Yes, it works via Rosetta 2 - [Github Issue](https://github.com/JuliaLang/julia/issues/36617)
 * [LLVM Clang](https://releases.llvm.org/download.html) - ✳️ Yes, it works via Rosetta 2 - [Apple Forums](https://developer.apple.com/forums/thread/649992)
+* [MacDown](https://macdown.uranusjr.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/382)
 * [MacPorts](https://www.macports.org/install.php) - ✳️ Yes, some ports are native while others work via Rosetta 2. - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/302). 
 * [MySQL Community Server](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
 * [MySQL Workbench](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
