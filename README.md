@@ -21,7 +21,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Developer Tools
 
-* [Android Studio](https://developer.android.com/studio) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/48#issuecomment-732143252)
+* [Android Studio](https://developer.android.com/studio) - ✳️ Yes, works via Rosetta 2, but no Emulation yet. - [Source](https://github.com/ThatGuySam/doesitarm/issues/48#issuecomment-732143252) [Emulator Issue](https://issuetracker.google.com/issues/173624439)
 * [App Preview Video Converter](https://apps.apple.com/us/app/app-preview-video-converter/id1137451860) - ✅ Yes, full native support as of v1.7.4 - [Release Notes](https://www.bridgetech.io)
 * [Arduino IDE](https://www.arduino.cc/en/software) - ✳️ Reported working via Rosetta with native support currently in development - [Issue](https://github.com/arduino/Arduino/issues/10836)
 * [Asset Catalog Creator](https://apps.apple.com/us/app/asset-catalog-creator-pro/id809625456) - ✅ Yes, full native support as of v3.7.4 - [Release Notes](https://www.bridgetech.io)
