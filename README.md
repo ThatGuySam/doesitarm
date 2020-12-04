@@ -201,6 +201,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [flickery](https://eternalstorms.at/flickery) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.48 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Geekbench](https://www.geekbench.com/download/mac/) - ✅ Yes, full native support as of v5.3 - [Release Notes](https://www.geekbench.com/blog/2020/11/geekbench-53/)
 * [Glimpses](https://eternalstorms.at/glimpses) - ✅ Yes, Full Native Apple Silicon Support as of v2.2.3 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
 * [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [HazeOver](https://hazeover.com/) - ✅ Yes, Full Native Apple Silicon Support as of 1.8.8 - [Official News](https://hazeover.com/news.html)
 * [Highland 2](https://quoteunquoteapps.com/highland-2/) - ✅ Yes, Full Native Apple Silicon Support as of v2.9 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
