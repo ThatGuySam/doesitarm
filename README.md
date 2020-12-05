@@ -182,6 +182,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [AmorphousDiskMark](https://apps.apple.com/us/app/amorphousdiskmark/id1168254295) - ✅ Yes, full native Apple Silicon support as of v3.1
 * [Amphetamine](https://apps.apple.com/app/amphetamine/id937984704) - ✅ Yes, full native Apple Silicon support from 5.1 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/295)
 * [Axure RP 9](https://www.axure.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/38)
+* [balenaEtcher](https://github.com/balena-io/etcher/releases) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/294#issuecomment-737011519)
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
 * [Bear](https://bear.app/) - ✅ Yes, fully supported as v1.8.2 - [Bear Blog Post](https://blog.bear.app/2020/11/bear-gets-new-widgets-and-ready-for-big-sur/)
 * [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502 - [Issue Tracker](https://community.folivora.ai/)
@@ -267,6 +268,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Spotify](https://www.spotify.com/us/download/mac/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/172)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
 * [Tidal](https://tidal.com/download) - ✳️ Yes, working via Rosetta 2 but with occasional force quits as of 2.23.0.488 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/314)
+* [Twitch](https://www.twitch.tv/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/387)
 * [Vienna](https://github.com/ViennaRSS/vienna-rss/releases/latest) - ✅ Yes, Full Native Apple Silicon Support as of v3.6 - [Release Notes](https://github.com/ViennaRSS/vienna-rss/releases/tag/v/3.6.0)
 * [VLC](https://www.videolan.org/index.html) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/21#issuecomment-728969937) [VLC Forums](https://forum.videolan.org/viewtopic.php?f=32&t=154539&p=507398&hilit=apple+silicon#p507398)
 
