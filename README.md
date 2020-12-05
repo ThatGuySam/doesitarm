@@ -306,3 +306,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Awais Mirza Video Tests](https://www.youtube.com/playlist?list=PLz5rnvLVJX5XF8cXAOQuarPIeP8Xr7b1_) - A series of videos demonstrating M1 support on various popular apps
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
 
+
+
+
+## License
+Unless otherwise noted, this list available under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/), and the code is available under the [Apache-2.0](https://opensource.org/licenses/Apache-2.0). 
