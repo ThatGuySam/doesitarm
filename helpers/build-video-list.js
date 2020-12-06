@@ -2,7 +2,8 @@
 import slugify from 'slugify'
 import axios from 'axios'
 
-
+import { byTimeThenNull } from './sort-list.js'
+import parseGithubDate from './parse-github-date'
 
 const videoFeaturesApp = function (app, video) {
     const appFuzzyName = app.name.toLowerCase()
@@ -42,9 +43,19 @@ export default async function ( applist ) {
             }
         }
 
+        // console.log('fetchedVideos[videoId].rawData.snippet.publishedAt', fetchedVideos[videoId].rawData.snippet.publishedAt)
+
+        const lastUpdated = {
+            raw: fetchedVideos[videoId].rawData.snippet.publishedAt,
+            timestamp: parseGithubDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
+        }
+
+        // console.log('lastUpdated', lastUpdated)
+
         videos.push({
             name: fetchedVideos[videoId].title,
             id: videoId,
+            lastUpdated,
             apps,
             slug,
             timestamps: fetchedVideos[videoId].timestamps,
@@ -54,5 +65,7 @@ export default async function ( applist ) {
 
     // console.log('videos', videos)
 
-    return videos
+    // publishedAt
+
+    return videos.sort(byTimeThenNull)
 }
