@@ -86,5 +86,6 @@ dist
 /README-temp.md
 /static/game-list.json
 /static/homebrew-list.json
-.DS_Store
+/static/video-list.json
 /commits-data.json
+.DS_Store

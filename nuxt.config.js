@@ -5,6 +5,7 @@ import pkg from './package'
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
+import buildVideoList from './helpers/build-video-list.js'
 
 import { categories } from './helpers/categories.js'
 
@@ -24,40 +25,51 @@ const listsOptions = [
     }
 ]
 
+const videoListOptions = {
+    buildMethod: buildVideoList,
+    path: '/static/video-list.json',
+}
+
+
+const saveList = async function ( list, buildArgs = null ) {
+    const methodName = `Building ${list.path}`
+    console.time(methodName)
+
+    // Run the build method
+    const builtList = await list.buildMethod(buildArgs)
+
+    // Make the relative path for our new JSON file
+    const listFullPath = `.${list.path}`
+
+    // console.log('listFullPath', listFullPath)
+
+    // Write the list to JSON
+    await fs.writeFile(listFullPath, JSON.stringify(builtList))
+
+    // Read back the JSON we just wrote to ensure it exists
+    const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
+
+    // console.log('savedListJSON', savedListJSON)
+
+    const savedList = JSON.parse(savedListJSON)
+
+
+    console.timeEnd(methodName)
+
+    // Import the created JSON File
+    return savedList
+}
+
 
 const storeAppLists = async function (builder) {
 
     console.log('Build Lists started')
 
-    const savedLists = await Promise.all(listsOptions.map(async list => {
-
-        const methodName = `Building ${list.path}`
-        console.time(methodName)
-
-        // Run the build method
-        const builtList = await list.buildMethod()
-
-        // Make the relative path for our new JSON file
-        const listFullPath = `.${list.path}`
-
-        // console.log('listFullPath', listFullPath)
-
-        // Write the list to JSON
-        await fs.writeFile(listFullPath, JSON.stringify(builtList))
-
-        // Read back the JSON we just wrote to ensure it exists
-        const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
-
-        // console.log('savedListJSON', savedListJSON)
-
-        const savedList = JSON.parse(savedListJSON)
-
-
-        console.timeEnd(methodName)
-
-        // Import the created JSON File
-        return savedList
-    }))
+    const savedLists = await Promise.all(listsOptions.map(saveList))
+        // Build and save list of videos based on app lists
+        .then(async lists => {
+            return saveList(videoListOptions, lists.flat(1))
+        })
 
     console.log('Build Lists finished')
 
@@ -93,7 +105,10 @@ export default {
             ]
         },
         routes() {
-            return Promise.all(listsOptions.map(async list => {
+            return Promise.all([
+                ...listsOptions,
+                videoListOptions
+            ].map(async list => {
                 const methodName = `Reading ${list.path}`
                 console.time(methodName)
 
@@ -116,8 +131,10 @@ export default {
                     const [
                         appRoutes,
                         gameRoutes,
+                        videoRoutes,
                         homebrewRoutes
                     ] = lists.map((list, listI) => {
+
                         return list.map( app => {
                             return app.endpoint
                         })
@@ -134,6 +151,7 @@ export default {
                         ...appRoutes,
                         ...gameRoutes,
                         ...homebrewRoutes,
+                        ...videoRoutes,
                         ...categoryRoutes
                     ]
                 })
