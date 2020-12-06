@@ -4,6 +4,13 @@
 
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
+
+# old node redirect
+[[redirects]]
+  from = "/app/node"
+  to = "/app/nodejs"
+  status = 301
+  
 [[redirects]]
   from = "/kind/entertainment"
   to = "/kind/entertainment-and-media-apps/"
