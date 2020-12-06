@@ -68,7 +68,18 @@ const storeAppLists = async function (builder) {
     const savedLists = await Promise.all(listsOptions.map(saveList))
         // Build and save list of videos based on app lists
         .then(async lists => {
-            return saveList(videoListOptions, lists.flat(1))
+            const [
+                appList,
+                gameList
+            ] = lists
+
+            // Build a video app list with apps and games only
+            const videoAppList = [
+                ...appList,
+                ...gameList
+            ].flat(1)
+
+            return await saveList(videoListOptions, videoAppList)
         })
 
     console.log('Build Lists finished')

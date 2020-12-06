@@ -4,6 +4,10 @@ import homebrewList from '~/static/homebrew-list.json'
 
 import { byTimeThenNull } from '~/helpers/sort-list.js'
 
+export const allVideoList = [
+    ...appList.sort(byTimeThenNull),
+    ...gameList,
+]
 
 export const allList = [
     ...appList.sort(byTimeThenNull),
