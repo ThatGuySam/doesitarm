@@ -117,7 +117,7 @@ export default async function ( applist ) {
 
     for (const videoId in fetchedVideos) {
         // Build video slug
-        const slug = slugify(`${fetchedVideos[videoId].title}-${videoId}`, {
+        const slug = slugify(`${fetchedVideos[videoId].title}-i-${videoId}`, {
             lower: true,
             strict: true
         })
