@@ -43,12 +43,16 @@ export default async function ( applist ) {
         }
 
         videos.push({
+            name: fetchedVideos[videoId].title,
+            id: videoId,
             apps,
             slug,
             timestamps: fetchedVideos[videoId].timestamps,
             endpoint: `/tv/${slug}`
         })
     }
+
+    // console.log('videos', videos)
 
     return videos
 }
