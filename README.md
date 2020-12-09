@@ -258,6 +258,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Usher](https://manytricks.com/usher/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [VeraCrypt](https://www.veracrypt.fr/en/Downloads.html) - ✳️ Yes, works via Rosetta 2 as of 1.24-Update8 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/355)
 * [Vivaldi](https://vivaldi.com/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/331)
+* [VMware Fusion](https://www.vmware.com/products/fusion.html) - ⏹ No, not working at all but support is in development - [Official Tweet](https://twitter.com/VMwareFusion/status/1326229094648832000)
 * [VMWare Horizon Client](https://my.vmware.com/en/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_horizon_clients/horizon_8) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/297)
 * [VMWare Remote Console](https://apps.apple.com/app/vmware-remote-console/id1230249825) - 🚫 No, not yet supported, only works on Intel-based Macs - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/281)
 * [VPN Tracker 365](https://www.vpntracker.com) - ✅ Yes, fully native IPsec, L2TP, OpenVPN, SonicWALL SSL VPN support as of v 21.0 - [Official page](https://www.vpntracker.com/us/VPN-Client-for-macOS-Big-Sur.html)
