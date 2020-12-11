@@ -158,9 +158,10 @@ export default {
             // console.log('$event', $event)
             this.query = $event
 
-            // If fetched lists have alraedy been loaded in
+            // If fetched lists have already been loaded in
+            // OR if there's no query
             // then stop
-            if (this.fetchedAppList.length !== 0) return
+            if (this.fetchedAppList.length !== 0 || this.query.trim().length === 0) return
 
             const fetchedListUrls = [
                 '/game-list.json',
