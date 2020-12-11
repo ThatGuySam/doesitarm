@@ -51,11 +51,11 @@ export default {
                 ...this.classGroups
             }
 
-            if (this.isFocused) {
-                delete mergedClassGroups.blur
-            } else {
-                delete mergedClassGroups.focus
-            }
+            // if (this.isFocused) {
+            //     delete mergedClassGroups.blur
+            // } else {
+            //     delete mergedClassGroups.focus
+            // }
 
             return Object.values(mergedClassGroups)
         }
