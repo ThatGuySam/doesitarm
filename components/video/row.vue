@@ -79,7 +79,7 @@ export default {
         },
         cardWidth: {
             type: Number,
-            default: 350
+            default: 325
         }
     },
     methods: {
