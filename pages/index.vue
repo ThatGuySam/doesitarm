@@ -58,7 +58,18 @@ export default {
         const { allList } = await import('~/helpers/get-list.js')
 
         return {
-            allList
+            // Filter app list to leave out data not needed for search
+            allList: allList.map( app => {
+                return {
+                    name: app.name,
+                    status: app.status,
+                    slug: app.slug,
+                    endpoint: app.endpoint,
+                    text: app.text,
+                    lastUpdated: app.lastUpdated,
+                    category: app.category,
+                }
+            })
         }
     },
     components: {
