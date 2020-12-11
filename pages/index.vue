@@ -155,10 +155,11 @@ export default {
     },
     methods: {
         async onQueryUpdate ( $event ) {
-            console.log('$event', $event)
+            // console.log('$event', $event)
             this.query = $event
 
-
+            // If fetched lists have alraedy been loaded in
+            // then stop
             if (this.fetchedAppList.length !== 0) return
 
             const fetchedListUrls = [
@@ -175,7 +176,7 @@ export default {
                 return fetchedApps
             }))
 
-            console.log('fetchedLists', fetchedLists)
+            // console.log('fetchedLists', fetchedLists)
 
             this.fetchedAppList = fetchedLists.flat(1)
 
