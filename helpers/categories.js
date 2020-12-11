@@ -21,7 +21,7 @@ export const categories = {
         ...categoryTemplate,
         label: 'Productivity Tools',
         pluralLabel: 'Productivity Tools',
-        slug: 'developer-tools',
+        slug: 'productivity-tools',
     },
     'video-and-motion-tools': {
         ...categoryTemplate,

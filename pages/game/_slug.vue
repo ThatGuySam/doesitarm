@@ -10,21 +10,11 @@
 
             <ThomasCredit />
 
-            <div class="links space-y-6 sm:space-x-6 mb-8">
-                <LinkButton
-                    v-for="(link, i) in app.relatedLinks"
-                    :key="i"
-                    :href="link.href"
-                    target="_blank"
-                    class=""
-                >{{ (i === 0) ? 'View' : link.label }}</LinkButton>
-            </div>
-
             <h2 class="subtitle text-xl md:text-2xl font-bold py-6">
                 Reports
             </h2>
 
-            <ul class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+            <ul class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4 mb-4">
 
                 <li
                     v-for="(report, i) in app.reports"
@@ -52,6 +42,7 @@
                             </p>
                         </div>
                     </div>
+
                     <div
                         v-if="report['Source'].length !== 0"
                         class="border-t border-gray-200"
@@ -80,6 +71,25 @@
                 </li>
 
             </ul>
+
+            <h2 class="subtitle text-xl md:text-2xl font-bold py-6">
+                Affiliate Links
+            </h2>
+            <div class="links space-y-6 sm:space-x-6 mb-8">
+                <div
+                    v-for="(link, i) in affiliateLinks"
+                    :key="i"
+                    class="affiliate-link space-y-2"
+                >
+                    <LinkButton
+                        :href="link.href"
+                        target="_blank"
+                    >
+                        <div>{{ link.label }}</div>
+                    </LinkButton>
+                    <small class="block test-xs">{{ link.subLabel }}</small>
+                </div>
+            </div>
 
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
@@ -112,6 +122,22 @@ export default {
         return {
             slug,
             app: gameList.find(app => (app.slug === slug))
+        }
+    },
+    computed: {
+        affiliateLinks () {
+            return [
+                {
+                    label: 'View on Humble Bundle',
+                    subLabel: 'Supports Charity',
+                    href: `https://www.humblebundle.com/store/search?sort=bestselling&partner=doesitarm&charity=1693256&platform=mac&search=${this.app.name}`
+                },
+                // {
+                //     label: 'View on Humble Bundle',
+                //     subLabel: 'Supports Charity',
+                //     href: `https://www.humblebundle.com/store/search?sort=bestselling&partner=doesitarm&charity=1693256&platform=mac&search=${this.app.name}`
+                // }
+            ]
         }
     },
     head() {

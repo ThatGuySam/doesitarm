@@ -29,6 +29,7 @@ const statusesTranslations = {
     // The formula has been found to need more analysis/work.
     '⚠️': 'no',
 
+    '': 'unreported'
 }
 
 const statusesMessages = {
@@ -36,7 +37,8 @@ const statusesMessages = {
     '🥈': '✳️ Yes, works via Rosetta 2',
     '🥉': '⏹ Known issues on macOS 11, though most features work',
     '⚠️': '⏹ No, not yet, support is still in progress',
-    '🚫': '🚫 No, not yet supported only works on Intel-based Macs'
+    '🚫': '🚫 No, not yet supported only works on Intel-based Macs',
+    '': '🔶 Unknown, more info needed'
 }
 
 function getStatusText(formula) {
@@ -128,7 +130,7 @@ export default async function () {
 
         // If this formulae status is empty
         // then skip this formulae
-        if (formulae.status.length === 0) continue
+        // if (formulae.status.length === 0) continue
 
         // If this formulae emoji status is not in statusesTranslations
         // then skip this formulae
