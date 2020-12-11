@@ -31,7 +31,7 @@
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Related Apps
                 </h2>
-                <div class="featured-apps overflow-x-auto whitespace-no-wrap py-2 space-x-2">
+                <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
                     <LinkButton
                         v-for="app in featuredApps"
                         :key="app.slug"
@@ -47,16 +47,9 @@
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Related Videos
                 </h2>
-                <div class="featured-apps overflow-x-auto whitespace-no-wrap py-2 space-x-2">
-                    <LinkButton
-                        v-for="video in relatedVideos"
-                        :key="video.slug"
-                        :href="video.endpoint"
-                        :class="[
-                            'inline-block text-xs rounded-lg py-1 px-2',
-                        ]"
-                    >{{ video.name }}</LinkButton>
-                </div>
+                <VideoRow
+                    :videos="relatedVideos"
+                />
             </div>
 
             <!-- video: {{ video }} -->
@@ -78,11 +71,13 @@
 <script>
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
+import VideoRow from '~/components/video/row.vue'
 
 export default {
     components: {
         LinkButton,
-        EmailSubscribe
+        EmailSubscribe,
+        VideoRow
     },
     async asyncData ({ params: { slug } }) {
 
