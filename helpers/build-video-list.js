@@ -24,7 +24,8 @@ export default async function ( applist ) {
     const response = await axios.get(process.env.VIDEO_SOURCE)
     // Extract commit from response data
     const fetchedVideos = response.data
-    // console.log('commits', commits)
+
+    // console.log('fetchedVideos', fetchedVideos)
 
     const videos = []
 
@@ -43,14 +44,14 @@ export default async function ( applist ) {
             }
         }
 
-        // console.log('fetchedVideos[videoId].rawData.snippet.publishedAt', fetchedVideos[videoId].rawData.snippet.publishedAt)
+        // console.log('fetchedVideos[videoId].rawData.snippet', fetchedVideos[videoId].rawData.snippet)
 
         const lastUpdated = {
             raw: fetchedVideos[videoId].rawData.snippet.publishedAt,
             timestamp: parseGithubDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
         }
 
-        // console.log('lastUpdated', lastUpdated)
+        // console.log('fetchedVideos[videoId].thumbnails', fetchedVideos[videoId].thumbnails)
 
         videos.push({
             name: fetchedVideos[videoId].title,
@@ -59,6 +60,7 @@ export default async function ( applist ) {
             apps,
             slug,
             timestamps: fetchedVideos[videoId].timestamps,
+            thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
             endpoint: `/tv/${slug}`
         })
     }
