@@ -48,7 +48,7 @@ export default {
 
             const mergedClassGroups = {
                 ...defaultClassGroups,
-                ...this.inputClassGroups
+                ...this.classGroups
             }
 
             if (this.isFocused) {
