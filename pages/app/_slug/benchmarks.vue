@@ -1,6 +1,6 @@
 <template>
     <section class="container py-16">
-        <div class="flex flex-col items-center text-center space-y-6">
+        <div class="flex flex-col items-center text-center space-y-8">
             <VideoPlayer
                 :video="video"
             />
@@ -10,11 +10,32 @@
             </h1> -->
 
             <div class="related-videos w-full max-w-4xl">
-                <!-- <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                    {{ app.name }} Related Videos
-                </h2> -->
+                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                    Benchmark Videos
+                </h2>
                 <VideoRow
                     :videos="relatedVideos"
+                    :active-video-id="video.id"
+                />
+            </div>
+
+            <div class="related-videos w-full max-w-4xl">
+                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                    Performance Videos
+                </h2>
+                <VideoRow
+                    :videos="relatedVideos"
+                    :active-video-id="video.id"
+                />
+            </div>
+
+            <div class="related-videos w-full max-w-4xl">
+                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                    More Videos
+                </h2>
+                <VideoRow
+                    :videos="relatedVideos"
+                    :active-video-id="video.id"
                 />
             </div>
 
