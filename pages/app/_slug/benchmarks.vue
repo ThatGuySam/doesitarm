@@ -116,6 +116,7 @@ export default {
     mounted () {
         window.onhashchange = this.loadVideoFromHash
 
+        if (location.hash.length !== 0) this.loadVideoFromHash()
     },
     methods: {
         loadVideoFromHash () {
