@@ -26,7 +26,10 @@
                 >{{ (i === 0) ? 'View' : link.label }}</LinkButton>
             </div>
 
-            <div class="related-videos w-full">
+            <div
+                v-if="relatedVideos.length !== 0"
+                class="related-videos w-full"
+            >
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Related Videos
                 </h2>
@@ -88,7 +91,13 @@ export default {
         return {
             slug,
             app,
-            relatedVideos
+            relatedVideos: relatedVideos.map(video => {
+                // console.log('video', video)
+                return {
+                    ...video,
+                    endpoint: `${slug}/benchmarks#${video.id}`
+                }
+            })
         }
     },
     computed: {
