@@ -215,7 +215,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [HazeOver](https://hazeover.com/) - ✅ Yes, Full Native Apple Silicon Support as of 1.8.8 - [Official News](https://hazeover.com/news.html)
 * [Highland 2](https://quoteunquoteapps.com/highland-2/) - ✅ Yes, Full Native Apple Silicon Support as of v2.9 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
-* [Highlights](https://highlightsapp.net/) - ✅ Yes, Full Native Apple Silicon Support as of v2020.3 - [Official Blog](https://highlightsapp.net/blog/2020/11/12/Time-for-change/)
+* [Highlights for Mac](https://highlightsapp.net/) - ✅ Yes, Full Native Apple Silicon Support as of v2020.3 - [Official Blog](https://highlightsapp.net/blog/2020/11/12/Time-for-change/)
 * [IA Writer](https://apps.apple.com/us/app/ia-writer/id775737172) - ✅ Yes, Full Native Apple Silicon Support - [Official Twitter](https://twitter.com/iawriter/status/1326284671005696009?s=21)
 * [iMazing 2](https://imazing.com/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Release notes](https://downloads.imazing.com/mac/iMazing/2.13.1.14452/release-notes.html)
 * [Internal Phone Numbers](https://lighthouse16.com/internal-phone-numbers/) - ✅ Yes, fully supported as of v1.2.2 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
