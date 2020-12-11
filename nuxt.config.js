@@ -7,6 +7,7 @@ import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 
 import { categories } from './helpers/categories.js'
+import { getAppEndpoint } from './helpers/app-derived.js'
 
 
 const listsOptions = [
@@ -119,7 +120,7 @@ export default {
                         homebrewRoutes
                     ] = lists.map((list, listI) => {
                         return list.map( app => {
-                            return app.endpoint
+                            return getAppEndpoint(app)
                         })
                     })
 

@@ -64,7 +64,7 @@ export default {
                     name: app.name,
                     status: app.status,
                     slug: app.slug,
-                    endpoint: app.endpoint,
+                    // endpoint: app.endpoint,
                     text: app.text,
                     lastUpdated: app.lastUpdated,
                     category: app.category,
