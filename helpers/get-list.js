@@ -9,8 +9,10 @@ export const allVideoList = [
     ...gameList,
 ]
 
+export const sortedAppList = appList.sort(byTimeThenNull)
+
 export const allList = [
-    ...appList.sort(byTimeThenNull),
+    ...sortedAppList,
     ...homebrewList,
     ...gameList,
 ]

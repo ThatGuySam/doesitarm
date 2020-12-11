@@ -1,7 +1,7 @@
 
 // import { promises as fs } from 'fs'
 // import MarkdownIt from 'markdown-it'
-import slugify from 'slugify'
+// import slugify from 'slugify'
 import axios from 'axios'
 
 // import statuses from './statuses'
@@ -10,6 +10,7 @@ import axios from 'axios'
 const marked = require('marked')
 const HTMLParser = require(`node-html-parser`)
 
+// import { getAppEndpoint } from './app-derived'
 
 
 const statusesTranslations = {
@@ -29,6 +30,7 @@ const statusesTranslations = {
     // The formula has been found to need more analysis/work.
     '⚠️': 'no',
 
+    '': 'unreported'
 }
 
 const statusesMessages = {
@@ -36,7 +38,8 @@ const statusesMessages = {
     '🥈': '✳️ Yes, works via Rosetta 2',
     '🥉': '⏹ Known issues on macOS 11, though most features work',
     '⚠️': '⏹ No, not yet, support is still in progress',
-    '🚫': '🚫 No, not yet supported only works on Intel-based Macs'
+    '🚫': '🚫 No, not yet supported only works on Intel-based Macs',
+    '': '🔶 Unknown, more info needed'
 }
 
 function getStatusText(formula) {
@@ -128,7 +131,7 @@ export default async function () {
 
         // If this formulae status is empty
         // then skip this formulae
-        if (formulae.status.length === 0) continue
+        // if (formulae.status.length === 0) continue
 
         // If this formulae emoji status is not in statusesTranslations
         // then skip this formulae
@@ -142,16 +145,21 @@ export default async function () {
         //     strict: true
         // })
 
+        const category = {
+            slug: 'homebrew'
+        }
+
         formulaeList.push({
             name: formulae.name,
             status: parseStatus(formulae),
             // url: `https://formulae.brew.sh/formula/${formulae.name}`,
             text: getStatusText(formulae),
             slug,
-            endpoint: `/formula/${slug}`,
-            category: {
-                slug: 'homebrew'
-            },
+            // endpoint: getAppEndpoint({
+            //     slug,
+            //     category
+            // }),//`/formula/${slug}`,
+            category,
             content: formulae.comments,
             relatedLinks: [
                 {

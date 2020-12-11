@@ -8,6 +8,7 @@ import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
 
 import { categories } from './helpers/categories.js'
+import { getAppEndpoint } from './helpers/app-derived.js'
 
 
 const listsOptions = [
@@ -147,7 +148,7 @@ export default {
                     ] = lists.map((list, listI) => {
 
                         return list.map( app => {
-                            return app.endpoint
+                            return getAppEndpoint(app)
                         })
                     })
 

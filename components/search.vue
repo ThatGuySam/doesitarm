@@ -1,13 +1,16 @@
 <template>
     <div class="search w-full">
-        <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
 
-            <ListSummary
-                :app-list="appList"
-                class="max-w-4xl"
-            />
+        <slot name="before-search">
+            <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
 
-        </div>
+                <ListSummary
+                    :app-list="appList"
+                    class="max-w-4xl"
+                />
+
+            </div>
+        </slot>
 
         <div class="search-input relative">
             <input
@@ -75,7 +78,7 @@
                 >
                     <!-- app.endpoint: {{ app.endpoint }} -->
                     <a
-                        :href="app.endpoint"
+                        :href="getAppEndpoint(app)"
                         class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-6 "
                         style="transition-property: border;"
                     >
@@ -168,6 +171,7 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
 
 import { getAppCategory } from '~/helpers/categories.js'
+import { getAppEndpoint } from '~/helpers/app-derived.js'
 // import appList from '~/static/app-list.json'
 
 // import EmailSubscribe from '~/components/email-subscribe.vue'
@@ -320,6 +324,7 @@ export default {
     },
     methods: {
         getAppCategory,
+        getAppEndpoint,
         // Search priorities
         titleStartsWith (query, app) {
             const matches = app.name.toLowerCase().startsWith(query)
