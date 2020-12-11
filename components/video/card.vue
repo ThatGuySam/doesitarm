@@ -5,7 +5,7 @@
             :href="video.endpoint"
             class=""
         >
-            <div class="video-card-container relative rounded-lg overflow-hidden bg-black">
+            <div class="video-card-container relative overflow-hidden bg-black">
                 <div class="video-card-image ratio-wrapper">
                     <div class="relative overflow-hidden w-full pb-16/9">
                         <img
