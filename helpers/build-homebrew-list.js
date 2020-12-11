@@ -1,7 +1,7 @@
 
 // import { promises as fs } from 'fs'
 // import MarkdownIt from 'markdown-it'
-import slugify from 'slugify'
+// import slugify from 'slugify'
 import axios from 'axios'
 
 // import statuses from './statuses'
@@ -10,6 +10,7 @@ import axios from 'axios'
 const marked = require('marked')
 const HTMLParser = require(`node-html-parser`)
 
+// import { getAppEndpoint } from './app-derived'
 
 
 const statusesTranslations = {
@@ -144,16 +145,21 @@ export default async function () {
         //     strict: true
         // })
 
+        const category = {
+            slug: 'homebrew'
+        }
+
         formulaeList.push({
             name: formulae.name,
             status: parseStatus(formulae),
             // url: `https://formulae.brew.sh/formula/${formulae.name}`,
             text: getStatusText(formulae),
             slug,
-            endpoint: `/formula/${slug}`,
-            category: {
-                slug: 'homebrew'
-            },
+            // endpoint: getAppEndpoint({
+            //     slug,
+            //     category
+            // }),//`/formula/${slug}`,
+            category,
             content: formulae.comments,
             relatedLinks: [
                 {

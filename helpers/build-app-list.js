@@ -6,6 +6,7 @@ import axios from 'axios'
 
 import statuses from './statuses'
 import parseGithubDate from './parse-github-date'
+import { getAppEndpoint } from './app-derived'
 
 
 const md = new MarkdownIt()
@@ -58,8 +59,10 @@ const lookForLastUpdated = function (app, commits) {
 
         // console.log('commit', commit)
 
+        const appEndpoint = getAppEndpoint(app)
+
         // $$ If message body contains endpoint
-        if (commit.messageBody.includes(app.endpoint)) {
+        if (commit.messageBody.includes(appEndpoint)) {
             // console.log('Found', app.name ,commit.committedDate)
             return commit.committedDate
         }
@@ -78,7 +81,7 @@ const lookForLastUpdated = function (app, commits) {
 
         // $$$ If commits comments contains endpoint
         for (const { node: comment } of commit.comments.edges) {
-            if (comment.body.includes(app.endpoint)) {
+            if (comment.body.includes(appEndpoint)) {
                 // console.log('Found', app.name ,commit.committedDate)
                 return commit.committedDate
             }
@@ -165,7 +168,12 @@ export default async function () {
                 strict: true
             })
 
-            const endpoint = `/app/${appSlug}`
+            const endpoint = getAppEndpoint({
+                category: {
+                    slug: null
+                },
+                slug: appSlug
+            })// `/app/${appSlug}`
 
             let status = 'unknown'
 
@@ -176,7 +184,11 @@ export default async function () {
                 }
             }
 
-            const lastUpdatedRaw = lookForLastUpdated({ name, endpoint }, commits)
+            const category = {
+                slug: categorySlug
+            }
+
+            const lastUpdatedRaw = lookForLastUpdated({ name, slug: appSlug, endpoint, category }, commits)
 
             const lastUpdated = (lastUpdatedRaw) ? {
                 raw: lastUpdatedRaw,
@@ -191,10 +203,8 @@ export default async function () {
                 // url,
                 text,
                 slug: appSlug,
-                endpoint,
-                category: {
-                    slug: categorySlug
-                },
+                // endpoint,
+                category,
                 // content: token.content,
                 relatedLinks
             })

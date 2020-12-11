@@ -3,7 +3,7 @@
     <div class="list-summary space-y-2">
 
         <div>
-            Currently there are <strong>{{ total }} listed</strong>,
+            <strong>{{ total }} listed</strong>,
             <span>
                 <span
                     v-for="percentage in percentages"
@@ -34,13 +34,25 @@
 
 <script>
 
-import statuses from '~/helpers/statuses'
+import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
 export default {
     props: {
         appList: {
             type: Array,
-            required: true
+            default: null
+        },
+        customNumbers: {
+            type: Object,
+            default: () => {
+                return {
+                    total: null,
+                    nativePercent: null,
+                    rosettaPercent: null,
+                    unreportedPercent: null,
+                    unsupportedPercent: null
+                }
+            }
         }
     },
     data: function () {
@@ -53,7 +65,7 @@ export default {
     },
     computed: {
         total () {
-            return this.appList.length
+            return (this.customNumbers.total) ? this.customNumbers.total : this.appList.length
         },
         percentages () {
             return [
@@ -62,28 +74,28 @@ export default {
                     bgColor: 'bg-green-500',
                     emoji: '✅',
                     percent: this.nativePercent,
-                    verbiage: `are natively supported, `
+                    verbiage: `Native, `
                 },
                 {
                     textColor: 'text-green-200',
                     bgColor: 'bg-green-200',
                     emoji: '✳️',
                     percent: this.rosettaPercent,
-                    verbiage: `run via Rosetta 2, `
+                    verbiage: `Rosetta, `
                 },
                 {
                     textColor: 'text-orange-500',
                     bgColor: 'bg-orange-500',
                     emoji: '🔶',
                     percent: this.unreportedPercent,
-                    verbiage: `need more info, `
+                    verbiage: `need info, `
                 },
                 {
                     textColor: 'text-red',
                     bgColor: 'bg-red',
                     emoji: '🚫',
                     percent: this.unsupportedPercent,
-                    verbiage: `are not working. `
+                    verbiage: `unsupported. `
                 },
             ].filter( percentage => {
                 const isZero = (percentage.percent === 0)
@@ -104,34 +116,24 @@ export default {
     created () {
         // console.log('total apps ', this.total)
 
-        // Create a totals object to collect amounts
-        const totals = {}
+        const hasCustomNumbers = Object.entries(this.customNumbers).some(([key, number]) => number !== null)
 
-        // Get status slugs from statuses
-        Object.entries(statuses).forEach( ([_, statusSlug]) => {
-            totals[statusSlug] = 0
-        })
+        if (hasCustomNumbers) {
 
-        // Count uses of each status
-        this.appList.forEach( app => {
-            // console.log('app.status', app.status)
+            this.nativePercent = this.customNumbers.nativePercent
+            this.rosettaPercent = this.customNumbers.rosettaPercent
+            this.unreportedPercent = this.customNumbers.unreportedPercent
+            this.unsupportedPercent = this.customNumbers.unsupportedPercent
 
-            for (const statusKey in statuses) {
-                if (app.status === statuses[statusKey]) {
-                    totals[app.status]++
-                    break
-                }
-            }
+            return
+        }
 
-        })
+        const summaryNumbers = getListSummaryNumbers(this.appList)
 
-        // console.log('totals', totals)
-
-        this.nativePercent = Number((( totals['native'] / this.total ) * 100).toFixed(1))
-        this.rosettaPercent = Number((( totals['rosetta'] / this.total ) * 100).toFixed(1))
-        this.unreportedPercent = Number((( totals['unreported'] / this.total ) * 100).toFixed(1))
-
-        this.unsupportedPercent = Number((100 - (this.nativePercent + this.rosettaPercent + this.unreportedPercent)).toFixed(1))
+        this.nativePercent = summaryNumbers.nativePercent
+        this.rosettaPercent = summaryNumbers.rosettaPercent
+        this.unreportedPercent = summaryNumbers.unreportedPercent
+        this.unsupportedPercent = summaryNumbers.unsupportedPercent
 
         // console.log('this.nativePercent', this.nativePercent)
         // console.log('this.unsupportedPercent', this.unsupportedPercent)
