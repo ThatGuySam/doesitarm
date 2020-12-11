@@ -39,6 +39,9 @@
                         :class="[
                             'inline-block text-xs rounded-lg py-1 px-2',
                         ]"
+                        :class-groups="{
+                            shadow: 'neumorphic-shadow-inner'
+                        }"
                     >{{ app.name }}</LinkButton>
                 </div>
             </div>
