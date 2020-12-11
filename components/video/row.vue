@@ -16,7 +16,10 @@
                     flexBasis: `${cardWidth}px`,
                     scrollSnapAlign: 'start'
                 }"
-                class="w-full flex-shrink-0 flex-grow-0"
+                :class="[
+                    'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden',
+                    (activeVideoId === video.id) ? 'border-white' : null
+                ]"
             />
         </div>
 
@@ -77,10 +80,14 @@ export default {
             type: Array,
             required: true
         },
+        activeVideoId: {
+            type: String,
+            default: null
+        },
         cardWidth: {
             type: Number,
             default: 325
-        }
+        },
     },
     methods: {
         scrollRow ( pixels ) {
