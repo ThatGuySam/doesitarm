@@ -3,7 +3,7 @@
     <div class="list-summary space-y-2">
 
         <div>
-            Currently there are <strong>{{ total }} listed</strong>,
+            <strong>{{ total }} listed</strong>,
             <span>
                 <span
                     v-for="percentage in percentages"
@@ -74,28 +74,28 @@ export default {
                     bgColor: 'bg-green-500',
                     emoji: '✅',
                     percent: this.nativePercent,
-                    verbiage: `are natively supported, `
+                    verbiage: `Native, `
                 },
                 {
                     textColor: 'text-green-200',
                     bgColor: 'bg-green-200',
                     emoji: '✳️',
                     percent: this.rosettaPercent,
-                    verbiage: `run via Rosetta 2, `
+                    verbiage: `Rosetta, `
                 },
                 {
                     textColor: 'text-orange-500',
                     bgColor: 'bg-orange-500',
                     emoji: '🔶',
                     percent: this.unreportedPercent,
-                    verbiage: `need more info, `
+                    verbiage: `need info, `
                 },
                 {
                     textColor: 'text-red',
                     bgColor: 'bg-red',
                     emoji: '🚫',
                     percent: this.unsupportedPercent,
-                    verbiage: `are not working. `
+                    verbiage: `unsupported. `
                 },
             ].filter( percentage => {
                 const isZero = (percentage.percent === 0)
