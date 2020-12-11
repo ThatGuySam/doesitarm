@@ -47,7 +47,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Haskell](https://www.haskell.org/platform/mac.html) - 🚫 Not yet supported only works on Intel-based Macs - [Gitlab Issue](https://gitlab.haskell.org/ghc/ghc/-/issues/18664)
 * [Homebrew](https://brew.sh/) - ✳️ Yes, with caveats and some troubleshooting. - [Issue](https://github.com/Homebrew/brew/issues/7857). 
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
-* [IntelliJ Idea](https://www.jetbrains.com/idea/download/#section=mac) - ✳️ Runs via Rosetta 2, native support available as preview - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526) [Download Preview](https://youtrack.jetbrains.com/issue/JBR-2526#focus=Comments-27-4589077.0-0)
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac) - ✳️ Runs via Rosetta 2, native support available as preview - [Official Jetbrains Issue](https://youtrack.jetbrains.com/issue/JBR-2526) [Download Preview](https://youtrack.jetbrains.com/issue/JBR-2526#focus=Comments-27-4589077.0-0)
 * [iTerm](https://iterm2.com/downloads.html) - ✅ Yes, fully supported as of v3.4.0 - [PR](https://github.com/gnachman/iTerm2/pull/421)
 * [Julia Language](https://julialang.org/downloads/) - ✳️ Yes, it works via Rosetta 2 - [Github Issue](https://github.com/JuliaLang/julia/issues/36617)
 * [LLVM Clang](https://releases.llvm.org/download.html) - ✳️ Yes, it works via Rosetta 2 - [Apple Forums](https://developer.apple.com/forums/thread/649992)
