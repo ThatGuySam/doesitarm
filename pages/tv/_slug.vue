@@ -10,7 +10,7 @@
                 }"
                 class="video-canvas w-screen flex justify-center bg-black"
             >
-                <div class="ratio-wrapper w-full max-w-5xl">
+                <div class="ratio-wrapper w-full max-w-4xl">
                     <div class="relative overflow-hidden w-full pb-16/9">
                         <iframe
                             :src="`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&playsinline=1`"
