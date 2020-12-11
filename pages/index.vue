@@ -12,7 +12,7 @@
                 :app-list="allList"
                 :quick-buttons="quickButtons"
                 :initial-limit="200"
-                @update:query="query = $event"
+                @update:query="onQueryUpdate"
             />
 
             <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
@@ -55,11 +57,11 @@ export default {
         // const { default: appList } = await import('~/static/app-list.json')
         // const { default: gamelist } = await import('~/static/game-list.json')
 
-        const { allList } = await import('~/helpers/get-list.js')
+        const { sortedAppList } = await import('~/helpers/get-list.js')
 
         return {
             // Filter app list to leave out data not needed for search
-            allList: allList.map( app => {
+            initialAppList: sortedAppList.map( app => {
                 return {
                     name: app.name,
                     status: app.status,
@@ -80,6 +82,7 @@ export default {
     data: function () {
         return {
             query: '',
+            fetchedAppList: [],
             quickButtons: [
                 {
                     label: '✅ Full Native Support',
@@ -122,6 +125,43 @@ export default {
                     query: 'Productivity'
                 },
             ]
+        }
+    },
+    computed: {
+        allList () {
+            return [
+                ...this.initialAppList,
+                ...this.fetchedAppList
+            ]
+        }
+    },
+    methods: {
+        async onQueryUpdate ( $event ) {
+            console.log('$event', $event)
+            this.query = $event
+
+
+            if (this.fetchedAppList.length !== 0) return
+
+            const fetchedListUrls = [
+                '/game-list.json',
+                '/homebrew-list.json'
+            ]
+
+            const fetchedLists = await Promise.all(fetchedListUrls.map( async listUrl => {
+                // Fetch List
+                const response = await axios.get(listUrl)
+                // Extract apps from response data
+                const fetchedApps = response.data
+
+                return fetchedApps
+            }))
+
+            console.log('fetchedLists', fetchedLists)
+
+            this.fetchedAppList = fetchedLists.flat(1)
+
+            return
         }
     }
 }
