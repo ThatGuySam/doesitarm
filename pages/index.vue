@@ -13,7 +13,18 @@
                 :quick-buttons="quickButtons"
                 :initial-limit="200"
                 @update:query="onQueryUpdate"
-            />
+            >
+                <template v-slot:before-search>
+                    <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
+
+                        <ListSummary
+                            :custom-numbers="customSummaryNumbers"
+                            class="max-w-4xl"
+                        />
+
+                    </div>
+                </template>
+            </Search>
 
             <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
                 <LinkButton
@@ -48,16 +59,21 @@
 <script>
 import axios from 'axios'
 
+import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
+
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+import ListSummary from '~/components/list-summary.vue'
 
 export default {
     async asyncData () {
         // const { default: appList } = await import('~/static/app-list.json')
         // const { default: gamelist } = await import('~/static/game-list.json')
 
-        const { sortedAppList } = await import('~/helpers/get-list.js')
+        const { sortedAppList, allList } = await import('~/helpers/get-list.js')
+
+
 
         return {
             // Filter app list to leave out data not needed for search
@@ -71,13 +87,15 @@ export default {
                     lastUpdated: app.lastUpdated,
                     category: app.category,
                 }
-            })
+            }),
+            customSummaryNumbers: getListSummaryNumbers(allList)
         }
     },
     components: {
         Search,
         LinkButton,
-        AllUpdatesSubscribe
+        AllUpdatesSubscribe,
+        ListSummary
     },
     data: function () {
         return {

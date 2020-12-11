@@ -1,13 +1,16 @@
 <template>
     <div class="search w-full">
-        <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
 
-            <ListSummary
-                :app-list="appList"
-                class="max-w-4xl"
-            />
+        <slot name="before-search">
+            <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
 
-        </div>
+                <ListSummary
+                    :app-list="appList"
+                    class="max-w-4xl"
+                />
+
+            </div>
+        </slot>
 
         <div class="search-input relative">
             <input
