@@ -24,7 +24,7 @@
                     }"
                     class="video-card-overlay absolute inset-0 flex justify-start items-start bg-gradient-to-tr from-black to-transparent p-4"
                 >
-                    <div class="play-circle w-10 h-10 bg-white-5 flex justify-center items-center outline-0 rounded-full ease">
+                    <div class="play-circle w-8 h-8 bg-white-2 flex justify-center items-center outline-0 rounded-full ease">
                         <svg
                             viewBox="0 0 18 18"
                             style="width:18px;height:18px;margin-left:3px"
@@ -36,7 +36,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="video-card-content absolute inset-0 flex items-end p-4">
+                <div class="video-card-content absolute inset-0 flex items-end py-4 px-6">
                     <div class="w-full text-sm text-left whitespace-normal">{{ video.name }}</div>
                 </div>
             </div>
