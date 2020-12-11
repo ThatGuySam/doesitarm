@@ -110,6 +110,8 @@ export default {
 
             // Load in the index to load out video
             this.activeVideoIndex = newVideoIndex
+
+            window.scroll({ top: 0, behavior: 'smooth' })
         }
     },
     head() {
