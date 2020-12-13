@@ -253,6 +253,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Quiet](https://lighthouse16.com/quiet/) - ✅ Yes, fully supported as of v2.6.7 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [SeaFile](https://www.seafile.com/en/download/) - ✳️ Yes, works via Rosetta 2 as of v7.0.10 - [Source](https://forum.seafile.com/t/native-support-for-apple-silicon/13390)
 * [SecKey](https://lighthouse16.com/seckey/) - ✅ Yes, fully supported as of v1.3.3 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/399#issuecomment-742175817)
