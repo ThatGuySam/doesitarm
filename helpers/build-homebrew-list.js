@@ -10,7 +10,7 @@ import axios from 'axios'
 const marked = require('marked')
 const HTMLParser = require(`node-html-parser`)
 
-// import { getAppEndpoint } from './app-derived'
+import { getAppEndpoint } from './app-derived'
 
 
 const statusesTranslations = {
@@ -155,10 +155,10 @@ export default async function () {
             // url: `https://formulae.brew.sh/formula/${formulae.name}`,
             text: getStatusText(formulae),
             slug,
-            // endpoint: getAppEndpoint({
-            //     slug,
-            //     category
-            // }),//`/formula/${slug}`,
+            endpoint: getAppEndpoint({
+                slug,
+                category
+            }),//`/formula/${slug}`,
             category,
             content: formulae.comments,
             relatedLinks: [

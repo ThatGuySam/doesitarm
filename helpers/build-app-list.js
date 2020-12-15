@@ -203,7 +203,7 @@ export default async function () {
                 // url,
                 text,
                 slug: appSlug,
-                // endpoint,
+                endpoint,
                 category,
                 // content: token.content,
                 relatedLinks
