@@ -17,7 +17,7 @@
                     <LinkButton
                         v-for="app in featuredApps"
                         :key="app.slug"
-                        :href="app.endpoint"
+                        :href="getAppEndpoint(app)"
                         :class="[
                             'inline-block text-xs rounded-lg py-1 px-2',
                         ]"
@@ -54,6 +54,9 @@
 </template>
 
 <script>
+
+import { getAppEndpoint } from '~/helpers/app-derived.js'
+
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
 import VideoRow from '~/components/video/row.vue'
@@ -109,6 +112,9 @@ export default {
 
             return `Apple Silicon performance and support videos for ${featuredAppsString}`
         }
+    },
+    methods: {
+        getAppEndpoint
     },
     head() {
         return {
