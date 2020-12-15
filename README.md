@@ -342,7 +342,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
 
 
-## Youtube Playlists
+## Youtube Apple Silicon Playlists
 * [Awais Mirza Video Tests](https://www.youtube.com/playlist?list=PLz5rnvLVJX5XF8cXAOQuarPIeP8Xr7b1_)
 * [Andrew Tsai Game Benchmarks](https://www.youtube.com/playlist?list=PLFbqxkNlqrHNK0i4WN99Jc8g-qSbKoZEy)
 * [Created Labs M1 Mackbook](https://www.youtube.com/playlist?list=PLcbQnQIwz6qSt-qsD3jCJaEw9fK8yXarA)
