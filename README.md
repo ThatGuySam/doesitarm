@@ -318,6 +318,14 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Zoom](https://zoom.us/download)  - ✳️ Yes, runs via Rosetta 2 - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/134)
 
 
+
+#### VPNs and Privacy
+
+* [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - 
+
+
+
+
 <!--- end-of-list -->
 
 
