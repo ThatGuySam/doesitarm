@@ -183,7 +183,6 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Productivity Tools
 
-* [1Password](https://1password.com/) - ✳️ Runs via Rosetta with native support currently in development. - [Forum Discussion](https://1password.community/discussion/114181/will-1password-run-on-apple-silicon-based-mac)
 * [Agenda](https://agenda.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Airmail](https://airmailapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v4.5.1 - [Release History](https://apps.apple.com/app/apple-store/id918858936)
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported  - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
@@ -194,7 +193,6 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
 * [Bear](https://bear.app/) - ✅ Yes, fully supported as v1.8.2 - [Bear Blog Post](https://blog.bear.app/2020/11/bear-gets-new-widgets-and-ready-for-big-sur/)
 * [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502 - [Issue Tracker](https://community.folivora.ai/)
-* [Bitwarden](https://bitwarden.com/) - ✳️ Yes, works via Rosetta 2 with a patch in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
 * [Blackmagic Disk Speed Test](https://apps.apple.com/app/id425264550) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/359#issuecomment-736255914)
 * [Box Drive](https://www.box.com/resources/downloads) - ⏹ Not yet, but it's currently in development. - [Official Post](https://support.box.com/hc/en-us/community/posts/360051323454-Box-Drive-s-system-extension-failed-to-load?page=1#community_comment_1500000009302)
 * [Chrome](https://www.google.com/chrome/) - ✅ Yes, fully supported as of v87 - [Article](https://9to5google.com/2020/11/17/chrome-mac-apple-silicon/)
@@ -206,15 +204,12 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Drafts](https://itunes.apple.com/app/id1236254471?ls=1&mt=8&at=11l4Cf&ct=site) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/draftsapp/status/1326263191601618945)
 * [Dropbox](https://www.dropbox.com) - ✳️ Yes, works via Rosetta 2 as of v110.4.458 - [Forum Post](https://www.dropboxforum.com/t5/Dropbox-desktop-client-builds/Stable-Build-110-4-458/m-p/470973/highlight/true#M6110)
 * [EasyConnect](https://lstratman.github.io/EasyConnect/) - 🔶 Unknown, more info needed - [Contribute](https://github.com/ThatGuySam/doesitarm/issues/219)
-* [Elpass](https://elpass.app/) - ✅ Yes, full native Apple Silicon Support as of v1.1.10 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/176)
-* [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [Fantastical](https://flexibits.com/fantastical) - ✅ Yes, Full Native Apple Silicon Support - [Media Post](https://www.macrumors.com/2020/11/12/fantastical-update-for-macos-big-sur-apple-silicon/)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ✅ Yes, Full Native Apple Silicon Support as of v84 - [Release Notes](https://www.mozilla.org/en-US/firefox/84.0/releasenotes/)
 * [flickery](https://eternalstorms.at/flickery) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.48 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Geekbench](https://www.geekbench.com/download/mac/) - ✅ Yes, full native support as of v5.3 - [Release Notes](https://www.geekbench.com/blog/2020/11/geekbench-53/)
 * [Glimpses](https://eternalstorms.at/glimpses) - ✅ Yes, Full Native Apple Silicon Support as of v2.2.3 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Google Backup and Sync](https://www.google.com/drive/download/) - 🚫 Not yet supported, unknown if Apple or Google issue - [Google Thread](https://support.google.com/drive/thread/85225515?hl=en&msgid=86860457) | [Reddit Thread](https://www.reddit.com/r/macbookair/comments/k65aps/m1_mba_google_backup_sync_error_8b227910/?sort=new) | [MacRumours Thread](https://forums.macrumors.com/threads/google-backup-and-sync-not-working-on-m1.2269295/page-3)
-* [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
 * [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [HazeOver](https://hazeover.com/) - ✅ Yes, Full Native Apple Silicon Support as of 1.8.8 - [Official News](https://hazeover.com/news.html)
 * [Highland 2](https://quoteunquoteapps.com/highland-2/) - ✅ Yes, Full Native Apple Silicon Support as of v2.9 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
@@ -223,14 +218,12 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [iMazing 2](https://imazing.com/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Release notes](https://downloads.imazing.com/mac/iMazing/2.13.1.14452/release-notes.html)
 * [Internal Phone Numbers](https://lighthouse16.com/internal-phone-numbers/) - ✅ Yes, fully supported as of v1.2.2 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [iStat Menus](https://bjango.com/mac/istatmenus/) - ✅ Yes, Full Native Apple Silicon Support as of v6.51 - [Official Twitter](https://twitter.com/bjango/status/1328863648270356482)
-* [IVPN](https://www.ivpn.net/apps-macos/) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/315)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keep It](http://reinventedsoftware.com/keepit/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9 - [Official News](http://reinventedsoftware.com/news/)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
 * [Key Codes](https://manytricks.com/keycodes/) - ✅ Yes, Full Native Apple Silicon Support as of v2.2 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [LaunchBar](https://www.obdev.at/products/launchbar/download.html) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/320)
 * [Ledger Live](https://www.ledger.com/ledger-live/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Source](https://github.com/ThatGuySam/doesitarm/pull/396)
-* [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - ✅ Yes, Full Native Apple Silicon Support from 5.0 - [Release notes](https://www.obdev.at/products/littlesnitch/releasenotes.html)
 * [MacZip](https://ezip.awehunt.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://ezip.awehunt.com/)
 * [Microsoft Edge](https://www.microsoft.com/en-us/edge) - ✳️ Yes, works via Rosetta 2 with native support in development - [Official Post](https://www.windowscentral.com/microsoft-edge-will-soon-support-apples-m1-chips)
 * [Microsoft Excel](https://www.microsoft.com/en-us/microsoft-365/office-365) - ✅ Yes, it was shown at WWDC - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5758)
@@ -241,7 +234,6 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Moom](https://manytricks.com/moom/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.20 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Nisus Writer Pro](https://nisus.com/pro/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
 * [Nisus Writer Express](https://nisus.com/Express/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
-* [NordVPN](https://nordvpn.com/download/nordvpn-site/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/317#issuecomment-736876490)
 * [Notion Desktop](https://www.notion.so) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/NotionHQ/status/1333867094463582208?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Etweet) [Verification](https://github.com/ThatGuySam/doesitarm/issues/378#issue-755529762)
 * [Noto](http://noto.ink/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [OmniFocus](https://www.omnigroup.com/omnifocus) - ✅ Yes, Full Native Apple Silicon Support as of v3.10 - [Release Notes](https://www.omnigroup.com/releasenotes/omnifocus)
@@ -259,25 +251,20 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [SeaDrive](https://www.seafile.com/en/download/) - 🚫 No, not yet supported only works on Intel-based Macs as of v2.0.9 - [Source](https://forum.seafile.com/t/seadrive-2-0-8-is-released-support-for-macos-11/13199/25)
 * [SeaFile](https://www.seafile.com/en/download/) - ✳️ Yes, works via Rosetta 2 as of v7.0.10 - [Source](https://forum.seafile.com/t/native-support-for-apple-silicon/13390)
-* [SecKey](https://lighthouse16.com/seckey/) - ✅ Yes, fully supported as of v1.3.3 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [SnagIt](https://www.techsmith.com/download/snagit/) - ✳️ Yes, works via Rosetta 2 but without video capture - [Source](https://github.com/ThatGuySam/doesitarm/issues/413) [Official documentation](https://support.techsmith.com/hc/en-us/articles/360052555611-Snagit-and-Apple-Silicon-Compatibility-Info)
 * [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/399#issuecomment-742175817)
 * [Tablecruncher](https://tablecruncher.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://tablecruncher.com/blog/2020/version-1.5.1-apple-silicon-ready/)
 * [TeamViewer](https://www.teamviewer.com/en-us/) - ✅ Yes, Full Native Apple Silicon Support as of v15.12.4 - [Release Notes](https://community.teamviewer.com/t5/Change-Logs-EN/macOS-v15-12-4-Full-Change-Log/m-p/107706)
 * [TouchSwitcher](https://hazeover.com/touchswitcher.html) - ✅ Yes, Full Native Apple Silicon Support as of 1.4 - [Official News](https://hazeover.com/news.html)
-* [Tor Browser](https://www.torproject.org/download/) - ✳️ Yes, works via Rosetta 2 but with a few page crashes - [Source](https://github.com/ThatGuySam/doesitarm/issues/436) [Issue tracker for tab crashes](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/40262)
 * [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Ulysses](https://ulysses.app/) - ✅ Yes, Full Native Apple Silicon Support as of v21 - [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/)
 * [Usher](https://manytricks.com/usher/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
-* [VeraCrypt](https://www.veracrypt.fr/en/Downloads.html) - ✳️ Yes, works via Rosetta 2 as of 1.24-Update8 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/355)
-* [Vivaldi](https://vivaldi.com/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/331)
 * [VMware Fusion](https://www.vmware.com/products/fusion.html) - ⏹ No, not working at all but support is in development - [Official Tweet](https://twitter.com/VMwareFusion/status/1326229094648832000)
 * [VMWare Horizon Client](https://my.vmware.com/en/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_horizon_clients/horizon_8) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/297)
 * [VMWare Remote Console](https://apps.apple.com/app/vmware-remote-console/id1230249825) - ✅ Yes, Full Native Apple Silicon Support as of v12.0.0 - [Release Notes](https://docs.vmware.com/en/VMware-Remote-Console/12.0/rn/VMware-Remote-Console-120-Release-Notes.html)
-* [VPN Tracker 365](https://www.vpntracker.com) - ✅ Yes, fully native IPsec, L2TP, OpenVPN, SonicWALL SSL VPN support as of v 21.0 - [Official page](https://www.vpntracker.com/us/VPN-Client-for-macOS-Big-Sur.html)
 * [WPS Office](https://apps.apple.com/cn/app/wps-office/id1443749478?l=en&mt=12) - ✅ Yes, full native support as of v3.0.1 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/149)
 * [Yoink](https://eternalstorms.at/yoink/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.11 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 
@@ -319,9 +306,22 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 
-#### VPNs and Privacy
+#### VPNs, Security, and Privacy
 
-* [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - 
+* [1Password](https://1password.com/) - ✳️ Runs via Rosetta with native support currently in development. - [Forum Discussion](https://1password.community/discussion/114181/will-1password-run-on-apple-silicon-based-mac)
+* [Bitwarden](https://bitwarden.com/) - ✳️ Yes, works via Rosetta 2 with a patch in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
+* [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/416#issue-760860704)
+* [Elpass](https://elpass.app/) - ✅ Yes, full native Apple Silicon Support as of v1.1.10 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/176)
+* [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
+* [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
+* [IVPN](https://www.ivpn.net/apps-macos/) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/315)
+* [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - ✅ Yes, Full Native Apple Silicon Support from 5.0 - [Release notes](https://www.obdev.at/products/littlesnitch/releasenotes.html)
+* [NordVPN](https://nordvpn.com/download/nordvpn-site/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/317#issuecomment-736876490)
+* [SecKey](https://lighthouse16.com/seckey/) - ✅ Yes, fully supported as of v1.3.3 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
+* [Tor Browser](https://www.torproject.org/download/) - ✳️ Yes, works via Rosetta 2 but with a few page crashes - [Source](https://github.com/ThatGuySam/doesitarm/issues/436) [Issue tracker for tab crashes](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/40262)
+* [VeraCrypt](https://www.veracrypt.fr/en/Downloads.html) - ✳️ Yes, works via Rosetta 2 as of 1.24-Update8 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/355)
+* [Vivaldi](https://vivaldi.com/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/331)
+* [VPN Tracker 365](https://www.vpntracker.com) - ✅ Yes, fully native IPsec, L2TP, OpenVPN, SonicWALL SSL VPN support as of v 21.0 - [Official page](https://www.vpntracker.com/us/VPN-Client-for-macOS-Big-Sur.html)
 
 
 
