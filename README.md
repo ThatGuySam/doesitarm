@@ -256,6 +256,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/399#issuecomment-742175817)
 * [Tablecruncher](https://tablecruncher.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://tablecruncher.com/blog/2020/version-1.5.1-apple-silicon-ready/)
 * [TeamViewer](https://www.teamviewer.com/en-us/) - ✅ Yes, Full Native Apple Silicon Support as of v15.12.4 - [Release Notes](https://community.teamviewer.com/t5/Change-Logs-EN/macOS-v15-12-4-Full-Change-Log/m-p/107706)
+* [Thunderbird](https://www.thunderbird.net/en-US/) - ✳️ Yes, works via Rosetta 2 - [Bugzilla Tracker](https://bugzilla.mozilla.org/show_bug.cgi?id=1678775)
 * [TouchSwitcher](https://hazeover.com/touchswitcher.html) - ✅ Yes, Full Native Apple Silicon Support as of 1.4 - [Official News](https://hazeover.com/news.html)
 * [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
