@@ -317,6 +317,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
 * [IVPN](https://www.ivpn.net/apps-macos/) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/315)
+* [LastPass](https://www.lastpass.com/) - ✳️ Yes, works via Rosetta 2, but the Safari extension has issues  - [Verification](https://github.com/ThatGuySam/doesitarm/issues/233#issuecomment-731506984) [Release Notes](https://lastpass.com/upgrade.php?fromwebsite=1&releasenotes=1) [Safari Issue](https://community.logmein.com/t5/Support-Discussions/macOS-Big-Sur-Safari-14-0-1-Official-Support/m-p/256549)
 * [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - ✅ Yes, Full Native Apple Silicon Support from 5.0 - [Release notes](https://www.obdev.at/products/littlesnitch/releasenotes.html)
 * [NordVPN](https://nordvpn.com/download/nordvpn-site/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/317#issuecomment-736876490)
 * [SecKey](https://lighthouse16.com/seckey/) - ✅ Yes, fully supported as of v1.3.3 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
