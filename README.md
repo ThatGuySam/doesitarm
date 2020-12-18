@@ -33,10 +33,12 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [CocoaPods](https://cocoapods.org/) - ✳️ Yes, it works via Rosetta 2 - [Issue](https://github.com/CocoaPods/CocoaPods/issues/9907)
 * [CotEditor](https://coteditor.com) - ✅ Yes, full native support as of 4.0.0 - [App Store](https://itunes.apple.com/app/coteditor/id1024640650)
 * [Cyberduck](https://cyberduck.io/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/333)
+* [Dash for macOS](https://kapeli.com/dash) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/225#issuecomment-734750855)
 * [DBeaver](https://dbeaver.io/) - ✳️ Yes, works via Rosetta 2 using the pkg installer - [Issue Tracking](https://github.com/dbeaver/dbeaver/issues/10470)
 * [Deno](https://deno.land/) - ✅ Yes, Full Native Apple Silicon Support - [Issue](https://github.com/denoland/deno/issues/8346)
 * [Docker](https://www.docker.com/products#/mac) - ⏹ Not yet, but M1 builds are now available via the Preview Program - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409) [M1 Preview and Download](https://www.docker.com/blog/download-and-try-the-tech-preview-of-docker-desktop-for-m1/)
 * [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
+* [FFmpeg](https://ffmpeg.org/download.html) - 🚫 Not yet supported because of unsupported or broken dependencies on arm64: rsvg, x264, libvpx, soxr - [Issue](https://trac.macports.org/ticket/61668)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
 * [Flutter](https://flutter.dev/docs/get-started/install/macos) - ✳️ Yes, works via Rosetta 2 with native support in development - [Github Issue](https://github.com/flutter/flutter/issues/60118#issuecomment-695341296)
 * [Fork](https://git-fork.com/) - ✅ Yes, full native support as of v2.1.0 - [Release notes](https://git-fork.com/releasenotes)
@@ -176,6 +178,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 * [Archicad](https://graphisoft.com/solutions/products/archicad) - 🚫 Not yet supported as of v24 - [Graphisoft Thread](https://archicad-talk.graphisoft.com/viewtopic.php?p=312614) [Reddit thread](https://www.reddit.com/r/ArchiCAD/comments/hsjs6l/archicad_and_macos_armtransition/)
 * [AutoCAD](https://www.autodesk.com/products/autocad/overview?plc=ACDIST&term=1-YEAR&support=ADVANCED&quantity=1) - 🚫 Not yet supported only works on Intel-based Macs - [AutoDesk Forums](https://forums.autodesk.com/t5/autocad-for-mac-forum/apple-silicon/m-p/9652836)
+* [PrusaSlicer](https://www.prusa3d.com/prusaslicer/) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/379#issue-755576203)
 * [Shaper3D](https://www.shapr3d.com/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=2211)
 * [SketchUp](https://www.sketchup.com/) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://forums.sketchup.com/t/the-new-m1-processor/141946)
 * [Timebox 3D Collage Maker](https://timeboxapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.1 - [Release Notes](https://timeboxapp.com/whats-new-81)
@@ -184,6 +187,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Productivity Tools
 
+* [AdBlock Pro for Safari](https://apps.apple.com/app/id1018301773) - ✅ Yes, full native support as of v8.1.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/237#issue-746743506)
 * [Agenda](https://agenda.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Airmail](https://airmailapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v4.5.1 - [Release History](https://apps.apple.com/app/apple-store/id918858936)
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported  - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
@@ -225,6 +229,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Key Codes](https://manytricks.com/keycodes/) - ✅ Yes, Full Native Apple Silicon Support as of v2.2 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [LaunchBar](https://www.obdev.at/products/launchbar/download.html) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/320)
 * [Ledger Live](https://www.ledger.com/ledger-live/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Source](https://github.com/ThatGuySam/doesitarm/pull/396)
+* [LibreOffice](https://www.libreoffice.org/download/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/371#issue-755004669) [Official Post](https://www.collaboraoffice.com/desktop/update-on-libreoffice-support-for-arm-based-macs/)
 * [MacZip](https://ezip.awehunt.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://ezip.awehunt.com/)
 * [Microsoft Edge](https://www.microsoft.com/en-us/edge) - ✳️ Yes, works via Rosetta 2, native Apple Silicon build available for insiders - [Insider Download](https://www.microsoftedgeinsider.com/en-us/download/canary)
 * [Microsoft Excel](https://apps.apple.com/cn/app/microsoft-excel/id462058435?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
@@ -236,6 +241,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Moom](https://manytricks.com/moom/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.20 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Nisus Writer Pro](https://nisus.com/pro/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
 * [Nisus Writer Express](https://nisus.com/Express/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
+* [Notability](https://www.gingerlabs.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/417#issue-760864996)
 * [Notion Desktop](https://www.notion.so) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/NotionHQ/status/1333867094463582208?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Etweet) [Verification](https://github.com/ThatGuySam/doesitarm/issues/378#issue-755529762)
 * [Noto](http://noto.ink/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [OmniFocus](https://www.omnigroup.com/omnifocus) - ✅ Yes, Full Native Apple Silicon Support as of v3.10 - [Release Notes](https://www.omnigroup.com/releasenotes/omnifocus)
@@ -249,7 +255,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Post-it®](https://apps.apple.com/app/post-it/id1475777828) - ✳️ Yes, runs via Rosetta 2, with native support coming soon - [Source](https://github.com/ThatGuySam/doesitarm/issues/197#issuecomment-732100064)
 * [Quiet](https://lighthouse16.com/quiet/) - ✅ Yes, fully supported as of v2.6.7 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Remotix](https://remotix.com/downloads-mac/) - ✅ Yes, fully supported as of v6.3 - [Release Notes](https://downloads.remotix.com/remotix-mac/release-notes.html?v=6.3)
-* [Safari](https://www.apple.com/safari/) - ✅ Yes, fully supported
+* [Safari Web Browser](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [SeaDrive](https://www.seafile.com/en/download/) - 🚫 No, not yet supported only works on Intel-based Macs as of v2.0.9 - [Source](https://forum.seafile.com/t/seadrive-2-0-8-is-released-support-for-macos-11/13199/25)
 * [SeaFile](https://www.seafile.com/en/download/) - ✳️ Yes, works via Rosetta 2 as of v7.0.10 - [Source](https://forum.seafile.com/t/native-support-for-apple-silicon/13390)
@@ -298,6 +304,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 * [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/59#issuecomment-731506903)
 * [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
+* [Mattermost](https://mattermost.com/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/245#issuecomment-735282100)
 * [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/191#issuecomment-730561942)
 * [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
 * [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/)  - ✳️ Runs via Rosetta 2 
