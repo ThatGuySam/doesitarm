@@ -177,7 +177,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### 3D and Architecture
 
-* [Archicad](https://graphisoft.com/solutions/products/archicad) - 🚫 Not yet supported as of v24 - [Graphisoft Thread](https://archicad-talk.graphisoft.com/viewtopic.php?p=312614) [Reddit thread](https://www.reddit.com/r/ArchiCAD/comments/hsjs6l/archicad_and_macos_armtransition/)
+* [Archicad](https://graphisoft.com/solutions/products/archicad) - ✳️ Yes, works via Rosetta 2 - [Graphisoft support update](https://helpcenter.graphisoft.com/knowledgebase/130674/) [Graphisoft Thread](https://archicad-talk.graphisoft.com/viewtopic.php?p=312614) [Reddit thread](https://www.reddit.com/r/ArchiCAD/comments/hsjs6l/archicad_and_macos_armtransition/) [Tudy's feedback](https://github.com/ThatGuySam/doesitarm/pull/189#issuecomment-742729489)
 * [AutoCAD](https://www.autodesk.com/products/autocad/overview?plc=ACDIST&term=1-YEAR&support=ADVANCED&quantity=1) - 🚫 Not yet supported only works on Intel-based Macs - [AutoDesk Forums](https://forums.autodesk.com/t5/autocad-for-mac-forum/apple-silicon/m-p/9652836)
 * [PrusaSlicer](https://www.prusa3d.com/prusaslicer/) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/379#issue-755576203)
 * [Shaper3D](https://www.shapr3d.com/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=2211)
@@ -215,7 +215,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [flickery](https://eternalstorms.at/flickery) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.48 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Geekbench](https://www.geekbench.com/download/mac/) - ✅ Yes, full native support as of v5.3 - [Release Notes](https://www.geekbench.com/blog/2020/11/geekbench-53/)
 * [Glimpses](https://eternalstorms.at/glimpses) - ✅ Yes, Full Native Apple Silicon Support as of v2.2.3 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
-* [Google Backup and Sync](https://www.google.com/drive/download/) - 🚫 Not yet supported, unknown if Apple or Google issue - [Google Thread](https://support.google.com/drive/thread/85225515?hl=en&msgid=86860457) | [Reddit Thread](https://www.reddit.com/r/macbookair/comments/k65aps/m1_mba_google_backup_sync_error_8b227910/?sort=new) | [MacRumours Thread](https://forums.macrumors.com/threads/google-backup-and-sync-not-working-on-m1.2269295/page-3)
+* [Google Backup and Sync](https://www.google.com/drive/download/) - 🚫 Not yet supported, unknown if Apple or Google issue - [Google Thread](https://support.google.com/drive/thread/85225515?hl=en&msgid=86860457) [Reddit Thread](https://www.reddit.com/r/macbookair/comments/k65aps/m1_mba_google_backup_sync_error_8b227910/?sort=new) [MacRumours Thread](https://forums.macrumors.com/threads/google-backup-and-sync-not-working-on-m1.2269295/page-3)
 * [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [HazeOver](https://hazeover.com/) - ✅ Yes, Full Native Apple Silicon Support as of 1.8.8 - [Official News](https://hazeover.com/news.html)
 * [Highland 2](https://quoteunquoteapps.com/highland-2/) - ✅ Yes, Full Native Apple Silicon Support as of v2.9 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
