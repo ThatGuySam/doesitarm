@@ -347,6 +347,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 ## More Apple Silicon Lists
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
 * [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
+* [Ported2M1](https://ported2m1.com/) - Beautiful list with app support discussion
 * [MacRumors List](https://forums.macrumors.com/threads/universal-and-native-apple-silicon-apps.2267176/) - List of Universal and Native Apple Silicon Apps
 * [RoaringApps](https://roaringapps.com/collections/list-of-apple-silicon-native-apps) - List of apps ready for Apple Silicon M1 chip Macs
 * [Laravel Supported Apps](https://laravelm1.tighten.co/) - List of Laravel-related apps and their status on Apple SIlicon
