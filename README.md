@@ -184,6 +184,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Tumult Hype](https://tumult.com/hype/) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Blog Post](https://blog.tumult.com/2020/11/23/introducing-tumult-hype-v4-1-with-apple-silicon-and-big-sur-compatibility/)
 * [Vuo](https://vuo.org/download) -  ✳️ Runs via Rosetta with native support currently in development - [Source 1](https://vuo.org/comment/7265#comment-7265) [Source 2](https://vuo.org/comment/7781#comment-7781)
 * [Wirecast](https://www.telestream.net/wirecast/) - ⏹ No, not working at all but support is in development - [Official Status](http://www.telestream.net/telestream-support/wire-cast/support.htm?accordion=faqBigSur#faqs)
+* [Wondershare Filmora](https://apps.apple.com/us/app/filmora-video-editor/id1516822341?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://filmora.wondershare.com/filmora-supports-apple-arm.html)
 
 
 
