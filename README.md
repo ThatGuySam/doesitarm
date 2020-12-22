@@ -371,6 +371,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Big List](https://airtable.com/shribWFi8yrG9B1nh/tbl6aypsMfuofEaJi) - An Airtable List of over 400 apps and their support on Big Sur and Apple Silicon
 * [Ivan Enderlin Twitter Thread](https://twitter.com/mnt_io/status/1327166454765150208?s=21) - A twitter thread with open status contributions
 * [Does It ARM Twitter Thread](https://twitter.com/DoesItARM/status/1330027384041508865) - Does It ARM's own twitter thread for reporting and suggecting apps
+* [Official Adobe M1 List](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html) - Adobe's official list of app support for M1
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
 
 
