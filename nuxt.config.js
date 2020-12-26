@@ -160,6 +160,12 @@ export default {
                         })
                     })
 
+                    // Build routes for app types that support benchmark endpoints
+                    const benchmarkRoutes = [
+                        ...appRoutes,
+                        // ...gameRoutes,
+                    ].flat(1).map( route => `${route}/benchmarks`)
+
                     // console.log('homebrewRoutes', homebrewRoutes)
 
                     const categoryRoutes = Object.keys(categories).map( slug => ({
@@ -171,8 +177,11 @@ export default {
                         ...appRoutes,
                         ...gameRoutes,
                         ...homebrewRoutes,
+
+                        // Non-app routes
                         ...videoRoutes,
-                        ...categoryRoutes
+                        ...categoryRoutes,
+                        ...benchmarkRoutes
                     ]
                 })
         }
