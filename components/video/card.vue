@@ -2,7 +2,7 @@
 
     <div class="video-card">
         <a
-            :href="video.endpoint"
+            :href="videoEndpoint"
             class=""
         >
             <div class="video-card-container relative overflow-hidden bg-black">
@@ -47,6 +47,8 @@
 
 <script>
 
+import { getVideoEndpoint } from '~/helpers/app-derived.js'
+
 export default {
     props: {
         video: {
@@ -74,7 +76,13 @@ export default {
                 // console.log('thumbnail', thumbnail)
                 return `${thumbnail.url} ${thumbnail.width}w`
             }).join(', ')
+        },
+        videoEndpoint () {
+            return getVideoEndpoint(this.video)
         }
+    },
+    methods: {
+        getVideoEndpoint
     }
 }
 

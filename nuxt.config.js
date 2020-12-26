@@ -8,7 +8,7 @@ import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
 
 import { categories } from './helpers/categories.js'
-import { getAppEndpoint } from './helpers/app-derived.js'
+import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 
 
 const listsOptions = [
@@ -121,6 +121,8 @@ export default {
                 ...listsOptions,
                 videoListOptions
             ].map(async list => {
+                // Read saved lists
+
                 const methodName = `Reading ${list.path}`
                 console.time(methodName)
 
@@ -146,8 +148,14 @@ export default {
                         videoRoutes,
                         homebrewRoutes
                     ] = lists.map((list, listI) => {
-
                         return list.map( app => {
+
+                            const isVideo = (app.category === undefined)
+
+                            if (isVideo) {
+                                return getVideoEndpoint(app)
+                            }
+
                             return getAppEndpoint(app)
                         })
                     })

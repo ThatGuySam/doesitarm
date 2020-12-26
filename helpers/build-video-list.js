@@ -3,6 +3,7 @@ import slugify from 'slugify'
 import axios from 'axios'
 
 import { byTimeThenNull } from './sort-list.js'
+import { getVideoEndpoint } from './app-derived.js'
 import parseGithubDate from './parse-github-date'
 
 const videoFeaturesApp = function (app, video) {
@@ -30,6 +31,10 @@ export default async function ( applist ) {
     const videos = []
 
     for (const videoId in fetchedVideos) {
+
+        // Skip private videos
+        if (fetchedVideos[videoId].title === 'Private video') continue
+
         // Build video slug
         const slug = slugify(`${fetchedVideos[videoId].title}-i-${videoId}`, {
             lower: true,
@@ -61,7 +66,9 @@ export default async function ( applist ) {
             slug,
             timestamps: fetchedVideos[videoId].timestamps,
             thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
-            endpoint: `/tv/${slug}`
+            endpoint: getVideoEndpoint({
+                slug
+            })
         })
     }
 
