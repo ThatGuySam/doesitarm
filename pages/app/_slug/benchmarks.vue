@@ -1,9 +1,32 @@
 <template>
     <section class="container py-16">
         <div class="flex flex-col items-center text-center space-y-8">
-            <VideoPlayer
-                :video="video"
-            />
+            <template
+                v-if="video"
+            >
+                <VideoPlayer
+                    :video="video"
+                />
+            </template>
+            <template v-else>
+                <div
+                    :style="{
+                        'left': '50%',
+                        'right': '50%',
+                        'margin-left': '-50vw',
+                        'margin-right': '-50vw'
+                    }"
+                    class="video-canvas w-screen flex justify-center bg-black"
+                >
+                    <div class="ratio-wrapper w-full max-w-4xl">
+                        <div class="relative overflow-hidden w-full pb-16/9">
+                            <div class="absolute h-full w-full flex justify-center items-center">
+                                <div class="message text-4xl md:text-6xl font-hairline leading-tight text-center">No videos yet</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
 
             <!-- <h1 class="title text-sm md:text-3xl font-semibold">
                 {{ video.name }}
@@ -14,6 +37,7 @@
                     Benchmark Videos
                 </h2>
                 <VideoRow
+                    v-if="relatedVideos.length !== 0"
                     :videos="relatedVideos"
                     :active-video-id="video.id"
                 />
@@ -24,6 +48,7 @@
                     Performance Videos
                 </h2>
                 <VideoRow
+                    v-if="relatedVideos.length !== 0"
                     :videos="relatedVideos"
                     :active-video-id="video.id"
                 />
@@ -34,6 +59,7 @@
                     More Videos
                 </h2>
                 <VideoRow
+                    v-if="relatedVideos.length !== 0"
                     :videos="relatedVideos"
                     :active-video-id="video.id"
                 />
@@ -80,6 +106,8 @@ export default {
         // const featuredApps = []
 
         const relatedVideos = videosRelatedToApp( app )
+
+        // console.log('relatedVideos', relatedVideos)
 
         return {
             app,
