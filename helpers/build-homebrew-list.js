@@ -84,8 +84,8 @@ class MakeHomebrewList {
             return false
         }
 
-        console.log('formulaData', formulaData)
-        console.log('formulae', formulae)
+        // console.log('formulaData', formulaData)
+        // console.log('formulae', formulae)
 
         // Check the official list first since it's data is newer and more frequently updated
         const hasStableFormula = (formulaData.bottle.stable !== undefined)
