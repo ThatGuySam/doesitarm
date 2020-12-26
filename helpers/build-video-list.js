@@ -6,6 +6,10 @@ import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
 import parseGithubDate from './parse-github-date'
 
+export function matchesWholeWord (needle, haystack) {
+    return new RegExp('\\b' + needle + '\\b').test(haystack)
+}
+
 const videoFeaturesApp = function (app, video) {
     const appFuzzyName = app.name.toLowerCase()
     if (video.title.toLowerCase().includes(appFuzzyName)) return true
@@ -14,7 +18,7 @@ const videoFeaturesApp = function (app, video) {
 
     if (appIsInTimestamps) return true
 
-    if (video.description.toLowerCase().includes(appFuzzyName)) return true
+    if (matchesWholeWord(appFuzzyName, video.description.toLowerCase())) return true
 
     return false
 }

@@ -71,40 +71,17 @@ export default {
     },
     async asyncData ({ params: { slug } }) {
 
-        const { allVideoList: allVideoAppsList } = await import('~/helpers/get-list.js')
+        const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
         const { default: videoList } = await import('~/static/video-list.json')
-
-        const featuredApps = []
 
         // Find the video for our current page
         const video = videoList.find(video => (video.slug === slug))
 
-        console.log('video', video)
+        // Get featured apps
+        const featuredApps = appsRelatedToVideo(video)
 
-        // Find the apps listed in this video
-        for (const app of allVideoAppsList) {
-            // Skip this app if it's not listed in the videos apps
-            if (!video.apps.includes(app.slug)) continue
-
-            // Add this app to our featured app list
-            featuredApps.push(app)
-        }
-
-        const relatedVideos = []
-
-        // Find other videos that also feature this video's app
-        for (const otherVideo of videoList) {
-            for (const app of featuredApps) {
-                // Skip if this app is not in the other video's apps
-                if (!otherVideo.apps.includes(app.slug)) continue
-
-                // Skip if the other video is, in fact, this video
-                if (otherVideo.slug === video.slug) continue
-
-                // Add this video to our related videos list
-                relatedVideos.push(otherVideo)
-            }
-        }
+        // Get related videos
+        const relatedVideos = videosRelatedToVideo(video)
 
         return {
             video,
