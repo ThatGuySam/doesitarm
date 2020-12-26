@@ -65,6 +65,12 @@ export const categories = {
         pluralLabel: '3D and Architecture Applications',
         slug: '3d-and-architecture',
     },
+    'vpns-security-and-privacy': {
+        ...categoryTemplate,
+        label: 'VPNs, Security, and Privacy',
+        pluralLabel: 'VPN, Security, and Privacy Applications',
+        slug: 'vpns-security-and-privacy',
+    },
 
     // Special Lists
     'games': {

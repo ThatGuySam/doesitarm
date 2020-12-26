@@ -4,7 +4,7 @@ import slugify from 'slugify'
 import axios from 'axios'
 
 // import { statuses } from './build-app-list'
-// import { getAppEndpoint } from './app-derived'
+import { getAppEndpoint } from './app-derived'
 
 
 // console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
@@ -140,10 +140,10 @@ export default async function () {
             // url: `https://rawg.io/search?query=${encodeURIComponent(game.Games)}`,
             text: getStatusText(game),
             slug,
-            // endpoint: getAppEndpoint({
-            //     slug,
-            //     category
-            // }),//`/game/${slug}`,
+            endpoint: getAppEndpoint({
+                slug,
+                category
+            }),//`/game/${slug}`,
             category,
             content: '',
             // relatedLinks: [],
