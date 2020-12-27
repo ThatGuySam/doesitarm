@@ -35,9 +35,9 @@
 
 
             <div class="related-videos w-full max-w-4xl">
-                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                <h1 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Benchmark Videos
-                </h2>
+                </h1>
                 <!-- <pre class="text-left">{{ benchmarkVideos }}</pre> -->
                 <VideoRow
                     :videos="benchmarkVideos"
