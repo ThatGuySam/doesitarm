@@ -99,6 +99,9 @@ export default async function ( applist ) {
         // Skip private videos
         if (fetchedVideos[videoId].title === 'Private video') continue
 
+        // Skip deleted videos
+        if (fetchedVideos[videoId].title === 'Deleted video') continue
+
         // Build video slug
         const slug = slugify(`${fetchedVideos[videoId].title}-i-${videoId}`, {
             lower: true,
