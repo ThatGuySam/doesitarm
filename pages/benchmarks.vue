@@ -1,6 +1,6 @@
 <template>
     <section class="container relative md:static overflow-hidden md:overflow-visible pb-16">
-        <div class="flex flex-col items-center text-center space-y-6">
+        <div class="flex flex-col items-center text-center space-y-12">
             <BgPlayer
                 :video="video"
                 class="absolute overflow-hidden w-2x-screen md:w-full"
@@ -48,44 +48,6 @@
                 />
             </div>
 
-            <div
-                v-if="performanceVideos.length !== 0"
-                class="performance-videos w-full max-w-4xl"
-            >
-                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                    Performance Videos
-                </h2>
-                <!-- <pre class="text-left">{{ performanceVideos }}</pre> -->
-                <VideoRow
-                    :videos="performanceVideos"
-                />
-            </div>
-
-
-            <div
-                class="all-videos w-full max-w-4xl"
-            >
-                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                    All Videos
-                </h2>
-                <!-- <pre class="text-left">{{ performanceVideos }}</pre> -->
-                <VideoRow
-                    :videos="allVideos"
-                />
-            </div>
-
-            <!-- video: {{ video }} -->
-
-            <!-- <div class="links space-y-6 sm:space-x-6 mb-8">
-                <LinkButton
-                    v-for="(link, i) in app.relatedLinks"
-                    :key="i"
-                    :href="link.href"
-                    target="_blank"
-                    class=""
-                >{{ (i === 0) ? 'View' : link.label }}</LinkButton>
-            </div> -->
-
         </div>
     </section>
 </template>
@@ -125,17 +87,57 @@ export default {
     },
     data: function () {
         return {
-            benchmarkVideos: [],
-            performanceVideos: [],
             videoRows: {
-                benchmarks: {
+                'video-benchmarks': {
+                    heading: 'Video Editing Benchmarks',
+                    matchesCondition: video => {
+                        return video.tags.includes('benchmark') && video.tags.includes('video-and-motion-tools')
+                    },
+                    videos: []
+                },
+                'music-and-audio-tools': {
+                    heading: 'Music and DAW Performance',
+                    matchesCondition: video => {
+                        return video.tags.includes('music-and-audio-tools')
+                    },
+                    videos: []
+                },
+                // 'science-and-research-software': {
+                //     heading: 'Science and Research',
+                //     matchesCondition: video => {
+                //         return video.tags.includes('science-and-research-software')
+                //     },
+                //     videos: []
+                // },
+                'photo-and-graphic-tools': {
+                    heading: 'Photography and Design Compatibility',
+                    matchesCondition: video => {
+                        return video.tags.includes('photo-and-graphic-tools')
+                    },
+                    videos: []
+                },
+                'games': {
+                    heading: 'Gaming Benchmarks',
+                    matchesCondition: video => {
+                        return video.tags.includes('benchmark') && video.tags.includes('games')
+                    },
+                    videos: []
+                },
+                'benchmarks': {
                     heading: 'Benchmark Videos',
                     matchesCondition: video => video.tags.includes('benchmark'),
                     videos: []
                 },
-                performance: {
+                'performance': {
                     heading: 'Performance Videos',
                     matchesCondition: video => video.tags.includes('performance'),
+                    videos: []
+                },
+
+                'other': {
+                    heading: 'More Videos',
+                    // Always true
+                    matchesCondition: () => true,
                     videos: []
                 }
             }
@@ -156,17 +158,6 @@ export default {
     },
     created () {
 
-        // const videoRows = [
-        //     {
-        //         name: 'benchmarks',
-        //         matchesCondition: video => video.tags.includes('benchmark')
-        //     },
-        //     {
-        //         name: 'performance',
-        //         matchesCondition: video => video.tags.includes('performance')
-        //     }
-        // ]
-
         // Move videos to relevant categories
         this.allVideos.forEach((video, index) => {
             // console.log('video.name', video.name)
@@ -184,6 +175,8 @@ export default {
             }
 
         })
+
+        console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
 
     },
     head() {
