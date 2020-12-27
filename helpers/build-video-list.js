@@ -41,14 +41,18 @@ const generateVideoTags = function ( video ) {
         }
     }
 
-    const videoTags = video.tags
+    const videoTags = new Set()
+
+    video.tags.forEach( tag => {
+        videoTags.add(tag)
+    })
 
     // Match tags against video titles and descriptions
     for (const tagKey in tags) {
 
         // Skip if this video already has this tag
         // then skip it
-        if (videoTags.includes(tagKey)) continue
+        if (videoTags.has(tagKey)) continue
 
         const matchingWords = [
             tagKey,
@@ -59,11 +63,11 @@ const generateVideoTags = function ( video ) {
 
             // Skip if this video already has this tag
             // then stop this loop
-            if (videoTags.includes(tagKey)) break
+            if (videoTags.has(tagKey)) break
 
             // Check title
             if (matchesWholeWord(tagWord.toLowerCase(), video.title.toLowerCase())) {
-                videoTags.push(tagKey)
+                videoTags.add(tagKey)
 
                 // console.log(video.title, 'has', tagKey, 'tag')
 
@@ -73,7 +77,7 @@ const generateVideoTags = function ( video ) {
 
             // Check description
             if (matchesWholeWord(tagWord.toLowerCase(), video.description.toLowerCase())) {
-                videoTags.push(tagKey)
+                videoTags.add(tagKey)
 
                 // console.log(video.title, 'has', tagKey, 'tag')
             }
@@ -109,10 +113,14 @@ export default async function ( applist ) {
         })
 
         const apps = []
+        // Generate new tag set based on api data
+        const tags = generateVideoTags(fetchedVideos[videoId])
 
         for ( const app of applist ) {
             if (videoFeaturesApp(app, fetchedVideos[videoId])) {
                 apps.push(app.slug)
+
+                tags.add(app.category.slug)
             }
         }
 
@@ -135,7 +143,8 @@ export default async function ( applist ) {
                 name: fetchedVideos[videoId].rawData.snippet.channelTitle,
                 id: fetchedVideos[videoId].rawData.snippet.channelId
             },
-            tags: generateVideoTags(fetchedVideos[videoId]),
+            // Convert tags set into array
+            tags: Array.from(tags),
             timestamps: fetchedVideos[videoId].timestamps,
             thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
             endpoint: getVideoEndpoint({
