@@ -38,33 +38,36 @@
                 </h2>
                 <!-- <pre class="text-left">{{ benchmarkVideos }}</pre> -->
                 <VideoRow
-                    v-if="benchmarkVideos.length !== 0"
                     :videos="benchmarkVideos"
-                    :active-video-id="video.id"
+                    :active-video-id="activeVideoId"
                 />
             </div>
 
-            <div class="related-videos w-full max-w-4xl">
+            <div
+                v-if="performanceVideos.length !== 0"
+                class="performance-videos w-full max-w-4xl"
+            >
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Performance Videos
                 </h2>
                 <!-- <pre class="text-left">{{ performanceVideos }}</pre> -->
                 <VideoRow
-                    v-if="performanceVideos.length !== 0"
                     :videos="performanceVideos"
-                    :active-video-id="video.id"
+                    :active-video-id="activeVideoId"
                 />
             </div>
 
-            <div class="related-videos w-full max-w-4xl">
+            <div
+                v-if="moreVideos.length !== 0"
+                class="related-videos w-full max-w-4xl"
+            >
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     More Videos
                 </h2>
                 <!-- <pre class="text-left">{{ relatedVideos }}</pre> -->
                 <VideoRow
-                    v-if="moreVideos.length !== 0"
                     :videos="moreVideos"
-                    :active-video-id="video.id"
+                    :active-video-id="activeVideoId"
                 />
             </div>
 
@@ -144,6 +147,9 @@ export default {
         description () {
             return `Apple Silicon benchmark, performance, and support videos for ${this.app.name}`
         },
+        activeVideoId () {
+            return (this.video === Object(this.video)) ? this.video.id : null
+        }
     },
     created () {
 
