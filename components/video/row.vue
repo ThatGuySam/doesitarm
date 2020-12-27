@@ -7,8 +7,9 @@
             }"
             class="video-row-contents flex overflow-x-auto whitespace-no-wrap py-2 space-x-6"
         >
-            <VideoCard
+            <component
                 v-for="video in videos"
+                :is="cardType ( video )"
                 :key="video.slug"
                 :video="video"
                 :style="{
@@ -68,11 +69,13 @@
 
 <script>
 
+import SubmitCard from '~/components/video/submit-card.vue'
 import VideoCard from '~/components/video/card.vue'
 
 
 export default {
     components: {
+        SubmitCard,
         VideoCard
     },
     props: {
@@ -92,6 +95,14 @@ export default {
     methods: {
         scrollRow ( pixels ) {
             this.$refs['row'].scrollBy({ left: pixels, behavior: 'smooth' })
+        },
+        isSubmitCard ( video ) {
+            return video.endpoint.includes('https://docs.google.com/forms')
+        },
+        cardType ( video ) {
+            if (this.isSubmitCard(video)) return SubmitCard
+
+            return VideoCard
         }
     }
 }

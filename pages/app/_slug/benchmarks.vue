@@ -122,7 +122,8 @@ export default {
 
         return {
             app,
-            allVideos: relatedVideos
+            allVideos: relatedVideos,
+            submitVideoCard
         }
     },
     data: function () {
@@ -184,13 +185,14 @@ export default {
             this.performanceVideos.push(video)
         })
 
+        // Append submit card to end
+        this.benchmarkVideos.push(this.submitVideoCard)
+
 
         // console.log('Added performance videos')
         // console.log('benchmarkVideos.length', this.benchmarkVideos.length)
         // console.log('performanceVideos.length', this.performanceVideos.length)
         // console.log('moreVideos.length', this.moreVideos.length)
-
-
     },
     mounted () {
         window.onhashchange = this.loadVideoFromHash
