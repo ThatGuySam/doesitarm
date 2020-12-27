@@ -128,6 +128,10 @@ export default async function ( applist ) {
             lastUpdated,
             apps,
             slug,
+            channel:{
+                name: fetchedVideos[videoId].rawData.snippet.channelTitle,
+                id: fetchedVideos[videoId].rawData.snippet.channelId
+            },
             tags: generateVideoTags(fetchedVideos[videoId]),
             timestamps: fetchedVideos[videoId].timestamps,
             thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,

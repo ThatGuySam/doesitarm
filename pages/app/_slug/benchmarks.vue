@@ -7,6 +7,10 @@
                 <VideoPlayer
                     :video="video"
                 />
+                <ChannelCredit
+                    :video="video"
+                    class="flex w-full justify-start md:px-10"
+                />
             </template>
             <template v-else>
                 <div
@@ -92,13 +96,15 @@ import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
 import VideoRow from '~/components/video/row.vue'
 import VideoPlayer from '~/components/video/player.vue'
+import ChannelCredit from '~/components/video/channel-credit.vue'
 
 export default {
     components: {
         LinkButton,
         EmailSubscribe,
         VideoRow,
-        VideoPlayer
+        VideoPlayer,
+        ChannelCredit
     },
     async asyncData ({ params: { slug } }) {
 

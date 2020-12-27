@@ -5,9 +5,20 @@
                 :video="video"
             />
 
-            <h1 class="title text-sm md:text-3xl font-semibold">
-                {{ video.name }}
-            </h1>
+            <div
+                class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10"
+            >
+                <h1 class="title text-lg md:text-2xl font-semibold">
+                    {{ video.name }}
+                </h1>
+
+                <ChannelCredit
+                    :video="video"
+                />
+            </div>
+
+            <hr class="w-full" >
+
 
             <div class="related-apps w-full">
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
@@ -61,13 +72,15 @@ import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
 import VideoRow from '~/components/video/row.vue'
 import VideoPlayer from '~/components/video/player.vue'
+import ChannelCredit from '~/components/video/channel-credit.vue'
 
 export default {
     components: {
         LinkButton,
         EmailSubscribe,
         VideoRow,
-        VideoPlayer
+        VideoPlayer,
+        ChannelCredit
     },
     async asyncData ({ params: { slug } }) {
 
