@@ -16,7 +16,7 @@
                         {{ video.name }}
                     </h2>
                     <div
-                        class="play-circle w-16 h-16 bg-white-2 flex justify-center items-center outline-0 rounded-full ease"
+                        class="play-circle w-16 h-16 bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease"
                     >
                         <svg
                             viewBox="0 0 18 18"
