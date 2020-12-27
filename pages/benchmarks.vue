@@ -10,11 +10,8 @@
                 :href="video.endpoint"
             >
                 <div
-                    class="relative flex flex-col w-full justify-center items-center space-y-8 py-16 md:py-32 md:px-10"
+                    class="relative flex flex-col w-full justify-center items-center space-y-8 py-16 md:pt-32 md:pb-12 md:px-10"
                 >
-                    <h2 class="title text-lg md:text-2xl font-semibold">
-                        {{ video.name }}
-                    </h2>
                     <div
                         class="play-circle w-16 h-16 bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease"
                     >
@@ -28,10 +25,30 @@
                             />
                         </svg>
                     </div>
+                    <h2 class="title text-lg md:text-2xl font-semibold">
+                        {{ video.name }}
+                    </h2>
                 </div>
             </a>
 
-            <hr class="w-full" >
+            <div
+                class="features-apps w-full"
+            >
+                <hr class="w-full" >
+                <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
+                    <LinkButton
+                        v-for="app in featuredApps"
+                        :key="app.slug"
+                        :href="app.endpoint"
+                        :class="[
+                            'inline-block text-xs rounded-lg py-1 px-2',
+                        ]"
+                        :class-groups="{
+                            shadow: 'neumorphic-shadow-inner'
+                        }"
+                    >{{ app.name }}</LinkButton>
+                </div>
+            </div>
 
 
             <div
@@ -54,7 +71,7 @@
 
 <script>
 
-import { getVideoEndpoint } from '~/helpers/app-derived.js'
+import { getVideoEndpoint, getAppEndpoint } from '~/helpers/app-derived.js'
 
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
@@ -72,11 +89,26 @@ export default {
     },
     async asyncData ({ params: { slug } }) {
 
-        // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
+        const { appsRelatedToVideo } = await import('~/helpers/related.js')
         const { default: videoList } = await import('~/static/video-list.json')
+
+        // Get featured apps
+        const featuredAppsSet = new Set()
+
+        videoList.slice(0, 24).forEach( video => {
+            appsRelatedToVideo(video).forEach( app => {
+                featuredAppsSet.add(app)
+            })
+        })
 
         return {
             video: videoList[0],
+            featuredApps: Array.from(featuredAppsSet).map( app => {
+                return {
+                    ...app,
+                    endpoint: getAppEndpoint(app) + '/benchmarks'
+                }
+            }),
             allVideos: videoList.map( video => {
                 return {
                     ...video,
