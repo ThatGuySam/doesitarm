@@ -20,7 +20,10 @@
             <hr class="w-full" >
 
 
-            <div class="related-apps w-full">
+            <div
+                v-if="featuredApps.length !== 0"
+                class="related-apps w-full"
+            >
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Related Apps
                 </h2>
@@ -99,7 +102,8 @@ export default {
         return {
             video,
             featuredApps,
-            relatedVideos
+            // If no related video found just get the 12 newest ones
+            relatedVideos: (relatedVideos.length !== 0) ? relatedVideos : videoList.slice(0, 12)
         }
     },
     computed: {
