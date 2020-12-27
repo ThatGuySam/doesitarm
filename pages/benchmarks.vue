@@ -3,7 +3,7 @@
         <div class="flex flex-col items-center text-center space-y-12">
             <BgPlayer
                 :video="video"
-                class="absolute overflow-hidden w-2x-screen md:w-full"
+                class="absolute overflow-hidden w-2x-screen md:w-full pointer-events-none"
             />
 
             <a
