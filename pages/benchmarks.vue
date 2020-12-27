@@ -34,13 +34,17 @@
             <hr class="w-full" >
 
 
-            <div class="related-videos w-full max-w-4xl">
-                <h1 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                    Benchmark Videos
-                </h1>
+            <div
+                v-for="(row, key) in videoRows"
+                :key="key"
+                :class="`${key}-videos w-full max-w-4xl`"
+            >
+                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                    {{ row.heading }}
+                </h2>
                 <!-- <pre class="text-left">{{ benchmarkVideos }}</pre> -->
                 <VideoRow
-                    :videos="benchmarkVideos"
+                    :videos="row.videos"
                 />
             </div>
 
@@ -122,7 +126,19 @@ export default {
     data: function () {
         return {
             benchmarkVideos: [],
-            performanceVideos: []
+            performanceVideos: [],
+            videoRows: {
+                benchmarks: {
+                    heading: 'Benchmark Videos',
+                    matchesCondition: video => video.tags.includes('benchmark'),
+                    videos: []
+                },
+                performance: {
+                    heading: 'Performance Videos',
+                    matchesCondition: video => video.tags.includes('performance'),
+                    videos: []
+                }
+            }
         }
     },
     computed: {
@@ -140,21 +156,31 @@ export default {
     },
     created () {
 
+        // const videoRows = [
+        //     {
+        //         name: 'benchmarks',
+        //         matchesCondition: video => video.tags.includes('benchmark')
+        //     },
+        //     {
+        //         name: 'performance',
+        //         matchesCondition: video => video.tags.includes('performance')
+        //     }
+        // ]
+
         // Move videos to relevant categories
         this.allVideos.forEach((video, index) => {
             // console.log('video.name', video.name)
             // console.log('video.tags', video.tags)
 
-            if (video.tags.includes('benchmark')) {
-                // Add to benchmark videos
-                this.benchmarkVideos.push(video)
-                return
-            }
+            // Look through row conditions to see if video matches
+            for (const row in this.videoRows) {
+                if( this.videoRows[row].matchesCondition(video) ) {
 
-            if (video.tags.includes('performance')) {
-                // Add to benchmark videos
-                this.performanceVideos.push(video)
-                return
+                    // Add the matching video
+                    this.videoRows[row].videos.push(video)
+
+                    return
+                }
             }
 
         })
