@@ -21,7 +21,7 @@ export function appsRelatedToVideo ( video ) {
 }
 
 export function videosRelatedToVideo ( video ) {
-    const relatedVideos = []
+    const relatedVideos = {}
 
     const featuredApps = appsRelatedToVideo( video )
 
@@ -35,23 +35,23 @@ export function videosRelatedToVideo ( video ) {
             if (otherVideo.slug === video.slug) continue
 
             // Add this video to our related videos list
-            relatedVideos.push(otherVideo)
+            relatedVideos[otherVideo.id] = otherVideo
         }
     }
 
-    return relatedVideos
+    return Object.values(relatedVideos)
 }
 
 
 export function videosRelatedToApp ( app ) {
-    const relatedVideos = []
+    const relatedVideos = {}
 
     // Find other videos that also feature this video's app
     for (const video of videoList) {
         if (!video.apps.includes(app.slug)) continue
 
-        relatedVideos.push(video)
+        relatedVideos[video.id] = video
     }
 
-    return relatedVideos
+    return Object.values(relatedVideos)
 }
