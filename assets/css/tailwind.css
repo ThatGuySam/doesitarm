@@ -61,6 +61,26 @@
  * @import "utilities/skew-transforms";
  */
 
+
+.ease {
+    transition-property: all;
+    transition-duration: 400ms;
+    /* easeInOutQuart */
+    /* https://easings.net/en#easeInOutQuart */
+    transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.lazyload,
+.lazyloading {
+	opacity: 0;
+}
+.lazyloaded {
+    @apply ease;
+    transition-property: opacity;
+
+	opacity: 1;
+}
+
  .neumorphic-shadow,
  .hover\:neumorphic-shadow:hover {
     /* box-shadow: -0.25rem -0.25rem 0.5rem rgba(255, 255, 255, 0.07); */
