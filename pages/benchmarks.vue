@@ -6,11 +6,19 @@
                 class="absolute overflow-hidden w-2x-screen md:w-full pointer-events-none"
             />
 
+            <div class="page-heading flex justify-start w-full">
+                <h1 class="title text-2xl leading-tight mt-12 mb-6">
+                    Benchmarks
+                </h1>
+            </div>
+
+            <div class="line-separator border-white border-t-2 mb-12" />
+
             <a
                 :href="video.endpoint"
             >
                 <div
-                    class="relative flex flex-col w-full justify-center items-center space-y-8 py-16 md:pt-32 md:pb-12 md:px-10"
+                    class="relative flex flex-col w-full justify-center items-center space-y-8 py-16 md:pt-0 md:pb-12 md:px-10"
                 >
                     <div
                         class="play-circle w-16 h-16 bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease"
