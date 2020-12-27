@@ -164,7 +164,7 @@ export default {
                     videos: []
                 },
                 'benchmarks': {
-                    heading: 'Benchmark Videos',
+                    heading: 'Other Benchmark Videos',
                     matchesCondition: video => video.tags.includes('benchmark'),
                     videos: []
                 },
