@@ -8,13 +8,18 @@
             <div class="video-card-container relative overflow-hidden bg-black">
                 <div class="video-card-image ratio-wrapper">
                     <div class="relative overflow-hidden w-full pb-16/9">
-                        <img
-                            :srcset="thumbnailSrcset"
-                            :sizes="thumbnailSizes"
-                            :src="video.thumbnails.default.url"
-                            :alt="video.name"
-                            class="absolute h-full w-full object-cover"
-                        >
+                        <picture>
+                            <source
+                                :sizes="thumbnailSizes"
+                                :data-srcset="thumbnailSrcset"
+                                type="image/jpg"
+                            >
+                            <img
+                                :data-src="video.thumbnails.default.url"
+                                :alt="video.name"
+                                class="lazyload absolute h-full w-full object-cover"
+                            >
+                        </picture>
                     </div>
                 </div>
                 <div
@@ -56,6 +61,8 @@
 </template>
 
 <script>
+
+import 'lazysizes'
 
 // import { getVideoEndpoint } from '~/helpers/app-derived.js'
 
