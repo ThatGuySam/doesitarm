@@ -2,7 +2,7 @@
 
     <div class="video-card">
         <a
-            :href="videoEndpoint"
+            :href="video.endpoint"
             class=""
         >
             <div class="video-card-container relative overflow-hidden bg-black">
@@ -22,7 +22,7 @@
                         '--gradient-from-color': 'rgba(0, 0, 0, 1)',
                         '--gradient-to-color': 'rgba(0, 0, 0, 0.7)'
                     }"
-                    class="video-card-overlay absolute inset-0 flex justify-start items-start bg-gradient-to-tr from-black to-transparent p-4"
+                    class="video-card-overlay absolute inset-0 flex justify-between items-start bg-gradient-to-tr from-black to-transparent p-4"
                 >
                     <div class="play-circle w-8 h-8 bg-white-2 flex justify-center items-center outline-0 rounded-full ease">
                         <svg
@@ -35,7 +35,17 @@
                             />
                         </svg>
                     </div>
+
+                    <div
+                        v-if="pill"
+                        class="video-pill h-5 text-xs bg-white-2 flex justify-center items-center outline-0 rounded-full ease px-2"
+                    >
+                        {{ pill }}
+                    </div>
+
                 </div>
+
+                <!-- Video Text Content -->
                 <div class="video-card-content absolute inset-0 flex items-end py-4 px-6">
                     <div class="w-full text-sm text-left whitespace-normal">{{ video.name }}</div>
                 </div>
@@ -47,7 +57,7 @@
 
 <script>
 
-import { getVideoEndpoint } from '~/helpers/app-derived.js'
+// import { getVideoEndpoint } from '~/helpers/app-derived.js'
 
 export default {
     props: {
@@ -77,12 +87,14 @@ export default {
                 return `${thumbnail.url} ${thumbnail.width}w`
             }).join(', ')
         },
-        videoEndpoint () {
-            return getVideoEndpoint(this.video)
+        pill () {
+            // if this video has a banchmark tag
+            // then pill is 'Benchmark'
+            if (this.video.tags.includes('benchmark')) return 'Benchmark'
+
+            // No pill
+            return null
         }
-    },
-    methods: {
-        getVideoEndpoint
     }
 }
 

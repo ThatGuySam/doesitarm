@@ -23,6 +23,66 @@ const videoFeaturesApp = function (app, video) {
     return false
 }
 
+const generateVideoTags = function ( video ) {
+    const tags = {
+        'benchmark': {
+            relatedWords: [
+                'benchmarks',
+                'comparison',
+                'speed test',
+                'bench mark',
+                'bench marks'
+            ]
+        },
+        'performance': {
+            relatedWords: [
+                'speed'
+            ]
+        }
+    }
+
+    const videoTags = video.tags
+
+    // Match tags against video titles and descriptions
+    for (const tagKey in tags) {
+
+        // Skip if this video already has this tag
+        // then skip it
+        if (videoTags.includes(tagKey)) continue
+
+        const matchingWords = [
+            tagKey,
+            ...tags[tagKey].relatedWords
+        ]
+
+        for (const tagWord of matchingWords) {
+
+            // Skip if this video already has this tag
+            // then stop this loop
+            if (videoTags.includes(tagKey)) break
+
+            // Check title
+            if (matchesWholeWord(tagWord.toLowerCase(), video.title.toLowerCase())) {
+                videoTags.push(tagKey)
+
+                // console.log(video.title, 'has', tagKey, 'tag')
+
+                // We're done since the tag matched for the title
+                continue
+            }
+
+            // Check description
+            if (matchesWholeWord(tagWord.toLowerCase(), video.description.toLowerCase())) {
+                videoTags.push(tagKey)
+
+                // console.log(video.title, 'has', tagKey, 'tag')
+            }
+        }
+    }
+
+    return videoTags
+}
+
 export default async function ( applist ) {
 
     // Fetch Commits
@@ -68,6 +128,7 @@ export default async function ( applist ) {
             lastUpdated,
             apps,
             slug,
+            tags: generateVideoTags(fetchedVideos[videoId]),
             timestamps: fetchedVideos[videoId].timestamps,
             thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
             endpoint: getVideoEndpoint({

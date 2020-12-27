@@ -36,9 +36,10 @@
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Benchmark Videos
                 </h2>
+                <!-- <pre class="text-left">{{ benchmarkVideos }}</pre> -->
                 <VideoRow
-                    v-if="relatedVideos.length !== 0"
-                    :videos="relatedVideos"
+                    v-if="benchmarkVideos.length !== 0"
+                    :videos="benchmarkVideos"
                     :active-video-id="video.id"
                 />
             </div>
@@ -47,9 +48,10 @@
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     Performance Videos
                 </h2>
+                <!-- <pre class="text-left">{{ performanceVideos }}</pre> -->
                 <VideoRow
-                    v-if="relatedVideos.length !== 0"
-                    :videos="relatedVideos"
+                    v-if="performanceVideos.length !== 0"
+                    :videos="performanceVideos"
                     :active-video-id="video.id"
                 />
             </div>
@@ -58,9 +60,10 @@
                 <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                     More Videos
                 </h2>
+                <!-- <pre class="text-left">{{ relatedVideos }}</pre> -->
                 <VideoRow
-                    v-if="relatedVideos.length !== 0"
-                    :videos="relatedVideos"
+                    v-if="moreVideos.length !== 0"
+                    :videos="moreVideos"
                     :active-video-id="video.id"
                 />
             </div>
@@ -103,38 +106,91 @@ export default {
 
         const app = allVideoAppsList.find(app => (app.slug === slug))
 
+        const submitVideoCard = {
+            endpoint: `https://docs.google.com/forms/d/e/1FAIpQLSeEVGM9vE7VcfLMy6fJkfU70X2VZ60rHDyhDQLtnAN4nso0WA/viewform?usp=pp_url&entry.1018125313=${app.name}`
+        }
+
         // const featuredApps = []
 
-        const relatedVideos = videosRelatedToApp( app )
-
-        // console.log('relatedVideos', relatedVideos)
+        const relatedVideos = videosRelatedToApp( app ).map(video => {
+            // console.log('video', video)
+            return {
+                ...video,
+                endpoint: `#${video.id}`
+            }
+        })
 
         return {
             app,
-            relatedVideos: relatedVideos.map(video => {
-                // console.log('video', video)
-                return {
-                    ...video,
-                    endpoint: `#${video.id}`
-                }
-            })
+            allVideos: relatedVideos
         }
     },
     data: function () {
         return {
-            activeVideoIndex: 0
+            activeVideoIndex: 0,
+            benchmarkVideos: [],
+            performanceVideos: [],
+            moreVideos: [],
         }
     },
     computed: {
         video () {
-            return this.relatedVideos[this.activeVideoIndex]
+            return this.allVideos[this.activeVideoIndex]
         },
         title () {
             return `${this.app.name} Benchmarks for Apple Silicon - Does It ARM`
         },
         description () {
-            return `Apple Silicon performance and support videos for ${this.app.name}`
-        }
+            return `Apple Silicon benchmark, performance, and support videos for ${this.app.name}`
+        },
+    },
+    created () {
+
+        const nonBenchmarkVideos = []
+
+        // console.log('benchmarkVideos.length', this.benchmarkVideos.length)
+        // console.log('performanceVideos.length', this.performanceVideos.length)
+        // console.log('moreVideos.length', this.moreVideos.length)
+
+        // Move benchmark videos out of related videos
+        this.allVideos.forEach((video, index) => {
+            // console.log('video.name', video.name)
+            // console.log('video.tags', video.tags)
+
+            if (!video.tags.includes('benchmark')) {
+                nonBenchmarkVideos.push(video)
+                return
+            }
+
+
+            // Add to benchmark videos
+            this.benchmarkVideos.push(video)
+        })
+
+        // console.log('Added benchmark videos')
+        // console.log('benchmarkVideos.length', this.benchmarkVideos.length)
+        // console.log('performanceVideos.length', this.performanceVideos.length)
+        // console.log('moreVideos.length', this.moreVideos.length)
+
+        // Move performance videos out of related videos
+        nonBenchmarkVideos.forEach((video, index) => {
+
+            if (!video.tags.includes('performance')) {
+                this.moreVideos.push(video)
+                return
+            }
+
+            // Add to benchmark videos
+            this.performanceVideos.push(video)
+        })
+
+
+        // console.log('Added performance videos')
+        // console.log('benchmarkVideos.length', this.benchmarkVideos.length)
+        // console.log('performanceVideos.length', this.performanceVideos.length)
+        // console.log('moreVideos.length', this.moreVideos.length)
+
+
     },
     mounted () {
         window.onhashchange = this.loadVideoFromHash
@@ -149,9 +205,11 @@ export default {
             const hashId = location.hash.split('#')[1]
 
             // Find the index of the video with the matching hash
-            const newVideoIndex = this.relatedVideos.findIndex(video => {
+            const newVideoIndex = this.allVideos.findIndex(video => {
                 return video.id === hashId
             })
+
+            console.log('newVideoIndex', newVideoIndex)
 
             // Load in the index to load out video
             this.activeVideoIndex = newVideoIndex
