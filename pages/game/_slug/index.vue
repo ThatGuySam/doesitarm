@@ -72,25 +72,6 @@
 
             </ul>
 
-            <h2 class="subtitle text-xl md:text-2xl font-bold py-6">
-                Affiliate Links
-            </h2>
-            <div class="links space-y-6 sm:space-x-6 mb-8">
-                <div
-                    v-for="(link, i) in affiliateLinks"
-                    :key="i"
-                    class="affiliate-link space-y-2"
-                >
-                    <LinkButton
-                        :href="link.href"
-                        target="_blank"
-                    >
-                        <div>{{ link.label }}</div>
-                    </LinkButton>
-                    <small class="block test-xs">{{ link.subLabel }}</small>
-                </div>
-            </div>
-
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                 <a
