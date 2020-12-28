@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { getAppEndpoint } from '~/helpers/app-derived.js'
 
 import VideoRow from '~/components/video/row.vue'
 import LinkButton from '~/components/link-button.vue'
@@ -130,7 +131,13 @@ export default {
         return {
             slug,
             app,
-            relatedVideos
+            relatedVideos: relatedVideos.map(video => {
+                // console.log('video', video)
+                return {
+                    ...video,
+                    endpoint: `${getAppEndpoint(app)}/benchmarks#${video.id}`
+                }
+            })
         }
     },
     head() {
