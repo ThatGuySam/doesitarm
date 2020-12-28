@@ -147,6 +147,10 @@ export default {
                     url: '/categories',
                 },
                 {
+                    label: 'Benchmarks',
+                    url: '/benchmarks',
+                },
+                {
                     label: 'Homebrew',
                     url: '/kind/homebrew',
                 },

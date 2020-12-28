@@ -18,6 +18,7 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "axios": "^0.21.0",
     "cross-env": "^5.2.0",
+    "lazysizes": "^5.3.0-beta1",
     "markdown-it": "^11.0.1",
     "marked": "^1.2.7",
     "node-html-parser": "^2.0.0",

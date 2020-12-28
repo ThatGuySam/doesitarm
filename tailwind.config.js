@@ -75,7 +75,13 @@ module.exports = {
                 '1/2-screen': '50vh',
                 'full-screen': '100vh'
             },
+            width: {
+                '1/2-screen': '50vw',
+                'full-screen': '100vw',
+                '2x-screen': '200vw'
+            },
             minHeight: {
+                '1/2-screen': '50vh',
                 '3/4-screen': '75vh',
             },
             spacing: {

@@ -5,9 +5,10 @@ import pkg from './package'
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
+import buildVideoList from './helpers/build-video-list.js'
 
 import { categories } from './helpers/categories.js'
-import { getAppEndpoint } from './helpers/app-derived.js'
+import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 
 
 const listsOptions = [
@@ -25,40 +26,62 @@ const listsOptions = [
     }
 ]
 
+const videoListOptions = {
+    buildMethod: buildVideoList,
+    path: '/static/video-list.json',
+}
+
+
+const saveList = async function ( list, buildArgs = null ) {
+    const methodName = `Building ${list.path}`
+    console.time(methodName)
+
+    // Run the build method
+    const builtList = await list.buildMethod(buildArgs)
+
+    // Make the relative path for our new JSON file
+    const listFullPath = `.${list.path}`
+
+    // console.log('listFullPath', listFullPath)
+
+    // Write the list to JSON
+    await fs.writeFile(listFullPath, JSON.stringify(builtList))
+
+    // Read back the JSON we just wrote to ensure it exists
+    const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
+
+    // console.log('savedListJSON', savedListJSON)
+
+    const savedList = JSON.parse(savedListJSON)
+
+
+    console.timeEnd(methodName)
+
+    // Import the created JSON File
+    return savedList
+}
+
 
 const storeAppLists = async function (builder) {
 
     console.log('Build Lists started')
 
-    const savedLists = await Promise.all(listsOptions.map(async list => {
+    const savedLists = await Promise.all(listsOptions.map(saveList))
+        // Build and save list of videos based on app lists
+        .then(async lists => {
+            const [
+                appList,
+                gameList
+            ] = lists
 
-        const methodName = `Building ${list.path}`
-        console.time(methodName)
+            // Build a video app list with apps and games only
+            const videoAppList = [
+                ...appList,
+                ...gameList
+            ].flat(1)
 
-        // Run the build method
-        const builtList = await list.buildMethod()
-
-        // Make the relative path for our new JSON file
-        const listFullPath = `.${list.path}`
-
-        // console.log('listFullPath', listFullPath)
-
-        // Write the list to JSON
-        await fs.writeFile(listFullPath, JSON.stringify(builtList))
-
-        // Read back the JSON we just wrote to ensure it exists
-        const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
-
-        // console.log('savedListJSON', savedListJSON)
-
-        const savedList = JSON.parse(savedListJSON)
-
-
-        console.timeEnd(methodName)
-
-        // Import the created JSON File
-        return savedList
-    }))
+            return await saveList(videoListOptions, videoAppList)
+        })
 
     console.log('Build Lists finished')
 
@@ -94,7 +117,12 @@ export default {
             ]
         },
         routes() {
-            return Promise.all(listsOptions.map(async list => {
+            return Promise.all([
+                ...listsOptions,
+                videoListOptions
+            ].map(async list => {
+                // Read saved lists
+
                 const methodName = `Reading ${list.path}`
                 console.time(methodName)
 
@@ -117,12 +145,26 @@ export default {
                     const [
                         appRoutes,
                         gameRoutes,
+                        videoRoutes,
                         homebrewRoutes
                     ] = lists.map((list, listI) => {
                         return list.map( app => {
+
+                            const isVideo = (app.category === undefined)
+
+                            if (isVideo) {
+                                return getVideoEndpoint(app)
+                            }
+
                             return getAppEndpoint(app)
                         })
                     })
+
+                    // Build routes for app types that support benchmark endpoints
+                    const benchmarkRoutes = [
+                        ...appRoutes,
+                        // ...gameRoutes,
+                    ].flat(1).map( route => `${route}/benchmarks`)
 
                     // console.log('homebrewRoutes', homebrewRoutes)
 
@@ -135,7 +177,11 @@ export default {
                         ...appRoutes,
                         ...gameRoutes,
                         ...homebrewRoutes,
-                        ...categoryRoutes
+
+                        // Non-app routes
+                        ...videoRoutes,
+                        ...categoryRoutes,
+                        ...benchmarkRoutes
                     ]
                 })
         }

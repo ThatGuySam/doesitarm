@@ -4,8 +4,8 @@
         :href="href"
         :target="target"
         :rel="rel"
+        :class="classlist"
         role="button"
-        class="relative inline-flex items-center px-4 py-2 border border-transparent leading-5 font-medium rounded-md text-white bg-darker neumorphic-shadow hover:bg-indigo-400 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-600 active:bg-indigo-600 transition duration-150 ease-in-out"
     >
         <slot />
     </a>
@@ -23,6 +23,10 @@ export default {
         target: {
             type: String,
             default: null
+        },
+        classGroups: {
+            type: Object,
+            default: () => {}
         }
     },
     computed: {
@@ -30,6 +34,30 @@ export default {
             if (this.href.charAt(0) === '/') return null
 
             return 'noopener'
+        },
+        classlist () {
+            const defaultClassGroups = {
+                general: 'relative inline-flex items-center rounded-md px-4 py-2',
+                font: 'leading-5 font-medium',
+                text: 'text-white',
+                border: 'border border-transparent focus:outline-none focus:border-indigo-600',
+                shadow: 'neumorphic-shadow focus:shadow-outline-indigo',
+                bg: 'bg-darker hover:bg-indigo-400 active:bg-indigo-600',
+                transition: 'transition duration-150 ease-in-out'
+            }
+
+            const mergedClassGroups = {
+                ...defaultClassGroups,
+                ...this.classGroups
+            }
+
+            // if (this.isFocused) {
+            //     delete mergedClassGroups.blur
+            // } else {
+            //     delete mergedClassGroups.focus
+            // }
+
+            return Object.values(mergedClassGroups)
         }
     }
 }
