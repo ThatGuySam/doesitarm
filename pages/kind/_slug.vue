@@ -69,7 +69,6 @@ export default {
         return {
             slug,
             categoryAppList: filteredList.map( app => {
-
                 return {
                     name: app.name,
                     status: app.status,

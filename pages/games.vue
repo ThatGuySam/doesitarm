@@ -52,9 +52,7 @@ export default {
                     category: app.category,
                     searchLinks: makeAppSearchLinks(app)
                 }
-            }),
-            // allAppSearchLinks,
-            // customSummaryNumbers: getListSummaryNumbers(allList)
+            })
         }
     },
     components: {
