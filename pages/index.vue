@@ -11,7 +11,7 @@
             <Search
                 :app-list="allList"
                 :quick-buttons="quickButtons"
-                :initial-limit="200"
+                :initial-limit="100"
                 @update:query="onQueryUpdate"
             >
                 <template v-slot:before-search>
