@@ -118,48 +118,71 @@
                                 </small>
                             </client-only>
 
-                            <client-only>
-                                <svg
-                                    class="absolute right-0 h-5 w-5 text-gray-400"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <use href="#chevron-right" />
-                                </svg>
-                            </client-only>
-
                             <!-- app.endpoint: {{ app.endpoint }} -->
                         </template>
 
                     </a>
 
-                    <!-- <client-only v-if="seenItems[app.slug] || hasStartedAnyQuery">
-                        <div
-                            class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
-                        >
 
-                            <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-12">
+                    <div
+                        class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
+                    >
 
-                                <div
-                                    v-if="!app.endpoint.includes('/game/')"
-                                    class="subscribe space-y-6 sm:space-x-6"
-                                >
-                                    <EmailSubscribe
-                                        :app-name="app.name"
-                                        :input-class-groups="{
-                                            shadow: 'hover:neumorphic-shadow',
-                                            bg: '',
-                                            focus: 'bg-transparent neumorphic-shadow pl-8',
-                                            blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
-                                        }"
-                                        class="pointer-events-auto"
-                                    />
-                                </div>
+                        <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-4">
 
-                            </div>
+                            <LinkButton
+                                v-for="link in getSearchLinks(app)"
+                                :key="`${app.slug}-${link.label.toLowerCase()}`"
+                                :href="link.href"
+                                :class="[
+                                    'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                                    'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                                ]"
+                                :class-groups="{
+                                    // general: 'relative inline-flex items-center rounded-md px-4 py-2',
+                                    // font: 'leading-5 font-medium',
+                                    // text: 'text-white',
+                                    // border: 'border border-transparent focus:outline-none focus:border-indigo-600',
+                                    shadow: 'hover:neumorphic-shadow',
+                                    bg: 'hover:bg-darker',
+                                    // transition: 'transition duration-150 ease-in-out'
+                                }"
+                            >
+                                {{ link.label }}
+                            </LinkButton>
+
+                            <LinkButton
+                                :href="getAppEndpoint(app)"
+                                :class="[
+                                    'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                                    'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                                ]"
+                                :class-groups="{
+                                    // general: 'relative inline-flex items-center rounded-md px-4 py-2',
+                                    // font: 'leading-5 font-medium',
+                                    // text: 'text-white',
+                                    // border: 'border border-transparent focus:outline-none focus:border-indigo-600',
+                                    shadow: 'hover:neumorphic-shadow',
+                                    bg: 'hover:bg-darker',
+                                    // transition: 'transition duration-150 ease-in-out'
+                                }"
+                            >
+                                <span>Details</span>
+                                <client-only>
+                                    <svg
+                                        class="h-5 w-5 -mr-2"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <use href="#chevron-right" />
+                                    </svg>
+                                </client-only>
+                            </LinkButton>
 
                         </div>
-                    </client-only> -->
+
+                    </div>
+
                 </li>
             </ul>
 
@@ -174,7 +197,7 @@ import { getAppCategory } from '~/helpers/categories.js'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 // import appList from '~/static/app-list.json'
 
-// import EmailSubscribe from '~/components/email-subscribe.vue'
+import LinkButton from '~/components/link-button.vue'
 // import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
 
@@ -183,6 +206,7 @@ export default {
     components: {
         // EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
         ListSummary,
+        LinkButton,
         RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
     },
     props: {
@@ -325,6 +349,11 @@ export default {
     methods: {
         getAppCategory,
         getAppEndpoint,
+        getSearchLinks (app) {
+            if (typeof app.searchLinks === 'undefined') return []
+
+            return app.searchLinks
+        },
         // Search priorities
         titleStartsWith (query, app) {
             const matches = app.name.toLowerCase().startsWith(query)
