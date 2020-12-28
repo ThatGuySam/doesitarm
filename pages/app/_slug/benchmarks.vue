@@ -1,11 +1,12 @@
 <template>
-    <section class="container py-16">
+    <section class="container pb-16">
         <div class="flex flex-col items-center text-center space-y-8">
             <template
                 v-if="video"
             >
                 <VideoPlayer
                     :video="video"
+                    class="pt-16"
                 />
                 <ChannelCredit
                     :video="video"
@@ -20,7 +21,7 @@
                         'margin-left': '-50vw',
                         'margin-right': '-50vw'
                     }"
-                    class="video-canvas w-screen flex justify-center bg-black"
+                    class="video-canvas w-screen flex justify-center bg-black pt-16"
                 >
                     <div class="ratio-wrapper w-full max-w-4xl">
                         <div class="relative overflow-hidden w-full pb-16/9">

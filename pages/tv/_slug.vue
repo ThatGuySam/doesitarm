@@ -1,8 +1,9 @@
 <template>
-    <section class="container py-16">
+    <section class="container pb-16">
         <div class="flex flex-col items-center text-center space-y-6">
             <VideoPlayer
                 :video="video"
+                class="pt-16"
             />
 
             <div
