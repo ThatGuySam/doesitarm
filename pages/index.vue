@@ -71,13 +71,33 @@ export default {
         // const { default: appList } = await import('~/static/app-list.json')
         // const { default: gamelist } = await import('~/static/game-list.json')
 
-        const { sortedAppList, allList } = await import('~/helpers/get-list.js')
+        const { sortedAppList, allList, allVideoAppsList, makeAppSearchLinks } = await import('~/helpers/get-list.js')
 
+        const allAppSearchLinks = {}
 
+        // console.log('allVideoAppsList', allVideoAppsList)
+
+        allVideoAppsList.forEach( app => {
+            // Make the search links
+            const searchLinks = makeAppSearchLinks(app)
+
+            // If there are more than zero
+            // add them to our list
+            if (searchLinks.length > 0) {
+                allAppSearchLinks[app.slug] = searchLinks
+            }
+        })
 
         return {
             // Filter app list to leave out data not needed for search
             initialAppList: sortedAppList.map( app => {
+
+                let searchLinks = []
+
+                if (typeof allAppSearchLinks[app.slug] !== 'undefined') {
+                    searchLinks = allAppSearchLinks[app.slug]
+                }
+
                 return {
                     name: app.name,
                     status: app.status,
@@ -86,8 +106,10 @@ export default {
                     text: app.text,
                     lastUpdated: app.lastUpdated,
                     category: app.category,
+                    searchLinks
                 }
             }),
+            allAppSearchLinks,
             customSummaryNumbers: getListSummaryNumbers(allList)
         }
     },
@@ -163,6 +185,8 @@ export default {
             // then stop
             if (this.fetchedAppList.length !== 0 || this.query.trim().length === 0) return
 
+            // console.log('this.allAppSearchLinks', this.allAppSearchLinks)
+
             const fetchedListUrls = [
                 '/game-list.json',
                 '/homebrew-list.json'
@@ -179,7 +203,19 @@ export default {
 
             // console.log('fetchedLists', fetchedLists)
 
-            this.fetchedAppList = fetchedLists.flat(1)
+            this.fetchedAppList = fetchedLists.flat(1).map( app => {
+
+                let searchLinks = []
+
+                if (typeof this.allAppSearchLinks[app.slug] !== 'undefined') {
+                    searchLinks = this.allAppSearchLinks[app.slug]
+                }
+
+                return {
+                    ...app,
+                    searchLinks
+                }
+            })
 
             return
         }

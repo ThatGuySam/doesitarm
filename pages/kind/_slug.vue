@@ -55,26 +55,32 @@
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
-import { byTimeThenNull } from '~/helpers/sort-list.js'
-
 import { categories, getAppCategory } from '~/helpers/categories.js'
-
-import appList from '~/static/app-list.json'
-import gamelist from '~/static/game-list.json'
-import homebrewList from '~/static/homebrew-list.json'
-
-const allList = [
-    ...appList.sort(byTimeThenNull),
-    ...homebrewList,
-    ...gamelist,
-]
 
 export default {
     async asyncData ({ params: { slug } }) {
-        // Maybe I could import() here to reduce client script size
+        const { sortedAppList, allList, allVideoAppsList, makeAppSearchLinks } = await import('~/helpers/get-list.js')
+        const { default: gameList } = await import('~/static/game-list.json')
+
+        const filteredList = allList.filter(app => {
+            return app.category.slug === slug
+        })
+
         return {
             slug,
-            // app: appList.find(app => (app.slug === slug))
+            categoryAppList: filteredList.map( app => {
+
+                return {
+                    name: app.name,
+                    status: app.status,
+                    slug: app.slug,
+                    // endpoint: app.endpoint,
+                    text: app.text,
+                    lastUpdated: app.lastUpdated,
+                    category: app.category,
+                    searchLinks: makeAppSearchLinks(app)
+                }
+            })
         }
     },
     components: {
@@ -103,20 +109,6 @@ export default {
     computed: {
         category () {
             return categories[this.slug]
-        },
-        categoryAppList () {
-
-            const filteredList = allList.filter(app => {
-                return app.category.slug === this.slug
-            })
-
-            // const sortedList = list.sort(byTimeThenNull)
-
-            // if (this.category.slug === 'homebrew') {
-            //     return filteredList.slice(0, 300)
-            // }
-
-            return filteredList
         },
         supportedAppList () {
             return this.categoryAppList.filter(app => {

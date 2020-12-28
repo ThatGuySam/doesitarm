@@ -34,6 +34,29 @@ import ThomasCredit from '~/components/thomas-credit.vue'
 import gameList from '~/static/game-list.json'
 
 export default {
+    async asyncData () {
+        const { sortedAppList, allList, allVideoAppsList, makeAppSearchLinks } = await import('~/helpers/get-list.js')
+        const { default: gameList } = await import('~/static/game-list.json')
+
+        return {
+            // Map game list
+            gameList: gameList.map( app => {
+
+                return {
+                    name: app.name,
+                    status: app.status,
+                    slug: app.slug,
+                    // endpoint: app.endpoint,
+                    text: app.text,
+                    lastUpdated: app.lastUpdated,
+                    category: app.category,
+                    searchLinks: makeAppSearchLinks(app)
+                }
+            }),
+            // allAppSearchLinks,
+            // customSummaryNumbers: getListSummaryNumbers(allList)
+        }
+    },
     components: {
         Search,
         LinkButton,
@@ -59,9 +82,9 @@ export default {
         }
     },
     computed: {
-        gameList() {
-            return gameList
-        }
+        // gameList() {
+        //     return gameList
+        // }
     },
     head() {
         return {
