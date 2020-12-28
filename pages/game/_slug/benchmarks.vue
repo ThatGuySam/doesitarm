@@ -91,7 +91,7 @@ export default {
             // console.log('video', video)
             return {
                 ...video,
-                endpoint: `#${video.id}`
+                // endpoint: `#${video.id}`
             }
         })
 
