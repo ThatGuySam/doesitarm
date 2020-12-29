@@ -134,6 +134,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Super 8 R2](https://www.native-instruments.com/en/products/komplete/synths/super-8/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [Traktor DJ 2](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-dj-2/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [Traktor Pro 3](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-pro-3/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
+* [TunesArt](https://www.jibapps.com/apps/tunesart/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.6 - [Source](https://twitter.com/jibapps/status/1334055652055003137)
 
 
 
@@ -229,6 +230,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [CrossOver](https://www.codeweavers.com/) - ✳️ Runs via Rosetta 2 - [Official Blog](https://www.codeweavers.com/blog/jwhite/2020/11/10/its-great-to-live-in-interesting-times)
 * [Day One Journal](https://apps.apple.com/app/id1055511498) - ✳️ Yes, works via Rosetta 2 - [Official Tweet](https://twitter.com/dayoneapp/status/1332727758447734784?s=20)
 * [DEVONthink](https://www.devontechnologies.com/download/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.2 - [Release Notes](https://www.devontechnologies.com/blog/20200814-devonthink-352)
+* [Displays](https://www.jibapps.com/apps/displays/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.7 - [Source](https://twitter.com/jibapps/status/1338478515453386755)
 * [Drafts](https://itunes.apple.com/app/id1236254471?ls=1&mt=8&at=11l4Cf&ct=site) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/draftsapp/status/1326263191601618945)
 * [Dropbox](https://www.dropbox.com) - ✳️ Yes, works via Rosetta 2 as of v110.4.458 - [Forum Post](https://www.dropboxforum.com/t5/Dropbox-desktop-client-builds/Stable-Build-110-4-458/m-p/470973/highlight/true#M6110)
 * [EasyConnect](https://lstratman.github.io/EasyConnect/) - 🔶 Unknown, more info needed - [Contribute](https://github.com/ThatGuySam/doesitarm/issues/219)
@@ -294,6 +296,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [TouchSwitcher](https://hazeover.com/touchswitcher.html) - ✅ Yes, Full Native Apple Silicon Support as of 1.4 - [Official News](https://hazeover.com/news.html)
 * [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
+* [TrashMe 3](https://www.jibapps.com/apps/trashme3/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 - [Source](https://twitter.com/jibapps/status/1332269102526832641)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Ulysses](https://ulysses.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/120#issuecomment-750041670) [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/)
 * [Usher](https://manytricks.com/usher/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
