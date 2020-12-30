@@ -15,6 +15,7 @@
     "clone-readme": "cp ./README.md README-temp.md"
   },
   "dependencies": {
+    "@fontsource/inter": "^4.0.1",
     "@nuxtjs/sitemap": "^2.4.0",
     "axios": "^0.21.0",
     "cross-env": "^5.2.0",
