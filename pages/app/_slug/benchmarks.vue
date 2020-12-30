@@ -33,7 +33,7 @@
                 </div>
             </template>
 
-            <!-- <h1 class="title text-sm md:text-3xl font-semibold">
+            <!-- <h1 class="title text-sm md:text-3xl font-bold">
                 {{ video.name }}
             </h1> -->
 

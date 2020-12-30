@@ -1,7 +1,7 @@
 <template>
     <section class="container py-32">
         <div class="flex flex-col items-center text-center">
-            <h1 class="title text-sm md:text-2xl font-semibold">
+            <h1 class="title text-sm md:text-2xl font-bold">
                 Does {{ app.name }} work on Apple Silicon?
             </h1>
             <h2 class="subtitle text-2xl md:text-5xl font-bold py-6">
@@ -37,8 +37,8 @@
                     <div class="w-full flex items-center justify-between p-6">
                         <div class="flex-1">
                             <div class="space-x-3">
-                                <h3 class="text-sm leading-5 font-medium">{{ report['Specs'] }}</h3>
-                                <span class="flex-shrink-0 inline-block px-2 py-0.5 text-teal-800 text-xs leading-4 font-medium bg-teal-100 rounded-full">{{ report['FPS'] }}</span>
+                                <h3 class="text-sm leading-5 font-bold">{{ report['Specs'] }}</h3>
+                                <span class="flex-shrink-0 inline-block px-2 py-0.5 text-teal-800 text-xs leading-4 font-bold bg-teal-100 rounded-full">{{ report['FPS'] }}</span>
                             </div>
                             <p class="mt-1 text-sm leading-5">{{ report['Notes'] }}</p>
                             <p
@@ -64,7 +64,7 @@
                             <div class="w-0 flex-1 flex border-r border-gray-200">
                                 <a
                                     :href="report['Source']"
-                                    class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 font-medium border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150"
+                                    class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 font-bold border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150"
                                 >
                                     <!-- Heroicon name: mail -->
                                     <svg

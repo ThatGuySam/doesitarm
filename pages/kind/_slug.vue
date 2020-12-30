@@ -7,7 +7,7 @@
 
             <h2
                 v-if="supportedAppList.length !== 0"
-                class="subtitle md:text-xl font-light text-center"
+                class="subtitle md:text-xl text-center"
             >
                 Supported apps include {{ supportedAppList.join(', ') }}.
             </h2>

@@ -15,6 +15,7 @@
     "clone-readme": "cp ./README.md README-temp.md"
   },
   "dependencies": {
+    "@fontsource/inter": "^4.0.1",
     "@nuxtjs/sitemap": "^2.4.0",
     "axios": "^0.21.0",
     "cross-env": "^5.2.0",
@@ -24,8 +25,7 @@
     "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
     "scroll-into-view-if-needed": "^2.2.26",
-    "slugify": "^1.4.6",
-    "typeface-inter": "^3.15.0"
+    "slugify": "^1.4.6"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^3.3.4",
