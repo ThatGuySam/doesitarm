@@ -168,6 +168,12 @@ export default {
         }
     },
     computed: {
+        title ()  {
+            return `Apple Silicon and Apple M1 app and game compatibility list`
+        },
+        description ()  {
+            return `List of compatibility apps and games for Apple Silicon and the Apple M1 including performance reports and benchmarks`
+        },
         allList () {
             return [
                 ...this.initialAppList,
@@ -218,6 +224,35 @@ export default {
             })
 
             return
+        }
+    },
+    head() {
+        return {
+            title: this.title,
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                {
+                    'hid': 'description',
+                    'name': 'description',
+                    'content': this.description
+                },
+
+                // Twitter Card
+                {
+                    'hid': 'twitter:title',
+                    'property':  'twitter:title',
+                    'content': this.title
+                },
+                {
+                    'hid': 'twitter:description',
+                    'property':  'twitter:description',
+                    'content': this.description
+                },
+                {
+                    'property':  'twitter:url',
+                    'content': `${process.env.URL}${this.$nuxt.$route.path}`
+                },
+            ]
         }
     }
 }
