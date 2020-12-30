@@ -34,7 +34,13 @@
 </template>
 
 <script>
-import 'typeface-inter/inter.css'
+// import 'typeface-inter/inter.css'
+
+import '@fontsource/inter/latin-100.css'
+import '@fontsource/inter/latin-400.css'
+import '@fontsource/inter/latin-700.css'
+
+// import '@fontsource/inter/variable.css'
 
 import Navbar from '~/components/navbar.vue'
 // import TwitterFollow from '~/components/twitter-follow.vue'
