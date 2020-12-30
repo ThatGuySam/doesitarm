@@ -10,6 +10,19 @@
 
             <ThomasCredit />
 
+
+            <div
+                v-if="relatedVideos.length !== 0"
+                class="related-videos w-full"
+            >
+                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                    Related Videos
+                </h2>
+                <VideoRow
+                    :videos="relatedVideos"
+                />
+            </div>
+
             <h2 class="subtitle text-xl md:text-2xl font-bold py-6">
                 Reports
             </h2>
@@ -44,7 +57,7 @@
                     </div>
 
                     <div
-                        v-if="report['Source'].length !== 0"
+                        v-if="report['Source'].includes('https://')"
                         class="border-t border-gray-200"
                     >
                         <div class="-mt-px flex">
@@ -72,25 +85,6 @@
 
             </ul>
 
-            <h2 class="subtitle text-xl md:text-2xl font-bold py-6">
-                Affiliate Links
-            </h2>
-            <div class="links space-y-6 sm:space-x-6 mb-8">
-                <div
-                    v-for="(link, i) in affiliateLinks"
-                    :key="i"
-                    class="affiliate-link space-y-2"
-                >
-                    <LinkButton
-                        :href="link.href"
-                        target="_blank"
-                    >
-                        <div>{{ link.label }}</div>
-                    </LinkButton>
-                    <small class="block test-xs">{{ link.subLabel }}</small>
-                </div>
-            </div>
-
             <div class="report-links py-24 shadow-none">
                 <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                 <a
@@ -105,39 +99,45 @@
 </template>
 
 <script>
+import { getAppEndpoint } from '~/helpers/app-derived.js'
+
+import VideoRow from '~/components/video/row.vue'
 import LinkButton from '~/components/link-button.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
 
-import gameList from '~/static/game-list.json'
-
-// import buildAppList from '~/helpers/build-app-list'
-
 export default {
     components: {
+        VideoRow,
         LinkButton,
         ThomasCredit
     },
     async asyncData ({ params: { slug } }) {
 
+        const { default: gameList } = await import('~/static/game-list.json')
+        const { default: videoList } = await import('~/static/video-list.json')
+        const { videosRelatedToApp } = await import('~/helpers/related.js')
+
+        const app = gameList.find(app => (app.slug === slug))
+
+        const relatedVideos = videosRelatedToApp(app)
+
+        // Find other videos that also feature this video's app
+        // for (const video of videoList) {
+        //     if (!video.apps.includes(app.slug)) continue
+
+        //     relatedVideos.push(video)
+        // }
+
         return {
             slug,
-            app: gameList.find(app => (app.slug === slug))
-        }
-    },
-    computed: {
-        affiliateLinks () {
-            return [
-                {
-                    label: 'View on Humble Bundle',
-                    subLabel: 'Supports Charity',
-                    href: `https://www.humblebundle.com/store/search?sort=bestselling&partner=doesitarm&charity=1693256&platform=mac&search=${this.app.name}`
-                },
-                // {
-                //     label: 'View on Humble Bundle',
-                //     subLabel: 'Supports Charity',
-                //     href: `https://www.humblebundle.com/store/search?sort=bestselling&partner=doesitarm&charity=1693256&platform=mac&search=${this.app.name}`
-                // }
-            ]
+            app,
+            relatedVideos: relatedVideos.map(video => {
+                // console.log('video', video)
+                return {
+                    ...video,
+                    endpoint: `${getAppEndpoint(app)}/benchmarks#${video.id}`
+                }
+            })
         }
     },
     head() {

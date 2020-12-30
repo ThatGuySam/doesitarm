@@ -60,6 +60,8 @@
 
 <script>
 import parseGithubDate from '~/helpers/parse-github-date'
+import { getAppEndpoint } from '~/helpers/app-derived.js'
+
 import LinkButton from '~/components/link-button.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import VideoRow from '~/components/video/row.vue'
@@ -96,7 +98,7 @@ export default {
                 // console.log('video', video)
                 return {
                     ...video,
-                    endpoint: `${slug}/benchmarks#${video.id}`
+                    endpoint: `${getAppEndpoint(app)}/benchmarks#${video.id}`
                 }
             })
         }

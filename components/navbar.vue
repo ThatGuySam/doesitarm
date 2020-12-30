@@ -84,13 +84,16 @@
 
                         </span> -->
                         <a
-                            :class="[
-                                'px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
-                            ]"
-                            href="https://twitter.com/DoesItARM"
+                            href="https://www.producthunt.com/posts/does-it-arm-benchmarks?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-does-it-arm-benchmarks"
+                            target="_blank"
                         >
-                            Twitter Updates
+                            <img
+                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=279410&theme=light"
+                                alt="Does It ARM Benchmarks - Curated App Benchmark Videos for Apple Silicon and Apple M1 | Product Hunt"
+                                style="width: 200px; height: 43px;"
+                                width="200"
+                                height="43"
+                            >
                         </a>
                     </div>
                 </div>
