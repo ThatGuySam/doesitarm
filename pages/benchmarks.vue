@@ -33,7 +33,7 @@
                             />
                         </svg>
                     </div>
-                    <h2 class="title text-lg md:text-2xl font-semibold">
+                    <h2 class="title text-lg md:text-2xl font-bold">
                         {{ video.name }}
                     </h2>
                 </div>

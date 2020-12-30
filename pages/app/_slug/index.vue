@@ -2,7 +2,7 @@
     <section class="container py-32">
         <div class="flex flex-col items-center text-center space-y-8">
             <div class="hero-heading space-y-6">
-                <h1 class="title text-sm md:text-2xl font-semibold">
+                <h1 class="title text-sm md:text-2xl font-bold">
                     Does {{ app.name }} work on Apple Silicon?
                 </h1>
                 <h2 class="subtitle text-2xl md:text-5xl font-bold">
