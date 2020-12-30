@@ -1,6 +1,11 @@
 [build]
   publish = "dist/"
-  command = "npm run generate"
+  command = "npm run generate --quiet"
+
+
+
+[build.environment]
+  NPM_FLAGS = "--no-optional"
 
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
@@ -10,7 +15,7 @@
   from = "/app/node"
   to = "/app/nodejs"
   status = 301
-  
+
 [[redirects]]
   from = "/kind/entertainment"
   to = "/kind/entertainment-and-media-apps/"
