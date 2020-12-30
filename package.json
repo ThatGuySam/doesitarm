@@ -25,8 +25,7 @@
     "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
     "scroll-into-view-if-needed": "^2.2.26",
-    "slugify": "^1.4.6",
-    "typeface-inter": "^3.15.0"
+    "slugify": "^1.4.6"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^3.3.4",

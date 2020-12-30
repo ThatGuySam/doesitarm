@@ -34,7 +34,6 @@
 </template>
 
 <script>
-// import 'typeface-inter/inter.css'
 
 // import '@fontsource/inter/latin-100.css'
 // import '@fontsource/inter/latin-400.css'
