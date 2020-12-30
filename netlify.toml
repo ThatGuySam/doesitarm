@@ -6,6 +6,7 @@
 
 [build.environment]
   NPM_FLAGS = "--no-optional"
+  CI = "1"
 
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
