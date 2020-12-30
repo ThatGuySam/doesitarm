@@ -3,6 +3,11 @@
   command = "npm run generate --quiet"
 
 
+
+[build.environment]
+  NPM_FLAGS = "--no-optional"
+
+
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
 
 # old node redirect
