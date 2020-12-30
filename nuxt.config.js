@@ -284,7 +284,13 @@ export default {
     ** Build configuration
     */
     build: {
-        html: { minify: { collapseWhitespace: true } },
+        html: {
+            minify: {
+                minifyCSS: false,
+                minifyJS: false,
+                collapseWhitespace: true
+            }
+        },
         /*
         ** You can extend webpack config here
         */
