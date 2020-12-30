@@ -291,6 +291,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [SeaDrive](https://www.seafile.com/en/download/) - 🚫 No, not yet supported only works on Intel-based Macs as of v2.0.9 - [Source](https://forum.seafile.com/t/seadrive-2-0-8-is-released-support-for-macos-11/13199/25)
 * [SeaFile](https://www.seafile.com/en/download/) - ✳️ Yes, works via Rosetta 2 as of v7.0.10 - [Source](https://forum.seafile.com/t/native-support-for-apple-silicon/13390)
 * [SiriMote](https://eternalstorms.at/sirimote) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.9 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [Skim PDF Reader](https://skim-app.sourceforge.io/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/468#issuecomment-751807890)
 * [SnagIt](https://www.techsmith.com/download/snagit/) - ✳️ Yes, works via Rosetta 2 but without video capture - [Source](https://github.com/ThatGuySam/doesitarm/issues/413) [Official documentation](https://support.techsmith.com/hc/en-us/articles/360052555611-Snagit-and-Apple-Silicon-Compatibility-Info)
 * [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/399#issuecomment-742175817)
 * [Tablecruncher](https://tablecruncher.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://tablecruncher.com/blog/2020/version-1.5.1-apple-silicon-ready/)
