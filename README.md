@@ -85,7 +85,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [PyTorch](https://pytorch.org/) - ✳️ Yes, works via Rosetta 2 - [Report Update](https://github.com/ThatGuySam/doesitarm/issues/432)
 * [React Native](https://reactnative.dev/) - 🔶 Unknown, more info needed - [Contribute](https://github.com/ThatGuySam/doesitarm/issues/427)
 * [Redis](https://redis.io/download) - ✅ Yes, full native Apple Silicon support as of v6 - [v6.0.9 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1002181585) [Verification](https://github.com/ThatGuySam/doesitarm/issues/298)
-* [RubyMine]() - ✅ Yes, full native support as of v2020.3.1
+* [RubyMine](https://www.jetbrains.com/ruby/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [Rust](https://www.rust-lang.org/) - ✳️ Runs via Rosetta 2 with native builds being tested - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557)
 * [Sketch](https://www.sketch.com/) - ✅ Yes, Full Native Apple Silicon Support as of v70 - [Release Notes](https://www.sketch.com/updates/#version-70)
 * [SourceTree](https://www.sourcetreeapp.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/200)
