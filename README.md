@@ -351,6 +351,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Telegram](https://macos.telegram.org/) - ✅ Yes, Full Native Apple Silicon Support as of 7.2.4 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/52) [Changelog](https://macos.telegram.org/#v7-2-4-2020-11-29)
 * [WeChat](https://apps.apple.com/cn/app/wechat/id836500024?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/369)
 * [Welly BBS](https://wellybbs.com/) - ✅ Yes, Full Native Apple Silicon Support as of Version 2020.9 - [App Store](https://apps.apple.com/us/app/id1521402269)
+* [WhatsApp](https://www.whatsapp.com/download/) - ✳️ Yes, works via Rosetta 2 as of v2.2049.10 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/479)
 * [Zoom](https://zoom.us/download)  - ✅ Yes, full native Apple Silicon support as of 5.4.7 (59780.1220) - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/134)
 
 
