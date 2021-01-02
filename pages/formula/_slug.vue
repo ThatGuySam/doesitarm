@@ -46,11 +46,11 @@ export default {
         EmailSubscribe,
         ThomasCredit
     },
-    async asyncData ({ params: { slug } }) {
+    async asyncData ({ params: { slug }, payload: { app } }) {
 
         return {
             slug,
-            app: homebrewList.find(app => (app.slug === slug))
+            app//: homebrewList.find(app => (app.slug === slug))
         }
     },
     head() {
