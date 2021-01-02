@@ -99,12 +99,13 @@ export default {
 
         const { appsRelatedToVideo } = await import('~/helpers/related.js')
         const { default: videoList } = await import('~/static/video-list.json')
+        const { allVideoAppsList } = await import('~/helpers/get-list.js')
 
         // Get featured apps
         const featuredAppsSet = new Set()
 
         videoList.slice(0, 24).forEach( video => {
-            appsRelatedToVideo(video).forEach( app => {
+            appsRelatedToVideo(video, allVideoAppsList).forEach( app => {
                 featuredAppsSet.add(app)
             })
         })

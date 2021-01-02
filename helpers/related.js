@@ -1,15 +1,16 @@
-import { allVideoAppsList } from '~/helpers/get-list.js'
-import videoList from '~/static/video-list.json'
+// import { allVideoAppsList } from '~/helpers/get-list.js'
+// import videoList from '~/static/video-list.json'
 
 export function matchesWholeWord (needle, haystack) {
     return new RegExp('\\b' + needle + '\\b').test(haystack)
 }
 
-export function appsRelatedToVideo ( video ) {
+export function appsRelatedToVideo ( video, allVideoAppsList ) {
     const relatedApps = []
 
     // Find the apps listed in this video
     for (const app of allVideoAppsList) {
+        // console.log('video', video)
         // Skip this app if it's not listed in the videos apps
         if (!video.apps.includes(app.slug)) continue
 
@@ -20,14 +21,18 @@ export function appsRelatedToVideo ( video ) {
     return relatedApps
 }
 
-export function videosRelatedToVideo ( video ) {
+export function videosRelatedToVideo ( video, allVideoAppsList, videoList ) {
     const relatedVideos = {}
 
-    const featuredApps = appsRelatedToVideo( video )
+    // console.log('videoList', videoList[0])
+    // console.log('allVideoAppsList', allVideoAppsList[0])
+
+    const featuredApps = appsRelatedToVideo( video, allVideoAppsList )
 
     // Find other videos that also feature this video's app
     for (const otherVideo of videoList) {
         for (const app of featuredApps) {
+            // console.log('otherVideo', otherVideo)
             // Skip if this app is not in the other video's apps
             if (!otherVideo.apps.includes(app.slug)) continue
 
@@ -43,7 +48,8 @@ export function videosRelatedToVideo ( video ) {
 }
 
 
-export function videosRelatedToApp ( app ) {
+export function videosRelatedToApp ( app, videoList ) {
+
     const relatedVideos = {}
 
     // Find other videos that also feature this video's app
