@@ -38,7 +38,7 @@ import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
 
-import homebrewList from '~/static/homebrew-list.json'
+// import homebrewList from '~/static/homebrew-list.json'
 
 export default {
     components: {
