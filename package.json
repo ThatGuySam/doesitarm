@@ -36,6 +36,7 @@
     "eslint-loader": "^2.0.0",
     "eslint-plugin-prettier": "2.6.2",
     "eslint-plugin-vue": "^4.0.0",
+    "netlify-plugin-cache-nuxt": "0.0.2",
     "node-fetch": "^2.6.1",
     "nodemon": "^1.11.0",
     "nuxt": "^2.14.11",
