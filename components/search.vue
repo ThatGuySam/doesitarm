@@ -350,9 +350,7 @@ export default {
         getAppCategory,
         getAppEndpoint,
         getSearchLinks (app) {
-            if (typeof app.searchLinks === 'undefined') return []
-
-            return app.searchLinks
+            return app?.searchLinks || []
         },
         // Search priorities
         titleStartsWith (query, app) {

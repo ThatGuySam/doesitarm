@@ -92,11 +92,11 @@ export default {
             // Filter app list to leave out data not needed for search
             initialAppList: sortedAppList.map( app => {
 
-                let searchLinks = []
+                const searchLinks = allAppSearchLinks?.[app.slug] || []
 
-                if (typeof allAppSearchLinks[app.slug] !== 'undefined') {
-                    searchLinks = allAppSearchLinks[app.slug]
-                }
+                // if (typeof allAppSearchLinks[app.slug] !== 'undefined') {
+                //     searchLinks = allAppSearchLinks[app.slug]
+                // }
 
                 return {
                     name: app.name,
@@ -211,11 +211,7 @@ export default {
 
             this.fetchedAppList = fetchedLists.flat(1).map( app => {
 
-                let searchLinks = []
-
-                if (typeof this.allAppSearchLinks[app.slug] !== 'undefined') {
-                    searchLinks = this.allAppSearchLinks[app.slug]
-                }
+                const searchLinks = this.allAppSearchLinks?.[app.slug] || []
 
                 return {
                     ...app,
