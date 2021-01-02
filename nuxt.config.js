@@ -153,10 +153,16 @@ export default {
                             const isVideo = (app.category === undefined)
 
                             if (isVideo) {
-                                return getVideoEndpoint(app)
+                                return {
+                                    route: getVideoEndpoint(app),
+                                    payload: { video: app }
+                                }
                             }
 
-                            return getAppEndpoint(app)
+                            return {
+                                route: getAppEndpoint(app),
+                                payload: { app }
+                            }
                         })
                     })
 
