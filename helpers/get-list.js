@@ -21,9 +21,9 @@ export const allList = [
 ]
 
 
-export function makeAppSearchLinks (app) {
+export function makeAppSearchLinks ( app, videoList ) {
 
-    const videos = videosRelatedToApp(app)
+    const videos = videosRelatedToApp( app, videoList )
 
     // If there are no videos
     // then skip

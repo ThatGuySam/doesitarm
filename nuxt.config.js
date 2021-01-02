@@ -7,6 +7,8 @@ import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
 
+import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
+
 import { categories } from './helpers/categories.js'
 import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 
@@ -75,12 +77,12 @@ const storeAppLists = async function (builder) {
             ] = lists
 
             // Build a video app list with apps and games only
-            const videoAppList = [
+            const allVideoAppsList = [
                 ...appList,
                 ...gameList
             ].flat(1)
 
-            return await saveList(videoListOptions, videoAppList)
+            return await saveList(videoListOptions, allVideoAppsList)
         })
 
     console.log('Build Lists finished')
@@ -142,11 +144,29 @@ export default {
                 .then(( lists ) => {
                     // console.log('appList', appList)
 
+                    // Break out lists
+                    const [
+                        appList,
+                        gameList,
+                        _,//homebrewList,
+
+                        videoList
+                    ] = lists
+
+                    const allVideoAppsList = [
+                        ...appList,
+                        ...gameList
+                    ]
+
+                    // console.log('allVideoAppsList', allVideoAppsList[0])
+                    // console.log('videoList', videoList[0])
+
                     const [
                         appRoutes,
                         gameRoutes,
-                        videoRoutes,
-                        homebrewRoutes
+                        homebrewRoutes,
+
+                        videoRoutes
                     ] = lists.map((list, listI) => {
                         return list.map( app => {
 
@@ -155,7 +175,7 @@ export default {
                             if (isVideo) {
                                 return {
                                     route: getVideoEndpoint(app),
-                                    payload: { video: app }
+                                    payload: buildVideoPayload(app, allVideoAppsList, videoList)
                                 }
                             }
 
@@ -169,8 +189,11 @@ export default {
                     // Build routes for app types that support benchmark endpoints
                     const benchmarkRoutes = [
                         ...appRoutes,
-                        // ...gameRoutes,
-                    ].flat(1).map( route => `${route}/benchmarks`)
+                        ...gameRoutes,
+                    ].flat(1).map( ({ route, payload: { app } }) => ({
+                        route: `${route}/benchmarks`,
+                        payload: buildAppBenchmarkPayload( app, allVideoAppsList, videoList )
+                    }))
 
                     // console.log('homebrewRoutes', homebrewRoutes)
 
@@ -179,7 +202,8 @@ export default {
                         // payload: appList
                     }))
 
-                    return [
+                    // Merge endpoints into set to ensure no duplicates
+                    const allEndpointsSet = new Set([
                         ...appRoutes,
                         ...gameRoutes,
                         ...homebrewRoutes,
@@ -188,7 +212,9 @@ export default {
                         ...videoRoutes,
                         ...categoryRoutes,
                         ...benchmarkRoutes
-                    ]
+                    ])
+
+                    return Array.from(allEndpointsSet)
                 })
         }
     },

@@ -72,6 +72,7 @@ export default {
         // const { default: gamelist } = await import('~/static/game-list.json')
 
         const { sortedAppList, allList, allVideoAppsList, makeAppSearchLinks } = await import('~/helpers/get-list.js')
+        const { default: videoList } = await import('~/static/video-list.json')
 
         const allAppSearchLinks = {}
 
@@ -79,7 +80,7 @@ export default {
 
         allVideoAppsList.forEach( app => {
             // Make the search links
-            const searchLinks = makeAppSearchLinks(app)
+            const searchLinks = makeAppSearchLinks( app, videoList )
 
             // If there are more than zero
             // add them to our list

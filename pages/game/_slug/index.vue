@@ -119,7 +119,7 @@ export default {
 
         const app = gameList.find(app => (app.slug === slug))
 
-        const relatedVideos = videosRelatedToApp(app)
+        const relatedVideos = videosRelatedToApp( app, videoList )
 
         // Find other videos that also feature this video's app
         // for (const video of videoList) {
