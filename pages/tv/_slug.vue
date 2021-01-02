@@ -86,7 +86,7 @@ export default {
         VideoPlayer,
         ChannelCredit
     },
-    async asyncData ({ params: { slug }, payload: { video, featuredApps, relatedVideos } }) {
+    asyncData ({ params: { slug }, payload: { video, featuredApps, relatedVideos } }) {
 
         // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
         // const { default: videoList } = await import('~/static/video-list.json')
