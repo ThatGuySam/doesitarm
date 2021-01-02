@@ -35,16 +35,14 @@
 
 <script>
 import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
-import ThomasCredit from '~/components/thomas-credit.vue'
+// import EmailSubscribe from '~/components/email-subscribe.vue'
 
 // import homebrewList from '~/static/homebrew-list.json'
 
 export default {
     components: {
         LinkButton,
-        EmailSubscribe,
-        ThomasCredit
+        // EmailSubscribe
     },
     async asyncData ({ params: { slug }, payload: { app } }) {
 
