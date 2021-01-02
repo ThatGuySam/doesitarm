@@ -8,6 +8,9 @@
   NPM_FLAGS = "--no-optional"
   CI = "1"
 
+[[plugins]]
+  package = "netlify-plugin-cache-nuxt"
+
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
 
