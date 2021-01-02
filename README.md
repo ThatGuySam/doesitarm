@@ -22,6 +22,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 #### Developer Tools
 
 * [Adobe XD](https://www.adobe.com/products/xd.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
+* [Anaconda](https://www.anaconda.com/products/individual#Downloads)  - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/123)
 * [Android Studio](https://developer.android.com/studio) - ✳️ Yes, works via Rosetta 2, emulator only available as preview. - [Source](https://github.com/ThatGuySam/doesitarm/issues/48#issuecomment-732143252) [Emulator Issue](https://issuetracker.google.com/issues/173624439) [Emulator Preview Download](https://github.com/741g/android-emulator-m1-preview/releases)
 * [Apache Maven](https://maven.apache.org/download.cgi) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/215#issuecomment-742910724)
 * [App Preview Video Converter](https://apps.apple.com/us/app/app-preview-video-converter/id1137451860) - ✅ Yes, full native support as of v1.7.4 - [Release Notes](https://www.bridgetech.io)
@@ -42,6 +43,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Deno](https://deno.land/) - ✅ Yes, Full Native Apple Silicon Support - [Issue](https://github.com/denoland/deno/issues/8346)
 * [Docker](https://www.docker.com/products#/mac) - ⏹ Not yet, but M1 builds are now available via the Preview Program - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409) [M1 Preview and Download](https://www.docker.com/blog/download-and-try-the-tech-preview-of-docker-desktop-for-m1/)
 * [Dreamweaver](https://www.adobe.com/products/dreamweaver.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
+* [Emacs](https://www.gnu.org/software/emacs/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/226)
 * [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
 * [FFmpeg](https://ffmpeg.org/download.html) - 🚫 Not yet supported because of unsupported or broken dependencies on arm64: rsvg, x264, libvpx, soxr - [Issue](https://trac.macports.org/ticket/61668)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
@@ -223,6 +225,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported  - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
 * [AmorphousDiskMark](https://apps.apple.com/us/app/amorphousdiskmark/id1168254295) - ✅ Yes, full native Apple Silicon support as of v3.1
 * [Amphetamine](https://apps.apple.com/app/amphetamine/id937984704) - ✅ Yes, full native Apple Silicon support from 5.1 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/295)
+* [Anki](https://apps.ankiweb.net/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/495)
 * [Axure RP 9](https://www.axure.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/38)
 * [balenaEtcher](https://github.com/balena-io/etcher/releases) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/294#issuecomment-737011519)
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
@@ -344,6 +347,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
 * [Mattermost](https://mattermost.com/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/245#issuecomment-735282100)
 * [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/191#issuecomment-730561942)
+* [Postbox](https://www.postbox-inc.com) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/35)
 * [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
 * [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/)  - ✳️ Runs via Rosetta 2 
 * [Signal](https://www.signal.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/337)
