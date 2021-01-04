@@ -120,6 +120,9 @@ export default {
             ]
         },
         routes() {
+            const routesTimeName = 'Building Nuxt Routes'
+            console.time(routesTimeName)
+
             return Promise.all([
                 ...listsOptions,
                 videoListOptions
@@ -229,6 +232,11 @@ export default {
                     ])
 
                     return Array.from(allEndpointsSet)
+                })
+                // Log the routes generation time
+                .then( result => {
+                    console.timeEnd(routesTimeName)
+                    return result
                 })
         }
     },
