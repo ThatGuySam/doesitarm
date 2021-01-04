@@ -187,6 +187,17 @@ export default {
                         })
                     })
 
+                    const extraEndpoints = []
+
+                    for (let i = 0; i < 5; i++) {
+                        videoList.forEach( video => {
+                            extraEndpoints.push({
+                                route: getVideoEndpoint(video) + '-' + i,
+                                payload: buildVideoPayload(video, allVideoAppsList, videoList)
+                            })
+                        })
+                    }
+
                     // Build routes for app types that support benchmark endpoints
                     const benchmarkRoutes = [
                         ...appRoutes,
@@ -212,7 +223,9 @@ export default {
                         // Non-app routes
                         ...videoRoutes,
                         ...categoryRoutes,
-                        ...benchmarkRoutes
+                        ...benchmarkRoutes,
+
+                        ...extraEndpoints
                     ])
 
                     return Array.from(allEndpointsSet)
