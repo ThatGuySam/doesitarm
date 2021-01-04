@@ -207,7 +207,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 #### 3D and Architecture
 
 * [Archicad](https://graphisoft.com/solutions/products/archicad) - ✳️ Yes, works via Rosetta 2 - [Graphisoft support update](https://helpcenter.graphisoft.com/knowledgebase/130674/) [Graphisoft Thread](https://archicad-talk.graphisoft.com/viewtopic.php?p=312614) [Reddit thread](https://www.reddit.com/r/ArchiCAD/comments/hsjs6l/archicad_and_macos_armtransition/) [Tudy's feedback](https://github.com/ThatGuySam/doesitarm/pull/189#issuecomment-742729489)
-* [AutoCAD](https://www.autodesk.com/products/autocad/overview?plc=ACDIST&term=1-YEAR&support=ADVANCED&quantity=1) - 🚫 Not yet supported only works on Intel-based Macs - [AutoDesk Forums](https://forums.autodesk.com/t5/autocad-for-mac-forum/apple-silicon/m-p/9652836)
+* [AutoCAD](https://www.autodesk.com/products/autocad/overview?plc=ACDIST&term=1-YEAR&support=ADVANCED&quantity=1) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/499#issuecomment-754202196) [AutoDesk Forums](https://forums.autodesk.com/t5/autocad-for-mac-forum/apple-silicon/m-p/9652836)
 * [PrusaSlicer](https://www.prusa3d.com/prusaslicer/) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/379#issue-755576203)
 * [Shaper3D](https://www.shapr3d.com/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=2211)
 * [SketchUp](https://www.sketchup.com/) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://forums.sketchup.com/t/the-new-m1-processor/141946)
