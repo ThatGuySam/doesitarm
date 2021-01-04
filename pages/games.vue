@@ -37,6 +37,7 @@ export default {
     async asyncData () {
         const { sortedAppList, allList, allVideoAppsList, makeAppSearchLinks } = await import('~/helpers/get-list.js')
         const { default: gameList } = await import('~/static/game-list.json')
+        const { default: videoList } = await import('~/static/video-list.json')
 
         return {
             // Map game list
@@ -50,7 +51,7 @@ export default {
                     text: app.text,
                     lastUpdated: app.lastUpdated,
                     category: app.category,
-                    searchLinks: makeAppSearchLinks(app)
+                    searchLinks: makeAppSearchLinks( app, videoList )
                 }
             })
         }
