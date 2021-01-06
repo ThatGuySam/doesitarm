@@ -43,7 +43,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Deno](https://deno.land/) - ✅ Yes, Full Native Apple Silicon Support - [Issue](https://github.com/denoland/deno/issues/8346)
 * [Docker](https://www.docker.com/products#/mac) - ⏹ Not yet, but M1 builds are now available via the Preview Program - [Official Post](https://www.docker.com/blog/apple-silicon-m1-chips-and-docker/) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409) [M1 Preview and Download](https://www.docker.com/blog/download-and-try-the-tech-preview-of-docker-desktop-for-m1/)
 * [Dreamweaver](https://www.adobe.com/products/dreamweaver.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
-* [Emacs](https://www.gnu.org/software/emacs/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/226)
+* [Emacs](https://www.gnu.org/software/emacs/) - ✅ Yes, full native support via Emacs plus - [Verification](https://github.com/ThatGuySam/doesitarm/issues/226) [Install instructions](https://github.com/d12frosted/homebrew-emacs-plus)
 * [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
 * [FFmpeg](https://ffmpeg.org/download.html) - 🚫 Not yet supported because of unsupported or broken dependencies on arm64: rsvg, x264, libvpx, soxr - [Issue](https://trac.macports.org/ticket/61668)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
