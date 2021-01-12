@@ -148,6 +148,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Traktor DJ 2](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-dj-2/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [Traktor Pro 3](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-pro-3/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [TunesArt](https://www.jibapps.com/apps/tunesart/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.6 - [Source](https://twitter.com/jibapps/status/1334055652055003137)
+* [X Lossless Decoder (XLD)](https://sourceforge.net/projects/xld/) - ✅ Yes, Full Native Apple Silicon Support as of 2021/1/1 - [Scroll to version history here](https://tmkk.undo.jp/xld/index_e.html)
 
 
 
