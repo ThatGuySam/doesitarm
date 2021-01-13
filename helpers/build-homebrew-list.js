@@ -54,7 +54,7 @@ class MakeHomebrewList {
         this.allFormulae = null
     }
 
-    getStatusText (formula) {
+    getStatusText ( formula ) {
         // Match status to Sheet Status
         return statusesMessages[formula.status]
     }
@@ -76,7 +76,10 @@ class MakeHomebrewList {
     }
 
     formulaIsNative (formulae) {
+        // Search Formulae from Homebrew API
         const formulaData = this.allFormulae[formulae.fullName] || this.searchFormulaeForName(formulae.name)
+
+        // console.log('formulae.fullName', formulae.fullName)
 
         // If this formula doesn't exist
         // then return false
@@ -95,11 +98,6 @@ class MakeHomebrewList {
     }
 
     parseStatus (formulae) {
-        // If an ARM 64 formula exists then it's native
-        if (this.formulaIsNative(formulae)) {
-            return 'native'
-        }
-
         // Match status to Sheet Status
         return statusesTranslations[formulae.status]
     }
@@ -189,6 +187,13 @@ class MakeHomebrewList {
             })
 
             // if (formulaeRow.links.length !== 0) console.log('formulaeRow', formulaeRow.links)
+
+            const isNativeInApi = this.formulaIsNative(formulaeRow)
+
+            if (isNativeInApi) {
+                // Update status
+                formulaeRow.status = '🥇'
+            }
 
             return formulaeRow
         })
