@@ -37,7 +37,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [CocoaPods](https://cocoapods.org/) - ✳️ Yes, it works via Rosetta 2 - [Issue](https://github.com/CocoaPods/CocoaPods/issues/9907)
 * [CotEditor](https://coteditor.com) - ✅ Yes, full native support as of 4.0.0 - [App Store](https://itunes.apple.com/app/coteditor/id1024640650)
 * [Cyberduck](https://cyberduck.io/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/333)
-* [Dash for macOS](https://kapeli.com/dash) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/225#issuecomment-734750855)
+* [Dash for macOS](https://kapeli.com/dash) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/225#issuecomment-734750855) [Snippet Issue](https://github.com/ThatGuySam/doesitarm/issues/225#issuecomment-757104857)
 * [DataGrip](https://www.jetbrains.com/datagrip/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [DBeaver](https://dbeaver.io/) - ✳️ Yes, works via Rosetta 2 using the pkg installer - [Issue Tracking](https://github.com/dbeaver/dbeaver/issues/10470)
 * [Deno](https://deno.land/) - ✅ Yes, Full Native Apple Silicon Support - [Issue](https://github.com/denoland/deno/issues/8346)
