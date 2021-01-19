@@ -28,6 +28,7 @@
     "slugify": "^1.4.6"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^0.11.1",
     "@nuxtjs/tailwindcss": "^3.3.4",
     "autoprefixer": "^8.6.4",
     "babel-eslint": "^8.2.1",
