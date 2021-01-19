@@ -5,7 +5,9 @@ Lists of reported app support for macOS on ARM so far.
 
 Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
-[Twitter Updates](https://twitter.com/DoesItARM)
+[Search List](https://doesitarm.com/) | [Benchmarks and Performance](https://doesitarm.com/benchmarks/) | [Twitter Updates](https://twitter.com/DoesItARM) | [More Lists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#more-apple-silicon-lists) | [Youtube Playlists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#youtube-apple-silicon-playlists)
+
+
 
 [Do you want to help with M1 testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
 
@@ -15,6 +17,19 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * ⏹ No, not working at all but support is in development
 * 🚫 No, not yet supported only works on Intel-based Macs
 * 🔶 Unknown, more info needed
+
+
+## Categories
+* [Developer Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#developer-tools)
+* [Science and Research Software](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#science-and-research-software)
+* [Music and Audio Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#music-and-audio-tools)
+* [Photo and Graphic Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#photo-and-graphic-tools)
+* [Video and Motion Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#video-and-motion-tools)
+* [3D and Architecture](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#3d-and-architecture)
+* [Productivity Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#productivity-tools)
+* [Entertainment and Media Apps](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#entertainment-and-media-apps)
+* [Social and Communication](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#social-and-communication)
+* [VPNs, Security, and Privacy](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#vpns-security-and-privacy)
 
 
 ## The Apps
