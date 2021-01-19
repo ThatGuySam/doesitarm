@@ -312,7 +312,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [MindNode](https://mindnode.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Monero GUI Wallet](https://www.getmonero.org/downloads/) - ✳️ Yes, works via Rosetta 2 with a few minor bugs - [Source](https://github.com/ThatGuySam/doesitarm/issues/435)
 * [Moom](https://manytricks.com/moom/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.20 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
-* [Moon FM](https://apps.apple.com/us/app/moon-fm-premium-podcast-app/id1465712037?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v2.0.3 - 
+* [Moon FM](https://apps.apple.com/us/app/moon-fm-premium-podcast-app/id1465712037?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v2.0.3
 * [Nisus Writer Pro](https://nisus.com/pro/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
 * [Nisus Writer Express](https://nisus.com/Express/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
 * [Notability](https://www.gingerlabs.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/417#issue-760864996)
