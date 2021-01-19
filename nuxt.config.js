@@ -29,7 +29,27 @@ const listsOptions = [
 ]
 
 const videoListOptions = {
-    buildMethod: buildVideoList,
+    buildMethod: async buildArgs => {
+        const videoList = await buildVideoList( buildArgs )
+
+        const extraVideos = []
+
+        const multiplier = 5
+
+        for (let i = 0; i < multiplier; i++) {
+            videoList.forEach( video => {
+                extraVideos.push({
+                    ...video,
+                    slug: video.slug + '-' + i,
+                })
+            })
+        }
+
+        return [
+            ...videoList,
+            ...extraVideos
+        ]
+    },
     path: '/static/video-list.json',
 }
 
