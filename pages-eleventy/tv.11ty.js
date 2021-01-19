@@ -3,7 +3,7 @@ class TV {
     // or `get data() {`
     data() {
         return {
-            layout: 'default.njk',
+            layout: 'default.11ty.js',
 
             pagination: {
                 data: 'video-list',
