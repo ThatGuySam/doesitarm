@@ -30,25 +30,27 @@ const listsOptions = [
 
 const videoListOptions = {
     buildMethod: async buildArgs => {
-        const videoList = await buildVideoList( buildArgs )
+        return await buildVideoList( buildArgs )
 
-        const extraVideos = []
+        // const videoList = await buildVideoList( buildArgs )
 
-        const multiplier = 12
+        // const extraVideos = []
 
-        for (let i = 0; i < multiplier; i++) {
-            videoList.forEach( video => {
-                extraVideos.push({
-                    ...video,
-                    slug: video.slug + '-' + i,
-                })
-            })
-        }
+        // const multiplier = 12
 
-        return [
-            ...videoList,
-            ...extraVideos
-        ].slice(0, 10 * 1000)
+        // for (let i = 0; i < multiplier; i++) {
+        //     videoList.forEach( video => {
+        //         extraVideos.push({
+        //             ...video,
+        //             slug: video.slug + '-' + i,
+        //         })
+        //     })
+        // }
+
+        // return [
+        //     ...videoList,
+        //     ...extraVideos
+        // ].slice(0, 10 * 1000)
     },
     path: '/static/video-list.json',
 }
