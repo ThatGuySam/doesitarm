@@ -34,7 +34,7 @@ const videoListOptions = {
 
         const extraVideos = []
 
-        const multiplier = 5
+        const multiplier = 12
 
         for (let i = 0; i < multiplier; i++) {
             videoList.forEach( video => {
@@ -48,7 +48,7 @@ const videoListOptions = {
         return [
             ...videoList,
             ...extraVideos
-        ]
+        ].slice(0, 10 * 1000)
     },
     path: '/static/video-list.json',
 }
@@ -187,7 +187,7 @@ export default {
                         gameRoutes,
                         homebrewRoutes,
 
-                        videoRoutes
+                        // videoRoutes
                     ] = lists.map((list, listI) => {
                         return list.map( app => {
 
@@ -196,7 +196,7 @@ export default {
                             if (isVideo) {
                                 return {
                                     route: getVideoEndpoint(app),
-                                    payload: buildVideoPayload(app, allVideoAppsList, videoList)
+                                    payload: {}//buildVideoPayload(app, allVideoAppsList, videoList)
                                 }
                             }
 
@@ -338,7 +338,7 @@ export default {
     */
     build: {
         parallel: true,
-        hardSource: true,
+        // hardSource: true,
         cache: true,
         html: {
             minify: {
