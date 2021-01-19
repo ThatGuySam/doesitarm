@@ -210,7 +210,7 @@ export default {
                         ...homebrewRoutes,
 
                         // Non-app routes
-                        ...videoRoutes,
+                        // ...videoRoutes,
                         ...categoryRoutes,
                         ...benchmarkRoutes
                     ])
