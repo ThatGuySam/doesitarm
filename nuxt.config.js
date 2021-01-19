@@ -317,6 +317,7 @@ export default {
     ** Build configuration
     */
     build: {
+        parallel: true,
         html: {
             minify: {
                 minifyCSS: false,
