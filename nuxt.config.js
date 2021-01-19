@@ -318,6 +318,7 @@ export default {
     */
     build: {
         parallel: true,
+        cache: true,
         html: {
             minify: {
                 minifyCSS: false,
