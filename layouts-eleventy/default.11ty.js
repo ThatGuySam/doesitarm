@@ -1,6 +1,6 @@
 import config from '../nuxt.config'
 
-
+const year = new Date().getFullYear()
 
 const makeTag = ( tag, tagName = 'meta') => {
 
@@ -72,9 +72,9 @@ class DefaultLayout {
     }) {
         return /* html */`
             <!doctype html>
-            <html lang="${ config.head.htmlAttrs.lang }">
+            <html lang="${ this.getNuxt().head.htmlAttrs.lang }">
                 <head>
-                    <title>${ title || config.head.title }</title>
+                    <title>${ title || this.getNuxt().head.title }</title>
 
                     ${ this.generateMetaTags() }
 
@@ -145,7 +145,7 @@ class DefaultLayout {
                                                 </div>
                                             </div>
                                         </div>
-                                        <p class="mt-8 text-center text-base leading-6 text-gray-400">© 2020 Does it ARM All rights reserved.</p>
+                                        <p class="mt-8 text-center text-base leading-6 text-gray-400">© ${ year } ${ this.getNuxt().head.title } All rights reserved.</p>
                                     </div>
                                 </footer>
                             </div>
