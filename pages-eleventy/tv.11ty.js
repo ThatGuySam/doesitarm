@@ -1,3 +1,5 @@
+import config from '../nuxt.config'
+
 class TV {
     // or `async data() {`
     // or `get data() {`
@@ -14,7 +16,7 @@ class TV {
             eleventyComputed: {
                 title: ({ video }) => {
                     // console.log('data', data)
-                    return `${ video.name } - Does It ARM`
+                    return `${ video.name } - ${ config.head.title }`
                 }
             },
 
