@@ -68,13 +68,13 @@ class DefaultLayout {
 
     render({
         content,
-        pageTitle = null
+        title = null
     }) {
         return /* html */`
             <!doctype html>
             <html lang="${ config.head.htmlAttrs.lang }">
                 <head>
-                    <title>${ pageTitle || config.head.title }</title>
+                    <title>${ title || config.head.title }</title>
 
                     ${ this.generateMetaTags() }
 

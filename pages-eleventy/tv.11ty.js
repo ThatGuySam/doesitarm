@@ -11,6 +11,13 @@ class TV {
                 alias: 'video'
             },
 
+            eleventyComputed: {
+                title: ({ video }) => {
+                    // console.log('data', data)
+                    return `${ video.name } - Does It ARM`
+                }
+            },
+
             permalink: ({ video }) => {
                 // console.log('data', data)
                 return `tv/${ video.slug }/`
