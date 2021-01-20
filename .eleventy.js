@@ -13,7 +13,7 @@ module.exports = function ( eleventyConfig ) {
 
             // Relative to input directory.
             data: '../static',
-            layouts: '../layouts'
+            layouts: '../layouts-eleventy'
         }
     }
 }
