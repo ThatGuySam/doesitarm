@@ -99,6 +99,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1469348209) [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
 * [Parallels Desktop](https://www.parallels.com/) - ⏹ Not entirely working yet, but running ARM guests (such as Windows 10 on ARM) is possible with the preview version - [Blog Post](https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/) [Beta Download](https://my.parallels.com/desktop/beta) [MacRumors Discussion](https://forums.macrumors.com/threads/parallels-tech-preview-for-m1.2275996/unread)
 * [Paw](https://paw.cloud/) - ✳️ Yes, works via Rosetta 2 - [Official Tweet](https://twitter.com/luckymarmot/status/1332614644654026755?s=20)
+* [Pelemay](https://github.com/zeam-vm/pelemay/releases) - ✅ Yes, Full Native Apple Silicon Support as of v0.0.14 - [Release Notes](https://github.com/zeam-vm/pelemay/releases/tag/0.0.14)
 * [PhpStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✅ Yes, full native Apple Silicon support as of v2020.3.1
 * [Postman](https://www.postman.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/160#issuecomment-736772593)
 * [PowerShell Core](https://github.com/PowerShell/PowerShell) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/125#issuecomment-736775191)
@@ -178,6 +179,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Affinity Photo](https://affinity.serif.com/en-us/publisher/) - ✅ Yes, fully supported as of v1.8.6 - [Press Release](https://affinity.serif.com/en-us/press/newsroom/affinity-apps-accelerate-with-macos-big-sur-and-native-m1-support/)
 * [Affinity Publisher](https://affinity.serif.com/en-us/publisher/) - ✅ Yes, fully supported as of v1.8.6 - [Press Release](https://affinity.serif.com/en-us/press/newsroom/affinity-apps-accelerate-with-macos-big-sur-and-native-m1-support/) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1286)
 * [ArmorPaint](https://armorpaint.org/) - 🚫 No, not yet supported only works on Intel-based Macs
+* [BiggerPicture](https://apps.apple.com/app/bigger-picture/id1406088493?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.0 - [Release Notes](https://basilsalad.com/kitchen/bigger-picture-big-sur/)
 * [BrandBook](https://lighthouse16.com/brandbook/) - ✅ Yes, fully supported as of v1.1.2 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Capture One](https://www.captureone.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/pull/130#issuecomment-736183868) [Capture One Twitter](https://twitter.com/captureonepro/status/1326570278462349312)
 * [Darkroom](https://darkroom.co/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1307)
@@ -335,6 +337,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Post-it®](https://apps.apple.com/app/post-it/id1475777828) - ✳️ Yes, runs via Rosetta 2, with native support coming soon - [Source](https://github.com/ThatGuySam/doesitarm/issues/197#issuecomment-732100064)
 * [Quiet](https://lighthouse16.com/quiet/) - ✅ Yes, fully supported as of v2.6.7 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Remotix](https://remotix.com/downloads-mac/) - ✅ Yes, fully supported as of v6.3 - [Release Notes](https://downloads.remotix.com/remotix-mac/release-notes.html?v=6.3)
+* [Razer macOS](https://github.com/1kc/razer-macos/releases) - ✳️ Yes, runs via Rosetta 2
+* [Razer Synapse](https://www.razer.com/synapse-2) - 🚫 No, not yet supported only works on Intel-based Macs - [Working Alternative](https://github.com/1kc/razer-macos)
 * [RingCentral](https://apps.apple.com/us/app/id715886894) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/251#issuecomment-736105390)
 * [Safari Web Browser](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
