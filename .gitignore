@@ -87,3 +87,4 @@ dist
 /static/**/*.json
 /commits-data.json
 .DS_Store
+/static/tailwind.css
