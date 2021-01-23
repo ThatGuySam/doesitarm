@@ -9,7 +9,10 @@ function pill ( text ) {
     `
 }
 
-export default function ( video ) {
+export default function ( video, {
+    width = '325px',
+    classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
+} ) {
 
     // Setup inline lazysizes
     this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
@@ -17,7 +20,7 @@ export default function ( video ) {
     // console.log('video', video)
 
     return /* html */`
-<div class="video-card">
+<div class="video-card ${ classes }" style="max-width: ${ width }; flex-basis: ${ width }; scroll-snap-align: start;">
     <a
         href="${video.endpoint}"
         class=""
