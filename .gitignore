@@ -87,5 +87,7 @@ dist
 /static/game-list.json
 /static/homebrew-list.json
 /static/video-list.json
+/static/eleventy-endpoints.json
+/static/nuxt-endpoints.json
 /commits-data.json
 .DS_Store
