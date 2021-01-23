@@ -18,6 +18,7 @@
     "clone-readme": "cp ./README.md README-temp.md"
   },
   "dependencies": {
+    "@11ty/eleventy-assets": "^1.0.5",
     "@fontsource/inter": "^4.0.1",
     "@nuxtjs/sitemap": "^2.4.0",
     "axios": "^0.21.0",
