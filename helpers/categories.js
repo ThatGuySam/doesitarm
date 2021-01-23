@@ -1,3 +1,5 @@
+// Universal JS imports only
+
 
 // Contains all types of properies to keep data consistent
 export const categoryTemplate = {
