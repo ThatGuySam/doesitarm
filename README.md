@@ -307,7 +307,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Logitech Options](https://www.logitech.com/en-us/product/options) - ✳️ Yes, works via Rosetta 2. Some users report issues with the Flow feature. - [MacRumors Discussion](https://forums.macrumors.com/threads/does-logitech-options-works.2270516)
 * [Lunar for Mac](https://lunar.fyi/) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue #1](https://github.com/alin23/Lunar/issues/210) [Issue #2](https://github.com/alin23/Lunar/issues/215)
 * [MacZip](https://ezip.awehunt.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://ezip.awehunt.com/)
-* [Microsoft Edge](https://www.microsoft.com/en-us/edge) - ✳️ Yes, works via Rosetta 2, native Apple Silicon build available for insiders - [Insider Download](https://www.microsoftedgeinsider.com/en-us/download/canary)
+* [Microsoft Edge](https://www.microsoft.com/en-us/edge) - ✅ Yes, Full Native Apple Silicon Support as of v88.0.705.50 - [Release Notes](https://docs.microsoft.com/en-us/deployedge/microsoft-edge-relnote-stable-channel)
 * [Microsoft Excel](https://apps.apple.com/cn/app/microsoft-excel/id462058435?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft Office 365](https://www.microsoft.com/en-us/microsoft-365/office-365) -  ✅ Yes, Full Native Apple Silicon Support as of v16.44 - [Official Post](https://www.microsoft.com/en-us/microsoft-365/blog/2020/12/15/4-ways-microsoft-365-is-improving-the-experience-for-mac-users/) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5681)
 * [Microsoft OneNote](https://apps.apple.com/cn/app/microsoft-onenote/id784801555?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
