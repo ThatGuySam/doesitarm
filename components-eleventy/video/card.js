@@ -11,6 +11,9 @@ function pill ( text ) {
 
 export default function ( video ) {
 
+    // Setup inline lazysizes
+    this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
+
     // console.log('video', video)
 
     return /* html */`

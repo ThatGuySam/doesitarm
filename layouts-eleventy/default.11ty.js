@@ -66,9 +66,10 @@ class DefaultLayout {
         return Object.values( linkTags ).join('')
     }
 
+
     render({
         content,
-        title = null
+        title = null,
     }) {
         return /* html */`
             <!doctype html>
@@ -152,7 +153,9 @@ class DefaultLayout {
                         </div>
                     </div>
 
-                    {{ Scripts }}
+                    <script>
+                        ${ this.getJs() }
+                    </script>
                 </body>
             </html>
         `;
