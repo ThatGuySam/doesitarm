@@ -64,7 +64,7 @@ class TV {
                         <div class="video-row relative w-full">
                             <div class="video-row-contents flex overflow-x-auto whitespace-no-wrap py-2 space-x-6" style="scroll-snap-type:x mandatory;">
 
-                                ${ video.payload.relatedVideos.map( this.boundComponent(VideoCard) ) }
+                                ${ video.payload.relatedVideos.map( this.boundComponent(VideoCard) ).join('') }
 
                             </div>
                             <button class="absolute left-0 h-10 w-10 flex justify-center items-center transform -translate-y-1/2 -translate-x-1/2 bg-darker rounded-full" style="top:50%;">
