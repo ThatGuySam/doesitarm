@@ -55,7 +55,10 @@ class BuildLists {
             path: '/static/video-list.json',
             buildMethod: async () => {
 
-                // const videoList = await buildVideoList( buildArgs )
+                return await buildVideoList( this.getAllVideoAppsList() )
+
+
+                // const videoList = await buildVideoList( this.getAllVideoAppsList() )
 
                 // const extraVideos = []
 
@@ -70,14 +73,10 @@ class BuildLists {
                 //     })
                 // }
 
-                // return [
+                // return new Set([
                 //     ...videoList,
                 //     ...extraVideos
-                // ].slice(0, 10 * 1000)
-
-                // return await this.saveList(videoListOptions, allVideoAppsList)
-
-                return await buildVideoList( this.getAllVideoAppsList() )
+                // ].slice(0, 10 * 1000))
             },
         }
     ]
@@ -112,7 +111,7 @@ class BuildLists {
         // console.log('listFullPath', listFullPath)
 
         // Write the list to JSON
-        await fs.writeFile(listFullPath, JSON.stringify(this.lists[listOptions.name]))
+        await fs.writeFile(listFullPath, JSON.stringify(Array.from(this.lists[listOptions.name])))
 
         // Read back the JSON we just wrote to ensure it exists
         const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
@@ -134,8 +133,12 @@ class BuildLists {
             const methodName = `Building ${listOptions.path}`
             console.time(methodName)
 
+            const builtList = await listOptions.buildMethod()
+
             // Run the build method to get the lists
-            this.lists[listOptions.name] = await listOptions.buildMethod()
+            this.lists[listOptions.name] = new Set([
+                ...builtList
+            ])
 
 
             console.timeEnd(methodName)

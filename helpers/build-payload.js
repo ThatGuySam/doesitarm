@@ -4,7 +4,7 @@ import { appsRelatedToVideo, videosRelatedToVideo, videosRelatedToApp } from './
 // import videoList from '~/static/video-list.json'
 
 
-export function buildVideoPayload ( video, allVideoAppsList, videoList ) {
+export function buildVideoPayload ( video, allVideoAppsList, videoListSet ) {
     // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
     // const { default: videoList } = await import('~/static/video-list.json')
 
@@ -15,18 +15,18 @@ export function buildVideoPayload ( video, allVideoAppsList, videoList ) {
     const featuredApps = appsRelatedToVideo( video, allVideoAppsList )
 
     // Get related videos
-    const relatedVideos = videosRelatedToVideo( video, allVideoAppsList, videoList )
+    const relatedVideos = videosRelatedToVideo( video, allVideoAppsList, videoListSet )
 
     return {
         video,
         featuredApps,
         // If no related video found just get the 12 newest ones
-        relatedVideos: (relatedVideos.length !== 0) ? relatedVideos.slice(0, 24) : videoList.slice(0, 12)
+        relatedVideos: (relatedVideos.length !== 0) ? relatedVideos.slice(0, 24) : Array.from(videoListSet).slice(0, 12)
     }
 }
 
 
-export function buildAppBenchmarkPayload ( app, allVideoAppsList, videoList ) {
+export function buildAppBenchmarkPayload ( app, allVideoAppsList, videoListSet ) {
     // const { allVideoAppsList } = await import('~/helpers/get-list.js')
 
     // const { videosRelatedToApp } = await import('~/helpers/related.js')
@@ -39,7 +39,7 @@ export function buildAppBenchmarkPayload ( app, allVideoAppsList, videoList ) {
 
     // const featuredApps = []
 
-    const relatedVideos = videosRelatedToApp( app, videoList ).map(video => {
+    const relatedVideos = videosRelatedToApp( app, videoListSet ).map(video => {
         // console.log('video', video)
         return {
             ...video,

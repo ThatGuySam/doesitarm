@@ -21,7 +21,7 @@ export function appsRelatedToVideo ( video, allVideoAppsList ) {
     return relatedApps
 }
 
-export function videosRelatedToVideo ( video, allVideoAppsList, videoList ) {
+export function videosRelatedToVideo ( video, allVideoAppsList, videoListSet ) {
     const relatedVideos = {}
 
     // console.log('videoList', videoList[0])
@@ -30,7 +30,7 @@ export function videosRelatedToVideo ( video, allVideoAppsList, videoList ) {
     const featuredApps = appsRelatedToVideo( video, allVideoAppsList )
 
     // Find other videos that also feature this video's app
-    for (const otherVideo of videoList) {
+    for (const otherVideo of videoListSet) {
         for (const app of featuredApps) {
             // console.log('otherVideo', otherVideo)
             // Skip if this app is not in the other video's apps
@@ -48,12 +48,14 @@ export function videosRelatedToVideo ( video, allVideoAppsList, videoList ) {
 }
 
 
-export function videosRelatedToApp ( app, videoList ) {
+export function videosRelatedToApp ( app, videoListSet ) {
+
+    // console.log('videoListSet', videoListSet)
 
     const relatedVideos = {}
 
     // Find other videos that also feature this video's app
-    for (const video of videoList) {
+    for (const video of videoListSet) {
         if (!video.apps.includes(app.slug)) continue
 
         relatedVideos[video.id] = video
