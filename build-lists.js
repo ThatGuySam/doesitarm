@@ -28,6 +28,8 @@ class BuildLists {
 
         // Where Eleventy Enpoints get stored
         this.eleventyEndpointsSet = new Set()
+
+        this.allVideoAppsList = []
     }
 
     listsOptions = [
@@ -77,6 +79,14 @@ class BuildLists {
                 //     ...extraVideos
                 // ].slice(0, 10 * 1000))
             },
+            beforeSave: videoListSet => {
+                return Array.from(videoListSet).map( video => {
+                    return {
+                        ...video,
+                        payload: buildVideoPayload( video, this.allVideoAppsList, this.lists.video )
+                    }
+                })
+            }
         }
     ]
 
@@ -107,10 +117,17 @@ class BuildLists {
         // Make the relative path for our new JSON file
         const listFullPath = `.${listOptions.path}`
 
+        const hasSaveMethod = listOptions.hasOwnProperty('beforeSave')
+        const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
+
         // console.log('listFullPath', listFullPath)
 
+        const saveableList = saveMethod( this.lists[listOptions.name] )
+
+        console.log('saveableList', typeof saveableList)
+
         // Write the list to JSON
-        await fs.writeFile(listFullPath, JSON.stringify(Array.from(this.lists[listOptions.name])))
+        await fs.writeFile(listFullPath, JSON.stringify( saveableList ))
 
         // Read back the JSON we just wrote to ensure it exists
         const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
@@ -190,7 +207,7 @@ class BuildLists {
 
         // console.log('appList', appList)
 
-        const allVideoAppsList = this.getAllVideoAppsList()
+        this.allVideoAppsList = this.getAllVideoAppsList()
 
         // console.log('allVideoAppsList', allVideoAppsList[0])
 
@@ -206,7 +223,7 @@ class BuildLists {
                 if (isVideo) {
                     this.eleventyEndpointsSet.add({
                         route: getVideoEndpoint(app),
-                        payload: buildVideoPayload( app, allVideoAppsList, this.lists.video )
+                        // payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
                     })
 
                     return
@@ -216,7 +233,7 @@ class BuildLists {
                 if ( isApp || isGame ) {
                     this.nuxtEndpointsSet.add({
                         route: `${getAppEndpoint(app)}/benchmarks`,
-                        payload: buildAppBenchmarkPayload( app, allVideoAppsList, this.lists.video )
+                        payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
                     })
                 }
 
