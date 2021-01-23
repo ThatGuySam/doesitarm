@@ -8,50 +8,48 @@ import buildVideoList from './helpers/build-video-list.js'
 
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
-import { categories } from './helpers/categories.js'
+import { categories, getAppCategory } from './helpers/categories.js'
 import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 
 // Setup dotenv
 dotenv.config()
 
 
+
 class BuildLists {
 
     constructor () {
-        // this.apps = new Set()
-        // this.games = new Set()
-        // this.homebrewFormulae = new Set()
-
+        // Where our lists are stored
         this.lists = {}
 
+        // Where Nuxt Routes and Payloads get stored
         this.nuxtEndpointsSet = new Set()
-        this.eleventyEndpointsSet = new Set()
 
-        // Videos contains app and game data
-        // so it goes during the second pass
-        // this.videos = new Set()
+        // Where Eleventy Enpoints get stored
+        this.eleventyEndpointsSet = new Set()
     }
 
     listsOptions = [
         {
-            name: 'apps',
+            name: 'app',
             path: '/static/app-list.json',
             buildMethod: buildAppList,
         },
         {
-            name: 'games',
+            name: 'game',
             path: '/static/game-list.json',
             buildMethod: buildGamesList,
         },
         {
-            name: 'homebrewFormulae',
+            name: 'homebrew',
             path: '/static/homebrew-list.json',
             buildMethod: buildHomebrewList,
         },
 
         // Always goes after initial lists
+        // since it depend on them
         {
-            name: 'videos',
+            name: 'video',
             path: '/static/video-list.json',
             buildMethod: async () => {
 
@@ -88,8 +86,8 @@ class BuildLists {
         // ])
 
         return [
-            ...Array.from(this.lists.apps),
-            ...Array.from(this.lists.games),
+            ...Array.from(this.lists.app),
+            ...Array.from(this.lists.game),
         ]
     }
 
@@ -124,13 +122,15 @@ class BuildLists {
         return savedList
     }
 
+    // Run all listsOprions methods
+    // and store them to this.lists
     async buildLists () {
         console.log('Build Lists started')
 
 
         for (const listOptions of this.listsOptions) {
 
-            const methodName = `Building ${listOptions.path}`
+            const methodName = `Building ${listOptions.name}`
             console.time(methodName)
 
             const builtList = await listOptions.buildMethod()
@@ -140,8 +140,8 @@ class BuildLists {
                 ...builtList
             ])
 
-
             console.timeEnd(methodName)
+            console.log(`Finished ${listOptions.name} list with ${this.lists[listOptions.name].size} items`)
         }
 
         console.log('Build Lists finished')
@@ -149,13 +149,115 @@ class BuildLists {
         return
     }
 
-    storeAppLists = async function () {
+    // Converts a list into a smaller searchable list
+    // similar to a table/spreadsheet
+    makeSearchableList ( list ) {
+        let firstLoop = true
+
+        const searchableList = new Set()
+
+        const tableHeader = new Set()
+
+        // const searchableKeys = new Set([
+        //     'name',
+        //     'text',
+        //     'lastUpdated',
+        //     'endpoint'
+        // ])
+
+        const makeSearchable = new Map([
+            [
+                'name',
+                item => {
+                    // console.log('Running name method', item)
+                    return item.name
+                }
+            ],
+            [
+                'text',
+                item => item.text
+            ],
+            [
+                'endpoint',
+                item => item.endpoint
+            ],
+            // [
+            //     'category',
+            //     app => {
+            //         return getAppCategory( item ).id
+            //     }
+            // ]
+        ])
+
+        list.forEach( ( searchableItem ) => {
+            // If this is the first items
+            // then store the keys
+            if ( firstLoop ) {
+                Object.keys(searchableItem).forEach( key => {
+                    // console.log(key, makeSearchable.has(key))
+
+                    if ( !makeSearchable.has(key) ) return
+
+                    // Add to table header so we can loop it later on
+                    tableHeader.add( key )
+                })
+
+                // Add keys to table head
+                searchableList.add( Array.from( tableHeader ) )
+
+                firstLoop = false
+            }
+            // This could cause an issue if the keys
+            // are out of order
+
+            // console.log('tableHeader', tableHeader)
+
+            const tableRow = []
+
+            // Loop through keys from table header
+            // and push them to this row
+            tableHeader.forEach( key => {
+                // console.log('searchableValue', key, searchableItem[key], makeSearchable.get(key)(searchableItem) )
+
+                tableRow.push( makeSearchable.get(key)(searchableItem) )
+            })
+
+            searchableList.add( tableRow )
+
+            return
+        })
+
+        return searchableList
+    }
+
+    // Save app lists to JSON
+    saveAppLists = async function () {
 
         if (Object.keys(this.listsOptions).length === 0) throw new Error('Trying to store empty lists')
 
+        console.log('Save lists started')
+
         for ( const listOptionsKey in this.listsOptions ) {
-            await this.saveList(this.listsOptions[listOptionsKey])
+
+            const methodName = `Saving ${this.listsOptions[listOptionsKey].path}`
+            console.time(methodName)
+
+            const listOptions = this.listsOptions[listOptionsKey]
+
+            await this.saveList( listOptions )
+
+            const searchableList = this.makeSearchableList( this.lists[listOptions.name] )
+
+            // console.log('searchableList', searchableList)
+
+            // Save a searchable list
+            await this.saveToJson( Array.from(searchableList), `./static/${listOptions.name}-list-searchable.json` )
+
+
+            console.timeEnd(methodName)
         }
+
+        console.log('Save lists finished')
 
         return
     }
@@ -164,27 +266,13 @@ class BuildLists {
 
         await this.buildLists()
 
-        await this.storeAppLists()
-
-        // console.log('appList', appList)
-
-        // Break out lists
-        // const [
-        //     appList,
-        //     gameList,
-        //     _,//homebrewList,
-
-        //     videoList
-        // ] = savedLists
+        await this.saveAppLists()
 
         // console.log('appList', appList)
 
         const allVideoAppsList = this.getAllVideoAppsList()
 
         // console.log('allVideoAppsList', allVideoAppsList[0])
-        // console.log('videoList', videoList[0])
-
-        // const allEndpointsSet = new Set()
 
         // Add list based routes
         for ( const listKey in this.lists ) {
@@ -198,7 +286,7 @@ class BuildLists {
                 if (isVideo) {
                     this.eleventyEndpointsSet.add({
                         route: getVideoEndpoint(app),
-                        payload: buildVideoPayload( app, allVideoAppsList, this.lists.videos )
+                        payload: buildVideoPayload( app, allVideoAppsList, this.lists.video )
                     })
 
                     return
@@ -208,7 +296,7 @@ class BuildLists {
                 if ( isApp || isGame ) {
                     this.nuxtEndpointsSet.add({
                         route: `${getAppEndpoint(app)}/benchmarks`,
-                        payload: buildAppBenchmarkPayload( app, allVideoAppsList, this.lists.videos )
+                        payload: buildAppBenchmarkPayload( app, allVideoAppsList, this.lists.video )
                     })
                 }
 
