@@ -55,28 +55,28 @@ class BuildLists {
             path: '/static/video-list.json',
             buildMethod: async () => {
 
-                return await buildVideoList( this.getAllVideoAppsList() )
+                // return await buildVideoList( this.getAllVideoAppsList() )
 
 
-                // const videoList = await buildVideoList( this.getAllVideoAppsList() )
+                const videoList = await buildVideoList( this.getAllVideoAppsList() )
 
-                // const extraVideos = []
+                const extraVideos = []
 
-                // const multiplier = 12
+                const multiplier = 12
 
-                // for (let i = 0; i < multiplier; i++) {
-                //     videoList.forEach( video => {
-                //         extraVideos.push({
-                //             ...video,
-                //             slug: video.slug + '-' + i,
-                //         })
-                //     })
-                // }
+                for (let i = 0; i < multiplier; i++) {
+                    videoList.forEach( video => {
+                        extraVideos.push({
+                            ...video,
+                            slug: video.slug + '-' + i,
+                        })
+                    })
+                }
 
-                // return new Set([
-                //     ...videoList,
-                //     ...extraVideos
-                // ].slice(0, 10 * 1000))
+                return new Set([
+                    ...videoList,
+                    ...extraVideos
+                ].slice(0, 10 * 1000))
             },
         }
     ]
