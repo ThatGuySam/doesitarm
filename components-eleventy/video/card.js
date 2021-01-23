@@ -58,7 +58,7 @@ export default function ( video, {
                     </svg>
                 </div>
 
-                ${ video.tags.includes('benchmark') && pill('Benchmark')}
+                ${ (video.tags.includes('benchmark')) ? pill('Benchmark') : '' }
 
             </div>
 
