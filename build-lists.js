@@ -181,12 +181,12 @@ class BuildLists {
                 'endpoint',
                 item => item.endpoint
             ],
-            // [
-            //     'category',
-            //     app => {
-            //         return getAppCategory( item ).id
-            //     }
-            // ]
+            [
+                'category',
+                app => {
+                    return getAppCategory( app ).id
+                }
+            ]
         ])
 
         list.forEach( ( searchableItem ) => {
