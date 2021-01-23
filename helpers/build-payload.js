@@ -21,7 +21,7 @@ export function buildVideoPayload ( video, allVideoAppsList, videoList ) {
         video,
         featuredApps,
         // If no related video found just get the 12 newest ones
-        relatedVideos: (relatedVideos.length !== 0) ? relatedVideos : videoList.slice(0, 12)
+        relatedVideos: (relatedVideos.length !== 0) ? relatedVideos.slice(0, 24) : videoList.slice(0, 12)
     }
 }
 
