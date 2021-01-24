@@ -1,8 +1,8 @@
 import fs from 'fs'
+import replace_css_url from 'replace-css-url'
+import { InlineCodeManager } from '@11ty/eleventy-assets'
 
 import nuxtConfig from './nuxt.config'
-
-import { InlineCodeManager } from '@11ty/eleventy-assets'
 
 
 function getAssetFilePath(componentName) {
@@ -42,9 +42,17 @@ module.exports = function ( eleventyConfig ) {
             if(!cssManager.hasComponentCode(componentName)) {
                 const fileContents = fs.readFileSync(getAssetFilePath(componentName), { encoding: "UTF-8" })
 
-                // console.log('Got component', componentName, componentCss)
+                // Replace urls in css with relative urls for dist folder
+                const parsedCss = replace_css_url(
+                    fileContents,
+                    function( path ) {
+                        const fileName = path.split('/').pop().split('#')[0].split('?')[0]
 
-                cssManager.addComponentCode(componentName, fileContents)
+                        return '/fonts/' + fileName
+                    }
+                )
+
+                cssManager.addComponentCode(componentName, parsedCss)
             }
 
             // Log usage for this url
@@ -53,6 +61,12 @@ module.exports = function ( eleventyConfig ) {
         }
 
         return
+    })
+
+
+    // Copy Inter font files
+    eleventyConfig.addPassthroughCopy({
+        "node_modules/@fontsource/inter/**/*.woff2": "fonts"
     })
 
     // This needs to be called in a Layout template.
