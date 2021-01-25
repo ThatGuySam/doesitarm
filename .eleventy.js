@@ -1,8 +1,12 @@
 import fs from 'fs'
 import replace_css_url from 'replace-css-url'
+import dotenv from 'dotenv'
 import { InlineCodeManager } from '@11ty/eleventy-assets'
 
 import nuxtConfig from './nuxt.config'
+
+// Setup dotenv
+dotenv.config()
 
 
 function getAssetFilePath(componentName) {

@@ -1,11 +1,30 @@
+import dotenv from 'dotenv'
+
 import config from '../nuxt.config'
 
 import VideoCard from '../components-eleventy/video/card.js'
 
+// Setup dotenv
+dotenv.config()
+
+export const makeTitle = function ( video ) {
+    return `${ video.name } - ${ config.head.title }`
+}
+
+export const makeDescription = function ( video ) {
+    if ( video.payload.featuredApps.length === 0 ) return 'Apple Silicon performance and support videos'
+
+    const featuredAppsString = video.payload.featuredApps.slice(0, 5).map(app => app.name).join(', ')
+
+    // console.log('video.payload.featuredApps', video.payload.featuredApps)
+
+    return `Apple Silicon performance and support videos for ${ featuredAppsString }`
+}
+
 class TV {
     // or `async data() {`
     // or `get data() {`
-    data() {
+    data () {
         return {
             layout: 'default.11ty.js',
 
@@ -18,11 +37,11 @@ class TV {
             eleventyComputed: {
                 title: ({ video }) => {
                     // console.log('data', data)
-                    return `${ video.name } - ${ config.head.title }`
+                    return makeTitle( video )
                 },
-                // footerInlineScripts: () => [
-                //     'node_modules/lazysizes/lazysizes.min.js'
-                // ]
+                description: ({ video }) => {
+                    return makeDescription( video )
+                },
             },
 
             permalink: ({ video }) => {

@@ -48,6 +48,7 @@ export default {
             lang: 'en',
         },
         title: 'Does it ARM',
+        description: pkg.description,
         meta: [
             { charset: 'utf-8' },
             {

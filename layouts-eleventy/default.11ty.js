@@ -46,12 +46,40 @@ const defaultLinkTags = Object.fromEntries(config.head.link.map( mapLinkTag ))
 
 class DefaultLayout {
 
-    generateMetaTags = ( pageMeta = [] ) => {
+    generateMetaTags = function ( renderData ) {
+
+        const {
+            title = null,
+            description = null,
+            meta: pageMeta = []
+        } = renderData
+
+        // console.log('renderData', Object.keys(renderData))
 
         const meta = {
             ...defaultMeta,
-            ...Object.fromEntries(pageMeta.map(mapMetaTag))
+            'property-twitter:url': `<meta property="twitter:url" content="${process.env.URL}${this.page.url}">`,
+            ...Object.fromEntries( pageMeta.map(mapMetaTag) )
         }
+
+        // console.log('renderData.description', renderData.description)
+
+        // if set
+        // get description from data
+        if ( description ) {
+            // Set meta description
+            meta['name-description'] = `<meta hid="description" name="description" content="${ description }">`
+            // Set twitter description
+            meta['property-twitter:description'] = `<meta hid="twitter:description" property="twitter:description" content="${ description }">`
+        }
+
+        // if set
+        // get title from data
+        if ( title ) {
+            // Set twitter title
+            meta['property-twitter:title'] = `<meta hid="twitter:title" property="twitter:title" content="${ title }">`
+        }
+
 
         return Object.values(meta).join('')
     }
@@ -67,10 +95,13 @@ class DefaultLayout {
     }
 
 
-    render({
-        content,
-        title = null,
-    }) {
+    render( data ) {
+
+        const {
+            content,
+            title = null,
+            description = null
+        } = data
 
         // Setup inline tailwind
         this.usingComponent( 'static/tailwind.css' )
@@ -83,7 +114,7 @@ class DefaultLayout {
                 <head>
                     <title>${ title || this.getNuxt().head.title }</title>
 
-                    ${ this.generateMetaTags() }
+                    ${ this.generateMetaTags( data ) }
 
                     ${ this.generateLinkTags() }
 
