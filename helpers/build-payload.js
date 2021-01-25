@@ -4,7 +4,7 @@ import { appsRelatedToVideo, videosRelatedToVideo, videosRelatedToApp } from './
 // import videoList from '~/static/video-list.json'
 
 
-export function buildVideoPayload ( video, allVideoAppsList, videoListSet ) {
+export function buildVideoPayload ( video, allVideoAppsListSet, videoListSet ) {
     // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
     // const { default: videoList } = await import('~/static/video-list.json')
 
@@ -12,10 +12,10 @@ export function buildVideoPayload ( video, allVideoAppsList, videoListSet ) {
     // const video = videoList.find(video => (video.slug === slug))
 
     // Get featured apps
-    const featuredApps = appsRelatedToVideo( video, allVideoAppsList )
+    const featuredApps = appsRelatedToVideo( video, allVideoAppsListSet )
 
     // Get related videos
-    const relatedVideos = videosRelatedToVideo( video, allVideoAppsList, videoListSet )
+    const relatedVideos = videosRelatedToVideo( video, allVideoAppsListSet, videoListSet )
 
     return {
         video,
@@ -26,12 +26,12 @@ export function buildVideoPayload ( video, allVideoAppsList, videoListSet ) {
 }
 
 
-export function buildAppBenchmarkPayload ( app, allVideoAppsList, videoListSet ) {
-    // const { allVideoAppsList } = await import('~/helpers/get-list.js')
+export function buildAppBenchmarkPayload ( app, allVideoAppsListSet, videoListSet ) {
+    // const { allVideoAppsListSet } = await import('~/helpers/get-list.js')
 
     // const { videosRelatedToApp } = await import('~/helpers/related.js')
 
-    // const app = allVideoAppsList.find(app => (app.slug === slug))
+    // const app = allVideoAppsListSet.find(app => (app.slug === slug))
 
     const submitVideoCard = {
         endpoint: `https://docs.google.com/forms/d/e/1FAIpQLSeEVGM9vE7VcfLMy6fJkfU70X2VZ60rHDyhDQLtnAN4nso0WA/viewform?usp=pp_url&entry.1018125313=${app.name}`

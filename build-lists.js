@@ -29,7 +29,7 @@ class BuildLists {
         // Where Eleventy Enpoints get stored
         this.eleventyEndpointsSet = new Set()
 
-        this.allVideoAppsList = []
+        this.allVideoAppsList = new Set()
     }
 
     listsOptions = [
@@ -102,15 +102,10 @@ class BuildLists {
     ]
 
     getAllVideoAppsList = () => {
-        // return new Set([
-        //     ...this.lists.apps,
-        //     ...this.lists.games,
-        // ])
-
-        return [
-            ...Array.from(this.lists.app),
-            ...Array.from(this.lists.game),
-        ]
+        return new Set([
+            ...this.lists.app,
+            ...this.lists.game,
+        ])
     }
 
     saveToJson = async function ( content, path ) {
