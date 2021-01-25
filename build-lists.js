@@ -33,6 +33,12 @@ class BuildLists {
     }
 
     listsOptions = [
+
+        // Mixed sources will(theoretically) go here
+        // then be read by follow main build methods
+
+
+        // Main build methods
         {
             name: 'app',
             path: '/static/app-list.json',
@@ -49,6 +55,7 @@ class BuildLists {
             buildMethod: buildHomebrewList,
         },
 
+        // Secondary Derivative built lists
         // Always goes after initial lists
         // since it depend on them
         {
