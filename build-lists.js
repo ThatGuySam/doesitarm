@@ -63,6 +63,8 @@ class BuildLists {
             path: '/static/video-list.json',
             buildMethod: async () => {
 
+                // console.log('this.getAllVideoAppsList()', this.getAllVideoAppsList())
+
                 return await buildVideoList( this.getAllVideoAppsList() )
 
 
@@ -87,6 +89,8 @@ class BuildLists {
                 // ].slice(0, 10 * 1000))
             },
             beforeSave: videoListSet => {
+                this.allVideoAppsList = this.getAllVideoAppsList()
+
                 return Array.from(videoListSet).map( video => {
                     return {
                         ...video,
@@ -214,9 +218,7 @@ class BuildLists {
 
         // console.log('appList', appList)
 
-        this.allVideoAppsList = this.getAllVideoAppsList()
-
-        // console.log('allVideoAppsList', allVideoAppsList[0])
+        // console.log('this.allVideoAppsList', this.allVideoAppsList.length, this.allVideoAppsList[0])
 
         // Add list based routes
         for ( const listKey in this.lists ) {
