@@ -80,6 +80,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac) - ✅ Yes, fully supported as of v2020.3.1 - [Release Notes](https://confluence.jetbrains.com/display/IDEADEV/IntelliJ+IDEA+2020.3.1+%28203.6682.168+build%29+Release+Notes)
 * [iTerm](https://iterm2.com/downloads.html) - ✅ Yes, fully supported as of v3.4.0 - [PR](https://github.com/gnachman/iTerm2/pull/421)
+* [Jetpack Compose for Desktop](https://www.jetbrains.com/lp/compose/) - ✅ Yes, Full Native Apple Silicon Support - [Changelog](https://github.com/JetBrains/compose-jb/blob/a4d59048f50c96970368e884925fd59b1a31ed12/CHANGELOG.md#m2-dec-2020)
 * [Julia Language](https://julialang.org/downloads/) - ✳️ Yes, it works via Rosetta 2 - [Github Issue](https://github.com/JuliaLang/julia/issues/36617)
 * [KiCad EDA](https://kicad.org/download/macos/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/199#issuecomment-736253625)
 * [kitty](https://github.com/kovidgoyal/kitty/releases) - ✅ Yes, Full Native Apple Silicon Support - [Github Issue](https://github.com/kovidgoyal/kitty/issues/3238)
@@ -308,6 +309,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [LibreOffice](https://www.libreoffice.org/download/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/371#issue-755004669) [Official Post](https://www.collaboraoffice.com/desktop/update-on-libreoffice-support-for-arm-based-macs/)
 * [Logitech Options](https://www.logitech.com/en-us/product/options) - ✳️ Yes, works via Rosetta 2. Some users report issues with the Flow feature. - [MacRumors Discussion](https://forums.macrumors.com/threads/does-logitech-options-works.2270516)
 * [Lunar for Mac](https://lunar.fyi/) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue #1](https://github.com/alin23/Lunar/issues/210) [Issue #2](https://github.com/alin23/Lunar/issues/215)
+* [Maccy](https://maccy.app/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://github.com/p0deje/Maccy/releases/tag/0.19.0) [Mac App Store](https://apps.apple.com/us/app/maccy/id1527619437)
 * [MacZip](https://ezip.awehunt.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://ezip.awehunt.com/)
 * [Microsoft Edge](https://www.microsoft.com/en-us/edge) - ✅ Yes, Full Native Apple Silicon Support as of v88.0.705.50 - [Release Notes](https://docs.microsoft.com/en-us/deployedge/microsoft-edge-relnote-stable-channel)
 * [Microsoft Excel](https://apps.apple.com/cn/app/microsoft-excel/id462058435?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
