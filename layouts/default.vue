@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <p class="mt-8 text-center text-base leading-6 text-gray-400">
-                    &copy; 2020 Does it ARM All rights reserved.
+                    &copy; {{ currentYear }} Does it ARM All rights reserved.
                 </p>
             </div>
         </footer>
@@ -49,6 +49,11 @@ export default {
     components: {
         Navbar,
         AllUpdatesSubscribe
+    },
+    computed: {
+        currentYear () {
+            return new Date().getFullYear()
+        }
     }
 }
 
