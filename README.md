@@ -126,6 +126,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Tunnelblick](https://tunnelblick.net/) - ✳️ Yes, works via Rosetta 2 - [Official Website](https://tunnelblick.net/cAppleSilicon.html)
 * [Typora](https://typora.io/#download) - ✅ Yes, fully supported as of v0.9.9.36 - [Release Notes](https://typora.io/dev_release.html)
 * [Unity](https://store.unity.com/download) - ✳️ Runs via Rosetta with native support currently in development - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator)
+* [Visual Studio for Mac](https://visualstudio.microsoft.com/vs/mac/) - ✳️ Yes, works via Rosetta 2 but debugging is not supported - [Verification](https://github.com/ThatGuySam/doesitarm/issues/401#issuecomment-748295469)
 * [VisualDiffer](https://apps.apple.com/us/app/visualdiffer/id412386481?ls=1&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.8.0 - [Mantis issue](https://visualdiffer.com/mantis/view.php?id=334)
 * [VS Code](https://code.visualstudio.com/) - ✅ Yes, Full Native Apple Silicon Support as of v1.53 - [Github Comment](https://github.com/microsoft/vscode/issues/106770#issuecomment-767298492)
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
@@ -335,6 +336,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [OmniGraffle](https://www.omnigroup.com/omnigraffle) - ✅ Yes, Full Native Apple Silicon Support as of v7.18 - [Release Notes](https://www.omnigroup.com/releasenotes/omnigraffle)
 * [OmniOutliner](https://www.omnigroup.com/omnioutliner) - ✅ Yes, Full Native Apple Silicon Support as of v5.8 - [Release Notes](https://www.omnigroup.com/releasenotes/omnioutliner)
 * [OmniPlan](https://www.omnigroup.com/omniplan) - ✅ Yes, Full Native Apple Silicon Support as of v4.2 - [Release Notes](https://www.omnigroup.com/releasenotes/omniplan)
+* [ONLYOFFICE](https://www.onlyoffice.com/download-desktop.aspx?from=desktop) - ✳️ Yes, works via Rosetta 2 - [Official Post](https://www.onlyoffice.com/blog/2020/12/onlyoffice-desktop-editors-6-1-goes-to-arm-based-apple-silicon-macs/?utm_source=twi&utm_medium=social&utm_campaign=desktop_6_1)
 * [Paragon NTFS](https://www.paragon-software.com/home/ntfs-mac/) - ✅ Yes, Full Native Apple Silicon Support
 * [Parcel](https://parcelapp.net/) - ✅ Yes, Full Native Apple Silicon Support as of 6.6 - [Tweet](https://twitter.com/parcel_app/status/1325751301322362880)
 * [PDF Viewer](https://pdfviewer.io/) - ✅ Yes, Full Native Apple Silicon Support as of v5.1 - [Blog Post](https://pdfviewer.io/blog/2020/pdf-viewer-5-1-for-ipad-iphone-mac/)
