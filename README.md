@@ -143,7 +143,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Mendeley](https://www.mendeley.com/download-desktop-new/macOS) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/448#issuecomment-751869800)
 * [RStudio](https://rstudio.com/products/rstudio/download/) - ✳️ Yes, runs via Rosetta 2 with native support in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/36) [Benchmark Info](https://github.com/ThatGuySam/doesitarm/issues/36#issuecomment-735668887)
 * [Stata](https://www.stata.com/) - ✅ Yes, Full Native Apple Silicon Support as of v16, update level 10 Nov 2020 - [Blog Post](https://blog.stata.com/2020/11/10/stata-for-mac-with-apple-silicon/)
-* [Tableau Desktop](https://www.tableau.com/products/desktop) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Video Demonstration](https://youtu.be/vyPm2fOyS7Y?t=625)
+* [Tableau Desktop](https://www.tableau.com/products/desktop) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Video Demonstration](https://youtu.be/vyPm2fOyS7Y?t=625) [Previous version via Rosetta 2](https://www.tableau.com/support/releases/desktop/2020.3.5)
+* [Tableau Prep](https://www.tableau.com/products/prep) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Previous version via Rosetta 2](https://www.tableau.com/support/releases/prep/2020.3.3)
 
 
 
