@@ -80,6 +80,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac) - ✅ Yes, fully supported as of v2020.3.1 - [Release Notes](https://confluence.jetbrains.com/display/IDEADEV/IntelliJ+IDEA+2020.3.1+%28203.6682.168+build%29+Release+Notes)
 * [iTerm](https://iterm2.com/downloads.html) - ✅ Yes, fully supported as of v3.4.0 - [PR](https://github.com/gnachman/iTerm2/pull/421)
+* [IDA Pro](https://www.hex-rays.com/products/ida/support/download_freeware/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/405#issue-759952494)
 * [Jetpack Compose for Desktop](https://www.jetbrains.com/lp/compose/) - ✅ Yes, Full Native Apple Silicon Support - [Changelog](https://github.com/JetBrains/compose-jb/blob/a4d59048f50c96970368e884925fd59b1a31ed12/CHANGELOG.md#m2-dec-2020)
 * [Julia Language](https://julialang.org/downloads/) - ✳️ Yes, it works via Rosetta 2 - [Github Issue](https://github.com/JuliaLang/julia/issues/36617)
 * [KiCad EDA](https://kicad.org/download/macos/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/199#issuecomment-736253625)
@@ -132,6 +133,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
+* [XAMPP](https://www.apachefriends.org/download.html) - ✳️ Yes, works via Rosetta 2 - [Video Demonstration](https://doesitarm.com/tv/watch-this-before-buying-apple-m1-macbook-for-xampp-or-apple-silicon-tests-in-4k-i-ebwwewsis8s/)
 * [Xcode](https://apps.apple.com/us/app/xcode/id497799835) - ✅ Yes, Full Native Apple Silicon Support as of v12.2 - [Release Notes](https://developer.apple.com/documentation/xcode-release-notes/xcode-12_2-release-notes)
 * [Xojo](https://www.xojo.com/download/) - ⏹ Not yet, but it’s in development - [Blog Post](https://blog.xojo.com/2020/11/10/apple-silicon-and-big-sur-support-coming-in-xojo-2020r2/)
 * [.NET](https://dotnet.microsoft.com/download) - ⏹ .NET Core nightly builds available, ongoing work for other frameworks - [Project Board](https://github.com/orgs/dotnet/projects/18)
@@ -403,7 +405,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Social and communication
 
-* [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/59#issuecomment-731506903)
+* [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/530#issue-790322821)
 * [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
 * [Mattermost](https://mattermost.com/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/245#issuecomment-735282100)
 * [Facebook Messenger Desktop](https://www.messenger.com/desktop) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/520)
