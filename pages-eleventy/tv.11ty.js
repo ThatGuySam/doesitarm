@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config'
 
-import VideoCard from '../components-eleventy/video/card.js'
+import VideoRow from '../components-eleventy/video/row.js'
 
 // Setup dotenv
 dotenv.config()
@@ -51,7 +51,7 @@ class TV {
         }
     }
 
-    render({ name, video }) {
+    render({ video }) {
 
         // console.log('video.payload', Object.keys(video.payload))
 
@@ -80,23 +80,9 @@ class TV {
 
                     <div class="related-videos w-full">
                         <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">Related Videos</h2>
-                        <div class="video-row relative w-full">
-                            <div class="video-row-contents flex overflow-x-auto whitespace-no-wrap py-2 space-x-6" style="scroll-snap-type:x mandatory;">
 
-                                ${ video.payload.relatedVideos.map( this.boundComponent(VideoCard) ).join('') }
+                        ${ this.boundComponent(VideoRow)( video.payload.relatedVideos ) }
 
-                            </div>
-                            <button class="absolute left-0 h-10 w-10 flex justify-center items-center transform -translate-y-1/2 -translate-x-1/2 bg-darker rounded-full" style="top:50%;">
-                                <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-gray-400" style="transform: scaleX(-1);">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                            <button class="absolute right-0 h-10 w-10 flex justify-center items-center transform -translate-y-1/2 translate-x-1/2 bg-darker rounded-full" style="top:50%;">
-                                <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-gray-400">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                        </div>
                     </div>
 
                 </div>

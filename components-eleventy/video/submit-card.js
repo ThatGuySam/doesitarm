@@ -1,26 +1,35 @@
 
-function pill ( text ) {
-    return /* html */`
-        <div
-            class="video-pill h-5 text-xs bg-white-2 flex justify-center items-center outline-0 rounded-full ease px-2"
-        >
-            ${ text }
-        </div>
-    `
-}
-
-export default function ( video, options = {} ) {
-    const {
-        width = '325px',
-        classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
-    } = options
+export default function ( video, {
+    width = '325px',
+    classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
+} ) {
 
     // Setup inline lazysizes
-    this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
+    // this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
 
     return /* html */`
+<div class="video-card ${ classes }" style="max-width: ${ width }; flex-basis: ${ width }; scroll-snap-align: start;">
+    <a href="${ video.endpoint }">
+        <div class="video-card-container relative overflow-hidden bg-white">
+            <div class="video-card-image ratio-wrapper">
+                <div class="relative overflow-hidden w-full pb-16/9"></div>
+            </div>
+            <div class="video-card-overlay absolute inset-0 flex justify-between items-start bg-gradient-to-tr from-black to-transparent p-4" style="--gradient-from-color:rgba(0, 0, 0, 1); --gradient-to-color:rgba(0, 0, 0, 0.7);">
+                <div class="plus-circle w-8 h-8 bg-white-2 flex justify-center items-center outline-0 rounded-full ease">
+                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                        <path fill="currentColor" d="M11 11v-11h1v11h11v1h-11v11h-1v-11h-11v-1h11z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="video-card-content absolute inset-0 flex items-end py-4 px-6">
+                <div class="w-full text-sm text-left whitespace-normal">Submit Video</div>
+            </div>
+        </div>
+    </a>
+</div>
+
 <div class="video-card ${ classes }" style="max-width: ${ width }; flex-basis: ${ width }; scroll-snap-align: start;">
     <a
         href="${video.endpoint}"
@@ -58,8 +67,6 @@ export default function ( video, options = {} ) {
                         />
                     </svg>
                 </div>
-
-                ${ (video.tags.includes('benchmark')) ? pill('Benchmark') : '' }
 
             </div>
 
