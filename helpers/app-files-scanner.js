@@ -56,8 +56,10 @@ export default class AppFilesScanner {
         // Files to process
         this.files = observableFilesArray
 
+        // https://gildas-lormeau.github.io/zip.js/
         zip = require('@zip.js/zip.js')
 
+        // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
         zip.configure({
             workerScripts: true,
             // workerScripts: {
@@ -148,13 +150,14 @@ export default class AppFilesScanner {
 
         // console.log('fileReader', fileReader)
 
-        const model = new zip.ZipReader( fileReader )
+        // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-reading
+        const zipReader = new zip.ZipReader( fileReader )
 
-        // model.onprogress = console.log
+        // zipReader.onprogress = console.log
 
-        // model.onerror = console.log
+        // zipReader.onerror = console.log
 
-        const entries = await model.getEntries()
+        const entries = await zipReader.getEntries()
             .then( entries => entries.map( entry => {
                 return entry
 
@@ -232,22 +235,9 @@ export default class AppFilesScanner {
 
     async scan ( fileList ) {
 
-        // if ( isValidHttpUrl( filesOrUrl ) ) {
-        //     const url = filesOrUrl
-        //     // Fetch resource
-        //     fetch( url, {
-        //         mode: 'no-cors'
-        //     })
-        //         .then(response => console.log('response', response))
-        //         // .then(data => console.log(data));
+        // console.log('this.files', this.files)
 
-        //     // Determine
-        // }
-
-        console.log('this.files', this.files)
-        // console.log('zip', zip)
-
-        // Push files to
+        // Push files to our files array
         Array.from(fileList).forEach( (fileInstance, index) => {
             this.files.unshift( {
                 status: 'loaded',
@@ -307,6 +297,7 @@ export default class AppFilesScanner {
 
             // const machOContents = await file.machOFile.getData(
             //     // writer
+            //     // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
             //     new zip.TextWriter(),
             //     // options
             //     {
