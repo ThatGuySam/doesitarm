@@ -143,7 +143,6 @@ export default class AppFilesScanner {
                 console.log('Read progress', progress)
 
                 file.statusMessage = `📖 Reading file. ${ progress }% read`
-                // this.files[index].progress = progress
             }
         }
 
@@ -174,6 +173,7 @@ export default class AppFilesScanner {
 
         if ( !Array.isArray(entries) ) {
             file.statusMessage = '🚫 Could not decompress file'
+            file.status = 'finished'
 
             throw new Error('Could not decompress file')
 
@@ -219,7 +219,7 @@ export default class AppFilesScanner {
         // Push files to
         Array.from(fileList).forEach( (fileInstance, index) => {
             this.files.unshift( {
-                status: 'selected',
+                status: 'loaded',
                 statusMessage: '⏳ File Loaded and Queud',
                 name: fileInstance.name,
                 size: fileInstance.size,
@@ -236,6 +236,7 @@ export default class AppFilesScanner {
 
             if ( !this.isApp( file ) ) {
                 file.statusMessage = '⏭ Skipped. Not app or archive'
+                file.status = 'finished'
 
                 return
             }
@@ -261,6 +262,7 @@ export default class AppFilesScanner {
 
                 // Set status message as error
                 file.statusMessage = `🚫 ${ Error.message }`
+                file.status = 'finished'
 
                 return
             }
@@ -311,6 +313,7 @@ export default class AppFilesScanner {
                 console.log('entries', entries)
 
                 file.statusMessage = `🚫 Could not find any application data`
+                file.status = 'finished'
 
                 return
             }
@@ -332,8 +335,16 @@ export default class AppFilesScanner {
 
             file.statusMessage = `🏁 Scan Finished. ${this.files[index].machOFiles.length} Mach-o files`
 
+            file.status = 'finished'
+
             return
         }))
+
+
+        // Go through and set all files to finished
+        this.files.forEach( file => {
+            file.status = 'finished'
+        })
 
 
         return
