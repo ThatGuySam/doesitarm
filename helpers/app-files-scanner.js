@@ -10,10 +10,24 @@
 // import parseGithubDate from './parse-github-date'
 
 const knownArchiveExtensions = new Set([
+    'app',
     'dmg',
+    // 'pkg',
     'zip',
-    'gz',
-    'bz2'
+    // 'gz',
+    // 'bz2'
+])
+
+const notAppFileTypes =  new Set([
+    'image',
+    'text',
+    'audio',
+    'video'
+])
+
+const knownAppExtensions =  new Set([
+    '.app',
+    '.app.zip'
 ])
 
 function isString( maybeString ) {
@@ -45,7 +59,7 @@ export default class AppFilesScanner {
         zip = require('@zip.js/zip.js')
 
         zip.configure({
-            workerScripts: false,
+            workerScripts: true,
             // workerScripts: {
             //     inflate: ["lib/z-worker-pako.js", "pako_inflate.min.js"]
             // }
@@ -53,17 +67,17 @@ export default class AppFilesScanner {
     }
 
 
-    fileKind () {
-        // if it's not html
-        // then return archive
+    isApp ( file ) {
 
-        // otherwise return html
+        if ( file.type.includes('/') && notAppFileTypes.has( file.type.split('/')[0] ) ) return false
+
+        return true
     }
 
     getStatusMessage () {
         // 'Drag and drop one or multiple apps'
 
-        return `Searching for apps at ${ file.url }`
+        // return `Searching for apps at ${ file.url }`
 
 
     }
@@ -104,11 +118,72 @@ export default class AppFilesScanner {
 
     // }
 
-    async unzipFile () {
+    async unzipFile ( file ) {
+        const fileReader = new zip.BlobReader( file.instance )//new FileReader()
 
+        fileReader.onload = function() {
+
+            // do something on FileReader onload
+            console.log('File Read')
+
+            file.statusMessage = '📖 Reading file'
+        }
+
+        fileReader.onerror = error => {
+
+            // do something on FileReader onload
+            console.error('File Read Error', error)
+
+            throw new Error('File Read Error', error)
+        }
+
+        fileReader.onprogress = (data) => {
+            if (data.lengthComputable) {
+                const progress = parseInt( ((data.loaded / data.total) * 100), 10 );
+                console.log('Read progress', progress)
+
+                file.statusMessage = `📖 Reading file. ${ progress }% read`
+                // this.files[index].progress = progress
+            }
+        }
+
+        // console.log('fileReader', fileReader)
+
+        const model = new zip.ZipReader( fileReader )
+
+        // model.onprogress = console.log
+
+        // model.onerror = console.log
+
+        const entries = await model.getEntries()
+            .then( entries => entries.map( entry => {
+                return entry
+
+                // return {
+                //     filename: entry.filename,
+                //     directory: entry.directory
+                // }
+            }) )
+            .catch( error => {
+                // console.warn('Unzip Error', error)
+
+                return error
+            })
+
+        // console.log('entries', entries)
+
+        if ( !Array.isArray(entries) ) {
+            file.statusMessage = '🚫 Could not decompress file'
+
+            throw new Error('Could not decompress file')
+
+            // return new Error('Could not decompress file')
+        }
+
+        return entries
     }
 
-    findMachOFile () {
+    findMachOFiles ( entries ) {
 
     }
 
@@ -145,6 +220,7 @@ export default class AppFilesScanner {
         Array.from(fileList).forEach( (fileInstance, index) => {
             this.files.unshift( {
                 status: 'selected',
+                statusMessage: '⏳ File Loaded and Queud',
                 name: fileInstance.name,
                 size: fileInstance.size,
                 type: fileList.item( index ).type,
@@ -154,86 +230,107 @@ export default class AppFilesScanner {
             } )
         })
 
+
+        // Scan for archives
         await Promise.all( this.files.map( async (file, index) => {
-            const fileReader = new zip.BlobReader(file.instance)//new FileReader()
 
-            console.log('file', file)
+            if ( !this.isApp( file ) ) {
+                file.statusMessage = '⏭ Skipped. Not app or archive'
 
-            await new Promise(r => setTimeout(r, 1000 * index))
-
-            fileReader.onload = function() {
-
-                // do something on FileReader onload
-                console.log('File Read')
+                return
             }
 
-            fileReader.onerror = error => {
 
-                // do something on FileReader onload
-                console.log('File Read Error', error)
-            }
+            // console.log('file', file)
 
-            fileReader.onprogress = (data) => {
-                if (data.lengthComputable) {
-                    const progress = parseInt( ((data.loaded / data.total) * 100), 10 );
-                    console.log('Read progress', progress)
+            // await new Promise(r => setTimeout(r, 1000 * index))
 
-                    this.files[index].progress = progress
-                }
-            }
 
-            // console.log('fileReader', fileReader)
-
-            const model = new zip.ZipReader( fileReader )
-
-            model.onprogress = console.log
-
-            model.onerror = console.log
 
             // Update
             // this.files[index]
 
-            const entries = await model.getEntries()
-                .then( entries => entries.map( entry => {
-                    return entry
+            file.statusMessage = '🗃 Decompressing file'
 
-                    // return {
-                    //     filename: entry.filename,
-                    //     directory: entry.directory
-                    // }
-                }) )
-                .catch( error => {
-                    console.warn('unzip Error', error)
-                })
+            let entries
+
+            try {
+                entries = await this.unzipFile( file )
+            } catch ( Error ) {
+                // console.warn( Error )
+
+                // Set status message as error
+                file.statusMessage = `🚫 ${ Error.message }`
+
+                return
+            }
+
+
+            file.statusMessage = '👀 Scanning App Files'
+
+            const appNamesInArchive = new Set()
+
+            entries.forEach( entry => {
+                // Look through filename parts
+                entry.filename.split('/').forEach( filenamePart => {
+                    if ( filenamePart.includes('.app') ) {
+                        const appName = filenamePart.split('.')[0]
+
+                        appNamesInArchive.add( appName )
+                    }
+                } )
+            } )
+
+            console.log('appNamesInArchive', appNamesInArchive)
 
             const rootDirectory = entries[0]
 
             const appName = rootDirectory.filename.slice(0, -5)//'.app/'
 
-            const machOPath = `${ appName }.app/Contents/MacOS/${ appName }`
+            // const machOPath = `${ appName }.app/Contents/MacOS/${ appName }`
 
             console.log('appName', appName)
 
-            this.files[index].machOFile = entries.find( entry => {
-                // console.log('entry', entry)
-                return entry.filename.includes( machOPath )
+            this.files[index].machOFiles = entries.filter( entry => {
+                let matchesMachOPath = false
+
+                // Match possible Mach-o names against this entries' filename
+                appNamesInArchive.forEach( appName => {
+                    const possibleMachOPath = `${ appName }.app/Contents/MacOS/${ appName }`
+
+                    // Check if this possible Mach-o path is contained within this entry's filename
+                    if ( entry.filename.includes( possibleMachOPath ) ) {
+                        matchesMachOPath = true
+                    }
+                })
+
+                return matchesMachOPath
             })
 
-            const machOContents = await this.files[index].machOFile.getData(
-                // writer
-                new zip.TextWriter(),
-                // options
-                {
-                    onprogress: (index, max) => {
-                        // onprogress callback
-                        console.log('Writer progress', index, max)
-                    }
-                }
-            );
-            // text contains the entry data as a String
-            console.log('Mach-O contents', machOContents)
+            if ( this.files[index].machOFiles.length === 0 ) {
+                console.log('entries', entries)
 
-            this.files[index].status = 'scanned'
+                file.statusMessage = `🚫 Could not find any application data`
+
+                return
+            }
+
+            // const machOContents = await this.files[index].machOFile.getData(
+            //     // writer
+            //     new zip.TextWriter(),
+            //     // options
+            //     {
+            //         onprogress: (index, max) => {
+            //             // onprogress callback
+            //             console.log('Writer progress', index, max)
+            //         }
+            //     }
+            // )
+
+            // text contains the entry data as a String
+            // console.log('Mach-O contents', machOContents)
+
+            file.statusMessage = `🏁 Scan Finished. ${this.files[index].machOFiles.length} Mach-o files`
 
             return
         }))
