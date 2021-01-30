@@ -17,15 +17,21 @@
             >
                 <button
                     :class="[
-                        'rounded-xl text-3xl font-semibold scale-150 bg-darkest neumorphic-shadow focus:outline-none py-4 px-6'
+                        'rounded-xl text-3xl font-semibold scale-150 bg-darkest neumorphic-shadow focus:outline-none py-4 px-6',
+                        isLoadingFiles ? 'shimmer' : ''
                     ]"
-                    :class-groups="{
-                        shadow: 'neumorphic-shadow-inner'
-                    }"
                     @click="triggerFilepicker"
-                >Select Apps</button>
+                >{{ isLoadingFiles ? 'Loading Files' : 'Select Apps' }}</button>
 
-                <small>Supports: Mac Apps, Zip files, and <em>some</em> DMG files</small>
+                <template v-if="isLoadingFiles">
+                    <div>Loading usually takes about a minute per 500mb</div>
+                    <button
+                        class="underline"
+                        @click="isLoadingFiles = false"
+                    >Cancel</button>
+                </template>
+
+                <small>Supports: Mac Apps, Zip files, and <em>some</em> DMG files. Bigger files take longer.</small>
 
                 <input
                     ref="file-selector"
@@ -76,7 +82,10 @@
                     >
                         <!-- app.endpoint: {{ app.endpoint }} -->
                         <div
-                            class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5"
+                            :class="[
+                                'flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5',
+                                (appScan.status !== 'finished') ? 'shimmer' : ''
+                            ]"
                             style="transition-property: border;"
                         >
 
@@ -143,6 +152,7 @@ export default {
     data: function () {
         return {
             query: '',
+            isLoadingFiles: false,
             appsBeingScanned: []
         }
     },
@@ -166,10 +176,19 @@ export default {
         })
     },
     methods: {
+        log ( thing ) {
+            console.log( thing )
+        },
+
         triggerFilepicker () {
-            this.$refs['file-selector'].dispatchEvent(new MouseEvent("click"))
+            this.isLoadingFiles = true
+
+            // this.watchFileInput()
+
+            this.$refs['file-selector'].dispatchEvent(new MouseEvent('click'))
         },
         fileInputChanged () {
+            this.isLoadingFiles = false
             // console.log('file-selector', this.$refs['file-selector'])
 
             // Get FileList from input
