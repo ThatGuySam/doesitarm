@@ -183,7 +183,38 @@ export default class AppFilesScanner {
         return entries
     }
 
-    findMachOFiles ( entries ) {
+    findMachOEntries ( entries ) {
+
+        // Create a new set to store and search App Names
+        const appNamesInArchive = new Set()
+
+        entries.forEach( entry => {
+            // Look through filename parts
+            entry.filename.split('/').forEach( filenamePart => {
+                if ( filenamePart.includes('.app') ) {
+                    const appName = filenamePart.split('.')[0]
+
+                    appNamesInArchive.add( appName )
+                }
+            } )
+        } )
+
+        // Return any entries that match Mach-o file paths
+        return entries.filter( entry => {
+            let matchesMachOPath = false
+
+            // Match possible Mach-o names against this entries' filename
+            appNamesInArchive.forEach( appName => {
+                const possibleMachOPath = `${ appName }.app/Contents/MacOS/${ appName }`
+
+                // Check if this possible Mach-o path is contained within this entry's filename
+                if ( entry.filename.includes( possibleMachOPath ) ) {
+                    matchesMachOPath = true
+                }
+            })
+
+            return matchesMachOPath
+        })
 
     }
 
@@ -241,15 +272,9 @@ export default class AppFilesScanner {
                 return
             }
 
-
             // console.log('file', file)
 
             // await new Promise(r => setTimeout(r, 1000 * index))
-
-
-
-            // Update
-            // this.files[index]
 
             file.statusMessage = '🗃 Decompressing file'
 
@@ -267,49 +292,11 @@ export default class AppFilesScanner {
                 return
             }
 
-
             file.statusMessage = '👀 Scanning App Files'
 
-            const appNamesInArchive = new Set()
+            file.machOEntries = this.findMachOEntries( entries )
 
-            entries.forEach( entry => {
-                // Look through filename parts
-                entry.filename.split('/').forEach( filenamePart => {
-                    if ( filenamePart.includes('.app') ) {
-                        const appName = filenamePart.split('.')[0]
-
-                        appNamesInArchive.add( appName )
-                    }
-                } )
-            } )
-
-            console.log('appNamesInArchive', appNamesInArchive)
-
-            const rootDirectory = entries[0]
-
-            const appName = rootDirectory.filename.slice(0, -5)//'.app/'
-
-            // const machOPath = `${ appName }.app/Contents/MacOS/${ appName }`
-
-            console.log('appName', appName)
-
-            this.files[index].machOFiles = entries.filter( entry => {
-                let matchesMachOPath = false
-
-                // Match possible Mach-o names against this entries' filename
-                appNamesInArchive.forEach( appName => {
-                    const possibleMachOPath = `${ appName }.app/Contents/MacOS/${ appName }`
-
-                    // Check if this possible Mach-o path is contained within this entry's filename
-                    if ( entry.filename.includes( possibleMachOPath ) ) {
-                        matchesMachOPath = true
-                    }
-                })
-
-                return matchesMachOPath
-            })
-
-            if ( this.files[index].machOFiles.length === 0 ) {
+            if ( file.machOEntries.length === 0 ) {
                 console.log('entries', entries)
 
                 file.statusMessage = `🚫 Could not find any application data`
@@ -318,7 +305,7 @@ export default class AppFilesScanner {
                 return
             }
 
-            // const machOContents = await this.files[index].machOFile.getData(
+            // const machOContents = await file.machOFile.getData(
             //     // writer
             //     new zip.TextWriter(),
             //     // options
@@ -333,7 +320,7 @@ export default class AppFilesScanner {
             // text contains the entry data as a String
             // console.log('Mach-O contents', machOContents)
 
-            file.statusMessage = `🏁 Scan Finished. ${this.files[index].machOFiles.length} Mach-o files`
+            file.statusMessage = `🏁 Scan Finished. ${file.machOEntries.length} Mach-o files`
 
             file.status = 'finished'
 
@@ -341,7 +328,7 @@ export default class AppFilesScanner {
         }))
 
 
-        // Go through and set all files to finished
+        // Go through and set all files to finished to clean up any straglers
         this.files.forEach( file => {
             file.status = 'finished'
         })
