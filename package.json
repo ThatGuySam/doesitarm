@@ -25,7 +25,8 @@
     "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
     "scroll-into-view-if-needed": "^2.2.26",
-    "slugify": "^1.4.6"
+    "slugify": "^1.4.6",
+    "vue-full-screen-file-drop": "^2.0.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^3.3.4",
