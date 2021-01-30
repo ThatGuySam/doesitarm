@@ -13,7 +13,7 @@
             </header>
 
             <div
-                class="relative w-full flex justify-center"
+                class="relative w-full flex flex-col justify-center items-center space-y-4"
             >
                 <button
                     :class="[
@@ -24,6 +24,9 @@
                     }"
                     @click="triggerFilepicker"
                 >Select Apps</button>
+
+                <small>Supports: Mac Apps, Zip files, and <em>some</em> DMG files</small>
+
                 <input
                     ref="file-selector"
                     type="file"
