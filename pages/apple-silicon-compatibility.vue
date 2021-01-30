@@ -35,6 +35,64 @@
                     hidden
                     @change="fileInputChanged"
                 >
+                <!-- Directories only: webkitdirectory directory -->
+            </div>
+
+            Total Files: {{ foundFiles.length }}
+
+            <div
+                v-if="foundFiles.length !== 0"
+                class="app-scans-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark my-4 px-5"
+            >
+
+                <svg style="display: none;">
+                    <defs>
+                        <path
+                            id="chevron-right"
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                        />
+                    </defs>
+                </svg>
+
+                <!-- hasStartedAnyQuery: {{ hasStartedAnyQuery }} -->
+
+                <!-- <div
+                    v-if="chunkedResults.length === 0"
+                    class="text-center py-4"
+                >
+                    No apps found
+                </div> -->
+
+                <ul
+                    class="results-container divide-y divide-gray-700"
+                >
+                    <li
+                        v-for="( appScan, index ) in foundFiles"
+                        :key="`${appScan.name}-${index}`"
+                        :ref="`${appScan.name}-row`"
+                        class="relative"
+                    >
+                        <!-- app.endpoint: {{ app.endpoint }} -->
+                        <div
+                            class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5"
+                            style="transition-property: border;"
+                        >
+
+                            <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                                {{ appScan.name.charAt(0) }}
+                            </div>
+                            {{ appScan.name }} <code>{{ appScan.type }}</code>
+                            <div class="text-sm leading-5 font-bold">
+                                {{ appScan.statusMessage }}
+                            </div>
+
+                        </div>
+
+                    </li>
+                </ul>
+
             </div>
 
 
@@ -89,6 +147,12 @@ export default {
         }
     },
     computed: {
+        foundFiles () {
+            return this.appsBeingScanned.filter( appScan => {
+                return !appScan.statusMessage.includes('⏭')
+            })
+        },
+
         title ()  {
             return `Apple Silicon Compatibility`
         },
