@@ -322,11 +322,7 @@ export default class AppFilesScanner {
                 return await this.parseMachOBlob( machOBlob, file.name )
             } ) )
 
-
-
-            // const machoData = await parseMacho( machOFile )//new MachoParser( machOFile, document.getElementById('callback'));
-
-            console.log('parsedMachoEntries', parsedMachoEntries)
+            // console.log('parsedMachoEntries', parsedMachoEntries)
 
             // file.statusMessage = `🏁 Scan Finished. ${file.machOEntries.length} Mach-o files`
             file.statusMessage = `🏁 Scan Finished. `
@@ -334,6 +330,7 @@ export default class AppFilesScanner {
             let supportedBinaries = 0
             let unsupportedBinaries = 0
 
+            // Count supported and unsupported binaries
             parsedMachoEntries.forEach( binaryEntry => {
                 const armBinary = binaryEntry.architectures.find( architecture => {
                     if ( architecture.processorType === 0 ) return false
@@ -355,9 +352,9 @@ export default class AppFilesScanner {
             if (supportedBinaries !== 0 && unsupportedBinaries !== 0) {
                 file.statusMessage = `🔶 App has some support. `
             } else if ( unsupportedBinaries !== 0 ) {
-                file.statusMessage = `🚫 This App's binary is not compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. You can try submitting the download page link for an app and we'll scan that. You can request a manual review to determine the current status of the app on Rosetta 2. `
+                file.statusMessage = `🚫 This app is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. You can try submitting the download page link for an app and we'll scan that. You can request a manual review to determine the current status of the app on Rosetta 2. `
             } else if ( supportedBinaries !== 0 ) {
-                file.statusMessage = '✅ This App is natively compatible with Apple Silicon!'
+                file.statusMessage = '✅ This app is natively compatible with Apple Silicon!'
             }
 
             file.status = 'finished'
