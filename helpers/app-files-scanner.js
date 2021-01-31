@@ -9,6 +9,11 @@
 // import statuses from './statuses'
 // import parseGithubDate from './parse-github-date'
 
+// import EndianReader from 'endian-reader'
+import parseMacho from './macho/index.js'
+
+// console.log('MachOParser', MachOParser)
+
 const knownArchiveExtensions = new Set([
     'app',
     'dmg',
@@ -221,8 +226,10 @@ export default class AppFilesScanner {
 
     }
 
-    parseMachOFile () {
+    async parseMachOBlob ( machOBlob, fileName ) {
+        const machOFile = new File([machOBlob], fileName)
 
+        return await parseMacho( machOFile )
     }
 
     classifyArchitecture () {
@@ -234,8 +241,6 @@ export default class AppFilesScanner {
     }
 
     async scan ( fileList ) {
-
-        // console.log('this.files', this.files)
 
         // Push files to our files array
         Array.from(fileList).forEach( (fileInstance, index) => {
@@ -287,7 +292,7 @@ export default class AppFilesScanner {
             file.machOEntries = this.findMachOEntries( entries )
 
             if ( file.machOEntries.length === 0 ) {
-                console.log('entries', entries)
+                console.log('file.machOEntries', file.machOEntries)
 
                 file.statusMessage = `🚫 Could not find any application data`
                 file.status = 'finished'
@@ -295,23 +300,74 @@ export default class AppFilesScanner {
                 return
             }
 
-            // const machOContents = await file.machOFile.getData(
-            //     // writer
-            //     // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
-            //     new zip.TextWriter(),
-            //     // options
-            //     {
-            //         onprogress: (index, max) => {
-            //             // onprogress callback
-            //             console.log('Writer progress', index, max)
-            //         }
-            //     }
-            // )
+            // const machOBlob = await file.machOEntries
+
+
+            const parsedMachoEntries = await Promise.all( file.machOEntries.map( async machOEntry => {
+                // Get blob data from zip
+                const machOBlob = await machOEntry.getData(
+                    // writer
+                    // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
+                    // new zip.TextWriter(),
+                    new zip.BlobWriter(),
+                    // options
+                    {
+                        onprogress: (index, max) => {
+                            // onprogress callback
+                            console.log('Writer progress', index, max)
+                        }
+                    }
+                )
+
+                return await this.parseMachOBlob( machOBlob, file.name )
+            } ) )
+
+
+
+            // const machoData = await parseMacho( machOFile )//new MachoParser( machOFile, document.getElementById('callback'));
+
+            console.log('parsedMachoEntries', parsedMachoEntries)
+
+
+
+            // const machOBuffer =  await machOBlob.arrayBuffer()
+
+            // const machOData = this.parseMachOFile( Buffer.from( machOBuffer ) )
 
             // text contains the entry data as a String
-            // console.log('Mach-O contents', machOContents)
+            // console.log('Mach-O contents', machOBuffer)
 
-            file.statusMessage = `🏁 Scan Finished. ${file.machOEntries.length} Mach-o files`
+            // file.statusMessage = `🏁 Scan Finished. ${file.machOEntries.length} Mach-o files`
+            file.statusMessage = `🏁 Scan Finished. `
+
+            let supportedBinaries = 0
+            let unsupportedBinaries = 0
+
+            parsedMachoEntries.forEach( binaryEntry => {
+                const armBinary = binaryEntry.architectures.find( architecture => {
+                    if ( architecture.processorType === 0 ) return false
+
+                    return architecture.processorType.toLowerCase().includes('arm')
+                })
+
+                if ( armBinary !== undefined ) {
+                    supportedBinaries++
+                } else {
+                    unsupportedBinaries++
+                }
+            } )
+
+
+            // console.log('supportedBinaries', supportedBinaries)
+            // console.log('unsupportedBinaries', unsupportedBinaries)
+
+            if (supportedBinaries !== 0 && unsupportedBinaries !== 0) {
+                file.statusMessage = `🔶 App has some support. `
+            } else if ( unsupportedBinaries !== 0 ) {
+                file.statusMessage = `🚫 This App's binary is not compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. You can try submitting the download page link for an app and we'll scan that. You can request a manual review to determine the current status of the app on Rosetta 2. `
+            } else if ( supportedBinaries !== 0 ) {
+                file.statusMessage = '✅ This App is natively compatible with Apple Silicon!'
+            }
 
             file.status = 'finished'
 
