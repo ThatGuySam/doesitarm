@@ -1,11 +1,20 @@
 <template>
     <section class="container py-24">
         <div class="flex flex-col items-center space-y-24">
-            <header>
+            <header class="flex flex-col items-center space-y-6 md:px-12">
 
-                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center">
-                    Apple Silicon Compatibility
-                </h1>
+                <div class="title-container relative">
+                    <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center">
+                        Apple Silicon Compatibility
+                    </h1>
+                    <div
+                        class="beta-pill absolute h-5 text-xs bg-white-2 flex justify-center items-center outline-0 rounded-full ease px-2"
+                        style="top: -1em; right: 0;"
+                    >
+                        Beta
+                    </div>
+                </div>
+
                 <h2 class="subtitle md:text-xl text-center">
                     Check for Apple Silicon compatibility for any app instantly before you buy an M1 Mac.
                 </h2>
