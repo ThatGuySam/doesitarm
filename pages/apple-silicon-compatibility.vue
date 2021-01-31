@@ -129,7 +129,7 @@
 <script>
 // import axios from 'axios'
 
-import AppFilesScanner from '~/helpers/app-files-scanner.js'
+// import AppFilesScanner from '~/helpers/app-files-scanner.js'
 
 
 import LinkButton from '~/components/link-button.vue'
@@ -171,9 +171,7 @@ export default {
         }
     },
     mounted () {
-        this.scanner = new AppFilesScanner({
-            observableFilesArray: this.appsBeingScanned
-        })
+        this.scanner = null
     },
     methods: {
         log ( thing ) {
@@ -187,12 +185,26 @@ export default {
 
             this.$refs['file-selector'].dispatchEvent(new MouseEvent('click'))
         },
-        fileInputChanged () {
+        async fileInputChanged () {
             this.isLoadingFiles = false
             // console.log('file-selector', this.$refs['file-selector'])
 
             // Get FileList from input
             const fileList = this.$refs['file-selector'].files
+
+            // If the scanner instance is not set up yet
+            // then create and initialize it
+            if ( this.scanner === null ) {
+                console.log('Initializing scanner instance')
+
+                // Bring in code
+                const { default: AppFilesScanner} = await import('~/helpers/app-files-scanner.js')
+
+                // Initialize instance
+                this.scanner = new AppFilesScanner({
+                    observableFilesArray: this.appsBeingScanned
+                })
+            }
 
             // console.log('fileInputChanged files', fileList)
 
