@@ -269,7 +269,7 @@ export default class AppFilesScanner {
 
             // console.log('file', file)
 
-            // await new Promise(r => setTimeout(r, 1000 * index))
+            await new Promise(r => setTimeout(r, 1000 * index))
 
             file.statusMessage = '🗃 Decompressing file'
 
