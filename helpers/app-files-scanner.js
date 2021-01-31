@@ -180,7 +180,7 @@ export default class AppFilesScanner {
         // console.log('entries', entries)
 
         if ( !Array.isArray(entries) ) {
-            file.statusMessage = '🚫 Could not decompress file'
+            file.statusMessage = '❔ Could not decompress file'
             file.status = 'finished'
 
             throw new Error('Could not decompress file')
@@ -281,7 +281,7 @@ export default class AppFilesScanner {
                 // console.warn( Error )
 
                 // Set status message as error
-                file.statusMessage = `🚫 ${ Error.message }`
+                file.statusMessage = `❔ ${ Error.message }`
                 file.status = 'finished'
 
                 return
@@ -294,7 +294,7 @@ export default class AppFilesScanner {
             if ( file.machOEntries.length === 0 ) {
                 console.log('file.machOEntries', file.machOEntries)
 
-                file.statusMessage = `🚫 Could not find any application data`
+                file.statusMessage = `❔ Unkown app format`
                 file.status = 'finished'
 
                 return
@@ -327,15 +327,6 @@ export default class AppFilesScanner {
             // const machoData = await parseMacho( machOFile )//new MachoParser( machOFile, document.getElementById('callback'));
 
             console.log('parsedMachoEntries', parsedMachoEntries)
-
-
-
-            // const machOBuffer =  await machOBlob.arrayBuffer()
-
-            // const machOData = this.parseMachOFile( Buffer.from( machOBuffer ) )
-
-            // text contains the entry data as a String
-            // console.log('Mach-O contents', machOBuffer)
 
             // file.statusMessage = `🏁 Scan Finished. ${file.machOEntries.length} Mach-o files`
             file.statusMessage = `🏁 Scan Finished. `
