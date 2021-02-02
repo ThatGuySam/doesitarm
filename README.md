@@ -90,7 +90,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [MacDown](https://macdown.uranusjr.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/382)
 * [MacPorts](https://www.macports.org/install.php) - ✳️ Yes, some ports are native while others work via Rosetta 2. - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/302). 
 * [MAMP](https://www.mamp.info/en/mamp/mac/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/309)
-* [MongoDB](https://www.mongodb.com/try/download/community) - ✅ Yes, Full Native Apple Silicon Support - [Test Video](https://youtu.be/b_S3CjGRQis?t=227)
+* [MongoDB](https://www.mongodb.com/try/download/community) - ✳️ Yes, works via Rosetta 2 - [Issue](https://jira.mongodb.org/browse/SERVER-50115) [Test Video](https://youtu.be/b_S3CjGRQis?t=227)
 * [MySQL Community Server](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
 * [MySQL Workbench](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 for v8.0.21 with issues reported on newer versions - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003) [Issues](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-763269306)
 * [Navicat Premium](https://www.navicat.com/en/products/navicat-premium) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/161#issuecomment-759768321)
@@ -141,6 +141,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 #### Science and Research Software
+* [GeoGebra Classic 5](https://www.geogebra.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/418#issue-760869359)
 * [IBM SPSS](https://www.ibm.com/analytics/spss-statistics-software) - ✳️ Yes, works via Rosetta 2 - [Official Post](https://community.ibm.com/community/user/datascience/blogs/todd-peterson1/2020/11/20/spss-statistics-on-macos-big-sur-110)
 * [Matlab](https://www.mathworks.com/products/get-matlab.html?s_tid=gn_getml) - ✳️ Yes, works via Rosetta 2 as of v9.9.0.1495850 - [Matlab Forums](https://www.mathworks.com/matlabcentral/answers/641925-is-matlab-supported-on-apple-silicon-macs)
 * [Mendeley](https://www.mendeley.com/download-desktop-new/macOS) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/448#issuecomment-751869800)
@@ -207,6 +208,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Pixelmator Classic](https://apps.apple.com/cn/app/pixelmator-classic/id407963104?l=en&mt=12) - ✳️ Yes, works via Rosetta 2, no native upgrade planned - [Verification](https://github.com/ThatGuySam/doesitarm/issues/367)
 * [Pixelmator Pro](https://pixelmator.com/pro) -  ✅ Yes, full native support as of v2.0
 * [Photoshop](https://www.adobe.com/products/photoshop.html) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Beta Post](https://feedback.photoshop.com/conversations/photoshop-beta/photoshop-for-mac-arm-is-here/5fb359d3ca9d527a59c4677e) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5813)
+* [Seashore](https://apps.apple.com/us/app/seashore/id1448648921?mt=12&app=apps&ign-mpt=uo%3D4) - ✳️ Yes, works via Rosetta 2, an experimental Apple Silicon build is available - [Verification](https://github.com/ThatGuySam/doesitarm/issues/544#issue-799623568) [Apple Silicon Build](https://github.com/leoplan2/seashore/releases/tag/v2.5.10)
 * [Simple Comic](http://dancingtortoise.com/simplecomic/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/407)
 * [Simple Comic (Community Fork)](https://github.com/MaddTheSane/Simple-Comic) - ✅ Yes, full native Apple Silicon support as of v1.9.1 - [App Store](https://apps.apple.com/us/app/simple-comic/id1497435571?l=en&mt=12) [Github Repo](https://github.com/MaddTheSane/Simple-Comic) [Verification](https://github.com/ThatGuySam/doesitarm/issues/407)
 * [Textify](https://apps.apple.com/app/id1522041836) - ✅ Yes, full native support as of v2.0.1 - [Macrumors Thread](https://forums.macrumors.com/threads/textify-text-recognition-ocr-made-easy-and-accurate-1-product-of-the-day-ph.2245225/page-2?post=29016938#post-29016938)
