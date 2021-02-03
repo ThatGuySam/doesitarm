@@ -496,7 +496,7 @@ export default class AppFilesScanner {
             if (supportedBinaries !== 0 && unsupportedBinaries !== 0) {
                 file.statusMessage = `🔶 App has some support. `
             } else if ( unsupportedBinaries !== 0 ) {
-                file.statusMessage = `🔶 This app is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
+                file.statusMessage = `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
             } else if ( supportedBinaries !== 0 ) {
                 file.statusMessage = '✅ This app is natively compatible with Apple Silicon!'
 
