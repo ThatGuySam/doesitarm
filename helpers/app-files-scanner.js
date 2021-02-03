@@ -1,19 +1,6 @@
-// import { fs, configure, ZipReader, BlobReader }
-// import * as zip from '@zip.js/zip.js'
+import plist from 'plist'
 
-// import { promises as fs } from 'fs'
-// import MarkdownIt from 'markdown-it'
-// import slugify from 'slugify'
-// import axios from 'axios'
-
-// import statuses from './statuses'
-// import parseGithubDate from './parse-github-date'
-
-// import EndianReader from 'endian-reader'
 import parseMacho from './macho/index.js'
-
-
-const plist = require('plist')
 
 // console.log('MachOParser', MachOParser)
 
@@ -359,30 +346,6 @@ export default class AppFilesScanner {
                 return
             }
 
-
-            // findPlistFile
-
-            // Maybe next time
-            // const matchesInfoPlist = path => path.endsWith(`/Info.plist`)
-            // const matchesRootInfoPlist = entryPath => {
-
-            //     // Skip files that are deeper than 2 folders
-            //     if ( entryPath.split('/').length > 3 ) return false
-
-            //     // Does this entry path match any of our wanted paths
-            //     return [
-            //         // `zoom.us.app/Contents/Info.plist`
-            //         `.app/Contents/Info.plist`,
-            //         `.zip/Contents/Info.plist`
-            //     ].some( pathToMatch => {
-            //         return entryPath.endsWith(pathToMatch)
-            //     })
-            // }
-            // const rootInfoFileEntries = entries.filter( entry => {
-
-            //     return matchesRootInfoPlist( entry.filename )
-            // })
-
             // Warn if Info.plist doesn't look right
             if ( foundEntries.rootInfo.length > 1) {
                 console.warn('More than one root Info.plist found', foundEntries.rootInfo)
@@ -418,6 +381,7 @@ export default class AppFilesScanner {
             file.appVersion = info.CFBundleShortVersionString
             file.displayName = info.CFBundleDisplayName
 
+            // Set details
             const detailsData = [
                 [ 'Version', info.CFBundleShortVersionString ],
                 [ 'Bundle Identifier', info.CFBundleIdentifier ],
