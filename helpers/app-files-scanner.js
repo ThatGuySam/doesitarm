@@ -12,6 +12,9 @@
 // import EndianReader from 'endian-reader'
 import parseMacho from './macho/index.js'
 
+
+const plist = require('plist')
+
 // console.log('MachOParser', MachOParser)
 
 const knownArchiveExtensions = new Set([
@@ -191,11 +194,50 @@ export default class AppFilesScanner {
         return entries
     }
 
-    findMachOEntries ( entries ) {
+    matchesMacho ( entry ) {
+        // Skip files that are deeper than 3 folders
+        if ( entry.filename.split('/').length > 4 ) return false
 
-        // Create a new set to store and search App Names
+        // Skip folders
+        if ( entry.filename.endsWith('/') ) return false
+
+        // `${ appName }.app/Contents/MacOS/${ appName }`
+        // Does this entry path match any of our wanted paths
+        return [
+            // `${ appName }.app/Contents/MacOS/${ appName }`
+            `.app/Contents/MacOS/`
+        ].some( pathToMatch => {
+            return entry.filename.includes(pathToMatch)
+        })
+    }
+
+    matchesRootInfo ( entry ) {
+        // Skip files that are deeper than 2 folders
+        if ( entry.filename.split('/').length > 3 ) return false
+
+        // Skip folders
+        if ( entry.filename.endsWith('/') ) return false
+
+        // Does this entry path match any of our wanted paths
+        return [
+            // `zoom.us.app/Contents/Info.plist`
+            `.app/Contents/Info.plist`,
+            `.zip/Contents/Info.plist`
+        ].some( pathToMatch => {
+            return entry.filename.endsWith(pathToMatch)
+        })
+    }
+
+    findEntries ( entries, matchersObject ) {
+
+        const matches = {}
+
+        // const matcherKeys = Object.keys( matchers )
+
+        // Create a new set to store found App Names
         const appNamesInArchive = new Set()
 
+        // Search App Names in entries
         entries.forEach( entry => {
             // Look through filename parts
             entry.filename.split('/').forEach( filenamePart => {
@@ -205,25 +247,26 @@ export default class AppFilesScanner {
                     appNamesInArchive.add( appName )
                 }
             } )
+
+
+            for ( const key in matchersObject ) {
+
+                // Deos it match the matcher method
+                const entryMatches = matchersObject[key]( entry )
+
+                if ( entryMatches ) {
+                    // If we haven't set up an array for this key
+                    // then create one
+                    if ( !Array.isArray(matches[key]) ) matches[key] = []
+
+                    // Push this entry to our matching list
+                    matches[key].push( entry )
+                }
+            }
+
         } )
 
-        // Return any entries that match Mach-o file paths
-        return entries.filter( entry => {
-            let matchesMachOPath = false
-
-            // Match possible Mach-o names against this entries' filename
-            appNamesInArchive.forEach( appName => {
-                const possibleMachOPath = `${ appName }.app/Contents/MacOS/${ appName }`
-
-                // Check if this possible Mach-o path is contained within this entry's filename
-                if ( entry.filename.includes( possibleMachOPath ) ) {
-                    matchesMachOPath = true
-                }
-            })
-
-            return matchesMachOPath
-        })
-
+        return matches
     }
 
     async parseMachOBlob ( machOBlob, fileName ) {
@@ -246,7 +289,11 @@ export default class AppFilesScanner {
         Array.from(fileList).forEach( (fileInstance, index) => {
             this.files.unshift( {
                 status: 'loaded',
+                displayName: null,
                 statusMessage: '⏳ File Loaded and Queud',
+                details: [],
+                appVersion: null,
+
                 name: fileInstance.name,
                 size: fileInstance.size,
                 type: fileList.item( index ).type,
@@ -255,7 +302,6 @@ export default class AppFilesScanner {
                 item: fileList.item( index )
             } )
         })
-
 
         // Scan for archives
         await Promise.all( this.files.map( async (file, index) => {
@@ -269,7 +315,7 @@ export default class AppFilesScanner {
 
             // console.log('file', file)
 
-            await new Promise(r => setTimeout(r, 1000 * index))
+            await new Promise(r => setTimeout(r, 1500 * index))
 
             file.statusMessage = '🗃 Decompressing file'
 
@@ -289,10 +335,23 @@ export default class AppFilesScanner {
 
             file.statusMessage = '👀 Scanning App Files'
 
-            file.machOEntries = this.findMachOEntries( entries )
+            const foundEntries = this.findEntries( entries, {
+                macho: this.matchesMacho,
+                rootInfo: this.matchesRootInfo
+            })
 
+            // Clean out entries now that we're done with them
+            entries = undefined
+
+            // console.log('foundEntries', foundEntries)
+
+            // file.machOEntries = this.findMachOEntries( entries )
+            file.machOEntries = foundEntries.macho
+
+            // If no Macho files were found
+            // then report and stop
             if ( file.machOEntries.length === 0 ) {
-                console.log('file.machOEntries', file.machOEntries)
+                console.log(`No Macho files found for ${file.name}`, file.machOEntries)
 
                 file.statusMessage = `❔ Unkown app format`
                 file.status = 'finished'
@@ -300,10 +359,93 @@ export default class AppFilesScanner {
                 return
             }
 
+
+            // findPlistFile
+
+            // Maybe next time
+            // const matchesInfoPlist = path => path.endsWith(`/Info.plist`)
+            // const matchesRootInfoPlist = entryPath => {
+
+            //     // Skip files that are deeper than 2 folders
+            //     if ( entryPath.split('/').length > 3 ) return false
+
+            //     // Does this entry path match any of our wanted paths
+            //     return [
+            //         // `zoom.us.app/Contents/Info.plist`
+            //         `.app/Contents/Info.plist`,
+            //         `.zip/Contents/Info.plist`
+            //     ].some( pathToMatch => {
+            //         return entryPath.endsWith(pathToMatch)
+            //     })
+            // }
+            // const rootInfoFileEntries = entries.filter( entry => {
+
+            //     return matchesRootInfoPlist( entry.filename )
+            // })
+
+            // Warn if Info.plist doesn't look right
+            if ( foundEntries.rootInfo.length > 1) {
+                console.warn('More than one root Info.plist found', foundEntries.rootInfo)
+            } else if ( foundEntries.rootInfo.length === 0 ) {
+                console.warn('No root Info.plist found', foundEntries.rootInfo)
+            }
+
+            // Break out root entry into a variable
+            const [ rootInfoEntry ] = foundEntries.rootInfo
+
+            // Get blob data from zip
+            const infoXml = await rootInfoEntry.getData(
+                // writer
+                // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
+                new zip.TextWriter(),
+                // options
+                {
+                    useWebWorkers: true,
+                    // onprogress: (index, max) => {
+
+                    //     const percentageNumber = (index / max * 100)
+                    //     // onprogress callback
+                    //     console.log(`Writer progress ${percentageNumber}`)
+                    // }
+                }
+            )
+
+            // console.log('infoXml', infoXml)
+
+            // Parse the Info.plist data
+            const info = plist.parse( infoXml )
+
+            file.appVersion = info.CFBundleShortVersionString
+            file.displayName = info.CFBundleDisplayName
+
+            const detailsData = [
+                [ 'Version', info.CFBundleShortVersionString ],
+                [ 'Bundle Identifier', info.CFBundleIdentifier ],
+                [ 'File Mime Type', file.type ],
+                [ 'Copyright', info.NSHumanReadableCopyright ],
+                // [ 'Version', info.CFBundleShortVersionString ],
+            ]
+
+            detailsData.forEach( ([ label, value ]) => {
+                if ( !value || value.length === 0 ) return
+
+                file.details.push({
+                    label,
+                    value,
+                })
+            } )
+
+            // console.log('infoFiles', file.name, {
+            //     path: rootInfoEntry.filename,
+            //     info
+            // })
+
             // const machOBlob = await file.machOEntries
 
 
             const parsedMachoEntries = await Promise.all( file.machOEntries.map( async machOEntry => {
+                // console.log('Parsing ', machOEntry.filename)
+
                 // Get blob data from zip
                 const machOBlob = await machOEntry.getData(
                     // writer
@@ -312,10 +454,12 @@ export default class AppFilesScanner {
                     new zip.BlobWriter(),
                     // options
                     {
-                        onprogress: (index, max) => {
-                            // onprogress callback
-                            console.log('Writer progress', index, max)
-                        }
+                        useWebWorkers: true,
+                        // onprogress: (index, max) => {
+                        //     const percentageNumber = (index / max * 100)
+                        //     // onprogress callback
+                        //     console.log(`Writer progress ${percentageNumber}`)
+                        // }
                     }
                 )
 

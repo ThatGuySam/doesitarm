@@ -92,7 +92,7 @@
                         <!-- app.endpoint: {{ app.endpoint }} -->
                         <div
                             :class="[
-                                'flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5',
+                                'flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-3 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5',
                                 (appScan.status !== 'finished') ? 'shimmer' : ''
                             ]"
                             style="transition-property: border;"
@@ -101,10 +101,23 @@
                             <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
                                 {{ appScan.name.charAt(0) }}
                             </div>
-                            {{ appScan.name }} <code>{{ appScan.type }}</code>
+                            {{ appScan.displayName || appScan.name }} {{ appScan.appVersion ? `- v${appScan.appVersion}` : '' }}
                             <div class="text-sm leading-5 font-bold">
                                 {{ appScan.statusMessage }}
                             </div>
+
+                            <details class="w-full pt-6">
+                                <summary class="cursor-pointer mb-3">Details</summary>
+                                <div>
+                                    <div v-if="appScan.details.length === 0">No details available</div>
+                                    <ul v-else>
+                                        <li
+                                            v-for="( detail ) in appScan.details"
+                                            :key="`${appScan.name}-detail-${detail.label}`"
+                                        ><strong>{{ detail.label }}</strong> <span v-html="detail.value" /></li>
+                                    </ul>
+                                </div>
+                            </details>
 
                         </div>
 
@@ -124,7 +137,7 @@
             </details>
 
 
-            <pre class="w-full">{{ appsBeingScanned }}</pre>
+            <!-- <pre class="w-full">{{ appsBeingScanned }}</pre> -->
 
             <AllUpdatesSubscribe
                 :input-class-groups="{
