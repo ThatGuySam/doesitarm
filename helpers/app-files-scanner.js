@@ -293,6 +293,10 @@ export default class AppFilesScanner {
         // Scan for archives
         await Promise.all( this.files.map( async (file, scanIndex) => {
 
+            // If we've already scanned this
+            // then skip
+            if ( file.status === 'finished' ) return
+
             if ( !this.isApp( file ) ) {
                 file.statusMessage = '⏭ Skipped. Not app or archive'
                 file.status = 'finished'
