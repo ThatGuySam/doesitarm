@@ -89,9 +89,21 @@
                                 <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
                                     {{ appScan.name.charAt(0) }}
                                 </div>
-                                {{ appScan.displayName || appScan.name }} {{ appScan.appVersion ? `- v${appScan.appVersion}` : '' }}
+                                {{ appScan.displayName || appScan.name }}
+                                {{ appScan.appVersion ? `- v${appScan.appVersion}` : '' }}
+                                {{ appScan.displayAppSize ? `- App ${appScan.displayAppSize}` : '' }}
+                                {{ appScan.displayBinarySize ? `- Binary ${appScan.displayBinarySize}` : '' }}
                                 <div class="text-sm leading-5 font-bold">
                                     {{ appScan.statusMessage }}
+                                </div>
+
+                                appScan.binarySize: {{ appScan.binarySize }}
+
+                                <div
+                                    v-if="appScan.binarySize && appScan.binarySize < (10 ^ 6)"
+                                    class="text-sm leading-5 font-bold"
+                                >
+                                    ⚠️ Large Binary - This scan may take a while an/or have issues
                                 </div>
 
                                 <details class="w-full pt-6">
