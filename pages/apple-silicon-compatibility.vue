@@ -5,7 +5,7 @@
 
                 <div class="title-container relative">
                     <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center">
-                        Apple Silicon Compatibility
+                        Apple Silicon App Test
                     </h1>
                     <div
                         class="beta-pill absolute h-5 text-xs bg-white-2 flex justify-center items-center outline-0 rounded-full ease px-2"
@@ -16,7 +16,7 @@
                 </div>
 
                 <h2 class="subtitle md:text-xl text-center">
-                    Check for Apple Silicon compatibility for any app instantly before you buy an M1 Mac.
+                    Check for Apple Silicon compatibility for your apps before you buy an M1 Mac.
                 </h2>
 
             </header>
