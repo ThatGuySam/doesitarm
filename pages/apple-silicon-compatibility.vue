@@ -21,120 +21,113 @@
 
             </header>
 
-            <div
-                class="relative w-full flex flex-col justify-center items-center space-y-4"
-            >
-                <button
-                    :class="[
-                        'rounded-xl text-3xl font-semibold scale-150 bg-darkest neumorphic-shadow focus:outline-none py-4 px-6',
-                        isLoadingFiles ? 'shimmer' : ''
-                    ]"
-                    @click="triggerFilepicker"
-                >{{ isLoadingFiles ? 'Loading Files' : 'Select Apps' }}</button>
+            <div class="app-tester w-full space-y-4 pb-64">
 
-                <template v-if="isLoadingFiles">
-                    <div>Loading usually takes about a minute per 500mb</div>
+                <div
+                    class="relative w-full flex flex-col justify-center items-center space-y-4 pb-8"
+                >
                     <button
-                        class="underline"
-                        @click="isLoadingFiles = false"
-                    >Cancel</button>
-                </template>
+                        :class="[
+                            'rounded-xl text-3xl font-semibold scale-150 bg-darkest neumorphic-shadow focus:outline-none py-4 px-6',
+                            isLoadingFiles ? 'shimmer' : ''
+                        ]"
+                        @click="triggerFilepicker"
+                    >{{ isLoadingFiles ? 'Loading Files' : 'Select Apps' }}</button>
 
-                <small>Supports: Mac Apps, Zip files, and <em>some</em> DMG files. Bigger files take longer.</small>
+                    <template v-if="isLoadingFiles">
+                        <div>Loading usually takes about a minute per 500mb</div>
+                        <button
+                            class="underline"
+                            @click="isLoadingFiles = false"
+                        >Cancel</button>
+                    </template>
 
-                <input
-                    ref="file-selector"
-                    type="file"
-                    accept="application/**"
-                    multiple
-                    hidden
-                    @change="fileInputChanged"
-                >
-                <!-- Directories only: webkitdirectory directory -->
-            </div>
+                    <small>Supports: Mac Apps, Zip files, and <em>some</em> DMG files. Bigger files take longer.</small>
 
-            Total Files: {{ foundFiles.length }}
-
-            <div
-                v-if="foundFiles.length !== 0"
-                class="app-scans-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark my-4 px-5"
-            >
-
-                <svg style="display: none;">
-                    <defs>
-                        <path
-                            id="chevron-right"
-                            fill-rule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                            clip-rule="evenodd"
-                        />
-                    </defs>
-                </svg>
-
-                <!-- hasStartedAnyQuery: {{ hasStartedAnyQuery }} -->
-
-                <!-- <div
-                    v-if="chunkedResults.length === 0"
-                    class="text-center py-4"
-                >
-                    No apps found
-                </div> -->
-
-                <ul
-                    class="results-container divide-y divide-gray-700"
-                >
-                    <li
-                        v-for="( appScan, index ) in foundFiles"
-                        :key="`${appScan.name}-${index}`"
-                        :ref="`${appScan.name}-row`"
-                        class="relative"
+                    <input
+                        ref="file-selector"
+                        type="file"
+                        accept="application/**"
+                        multiple
+                        hidden
+                        @change="fileInputChanged"
                     >
-                        <!-- app.endpoint: {{ app.endpoint }} -->
-                        <div
-                            :class="[
-                                'flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-3 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5',
-                                (appScan.status !== 'finished') ? 'shimmer' : ''
-                            ]"
-                            style="transition-property: border;"
+                    <!-- Directories only: webkitdirectory directory -->
+                </div>
+
+
+                <div
+                    v-if="foundFiles.length !== 0"
+                    class="w-full text-center"
+                >
+                    Total Files: {{ foundFiles.length }}
+                </div>
+
+                <div
+                    v-if="foundFiles.length !== 0"
+                    class="app-scans-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark spac-y-3 my-4 px-5"
+                >
+
+                    <ul
+                        class="results-container divide-y divide-gray-700"
+                    >
+                        <li
+                            v-for="( appScan, index ) in foundFiles"
+                            :key="`${appScan.name}-${index}`"
+                            :ref="`${appScan.name}-row`"
+                            class="relative"
                         >
+                            <!-- app.endpoint: {{ app.endpoint }} -->
+                            <div
+                                :class="[
+                                    'flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-3 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5',
+                                    (appScan.status !== 'finished') ? 'shimmer' : ''
+                                ]"
+                                style="transition-property: border;"
+                            >
 
-                            <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
-                                {{ appScan.name.charAt(0) }}
-                            </div>
-                            {{ appScan.displayName || appScan.name }} {{ appScan.appVersion ? `- v${appScan.appVersion}` : '' }}
-                            <div class="text-sm leading-5 font-bold">
-                                {{ appScan.statusMessage }}
-                            </div>
-
-                            <details class="w-full pt-6">
-                                <summary class="cursor-pointer mb-3">Details</summary>
-                                <div>
-                                    <div v-if="appScan.details.length === 0">No details available</div>
-                                    <ul v-else>
-                                        <li
-                                            v-for="( detail ) in appScan.details"
-                                            :key="`${appScan.name}-detail-${detail.label}`"
-                                        ><strong>{{ detail.label }}</strong> <span v-html="detail.value" /></li>
-                                    </ul>
+                                <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                                    {{ appScan.name.charAt(0) }}
                                 </div>
-                            </details>
+                                {{ appScan.displayName || appScan.name }} {{ appScan.appVersion ? `- v${appScan.appVersion}` : '' }}
+                                <div class="text-sm leading-5 font-bold">
+                                    {{ appScan.statusMessage }}
+                                </div>
 
-                        </div>
+                                <details class="w-full pt-6">
+                                    <summary class="cursor-pointer mb-3">Details</summary>
+                                    <div>
+                                        <div v-if="appScan.details.length === 0">No details available</div>
+                                        <ul v-else>
+                                            <li
+                                                v-for="( detail ) in appScan.details"
+                                                :key="`${appScan.name}-detail-${detail.label}`"
+                                            ><strong>{{ detail.label }}</strong> <span v-html="detail.value" /></li>
+                                        </ul>
+                                    </div>
+                                </details>
 
-                    </li>
-                </ul>
+                            </div>
+
+                        </li>
+                    </ul>
+
+                </div>
 
             </div>
 
-            <details class="w-full">
-                <summary class="cursor-pointer">Non-native Apps (🔶)</summary>
-                <div>
-                    <p>
-                        You can try getting the latest version from the developer's the download page scan that.
-                        You can also request a manual review to determine the current status of the app on Rosetta 2.
-                    </p>
-                </div>
-            </details>
+            <div class="w-full max-w-2xl">
+                <details
+                    v-for="([ question, answer ], index) in faqs"
+                    :key="`question-${index}`"
+                    class="w-full"
+                >
+                    <summary class="cursor-pointer">{{ question }}</summary>
+                    <div class="p-4">
+                        <p>{{ answer }}</p>
+                    </div>
+                </details>
+            </div>
 
 
             <!-- <pre class="w-full">{{ appsBeingScanned }}</pre> -->
@@ -193,6 +186,27 @@ export default {
             return this.appsBeingScanned.filter( appScan => {
                 return !appScan.statusMessage.includes('⏭')
             })
+        },
+
+        faqs () {
+            return [
+                [
+                    'Non-native Apps (🔶)',
+                    `
+                    You can try getting the latest version from the developer\'s the download page scan that.
+                    You can also request a manual review to determine the current status of the app on Rosetta 2.
+                    `
+                ],
+                [
+                    'Why can\'t it tell me if an app will work on Rosetta 2? ',
+                    `
+                    Currently, Rosetta 2 is a proprietary Apple software that is only available on macOS on Apple Silicon devices.
+                    This means there isn't any way to test Rosetta 2 compatibility with an app without a physical Apple Silicon device and so you definitely can't test that with just a website alone... for now...
+
+                    Feel free to signup for email updates.
+                    `
+                ]
+            ]
         },
 
         title ()  {
