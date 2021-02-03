@@ -23,13 +23,20 @@ async function arrayBufferToBlob( buffer ) {
     return new Blob([buffer])
 }
 
+let readers = []
+
+let tempFile
+let tempFiles
+
 var ChunkReader = function ChunkReader(file, chunksize = (1024 * 1024), callback = default_callback) {
 
     if(file == undefined) {
         throw new Error('Invalid argument for file parameter.');
     }
 
-    if(window.readers == undefined) { window.readers = []; } //Free list
+    if(readers == undefined) { readers = []; } //Free list
+
+
     this.chunksize = chunksize; //Read a kilobyte at a time
     this.filesize = file.size;
     this.offset = 0;
@@ -39,20 +46,23 @@ var ChunkReader = function ChunkReader(file, chunksize = (1024 * 1024), callback
 
         this.blob = file.slice(this.offset, this.offset+this.chunksize);
 
-        window.readers[window.readers.length] = new FileReader();
-        window.readers[window.readers.length-1].onloadend = function(e) {
+        readers[readers.length] = new FileReader();
+        readers[readers.length-1].onloadend = function(e) {
             callback(e.target.result);
         };
-        window.readers[window.readers.length-1].readAsArrayBuffer(this.blob);
-        console.log('Sending chunk from 0x'+this.offset.toString(16));
+        readers[readers.length-1].readAsArrayBuffer(this.blob);
+        // console.log('Sending chunk from 0x'+this.offset.toString(16));
         this.offset+=this.chunksize;
     }
 
-    for(obj = 0; obj < window.readers.length; obj++) {
-        window.readers[obj] = undefined;
+    for(obj = 0; obj < readers.length; obj++) {
+        readers[obj] = undefined;
     }
 
-    free("window.readers");
+
+    // Clean up readers
+    readers = undefined
+    // free("readers");
 };
 
 export function MachoParser(file, callback) {
@@ -109,7 +119,7 @@ export function MachoParser(file, callback) {
         var cmd = null;
         if(type == LOAD_COMMAND_TYPE.LC_SEGMENT) {
             if(data.length < 48) {
-                if(window.verbose){console.log('Segment command OOB');}
+                if(process.env.VERBOSE){ console.log('Segment command OOB'); }
                 return new LoadCommand(type, data, size, off);
             }
             let name = new Cstr(data.slice(0, (4*uint32_t)));
@@ -150,7 +160,7 @@ export function MachoParser(file, callback) {
         arrayBufferToBlob(e.target.result, fileType).then(function(blob) {
 
             let filesize =  ((blob.size / 1024) / 1024); //Calculate FileSize in Megabyte
-            window.tempFile = blob;
+            tempFile = blob;
 
             //Set up the file and print out for verbosity
             machoOutputData.file = file
@@ -163,7 +173,7 @@ export function MachoParser(file, callback) {
             let data = new Uint8Array(e.target.result);
             let magics = FindMagic(data, false); //Try to find all Mach-O magics in the byte array
 
-            if(window.debug) { console.log('Parsing all magics...'); }
+            if ( process.env.DEBUG ) { console.log('Parsing all magics...'); }
 
             //If magics where found, parse the binary.
             if(magics.length > 0) {
@@ -268,8 +278,8 @@ export function MachoParser(file, callback) {
 
                     // blobUtil.
                     arrayBufferToBlob(data.buffer, fileType).then(function(blob){
-	               			if(!window.tempFiles) { window.tempFiles = []; }
-	               			window.tempFiles[window.tempFiles.length] = blob;
+	               			if(!tempFiles) { tempFiles = []; }
+	               			tempFiles[tempFiles.length] = blob;
                     }).catch(console.log.bind(console));
 
                     machoOutputData.architectures.push( architecture )
@@ -277,7 +287,7 @@ export function MachoParser(file, callback) {
 
                 callback( machoOutputData )
 
-                console.log('The parser has finished')
+                // console.log('The parser has finished')
 
             } else { //(magics.length <= 0) (If we end up here it means no magics were found in the file).
                 // writeToCallback('This is not a valid Mach-O file.');
@@ -290,7 +300,7 @@ export function MachoParser(file, callback) {
 
     this.reader.readAsArrayBuffer(file);
 
-    console.log('Parsing, please wait...');
+    // console.log('Parsing, please wait...');
 
 };
 
