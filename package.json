@@ -26,6 +26,7 @@
     "marked": "^1.2.7",
     "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
+    "plist": "^3.0.1",
     "scroll-into-view-if-needed": "^2.2.26",
     "slugify": "^1.4.6",
     "vue-full-screen-file-drop": "^2.0.0"
