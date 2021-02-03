@@ -286,7 +286,7 @@ export default class AppFilesScanner {
     async scan ( fileList ) {
 
         // Push files to our files array
-        Array.from(fileList).forEach( (fileInstance, index) => {
+        Array.from(fileList).forEach( (fileInstance, scanIndex) => {
             this.files.unshift( {
                 status: 'loaded',
                 displayName: null,
@@ -296,15 +296,15 @@ export default class AppFilesScanner {
 
                 name: fileInstance.name,
                 size: fileInstance.size,
-                type: fileList.item( index ).type,
+                type: fileList.item( scanIndex ).type,
                 lastModifiedDate: fileInstance.lastModifiedDate,
                 instance: fileInstance,
-                item: fileList.item( index )
+                item: fileList.item( scanIndex )
             } )
         })
 
         // Scan for archives
-        await Promise.all( this.files.map( async (file, index) => {
+        await Promise.all( this.files.map( async (file, scanIndex) => {
 
             if ( !this.isApp( file ) ) {
                 file.statusMessage = '⏭ Skipped. Not app or archive'
@@ -315,7 +315,7 @@ export default class AppFilesScanner {
 
             // console.log('file', file)
 
-            await new Promise(r => setTimeout(r, 1500 * index))
+            await new Promise(r => setTimeout(r, 1500 * scanIndex))
 
             file.statusMessage = '🗃 Decompressing file'
 
@@ -499,6 +499,9 @@ export default class AppFilesScanner {
                 file.statusMessage = `🔶 This app is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
             } else if ( supportedBinaries !== 0 ) {
                 file.statusMessage = '✅ This app is natively compatible with Apple Silicon!'
+
+                // Shift this scan to the top
+                this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
             }
 
             file.status = 'finished'
