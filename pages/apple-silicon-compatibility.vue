@@ -113,6 +113,16 @@
 
             </div>
 
+            <details class="w-full">
+                <summary class="cursor-pointer">Non-native Apps (🔶)</summary>
+                <div>
+                    <p>
+                        You can try getting the latest version from the developer's the download page scan that.
+                        You can also request a manual review to determine the current status of the app on Rosetta 2.
+                    </p>
+                </div>
+            </details>
+
 
             <pre class="w-full">{{ appsBeingScanned }}</pre>
 

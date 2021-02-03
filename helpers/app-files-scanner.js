@@ -352,7 +352,7 @@ export default class AppFilesScanner {
             if (supportedBinaries !== 0 && unsupportedBinaries !== 0) {
                 file.statusMessage = `🔶 App has some support. `
             } else if ( unsupportedBinaries !== 0 ) {
-                file.statusMessage = `🔶 This app is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. You can try submitting the download page link for an app and we'll scan that. You can request a manual review to determine the current status of the app on Rosetta 2. `
+                file.statusMessage = `🔶 This app is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
             } else if ( supportedBinaries !== 0 ) {
                 file.statusMessage = '✅ This app is natively compatible with Apple Silicon!'
             }
