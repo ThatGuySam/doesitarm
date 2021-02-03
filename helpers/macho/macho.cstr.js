@@ -8,3 +8,5 @@ var Cstr = function Cstr(buf) {
     }
     return cstr;
 };
+
+export default Cstr

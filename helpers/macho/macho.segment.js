@@ -68,3 +68,6 @@ var SegmentCommand64 = function SegmentCommand64(cmd, cmdsize, segname, vmaddr, 
         return JSON.stringify(this);
     };
 };
+
+
+export { SG_FLAGS, SG_FLAG, SEGMENT, SegmentCommand, SegmentCommand64 }

@@ -11,6 +11,8 @@ import { MachoHeader64, MachoHeader } from './macho.header.js'
 import { LOAD_COMMAND_TYPE, LoadCommand } from './macho.loadcommand.js'
 import { CPU_TYPE, CPU_SUB_TYPE } from './macho.cpu.js'
 import { FILE_FLAGS, FILE_TYPE } from './macho.file.js'
+import Cstr from './macho.cstr.js'
+import { SegmentCommand } from './macho.segment.js'
 
 function default_callback(buffer) {
     console.log('Received ' + buffer.byteLength / (1024 * 1024) + ' MB');
