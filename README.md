@@ -290,7 +290,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [coconutBattery](https://www.coconut-flavour.com/coconutbattery/) - ✅ Yes, full native support as of v3.9.2
 * [Coloban](https://www.coloban.com) - ⏹ Not yet, but it's currently in development. - [Coloban Forum Issue](https://forum.coloban.com/index.php?u=/topic/21/new-arm-based-apple-computers)
 * [CrossOver](https://www.codeweavers.com/) - ✳️ Runs via Rosetta 2 - [Official Blog](https://www.codeweavers.com/blog/jwhite/2020/11/10/its-great-to-live-in-interesting-times)
-* [Day One Journal](https://apps.apple.com/app/id1055511498) - ✳️ Yes, works via Rosetta 2 - [Official Tweet](https://twitter.com/dayoneapp/status/1332727758447734784?s=20)
+* [Day One Journal](https://apps.apple.com/app/id1055511498) - ✅ Yes, Full Native Apple Silicon Support as of v5.8 - [Release Notes](https://help.dayoneapp.com/en/articles/469749-mac-release-notes)
 * [DEVONthink](https://www.devontechnologies.com/download/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.2 - [Release Notes](https://www.devontechnologies.com/blog/20200814-devonthink-352)
 * [Displays for Mac](https://www.jibapps.com/apps/displays/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.7 - [Source](https://twitter.com/jibapps/status/1338478515453386755)
 * [Drafts](https://itunes.apple.com/app/id1236254471?ls=1&mt=8&at=11l4Cf&ct=site) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/draftsapp/status/1326263191601618945)
