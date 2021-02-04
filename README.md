@@ -133,6 +133,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
+* [Xamarin](https://dotnet.microsoft.com/apps/xamarin) - ✳️ Yes, works via Rosetta 2 - [Souorce](https://github.com/xamarin/xamarin-macios/issues/10005#issue-732495019) [Video Demo](https://doesitarm.com/tv/xamarin-and-visual-studio-on-apple-macbook-pro-13-m1-in-4k-i-rwpspmmlos/)
 * [XAMPP](https://www.apachefriends.org/download.html) - ✳️ Yes, works via Rosetta 2 - [Video Demonstration](https://doesitarm.com/tv/watch-this-before-buying-apple-m1-macbook-for-xampp-or-apple-silicon-tests-in-4k-i-ebwwewsis8s/)
 * [Xcode](https://apps.apple.com/us/app/xcode/id497799835) - ✅ Yes, Full Native Apple Silicon Support as of v12.2 - [Release Notes](https://developer.apple.com/documentation/xcode-release-notes/xcode-12_2-release-notes)
 * [Xojo](https://www.xojo.com/download/) - ⏹ Not yet, but it’s in development - [Blog Post](https://blog.xojo.com/2020/11/10/apple-silicon-and-big-sur-support-coming-in-xojo-2020r2/)
@@ -229,6 +230,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Cinema 4D](https://www.maxon.net/en/downloads) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.maxon.net/en/article/cinema-4d-r23-sp1-now-available) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=924)
 * [Claquette](https://www.peakstep.com/claquette/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1 - [Release Notes](https://www.peakstep.com/claquette/releasenotes.html)
 * [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=950)
+* [Ecamm Live](https://www.ecamm.com/mac/ecammlive/?fp_ref=lsp) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.ecamm.com/en/articles/4616420-ecamm-live-on-macos-11-big-sur-and-apple-silicon-m1-macs)
 * [ffWorks](https://www.ffworks.net/download.html) - ✅ Yes, full native support as of v2.2.3
 * [Final Cut Pro](https://www.apple.com/final-cut-pro/) - ✅ Yes, it will available on Apple Silicon launch - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1173) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5844)
 * [Handbrake](https://handbrake.fr/) - ✅ Yes, natively supported as of v1.4.0  - [Github Issue](https://github.com/HandBrake/HandBrake/issues/2951)
@@ -262,6 +264,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 * [AdBlock Pro for Safari](https://apps.apple.com/app/id1018301773) - ✅ Yes, full native support as of v8.1.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/237#issue-746743506)
 * [Acrobat Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) - ✳️ Yes, works via Rosetta 2 with some known issues - [Known Issues](https://helpx.adobe.com/acrobat/kb/mac-os11-big-sur-compatibility.html#KnownIssues) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
+* [Acrobat Reader](https://get.adobe.com/reader/) - ✳️ Yes, works via Rosetta 2 - [Source](https://helpx.adobe.com/acrobat/kb/mac-os11-big-sur-compatibility.html#WhendoesAdobeplantonativelysupportAppleSilicondevices)
 * [Adobe Bridge](https://www.adobe.com/products/bridge.html) - ✳️ Yes, works via Rosetta 2 with known issues - [Known Issues](https://helpx.adobe.com/bridge/kb/bridge-and-macos-big-sur.html#apple-silicon-compatibility) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Agenda](https://agenda.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Airmail](https://airmailapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v4.5.1 - [Release History](https://apps.apple.com/app/apple-store/id918858936)
@@ -280,6 +283,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Box Drive](https://www.box.com/resources/downloads) - ⏹ Not yet, but it's currently in development. - [Official Post](https://support.box.com/hc/en-us/community/posts/360051323454-Box-Drive-s-system-extension-failed-to-load?page=1#community_comment_1500000009302)
 * [Brave Browser](https://brave.com/#mac-options) - ✅ Yes, Full Native Apple Silicon Support
 * [Calibre](https://calibre-ebook.com/download_osx) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/26#issuecomment-736778254)
+* [Call Recorder for Skype](https://www.ecamm.com/mac/callrecorder/) - 🚫 No, not supported and no plans for support - [Official Post](https://ecamm.com/blog/call-recorder-for-skype-update/)
 * [Camo Studio](https://reincubate.com/camo/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://reincubate.com/support/camo/release-notes/#1.1.3.122)
 * [Chrome](https://www.google.com/chrome/) - ✅ Yes, fully supported as of v87 - [Article](https://9to5google.com/2020/11/17/chrome-mac-apple-silicon/)
 * [Citrix Workspace](https://www.citrix.com/downloads/workspace-app/mac/workspace-app-for-mac-latest.html) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://discussions.citrix.com/topic/411196-will-citrix-viewer-run-on-new-apple-hardware-with-apple-silicon-m1/)
@@ -409,7 +413,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 
-#### Social and communication
+#### Social and Communication
 
 * [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/530#issue-790322821)
 * [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
@@ -420,6 +424,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
 * [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/)  - ✳️ Runs via Rosetta 2 
 * [Signal](https://www.signal.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/337)
+* [Skype](https://www.skype.com/en/get-skype/) - ✳️ Yes, works via Rosetta 2 - [Video](https://doesitarm.com/tv/the-new-m1-macbook-running-microsoft-office-business-apps-teams-skype-excel-cpu-and-ram-usage-i-ibseaue3se8/)
+* [Skype for Business](https://www.microsoft.com/en-us/microsoft-365/skype-for-business/download-app) - ✳️ Yes, works via Rosetta 2 - [Video](https://doesitarm.com/tv/the-new-m1-macbook-running-microsoft-office-business-apps-teams-skype-excel-cpu-and-ram-usage-i-ibseaue3se8/)
 * [Slack](https://slack.com/) - ✳️ Yes, works via Rosetta 2 with native support in beta. - [Official Tweet](https://twitter.com/SlackEng/status/1326237727667314688)
 * [Telegram](https://macos.telegram.org/) - ✅ Yes, Full Native Apple Silicon Support as of 7.2.4 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/52) [Changelog](https://macos.telegram.org/#v7-2-4-2020-11-29)
 * [WeChat](https://apps.apple.com/cn/app/wechat/id836500024?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/369)
