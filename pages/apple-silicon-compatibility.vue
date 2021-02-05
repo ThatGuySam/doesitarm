@@ -97,7 +97,7 @@
                                     {{ appScan.statusMessage }}
                                 </div>
 
-                                appScan.binarySize: {{ appScan.binarySize }}
+                                <!-- appScan.binarySize: {{ appScan.binarySize }} -->
 
                                 <div
                                     v-if="appScan.binarySize && appScan.binarySize < (10 ^ 6)"
