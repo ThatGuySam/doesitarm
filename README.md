@@ -129,7 +129,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Unity](https://store.unity.com/download) - ✳️ Runs via Rosetta with native support currently in development - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator)
 * [Visual Studio for Mac](https://visualstudio.microsoft.com/vs/mac/) - ✳️ Yes, works via Rosetta 2 but debugging is not supported - [Verification](https://github.com/ThatGuySam/doesitarm/issues/401#issuecomment-748295469)
 * [VisualDiffer](https://apps.apple.com/us/app/visualdiffer/id412386481?ls=1&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.8.0 - [Mantis issue](https://visualdiffer.com/mantis/view.php?id=334)
-* [VS Code](https://code.visualstudio.com/) - ✅ Yes, Full Native Apple Silicon Support as of v1.53 - [Github Comment](https://github.com/microsoft/vscode/issues/106770#issuecomment-767298492)
+* [VS Code](https://code.visualstudio.com/) - ✳️ Yes, works via Rosetta 2 (Native for insiders v1.53) - [Native Progress](https://code.visualstudio.com/updates/v1_53#_apple-silicon-insiders)
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
@@ -143,13 +143,15 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Science and Research Software
 * [GeoGebra Classic 5](https://www.geogebra.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/418#issue-760869359)
+* [JMP](https://www.jmp.com/en_us/software/data-analysis-software.html) - ✳️ Yes, works via Rosetta 2 as of v15.2 - [Developer Report](https://community.jmp.com/t5/Discussions/jmp-combatiblity-on-the-apple-M1-mac-book-air/m-p/339577#M58780)
 * [IBM SPSS](https://www.ibm.com/analytics/spss-statistics-software) - ✳️ Yes, works via Rosetta 2 - [Official Post](https://community.ibm.com/community/user/datascience/blogs/todd-peterson1/2020/11/20/spss-statistics-on-macos-big-sur-110)
-* [Matlab](https://www.mathworks.com/products/get-matlab.html?s_tid=gn_getml) - ✳️ Yes, works via Rosetta 2 as of v9.9.0.1495850 - [Matlab Forums](https://www.mathworks.com/matlabcentral/answers/641925-is-matlab-supported-on-apple-silicon-macs)
+* [MATLAB](https://www.mathworks.com/products/get-matlab.html?s_tid=gn_getml) - ✳️ Yes, works via Rosetta 2 as of v9.9.0.1495850 - [MATLAB Forums](https://www.mathworks.com/matlabcentral/answers/641925-is-matlab-supported-on-apple-silicon-macs)
 * [Mendeley](https://www.mendeley.com/download-desktop-new/macOS) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/448#issuecomment-751869800)
 * [RStudio](https://rstudio.com/products/rstudio/download/) - ✳️ Yes, runs via Rosetta 2 with native support in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/36) [Benchmark Info](https://github.com/ThatGuySam/doesitarm/issues/36#issuecomment-735668887)
 * [Stata](https://www.stata.com/) - ✅ Yes, Full Native Apple Silicon Support as of v16, update level 10 Nov 2020 - [Blog Post](https://blog.stata.com/2020/11/10/stata-for-mac-with-apple-silicon/)
 * [Tableau Desktop](https://www.tableau.com/products/desktop) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Video Demonstration](https://youtu.be/vyPm2fOyS7Y?t=625) [Previous version via Rosetta 2](https://www.tableau.com/support/releases/desktop/2020.3.5)
 * [Tableau Prep](https://www.tableau.com/products/prep) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Previous version via Rosetta 2](https://www.tableau.com/support/releases/prep/2020.3.3)
+* [Wolfram Mathematica](https://www.wolfram.com/mathematica/) - ✳️ Yes, works via Rosetta 2 as of v12 - [Discussion](https://community.wolfram.com/groups/-/m/t/2118125#_19_message_2121051)
 
 
 
