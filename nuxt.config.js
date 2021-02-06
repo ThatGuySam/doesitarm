@@ -95,7 +95,8 @@ export default {
     target: 'static',
 
     publicRuntimeConfig: {
-        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE
+        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
+        testResultStore: process.env.TEST_RESULT_STORE
     },
 
     /*

@@ -1,4 +1,5 @@
 import plist from 'plist'
+import axios from 'axios'
 
 import parseMacho from './macho/index.js'
 
@@ -58,9 +59,14 @@ let zip
 
 export default class AppFilesScanner {
 
-    constructor( { observableFilesArray } ) {
+    constructor( {
+        observableFilesArray,
+        testResultStore
+    } ) {
         // Files to process
         this.files = observableFilesArray
+
+        this.testResultStore = testResultStore
 
         // https://gildas-lormeau.github.io/zip.js/
         zip = require('@zip.js/zip.js')
@@ -277,8 +283,26 @@ export default class AppFilesScanner {
 
     }
 
-    submitScanInfo () {
+    async submitScanInfo ({
+        filename,
+        appVersion,
+        result,
+        machoMeta,
+        infoPlist
+    }) {
         // Each file scanned: Filename, Type(Drop or URL), File URL, Datetime, Architectures, Mach-o Meta
+
+        console.log( 'this.testResultStore', this.testResultStore )
+
+        await axios.post( this.testResultStore , {
+            filename,
+            appVersion,
+            result,
+            machoMeta: JSON.stringify( machoMeta ),
+            infoPlist: JSON.stringify( infoPlist )
+        }).catch(function (error) {
+            console.error(error)
+        })
     }
 
     async scanFile ( file, scanIndex ) {
@@ -308,6 +332,14 @@ export default class AppFilesScanner {
         } catch ( Error ) {
             // console.warn( Error )
 
+            this.submitScanInfo ({
+                filename: file.name,
+                appVersion: null,
+                result: 'error_decompression_error',
+                machoMeta: null,
+                infoPlist: null
+            })
+
             // Set status message as error
             file.statusMessage = `❔ ${ Error.message }`
             file.status = 'finished'
@@ -335,6 +367,14 @@ export default class AppFilesScanner {
         // then report and stop
         if ( file.machOEntries.length === 0 ) {
             console.log(`No Macho files found for ${file.name}`, file.machOEntries)
+
+            this.submitScanInfo ({
+                filename: file.name,
+                appVersion: null,
+                result: 'error_no_macho_files',
+                machoMeta: null,
+                infoPlist: null
+            })
 
             file.statusMessage = `❔ Unkown app format`
             file.status = 'finished'
@@ -473,6 +513,37 @@ export default class AppFilesScanner {
             // Shift this scan to the top
             this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
         }
+
+        // console.log('parsedMachoEntries', JSON.parse( JSON.stringify(parsedMachoEntries) ))
+        console.log( 'parsedMachoEntries', parsedMachoEntries )
+
+        this.submitScanInfo ({
+            filename: file.name,
+            appVersion: file.appVersion,
+            result: file.statusMessage,
+            machoMeta: parsedMachoEntries.map( machoMeta => {
+
+                const architectures = machoMeta.architectures.map( architecture => {
+                    return {
+                        bits: architecture.bits,
+                        fileType: architecture.fileType,
+                        header: architecture.header,
+                        loadCommandsInfo: architecture.loadCommandsInfo,
+                        magic: architecture.magic,
+                        offset: architecture.offset,
+                        processorSubType: architecture.processorSubType,
+                        processorType: architecture.processorType,
+                    }
+                })
+
+                return {
+                    ...machoMeta,
+                    file: undefined, // Remove file
+                    architectures
+                }
+            }),
+            infoPlist: info
+        })
 
         file.status = 'finished'
 
