@@ -268,7 +268,8 @@ export default {
 
                 // Initialize instance
                 this.scanner = new AppFilesScanner({
-                    observableFilesArray: this.appsBeingScanned
+                    observableFilesArray: this.appsBeingScanned,
+                    testResultStore: this.$config.testResultStore
                 })
             }
 
