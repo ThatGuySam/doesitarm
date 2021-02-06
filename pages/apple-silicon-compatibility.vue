@@ -222,7 +222,7 @@ export default {
                     'Don\'t all previous Mac Apps work via Rosetta 2 translation? ',
                     `
                     Most apps will work with Rosetta 2 translation well but it's not a perfect technology.
-                    Some apps will have various small issues and graphical bugs but will work well enough, a few apps will fail to launch entirely and some apps will runs with vitually no issues and perform even faster than an equivalent Intel-based Mac.
+                    Some apps will have various small issues and graphical bugs but will work well enough, a few apps will fail to launch entirely and some apps will runs with virtually no issues and perform even faster than an equivalent Intel-based Mac.
                     For now the best way to determine how well an app will run under Rosetta 2 is by human review.
                     `
                 ]
