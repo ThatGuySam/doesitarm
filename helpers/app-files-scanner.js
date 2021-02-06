@@ -292,7 +292,7 @@ export default class AppFilesScanner {
     }) {
         // Each file scanned: Filename, Type(Drop or URL), File URL, Datetime, Architectures, Mach-o Meta
 
-        console.log( 'this.testResultStore', this.testResultStore )
+        // console.log( 'this.testResultStore', this.testResultStore )
 
         await axios.post( this.testResultStore , {
             filename,
@@ -410,10 +410,10 @@ export default class AppFilesScanner {
             }
         )
 
-        // console.log('infoXml', infoXml)
-
         // Parse the Info.plist data
         const info = plist.parse( infoXml )
+
+        // console.log('info', info)
 
         file.appVersion = info.CFBundleShortVersionString
         file.displayName = info.CFBundleDisplayName
