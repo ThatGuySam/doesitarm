@@ -279,8 +279,26 @@ export default class AppFilesScanner {
         return await parseMacho( machOFile )
     }
 
-    classifyArchitecture () {
+    getBundleExecutablePath ( info ) {
+        if ( info.CFBundleExecutable.includes('/') ) return `/Contents/${ info.CFBundleExecutable }`
 
+        return `/Contents/MacOS/${ info.CFBundleExecutable }`
+    }
+
+    classifyBinaryEntryArchitecture ( binaryEntry ) {
+        // Find an ARM Architecture
+        const armArchitecture = binaryEntry.architectures.find( architecture => {
+            // if ( architecture.processorType === 0 ) return false
+
+            // If processorType not a string
+            // then return false
+            if ( !isString(architecture.processorType) ) return false
+
+            return architecture.processorType.toLowerCase().includes('arm')
+        })
+
+        // Was an ARM Architecture found
+        return (armArchitecture !== undefined)
     }
 
     async submitScanInfo ({
@@ -413,8 +431,6 @@ export default class AppFilesScanner {
         // Parse the Info.plist data
         const info = plist.parse( infoXml )
 
-        // console.log('info', info)
-
         file.appVersion = info.CFBundleShortVersionString
         file.displayName = info.CFBundleDisplayName
 
@@ -444,86 +460,65 @@ export default class AppFilesScanner {
 
         console.log(`Parsing Macho ${ file.machOEntries.length } files`)
 
-        const parsedMachoEntries = await Promise.all( file.machOEntries.map( async ( machOEntry, machEntryIndex ) => {
-            console.log('Parsing ', machOEntry.filename, machOEntry.uncompressedSize / 1000 )
+        // console.log('info.CFBundleExecutable', info.CFBundleExecutable)
+        // console.log('info', info)
+        // console.log('file.machOEntries', file.machOEntries)
 
-            if ( machEntryIndex === 0 ) {
-                file.displayBinarySize = prettyBytes( machOEntry.uncompressedSize )
-                file.binarySize = machOEntry.uncompressedSize
+        const bundelExecutablePath = this.getBundleExecutablePath( info )
+
+        const bundleExecutables = file.machOEntries.filter( machoEntry => {
+            return machoEntry.filename.includes(bundelExecutablePath)
+        })
+
+        // Warn if Bundle Executable doesn't look right
+        if ( bundleExecutables.length > 1) {
+            console.warn('More than one root bundleExecutable found', bundleExecutables)
+        } else if ( bundleExecutables.length === 0 ) {
+            console.warn('No root bundleExecutable found', bundleExecutables)
+        }
+
+        const [ bundleExecutable ] = bundleExecutables
+
+        console.log('Parsing ', bundleExecutable.filename, bundleExecutable.uncompressedSize / 1000 )
+
+        file.displayBinarySize = prettyBytes( bundleExecutable.uncompressedSize )
+        file.binarySize = bundleExecutable.uncompressedSize
+
+        // Get blob data from zip
+        // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
+        const bundleExecutableBlob = await bundleExecutable.getData(
+            // writer
+            // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
+            new zip.BlobWriter(),
+            // options
+            {
+                useWebWorkers: true
             }
+        )
 
-            // Get blob data from zip
-            // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
-            const machOBlob = await machOEntry.getData(
-                // writer
-                // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
-                // new zip.TextWriter(),
-                new zip.BlobWriter(),
-                // options
-                {
-                    useWebWorkers: true,
-                    // onprogress: (index, max) => {
-                    //     const percentageNumber = (index / max * 100)
-                    //     // onprogress callback
-                    //     console.log(`Writer progress ${percentageNumber}`)
-                    // }
-                }
-            )
+        const mainExecutableMeta = await this.parseMachOBlob( bundleExecutableBlob, file.name )
+        console.log( 'mainExecutableMeta', mainExecutableMeta )
 
-            return await this.parseMachOBlob( machOBlob, file.name )
-        } ) )
-
-        // console.log('parsedMachoEntries', parsedMachoEntries)
-
-        // file.statusMessage = `🏁 Scan Finished. ${file.machOEntries.length} Mach-o files`
-        // file.statusMessage = `🏁 Scan Finished. `
-        console.log(`Searching ${ parsedMachoEntries.length } binaries for architecture info`)
+        const binarySupportsNative = this.classifyBinaryEntryArchitecture( mainExecutableMeta )
 
 
-        let supportedBinaries = 0
-        let unsupportedBinaries = 0
-
-        // Count supported and unsupported binaries
-        parsedMachoEntries.forEach( binaryEntry => {
-            const armBinary = binaryEntry.architectures.find( architecture => {
-                if ( architecture.processorType === 0 ) return false
-
-                return architecture.processorType.toLowerCase().includes('arm')
-            })
-
-            if ( armBinary !== undefined ) {
-                supportedBinaries++
-            } else {
-                unsupportedBinaries++
-            }
-        } )
-
-        console.log(`Found ${ supportedBinaries } supportedBinaries and ${unsupportedBinaries} unsupportedBinaries`)
-
-        // console.log('supportedBinaries', supportedBinaries)
-        // console.log('unsupportedBinaries', unsupportedBinaries)
-
-        if (supportedBinaries !== 0 && unsupportedBinaries !== 0) {
-            file.statusMessage = `🔶 App has some support. `
-        } else if ( unsupportedBinaries !== 0 ) {
-            file.statusMessage = `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
-        } else if ( supportedBinaries !== 0 ) {
+        if ( binarySupportsNative ) {
             file.statusMessage = '✅ This app is natively compatible with Apple Silicon!'
 
             // Shift this scan to the top
             this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
+        } else {
+            file.statusMessage = `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
         }
-
-        // console.log('parsedMachoEntries', JSON.parse( JSON.stringify(parsedMachoEntries) ))
-        console.log( 'parsedMachoEntries', parsedMachoEntries )
 
         this.submitScanInfo ({
             filename: file.name,
             appVersion: file.appVersion,
             result: file.statusMessage,
-            machoMeta: parsedMachoEntries.map( machoMeta => {
-
-                const architectures = machoMeta.architectures.map( architecture => {
+            machoMeta: {
+                ...mainExecutableMeta,
+                file: undefined,
+                architectures: mainExecutableMeta.architectures.map( architecture => {
                     return {
                         bits: architecture.bits,
                         fileType: architecture.fileType,
@@ -535,13 +530,7 @@ export default class AppFilesScanner {
                         processorType: architecture.processorType,
                     }
                 })
-
-                return {
-                    ...machoMeta,
-                    file: undefined, // Remove file
-                    architectures
-                }
-            }),
+            },
             infoPlist: info
         })
 
@@ -593,11 +582,12 @@ export default class AppFilesScanner {
             })
         }))
 
-
         // Go through and set all files to finished to clean up any straglers
         this.files.forEach( file => {
             file.status = 'finished'
         })
+
+        console.log('All Scans Finished')
 
 
         return
