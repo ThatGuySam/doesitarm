@@ -161,6 +161,10 @@ export default {
                     label: 'Games',
                     url: '/games',
                 },
+                {
+                    label: 'Apple Silicon App Test',
+                    url: '/apple-silicon-app-test',
+                },
             ])
         }
     },
