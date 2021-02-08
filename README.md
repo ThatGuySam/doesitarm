@@ -110,10 +110,11 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [Python](https://www.python.org/) - ✅ Yes, reported working for v2.7.16, v3.8.2, and v3.9 - [PyPerformance Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1795089557) [Python Tracker](https://bugs.python.org/issue41100) [Github Issue](https://github.com/python/cpython/pull/22855) [Github Issue #2](https://github.com/ThatGuySam/doesitarm/issues/111)
 * [PyTorch](https://pytorch.org/) - ✳️ Yes, works via Rosetta 2 - [Report Update](https://github.com/ThatGuySam/doesitarm/issues/432)
-* [React Native](https://reactnative.dev/) - 🔶 Unknown, more info needed - [Contribute](https://github.com/ThatGuySam/doesitarm/issues/427)
+* [React Native](https://reactnative.dev/) - ✳️ Yes, works on supported Node versions - [Check Node Support](https://doesitarm.com/app/nodejs/)
 * [Redis](https://redis.io/download) - ✅ Yes, full native Apple Silicon support as of v6 - [v6.0.9 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1002181585) [Verification](https://github.com/ThatGuySam/doesitarm/issues/298)
 * [RubyMine](https://www.jetbrains.com/ruby/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [Rust](https://www.rust-lang.org/) - ✅ Yes, full native support (Tier 2) as of v1.49 - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557) [Official Blog Post](https://blog.rust-lang.org/2020/12/31/Rust-1.49.0.html)
+* [Sequel Ace](https://github.com/Sequel-Ace/Sequel-Ace/releases) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.1 - [Release Notes](https://github.com/Sequel-Ace/Sequel-Ace/releases/tag/production%2F3.0.1-3008)
 * [Sketch](https://www.sketch.com/) - ✅ Yes, Full Native Apple Silicon Support as of v70 - [Release Notes](https://www.sketch.com/updates/#version-70)
 * [SourceTree](https://www.sourcetreeapp.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/200)
 * [SubEthaEdit](https://subethaedit.net/) - ✅ Yes, full native Apple Silicon Support as of v5.1.5 - [Release Notes](https://github.com/subethaedit/SubEthaEdit/releases/tag/SubEthaEdit-MacFull-5.1.5)
@@ -398,7 +399,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Dolphin](https://dolphin-emu.org/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/452)
 * [DOSBox](https://sourceforge.net/projects/dosbox/) - ✳️ Yes, it works via Rosetta 2 - [Project Ticket 149](https://sourceforge.net/p/dosbox/feature-requests/149/)
 * [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
-* [IINA](https://iina.io/download/) - ✅ Yes, Full Native Apple Silicon Support as of 1.2.0 [Github Release](https://github.com/iina/iina/releases/tag/v1.2.0)
+* [IINA](https://iina.io/download/) - ✅ Yes, Full Native Apple Silicon Support as of 1.2.0 - [Github Release](https://github.com/iina/iina/releases/tag/v1.2.0)
 * [Infuse](https://apps.apple.com/cn/app/infuse-6/id1136220934) - ⏹ Not released yet, macOS support is currently in alpha test and it runs via Rosetta 2 - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/458) [Sign up for Alpha](http://firecore.com/macos)
 * [Movist](https://movistprime.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.6 - [Changelog](https://movistprime.com/changelog.html)
 * [NetEase Music](https://music.163.com/#/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.4 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/528#issue-789094015)
