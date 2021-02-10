@@ -103,7 +103,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [OpenJDK](https://openjdk.java.net/install/) - ✅ Yes, Full Native Apple Silicon Support via Azul Zulu
 Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1469348209) [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
 * [Parallels Desktop](https://www.parallels.com/) - ⏹ Not entirely working yet, but running ARM guests (such as Windows 10 on ARM) is possible with the preview version - [Blog Post](https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/) [Beta Download](https://my.parallels.com/desktop/beta) [MacRumors Discussion](https://forums.macrumors.com/threads/parallels-tech-preview-for-m1.2275996/unread)
-* [Paw](https://paw.cloud/) - ✳️ Yes, works via Rosetta 2 - [Official Tweet](https://twitter.com/luckymarmot/status/1332614644654026755?s=20)
+* [Paw](https://paw.cloud/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.1 - [Release Notes](https://paw.cloud/updates/3.2.1)
 * [Pelemay](https://github.com/zeam-vm/pelemay/releases) - ✅ Yes, Full Native Apple Silicon Support as of v0.0.14 - [Release Notes](https://github.com/zeam-vm/pelemay/releases/tag/0.0.14)
 * [PhpStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✅ Yes, full native Apple Silicon support as of v2020.3.1
 * [Postman](https://www.postman.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/160#issuecomment-736772593)
@@ -407,7 +407,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [NetEase Music](https://music.163.com/#/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.4 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/528#issue-789094015)
 * [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.11 - [Blog Post](https://betamagic.nl/news/2020/2020_09.html)
 * [QQ音乐(QQ Music)](https://apps.apple.com/cn/app/qq音乐-让生活充满音乐/id595615424?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/368)
-* [PPSSPP](https://build.ppsspp.org/?page/downloads#osx) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/347)
+* [PPSSPP](https://build.ppsspp.org/?page/downloads#osx) - ✅ Yes, Full Native Apple Silicon Support as of v1.11 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/347#issuecomment-776444965)
 * [PS Remote Play](https://remoteplay.dl.playstation.net/remoteplay/lang/en/ps5_mac.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/441#issuecomment-748282150)
 * [Remote Buddy](https://www.iospirit.com/products/remotebuddy/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/556#issue-802733637)
 * [RetroArch](https://www.retroarch.com/?page=platforms) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/348)
@@ -449,6 +449,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [1Password](https://1password.com/) - ✳️ Runs via Rosetta with native support currently in development. - [Forum Discussion](https://1password.community/discussion/114181/will-1password-run-on-apple-silicon-based-mac)
 * [Bitwarden](https://bitwarden.com/) - ✳️ Yes, works via Rosetta 2 with a patch in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
 * [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/416#issue-760860704)
+* [ClashX](https://github.com/yichengchen/clashX#install) - ✅ Yes, Full Native Apple Silicon Support as of v1.31.1.1 - [Release Notes](https://github.com/yichengchen/clashX/releases/tag/1.31.1)
 * [Elpass](https://elpass.app/) - ✅ Yes, full native Apple Silicon Support as of v1.1.10 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/176)
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
