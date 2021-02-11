@@ -146,6 +146,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 #### Science and Research Software
+* [COMSOL Multiphysics](https://www.comsol.com/comsol-multiphysics) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://www.comsol.com/forum/thread/272202/new-apple-m1-machines-and-rosetta-2-intel-emulator?last=2021-02-04T17:09:35Z) [Report #2](https://www.reddit.com/r/mac/comments/kfp8tg/comsol_with_m1/glvd947?utm_source=share&utm_medium=web2x&context=3)
 * [GeoGebra Classic 5](https://www.geogebra.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/418#issue-760869359)
 * [JMP](https://www.jmp.com/en_us/software/data-analysis-software.html) - ✳️ Yes, works via Rosetta 2 as of v15.2 - [Developer Report](https://community.jmp.com/t5/Discussions/jmp-combatiblity-on-the-apple-M1-mac-book-air/m-p/339577#M58780)
 * [IBM SPSS](https://www.ibm.com/analytics/spss-statistics-software) - ✳️ Yes, works via Rosetta 2 - [Official Post](https://community.ibm.com/community/user/datascience/blogs/todd-peterson1/2020/11/20/spss-statistics-on-macos-big-sur-110)
@@ -165,6 +166,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
 * [Adobe Audition](https://www.adobe.com/products/audition.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Airfoil](https://rogueamoeba.com/airfoil/mac/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.10.0 - [Release Notes](https://rogueamoeba.com/airfoil/mac/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
+* [Ardour](https://community.ardour.org/download) - ✳️ Yes, it works via Rosetta 2 with native support in progress - [Apple Silicon Pre-release](https://discourse.ardour.org/t/ardour-for-apple-m1-arm-pre-release/105174)
 * [Audacity](https://www.audacityteam.org/download/) - ✳️ Yes, it works via Rosetta 2 with no reported issues - [Github Issue Comment](https://github.com/audacity/audacity/issues/684#issuecomment-710726323)
 * [Audio Hijack](https://rogueamoeba.com/audiohijack/) - ✅ Yes, Initial Native Apple Silicon Support as of v3.8.0 - [Release Notes](https://rogueamoeba.com/audiohijack/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Avid Pro Tools](https://www.avid.com/pro-tools) - 🚫 No official word yet.
@@ -450,6 +452,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Bitwarden](https://bitwarden.com/) - ✳️ Yes, works via Rosetta 2 with a patch in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
 * [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/416#issue-760860704)
 * [ClashX](https://github.com/yichengchen/clashX#install) - ✅ Yes, Full Native Apple Silicon Support as of v1.31.1.1 - [Release Notes](https://github.com/yichengchen/clashX/releases/tag/1.31.1)
+* [Cryptomator](https://cryptomator.org/) - 🚫 No, crashes under Rosetta 2 only recommended on Intel-based Macs - [Crashing Issue](https://github.com/cryptomator/cryptomator/issues/1419)
 * [Elpass](https://elpass.app/) - ✅ Yes, full native Apple Silicon Support as of v1.1.10 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/176)
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
@@ -478,6 +481,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 ## More Apple Silicon Lists
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
 * [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
+* [SweetWater Compatibility Guide](https://www.sweetwater.com/sweetcare/articles/macos-11-big-sur-compatibility-guide/) - Big Sur and Apple Silicon reports for producstion and live performance software
 * [Ported2M1](https://ported2m1.com/) - Beautiful list with app support discussion
 * [MacRumors List](https://forums.macrumors.com/threads/universal-and-native-apple-silicon-apps.2267176/) - List of Universal and Native Apple Silicon Apps
 * [RoaringApps](https://roaringapps.com/collections/list-of-apple-silicon-native-apps) - List of apps ready for Apple Silicon M1 chip Macs
