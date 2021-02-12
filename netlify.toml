@@ -43,3 +43,8 @@
   from = "/。"
   to = "/"
   status = 301
+  
+[[redirects]]
+  from = "/%E3%80%82"
+  to = "/"
+  status = 301
