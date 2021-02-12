@@ -267,6 +267,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [SketchUp](https://www.sketchup.com/) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://forums.sketchup.com/t/the-new-m1-processor/141946)
 * [Timebox 3D Collage Maker](https://timeboxapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.1 - [Release Notes](https://timeboxapp.com/whats-new-81)
 * [Ultimaker Cura](https://ultimaker.com/software/ultimaker-cura) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/424#issue-761853484)
+* [ZBrush](http://pixologic.com/zbrush/downloadcenter/#) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.pixologic.com/article/447-support-for-apple-silicon)
 
 
 #### Productivity Tools
@@ -283,6 +284,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Anki](https://apps.ankiweb.net/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/495)
 * [AppCleaner](https://freemacsoft.net/appcleaner/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/559#issue-803995485)
 * [Axure RP 9](https://www.axure.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/38)
+* [Backblaze](https://www.backblaze.com/) - ✅ Yes, Full Native Apple Silicon Support - [Verification #1](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-744336558) [Verification #2](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-777878266)
 * [Bandizip](https://en.bandisoft.com/bandizip.mac/) - ✅ Yes, Full Native Apple Silicon Support as of v7.03 - [Release Notes](https://en.bandisoft.com/bandizip.mac/history/)
 * [balenaEtcher](https://github.com/balena-io/etcher/releases) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/294#issuecomment-737011519)
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
@@ -339,6 +341,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Microsoft OneNote](https://apps.apple.com/cn/app/microsoft-onenote/id784801555?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft Outlook](https://apps.apple.com/app/microsoft-outlook/id985367838?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft PowerPoint](https://apps.apple.com/cn/app/microsoft-powerpoint/id462062816?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
+* [Microsoft Remote Deskto‪p](https://apps.apple.com/au/app/microsoft-remote-desktop/id1295203466?mt=12) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Apple Silicon Beta](https://install.appcenter.ms/orgs/rdmacios-k2vy/apps/microsoft-remote-desktop-for-mac/distribution_groups/all-users-of-microsoft-remote-desktop-for-mac) 
 * [Microsoft Word](https://apps.apple.com/cn/app/microsoft-word/id462054704?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [MindNode](https://mindnode.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Monero GUI Wallet](https://www.getmonero.org/downloads/) - ✳️ Yes, works via Rosetta 2 with a few minor bugs - [Source](https://github.com/ThatGuySam/doesitarm/issues/435)
