@@ -312,15 +312,21 @@ export default class AppFilesScanner {
 
         // console.log( 'this.testResultStore', this.testResultStore )
 
-        await axios.post( this.testResultStore , {
+        const { supportedVersionNumber } = await axios.post( this.testResultStore , {
             filename,
             appVersion,
             result,
             machoMeta: JSON.stringify( machoMeta ),
             infoPlist: JSON.stringify( infoPlist )
-        }).catch(function (error) {
-            console.error(error)
         })
+            .then( response => response.data )
+            .catch(function (error) {
+                console.error(error)
+            })
+
+        return {
+            supportedVersionNumber
+        }
     }
 
     async scanFile ( file, scanIndex ) {
@@ -502,19 +508,11 @@ export default class AppFilesScanner {
         const binarySupportsNative = this.classifyBinaryEntryArchitecture( mainExecutableMeta )
 
 
-        if ( binarySupportsNative ) {
-            file.statusMessage = '✅ This app is natively compatible with Apple Silicon!'
-
-            // Shift this scan to the top
-            this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
-        } else {
-            file.statusMessage = `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
-        }
-
-        this.submitScanInfo ({
+        // Submit the scan to get any reports on preexisting native reports
+        const { supportedVersionNumber } = await this.submitScanInfo ({
             filename: file.name,
             appVersion: file.appVersion,
-            result: file.statusMessage,
+            result: finishedStatusMessage,
             machoMeta: {
                 ...mainExecutableMeta,
                 file: undefined,
@@ -534,6 +532,28 @@ export default class AppFilesScanner {
             infoPlist: info
         })
 
+        console.log('supportedVersionNumber', supportedVersionNumber)
+
+
+        let finishedStatusMessage = ''
+
+        if ( binarySupportsNative ) {
+            finishedStatusMessage = '✅ This app is natively compatible with Apple Silicon!'
+
+            // Shift this scan to the top
+            this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
+        } else if ( supportedVersionNumber !== null ) {
+
+            finishedStatusMessage = [
+                '✅ A native version of this has been reported',
+                (supportedVersionNumber.length > 0) ? `as of v${supportedVersionNumber}` : null
+            ].join(' ')
+
+        } else {
+            finishedStatusMessage = `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
+        }
+
+        file.statusMessage = finishedStatusMessage
         file.status = 'finished'
 
         return
