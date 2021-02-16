@@ -512,7 +512,7 @@ export default class AppFilesScanner {
         const { supportedVersionNumber } = await this.submitScanInfo ({
             filename: file.name,
             appVersion: file.appVersion,
-            result: finishedStatusMessage,
+            result: binarySupportsNative ? '✅' : '🔶',
             machoMeta: {
                 ...mainExecutableMeta,
                 file: undefined,
@@ -533,7 +533,6 @@ export default class AppFilesScanner {
         })
 
         console.log('supportedVersionNumber', supportedVersionNumber)
-
 
         let finishedStatusMessage = ''
 
