@@ -95,7 +95,8 @@ export default {
     target: 'static',
 
     publicRuntimeConfig: {
-        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE
+        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
+        testResultStore: process.env.TEST_RESULT_STORE
     },
 
     /*
@@ -328,8 +329,19 @@ export default {
         ** You can extend webpack config here
         */
         extend(config, ctx) {
+
+            // Client
+            if (ctx.isClient) {
+                // Push meta import rule for zip.js
+                config.module.rules.push({
+                    test: /\.js$/,
+                    loader: require.resolve('@open-wc/webpack-import-meta-loader')
+                })
+            }
+
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
+
                 config.module.rules.push({
                     enforce: 'pre',
                     test: /\.(js|vue)$/,
