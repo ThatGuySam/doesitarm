@@ -60,7 +60,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Dreamweaver](https://www.adobe.com/products/dreamweaver.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Emacs](https://www.gnu.org/software/emacs/) - ✅ Yes, full native support via Emacs plus - [Verification](https://github.com/ThatGuySam/doesitarm/issues/226) [Install instructions](https://github.com/d12frosted/homebrew-emacs-plus)
 * [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
-* [FFmpeg](https://ffmpeg.org/download.html) - 🚫 Not yet supported because of unsupported or broken dependencies on arm64: rsvg, x264, libvpx, soxr - [Issue](https://trac.macports.org/ticket/61668)
+* [FFmpeg](https://ffmpeg.org/download.html) - ✅ Yes, Full Native Apple Silicon Support via Homebrew - [Homebrew ARM Binary Available](https://formulae.brew.sh/formula/ffmpeg#default)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
 * [Flutter](https://flutter.dev/docs/get-started/install/macos) - ✳️ Yes, works via Rosetta 2 with native support in development - [Github Issue](https://github.com/flutter/flutter/issues/60118#issuecomment-695341296)
 * [Fork](https://git-fork.com/) - ✅ Yes, full native support as of v2.1.0 - [Release notes](https://git-fork.com/releasenotes)
