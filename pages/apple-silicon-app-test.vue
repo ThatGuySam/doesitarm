@@ -46,8 +46,9 @@
                         <small>
                             <span>Supports: Mac Apps, Zip files, and <em>some</em> DMG files. Bigger files take longer. </span>
                             <a
-                                href="/#"
+                                href="https://www.youtube.com/watch?v=icq9wJx7wbg"
                                 class="underline"
+                                rel="noopener"
                             >How it works</a>
                         </small>
                     </div>
