@@ -19,11 +19,6 @@
                     Check for Apple Silicon compatibility for your apps before you buy an M1 Mac.
                 </h2>
 
-                <a
-                    href="/#"
-                    class="underline"
-                >How it works</a>
-
             </header>
 
             <div class="app-tester w-full space-y-4 pb-64">
@@ -47,7 +42,15 @@
                         >Cancel</button>
                     </template>
 
-                    <small>Supports: Mac Apps, Zip files, and <em>some</em> DMG files. Bigger files take longer.</small>
+                    <div>
+                        <small>
+                            <span>Supports: Mac Apps, Zip files, and <em>some</em> DMG files. Bigger files take longer. </span>
+                            <a
+                                href="/#"
+                                class="underline"
+                            >How it works</a>
+                        </small>
+                    </div>
 
                     <input
                         ref="file-selector"
