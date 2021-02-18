@@ -19,6 +19,11 @@
                     Check for Apple Silicon compatibility for your apps before you buy an M1 Mac.
                 </h2>
 
+                <a
+                    href="/#"
+                    class="underline"
+                >How it works</a>
+
             </header>
 
             <div class="app-tester w-full space-y-4 pb-64">
