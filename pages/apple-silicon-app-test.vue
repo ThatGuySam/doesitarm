@@ -127,6 +127,13 @@
                                     </div>
                                 </details>
 
+                                <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+                                    <a
+                                        :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${appScan.displayName || appScan.name}`"
+                                        class="underline"
+                                    >Request a Review</a>
+                                </div>
+
                             </div>
 
                         </li>
