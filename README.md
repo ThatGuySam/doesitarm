@@ -114,6 +114,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PyTorch](https://pytorch.org/) - ✳️ Yes, works via Rosetta 2 - [Report Update](https://github.com/ThatGuySam/doesitarm/issues/432)
 * [React Native](https://reactnative.dev/) - ✳️ Yes, works on supported Node versions - [Check Node Support](https://doesitarm.com/app/nodejs/)
 * [Redis](https://redis.io/download) - ✅ Yes, full native Apple Silicon support as of v6 - [v6.0.9 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1002181585) [Verification](https://github.com/ThatGuySam/doesitarm/issues/298)
+* [Robo 3T (formerly Robomongo)](https://robomongo.org/download) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/175#issuecomment-782071460)
 * [RubyMine](https://www.jetbrains.com/ruby/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [Rust](https://www.rust-lang.org/) - ✅ Yes, full native support (Tier 2) as of v1.49 - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557) [Official Blog Post](https://blog.rust-lang.org/2020/12/31/Rust-1.49.0.html)
 * [Sequel Ace](https://github.com/Sequel-Ace/Sequel-Ace/releases) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.1 - [Release Notes](https://github.com/Sequel-Ace/Sequel-Ace/releases/tag/production%2F3.0.1-3008)
@@ -225,6 +226,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Simple Comic (Community Fork)](https://github.com/MaddTheSane/Simple-Comic) - ✅ Yes, full native Apple Silicon support as of v1.9.1 - [App Store](https://apps.apple.com/us/app/simple-comic/id1497435571?l=en&mt=12) [Github Repo](https://github.com/MaddTheSane/Simple-Comic) [Verification](https://github.com/ThatGuySam/doesitarm/issues/407)
 * [Textify](https://apps.apple.com/app/id1522041836) - ✅ Yes, full native support as of v2.0.1 - [Macrumors Thread](https://forums.macrumors.com/threads/textify-text-recognition-ocr-made-easy-and-accurate-1-product-of-the-day-ph.2245225/page-2?post=29016938#post-29016938)
 * [Vectornator](https://www.vectornator.io/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1300)
+* [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan/releases) - ✅ Yes, Full Native Apple Silicon Support as of v20210102 - [Release Notes](https://github.com/nihui/waifu2x-ncnn-vulkan/releases/tag/20210102)
 
 
 
