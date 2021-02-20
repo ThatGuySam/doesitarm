@@ -6,7 +6,7 @@
             isOpen ? 'bg-blur' : ''
         ]"
     >
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <div class="-ml-2 mr-2 flex items-center lg:hidden">
@@ -83,13 +83,15 @@
                             </LinkButton>
 
                         </span> -->
+
                         <a
-                            href="https://www.producthunt.com/posts/does-it-arm-benchmarks?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-does-it-arm-benchmarks"
+                            href="https://www.producthunt.com/posts/apple-silicon-app-test?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-apple-silicon-app-test"
+                            rel="noopener"
                             target="_blank"
                         >
                             <img
-                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=279410&theme=light"
-                                alt="Does It ARM Benchmarks - Curated App Benchmark Videos for Apple Silicon and Apple M1 | Product Hunt"
+                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=285320&theme=light"
+                                alt="Apple Silicon App Test - Test your apps for compatibility before you buy an M1 Mac | Product Hunt"
                                 style="width: 200px; height: 43px;"
                                 width="200"
                                 height="43"
