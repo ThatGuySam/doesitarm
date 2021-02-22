@@ -47,7 +47,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Attributed String Creator](https://apps.apple.com/us/app/attributed-string-creator-pro/id730928349) - ✅ Yes, full native support as of v1.9.6 - [Release Notes](https://www.bridgetech.io)
 * [BBEdit](https://www.barebones.com/products/bbedit/download.html) - ✅ Yes, full native support as of v13.5 - [Release Notes](https://www.barebones.com/support/bbedit/notes-13.5.html)
 * [Beyond Compare](https://www.scootersoftware.com/) - ✳️ Yes, works via Rosetta 2 - [Facebook Post](https://www.facebook.com/ScooterSoftware/posts/5178865142127412)
-* [Caddy](https://caddyserver.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/577#issue-812904613)
+* [Caddy](https://caddyserver.com/download) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/577#issuecomment-783684858)
 * [Charles Web Debugging Proxy](https://www.charlesproxy.com/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/122#issuecomment-751907737)
 * [CLion](https://www.jetbrains.com/clion/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [CocoaPods](https://cocoapods.org/) - ✳️ Yes, it works via Rosetta 2 - [Issue](https://github.com/CocoaPods/CocoaPods/issues/9907)
