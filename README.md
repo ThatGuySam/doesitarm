@@ -5,7 +5,7 @@ Lists of reported app support for macOS on ARM so far.
 
 Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
-[Search List](https://doesitarm.com/) | [Benchmarks and Performance](https://doesitarm.com/benchmarks/) | [Twitter Updates](https://twitter.com/DoesItARM) | [More Lists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#more-apple-silicon-lists) | [Youtube Playlists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#youtube-apple-silicon-playlists)
+[Search List](https://doesitarm.com/) | [🧪 Apple Silicon App Test](https://doesitarm.com/apple-silicon-app-test/) | [Benchmarks and Performance](https://doesitarm.com/benchmarks/) | [Twitter Updates](https://twitter.com/DoesItARM) | [More Lists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#more-apple-silicon-lists) | [Youtube Playlists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#youtube-apple-silicon-playlists)
 
 
 
@@ -210,12 +210,12 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Capture One](https://www.captureone.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/pull/130#issuecomment-736183868) [Capture One Twitter](https://twitter.com/captureonepro/status/1326570278462349312)
 * [Darkroom](https://darkroom.co/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1307)
 * [Darktable](https://www.darktable.org/install/#macos) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/328#issuecomment-736769770) [Discussion](https://discuss.pixls.us/t/the-future-of-darktable-on-the-mac-with-arm/21290)
-* [EXIF Sync](https://www.lemkesoft.de/en/products/exif-sync/download/) - ✅ Yes, Full Native Apple Silicon Support - [Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
-* [FontBook](https://www.lemkesoft.de/en/products/fontbook/download/) - ✅ Yes, Full Native Apple Silicon Support - [Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
+* [EXIF Sync](https://www.lemkesoft.de/en/products/exif-sync/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
+* [FontBook](https://www.lemkesoft.de/en/products/fontbook/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Gimp](https://www.gimp.org/downloads/) - ✳️ Yes, works via Rosetta 2 but with noticeable performance dip - [Verification](https://github.com/ThatGuySam/doesitarm/issues/304#issuecomment-748297707)
 * [GraphicConverter](https://www.lemkesoft.de/en/products/graphicconverter/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/483#issuecomment-752342847)
 * [Graphite Sketchbook](https://www.digitalmasterpieces.com/graphite/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1303)
-* [iCalamus](https://www.lemkesoft.de/en/products/icalamus/download/) - ✅ Yes, Full Native Apple Silicon Support - [Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
+* [iCalamus](https://www.lemkesoft.de/en/products/icalamus/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Illustrator](https://www.adobe.com/products/illustrator.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [InCopy](https://www.adobe.com/products/incopy.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [InDesign](https://www.adobe.com/products/indesign.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
@@ -274,7 +274,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 * [Archicad](https://graphisoft.com/solutions/products/archicad) - ✳️ Yes, works via Rosetta 2 - [Graphisoft support update](https://helpcenter.graphisoft.com/knowledgebase/130674/) [Graphisoft Thread](https://archicad-talk.graphisoft.com/viewtopic.php?p=312614) [Reddit thread](https://www.reddit.com/r/ArchiCAD/comments/hsjs6l/archicad_and_macos_armtransition/) [Tudy's feedback](https://github.com/ThatGuySam/doesitarm/pull/189#issuecomment-742729489)
 * [AutoCAD](https://www.autodesk.com/products/autocad/overview?plc=ACDIST&term=1-YEAR&support=ADVANCED&quantity=1) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/499#issuecomment-754202196) [AutoDesk Forums](https://forums.autodesk.com/t5/autocad-for-mac-forum/apple-silicon/m-p/9652836)
-* [CADintosh](https://www.lemkesoft.de/en/products/cadintosh/download/) - ✅ Yes, Full Native Apple Silicon Support - [Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
+* [CADintosh](https://www.lemkesoft.de/en/products/cadintosh/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [PrusaSlicer](https://www.prusa3d.com/prusaslicer/) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/379#issue-755576203)
 * [Shaper3D](https://www.shapr3d.com/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=2211)
 * [SketchUp](https://www.sketchup.com/) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://forums.sketchup.com/t/the-new-m1-processor/141946)
