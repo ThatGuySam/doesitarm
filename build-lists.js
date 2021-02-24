@@ -23,11 +23,13 @@ class BuildLists {
         // Where our lists are stored
         this.lists = {}
 
-        // Where Nuxt Routes and Payloads get stored
-        this.nuxtEndpointsSet = new Set()
+        this.endpointSets = {
+            // Where Nuxt Routes and Payloads get stored
+            nuxtEndpointsSet: new Set(),
 
-        // Where Eleventy Enpoints get stored
-        this.eleventyEndpointsSet = new Set()
+            // Where Eleventy Endpoints get stored
+            eleventyEndpointsSet: new Set()
+        }
 
         this.allVideoAppsList = new Set()
     }
@@ -225,7 +227,7 @@ class BuildLists {
                 const isGame = (app.category === 'games')
 
                 if (isVideo) {
-                    this.eleventyEndpointsSet.add({
+                    this.endpointSets.eleventyEndpointsSet.add({
                         route: getVideoEndpoint(app),
                         // payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
                     })
@@ -235,13 +237,13 @@ class BuildLists {
 
                 // Add benchmark endpoints for apps and games
                 if ( isApp || isGame ) {
-                    this.nuxtEndpointsSet.add({
+                    this.endpointSets.nuxtEndpointsSet.add({
                         route: `${getAppEndpoint(app)}/benchmarks`,
                         payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
                     })
                 }
 
-                this.nuxtEndpointsSet.add({
+                this.endpointSets.nuxtEndpointsSet.add({
                     route: getAppEndpoint(app),
                     payload: { app }
                 })
@@ -253,7 +255,7 @@ class BuildLists {
 
 
         Object.keys(categories).forEach( slug => {
-            this.nuxtEndpointsSet.add({
+            this.endpointSets.nuxtEndpointsSet.add({
                 route: '/kind/' + slug,
                 // payload: appList
             })
@@ -261,10 +263,15 @@ class BuildLists {
 
 
         // Save Nuxt Endpoints
-        await this.saveToJson(Array.from(this.nuxtEndpointsSet), './static/nuxt-endpoints.json')
+        await this.saveToJson(Array.from(this.endpointSets.nuxtEndpointsSet), './static/nuxt-endpoints.json')
 
         // Save Eleventy Endpoints
-        await this.saveToJson(Array.from(this.eleventyEndpointsSet), './static/eleventy-endpoints.json')
+        await this.saveToJson(Array.from(this.endpointSets.eleventyEndpointsSet), './static/eleventy-endpoints.json')
+
+        // Save sitemap endpoints
+        await this.saveToJson(Object.values(this.endpointSets).map( endpointSet => {
+            return Array.from( endpointSet )
+        } ).flat(1), './static/sitemap-endpoints.json')
 
         return
     }
