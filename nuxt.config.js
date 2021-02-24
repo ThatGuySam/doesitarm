@@ -127,7 +127,18 @@ export default {
     ],
 
     sitemap: {
-        hostname: 'https://doesitarm.com'
+        hostname: 'https://doesitarm.com',
+        routes: async () => {
+            // Get routes from previous build
+            const sitemapEndpoints = await fs.readFile('./static/sitemap-endpoints.json', 'utf-8')
+                .then( endpointsJson => {
+                    return JSON.parse(endpointsJson)
+                })
+
+            console.log('Total Sitemap Endpoints', sitemapEndpoints.length)
+
+            return sitemapEndpoints.map( endpoint => endpoint.route )
+        }
     },
 
     buildModules: [
