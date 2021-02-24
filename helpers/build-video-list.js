@@ -87,6 +87,30 @@ const generateVideoTags = function ( video ) {
     return videoTags
 }
 
+const makeThumbnailData = function ( thumbnails ) {
+
+    let maxWidth = 0
+    Object.entries( thumbnails ).forEach(([thumbnailKey, thumbnail]) => {
+        if (thumbnail.width > maxWidth) maxWidth = thumbnail.width
+    })
+
+    const sizes = `(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`
+
+    const srcset = Object.entries( thumbnails ).map(([thumbnailKey, thumbnail]) => {
+        // console.log('thumbnail', thumbnail)
+        return `${thumbnail.url} ${thumbnail.width}w`
+    }).join(', ')
+
+
+    const src = thumbnails.default.url
+
+    return {
+        sizes,
+        srcset,
+        src
+    }
+}
+
 export default async function ( applist ) {
 
     // Fetch Commits
@@ -139,14 +163,15 @@ export default async function ( applist ) {
             lastUpdated,
             apps,
             slug,
-            channel:{
+            channel: {
                 name: fetchedVideos[videoId].rawData.snippet.channelTitle,
                 id: fetchedVideos[videoId].rawData.snippet.channelId
             },
             // Convert tags set into array
             tags: Array.from(tags),
             timestamps: fetchedVideos[videoId].timestamps,
-            thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
+            // thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
+            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails ),
             endpoint: getVideoEndpoint({
                 slug
             })

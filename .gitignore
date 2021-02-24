@@ -84,8 +84,7 @@ dist
 # Other
 /static/app-list.json
 /README-temp.md
-/static/game-list.json
-/static/homebrew-list.json
-/static/video-list.json
+/static/**/*.json
 /commits-data.json
 .DS_Store
+/static/tailwind.css
