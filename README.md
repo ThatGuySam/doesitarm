@@ -13,7 +13,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 ## Legend
 * ✅ Yes, Full Native Apple Silicon Support
-* ✳️ Yes, works via Rosetta 2
+* ✳️ Yes, works via Translation or Virtualization
 * ⏹ No, not working at all but support is in development
 * 🚫 No, not yet supported only works on Intel-based Macs
 * 🔶 Unknown, more info needed
@@ -151,6 +151,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [COMSOL Multiphysics](https://www.comsol.com/comsol-multiphysics) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://www.comsol.com/forum/thread/272202/new-apple-m1-machines-and-rosetta-2-intel-emulator?last=2021-02-04T17:09:35Z) [Report #2](https://www.reddit.com/r/mac/comments/kfp8tg/comsol_with_m1/glvd947?utm_source=share&utm_medium=web2x&context=3)
 * [GeoGebra Classic 5](https://www.geogebra.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/418#issue-760869359)
 * [GNU Octave](https://www.gnu.org/software/octave/index.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/574#issue-812510611)
+* [GraphPad Prism](https://www.graphpad.com/scientific-software/prism/) - ✅ Yes, Full Native Apple Silicon Support as of v9.0.1 - [Release Notes](https://www.graphpad.com/support/faq/prism-901-release-notes/) [Official Article](https://www.graphpad.com/support/faq/prism-mac-big-sur/)
 * [IBM SPSS](https://www.ibm.com/analytics/spss-statistics-software) - ✳️ Yes, works via Rosetta 2 - [Official Post](https://community.ibm.com/community/user/datascience/blogs/todd-peterson1/2020/11/20/spss-statistics-on-macos-big-sur-110)
 * [JMP](https://www.jmp.com/en_us/software/data-analysis-software.html) - ✳️ Yes, works via Rosetta 2 as of v15.2 - [Developer Report](https://community.jmp.com/t5/Discussions/jmp-combatiblity-on-the-apple-M1-mac-book-air/m-p/339577#M58780)
 * [LabVIEW](https://www.ni.com/en-us/shop/labview.html) - 🚫 No, not yet stable on under Rosetta 2 - [Official Apple Compatibility](https://www.ni.com/en-us/support/documentation/compatibility/18/labview-and-macos-compatibility.html) [Discussion](https://forums.ni.com/t5/LabVIEW/LabVIEW-on-Apple-Silicon-M1-and-beyond/td-p/4100430?profile.language=en)
@@ -211,6 +212,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Darkroom](https://darkroom.co/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1307)
 * [Darktable](https://www.darktable.org/install/#macos) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/328#issuecomment-736769770) [Discussion](https://discuss.pixls.us/t/the-future-of-darktable-on-the-mac-with-arm/21290)
 * [EXIF Sync](https://www.lemkesoft.de/en/products/exif-sync/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
+* [Figma](https://www.figma.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://www.reddit.com/r/FigmaDesign/comments/k58d5h/figma_client_for_apple_silicon/gje6y83/?utm_source=reddit&utm_medium=web2x&context=3) [Report #2](https://twitter.com/joeyabanks/status/1330929000701710345)
 * [FontBook](https://www.lemkesoft.de/en/products/fontbook/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Gimp](https://www.gimp.org/downloads/) - ✳️ Yes, works via Rosetta 2 but with noticeable performance dip - [Verification](https://github.com/ThatGuySam/doesitarm/issues/304#issuecomment-748297707)
 * [GraphicConverter](https://www.lemkesoft.de/en/products/graphicconverter/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/483#issuecomment-752342847)
@@ -278,6 +280,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PrusaSlicer](https://www.prusa3d.com/prusaslicer/) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/379#issue-755576203)
 * [Shaper3D](https://www.shapr3d.com/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=2211)
 * [SketchUp](https://www.sketchup.com/) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://forums.sketchup.com/t/the-new-m1-processor/141946)
+* [SOLIDWORKS](https://www.solidworks.com/sw/support/downloads.htm) - ✳️ Yes, works via Parallels Virtualization - [Working on Parallels](https://www.parallels.com/blogs/solidworks-for-mac/)
 * [Timebox 3D Collage Maker](https://timeboxapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.1 - [Release Notes](https://timeboxapp.com/whats-new-81)
 * [Ultimaker Cura](https://ultimaker.com/software/ultimaker-cura) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/424#issue-761853484)
 * [ZBrush](http://pixologic.com/zbrush/downloadcenter/#) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.pixologic.com/article/447-support-for-apple-silicon)
