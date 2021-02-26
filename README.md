@@ -528,7 +528,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 ## Youtube Apple Silicon Playlists
 * [Awais Mirza Video Tests](https://www.youtube.com/playlist?list=PLz5rnvLVJX5XF8cXAOQuarPIeP8Xr7b1_)
 * [Andrew Tsai Game Benchmarks](https://www.youtube.com/playlist?list=PLFbqxkNlqrHNK0i4WN99Jc8g-qSbKoZEy)
-* [Created Labs M1 Mackbook](https://www.youtube.com/playlist?list=PLcbQnQIwz6qSt-qsD3jCJaEw9fK8yXarA)
+* [Created Labs M1 MacBook](https://www.youtube.com/playlist?list=PLcbQnQIwz6qSt-qsD3jCJaEw9fK8yXarA)
 * [Tonyisgaming M1 Benchmarks](https://www.youtube.com/playlist?list=PLgz-h_Uy9AwOctqRcm6hEYEqTO9yIawoO)
 * [DevChannel M1 Videos](https://www.youtube.com/playlist?list=PLEi3_qsqIyclc-3NqbEYlIvXEdcLXy1qX)
 * [Ben G Kaiser - M1 for Creative Professionals](https://www.youtube.com/playlist?list=PL_9qmWdi19yCOCzAdTfFxpZtXonyfWTYJ)
