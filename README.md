@@ -75,6 +75,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [GoLand](https://www.jetbrains.com/go/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [Godot Engine](https://godotengine.org/) - ⏹ No official binaries yet, but can be compiled from source - [Master PR](https://github.com/godotengine/godot/pull/39788), [v3.2 PR](https://github.com/godotengine/godot/pull/39943)
 * [GNU Compiler Collection](https://gcc.gnu.org/) - ✳️ Yes, runs via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/105#issuecomment-732795155) [Bugzilla Issue](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96168)
+* [hadolint](https://github.com/hadolint/hadolint) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://github.com/Homebrew/brew/issues/10744#issuecomment-787498421)
 * [Haskell](https://www.haskell.org/platform/mac.html) - 🚫 Not yet supported only works on Intel-based Macs - [Gitlab Issue](https://gitlab.haskell.org/ghc/ghc/-/issues/18664)
 * [Hex Fiend](https://github.com/HexFiend/HexFiend/releases) - ✅ Yes, full native support as of v2.14.0 - [Source](https://github.com/ThatGuySam/doesitarm/issues/429)
 * [Homebrew](https://brew.sh/) - ✳️ Yes, fully supported as of v3.0.0 - [Release Notes](https://brew.sh/2021/02/05/homebrew-3.0.0/). 
@@ -183,6 +184,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Farrago](https://rogueamoeba.com/farrago/) - ✅ Yes, Initial Native Apple Silicon Support as of v1.6.0 - [Release Notes](https://rogueamoeba.com/farrago/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Fission](https://rogueamoeba.com/fission/) - ✅ Yes, Initial Native Apple Silicon Support as of v2.7.0 - [Release Notes](https://rogueamoeba.com/fission/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [FL Studio](https://www.image-line.com/fl-studio-download/) - ✳️ Yes, works via Rosetta 2 but may have performance issues - [Image Line Article](https://support.image-line.com/action/knowledgebase/?ans=668)
+* [foobar2000](https://www.foobar2000.org/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/586#issue-817790955) [Changelog](https://www.foobar2000.org/changelog-mac)
 * [forScore](https://forscore.co/) - ✅ Yes, Full Native Apple Silicon Support as of v12 - [Official News](https://forscore.co/forscore-comes-to-the-mac/)
 * [Fretello](https://apps.apple.com/us/app/fretello-guitar-lessons/id1107957482) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.3 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Garageband](https://www.apple.com/mac/garageband/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1033)
@@ -427,6 +429,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [VMWare Remote Console](https://apps.apple.com/app/vmware-remote-console/id1230249825) - ✅ Yes, Full Native Apple Silicon Support as of v12.0.0 - [Release Notes](https://docs.vmware.com/en/VMware-Remote-Console/12.0/rn/VMware-Remote-Console-120-Release-Notes.html)
 * [WPS Office](https://apps.apple.com/cn/app/wps-office/id1443749478?l=en&mt=12) - ✅ Yes, full native support as of v3.0.1 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/149)
 * [Yoink](https://eternalstorms.at/yoink/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.11 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
+* [Zettlr](https://www.zettlr.com/download) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/587#issue-817891514)
 
 
 
