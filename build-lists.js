@@ -9,7 +9,7 @@ import buildVideoList from './helpers/build-video-list.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
 import { categories, getAppCategory } from './helpers/categories.js'
-import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
+import { getAppType, getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
 // Setup dotenv
@@ -154,7 +154,7 @@ class BuildLists {
         console.log('Build Lists started')
 
 
-        for (const listOptions of this.listsOptions) {
+        for ( const listOptions of this.listsOptions ) {
 
             const methodName = `Building ${listOptions.name}`
             console.time(methodName)
@@ -162,9 +162,7 @@ class BuildLists {
             const builtList = await listOptions.buildMethod()
 
             // Run the build method to get the lists
-            this.lists[listOptions.name] = new Set([
-                ...builtList
-            ])
+            this.lists[listOptions.name] = new Set( builtList )
 
             console.timeEnd(methodName)
             console.log(`Finished ${listOptions.name} list with ${this.lists[listOptions.name].size} items`)
@@ -223,10 +221,9 @@ class BuildLists {
             this.lists[listKey].forEach( app => {
 
                 const isVideo = (app.category === undefined)
-                const isApp = (app.endpoint.includes('/app/'))
-                const isGame = (app.category === 'games')
+                const appType = getAppType( app )
 
-                if (isVideo) {
+                if ( isVideo ) {
                     // this.endpointSets.eleventy.add({
                     //     route: getVideoEndpoint(app),
                     //     // payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
@@ -240,18 +237,22 @@ class BuildLists {
                     return
                 }
 
+                // if ( isGame ) { console.log() }
+
                 // Add benchmark endpoints for apps and games
-                if ( isApp || isGame ) {
+                if ( appType === 'app' || appType === 'game' ) {
                     this.endpointSets.nuxt.add({
                         route: `${getAppEndpoint(app)}/benchmarks`,
                         payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
                     })
                 }
 
+                // Add app or game endpoint
                 this.endpointSets.nuxt.add({
                     route: getAppEndpoint(app),
                     payload: { app }
                 })
+                // console.log('Added to nuxt endpoints', getAppEndpoint(app))
 
                 return
             })
