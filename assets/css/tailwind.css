@@ -142,3 +142,21 @@ html {
 .hover\:bg-blur:hover {
     backdrop-filter: blur(15px);
 }
+
+.shimmer {
+    animation: placeHolderShimmer 1s infinite;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.07) 8%, rgba(0, 0, 0, 0.45) 18%, rgba(0, 0, 0, 0.07) 33%);
+    background-size: 200% 100px;
+    background-attachment: fixed;
+}
+
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
