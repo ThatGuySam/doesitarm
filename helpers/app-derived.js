@@ -1,6 +1,17 @@
 // App Data that is derived from other app data
 
+
+export function isVideo ( app ) {
+    return app.hasOwnProperty('thumbnail') && app.hasOwnProperty('timestamps')
+}
+
 export function getAppType ( app ) {
+
+    // Videos don't have a category
+    // so we check for videos here
+    if ( isVideo( app ) ) {
+        return 'video'
+    }
 
     if(app.category !== Object(app.category)) {
         console.warn('app has no categories', app)
