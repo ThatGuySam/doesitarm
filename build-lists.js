@@ -226,7 +226,7 @@ class BuildLists {
                 if ( isVideo ) {
                     // this.endpointSets.eleventy.add({
                     //     route: getVideoEndpoint(app),
-                    //     // payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
+                    //     payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
                     // })
 
                     this.endpointSets.nuxt.add({
