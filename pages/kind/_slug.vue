@@ -85,7 +85,7 @@ export default {
                     text: app.text,
                     lastUpdated: app.lastUpdated,
                     category: app.category,
-                    searchLinks: makeAppSearchLinks( app, videoList )
+                    searchLinks: makeAppSearchLinks( app, (new Set(videoList)) )
                 }
             })
         }

@@ -87,7 +87,7 @@ export default {
 
         allVideoAppsList.forEach( app => {
             // Make the search links
-            const searchLinks = makeAppSearchLinks( app, videoList )
+            const searchLinks = makeAppSearchLinks( app, (new Set(videoList)) )
 
             // If there are more than zero
             // add them to our list
