@@ -149,7 +149,7 @@ export default {
     ** Build configuration
     */
     build: {
-        parallel: true,
+        // parallel: true,
         // hardSource: true,
         cache: true,
         html: {
