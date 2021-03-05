@@ -2,12 +2,9 @@
 import slugify from 'slugify'
 import axios from 'axios'
 
+import { matchesWholeWord } from './matching.js'
 import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
-
-export function matchesWholeWord (needle, haystack) {
-    return new RegExp('\\b' + needle + '\\b').test(haystack)
-}
 import parseDate from './parse-date'
 
 const videoFeaturesApp = function (app, video) {
