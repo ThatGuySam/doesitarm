@@ -52,10 +52,17 @@ export default {
         const { allList } = await import('~/helpers/get-list.js')
         const { categories } = await import('~/helpers/categories.js')
 
-        const categoryList = {}
+        // Map Categories into category list
+        const categoryList = Object.fromEntries(Object.entries(categories).map( ( entry ) => {
+            entry[1].appNamesList = []
+            return entry
+        } ))
+
+        // Delete no-category
+        delete categoryList['no-category']
 
         allList.forEach( app => {
-            // Find and store all categorys
+            // Find and store all categories
 
             // console.log('app.category.slug', app.category.slug)
 
