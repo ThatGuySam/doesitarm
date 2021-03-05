@@ -164,7 +164,7 @@ export default async function () {
                         slug: appSlug
                     }),
                     category: {
-                        slug: 'no-category'
+                        slug: 'uncategorized'
                     },
                     relatedLinks
                 })

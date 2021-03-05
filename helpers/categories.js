@@ -122,6 +122,16 @@ export const categories = {
         slug: 'homebrew',
         icon: '🍺'
     },
+
+
+    // Uncategorized
+    'uncategorized': {
+        id: 1000,
+        ...categoryTemplate,
+        label: 'Uncategorized',
+        pluralLabel: 'Uncategorized Software',
+        slug: 'uncategorized',
+    },
 }
 
 
