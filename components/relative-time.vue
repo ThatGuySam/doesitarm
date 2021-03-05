@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import parseGithubDate from '~/helpers/parse-github-date'
+import parseDate from '~/helpers/parse-date'
 
 export default {
     props: {
@@ -16,7 +16,7 @@ export default {
     },
     computed: {
         relativeTime () {
-            return parseGithubDate(this.timestamp).relative
+            return parseDate(this.timestamp).relative
         }
     }
 }

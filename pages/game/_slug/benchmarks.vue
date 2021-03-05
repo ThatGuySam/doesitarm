@@ -165,7 +165,7 @@ export default {
 
         })
 
-        console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
+        // console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
 
     },
     mounted () {

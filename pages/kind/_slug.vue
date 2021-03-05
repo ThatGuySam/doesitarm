@@ -44,6 +44,13 @@
                     >
                         Request an App with Twitter
                     </LinkButton>
+
+                    <LinkButton
+                        :href="`/apple-silicon-app-test/`"
+                        class="text-xs"
+                    >
+                        Scan Your Own App
+                    </LinkButton>
                 </template>
             </div>
 

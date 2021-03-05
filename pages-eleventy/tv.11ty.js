@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import config from '../nuxt.config'
 
 import VideoRow from '../components-eleventy/video/row.js'
+import { isVideo } from '../helpers/app-derived'
 
 // Setup dotenv
 dotenv.config()
@@ -29,29 +30,34 @@ class TV {
             layout: 'default.11ty.js',
 
             pagination: {
-                data: 'video-list',
+                data: 'eleventy-endpoints',
                 size: 1,
-                alias: 'video'
+                alias: 'payload',
+                before: function( data ) {
+                    return data.filter( entry => {
+                        return entry.payload.hasOwnProperty('video') && isVideo( entry.payload.video )
+                    })
+                }
             },
 
             eleventyComputed: {
-                title: ({ video }) => {
+                title: ({ payload: { video } }) => {
                     // console.log('data', data)
                     return makeTitle( video )
                 },
-                description: ({ video }) => {
+                description: ({ payload: { video } }) => {
                     return makeDescription( video )
                 },
             },
 
-            permalink: ({ video }) => {
+            permalink: ({ payload: { video } }) => {
                 // console.log('data', data)
                 return `tv/${ video.slug }/`
             }
         }
     }
 
-    render({ video }) {
+    render({ payload: { video } }) {
 
         // console.log('video.payload', Object.keys(video.payload))
 

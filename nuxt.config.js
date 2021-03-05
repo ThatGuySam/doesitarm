@@ -7,7 +7,8 @@ export default {
     target: 'static',
 
     publicRuntimeConfig: {
-        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE
+        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
+        testResultStore: process.env.TEST_RESULT_STORE
     },
 
     /*
@@ -126,7 +127,18 @@ export default {
     ],
 
     sitemap: {
-        hostname: 'https://doesitarm.com'
+        hostname: 'https://doesitarm.com',
+        routes: async () => {
+            // Get routes from previous build
+            const sitemapEndpoints = await fs.readFile('./static/sitemap-endpoints.json', 'utf-8')
+                .then( endpointsJson => {
+                    return JSON.parse(endpointsJson)
+                })
+
+            console.log('Total Sitemap Endpoints', sitemapEndpoints.length)
+
+            return sitemapEndpoints.map( endpoint => endpoint.route )
+        }
     },
 
     buildModules: [
@@ -137,7 +149,7 @@ export default {
     ** Build configuration
     */
     build: {
-        parallel: true,
+        // parallel: true,
         // hardSource: true,
         cache: true,
         html: {
@@ -151,8 +163,19 @@ export default {
         ** You can extend webpack config here
         */
         extend(config, ctx) {
+
+            // Client
+            if (ctx.isClient) {
+                // Push meta import rule for zip.js
+                config.module.rules.push({
+                    test: /\.js$/,
+                    loader: require.resolve('@open-wc/webpack-import-meta-loader')
+                })
+            }
+
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
+
                 config.module.rules.push({
                     enforce: 'pre',
                     test: /\.(js|vue)$/,

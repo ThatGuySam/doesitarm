@@ -23,6 +23,8 @@
     "@11ty/eleventy-assets": "^1.0.5",
     "@fontsource/inter": "^4.0.1",
     "@nuxtjs/sitemap": "^2.4.0",
+    "@open-wc/webpack-import-meta-loader": "^0.4.7",
+    "@zip.js/zip.js": "^2.2.6",
     "axios": "^0.21.0",
     "cross-env": "^5.2.0",
     "lazysizes": "^5.3.0-beta1",
@@ -30,8 +32,11 @@
     "marked": "^1.2.7",
     "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
+    "plist": "^3.0.1",
+    "pretty-bytes": "^5.5.0",
     "scroll-into-view-if-needed": "^2.2.26",
-    "slugify": "^1.4.6"
+    "slugify": "^1.4.6",
+    "vue-full-screen-file-drop": "^2.0.0"
   },
   "devDependencies": {
     "@11ty/eleventy": "^0.11.1",

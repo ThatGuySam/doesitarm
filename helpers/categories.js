@@ -13,7 +13,8 @@ export const categoryTemplate = {
 export const categories = {
 
     'no-category': {
-        id: 0
+        id: 0,
+        label: ''
     },
 
     // App lists
@@ -120,6 +121,16 @@ export const categories = {
         itemSuffixLabel: 'via Homebrew',
         slug: 'homebrew',
         icon: '🍺'
+    },
+
+
+    // Uncategorized
+    'uncategorized': {
+        id: 1000,
+        ...categoryTemplate,
+        label: 'Uncategorized',
+        pluralLabel: 'Uncategorized Software',
+        slug: 'uncategorized',
     },
 }
 

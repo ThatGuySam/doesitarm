@@ -9,7 +9,7 @@ import buildVideoList from './helpers/build-video-list.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
 import { categories, getAppCategory } from './helpers/categories.js'
-import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
+import { getAppType, getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
 // Setup dotenv
@@ -23,11 +23,13 @@ class BuildLists {
         // Where our lists are stored
         this.lists = {}
 
-        // Where Nuxt Routes and Payloads get stored
-        this.nuxtEndpointsSet = new Set()
+        this.endpointSets = {
+            // Where Nuxt Routes and Payloads get stored
+            nuxt: new Set(),
 
-        // Where Eleventy Enpoints get stored
-        this.eleventyEndpointsSet = new Set()
+            // Where Eleventy Endpoints get stored
+            eleventy: new Set()
+        }
 
         this.allVideoAppsList = new Set()
     }
@@ -152,7 +154,7 @@ class BuildLists {
         console.log('Build Lists started')
 
 
-        for (const listOptions of this.listsOptions) {
+        for ( const listOptions of this.listsOptions ) {
 
             const methodName = `Building ${listOptions.name}`
             console.time(methodName)
@@ -160,9 +162,7 @@ class BuildLists {
             const builtList = await listOptions.buildMethod()
 
             // Run the build method to get the lists
-            this.lists[listOptions.name] = new Set([
-                ...builtList
-            ])
+            this.lists[listOptions.name] = new Set( builtList )
 
             console.timeEnd(methodName)
             console.log(`Finished ${listOptions.name} list with ${this.lists[listOptions.name].size} items`)
@@ -221,30 +221,43 @@ class BuildLists {
             this.lists[listKey].forEach( app => {
 
                 const isVideo = (app.category === undefined)
-                const isApp = (app.endpoint.includes('/app/'))
-                const isGame = (app.category === 'games')
+                const appType = getAppType( app )
 
-                if (isVideo) {
-                    this.eleventyEndpointsSet.add({
+                if ( isVideo ) {
+                    // this.endpointSets.eleventy.add({
+                    //     route: getVideoEndpoint(app),
+                    //     payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
+                    // })
+
+                    this.endpointSets.nuxt.add({
                         route: getVideoEndpoint(app),
-                        // payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
+                        payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
                     })
 
                     return
                 }
 
+                // if ( isGame ) { console.log() }
+
                 // Add benchmark endpoints for apps and games
-                if ( isApp || isGame ) {
-                    this.nuxtEndpointsSet.add({
-                        route: `${getAppEndpoint(app)}/benchmarks`,
-                        payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
-                    })
+                if ( appType === 'app' || appType === 'game' ) {
+                    const payload = buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
+
+                    // Only add a benchmarks endpoint if it has any videos
+                    if ( payload.allVideos.length > 0 ) {
+                        this.endpointSets.nuxt.add({
+                            route: `${getAppEndpoint(app)}/benchmarks`,
+                            payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
+                        })
+                    }
                 }
 
-                this.nuxtEndpointsSet.add({
+                // Add app or game endpoint
+                this.endpointSets.nuxt.add({
                     route: getAppEndpoint(app),
                     payload: { app }
                 })
+                // console.log('Added to nuxt endpoints', getAppEndpoint(app))
 
                 return
             })
@@ -253,7 +266,7 @@ class BuildLists {
 
 
         Object.keys(categories).forEach( slug => {
-            this.nuxtEndpointsSet.add({
+            this.endpointSets.nuxt.add({
                 route: '/kind/' + slug,
                 // payload: appList
             })
@@ -261,10 +274,20 @@ class BuildLists {
 
 
         // Save Nuxt Endpoints
-        await this.saveToJson(Array.from(this.nuxtEndpointsSet), './static/nuxt-endpoints.json')
+        // await this.saveToJson(Array.from(this.endpointSets.nuxt), './static/nuxt-endpoints.json')
 
-        // Save Eleventy Endpoints
-        await this.saveToJson(Array.from(this.eleventyEndpointsSet), './static/eleventy-endpoints.json')
+        // // Save Eleventy Endpoints
+        // await this.saveToJson(Array.from(this.endpointSets.eleventy), './static/eleventy-endpoints.json')
+
+        for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointSets) ) {
+            // Save Endpoints
+            await this.saveToJson(Array.from( endpointSet ), `./static/${endpointSetName}-endpoints.json`)
+        }
+
+        // Save sitemap endpoints
+        await this.saveToJson(Object.values(this.endpointSets).map( endpointSet => {
+            return Array.from( endpointSet )
+        } ).flat(1), './static/sitemap-endpoints.json')
 
         return
     }
