@@ -5,7 +5,7 @@ import slugify from 'slugify'
 import axios from 'axios'
 
 import statuses from './statuses'
-import parseGithubDate from './parse-github-date'
+import parseDate from './parse-date'
 import { getAppEndpoint } from './app-derived'
 
 
@@ -192,7 +192,7 @@ export default async function () {
 
             const lastUpdated = (lastUpdatedRaw) ? {
                 raw: lastUpdatedRaw,
-                timestamp: parseGithubDate(lastUpdatedRaw).timestamp,
+                timestamp: parseDate(lastUpdatedRaw).timestamp,
             } : null
 
 

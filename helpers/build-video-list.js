@@ -4,11 +4,11 @@ import axios from 'axios'
 
 import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
-import parseGithubDate from './parse-github-date'
 
 export function matchesWholeWord (needle, haystack) {
     return new RegExp('\\b' + needle + '\\b').test(haystack)
 }
+import parseDate from './parse-date'
 
 const videoFeaturesApp = function (app, video) {
     const appFuzzyName = app.name.toLowerCase()
@@ -152,7 +152,7 @@ export default async function ( applist ) {
 
         const lastUpdated = {
             raw: fetchedVideos[videoId].rawData.snippet.publishedAt,
-            timestamp: parseGithubDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
+            timestamp: parseDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
         }
 
         // console.log('fetchedVideos[videoId].thumbnails', fetchedVideos[videoId].thumbnails)

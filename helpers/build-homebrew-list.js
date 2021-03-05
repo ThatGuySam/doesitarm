@@ -5,7 +5,7 @@
 import axios from 'axios'
 
 // import statuses from './statuses'
-// import parseGithubDate from './parse-github-date'
+// import parseDate from './parse-github-date'
 
 const marked = require('marked')
 const HTMLParser = require(`node-html-parser`)
