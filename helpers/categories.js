@@ -13,7 +13,8 @@ export const categoryTemplate = {
 export const categories = {
 
     'no-category': {
-        id: 0
+        id: 0,
+        label: ''
     },
 
     // App lists
