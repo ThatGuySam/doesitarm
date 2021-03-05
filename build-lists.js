@@ -252,12 +252,20 @@ class BuildLists {
                     }
                 }
 
-                // Add app or game endpoint
-                this.endpointSets.nuxt.add({
-                    route: getAppEndpoint(app),
-                    payload: { app }
-                })
-                // console.log('Added to nuxt endpoints', getAppEndpoint(app))
+                // Add standard app endpoint
+                if ( appType === 'formula' ) {
+                    this.endpointSets.eleventy.add({
+                        route: getAppEndpoint(app),
+                        payload: { app }
+                    })
+                } else {
+                    // Add app or game endpoint
+                    this.endpointSets.nuxt.add({
+                        route: getAppEndpoint(app),
+                        payload: { app }
+                    })
+                    // console.log('Added to nuxt endpoints', getAppEndpoint(app))
+                }
 
                 return
             })
