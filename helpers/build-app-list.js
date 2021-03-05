@@ -148,6 +148,12 @@ export default async function () {
                     })
                 }
 
+                // Add 🧪 Apple Silicon App Tested link
+                relatedLinks.push({
+                    label: '🧪 Apple Silicon App Tested',
+                    href: 'https://doesitarm.com/apple-silicon-app-test/',
+                })
+
                 // Add to scanned app list
                 scanListMap.set( appSlug, {
                     name: appName,
