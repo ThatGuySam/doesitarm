@@ -4,13 +4,19 @@ import MarkdownIt from 'markdown-it'
 import slugify from 'slugify'
 import axios from 'axios'
 
-import statuses from './statuses'
+import statuses, { getStatusName } from './statuses'
 import parseDate from './parse-date'
+import { eitherMatches } from './matching.js'
 import { getAppEndpoint } from './app-derived'
 
 
 const md = new MarkdownIt()
 
+
+const makeSlug = name => slugify(name, {
+    lower: true,
+    strict: true
+})
 
 
 const getTokenLinks = function ( childTokens ) {
@@ -108,6 +114,70 @@ export default async function () {
     // await fs.writeFile('./commits-data.json', JSON.stringify(commits))
 
 
+    const scanListMap = new Map()
+
+    // Store app scans
+    await axios
+        .get(process.env.SCANS_SOURCE)
+        .then(function (response) {
+
+            response.data.appList.forEach( appScan => {
+
+                const appName = appScan.aliases[0]
+
+                // 'native' or 'unreported'
+                const statusName = getStatusName( appScan['Result'] )
+
+                const statusText = (statusName === 'native') ? `✅ Yes, Full Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
+
+                const appSlug = makeSlug( appName )
+
+                // Skip empty slugs
+                if (appSlug.trim().length === 0) {
+                    console.log('Empty slug', appScan)
+                    return
+                }
+
+                const relatedLinks = []
+
+                // If downloadUrl is not empty then add it as the download link
+                if ( appScan['downloadUrl'] !== null ) {
+                    relatedLinks.push({
+                        href: appScan['downloadUrl'],
+                        label: 'View',
+                    })
+                }
+
+                // Add to scanned app list
+                scanListMap.set( appSlug, {
+                    name: appName,
+                    aliases: appScan['aliases'],
+                    status: statusName,
+                    lastUpdated: parseDate( appScan['Date'] ),
+                    // url,
+                    text: statusText,
+                    slug: appSlug,
+                    endpoint: getAppEndpoint({
+                        category: {
+                            slug: null
+                        },
+                        slug: appSlug
+                    }),
+                    category: {
+                        slug: 'no-category'
+                    },
+                    relatedLinks
+                })
+            })
+
+            return
+        })
+        .catch(function (error) {
+            // handle error
+            console.warn(error)
+        })
+
+
     // Parse markdown
     const result = md.parse(readmeContent)
 
@@ -143,8 +213,6 @@ export default async function () {
         // On heading close switch off heading mode
         if (token.type.includes('paragraph_')) isParagraph = !isParagraph
 
-
-
         if (isHeading && token.type === 'inline') {
             categoryTitle = token.content
             categorySlug = slugify(token.content, {
@@ -157,16 +225,27 @@ export default async function () {
 
 
         if ( isParagraph && token.type === 'inline' && token.content.includes(' - ') ) {
-            const [ link, text ] = token.content.split(' - ').map(string => string.trim())
 
-            const relatedLinks = getTokenLinks(token.children)
+            const [ link, text ] = token.content.split(' - ').map(string => string.trim())
 
             const [ name, url ] = link.substring(1, link.length-1).split('](')
 
-            const appSlug = slugify(name, {
-                lower: true,
-                strict: true
+            // Search for this app in the scanList and remove duplicates
+            scanListMap.forEach( ( scannedApp, key ) => {
+
+                for ( const alias of scannedApp.aliases) {
+                    // console.log( key, alias, name, eitherMatches(alias, name) )
+
+                    if ( eitherMatches(alias, name) ) {
+                        console.log(`Removing ${alias} from scanned apps`)
+                        scanListMap.delete( key )
+                    }
+                }
             })
+
+            const relatedLinks = getTokenLinks(token.children)
+
+            const appSlug = makeSlug( name )
 
             const endpoint = getAppEndpoint({
                 category: {
@@ -219,7 +298,10 @@ export default async function () {
     // console.log('appList', appList)
 
 
-    return appList
+    return [
+        ...appList,
+        ...Array.from( scanListMap, ([name, value]) => value )
+    ]
 
     // fs.readFile('../README.md', 'utf8')
     //     .then((err, data) => {
