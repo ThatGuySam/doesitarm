@@ -1,10 +1,6 @@
 // import { allVideoAppsListSet } from '~/helpers/get-list.js'
 // import videoList from '~/static/video-list.json'
 
-export function matchesWholeWord (needle, haystack) {
-    return new RegExp('\\b' + needle + '\\b').test(haystack)
-}
-
 export function appsRelatedToVideo ( video, allVideoAppsListSet ) {
     // console.log('allVideoAppsListSet', allVideoAppsListSet.length)
 

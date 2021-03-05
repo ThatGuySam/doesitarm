@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import parseGithubDate from '~/helpers/parse-github-date'
+import parseDate from '~/helpers/parse-date'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
 import LinkButton from '~/components/link-button.vue'

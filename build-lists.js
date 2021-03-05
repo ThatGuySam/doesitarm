@@ -241,10 +241,15 @@ class BuildLists {
 
                 // Add benchmark endpoints for apps and games
                 if ( appType === 'app' || appType === 'game' ) {
-                    this.endpointSets.nuxt.add({
-                        route: `${getAppEndpoint(app)}/benchmarks`,
-                        payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
-                    })
+                    const payload = buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
+
+                    // Only add a benchmarks endpoint if it has any videos
+                    if ( payload.allVideos.length > 0 ) {
+                        this.endpointSets.nuxt.add({
+                            route: `${getAppEndpoint(app)}/benchmarks`,
+                            payload: buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
+                        })
+                    }
                 }
 
                 // Add app or game endpoint
