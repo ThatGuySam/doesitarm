@@ -4,6 +4,8 @@ import config from '../nuxt.config.js'
 
 import { getAppType } from '../helpers/app-derived.js'
 
+import VideoRow from '../components-eleventy/video/row.js'
+
 // import VideoRow from '../components-eleventy/video/row.js'
 // import { isVideo } from '../helpers/app-derived'
 
@@ -108,7 +110,7 @@ class AppTemplate {
                     </div>
                     <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                     <a
-                        href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+${ app.name }`"
+                        href="https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+${ app.name }"
                         target="_blank"
                         class="underline"
                         rel="noopener"
