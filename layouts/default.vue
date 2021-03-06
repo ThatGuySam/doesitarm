@@ -25,6 +25,9 @@
                     </div>
                 </div>
                 <p class="mt-8 text-center text-base leading-6 text-gray-400">
+                    This site is supported by Affiliate links
+                </p>
+                <p class="mt-8 text-center text-base leading-6 text-gray-400">
                     &copy; {{ currentYear }} Does it ARM All rights reserved.
                 </p>
             </div>

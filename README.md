@@ -42,7 +42,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Apache Maven](https://maven.apache.org/download.cgi) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/215#issuecomment-742910724)
 * [App Preview Video Converter](https://apps.apple.com/us/app/app-preview-video-converter/id1137451860) - ✅ Yes, full native support as of v1.7.4 - [Release Notes](https://www.bridgetech.io)
 * [Arduino IDE](https://www.arduino.cc/en/software) - ✳️ Reported working via Rosetta with native support currently in development - [Issue](https://github.com/arduino/Arduino/issues/10836)
-* [Asset Catalog Creator](https://apps.apple.com/us/app/asset-catalog-creator-pro/id809625456) - ✅ Yes, full native support as of v3.7.4 - [Release Notes](https://www.bridgetech.io)
+* [Asset Catalog Creator](https://apps.apple.com/us/app/asset-catalog-creator-pro/id809625456) - ✅ Yes, full native support as of v3.7.4 - [Release Notes](https://www.bridgetech.io) [View on Setapp](https://setapp.sjv.io/c/2708043/905851/5114)
 * [Atom](https://atom.io/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/307#issue-748524692) [Github Issue](https://github.com/atom/atom/issues/21078). 
 * [Attributed String Creator](https://apps.apple.com/us/app/attributed-string-creator-pro/id730928349) - ✅ Yes, full native support as of v1.9.6 - [Release Notes](https://www.bridgetech.io)
 * [BBEdit](https://www.barebones.com/products/bbedit/download.html) - ✅ Yes, full native support as of v13.5 - [Release Notes](https://www.barebones.com/support/bbedit/notes-13.5.html)
@@ -106,7 +106,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [OpenJDK](https://openjdk.java.net/install/) - ✅ Yes, Full Native Apple Silicon Support via Azul Zulu
 Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1469348209) [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
 * [Parallels Desktop](https://www.parallels.com/) - ⏹ Not entirely working yet, but running ARM guests (such as Windows 10 on ARM) is possible with the preview version - [Blog Post](https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/) [Beta Download](https://my.parallels.com/desktop/beta) [MacRumors Discussion](https://forums.macrumors.com/threads/parallels-tech-preview-for-m1.2275996/unread)
-* [Paw](https://paw.cloud/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.1 - [Release Notes](https://paw.cloud/updates/3.2.1)
+* [Paw](https://paw.cloud/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.1 - [Release Notes](https://paw.cloud/updates/3.2.1) [View on Setapp](https://setapp.sjv.io/c/2708043/385092/5114)
 * [Pelemay](https://github.com/zeam-vm/pelemay/releases) - ✅ Yes, Full Native Apple Silicon Support as of v0.0.14 - [Release Notes](https://github.com/zeam-vm/pelemay/releases/tag/0.0.14)
 * [PhpStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✅ Yes, full native Apple Silicon support as of v2020.3.1
 * [Postman](https://www.postman.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/160#issuecomment-736772593)
@@ -126,7 +126,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [SubEthaEdit](https://subethaedit.net/) - ✅ Yes, full native Apple Silicon Support as of v5.1.5 - [Release Notes](https://github.com/subethaedit/SubEthaEdit/releases/tag/SubEthaEdit-MacFull-5.1.5)
 * [Sublime Text](https://www.sublimetext.com/) - ✳️ Yes, works via Rosetta 2 - [Forum Discussion](https://forum.sublimetext.com/t/arm-build/5882/97)
 * [Surge](https://nssurge.com/) - ✅ Yes, full native Apple Silicon Support as of v4.0.0 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/157)
-* [TablePlus](https://tableplus.com/)  - ✅ Yes, Full Native Apple Silicon Support as of Build 352 - [Release Notes](https://twitter.com/TablePlus/status/1327650704295489536)
+* [TablePlus](https://tableplus.com/)  - ✅ Yes, Full Native Apple Silicon Support as of Build 352 - [Release Notes](https://twitter.com/TablePlus/status/1327650704295489536) [View on Setapp](https://setapp.sjv.io/c/2708043/455094/5114)
 * [TensorFlow](https://www.tensorflow.org/) - ⏹ Not yet, but a supported pre-release is available - [Pre-Release](https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html)
 * [Textmate](https://macromates.com/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/585#issue-817594010)
 * [Termius](https://termius.com/)  - ✅ Yes, Full Native Apple Silicon Support as of v7.4.1 - [Release Notes](https://docs.termius.com/changelog/desktop)
@@ -138,7 +138,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) - 🚫 No, not yet supported only works on Intel-based Macs - [Discussion](https://forums.virtualbox.org/viewtopic.php?f=8&t=98742)
 * [Visual Studio for Mac](https://visualstudio.microsoft.com/vs/mac/) - ✳️ Yes, works via Rosetta 2 but debugging is not supported - [Verification](https://github.com/ThatGuySam/doesitarm/issues/401#issuecomment-748295469)
 * [VisualDiffer](https://apps.apple.com/us/app/visualdiffer/id412386481?ls=1&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.8.0 - [Mantis issue](https://visualdiffer.com/mantis/view.php?id=334)
-* [VS Code](https://code.visualstudio.com/) - ✳️ Yes, works via Rosetta 2 (Native for insiders v1.53) - [Native Progress](https://code.visualstudio.com/updates/v1_53#_apple-silicon-insiders)
+* [VS Code](https://code.visualstudio.com/) - ✅ Yes, Full Native Apple Silicon Support as of v1.54 - [Release Notes](https://code.visualstudio.com/updates/v1_54)
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
@@ -212,6 +212,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Affinity Publisher](https://affinity.serif.com/en-us/publisher/) - ✅ Yes, fully supported as of v1.8.6 - [Press Release](https://affinity.serif.com/en-us/press/newsroom/affinity-apps-accelerate-with-macos-big-sur-and-native-m1-support/) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1286)
 * [ArmorPaint](https://armorpaint.org/) - 🚫 No, not yet supported only works on Intel-based Macs
 * [BiggerPicture](https://apps.apple.com/app/bigger-picture/id1406088493?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.0 - [Release Notes](https://basilsalad.com/kitchen/bigger-picture-big-sur/)
+* [Blocs](https://blocsapp.com/) -  ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [BrandBook](https://lighthouse16.com/brandbook/) - ✅ Yes, fully supported as of v1.1.2 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Capture One](https://www.captureone.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/pull/130#issuecomment-736183868) [Capture One Twitter](https://twitter.com/captureonepro/status/1326570278462349312)
 * [Darkroom](https://darkroom.co/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1307)
@@ -309,18 +310,19 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Backblaze](https://www.backblaze.com/) - ✳️ Yes, works via Rosetta 2 - [Verification #1](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-744336558) [Verification #2](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-777878266)
 * [Bandizip](https://en.bandisoft.com/bandizip.mac/) - ✅ Yes, Full Native Apple Silicon Support as of v7.03 - [Release Notes](https://en.bandisoft.com/bandizip.mac/history/)
 * [balenaEtcher](https://github.com/balena-io/etcher/releases) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/294#issuecomment-737011519)
-* [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/)
+* [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/) [View on Setapp](https://setapp.sjv.io/c/2708043/443665/5114)
 * [Bear](https://bear.app/) - ✅ Yes, fully supported as v1.8.2 - [Bear Blog Post](https://blog.bear.app/2020/11/bear-gets-new-widgets-and-ready-for-big-sur/)
 * [BetterTouchTool](https://folivora.ai/) - ✅ Yes, fully supported as of v3.502 - [Issue Tracker](https://community.folivora.ai/)
 * [Blackmagic Disk Speed Test](https://apps.apple.com/app/id425264550) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/359#issuecomment-736255914)
 * [Box Drive](https://www.box.com/resources/downloads) - ⏹ Not yet, but it's currently in development. - [Official Post](https://support.box.com/hc/en-us/community/posts/360051323454-Box-Drive-s-system-extension-failed-to-load?page=1#community_comment_1500000009302)
 * [Brave Browser](https://brave.com/#mac-options) - ✅ Yes, Full Native Apple Silicon Support
+* [Burn for Mac](https://burn-osx.sourceforge.io/Pages/English/home.html) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.0 - [Release Notes](https://burn-osx.sourceforge.io/Pages/English/news.html)
 * [Calibre](https://calibre-ebook.com/download_osx) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/26#issuecomment-736778254)
 * [Call Recorder for Skype](https://www.ecamm.com/mac/callrecorder/) - 🚫 No, not supported and no plans for support - [Official Post](https://ecamm.com/blog/call-recorder-for-skype-update/)
 * [Camo Studio](https://reincubate.com/camo/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://reincubate.com/support/camo/release-notes/#1.1.3.122)
 * [Chrome](https://www.google.com/chrome/) - ✅ Yes, fully supported as of v87 - [Article](https://9to5google.com/2020/11/17/chrome-mac-apple-silicon/)
 * [Citrix Workspace](https://www.citrix.com/downloads/workspace-app/mac/workspace-app-for-mac-latest.html) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://discussions.citrix.com/topic/411196-will-citrix-viewer-run-on-new-apple-hardware-with-apple-silicon-m1/)
-* [CleanShot X](https://cleanshot.com) - ✅ Yes, fully supported as of v3.4.4 - [Changelog](https://cleanshot.com/changelog/)
+* [CleanShot X](https://cleanshot.com) - ✅ Yes, fully supported as of v3.4.4 - [Changelog](https://cleanshot.com/changelog/) [View on Setapp](https://setapp.sjv.io/c/2708043/569389/5114)
 * [coconutBattery](https://www.coconut-flavour.com/coconutbattery/) - ✅ Yes, full native support as of v3.9.2
 * [Coloban](https://www.coloban.com) - ⏹ Not yet, but it's currently in development. - [Coloban Forum Issue](https://forum.coloban.com/index.php?u=/topic/21/new-arm-based-apple-computers)
 * [CrossOver](https://www.codeweavers.com/) - ✳️ Runs via Rosetta 2 - [Official Blog](https://www.codeweavers.com/blog/jwhite/2020/11/10/its-great-to-live-in-interesting-times)
@@ -340,7 +342,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [GitHub Classroom Assistant](https://classroom.github.com/assistant) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/419#issue-760871225)
 * [Glimpses](https://eternalstorms.at/glimpses) - ✅ Yes, Full Native Apple Silicon Support as of v2.2.3 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Google Backup and Sync](https://www.google.com/drive/download/) - ✳️ Yes, works via Rosetta 2 as of v3.54 - [Release Notes](https://support.google.com/a/answer/7573023?hl=en) [Verification](https://github.com/ThatGuySam/doesitarm/issues/564#issue-807949490)
-* [Google Drive File Stream](https://support.google.com/drive/answer/7329379#zippy=%2Cdownload-install-drive-file-stream) - 🚫 No, not yet supported only works on Intel-based Macs - [Official Status](https://support.google.com/a/answer/7491144?utm_medium=et&utm_source=aboutdrive&utm_content=getstarted&utm_campaign=en_us&hl=en#:~:text=Drive%20File%20Stream%20does%20not%20yet%20support%20Apple%20M1%20devices)
+* [Google Drive for desktop](https://support.google.com/drive/answer/7329379#zippy=%2Cdownload-install-drive-file-stream) - 🚫 No, not yet but native support is in beta - [Official Status](https://support.google.com/a/answer/7491144?utm_medium=et&utm_source=aboutdrive&utm_content=getstarted&utm_campaign=en_us&hl=en#:~:text=Drive%20File%20Stream%20does%20not%20yet%20support%20Apple%20M1%20devices) [Apple Silicon Beta Info](https://support.google.com/a/answer/7577057?hl=en)
 * [GrandPerspective](https://apps.apple.com/app/grandperspective/id1111570163?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of 2.5.3 - [Release Notes](http://grandperspectiv.sourceforge.net/)
 * [HazeOver](https://hazeover.com/) - ✅ Yes, Full Native Apple Silicon Support as of 1.8.8 - [Official News](https://hazeover.com/news.html)
 * [Highland 2](https://quoteunquoteapps.com/highland-2/) - ✅ Yes, Full Native Apple Silicon Support as of v2.9 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
@@ -349,7 +351,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [IDrive](https://www.idrive.com/online-backup-download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/542#issue-797628007)
 * [iMazing 2](https://imazing.com/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Release notes](https://downloads.imazing.com/mac/iMazing/2.13.1.14452/release-notes.html)
 * [Internal Phone Numbers](https://lighthouse16.com/internal-phone-numbers/) - ✅ Yes, fully supported as of v1.2.2 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
-* [iStat Menus](https://bjango.com/mac/istatmenus/) - ✅ Yes, Full Native Apple Silicon Support as of v6.51 - [Official Twitter](https://twitter.com/bjango/status/1328863648270356482)
+* [iStat Menus](https://bjango.com/mac/istatmenus/) - ✅ Yes, Full Native Apple Silicon Support as of v6.51 - [Official Twitter](https://twitter.com/bjango/status/1328863648270356482) [View on Setapp](https://setapp.sjv.io/c/2708043/344394/5114)
+* [Jamf Self Service](https://docs.jamf.com/10.26.0/jamf-pro/administrator-guide/About_Jamf_Self_Service_for_macOS.html) -  ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keep It](http://reinventedsoftware.com/keepit/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9 - [Official News](http://reinventedsoftware.com/news/)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
@@ -371,6 +374,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Microsoft Word](https://apps.apple.com/cn/app/microsoft-word/id462054704?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [MindNode](https://mindnode.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Monero GUI Wallet](https://www.getmonero.org/downloads/) - ✳️ Yes, works via Rosetta 2 with a few minor bugs - [Source](https://github.com/ThatGuySam/doesitarm/issues/435)
+* [MoneyWiz](https://apps.apple.com/us/app/moneywiz-3-personal-finance/id1004710719) -  ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Moom](https://manytricks.com/moom/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.20 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Moon FM](https://apps.apple.com/us/app/moon-fm-premium-podcast-app/id1465712037?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v2.0.3
 * [Newton Mail](https://newtonhq.com/#app) - ✅ Yes, Full Native Apple Silicon Support
@@ -398,6 +402,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Remotix](https://remotix.com/downloads-mac/) - ✅ Yes, fully supported as of v6.3 - [Release Notes](https://downloads.remotix.com/remotix-mac/release-notes.html?v=6.3)
 * [Razer macOS](https://github.com/1kc/razer-macos/releases) - ✳️ Yes, runs via Rosetta 2
 * [Razer Synapse](https://www.razer.com/synapse-2) - 🚫 No, not yet supported only works on Intel-based Macs - [Working Alternative](https://github.com/1kc/razer-macos)
+* [Rectangle](https://rectangleapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [restic](https://restic.net/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/492#issuecomment-754580871)
 * [RingCentral](https://apps.apple.com/us/app/id715886894) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/251#issuecomment-736105390)
 * [Safari Web Browser](https://www.apple.com/safari/) - ✅ Yes, fully supported
@@ -419,6 +424,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
 * [TrashMe 3](https://www.jibapps.com/apps/trashme3/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 - [Source](https://twitter.com/jibapps/status/1332269102526832641)
+* [Trello](https://apps.apple.com/de/app/trello/id1278508951?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/581#issue-816735691)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Tuple](https://tuple.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/514#issuecomment-761276719)
 * [Ulysses](https://ulysses.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/120#issuecomment-750041670) [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/)
@@ -435,6 +441,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Entertainment and Media Apps
 
+* [2048 Game](https://apps.apple.com/us/app/2048-game/id871033113?mt=12) -  ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Dolphin](https://dolphin-emu.org/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/452)
 * [DOSBox](https://sourceforge.net/projects/dosbox/) - ✳️ Yes, it works via Rosetta 2 - [Project Ticket 149](https://sourceforge.net/p/dosbox/feature-requests/149/)
 * [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
@@ -449,6 +456,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PS Remote Play](https://remoteplay.dl.playstation.net/remoteplay/lang/en/ps5_mac.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/441#issuecomment-748282150)
 * [Remote Buddy](https://www.iospirit.com/products/remotebuddy/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/556#issue-802733637)
 * [RetroArch](https://www.retroarch.com/?page=platforms) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/348)
+* [Shaza‪m‬](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
 * [Spotify](https://www.spotify.com/us/download/mac/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/172)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
 * [Tidal](https://tidal.com/download) - ✳️ Yes, working via Rosetta 2 but with occasional force quits as of 2.23.0.488 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/314)
@@ -462,6 +470,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Social and Communication
 
+* [Aviary Twitter Client](https://apps.apple.com/us/app/aviary/id1522043420) -  ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/530#issue-790322821)
 * [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
 * [Mattermost](https://mattermost.com/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/245#issuecomment-735282100)
@@ -475,6 +484,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Skype for Business](https://www.microsoft.com/en-us/microsoft-365/skype-for-business/download-app) - ✳️ Yes, works via Rosetta 2 - [Video](https://doesitarm.com/tv/the-new-m1-macbook-running-microsoft-office-business-apps-teams-skype-excel-cpu-and-ram-usage-i-ibseaue3se8/)
 * [Slack](https://slack.com/) - ✅ Yes, Full Native Apple Silicon Support as of 4.13.0 - [Release Notes](https://slack.com/intl/en-au/release-notes/mac)
 * [Telegram](https://macos.telegram.org/) - ✅ Yes, Full Native Apple Silicon Support as of 7.2.4 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/52) [Changelog](https://macos.telegram.org/#v7-2-4-2020-11-29)
+* [Twitter](https://apps.apple.com/app/twitter/id1482454543?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/580#issue-816729668)
 * [WeChat](https://apps.apple.com/cn/app/wechat/id836500024?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/369)
 * [Welly BBS](https://wellybbs.com/) - ✅ Yes, Full Native Apple Silicon Support as of Version 2020.9 - [App Store](https://apps.apple.com/us/app/id1521402269)
 * [WhatsApp](https://www.whatsapp.com/download/) - ✳️ Yes, works via Rosetta 2 as of v2.2049.10 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/479)
