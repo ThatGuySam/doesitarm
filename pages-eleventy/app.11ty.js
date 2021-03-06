@@ -74,7 +74,7 @@ class AppTemplate {
         } ).join('')
 
         return /* html */`
-            <section class="container pb-16">
+            <section class="container py-32">
                 <div class="flex flex-col items-center text-center">
                     <h1 class="title text-sm md:text-2xl font-bold">
                         Does ${ app.name } work on Apple Silicon when installed?
