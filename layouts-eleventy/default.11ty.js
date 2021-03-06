@@ -1,4 +1,11 @@
+import fs from 'fs'
+import { JSDOM } from 'jsdom'
+
 import config from '../nuxt.config'
+
+
+console.log('Running Default Layout file')
+
 
 const year = new Date().getFullYear()
 
@@ -40,9 +47,29 @@ const mapLinkTag = ( tag ) => {
     ]
 }
 
+
+const getNuxtDefaultLayoutHtml = () => {
+    const fileContents = fs.readFileSync('./dist/layout-template/index.html', { encoding: "UTF-8" })
+
+    return fileContents
+}
+
+const parseDefaultLayoutDom = () => {
+    const html = getNuxtDefaultLayoutHtml()
+
+    // Build initial dom from the Layout
+    const dom = new JSDOM( html )
+
+    return dom
+}
+
+// Buld data that only needs to run once
 const defaultMeta = Object.fromEntries(config.head.meta.map( mapMetaTag ))
 
 const defaultLinkTags = Object.fromEntries(config.head.link.map( mapLinkTag ))
+
+// Generate manipulatable dom for page render
+const layout = parseDefaultLayoutDom()
 
 class DefaultLayout {
 
@@ -95,7 +122,11 @@ class DefaultLayout {
     }
 
 
-    render( data ) {
+    async render( data ) {
+
+        // return nuxtLayoutHtml
+
+        // console.log('Running DefaultLayout render')
 
         const {
             content,
@@ -103,97 +134,55 @@ class DefaultLayout {
             description = null
         } = data
 
+        // Get our jsdom document instance
+        const document = layout.window.document
+
         // Setup inline tailwind
-        this.usingComponent( 'static/tailwind.css' )
+        // this.usingComponent( 'static/tailwind.css' )
         // Setup inline tailwind
-        this.usingComponent( 'node_modules/@fontsource/inter/variable.css' )
+        // this.usingComponent( 'node_modules/@fontsource/inter/variable.css' )
 
-        return /* html */`
-            <!doctype html>
-            <html lang="${ this.getNuxt().head.htmlAttrs.lang }">
-                <head>
-                    <title>${ title || this.getNuxt().head.title }</title>
 
-                    ${ this.generateMetaTags( data ) }
 
-                    ${ this.generateLinkTags() }
+        // Strip out existing meta
+        Array.from(document.querySelectorAll('head > meta')).forEach( domNode => {
+            domNode.remove()
+        })
 
-                    <!-- {{ Script Preloads }} -->
+        // Strip out existing preloads
+        Array.from(document.querySelectorAll('link[rel="preload"]')).forEach( domNode => {
+            domNode.remove()
+        })
 
-                    <style>
-                        ${ this.getCss() }
-                    </style>
+        // Strip out existing scripts
+        Array.from(document.querySelectorAll('script[src*=".js"]')).forEach( domNode => {
+            domNode.remove()
+        })
 
-                    <!-- {{ External Styles }} -->
 
-                </head>
-                <body>
-                    <div id="__nuxt">
-                        <!---->
-                        <div id="__layout">
-                            <div class="app-wrapper text-gray-300 bg-gradient-to-bl from-dark to-darker bg-fixed">
-                                <nav class="fixed top-0 left-0 right-0 z-navbar">
-                                    <div class="max-w-7xl mx-auto px-4 lg:px-8">
-                                        <div class="flex justify-between h-16">
-                                            <div class="flex">
-                                                <div class="-ml-2 mr-2 flex items-center lg:hidden">
-                                                    <button aria-expanded="false" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out">
-                                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                                        </svg>
-                                                        <!---->
-                                                    </button>
-                                                </div>
-                                                <div class="flex-shrink-0 flex items-center text-4xl lg:text-5xl py-3">
-                                                    <div>🦾</div>
-                                                </div>
-                                                <div class="hidden lg:ml-6 lg:flex lg:items-center space-x-4"><a href="/" class="px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow">Home </a><a href="/categories" class="px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow">Categories </a><a href="/benchmarks" class="px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow">Benchmarks </a><a href="/kind/homebrew" class="px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow">Homebrew </a><a href="/games" class="px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow">Games</a></div>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0"><a href="https://www.producthunt.com/posts/does-it-arm-benchmarks?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-does-it-arm-benchmarks" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=279410&theme=light" alt="Does It ARM Benchmarks - Curated App Benchmark Videos for Apple Silicon and Apple M1 | Product Hunt" width="200" height="43" style="width: 200px; height: 43px;"></a></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="lg:hidden hidden">
-                                        <div class="px-2 pt-2 pb-3 lg:px-3"><a href="/" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-gray-700">Home </a><a href="/categories" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-gray-700">Categories </a><a href="/benchmarks" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-gray-700">Benchmarks </a><a href="/kind/homebrew" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-gray-700">Homebrew </a><a href="/games" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-gray-700">Games</a></div>
-                                        <hr>
-                                    </div>
-                                </nav>
-                                <div class="app-main min-h-screen flex items-center">
 
-                                    ${ content }
+        // Set page title
+        document.title = title || this.getNuxt().head.title
 
-                                </div>
-                                <footer>
-                                    <div class="max-w-screen-xl mx-auto py-12 px-4 overflow-hidden space-y-8 sm:px-6 lg:px-8">
-                                        <div class="mt-8 flex justify-center space-x-6">
-                                            <div class="flex flex-col items-center space-y-4">
-                                                <div>
-                                                    <div>
-                                                        <form class="all-updates-subscribe text-xs relative">
-                                                            <!---->
-                                                            <div class="mt-1 relative rounded-md shadow-sm">
-                                                                <!----> <input id="all-updates-subscribe-17332" placeholder="Send me regular app updates" aria-label="Send me regular app updates" name="all-updates-subscribe" type="email" required class="form-input block w-full rounded-md py-1 neumorphic-shadow bg-darker placeholder-white text-center border border-transparent px-3" style="width: 240px;">
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <!---->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p class="mt-8 text-center text-base leading-6 text-gray-400">© ${ year } ${ this.getNuxt().head.title } All rights reserved.</p>
-                                    </div>
-                                </footer>
-                            </div>
-                        </div>
-                    </div>
+        // Set link tags
+        document.querySelector('title').insertAdjacentHTML('afterend', this.generateLinkTags() )
 
-                    <script>
-                        ${ this.getJs() }
-                    </script>
-                </body>
-            </html>
-        `;
+        // Add meta tags after title node
+        document.querySelector('title').insertAdjacentHTML('afterend', this.generateMetaTags( data ) )
+
+        // Set page css
+        // document.querySelector('head').insertAdjacentHTML('beforeend', this.getCss() )
+
+        // Set page content
+        document.querySelector('.app-main').innerHTML = content
+
+        // Set js before end of body
+        document.querySelector('body').insertAdjacentHTML('beforeend', `<script>${ this.getJs() }</script>` )
+
+
+        // Return stringified html for page
+        return layout.serialize()
+
     }
 }
 
