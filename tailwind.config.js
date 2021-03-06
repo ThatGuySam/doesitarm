@@ -3,8 +3,10 @@ module.exports = {
         enabled: true,//process.env.NODE_ENV === 'production',
         content: [
             'components/**/*.vue',
+            'layouts-eleventy/**/*.js',
             'layouts/**/*.vue',
             'pages/**/*.vue',
+            'pages-eleventy/**/*.js',
             'plugins/**/*.js',
             'nuxt.config.js'
         ]
