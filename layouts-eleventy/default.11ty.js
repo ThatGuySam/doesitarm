@@ -176,6 +176,18 @@ class DefaultLayout {
         // Set page content
         document.querySelector('.app-main').innerHTML = content
 
+        // Convert subscribe to iframe embed
+        Array.from(document.querySelectorAll('form.all-updates-subscribe')).forEach( domNode => {
+            const subscribeEmbed = document.createElement('iframe')
+            subscribeEmbed.setAttribute('src', '/embed-subscribe')
+            // https://web.dev/iframe-lazy-loading/
+            subscribeEmbed.setAttribute('loading', 'lazy')
+            subscribeEmbed.style.width = '350px'
+            subscribeEmbed.style.height = '150px'
+
+            domNode.parentNode.replaceChild(subscribeEmbed, domNode)
+        })
+
         // Set js before end of body
         document.querySelector('body').insertAdjacentHTML('beforeend', `<script>${ this.getJs() }</script>` )
 
