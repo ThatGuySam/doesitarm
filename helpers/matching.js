@@ -5,7 +5,11 @@ export function matchesWholeWord (needle, haystack) {
 }
 
 
-export function eitherMatches (stringA, stringB) {
+export function eitherMatches (stringARaw, stringBRaw) {
+    // Make strings lowercase for more generous comparison
+    const stringA = stringARaw.toLowerCase()
+    const stringB = stringBRaw.toLowerCase()
+
     const stringALength = stringA.length
     const stringBLength = stringB.length
 
