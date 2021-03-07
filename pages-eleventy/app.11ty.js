@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import config from '../nuxt.config.js'
 
 import { getAppType } from '../helpers/app-derived.js'
+import { makeLastUpdatedFriendly } from '../helpers/parse-date'
+
 
 import VideoRow from '../components-eleventy/video/row.js'
 
@@ -31,6 +33,7 @@ export class AppTemplate {
                 data: 'eleventy-endpoints',
                 size: 1,
                 alias: 'app',
+
                 before: function( data ) {
                     return data.filter( entry => {
                         const appType = getAppType( entry.payload.app )
@@ -66,6 +69,8 @@ export class AppTemplate {
 
         // console.log('video.payload', Object.keys(video.payload))
 
+        const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
+
         const relatedLinksHtml = app.relatedLinks.map( (link, i) => {
             return /* html */`
                 <a
@@ -97,34 +102,37 @@ export class AppTemplate {
                     </div>
                 </div>
 
-                <div
-                    v-if="relatedVideos.length !== 0"
-                    class="related-videos w-full"
-                >
-                    <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                        Related Videos
-                    </h2>
+                ${ relatedVideos.length > 0 ? /* html */`
+                    <div
+                        v-if="relatedVideos.length !== 0"
+                        class="related-videos w-full"
+                    >
+                        <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                            Related Videos
+                        </h2>
 
-                    ${ this.boundComponent(VideoRow)( relatedVideos ) }
+                        ${ this.boundComponent(VideoRow)( relatedVideos ) }
 
-                </div>
-
-                <div class="report-links py-24 text-xs shadow-none">
-                    <div v-if="app.lastUpdated">
-                        <time
-                            datetime="${'app.lastUpdated.raw'}"
-                        >
-                            Last Updated {{ lastUpdatedFriendly }}
-                        </time>
                     </div>
+                ` : '' }
+
+                <div class="report-update text-xs text-center w-full shadow-none py-24">
+                    ${ lastUpdatedFriendly !== null ? /* html */`
+                        <div>
+                            <time
+                                datetime="${ app.lastUpdated.raw }"
+                            >
+                                Last Updated ${ lastUpdatedFriendly }
+                            </time>
+                        </div>
+                    ` : '' }
                     <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
                     <a
-                        href="https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+${ app.name }"
+                        href="https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${ app.name }"
                         target="_blank"
                         class="underline"
                         rel="noopener"
                     >Report Update</a>
-
                 </div>
 
             </section>
