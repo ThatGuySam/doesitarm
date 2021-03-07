@@ -48,6 +48,9 @@ export class AppTemplate {
                 description: ({ app: { payload: { app } }  }) => {
                     return makeDescription( app )
                 },
+                mainHeading: ({ app: { payload: { app } }  }) => {
+                    return `Does ${ app.name } work on Apple Silicon?`
+                },
             },
 
             permalink: ({ app }) => {
@@ -57,7 +60,9 @@ export class AppTemplate {
         }
     }
 
-    render({ app: { payload: { app, relatedVideos = [] } } }) {
+    render( data ) {
+
+        const { app: { payload: { app, relatedVideos = [] } } } = data
 
         // console.log('video.payload', Object.keys(video.payload))
 
@@ -77,7 +82,7 @@ export class AppTemplate {
             <section class="container py-32">
                 <div class="flex flex-col items-center text-center">
                     <h1 class="title text-sm md:text-2xl font-bold">
-                        Does ${ app.name } work on Apple Silicon?
+                        ${ data.mainHeading }
                     </h1>
                     <h2 class="subtitle text-2xl md:text-5xl font-bold py-6">
                         ${ app.text }
