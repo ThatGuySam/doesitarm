@@ -20,7 +20,7 @@ export const makeDescription = function ( app ) {
     return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors when installed via Homebrew. `
 }
 
-class AppTemplate {
+export class AppTemplate {
     // or `async data() {`
     // or `get data() {`
     data () {
