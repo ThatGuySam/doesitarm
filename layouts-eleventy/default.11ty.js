@@ -68,9 +68,6 @@ const defaultMeta = Object.fromEntries(config.head.meta.map( mapMetaTag ))
 
 const defaultLinkTags = Object.fromEntries(config.head.link.map( mapLinkTag ))
 
-// Generate manipulatable dom for page render
-const layout = parseDefaultLayoutDom()
-
 class DefaultLayout {
 
     generateMetaTags = function ( renderData ) {
@@ -133,6 +130,9 @@ class DefaultLayout {
             title = null,
             description = null
         } = data
+
+        // Generate manipulatable dom for page render
+        const layout = parseDefaultLayoutDom()
 
         // Get our jsdom document instance
         const document = layout.window.document
