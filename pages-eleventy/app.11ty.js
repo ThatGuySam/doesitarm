@@ -84,7 +84,7 @@ class AppTemplate {
                     </h2>
 
                     <div class="subscribe">
-                        <iframe src="/embed-subscribe" loading="lazy" style="width: 350px; height: 150px;" class="-my-10"></iframe>
+                        <iframe src="/embed-subscribe" loading="lazy" style="width: 350px; height: 150px;" class="-my-8"></iframe>
                     </div>
 
                     <div class="links space-y-6 sm:space-x-6 mb-8">
