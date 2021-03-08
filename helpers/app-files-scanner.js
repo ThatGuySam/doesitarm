@@ -187,7 +187,7 @@ export default class AppFilesScanner {
         // console.log('entries', entries)
 
         if ( !Array.isArray(entries) ) {
-            file.statusMessage = '❔ Could not decompress file'
+            file.statusMessage = '❔ Could not decompress file. Try extracting the app or using a different app file. '
             file.status = 'finished'
 
             throw new Error('Could not decompress file')
