@@ -1,4 +1,13 @@
 // Universal JS imports only
+import slugify from 'slugify'
+
+
+export function makeCategorySlug ( categoryName ) {
+    return slugify(categoryName, {
+        lower: true,
+        strict: true
+    })
+}
 
 
 // Contains all types of properies to keep data consistent
@@ -139,5 +148,21 @@ export function getAppCategory (app) {
     if (typeof app.category === 'undefined') {
         console.log('app', app)
     }
+
+    // If this category is not defined yet
+    // then add it
+    if ( !categories.hasOwnProperty( app.category.slug ) ) {
+        // console.log('app', app)
+
+        const customCategory = {
+            id: null,
+            ...app.category,
+        }
+
+        categories[app.category.slug] = customCategory
+
+        console.log('Added new category', app.category.slug)
+    }
+
     return categories[app.category.slug]
 }

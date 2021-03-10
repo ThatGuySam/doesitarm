@@ -73,6 +73,9 @@ export default {
             }
 
             categoryList[app.category.slug] = {
+                // Merg in category data from app
+                ...app.category,
+                // Merge in category data from category file
                 ...categories[app.category.slug],
                 appNamesList: [ app.name ]
             }
@@ -81,11 +84,14 @@ export default {
         // Add App Names Text into categoryList
         Object.keys(categoryList).map(function(key, index) {
             const category = categoryList[key]
+
             categoryList[key] = {
                 ...category,
                 appNames: category.appNamesList.slice(0, 25).join(', ') + ', etc...'
             }
-        });
+        })
+
+        // console.log('categoryList', categoryList)
 
         return {
             categoryList
