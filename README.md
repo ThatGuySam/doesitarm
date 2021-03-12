@@ -30,6 +30,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Entertainment and Media Apps](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#entertainment-and-media-apps)
 * [Social and Communication](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#social-and-communication)
 * [VPNs, Security, and Privacy](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#vpns-security-and-privacy)
+* [System Tools](#system-tools)
 
 
 ## The Apps
