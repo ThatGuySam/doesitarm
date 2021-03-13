@@ -75,6 +75,13 @@ class MakeHomebrewList {
         return null
     }
 
+    hasArm64Formula( formulaData ) {
+        // Check the official list first since it's data is newer and more frequently updated
+        const hasStableFormula = (formulaData.bottle.stable !== undefined)
+
+        return hasStableFormula && (formulaData.bottle.stable.files['arm64_big_sur'] !== undefined)
+    }
+
     formulaIsNative (formulae) {
         // Search Formulae from Homebrew API
         const formulaData = this.allFormulae[formulae.fullName] || this.searchFormulaeForName(formulae.name)
@@ -94,7 +101,7 @@ class MakeHomebrewList {
         const hasStableFormula = (formulaData.bottle.stable !== undefined)
         const hasArm64Formula = hasStableFormula && (formulaData.bottle.stable.files['arm64_big_sur'] !== undefined)
 
-        return hasArm64Formula
+        return this.hasArm64Formula( formulaData )
     }
 
     parseStatus (formulae) {
@@ -203,7 +210,11 @@ class MakeHomebrewList {
         // console.log('formulaeWithStatus', formulaeWithStatus)
 
 
-        const formulaeList = []
+        const formulaeList = new Map()
+
+        const category = {
+            slug: 'homebrew'
+        }
 
 
         for (const formulae of this.issueTableRowData) {
@@ -224,11 +235,7 @@ class MakeHomebrewList {
             //     strict: true
             // })
 
-            const category = {
-                slug: 'homebrew'
-            }
-
-            formulaeList.push({
+            formulaeList.set(formulae.name, {
                 name: formulae.name,
                 status: this.parseStatus(formulae),
                 // url: `https://formulae.brew.sh/formula/${formulae.name}`,
@@ -256,7 +263,7 @@ class MakeHomebrewList {
 
         // console.log('formulaeList', formulaeList)
 
-        return formulaeList
+        return Array.from( formulaeList , ([_, data]) =>  data )
     }
 }
 
