@@ -270,6 +270,7 @@ export default async function () {
             }
 
             const category = {
+                label: categoryTitle,
                 slug: categorySlug
             }
 

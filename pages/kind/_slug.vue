@@ -2,7 +2,7 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
-                {{ category.pluralLabel || category.label }} that are reported to support Apple Silicon
+                {{ pluralLabel }} that are reported to support Apple Silicon
             </h1>
 
             <h2
@@ -115,7 +115,25 @@ export default {
     },
     computed: {
         category () {
-            return categories[this.slug]
+            if ( categories.hasOwnProperty( this.slug ) ) {
+                return categories[this.slug]
+            }
+
+            // Try to find the category info within the passed apps
+            const appWithCategory = this.categoryAppList.find( app => {
+                return app.category.slug === this.slug
+            })
+
+            // console.log('appWithCategory', appWithCategory)
+
+            return appWithCategory.category
+        },
+        pluralLabel () {
+            if ( this.category.hasOwnProperty('pluralLabel') ) {
+                return this.category.pluralLabel
+            }
+
+            return this.category.label
         },
         supportedAppList () {
             return this.categoryAppList.filter(app => {
@@ -123,10 +141,10 @@ export default {
             }).map(app => app.name)
         },
         title () {
-            return `List of ${this.category.pluralLabel || this.category.label} that work on Apple Silicon?`
+            return `List of ${this.pluralLabel || this.category.label} that work on Apple Silicon?`
         },
         description () {
-            return `Check the the latest reported support status of ${this.category.pluralLabel || this.category.label} on Apple Silicon and Apple M1 Processors. `
+            return `Check the the latest reported support status of ${this.pluralLabel || this.category.label} on Apple Silicon and Apple M1 Processors. `
         },
     },
     head() {
