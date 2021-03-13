@@ -33,7 +33,7 @@
                             />
                         </svg>
                     </div>
-                    <h2 class="title text-lg md:text-2xl font-semibold">
+                    <h2 class="title text-lg md:text-2xl font-bold">
                         {{ video.name }}
                     </h2>
                 </div>
@@ -99,12 +99,13 @@ export default {
 
         const { appsRelatedToVideo } = await import('~/helpers/related.js')
         const { default: videoList } = await import('~/static/video-list.json')
+        const { allVideoAppsList } = await import('~/helpers/get-list.js')
 
         // Get featured apps
         const featuredAppsSet = new Set()
 
         videoList.slice(0, 24).forEach( video => {
-            appsRelatedToVideo(video).forEach( app => {
+            appsRelatedToVideo(video, allVideoAppsList).forEach( app => {
                 featuredAppsSet.add(app)
             })
         })
@@ -216,7 +217,7 @@ export default {
 
         })
 
-        console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
+        // console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
 
     },
     head() {

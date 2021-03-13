@@ -1,7 +1,7 @@
 <template>
     <section class="container py-32">
         <div class="flex flex-col items-center text-center">
-            <h1 class="title text-sm md:text-2xl font-semibold">
+            <h1 class="title text-sm md:text-2xl font-bold">
                 Does <code>{{ app.name }}</code> work on Apple Silicon when installed via Homebrew?
             </h1>
             <h2 class="subtitle text-2xl md:text-5xl font-bold py-6">
@@ -35,22 +35,20 @@
 
 <script>
 import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
-import ThomasCredit from '~/components/thomas-credit.vue'
+// import EmailSubscribe from '~/components/email-subscribe.vue'
 
-import homebrewList from '~/static/homebrew-list.json'
+// import homebrewList from '~/static/homebrew-list.json'
 
 export default {
     components: {
         LinkButton,
-        EmailSubscribe,
-        ThomasCredit
+        // EmailSubscribe
     },
-    async asyncData ({ params: { slug } }) {
+    async asyncData ({ params: { slug }, payload: { app } }) {
 
         return {
             slug,
-            app: homebrewList.find(app => (app.slug === slug))
+            app//: homebrewList.find(app => (app.slug === slug))
         }
     },
     head() {

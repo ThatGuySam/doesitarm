@@ -72,32 +72,38 @@ export default {
         VideoPlayer,
         ChannelCredit
     },
-    async asyncData ({ params: { slug } }) {
+    asyncData ({ params: { slug }, payload: { app, allVideos } }) {
 
-        const { allVideoAppsList } = await import('~/helpers/get-list.js')
+        // const { allVideoAppsList } = await import('~/helpers/get-list.js')
         // const { default: videoList } = await import('~/static/video-list.json')
 
-        const { videosRelatedToApp } = await import('~/helpers/related.js')
+        // const { videosRelatedToApp } = await import('~/helpers/related.js')
 
-        const app = allVideoAppsList.find(app => (app.slug === slug))
+        // const app = allVideoAppsList.find(app => (app.slug === slug))
 
-        // const submitVideoCard = {
-        //     endpoint: `https://docs.google.com/forms/d/e/1FAIpQLSeEVGM9vE7VcfLMy6fJkfU70X2VZ60rHDyhDQLtnAN4nso0WA/viewform?usp=pp_url&entry.1018125313=${app.name}`
-        // }
+        // // const submitVideoCard = {
+        // //     endpoint: `https://docs.google.com/forms/d/e/1FAIpQLSeEVGM9vE7VcfLMy6fJkfU70X2VZ60rHDyhDQLtnAN4nso0WA/viewform?usp=pp_url&entry.1018125313=${app.name}`
+        // // }
 
-        // const featuredApps = []
+        // // const featuredApps = []
 
-        const relatedVideos = videosRelatedToApp( app ).map(video => {
-            // console.log('video', video)
-            return {
-                ...video,
-                // endpoint: `#${video.id}`
-            }
-        })
+        // const relatedVideos = videosRelatedToApp( app, videoList ).map(video => {
+        //     // console.log('video', video)
+        //     return {
+        //         ...video,
+        //         // endpoint: `#${video.id}`
+        //     }
+        // })
+
+        // console.log({
+        //     app,
+        //     allVideos,
+        //     // submitVideoCard
+        // })
 
         return {
             app,
-            allVideos: relatedVideos,
+            allVideos,
             // submitVideoCard
         }
     },
@@ -159,7 +165,7 @@ export default {
 
         })
 
-        console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
+        // console.log('lengths', Object.values(this.videoRows).map(row => [row.heading, row.videos.length]))
 
     },
     mounted () {

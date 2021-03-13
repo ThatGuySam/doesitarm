@@ -5,7 +5,7 @@
 import axios from 'axios'
 
 // import statuses from './statuses'
-// import parseGithubDate from './parse-github-date'
+// import parseDate from './parse-github-date'
 
 const marked = require('marked')
 const HTMLParser = require(`node-html-parser`)
@@ -54,7 +54,7 @@ class MakeHomebrewList {
         this.allFormulae = null
     }
 
-    getStatusText (formula) {
+    getStatusText ( formula ) {
         // Match status to Sheet Status
         return statusesMessages[formula.status]
     }
@@ -75,8 +75,18 @@ class MakeHomebrewList {
         return null
     }
 
+    hasArm64Formula( formulaData ) {
+        // Check the official list first since it's data is newer and more frequently updated
+        const hasStableFormula = (formulaData.bottle.stable !== undefined)
+
+        return hasStableFormula && (formulaData.bottle.stable.files['arm64_big_sur'] !== undefined)
+    }
+
     formulaIsNative (formulae) {
+        // Search Formulae from Homebrew API
         const formulaData = this.allFormulae[formulae.fullName] || this.searchFormulaeForName(formulae.name)
+
+        // console.log('formulae.fullName', formulae.fullName)
 
         // If this formula doesn't exist
         // then return false
@@ -91,15 +101,10 @@ class MakeHomebrewList {
         const hasStableFormula = (formulaData.bottle.stable !== undefined)
         const hasArm64Formula = hasStableFormula && (formulaData.bottle.stable.files['arm64_big_sur'] !== undefined)
 
-        return hasArm64Formula
+        return this.hasArm64Formula( formulaData )
     }
 
     parseStatus (formulae) {
-        // If an ARM 64 formula exists then it's native
-        if (this.formulaIsNative(formulae)) {
-            return 'native'
-        }
-
         // Match status to Sheet Status
         return statusesTranslations[formulae.status]
     }
@@ -190,6 +195,13 @@ class MakeHomebrewList {
 
             // if (formulaeRow.links.length !== 0) console.log('formulaeRow', formulaeRow.links)
 
+            const isNativeInApi = this.formulaIsNative(formulaeRow)
+
+            if (isNativeInApi) {
+                // Update status
+                formulaeRow.status = '🥇'
+            }
+
             return formulaeRow
         })
 
@@ -198,7 +210,45 @@ class MakeHomebrewList {
         // console.log('formulaeWithStatus', formulaeWithStatus)
 
 
-        const formulaeList = []
+        const formulaeList = new Map()
+
+        const category = {
+            slug: 'homebrew'
+        }
+
+        // for (const formula of Object.values( this.allFormulae )) {
+
+        //     const isNative = this.hasArm64Formula( formula )
+        //     const status = isNative ? 'native' : 'unreported'
+        //     const statusText = isNative ? '✅ Yes, Full Native Apple Silicon Support' : '🔶 Formula has not yet been reported to be native to Apple Silicon'
+        //     const slug = formula.full_name
+
+        //     formulaeList.set(formula.full_name, {
+        //         name: formula.full_name,
+        //         status: status,
+        //         // url: `https://formulae.brew.sh/formula/${formulae.name}`,
+        //         text: statusText,
+        //         slug,
+        //         endpoint: getAppEndpoint({
+        //             slug,
+        //             category
+        //         }),//`/formula/${slug}`,
+        //         category,
+        //         content: null,npm
+        //         relatedLinks: [
+        //             {
+        //                 href: `https://formulae.brew.sh/formula/${formula.name}`,
+        //                 label: formula.full_name,
+        //                 // a
+        //             },
+        //             // ...formula.links
+        //         ],
+        //         // reports: [
+        //         //     formulae
+        //         // ]
+        //     })
+
+        // }
 
 
         for (const formulae of this.issueTableRowData) {
@@ -219,11 +269,7 @@ class MakeHomebrewList {
             //     strict: true
             // })
 
-            const category = {
-                slug: 'homebrew'
-            }
-
-            formulaeList.push({
+            formulaeList.set(formulae.name, {
                 name: formulae.name,
                 status: this.parseStatus(formulae),
                 // url: `https://formulae.brew.sh/formula/${formulae.name}`,
@@ -251,7 +297,7 @@ class MakeHomebrewList {
 
         // console.log('formulaeList', formulaeList)
 
-        return formulaeList
+        return Array.from( formulaeList , ([_, data]) =>  data )
     }
 }
 

@@ -1,15 +1,14 @@
-import { allVideoAppsList } from '~/helpers/get-list.js'
-import videoList from '~/static/video-list.json'
+// import { allVideoAppsListSet } from '~/helpers/get-list.js'
+// import videoList from '~/static/video-list.json'
 
-export function matchesWholeWord (needle, haystack) {
-    return new RegExp('\\b' + needle + '\\b').test(haystack)
-}
+export function appsRelatedToVideo ( video, allVideoAppsListSet ) {
+    // console.log('allVideoAppsListSet', allVideoAppsListSet.length)
 
-export function appsRelatedToVideo ( video ) {
     const relatedApps = []
 
     // Find the apps listed in this video
-    for (const app of allVideoAppsList) {
+    for (const app of allVideoAppsListSet) {
+        // console.log('video', video)
         // Skip this app if it's not listed in the videos apps
         if (!video.apps.includes(app.slug)) continue
 
@@ -20,14 +19,18 @@ export function appsRelatedToVideo ( video ) {
     return relatedApps
 }
 
-export function videosRelatedToVideo ( video ) {
+export function videosRelatedToVideo ( video, allVideoAppsListSet, videoListSet ) {
     const relatedVideos = {}
 
-    const featuredApps = appsRelatedToVideo( video )
+    // console.log('videoList', videoList[0])
+    // console.log('allVideoAppsListSet', allVideoAppsListSet[0])
+
+    const featuredApps = appsRelatedToVideo( video, allVideoAppsListSet )
 
     // Find other videos that also feature this video's app
-    for (const otherVideo of videoList) {
+    for (const otherVideo of videoListSet) {
         for (const app of featuredApps) {
+            // console.log('otherVideo', otherVideo)
             // Skip if this app is not in the other video's apps
             if (!otherVideo.apps.includes(app.slug)) continue
 
@@ -43,11 +46,14 @@ export function videosRelatedToVideo ( video ) {
 }
 
 
-export function videosRelatedToApp ( app ) {
+export function videosRelatedToApp ( app, videoListSet ) {
+
+    // console.log('videoListSet', videoListSet)
+
     const relatedVideos = {}
 
     // Find other videos that also feature this video's app
-    for (const video of videoList) {
+    for (const video of videoListSet) {
         if (!video.apps.includes(app.slug)) continue
 
         relatedVideos[video.id] = video

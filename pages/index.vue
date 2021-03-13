@@ -4,7 +4,7 @@
             <h1 class="title text-4xl md:text-6xl font-hairline leading-tight text-center">
                 Does it ARM?
             </h1>
-            <h2 class="subtitle md:text-xl font-light text-center">
+            <h2 class="subtitle md:text-xl text-center">
                 Apps that are reported to support Apple Silicon
             </h2>
 
@@ -40,6 +40,13 @@
                 >
                     Request an App with Twitter
                 </LinkButton>
+
+                <LinkButton
+                    :href="`/apple-silicon-app-test/`"
+                    class="text-xs"
+                >
+                    Scan Your Own App
+                </LinkButton>
             </div>
 
             <AllUpdatesSubscribe
@@ -72,6 +79,7 @@ export default {
         // const { default: gamelist } = await import('~/static/game-list.json')
 
         const { sortedAppList, allList, allVideoAppsList, makeAppSearchLinks } = await import('~/helpers/get-list.js')
+        const { default: videoList } = await import('~/static/video-list.json')
 
         const allAppSearchLinks = {}
 
@@ -79,7 +87,7 @@ export default {
 
         allVideoAppsList.forEach( app => {
             // Make the search links
-            const searchLinks = makeAppSearchLinks(app)
+            const searchLinks = makeAppSearchLinks( app, (new Set(videoList)) )
 
             // If there are more than zero
             // add them to our list
@@ -92,11 +100,11 @@ export default {
             // Filter app list to leave out data not needed for search
             initialAppList: sortedAppList.map( app => {
 
-                let searchLinks = []
+                const searchLinks = allAppSearchLinks?.[app.slug] || []
 
-                if (typeof allAppSearchLinks[app.slug] !== 'undefined') {
-                    searchLinks = allAppSearchLinks[app.slug]
-                }
+                // if (typeof allAppSearchLinks[app.slug] !== 'undefined') {
+                //     searchLinks = allAppSearchLinks[app.slug]
+                // }
 
                 return {
                     name: app.name,
@@ -168,6 +176,12 @@ export default {
         }
     },
     computed: {
+        title ()  {
+            return `Apple Silicon and Apple M1 app and game compatibility list`
+        },
+        description ()  {
+            return `List of compatibility apps and games for Apple Silicon and the Apple M1 including performance reports and benchmarks`
+        },
         allList () {
             return [
                 ...this.initialAppList,
@@ -205,11 +219,7 @@ export default {
 
             this.fetchedAppList = fetchedLists.flat(1).map( app => {
 
-                let searchLinks = []
-
-                if (typeof this.allAppSearchLinks[app.slug] !== 'undefined') {
-                    searchLinks = this.allAppSearchLinks[app.slug]
-                }
+                const searchLinks = this.allAppSearchLinks?.[app.slug] || []
 
                 return {
                     ...app,
@@ -218,6 +228,35 @@ export default {
             })
 
             return
+        }
+    },
+    head() {
+        return {
+            title: this.title,
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                {
+                    'hid': 'description',
+                    'name': 'description',
+                    'content': this.description
+                },
+
+                // Twitter Card
+                {
+                    'hid': 'twitter:title',
+                    'property':  'twitter:title',
+                    'content': this.title
+                },
+                {
+                    'hid': 'twitter:description',
+                    'property':  'twitter:description',
+                    'content': this.description
+                },
+                {
+                    'property':  'twitter:url',
+                    'content': `${process.env.URL}${this.$nuxt.$route.path}`
+                },
+            ]
         }
     }
 }

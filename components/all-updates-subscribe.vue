@@ -11,7 +11,7 @@
                 <label
                     v-if="isFocused"
                     :for="inputId"
-                    class="block font-medium absolute"
+                    class="block font-bold absolute"
                     style="top: -2em;"
                 >Email</label>
                 <div class="mt-1 relative rounded-md shadow-sm">

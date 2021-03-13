@@ -52,10 +52,17 @@ export default {
         const { allList } = await import('~/helpers/get-list.js')
         const { categories } = await import('~/helpers/categories.js')
 
-        const categoryList = {}
+        // Map Categories into category list
+        const categoryList = Object.fromEntries(Object.entries(categories).map( ( entry ) => {
+            entry[1].appNamesList = []
+            return entry
+        } ))
+
+        // Delete no-category
+        delete categoryList['no-category']
 
         allList.forEach( app => {
-            // Find and store all categorys
+            // Find and store all categories
 
             // console.log('app.category.slug', app.category.slug)
 
@@ -66,6 +73,9 @@ export default {
             }
 
             categoryList[app.category.slug] = {
+                // Merg in category data from app
+                ...app.category,
+                // Merge in category data from category file
                 ...categories[app.category.slug],
                 appNamesList: [ app.name ]
             }
@@ -74,11 +84,14 @@ export default {
         // Add App Names Text into categoryList
         Object.keys(categoryList).map(function(key, index) {
             const category = categoryList[key]
+
             categoryList[key] = {
                 ...category,
                 appNames: category.appNamesList.slice(0, 25).join(', ') + ', etc...'
             }
-        });
+        })
+
+        // console.log('categoryList', categoryList)
 
         return {
             categoryList

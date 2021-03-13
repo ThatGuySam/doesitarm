@@ -2,13 +2,10 @@
 import slugify from 'slugify'
 import axios from 'axios'
 
+import { matchesWholeWord } from './matching.js'
 import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
-import parseGithubDate from './parse-github-date'
-
-export function matchesWholeWord (needle, haystack) {
-    return new RegExp('\\b' + needle + '\\b').test(haystack)
-}
+import parseDate from './parse-date'
 
 const videoFeaturesApp = function (app, video) {
     const appFuzzyName = app.name.toLowerCase()
@@ -87,6 +84,30 @@ const generateVideoTags = function ( video ) {
     return videoTags
 }
 
+const makeThumbnailData = function ( thumbnails ) {
+
+    let maxWidth = 0
+    Object.entries( thumbnails ).forEach(([thumbnailKey, thumbnail]) => {
+        if (thumbnail.width > maxWidth) maxWidth = thumbnail.width
+    })
+
+    const sizes = `(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`
+
+    const srcset = Object.entries( thumbnails ).map(([thumbnailKey, thumbnail]) => {
+        // console.log('thumbnail', thumbnail)
+        return `${thumbnail.url} ${thumbnail.width}w`
+    }).join(', ')
+
+
+    const src = thumbnails.default.url
+
+    return {
+        sizes,
+        srcset,
+        src
+    }
+}
+
 export default async function ( applist ) {
 
     // Fetch Commits
@@ -128,7 +149,7 @@ export default async function ( applist ) {
 
         const lastUpdated = {
             raw: fetchedVideos[videoId].rawData.snippet.publishedAt,
-            timestamp: parseGithubDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
+            timestamp: parseDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
         }
 
         // console.log('fetchedVideos[videoId].thumbnails', fetchedVideos[videoId].thumbnails)
@@ -139,14 +160,15 @@ export default async function ( applist ) {
             lastUpdated,
             apps,
             slug,
-            channel:{
+            channel: {
                 name: fetchedVideos[videoId].rawData.snippet.channelTitle,
                 id: fetchedVideos[videoId].rawData.snippet.channelId
             },
             // Convert tags set into array
             tags: Array.from(tags),
             timestamps: fetchedVideos[videoId].timestamps,
-            thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
+            // thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
+            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails ),
             endpoint: getVideoEndpoint({
                 slug
             })

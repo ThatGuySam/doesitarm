@@ -25,7 +25,10 @@
                     </div>
                 </div>
                 <p class="mt-8 text-center text-base leading-6 text-gray-400">
-                    &copy; 2020 Does it ARM All rights reserved.
+                    This site is supported by Affiliate links
+                </p>
+                <p class="mt-8 text-center text-base leading-6 text-gray-400">
+                    &copy; {{ currentYear }} Does it ARM All rights reserved.
                 </p>
             </div>
         </footer>
@@ -34,7 +37,12 @@
 </template>
 
 <script>
-import 'typeface-inter/inter.css'
+
+// import '@fontsource/inter/latin-100.css'
+// import '@fontsource/inter/latin-400.css'
+// import '@fontsource/inter/latin-700.css'
+
+import '@fontsource/inter/variable.css'
 
 import Navbar from '~/components/navbar.vue'
 // import TwitterFollow from '~/components/twitter-follow.vue'
@@ -44,31 +52,12 @@ export default {
     components: {
         Navbar,
         AllUpdatesSubscribe
+    },
+    computed: {
+        currentYear () {
+            return new Date().getFullYear()
+        }
     }
 }
 
 </script>
-
-<style>
-html {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont,
-        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    font-size: 20px;
-    word-spacing: 1px;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    box-sizing: border-box;
-
-    background: #191a1d;
-}
-
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-    margin: 0;
-}
-
-</style>

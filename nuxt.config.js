@@ -1,99 +1,14 @@
 import { promises as fs } from 'fs'
-// import path from 'path'
 
 import pkg from './package'
-import buildAppList from './helpers/build-app-list.js'
-import buildGamesList from './helpers/build-game-list.js'
-import buildHomebrewList from './helpers/build-homebrew-list.js'
-import buildVideoList from './helpers/build-video-list.js'
-
-import { categories } from './helpers/categories.js'
-import { getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
-
-
-const listsOptions = [
-    {
-        buildMethod: buildAppList,
-        path: '/static/app-list.json',
-    },
-    {
-        buildMethod: buildGamesList,
-        path: '/static/game-list.json',
-    },
-    {
-        buildMethod: buildHomebrewList,
-        path: '/static/homebrew-list.json',
-    }
-]
-
-const videoListOptions = {
-    buildMethod: buildVideoList,
-    path: '/static/video-list.json',
-}
-
-
-const saveList = async function ( list, buildArgs = null ) {
-    const methodName = `Building ${list.path}`
-    console.time(methodName)
-
-    // Run the build method
-    const builtList = await list.buildMethod(buildArgs)
-
-    // Make the relative path for our new JSON file
-    const listFullPath = `.${list.path}`
-
-    // console.log('listFullPath', listFullPath)
-
-    // Write the list to JSON
-    await fs.writeFile(listFullPath, JSON.stringify(builtList))
-
-    // Read back the JSON we just wrote to ensure it exists
-    const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
-
-    // console.log('savedListJSON', savedListJSON)
-
-    const savedList = JSON.parse(savedListJSON)
-
-
-    console.timeEnd(methodName)
-
-    // Import the created JSON File
-    return savedList
-}
-
-
-const storeAppLists = async function (builder) {
-
-    console.log('Build Lists started')
-
-    const savedLists = await Promise.all(listsOptions.map(saveList))
-        // Build and save list of videos based on app lists
-        .then(async lists => {
-            const [
-                appList,
-                gameList
-            ] = lists
-
-            // Build a video app list with apps and games only
-            const videoAppList = [
-                ...appList,
-                ...gameList
-            ].flat(1)
-
-            return await saveList(videoListOptions, videoAppList)
-        })
-
-    console.log('Build Lists finished')
-
-    return savedLists
-}
 
 
 export default {
     target: 'static',
 
     publicRuntimeConfig: {
-        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE
+        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
+        testResultStore: process.env.TEST_RESULT_STORE
     },
 
     /*
@@ -101,15 +16,16 @@ export default {
     * https://nuxtjs.org/api/configuration-hooks/
     */
     hooks: {
-        build: {
-            before: storeAppLists
-        },
-        generate: {
-            before: storeAppLists
-        }
+        // build: {
+        //     before: storeAppLists
+        // },
+        // generate: {
+        //     before: storeAppLists
+        // }
     },
 
     generate: {
+        crawler: false,
         cache: {
             ignore: [
                 // When something changed in the docs folder, do not re-build via webpack
@@ -117,72 +33,9 @@ export default {
             ]
         },
         routes() {
-            return Promise.all([
-                ...listsOptions,
-                videoListOptions
-            ].map(async list => {
-                // Read saved lists
-
-                const methodName = `Reading ${list.path}`
-                console.time(methodName)
-
-                const listPath = `.${list.path}`
-
-                // Read JSON to ensure it exists
-                const savedListJSON = await fs.readFile(listPath, 'utf-8')
-
-                // Parse the saved JSON into a variable
-                const savedList = JSON.parse(savedListJSON)
-
-                console.timeEnd(methodName)
-
-                // Pass on the variable
-                return savedList
-            }))
-                .then(( lists ) => {
-                    // console.log('appList', appList)
-
-                    const [
-                        appRoutes,
-                        gameRoutes,
-                        videoRoutes,
-                        homebrewRoutes
-                    ] = lists.map((list, listI) => {
-                        return list.map( app => {
-
-                            const isVideo = (app.category === undefined)
-
-                            if (isVideo) {
-                                return getVideoEndpoint(app)
-                            }
-
-                            return getAppEndpoint(app)
-                        })
-                    })
-
-                    // Build routes for app types that support benchmark endpoints
-                    const benchmarkRoutes = [
-                        ...appRoutes,
-                        // ...gameRoutes,
-                    ].flat(1).map( route => `${route}/benchmarks`)
-
-                    // console.log('homebrewRoutes', homebrewRoutes)
-
-                    const categoryRoutes = Object.keys(categories).map( slug => ({
-                        route: '/kind/' + slug,
-                        // payload: appList
-                    }))
-
-                    return [
-                        ...appRoutes,
-                        ...gameRoutes,
-                        ...homebrewRoutes,
-
-                        // Non-app routes
-                        ...videoRoutes,
-                        ...categoryRoutes,
-                        ...benchmarkRoutes
-                    ]
+            return fs.readFile('./static/nuxt-endpoints.json', 'utf-8')
+                .then( endpointsJson => {
+                    return JSON.parse(endpointsJson)
                 })
         }
     },
@@ -196,6 +49,7 @@ export default {
             lang: 'en',
         },
         title: 'Does it ARM',
+        description: pkg.description,
         meta: [
             { charset: 'utf-8' },
             {
@@ -273,7 +127,18 @@ export default {
     ],
 
     sitemap: {
-        hostname: 'https://doesitarm.com'
+        hostname: 'https://doesitarm.com',
+        routes: async () => {
+            // Get routes from previous build
+            const sitemapEndpoints = await fs.readFile('./static/sitemap-endpoints.json', 'utf-8')
+                .then( endpointsJson => {
+                    return JSON.parse(endpointsJson)
+                })
+
+            console.log('Total Sitemap Endpoints', sitemapEndpoints.length)
+
+            return sitemapEndpoints.map( endpoint => endpoint.route )
+        }
     },
 
     buildModules: [
@@ -284,6 +149,9 @@ export default {
     ** Build configuration
     */
     build: {
+        // parallel: true,
+        // hardSource: true,
+        cache: true,
         html: {
             minify: {
                 minifyCSS: false,
@@ -295,8 +163,19 @@ export default {
         ** You can extend webpack config here
         */
         extend(config, ctx) {
+
+            // Client
+            if (ctx.isClient) {
+                // Push meta import rule for zip.js
+                config.module.rules.push({
+                    test: /\.js$/,
+                    loader: require.resolve('@open-wc/webpack-import-meta-loader')
+                })
+            }
+
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
+
                 config.module.rules.push({
                     enforce: 'pre',
                     test: /\.(js|vue)$/,

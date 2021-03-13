@@ -10,12 +10,12 @@
                     <div class="relative overflow-hidden w-full pb-16/9">
                         <picture>
                             <source
-                                :sizes="thumbnailSizes"
-                                :data-srcset="thumbnailSrcset"
+                                :sizes="video.thumbnail.sizes"
+                                :data-srcset="video.thumbnail.srcset"
                                 type="image/jpg"
                             >
                             <img
-                                :data-src="video.thumbnails.default.url"
+                                :data-src="video.thumbnail.src"
                                 :alt="video.name"
                                 class="lazyload absolute h-full w-full object-cover"
                             >
@@ -64,8 +64,6 @@
 
 import 'lazysizes'
 
-// import { getVideoEndpoint } from '~/helpers/app-derived.js'
-
 export default {
     props: {
         video: {
@@ -74,26 +72,6 @@ export default {
         }
     },
     computed: {
-        thumbnailSizes () {
-            let maxWidth = 0
-            Object.entries(this.video.thumbnails).forEach(([thumbnailKey, thumbnail]) => {
-                if (thumbnail.width > maxWidth) maxWidth = thumbnail.width
-            })
-
-            // example:
-            // "(max-width: 640px) 100vw, 640px"
-            return `(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`
-        },
-        thumbnailSrcset () {
-            // console.log('this.video', this.video)
-
-            // example:
-            // https://vumbnail.com/358629078.jpg 640w, https://vumbnail.com/358629078_large.jpg 640w, https://vumbnail.com/358629078_medium.jpg 200w, https://vumbnail.com/358629078_small.jpg 100w
-            return Object.entries(this.video.thumbnails).map(([thumbnailKey, thumbnail]) => {
-                // console.log('thumbnail', thumbnail)
-                return `${thumbnail.url} ${thumbnail.width}w`
-            }).join(', ')
-        },
         pill () {
             // if this video has a banchmark tag
             // then pill is 'Benchmark'

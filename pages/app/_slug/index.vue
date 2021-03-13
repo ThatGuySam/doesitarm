@@ -2,7 +2,7 @@
     <section class="container py-32">
         <div class="flex flex-col items-center text-center space-y-8">
             <div class="hero-heading space-y-6">
-                <h1 class="title text-sm md:text-2xl font-semibold">
+                <h1 class="title text-sm md:text-2xl font-bold">
                     Does {{ app.name }} work on Apple Silicon?
                 </h1>
                 <h2 class="subtitle text-2xl md:text-5xl font-bold">
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import parseGithubDate from '~/helpers/parse-github-date'
+import { lastUpdatedFriendly } from '~/helpers/parse-date'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
 import LinkButton from '~/components/link-button.vue'
@@ -82,7 +82,7 @@ export default {
 
         const app = appList.find(app => (app.slug === slug))
 
-        const relatedVideos = videosRelatedToApp(app)
+        const relatedVideos = videosRelatedToApp( app, (new Set(videoList)) )
 
         // Find other videos that also feature this video's app
         // for (const video of videoList) {
@@ -105,14 +105,7 @@ export default {
     },
     computed: {
         lastUpdatedFriendly () {
-
-            if (this.app.lastUpdated === null) return
-
-            const options = { month: "long", day: "numeric", year: "numeric" }
-            const date = new Date(this.app.lastUpdated.raw)
-            const americanDate = new Intl.DateTimeFormat("en-US", options).format(date)
-
-            return americanDate
+            return lastUpdatedFriendly( this.app.lastUpdated )
         }
     },
     head() {

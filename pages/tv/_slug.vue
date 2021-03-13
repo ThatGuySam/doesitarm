@@ -9,7 +9,7 @@
             <div
                 class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10"
             >
-                <h1 class="title text-lg md:text-2xl font-semibold">
+                <h1 class="title text-lg md:text-2xl font-bold">
                     {{ video.name }}
                 </h1>
 
@@ -86,25 +86,30 @@ export default {
         VideoPlayer,
         ChannelCredit
     },
-    async asyncData ({ params: { slug } }) {
+    asyncData ({ params: { slug }, payload: { video, featuredApps, relatedVideos } }) {
 
-        const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
-        const { default: videoList } = await import('~/static/video-list.json')
+        // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
+        // const { default: videoList } = await import('~/static/video-list.json')
 
         // Find the video for our current page
-        const video = videoList.find(video => (video.slug === slug))
+        // const video = videoList.find(video => (video.slug === slug))
 
         // Get featured apps
-        const featuredApps = appsRelatedToVideo(video)
+        // const featuredApps = appsRelatedToVideo(video)
 
-        // Get related videos
-        const relatedVideos = videosRelatedToVideo(video)
+        // // Get related videos
+        // const relatedVideos = videosRelatedToVideo(video)
+
+        // console.log({
+        //     video,
+        //     featuredApps,
+        //     relatedVideos
+        // })
 
         return {
             video,
             featuredApps,
-            // If no related video found just get the 12 newest ones
-            relatedVideos: (relatedVideos.length !== 0) ? relatedVideos : videoList.slice(0, 12)
+            relatedVideos
         }
     },
     computed: {
