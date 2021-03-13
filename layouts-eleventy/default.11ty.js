@@ -54,19 +54,83 @@ const getNuxtDefaultLayoutHtml = () => {
     return fileContents
 }
 
+const templateVar = string => `--- template-var ${string} ---`
+
+const cleanNuxtLayout = ( layout ) => {
+
+    const document = layout.window.document
+
+    // Strip out existing meta
+    Array.from(document.querySelectorAll('head > meta')).forEach( domNode => {
+        domNode.remove()
+    })
+
+    // Strip out existing preloads
+    Array.from(document.querySelectorAll('link[rel="preload"]')).forEach( domNode => {
+        domNode.remove()
+    })
+
+    // Strip out existing scripts
+    Array.from(document.querySelectorAll('script[src*=".js"]')).forEach( domNode => {
+        domNode.remove()
+    })
+
+    // Convert subscribe to iframe embed
+    Array.from(document.querySelectorAll('form.all-updates-subscribe')).forEach( domNode => {
+        const subscribeEmbed = document.createElement('iframe')
+        subscribeEmbed.setAttribute('src', '/embed-subscribe')
+        // https://web.dev/iframe-lazy-loading/
+        subscribeEmbed.setAttribute('loading', 'lazy')
+        subscribeEmbed.style.width = '350px'
+        subscribeEmbed.style.height = '150px'
+
+        domNode.parentNode.replaceChild(subscribeEmbed, domNode)
+    })
+
+
+    // Set page title
+    document.title = templateVar('title')
+
+    // Set link tags
+    document.querySelector('title').insertAdjacentHTML('afterend', templateVar('link-tags') )
+
+    // Add meta tags after title node
+    document.querySelector('title').insertAdjacentHTML('afterend', templateVar('meta-tags') )
+
+    // Set page css
+    // document.querySelector('head').insertAdjacentHTML('beforeend', this.getCss() )
+
+    // Set page content
+    document.querySelector('.app-main').innerHTML = templateVar('main-content')//content
+
+    // Set js before end of body
+    // `<script>${ this.getJs() }</script>`
+    document.querySelector('body').insertAdjacentHTML('beforeend', templateVar('scripts') )
+
+    return layout
+}
+
+let nuxtLayoutHtml = null
 const parseDefaultLayoutDom = () => {
-    const html = getNuxtDefaultLayoutHtml()
+    if ( nuxtLayoutHtml === null ) {
+        nuxtLayoutHtml = getNuxtDefaultLayoutHtml()
+    }
+    // const html = getNuxtDefaultLayoutHtml()
 
     // Build initial dom from the Layout
-    const dom = new JSDOM( html )
+    const dom = new JSDOM( nuxtLayoutHtml )
 
-    return dom
+    const cleanedLayout = cleanNuxtLayout( dom )
+
+    return cleanedLayout
 }
 
 // Buld data that only needs to run once
 const defaultMeta = Object.fromEntries(config.head.meta.map( mapMetaTag ))
 
 const defaultLinkTags = Object.fromEntries(config.head.link.map( mapLinkTag ))
+
+const masterLayoutDomString = parseDefaultLayoutDom().serialize()
 
 class DefaultLayout {
 
@@ -128,72 +192,39 @@ class DefaultLayout {
         const {
             content,
             title = null,
-            description = null
+            // description = null
         } = data
 
-        // Generate manipulatable dom for page render
-        const layout = parseDefaultLayoutDom()
+        const pageTitle = title || this.getNuxt().head.title
 
-        // Get our jsdom document instance
-        const document = layout.window.document
-
-        // Setup inline tailwind
-        // this.usingComponent( 'static/tailwind.css' )
-        // Setup inline tailwind
-        // this.usingComponent( 'node_modules/@fontsource/inter/variable.css' )
-
-
-
-        // Strip out existing meta
-        Array.from(document.querySelectorAll('head > meta')).forEach( domNode => {
-            domNode.remove()
-        })
-
-        // Strip out existing preloads
-        Array.from(document.querySelectorAll('link[rel="preload"]')).forEach( domNode => {
-            domNode.remove()
-        })
-
-        // Strip out existing scripts
-        Array.from(document.querySelectorAll('script[src*=".js"]')).forEach( domNode => {
-            domNode.remove()
-        })
-
-
+        let workingLayoutString = masterLayoutDomString
 
         // Set page title
-        document.title = title || this.getNuxt().head.title
+        // pageTitle
+        workingLayoutString = workingLayoutString.replace( templateVar('title'), pageTitle )
 
         // Set link tags
-        document.querySelector('title').insertAdjacentHTML('afterend', this.generateLinkTags() )
+        // this.generateLinkTags()
+        workingLayoutString = workingLayoutString.replace( templateVar('link-tags'), this.generateLinkTags() )
 
         // Add meta tags after title node
-        document.querySelector('title').insertAdjacentHTML('afterend', this.generateMetaTags( data ) )
+        // this.generateMetaTags( data )
+        workingLayoutString = workingLayoutString.replace( templateVar('meta-tags'), this.generateMetaTags( data ) )
 
         // Set page css
         // document.querySelector('head').insertAdjacentHTML('beforeend', this.getCss() )
 
         // Set page content
-        document.querySelector('.app-main').innerHTML = content
-
-        // Convert subscribe to iframe embed
-        Array.from(document.querySelectorAll('form.all-updates-subscribe')).forEach( domNode => {
-            const subscribeEmbed = document.createElement('iframe')
-            subscribeEmbed.setAttribute('src', '/embed-subscribe')
-            // https://web.dev/iframe-lazy-loading/
-            subscribeEmbed.setAttribute('loading', 'lazy')
-            subscribeEmbed.style.width = '350px'
-            subscribeEmbed.style.height = '150px'
-
-            domNode.parentNode.replaceChild(subscribeEmbed, domNode)
-        })
+        // content
+        workingLayoutString = workingLayoutString.replace( templateVar('main-content'), content )
 
         // Set js before end of body
-        document.querySelector('body').insertAdjacentHTML('beforeend', `<script>${ this.getJs() }</script>` )
+        // `<script>${ this.getJs() }</script>`
+        workingLayoutString = workingLayoutString.replace( templateVar('scripts'), `<script>${ this.getJs() }</script>` )
 
 
         // Return stringified html for page
-        return layout.serialize()
+        return workingLayoutString
 
     }
 }
