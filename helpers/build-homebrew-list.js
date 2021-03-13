@@ -216,6 +216,40 @@ class MakeHomebrewList {
             slug: 'homebrew'
         }
 
+        // for (const formula of Object.values( this.allFormulae )) {
+
+        //     const isNative = this.hasArm64Formula( formula )
+        //     const status = isNative ? 'native' : 'unreported'
+        //     const statusText = isNative ? '✅ Yes, Full Native Apple Silicon Support' : '🔶 Formula has not yet been reported to be native to Apple Silicon'
+        //     const slug = formula.full_name
+
+        //     formulaeList.set(formula.full_name, {
+        //         name: formula.full_name,
+        //         status: status,
+        //         // url: `https://formulae.brew.sh/formula/${formulae.name}`,
+        //         text: statusText,
+        //         slug,
+        //         endpoint: getAppEndpoint({
+        //             slug,
+        //             category
+        //         }),//`/formula/${slug}`,
+        //         category,
+        //         content: null,npm
+        //         relatedLinks: [
+        //             {
+        //                 href: `https://formulae.brew.sh/formula/${formula.name}`,
+        //                 label: formula.full_name,
+        //                 // a
+        //             },
+        //             // ...formula.links
+        //         ],
+        //         // reports: [
+        //         //     formulae
+        //         // ]
+        //     })
+
+        // }
+
 
         for (const formulae of this.issueTableRowData) {
 
