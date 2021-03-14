@@ -57,8 +57,8 @@ export class Story {
             },
 
             permalink: ({ app }) => {
-                // console.log('payload', app.payload)
-                return app.route.substring(1) + '/story/'
+                // console.log('payload', app.route)
+                return app.route//.substring(1) + '/story/'
             }
         }
     }
