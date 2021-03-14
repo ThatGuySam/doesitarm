@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config.js'
 
-import { hasStory } from '../helpers/app-derived.js'
+import { hasStory, getStoryEndpoint } from '../helpers/app-derived.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 
 
@@ -38,7 +38,7 @@ export class Story {
                     return data.filter( entry => {
                         // const appType = getAppType( entry.payload.app )
 
-                        return hasStory ( entry.payload.app )
+                        return hasStory ( entry.payload.app ) && entry.route === getStoryEndpoint( entry.payload.app )
                     })
                 }
             },

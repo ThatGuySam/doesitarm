@@ -46,6 +46,10 @@ export function getAppEndpoint ( app ) {
     return `/${appType}/${app.slug}`
 }
 
+export function getStoryEndpoint( app ) {
+    return `${getAppEndpoint(app)}/story/`
+}
+
 export function getVideoEndpoint ( video ) {
 
     return `/tv/${video.slug}`

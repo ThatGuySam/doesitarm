@@ -9,7 +9,13 @@ import buildVideoList from './helpers/build-video-list.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
 import { categories, getAppCategory } from './helpers/categories.js'
-import { hasStory, getAppType, getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
+import {
+    hasStory,
+    getAppType,
+    getAppEndpoint,
+    getStoryEndpoint,
+    getVideoEndpoint
+} from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
 // Setup dotenv
@@ -240,7 +246,7 @@ class BuildLists {
                 if ( hasStory( app ) ) {
                     const payload = buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
 
-                    this.endpointMaps.eleventy.set( `${getAppEndpoint(app)}/story/`, payload )
+                    this.endpointMaps.eleventy.set( getStoryEndpoint(app), payload )
                 }
 
 

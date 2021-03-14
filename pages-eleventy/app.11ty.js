@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config.js'
 
-import { getAppType } from '../helpers/app-derived.js'
+import { getAppType, getAppEndpoint } from '../helpers/app-derived.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 
 
@@ -35,10 +35,10 @@ export class AppTemplate {
                 alias: 'app',
 
                 before: function( data ) {
-                    return data.filter( entry => {
-                        const appType = getAppType( entry.payload.app )
+                    return data.filter( endpoint => {
+                        const appType = getAppType( endpoint.payload.app )
 
-                        return appType === 'app'
+                        return appType === 'app' && endpoint.route === getAppEndpoint( endpoint.payload.app )
                     })
                 }
             },
