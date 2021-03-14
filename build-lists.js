@@ -9,7 +9,7 @@ import buildVideoList from './helpers/build-video-list.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
 import { categories, getAppCategory } from './helpers/categories.js'
-import { getAppType, getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
+import { hasStory, getAppType, getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
 // Setup dotenv
@@ -235,6 +235,14 @@ class BuildLists {
                 }
 
                 // if ( isGame ) { console.log() }
+
+                // Add story endpoints for native apps
+                if ( hasStory( app ) ) {
+                    const payload = buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
+
+                    this.endpointMaps.nuxt.set( `${getAppEndpoint(app)}/story/`, payload )
+                }
+
 
                 // Add benchmark endpoints for apps and games
                 if ( appType === 'app' || appType === 'game' ) {
