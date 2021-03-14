@@ -15,7 +15,7 @@ import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 dotenv.config()
 
 export const makeTitle = function ( app ) {
-    return `Does ${app.name} work on Apple Silicon? - ${ config.head.title }`
+    return `${app.name} on Apple Silicon and Apple M1 - ${ config.head.title }`
 }
 
 export const makeDescription = function ( app ) {
