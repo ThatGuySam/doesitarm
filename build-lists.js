@@ -240,7 +240,7 @@ class BuildLists {
                 if ( hasStory( app ) ) {
                     const payload = buildAppBenchmarkPayload( app, this.allVideoAppsList, this.lists.video )
 
-                    this.endpointMaps.nuxt.set( `${getAppEndpoint(app)}/story/`, payload )
+                    this.endpointMaps.eleventy.set( `${getAppEndpoint(app)}/story/`, payload )
                 }
 
 
