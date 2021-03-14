@@ -5,6 +5,10 @@ export function isVideo ( app ) {
     return app.hasOwnProperty('thumbnail') && app.hasOwnProperty('timestamps')
 }
 
+export function hasStory ( app ) {
+    return app.lastUpdated !== null && getAppType( app ) === 'app' && app.text.includes('✅')
+}
+
 export function getAppType ( app ) {
 
     // Videos don't have a category
