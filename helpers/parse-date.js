@@ -20,6 +20,17 @@ const getRelativeTime = function (d1, d2 = new Date()) {
 
 }
 
+export function makeLastUpdatedFriendly ( lastUpdated ) {
+
+    if ( !lastUpdated ) return null
+
+    const options = { month: "long", day: "numeric", year: "numeric" }
+    const date = new Date( lastUpdated.raw )
+    const americanDate = new Intl.DateTimeFormat("en-US", options).format(date)
+
+    return americanDate
+}
+
 export default function (rawDate) {
 
     const date = new Date(rawDate)

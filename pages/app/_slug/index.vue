@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import parseDate from '~/helpers/parse-date'
+import { lastUpdatedFriendly } from '~/helpers/parse-date'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
 import LinkButton from '~/components/link-button.vue'
@@ -105,14 +105,7 @@ export default {
     },
     computed: {
         lastUpdatedFriendly () {
-
-            if (this.app.lastUpdated === null) return
-
-            const options = { month: "long", day: "numeric", year: "numeric" }
-            const date = new Date(this.app.lastUpdated.raw)
-            const americanDate = new Intl.DateTimeFormat("en-US", options).format(date)
-
-            return americanDate
+            return lastUpdatedFriendly( this.app.lastUpdated )
         }
     },
     head() {
