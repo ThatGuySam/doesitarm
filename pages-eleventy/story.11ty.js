@@ -19,7 +19,55 @@ export const makeTitle = function ( app ) {
 }
 
 export const makeDescription = function ( app ) {
-    return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors when installed via Homebrew. `
+    return `Reported status of ${ app.name } on Apple Silicon and the new Apple Macs. `
+}
+
+function makeFullUrlFromPath ( path ) {
+    return `${process.env.URL}${path}`
+}
+
+// https://stackoverflow.com/a/34015511/1397641
+function makeJsonLdDate ( dateObject ) {
+    return dateObject.toLocaleDateString('en-US')
+}
+
+function makeJsonLdObject ( data ) {
+
+    const {
+        page,
+        app
+    } = data
+
+    const fullUrl = makeFullUrlFromPath( page.url )
+
+    // console.log('app', app.payload.app )
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": fullUrl
+        },
+        "headline": data.mainHeading,
+        "description": data.description,
+        // "datePublished": makeJsonLdDate( new Date( app.payload.app.lastUpdated.raw ) ),
+        "dateModified": makeJsonLdDate( new Date( app.payload.app.lastUpdated.raw ) ),
+        "author":{
+            "@type": "Organization",
+            "name": "Does It ARM"
+        },
+        "publisher":{
+            "@type": "Organization",
+            "name": "Does It ARM",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "/images/mark.png",
+                "width": 100,
+                "height": 100
+            }
+        }
+    }
 }
 
 function makeBookend () {
@@ -111,7 +159,8 @@ export class Story {
 
         // console.log('video.payload', Object.keys(video.payload))
 
-        // const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
+        const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
+        const jsonLd = JSON.stringify( makeJsonLdObject( data ) )
 
         return /* html */`
         <!doctype html>
@@ -131,20 +180,21 @@ export class Story {
                 <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
 
 
-                <meta name="description"  property="description" content="Check the the latest reported support status of ack on Apple Silicon and Apple M1 Processors. ">
-                <link rel="shortcut icon" href="assets/3.png" type="image/x-icon">
+                <meta name="description"  property="description" content="${ data.description }">
+                <link rel="shortcut icon" href="/images/mark.png" type="image/x-icon">
 
-                <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://doesitarm.com/formula/ack/story"},"headline":"Does It ARM","description":"App is now native to Apple Silicon","datePublished":"03/13/2021","dateModified":"03/13/2021","author":{"@type":"Organization","name":"Does It ARM"},"publisher":{"@type":"Organization","name":"Does It ARM","logo":{"@type":"ImageObject","url":"assets/3.png","width":100,"height":100}}}</script>
+                <script type="application/ld+json">${ jsonLd }</script>
 
+                <!-- https://amp.dev/documentation/components/amp-story/#metadata-guidelines -->
                 <meta property="og:url" content="https://doesitarm.com/formula/ack/story" />
                 <meta property="twitter:site" content="@DoesItARM" />
                 <meta property="twitter:creator" content="@DoesItARM" />
                 <meta property="title" content="Does It ARM" />
                 <meta property="og:title" content="Does It ARM" />
                 <meta property="twitter:title" content="Does It ARM" />
-                <meta property="description" content="App is now native to Apple Silicon" />
-                <meta property="og:description" content="App is now native to Apple Silicon" />
-                <meta property="twitter:description" content="App is now native to Apple Silicon" />
+                <meta property="description" content="${ data.description }" />
+                <meta property="og:description" content="${ data.description }" />
+                <meta property="twitter:description" content="${ data.description }" />
                 <meta property="og:published_time" content="2021-03-13T00:00:00.000Z" />
                 <meta property="og:modified_time" content="2021-03-13T00:00:00.000Z" />
                 <meta name="twitter:card" content="summary" />
@@ -394,7 +444,7 @@ export class Story {
             </head>
             <body>
 
-            <amp-story standalone poster-portrait-src="assets/4.jpeg" publisher-logo-src="assets/3.png" publisher="Does It ARM" title="Does It ARM" poster-landscape-src="assets/5.jpeg" poster-square-src="assets/6.jpeg"    >
+            <amp-story standalone poster-portrait-src="/images/poster-portrait.jpeg" publisher-logo-src="/images/mark.png" publisher="Does It ARM" title="Does It ARM" poster-landscape-src="/images/poster-landscape.jpeg" poster-square-src="/images/poster-landscape.jpeg">
 
                 <!-- PAGE 1 STARTS HERE -->
                 <amp-story-page id="jlqerrcdhz" class="jlqerrcdhz ms-st-pg"  >
