@@ -6,10 +6,15 @@ import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
 
+import { videosRelatedToApp } from './helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
 import { categories, getAppCategory } from './helpers/categories.js'
-import { getAppType, getAppEndpoint, getVideoEndpoint } from './helpers/app-derived.js'
+import {
+    getAppType,
+    getAppEndpoint,
+    getVideoEndpoint,
+} from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
 // Setup dotenv
@@ -253,18 +258,23 @@ class BuildLists {
 
                 // Add standard app endpoint
                 if ( appType === 'app' || appType === 'formula' ) {
-                    // this.endpointMaps.eleventy.add({
-                    //     route: getAppEndpoint(app),
-                    //     payload: { app }
-                    // })
 
-                    this.endpointMaps.eleventy.set( getAppEndpoint(app), { app } )
+                    const relatedVideos = videosRelatedToApp( app, this.lists.video ).map(video => {
+                        // console.log('video', video)
+                        return {
+                            ...video,
+                            endpoint: `${getAppEndpoint(app)}/benchmarks#${video.id}`
+                        }
+                    })
+
+                    // Add app or formula endpoint
+                    this.endpointMaps.eleventy.set( getAppEndpoint(app), {
+                        app,
+                        relatedVideos
+                    } )
+
                 } else {
-                    // Add app or game endpoint
-                    // this.endpointMaps.nuxt.add({
-                    //     route: getAppEndpoint(app),
-                    //     payload: { app }
-                    // })
+                    // Add game or other endpoint
                     // console.log('Added to nuxt endpoints', getAppEndpoint(app))
                     this.endpointMaps.nuxt.set( getAppEndpoint(app), { app } )
                 }
