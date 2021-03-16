@@ -315,6 +315,10 @@ class BuildLists {
             return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
         } ).flat(1), './static/sitemap-endpoints.json')
 
+        console.log('Total Nuxt Endpoints', this.endpointMaps.nuxt.size )
+        console.log('Total Eleventy Endpoints', this.endpointMaps.eleventy.size )
+        console.log('Total Endpoints', this.endpointMaps.nuxt.size + this.endpointMaps.eleventy.size )
+
         return
     }
 }
