@@ -5,6 +5,8 @@ import config from '../nuxt.config.js'
 import { hasStory, getStoryEndpoint } from '../helpers/app-derived.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 
+import CoverPage from '../components-eleventy/story/cover.js'
+
 
 // import VideoRow from '../components-eleventy/video/row.js'
 
@@ -128,6 +130,7 @@ export class Story {
                 description: ({ app: { payload: { app } }  }) => {
                     return makeDescription( app )
                 },
+
                 mainHeading: ({ app: { payload: { app } }  }) => {
                     return `Does ${ app.name } work on Apple Silicon?`
                 },
@@ -138,6 +141,36 @@ export class Story {
                 return app.route//.substring(1) + '/story/'
             }
         }
+    }
+
+    buildPages ( data ) {
+        const pages = []
+
+        const {
+            // content,
+            // title = null,
+            app: {
+                payload: {
+                    app
+                }
+            }
+        } = data
+
+
+        // console.log('video.payload', Object.keys(video.payload))
+
+        const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
+
+        // Build cover page
+        pages.push({
+            template: CoverPage,
+            heading: `${ app.name } has  been reported to support Apple Silicon nativelty as of ${lastUpdatedFriendly}!`,
+            headingUrl: '',
+            imageUrl: '/images/backgrounds/liquid-cheese.svg'
+        })
+
+
+        return pages
     }
 
     render( data ) {
@@ -161,6 +194,12 @@ export class Story {
 
         const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
         const jsonLd = JSON.stringify( makeJsonLdObject( data ) )
+
+        const pages = this.buildPages( data )
+
+        const pagesHtml = pages.map( page => {
+            return this.boundComponent( page.template )( page )
+        } ).join('')
 
         return /* html */`
         <!doctype html>
@@ -446,16 +485,18 @@ export class Story {
 
             <amp-story standalone poster-portrait-src="/images/poster-portrait.jpeg" publisher-logo-src="/images/mark.png" publisher="Does It ARM" title="Does It ARM" poster-landscape-src="/images/poster-landscape.jpeg" poster-square-src="/images/poster-landscape.jpeg">
 
+                ${ pagesHtml }
+
                 <!-- PAGE 1 STARTS HERE -->
                 <amp-story-page id="jlqerrcdhz" class="jlqerrcdhz ms-st-pg"  >
                     <!-- PAGE BACKGROUND LAYER (jlqerrcdhz) -->
                     <amp-story-grid-layer template="fill" class="pbxiyzxp">
-                        <amp-img width='720' height='1280' layout='responsive' class='pbxiyzx' id='jlqerrcdhz-bg' src='assets/1.png' alt='App is now native' ></amp-img>
+                        <amp-img width='720' height='1280' layout='responsive' class='pbxiyzx' id='jlqerrcdhz-bg' src='/images/backgrounds/liquid-cheese.svg' alt='App is now native' ></amp-img>
                     </amp-story-grid-layer>
                     <!-- PAGE BACKGROUND LAYER (jlqerrcdhz) ENDS -->
                     <amp-story-grid-layer template="vertical" id="vsyyg" class="scrim"><div class="letterbox">
                         <!-- The best therapist has fur and four legs STARTS HERE -->
-                        <h1 class='zegok pa' animate-in='fade-in' animate-in-duration='500ms' id='workflow-text' >Ack has&nbsp; been reported to support Apple Silicon nativelty as of Oct 31st, 2020!<a href='https://doesitarm.com/formula/ack/' role='link' data-tooltip-text='Details' class='story-tooltip pa' data-tooltip-icon='https://www.google.com/s2/favicons?domain=https://doesitarm.com/formula/ack/' data-vars-ctalink='https://doesitarm.com/formula/ack/' ></a></h1>
+                        <h1 class='zegok pa' animate-in='fade-in' animate-in-duration='500ms' id='workflow-text' >Ack has&nbsp; been reported to support Apple Silicon nativelty as of ${lastUpdatedFriendly}!<a href='https://doesitarm.com/formula/ack/' role='link' data-tooltip-text='Details' class='story-tooltip pa' data-tooltip-icon='https://www.google.com/s2/favicons?domain=https://doesitarm.com/formula/ack/' data-vars-ctalink='https://doesitarm.com/formula/ack/' ></a></h1>
                         <!-- The best therapist has fur and four legs ENDS HERE -->
                     </div></amp-story-grid-layer>
 
