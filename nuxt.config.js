@@ -135,7 +135,7 @@ export default {
                     return JSON.parse(endpointsJson)
                 })
 
-            console.log('Total Sitemap Endpoints', sitemapEndpoints.length)
+            // console.log('Total Sitemap Endpoints', sitemapEndpoints.length)
 
             return sitemapEndpoints.map( endpoint => endpoint.route )
         }
