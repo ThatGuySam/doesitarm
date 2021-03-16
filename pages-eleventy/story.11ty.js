@@ -22,6 +22,35 @@ export const makeDescription = function ( app ) {
     return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors when installed via Homebrew. `
 }
 
+function makeBookend () {
+    return {
+        "bookendVersion": "v1.0",
+        "shareProviders": [
+            "system",
+            "email",
+            "twitter",
+            "sms"
+        ],
+        "components": [
+            {
+                "type": "cta-link",
+                "links": [
+                    {
+                        "text": "Search Other Apps",
+                        "url": "doesitarm.com"
+                    },
+                    {
+                        "text": "Get App Updates",
+                        "url": "doesitarm.com/embed-subscribe"
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+const bookendJson = JSON.stringify( makeBookend() )
+
 export class Story {
     // or `async data() {`
     // or `get data() {`
@@ -439,7 +468,12 @@ export class Story {
                 </amp-story-page>
                 <!-- PAGE 4 ENDS HERE -->
 
-                <amp-story-bookend src="https://doesitarm.com/formula/ack/story/bookend.json" layout="nodisplay"></amp-story-bookend>
+                <!-- https://amp.dev/documentation/components/amp-story-bookend/ -->
+                <amp-story-bookend layout="nodisplay">
+                    <script type="application/json">
+                     ${ bookendJson }
+                    </script>
+                </amp-story-bookend>
             </amp-story>
 
             </body>
