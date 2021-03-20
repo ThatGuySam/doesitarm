@@ -9,14 +9,18 @@ console.log('Running Default Layout file')
 
 const year = new Date().getFullYear()
 
-const makeTag = ( tag, tagName = 'meta') => {
+export function makeFullUrlFromPath ( path ) {
+    return `${process.env.URL}${path}`
+}
+
+export const makeTag = ( tag, tagName = 'meta') => {
 
     const attributes = Object.entries(tag).map( ([ name, value ]) => `${name}="${value}"` ).join(' ')
 
     return `<${tagName} ${attributes}>`
 }
 
-const mapMetaTag = ( tag ) => {
+export const mapMetaTag = ( tag ) => {
 
     if ( tag.hasOwnProperty('property') ) {
         return [
@@ -40,7 +44,7 @@ const mapMetaTag = ( tag ) => {
     }
 }
 
-const mapLinkTag = ( tag ) => {
+export const mapLinkTag = ( tag ) => {
     return [
         `type-${tag.type}`,
         makeTag(tag, 'link')
@@ -54,11 +58,28 @@ const getNuxtDefaultLayoutHtml = () => {
     return fileContents
 }
 
-const templateVar = string => `--- template-var ${string} ---`
+export const templateVar = ( string, asComment = true ) => {
+    if ( asComment === false ) {
+        return `-- template-var ${string} --`
+    }
 
-const cleanNuxtLayout = ( layout ) => {
+    return `<!-- template-var ${string} -->`
+}
+
+const cleanNuxtLayout = ( layout, options ) => {
+
+    const {
+        excludedElements = [],
+        replaceElements = {}
+    } = options
 
     const document = layout.window.document
+
+    excludedElements.forEach( selector => {
+        Array.from( document.querySelectorAll(selector) ).forEach( domNode => {
+            domNode.remove()
+        })
+    })
 
     // Strip out existing meta
     Array.from(document.querySelectorAll('head > meta')).forEach( domNode => {
@@ -89,7 +110,7 @@ const cleanNuxtLayout = ( layout ) => {
 
 
     // Set page title
-    document.title = templateVar('title')
+    document.title = templateVar('title', false)
 
     // Set link tags
     document.querySelector('title').insertAdjacentHTML('afterend', templateVar('link-tags') )
@@ -100,6 +121,12 @@ const cleanNuxtLayout = ( layout ) => {
     // Set page css
     // document.querySelector('head').insertAdjacentHTML('beforeend', this.getCss() )
 
+    // Set header-scripts placeholder
+    document.querySelector('title').insertAdjacentHTML('afterend', templateVar('header-scripts') )
+
+    // Set header-styles placeholder
+    document.querySelector('title').insertAdjacentHTML('afterend', templateVar('header-styles') )
+
     // Set page content
     document.querySelector('.app-main').innerHTML = templateVar('main-content')//content
 
@@ -107,11 +134,28 @@ const cleanNuxtLayout = ( layout ) => {
     // `<script>${ this.getJs() }</script>`
     document.querySelector('body').insertAdjacentHTML('beforeend', templateVar('scripts') )
 
+
+    // Run additional replacements
+    for ( const selector in replaceElements ) {
+        // console.log('domNode', selector, document.querySelector( selector ), replaceElements[ selector ])
+
+        Array.from( document.querySelectorAll( selector ) ).forEach( domNode => {
+            // console.log('domNode', domNode, replaceElements[ selector ])
+            domNode.outerHTML = replaceElements[ selector ]
+        })
+    }
+
     return layout
 }
 
 let nuxtLayoutHtml = null
-const parseDefaultLayoutDom = () => {
+export const parseDefaultLayoutDom = ( options = {} ) => {
+
+    // const {
+    //     excludedElements = [],
+    //     replaceElements = {}
+    // } = options
+
     if ( nuxtLayoutHtml === null ) {
         nuxtLayoutHtml = getNuxtDefaultLayoutHtml()
     }
@@ -120,7 +164,7 @@ const parseDefaultLayoutDom = () => {
     // Build initial dom from the Layout
     const dom = new JSDOM( nuxtLayoutHtml )
 
-    const cleanedLayout = cleanNuxtLayout( dom )
+    const cleanedLayout = cleanNuxtLayout( dom, options )
 
     return cleanedLayout
 }
@@ -201,7 +245,7 @@ class DefaultLayout {
 
         // Set page title
         // pageTitle
-        workingLayoutString = workingLayoutString.replace( templateVar('title'), pageTitle )
+        workingLayoutString = workingLayoutString.replace( templateVar('title', false), pageTitle )
 
         // Set link tags
         // this.generateLinkTags()
