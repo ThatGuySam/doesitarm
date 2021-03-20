@@ -1,7 +1,7 @@
 [build]
   publish = "dist/"
   command = "npm run generate --quiet"
-  functions = "functions/"
+  # functions = "functions/"
 
 
 
