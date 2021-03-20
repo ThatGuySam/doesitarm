@@ -104,7 +104,6 @@ export class AppTemplate {
 
                 ${ relatedVideos.length > 0 ? /* html */`
                     <div
-                        v-if="relatedVideos.length !== 0"
                         class="related-videos w-full"
                     >
                         <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
