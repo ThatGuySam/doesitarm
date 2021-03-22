@@ -454,6 +454,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 * [2048 Game](https://apps.apple.com/us/app/2048-game/id871033113?mt=12) -  ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Celeste](http://www.celestegame.com/) - ⏹ No, not yet but can be made to run with a work around - [Apple Silicon Work Around](https://github.com/AbeJellinek/celeste-on-m1) [View on Itch.io](https://mattmakesgames.itch.io/celeste?ac=QWRPsg4sVvG)
+* [Cog Player](https://cog.losno.co/download) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Dolphin](https://dolphin-emu.org/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/452)
 * [DOSBox](https://sourceforge.net/projects/dosbox/) - ✳️ Yes, it works via Rosetta 2 - [Project Ticket 149](https://sourceforge.net/p/dosbox/feature-requests/149/)
 * [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
