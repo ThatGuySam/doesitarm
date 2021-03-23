@@ -22,6 +22,25 @@ export const makeDescription = function ( app ) {
     return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors.`
 }
 
+export function renderPageLinksHtml ( links ) {
+    return links.map( (link, i) => {
+
+        const notAppTestLink = !link.label.includes('🧪')
+
+        const isMainLink = (i === 0) && notAppTestLink
+
+        return /* html */`
+            <a
+                class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow focus:shadow-outline-indigo bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out"
+                href="${link.href}"
+                target="_blank"
+                rel="noopener"
+                role="button"
+            >${ isMainLink ? 'View' : link.label }</a>
+        `
+    } ).join('')
+}
+
 export class AppTemplate {
     // or `async data() {`
     // or `get data() {`
@@ -71,17 +90,7 @@ export class AppTemplate {
 
         const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
 
-        const relatedLinksHtml = app.relatedLinks.map( (link, i) => {
-            return /* html */`
-                <a
-                    class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow focus:shadow-outline-indigo bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out"
-                    href="${link.href}"
-                    target="_blank"
-                    rel="noopener"
-                    role="button"
-                >${ (i === 0) ? 'View' : link.label }</a>
-            `
-        } ).join('')
+        const relatedLinksHtml = renderPageLinksHtml( app.relatedLinks )
 
         return /* html */`
             <section class="container py-32">
