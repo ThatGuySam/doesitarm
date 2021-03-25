@@ -10,7 +10,7 @@
     "start": "nuxt start",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
     "build-lists": "node -r esm build-lists.js",
-    "generate-nuxt": "nuxt generate",
+    "generate-nuxt": "NODE_OPTIONS=--max-old-space-size=60000 nuxt generate",
     "generate-eleventy": "npm run generate-postcss && node --max-old-space-size=60000  -r esm node_modules/.bin/eleventy --quiet",
     "generate-postcss": "ENV=production postcss assets/css/tailwind.css --o static/tailwind.css",
     "dev-eleventy": "node --max-old-space-size=60000 -r esm node_modules/.bin/eleventy --quiet --watch --serve",
