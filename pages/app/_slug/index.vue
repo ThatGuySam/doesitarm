@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { lastUpdatedFriendly } from '~/helpers/parse-date'
+import { makeLastUpdatedFriendly } from '~/helpers/parse-date'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
 import LinkButton from '~/components/link-button.vue'
@@ -105,7 +105,7 @@ export default {
     },
     computed: {
         lastUpdatedFriendly () {
-            return lastUpdatedFriendly( this.app.lastUpdated )
+            return makeLastUpdatedFriendly( this.app.lastUpdated )
         }
     },
     head() {
