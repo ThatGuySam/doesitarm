@@ -149,12 +149,16 @@ export default {
         structuredData () {
             return {
                 "@context": "https://schema.org",
+                // https://developers.google.com/search/docs/data-types/faqpage
+                // https://schema.org/FAQPage
                 "@type": "FAQPage",
                 "mainEntity": this.categoryAppList.map( app => {
                     return {
+                        // https://schema.org/Question
                         "@type": "Question",
                         "name": `Does ${app.name} work on Apple Silicon and Apple M1 Macs?`,
                         "acceptedAnswer": {
+                            // https://schema.org/Answer
                             "@type": "Answer",
                             "text": app.text
                         }
