@@ -110,8 +110,10 @@ const makeThumbnailData = function ( thumbnails ) {
 
 export default async function ( applist ) {
 
+    const videosJsonUrl = `${process.env.VFUNCTIONS_URL}/videos.json`
+
     // Fetch Commits
-    const response = await axios.get(process.env.VIDEO_SOURCE)
+    const response = await axios.get( videosJsonUrl )
     // Extract commit from response data
     const fetchedVideos = response.data
 
