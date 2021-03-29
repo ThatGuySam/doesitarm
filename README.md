@@ -83,7 +83,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [hadolint](https://github.com/hadolint/hadolint) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://github.com/Homebrew/brew/issues/10744#issuecomment-787498421)
 * [Haskell](https://www.haskell.org/platform/mac.html) - 🚫 Not yet supported only works on Intel-based Macs - [Gitlab Issue](https://gitlab.haskell.org/ghc/ghc/-/issues/18664)
 * [Hex Fiend](https://github.com/HexFiend/HexFiend/releases) - ✅ Yes, full native support as of v2.14.0 - [Source](https://github.com/ThatGuySam/doesitarm/issues/429)
-* [Homebrew](https://brew.sh/) - ✳️ Yes, fully supported as of v3.0.0 - [Release Notes](https://brew.sh/2021/02/05/homebrew-3.0.0/). 
+* [Homebrew](https://brew.sh/) - ✅ Yes, fully supported as of v3.0.0 - [Release Notes](https://brew.sh/2021/02/05/homebrew-3.0.0/). 
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
 * [IDA Pro](https://www.hex-rays.com/products/ida/support/download_freeware/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/405#issue-759952494)
 * [Insomnia Designer](https://insomnia.rest/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/456#issuecomment-748260642)
