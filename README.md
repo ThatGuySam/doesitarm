@@ -432,6 +432,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/399#issuecomment-742175817)
 * [Tablecruncher](https://tablecruncher.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://tablecruncher.com/blog/2020/version-1.5.1-apple-silicon-ready/)
 * [Taskheat](https://www.eyen.fr/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/taskheat)
+* [TaskPaper](https://www.taskpaper.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344469/5114)
 * [TeamViewer](https://www.teamviewer.com/en-us/) - ✅ Yes, Full Native Apple Silicon Support as of v15.12.4 - [Release Notes](https://community.teamviewer.com/t5/Change-Logs-EN/macOS-v15-12-4-Full-Change-Log/m-p/107706)
 * [TextSniper](https://textsniper.app/) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.1 - [Release Notes](https://textsniper.app/release-notes) [Verification](https://github.com/ThatGuySam/doesitarm/issues/571#issue-811238095)
 * [Thunderbird](https://www.thunderbird.net/en-US/) - ✅ Yes, Full Native Apple Silicon Support as of v87 - [Bugzilla Tracker](https://bugzilla.mozilla.org/show_bug.cgi?id=1678775) [Verification](https://github.com/ThatGuySam/doesitarm/issues/591#issue-824609519)
@@ -443,6 +444,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Tuple](https://tuple.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/514#issuecomment-761276719)
 * [UctoX](https://software.charliemonroe.net/uctox/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](http://blog.charliemonroe.net/big-sur-and-apple-silicon/) [View on Setapp](https://setapp.sjv.io/uctox)
 * [Ulysses](https://ulysses.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/120#issuecomment-750041670) [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/) [View on Setapp](https://setapp.sjv.io/c/2708043/344477/5114)
+* [Unibox](https://www.uniboxapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/368242/5114)
 * [Usher](https://manytricks.com/usher/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Vidrio](https://vidr.io/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/833645/5114)
 * [VisualGrep](https://apps.apple.com/us/app/visualgrep/id597887722?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.30 - [GitHub issue](https://github.com/visualgrep/app/issues/46)
@@ -608,6 +610,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [TouchSwitcher](https://hazeover.com/touchswitcher.html) - ✅ Yes, Full Native Apple Silicon Support as of 1.4 - [Official News](https://hazeover.com/news.html)
 * [Transloader](https://eternalstorms.at/transloader/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1.1 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Trickster](https://www.apparentsoft.com/trickster) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/668337/5114)
+* [uBar](https://brawersoftware.com/products/ubar) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/489433/5114)
 * [Wifi Explorer](https://www.intuitibits.com/products/wifi-explorer/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344478/5114)
 * [Witch for Mac](https://manytricks.com/witch/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/602#issue-834336906) [Release Notes](https://manytricks.com/witch/releasenotes/)
 
