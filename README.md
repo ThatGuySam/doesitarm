@@ -307,7 +307,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [AutoCAD](https://www.autodesk.com/products/autocad/overview?plc=ACDIST&term=1-YEAR&support=ADVANCED&quantity=1) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/499#issuecomment-754202196) [AutoDesk Forums](https://forums.autodesk.com/t5/autocad-for-mac-forum/apple-silicon/m-p/9652836)
 * [CADintosh](https://www.lemkesoft.de/en/products/cadintosh/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [PrusaSlicer](https://www.prusa3d.com/prusaslicer/) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/379#issue-755576203)
-* [Rhinoceros 3D](https://www.rhino3d.com/download/) - ✳️ Yes, works via Rosetta 2 translation - [Developer Article](https://discourse.mcneel.com/t/apple-silicon-and-rhino-for-mac-the-work-continues/113164)
+* [Rhinoceros 3D](https://www.rhino3d.com/download/) - 🚫 No, not yet supported only works on Intel-based Macs - [Developer Article](https://discourse.mcneel.com/t/apple-silicon-and-rhino-for-mac-the-work-continues/113164)
 * [Shaper3D](https://www.shapr3d.com/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=2211)
 * [SketchUp](https://www.sketchup.com/) - ✳️ Yes, works via Rosetta 2 - [Discussion](https://forums.sketchup.com/t/the-new-m1-processor/141946)
 * [SOLIDWORKS](https://www.solidworks.com/sw/support/downloads.htm) - ✳️ Yes, works via Parallels Virtualization - [Working on Parallels](https://www.parallels.com/blogs/solidworks-for-mac/)
