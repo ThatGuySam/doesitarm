@@ -644,6 +644,14 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
 
 
+## Apple Silicon Testing Tools
+* [Uni Detetector](https://apps.apple.com/app/id1531249804) - Check all your Mac's apps and display Binary Architecture and more. 
+* [Silicon by DigiDNA](https://github.com/DigiDNA/Silicon) - Identify Intel-Only Apps on your Mac with ease 
+* [ascheck](https://github.com/harryzcy/ascheck) - A command-line app that bulk-checks your apps for the Apple Silicon support. 
+* [Silicon Info](https://github.com/billycastelli/Silicon-Info) - Mac menu bar tool to view the architecture of the running application
+* [Does It ARM App Test](https://doesitarm.com/apple-silicon-app-test/) - Test any app for Native Apple Silicon support or check for reported native versions all in the browser
+
+
 ## Youtube Apple Silicon Playlists
 * [Awais Mirza Video Tests](https://www.youtube.com/playlist?list=PLz5rnvLVJX5XF8cXAOQuarPIeP8Xr7b1_)
 * [Andrew Tsai Game Benchmarks](https://www.youtube.com/playlist?list=PLFbqxkNlqrHNK0i4WN99Jc8g-qSbKoZEy)
