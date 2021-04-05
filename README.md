@@ -554,8 +554,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [NordVPN](https://nordvpn.com/download/nordvpn-site/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/317#issuecomment-736876490)
 * [SecKey](https://lighthouse16.com/seckey/) - ✅ Yes, fully supported as of v1.3.3 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Secrets for Mac](https://apps.apple.com/app/secrets/id973049011?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v3.4.0 - [Official Post](https://outercorner.com/blog/2020/11/password-autofill-now-on-macos-big-sur/) [View on Setapp](https://setapp.sjv.io/c/2708043/442278/5114)
-* [Step Two for Mac](https://steptwo.app/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/766955/5114)
-* [Tor Browser](https://www.torproject.org/download/) - ✳️ Yes, works via Rosetta 2 but with a few page crashes - [Source](https://github.com/ThatGuySam/doesitarm/issues/436) [Issue tracker for tab crashes](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/40262)
+* [Step Two for Mac](https://steptwo.app/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/619#issue-849584485) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/766955/5114)
+* [Tor Browser](https://www.torproject.org/download/) - ✳️ Yes, works via Rosetta 2 translation - [Release Notes](https://blog.torproject.org/new-release-tor-browser-1008) [Source](https://github.com/ThatGuySam/doesitarm/issues/436) [Issue tracker for tab crashes](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/40262)
 * [VeraCrypt](https://www.veracrypt.fr/en/Downloads.html) - ✳️ Yes, works via Rosetta 2 as of 1.24-Update8 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/355)
 * [Vivaldi](https://vivaldi.com/download/) - ✅ Yes, native support as of v3.7 - [Source](https://vivaldi.com/blog/vivaldi-fires-up-performance-2/)
 * [VPN Tracker 365](https://www.vpntracker.com) - ✅ Yes, fully native IPsec, L2TP, OpenVPN, SonicWALL SSL VPN support as of v 21.0 - [Official page](https://www.vpntracker.com/us/VPN-Client-for-macOS-Big-Sur.html)
@@ -566,6 +566,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### System Tools
 
+* [Access Menu for macOS](https://titanium-software.fr/en/accessmenu.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://titanium-software.fr/en/release_accessmenu.html)
 * [AlDente](https://github.com/davidwernhart/AlDente/releases) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://github.com/davidwernhart/AlDente/releases)
 * [AmorphousDiskMark](https://apps.apple.com/us/app/amorphousdiskmark/id1168254295) - ✅ Yes, full native Apple Silicon support as of v3.1
 * [Amphetamine](https://apps.apple.com/app/amphetamine/id937984704) - ✅ Yes, full native Apple Silicon support from 5.1 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/295)
@@ -577,10 +578,12 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Beamer](https://beamer-app.com/) - ✳️ Yes, works via Rosetta 2 Translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/815231/5114)
 * [BetterZip](https://macitbetter.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/354709/5114)
 * [Burn for Mac](https://burn-osx.sourceforge.io/Pages/English/home.html) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.0 - [Release Notes](https://burn-osx.sourceforge.io/Pages/English/news.html)
+* [CalHash](https://titanium-software.fr/en/calhash.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://titanium-software.fr/en/release_calhash.html)
 * [Camo Studio](https://reincubate.com/camo/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://reincubate.com/support/camo/release-notes/#1.1.3.122)
 * [coconutBattery](https://www.coconut-flavour.com/coconutbattery/) - ✅ Yes, full native support as of v3.9.2
 * [CleanMyMac](https://cleanmymac.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344326/5114)
 * [CleanShot X](https://cleanshot.com) - ✅ Yes, fully supported as of v3.4.4 - [Changelog](https://cleanshot.com/changelog/) [View on Setapp](https://setapp.sjv.io/c/2708043/569389/5114)
+* [Deeper for macOS](https://titanium-software.fr/en/deeper.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://titanium-software.fr/en/release_deeper.html)
 * [Default Folder X](https://www.stclairsoft.com/DefaultFolderX/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/840195/5114)
 * [Disk Drill](https://www.cleverfiles.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344358/5114)
 * [DisplayLink Manager](https://www.displaylink.com/downloads/macos) - ✅ Yes, Full Native Apple Silicon Support as of v1.3 - [Release Notes](https://gist.github.com/ThatGuySam/30e5f1d2ee4edacab6323acaa55791fc)
@@ -603,10 +606,12 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Maccy](https://maccy.app/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://github.com/p0deje/Maccy/releases/tag/0.19.0) [Mac App Store](https://apps.apple.com/us/app/maccy/id1527619437)
 * [MacPilot](https://www.koingosw.com/products/macpilot/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/550030/5114)
 * [MacZip](https://ezip.awehunt.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://ezip.awehunt.com/)
+* [Maintenance for macOS](https://titanium-software.fr/en/maintenance.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://titanium-software.fr/en/release_maintenance.html)
 * [Magic Window Air](https://apps.apple.com/us/app/magic-window-air/id1481258399) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/933402/5114) 
 * [Moom](https://manytricks.com/moom/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.20 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Mosaic for Mac](https://www.lightpillar.com/mosaic.html) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [Release Notes](https://lightpillar.com/appdata/mosaic/features/version-history.html) [View on Setapp](https://setapp.sjv.io/mosaic)
 * [One Switch](https://fireball.studio/oneswitch/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/635280/5114)
+* [OnyX for macOS](https://titanium-software.fr/en/onyx.html) - ✅ Yes, Full Native Apple Silicon Support reported as of v3.9.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/622#issue-849839262) [Release Notes](https://titanium-software.fr/en/release_onyx.html)
 * [Pacifist](https://www.charlessoft.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/573#issue-812045761)
 * [Paragon NTFS](https://www.paragon-software.com/home/ntfs-mac/) - ✅ Yes, Full Native Apple Silicon Support
 * [Paste for Mac](https://pasteapp.io/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/paste)
