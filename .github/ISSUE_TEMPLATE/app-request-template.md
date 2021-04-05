@@ -19,6 +19,8 @@ Final Line Example
 For a great example issue check out https://github.com/ThatGuySam/doesitarm/issues/358
 
 
+--------- Delete this line and everything above it before submitting ---------
+
 
 **The official name of the app**
 {What's the full official name of the app}
