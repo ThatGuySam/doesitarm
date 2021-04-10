@@ -2,20 +2,32 @@
 import slugify from 'slugify'
 import axios from 'axios'
 
-import { matchesWholeWord } from './matching.js'
+import { fuzzyMatchesWholeWord } from './matching.js'
 import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
 import parseDate from './parse-date'
 
+
+const inTimestamps = ( name, video ) => {
+    // If this is empty
+    // then reutrn false
+    if ( video.timestamps.length === 0 ) return false
+
+    for ( const timestamp of video.timestamps ) {
+        if ( fuzzyMatchesWholeWord(name, timestamp.fullText ) ) return true
+    }
+
+    return false
+}
+
 const videoFeaturesApp = function (app, video) {
     const appFuzzyName = app.name.toLowerCase()
-    if (video.title.toLowerCase().includes(appFuzzyName)) return true
 
-    const appIsInTimestamps = video.timestamps.map( timestamp => timestamp.fullText.toLowerCase()).includes(appFuzzyName)
+    if ( fuzzyMatchesWholeWord(appFuzzyName, video.title ) ) return true
 
-    if (appIsInTimestamps) return true
+    if ( inTimestamps(appFuzzyName, video) ) return true
 
-    if (matchesWholeWord(appFuzzyName, video.description.toLowerCase())) return true
+    if ( fuzzyMatchesWholeWord(appFuzzyName, video.description ) ) return true
 
     return false
 }
@@ -63,7 +75,7 @@ const generateVideoTags = function ( video ) {
             if (videoTags.has(tagKey)) break
 
             // Check title
-            if (matchesWholeWord(tagWord.toLowerCase(), video.title.toLowerCase())) {
+            if (fuzzyMatchesWholeWord( tagWord, video.title )) {
                 videoTags.add(tagKey)
 
                 // console.log(video.title, 'has', tagKey, 'tag')
@@ -73,7 +85,7 @@ const generateVideoTags = function ( video ) {
             }
 
             // Check description
-            if (matchesWholeWord(tagWord.toLowerCase(), video.description.toLowerCase())) {
+            if (fuzzyMatchesWholeWord( tagWord, video.description )) {
                 videoTags.add(tagKey)
 
                 // console.log(video.title, 'has', tagKey, 'tag')
