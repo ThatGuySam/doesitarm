@@ -8,10 +8,18 @@ assignees: ''
 ---
 
 
-Replace the text inside the {}'s with your own. 
+Replace the {} and the text inside with your own text. 
+
+Final Line Example
+```
+**Proposed App Status**
+✳️ Runs via Rosetta with native support currently in development
+```
 
 For a great example issue check out https://github.com/ThatGuySam/doesitarm/issues/358
 
+
+--------- Delete this line and everything above it before submitting ---------
 
 
 **The official name of the app**

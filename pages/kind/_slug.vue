@@ -146,6 +146,26 @@ export default {
         description () {
             return `Check the the latest reported support status of ${this.pluralLabel || this.category.label} on Apple Silicon and Apple M1 Processors. `
         },
+        structuredData () {
+            return {
+                "@context": "https://schema.org",
+                // https://developers.google.com/search/docs/data-types/faqpage
+                // https://schema.org/FAQPage
+                "@type": "FAQPage",
+                "mainEntity": this.categoryAppList.map( app => {
+                    return {
+                        // https://schema.org/Question
+                        "@type": "Question",
+                        "name": `Does ${app.name} work on Apple Silicon and Apple M1 Macs?`,
+                        "acceptedAnswer": {
+                            // https://schema.org/Answer
+                            "@type": "Answer",
+                            "text": app.text
+                        }
+                    }
+                })
+            }
+        }
     },
     head() {
         return {
@@ -173,7 +193,9 @@ export default {
                     'property':  'twitter:url',
                     'content': `${process.env.URL}${this.$nuxt.$route.path}`
                 },
-            ]
+            ],
+            __dangerouslyDisableSanitizers: ['script'],
+            script: [{ innerHTML: JSON.stringify(this.structuredData), type: 'application/ld+json' }]
         }
     }
 }
