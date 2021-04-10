@@ -5,7 +5,7 @@
             <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0">
 
                 <h1 class="title text-sm md:text-2xl font-bold">
-                    Does `{{ app.name }} work on Apple Silicon?
+                    Does {{ app.name }} work on Apple Silicon?
                 </h1>
                 <h2 class="subtitle text-2xl md:text-5xl font-bold py-6">
                     {{ app.text }}
