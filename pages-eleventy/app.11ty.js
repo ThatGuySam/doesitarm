@@ -94,7 +94,7 @@ export class AppTemplate {
 
         return /* html */`
             <section class="container py-32">
-                <div class="flex flex-col items-center text-center">
+                <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0">
                     <h1 class="title text-sm md:text-2xl font-bold">
                         ${ data.mainHeading }
                     </h1>
