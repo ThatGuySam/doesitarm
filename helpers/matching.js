@@ -4,6 +4,9 @@ export function matchesWholeWord (needle, haystack) {
     return new RegExp('\\b' + needle + '\\b').test(haystack)
 }
 
+export function fuzzyMatchesWholeWord (needle, haystack) {
+    return matchesWholeWord ( needle.toLowerCase() , haystack.toLowerCase() )
+}
 
 export function eitherMatches (stringARaw, stringBRaw) {
     // Make strings lowercase for more generous comparison
