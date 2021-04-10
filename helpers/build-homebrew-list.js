@@ -184,14 +184,15 @@ class MakeHomebrewList {
 
             formulaeRow.name = formulaeRow.fullName.split(' ')[0]
 
-            formulaeRow.links = tr.querySelectorAll('a').map( a => {
-                const href = a.getAttribute('href')
-                return {
-                    href,
-                    label: a.rawText,
-                    // a
-                }
-            })
+            formulaeRow.links = []
+            // formulaeRow.links = tr.querySelectorAll('a').map( a => {
+            //     const href = a.getAttribute('href')
+            //     return {
+            //         href,
+            //         label: a.rawText,
+            //         // a
+            //     }
+            // })
 
             // if (formulaeRow.links.length !== 0) console.log('formulaeRow', formulaeRow.links)
 
@@ -280,7 +281,7 @@ class MakeHomebrewList {
                     category
                 }),//`/formula/${slug}`,
                 category,
-                content: formulae.comments,
+                content: '',//formulae.comments,
                 relatedLinks: [
                     {
                         href: `https://formulae.brew.sh/formula/${formulae.name}`,
