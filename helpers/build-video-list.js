@@ -84,22 +84,30 @@ const generateVideoTags = function ( video ) {
     return videoTags
 }
 
-const makeThumbnailData = function ( thumbnails ) {
+const makeThumbnailData = function ( thumbnails, widthLimit = null ) {
+
+    const thumbnailEntries = Object.entries( thumbnails )
+    const srcsetArray = []
 
     let maxWidth = 0
-    Object.entries( thumbnails ).forEach(([thumbnailKey, thumbnail]) => {
+
+    thumbnailEntries.forEach(([thumbnailKey, thumbnail]) => {
+        if ( widthLimit !== null &&  widthLimit < thumbnail.width) return
+
+        // If this width is more than known maxWidth
+        // then set maxWidth
         if (thumbnail.width > maxWidth) maxWidth = thumbnail.width
+
+        // Add this width to our srcset
+        srcsetArray.push(`${thumbnail.url} ${thumbnail.width}w`)
     })
 
+
     const sizes = `(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`
-
-    const srcset = Object.entries( thumbnails ).map(([thumbnailKey, thumbnail]) => {
-        // console.log('thumbnail', thumbnail)
-        return `${thumbnail.url} ${thumbnail.width}w`
-    }).join(', ')
-
-
+    const srcset = srcsetArray.join(', ')
     const src = thumbnails.default.url
+
+    // console.log('srcsetArray', srcsetArray)
 
     return {
         sizes,
@@ -170,7 +178,7 @@ export default async function ( applist ) {
             tags: Array.from(tags),
             timestamps: fetchedVideos[videoId].timestamps,
             // thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
-            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails ),
+            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails, 700 ),
             endpoint: getVideoEndpoint({
                 slug
             })
