@@ -301,7 +301,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Permute](https://software.charliemonroe.net/permute/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344448/5114)
 * [Subler](https://subler.org/) - ✅ Yes, Full Native Apple Silicon Support as of v1.6.6 - [Release Notes](https://bitbucket.org/galad87/subler/wiki/Release%20Notes)
 * [Tumult Hype](https://tumult.com/hype/) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Blog Post](https://blog.tumult.com/2020/11/23/introducing-tumult-hype-v4-1-with-apple-silicon-and-big-sur-compatibility/) [View on Setapp](https://setapp.sjv.io/c/2708043/344385/5114)
-* [Vuo](https://vuo.org/download) - ✳️ Runs via Rosetta with native support currently in development - [Source 1](https://vuo.org/comment/7265#comment-7265) [Source 2](https://vuo.org/comment/7781#comment-7781)
+* [Vuo](https://vuo.org/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.0 - [Release Notes](https://vuo.org/release/2.3.0)
 * [WebTorrent](https://webtorrent.io/desktop/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/494#issuecomment-759525123)
 * [Wirecast](https://www.telestream.net/wirecast/) - ⏹ No, not working at all but support is in development - [Official Status](http://www.telestream.net/telestream-support/wire-cast/support.htm?accordion=faqBigSur#faqs)
 * [Wondershare Filmora](https://apps.apple.com/us/app/filmora-video-editor/id1516822341?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://filmora.wondershare.com/filmora-supports-apple-arm.html)
