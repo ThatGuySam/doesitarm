@@ -404,7 +404,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Microsoft OneNote](https://apps.apple.com/cn/app/microsoft-onenote/id784801555?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft Outlook](https://apps.apple.com/app/microsoft-outlook/id985367838?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft PowerPoint](https://apps.apple.com/cn/app/microsoft-powerpoint/id462062816?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
-* [Microsoft Remote Deskto‪p](https://apps.apple.com/au/app/microsoft-remote-desktop/id1295203466?mt=12) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Apple Silicon Beta](https://install.appcenter.ms/orgs/rdmacios-k2vy/apps/microsoft-remote-desktop-for-mac/distribution_groups/all-users-of-microsoft-remote-desktop-for-mac) 
+* [Microsoft Remote Deskto‪p](https://apps.apple.com/au/app/microsoft-remote-desktop/id1295203466?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v10.6.0 - [App Store Version History](https://apps.apple.com/gb/app/microsoft-remote-desktop/id1295203466?mt=12)
 * [Microsoft Word](https://apps.apple.com/cn/app/microsoft-word/id462054704?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [MindNode](https://mindnode.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103) [View on Setapp](https://setapp.sjv.io/c/2708043/557413/5114)
 * [Moment for macOS](https://fireball.studio/moment) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/896739/5114)
