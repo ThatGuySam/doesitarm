@@ -67,7 +67,7 @@
                     <div class="flex-shrink-0">
                         <!-- <span class="rounded-md shadow-sm">
                             <LinkButton
-                                href="https://github.com/ThatGuySam/doesitarm/issues"
+                                href="https://prf.hn/l/7JG0bEj"
                                 class="relative inline-flex items-center border-indigo-500"
                             >
                                 <svg
@@ -79,23 +79,19 @@
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                <span>Submit App</span>
+                                <span>Parallels is now Apple Silicon native!</span>
                             </LinkButton>
 
                         </span> -->
 
                         <a
-                            href="https://www.producthunt.com/posts/apple-silicon-app-test?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-apple-silicon-app-test"
-                            rel="noopener"
-                            target="_blank"
+                            :class="[
+                                'underline px-3 py-2 rounded-md text-xs font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                                //($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                            ]"
+                            href="https://prf.hn/l/7JG0bEj"
                         >
-                            <img
-                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=285320&theme=light"
-                                alt="Apple Silicon App Test - Test your apps for compatibility before you buy an M1 Mac | Product Hunt"
-                                style="width: 200px; height: 43px;"
-                                width="200"
-                                height="43"
-                            >
+                            ✅ Parallels is now fully native!
                         </a>
                     </div>
                 </div>

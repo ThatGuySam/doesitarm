@@ -158,18 +158,6 @@
             </div>
 
 
-            <!-- <pre class="w-full">{{ appsBeingScanned }}</pre> -->
-
-            <AllUpdatesSubscribe
-                :input-class-groups="{
-                    shadow: 'hover:neumorphic-shadow',
-                    bg: '',
-                    focus: 'bg-transparent neumorphic-shadow pl-8',
-                    blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
-                }"
-                class="my-12"
-            />
-
         </div>
 
         <!-- <client-only>
