@@ -25,6 +25,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Music and Audio Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#music-and-audio-tools)
 * [Photo and Graphic Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#photo-and-graphic-tools)
 * [Video and Motion Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#video-and-motion-tools)
+* [Live Production and Performance](#live-production-and-performance)
 * [3D and Architecture](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#3d-and-architecture)
 * [Productivity Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#productivity-tools)
 * [Entertainment and Media Apps](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#entertainment-and-media-apps)
@@ -192,7 +193,6 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Music and Audio Tools
 
-* [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
 * [Adobe Audition](https://www.adobe.com/products/audition.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Airfoil](https://rogueamoeba.com/airfoil/mac/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.10.0 - [Release Notes](https://rogueamoeba.com/airfoil/mac/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Ardour](https://community.ardour.org/download) - ✳️ Yes, it works via Rosetta 2 with native support in progress - [Apple Silicon Pre-release](https://discourse.ardour.org/t/ardour-for-apple-m1-arm-pre-release/105174)
@@ -201,9 +201,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Avid Pro Tools](https://www.avid.com/pro-tools) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
 * [Avid Sibelius](https://www.avid.com/sibelius) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
 * [Capo](http://supermegaultragroovy.com/products/capo/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v4 - [Official Post](https://supermegaultragroovy.com/products/capo/press/pr/2020-11-17/)
-* [djay](https://www.algoriddim.com/) - ✅ Yes, Full Native Apple Silicon Support as of v3.0 - [Release Notes](https://www.algoriddim.com/djay-pro-mac/releasenotes)
 * [eqMac](https://eqmac.app) - ✅ Yes, Native Apple Silicon binary, works well as of v0.3.7, Rosetta 2 lacks performance - [Tracked Issue](https://github.com/bitgapp/eqMac/issues/413)
-* [Farrago](https://rogueamoeba.com/farrago/) - ✅ Yes, Initial Native Apple Silicon Support as of v1.6.0 - [Release Notes](https://rogueamoeba.com/farrago/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Fission](https://rogueamoeba.com/fission/) - ✅ Yes, Initial Native Apple Silicon Support as of v2.7.0 - [Release Notes](https://rogueamoeba.com/fission/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [FL Studio](https://www.image-line.com/fl-studio-download/) - ✳️ Yes, works via Rosetta 2 but may have performance issues - [Image Line Article](https://support.image-line.com/action/knowledgebase/?ans=668)
 * [foobar2000](https://www.foobar2000.org/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/586#issue-817790955) [Changelog](https://www.foobar2000.org/changelog-mac)
@@ -211,19 +209,13 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Fretello](https://apps.apple.com/us/app/fretello-guitar-lessons/id1107957482) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.3 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Garageband](https://www.apple.com/mac/garageband/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1033)
 * [Logic Pro](https://www.apple.com/logic-pro/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1037)
-* [Loopback](https://rogueamoeba.com/loopback/) - ✅ Yes, Initial Native Apple Silicon Support as of v2.2.0 - [Release Notes](https://rogueamoeba.com/loopback/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Native Access](https://www.native-instruments.com/en/specials/native-access/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [n-Track Studio](https://ntrack.com/download.php) - 🚫 Not yet supported only works on Intel-based Macs - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/354737/5114)
 * [Piezo](https://rogueamoeba.com/piezo/) - ✅ Yes, Initial Native Apple Silicon Support as of v1.7.0 - [Release Notes](https://rogueamoeba.com/piezo/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Plogue Bidule](https://plogue.com/downloads.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/480#issue-776226694)
 * [REAPER](https://www.reaper.fm/download.php) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Apple Silicon Discussion](https://forum.cockos.com/showthread.php?t=245263)
-* [rekordbox](https://rekordbox.com/en/download/) - ✳️ Yes, works via Rosetta 2 with native support currently in development - [Official Support List](https://www.pioneerdj.com/en-us/landing/support-for-macos-big-sur/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/560#issue-805540415)
-* [Serato DJ Pro](https://serato.com/dj/pro/downloads/mac) - ✳️ Yes, works via Rosetta 2 translation - [Beta Download](https://serato.com/forum/area/740)
-* [SoundSource](https://rogueamoeba.com/soundsource/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.2.0 - [Release Notes](https://rogueamoeba.com/soundsource/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
-* [Super 8 R2](https://www.native-instruments.com/en/products/komplete/synths/super-8/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
+* [SoundSource](https://rogueamoeba.com/soundsource/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.2.0 - [Release Notes](https://rogueamoeba.com/soundsource/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/)
 * [TwistedWave](https://twistedwave.com/mac) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Verification](https://github.com/ThatGuySam/doesitarm/issues/508#issue-781561446)
-* [Traktor DJ 2](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-dj-2/) - ✳️ Yes, works via Rosetta 2 - [Official Apple Silicon Status](https://support.native-instruments.com/hc/en-us/articles/360014683497-) [Official Big Sur Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
-* [Traktor Pro 3](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-pro-3/) - ✳️ Yes, works via Rosetta 2 - [Official Apple Silicon Status](https://support.native-instruments.com/hc/en-us/articles/360014683497-) [Official Big Sur Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [TunesArt](https://www.jibapps.com/apps/tunesart/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.6 - [Source](https://twitter.com/jibapps/status/1334055652055003137)
 * [X Lossless Decoder (XLD)](https://sourceforge.net/projects/xld/) - ✅ Yes, Full Native Apple Silicon Support as of 2021/1/1 - [Scroll to version history here](https://tmkk.undo.jp/xld/index_e.html)
 
@@ -290,7 +282,6 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Cinema 4D](https://www.maxon.net/en/downloads) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.maxon.net/en/article/cinema-4d-r23-sp1-now-available) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=924)
 * [Claquette](https://www.peakstep.com/claquette/) - ✅ Yes, Full Native Apple Silicon Support as of v2.1 - [Release Notes](https://www.peakstep.com/claquette/releasenotes.html)
 * [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=950)
-* [Ecamm Live](https://www.ecamm.com/mac/ecammlive/?fp_ref=lsp) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.ecamm.com/en/articles/4616420-ecamm-live-on-macos-11-big-sur-and-apple-silicon-m1-macs)
 * [ffWorks](https://www.ffworks.net/download.html) - ✅ Yes, full native support as of v2.2.3
 * [Filma](https://apps.apple.com/app/filma-best-video-editor/id1456095438) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Final Cut Pro](https://www.apple.com/final-cut-pro/) - ✅ Yes, it will available on Apple Silicon launch - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1173) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5844)
@@ -298,7 +289,6 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Handbrake](https://handbrake.fr/) - ✅ Yes, natively supported as of v1.4.0 - [Github Issue](https://github.com/HandBrake/HandBrake/issues/2951)
 * [Houdini](https://www.sidefx.com/products/houdini/) - ✳️ Yes, works via Rosetta 2 - [Source](https://www.reddit.com/r/Houdini/comments/jzg1wj/houdini_running_on_apple_silicon_m1_macs_demo/)
 * [MKVToolNix](https://mkvtoolnix.download/downloads.html#macosx) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/344)
-* [OBS](https://obsproject.com/) - ✳️ Yes, works via Rosetta 2 - [MacRumors Discussion](https://forums.macrumors.com/threads/so-hows-m1-for-streamers-obs-streamlabs-obs-etc.2269239/) [Mention in Issue](https://github.com/obsproject/obs-studio/pull/3444#issuecomment-690216403)
 * [OpenISS](https://github.com/OpenISS/OpenISS) - 🔶 Unknown, more info needed - [GitHub Issue](https://github.com/OpenISS/OpenISS/issues/72) [Contribute](https://github.com/ThatGuySam/doesitarm/issues/475)
 * [Premiere Pro](https://www.adobe.com/products/premiere.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Premiere Rush](https://www.adobe.com/products/premiere-rush.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.58 - [Release Notes](https://helpx.adobe.com/premiere-rush/user-guide.html/premiere-rush/help/whats-new/2021-3.ug.html) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
@@ -307,8 +297,24 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Tumult Hype](https://tumult.com/hype/) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Blog Post](https://blog.tumult.com/2020/11/23/introducing-tumult-hype-v4-1-with-apple-silicon-and-big-sur-compatibility/) [View on Setapp](https://setapp.sjv.io/c/2708043/344385/5114)
 * [Vuo](https://vuo.org/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.0 - [Release Notes](https://vuo.org/release/2.3.0)
 * [WebTorrent](https://webtorrent.io/desktop/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/494#issuecomment-759525123)
-* [Wirecast](https://www.telestream.net/wirecast/) - ⏹ No, not working at all but support is in development - [Official Status](http://www.telestream.net/telestream-support/wire-cast/support.htm?accordion=faqBigSur#faqs)
 * [Wondershare Filmora](https://apps.apple.com/us/app/filmora-video-editor/id1516822341?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://filmora.wondershare.com/filmora-supports-apple-arm.html)
+
+
+
+#### Live Production and Performance
+* [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
+* [djay](https://www.algoriddim.com/) - ✅ Yes, Full Native Apple Silicon Support as of v3.0 - [Release Notes](https://www.algoriddim.com/djay-pro-mac/releasenotes)
+* [Ecamm Live](https://www.ecamm.com/mac/ecammlive/?fp_ref=lsp) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.ecamm.com/en/articles/4616420-ecamm-live-on-macos-11-big-sur-and-apple-silicon-m1-macs)
+* [Farrago](https://rogueamoeba.com/farrago/) - ✅ Yes, Initial Native Apple Silicon Support as of v1.6.0 - [Release Notes](https://rogueamoeba.com/farrago/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
+* [Loopback](https://rogueamoeba.com/loopback/) - ✅ Yes, Initial Native Apple Silicon Support as of v2.2.0 - [Release Notes](https://rogueamoeba.com/loopback/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
+* [OBS](https://obsproject.com/) - ✳️ Yes, works via Rosetta 2 - [MacRumors Discussion](https://forums.macrumors.com/threads/so-hows-m1-for-streamers-obs-streamlabs-obs-etc.2269239/) [Mention in Issue](https://github.com/obsproject/obs-studio/pull/3444#issuecomment-690216403)
+* [rekordbox](https://rekordbox.com/en/download/) - ✳️ Yes, works via Rosetta 2 with native support currently in development - [Official Support List](https://www.pioneerdj.com/en-us/landing/support-for-macos-big-sur/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/560#issue-805540415)
+* [Serato DJ Pro](https://serato.com/dj/pro/downloads/mac) - ✳️ Yes, works via Rosetta 2 translation - [Beta Download](https://serato.com/forum/area/740)
+* [Super 8 R2](https://www.native-instruments.com/en/products/komplete/synths/super-8/) - ⏹ No, not working at all but support is in development - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
+* [Traktor DJ 2](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-dj-2/) - ✳️ Yes, works via Rosetta 2 - [Official Apple Silicon Status](https://support.native-instruments.com/hc/en-us/articles/360014683497-) [Official Big Sur Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
+* [Traktor Pro 3](https://www.native-instruments.com/en/products/traktor/dj-software/traktor-pro-3/) - ✳️ Yes, works via Rosetta 2 - [Official Apple Silicon Status](https://support.native-instruments.com/hc/en-us/articles/360014683497-) [Official Big Sur Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
+* [Wirecast](https://www.telestream.net/wirecast/) - ⏹ No, not working at all but support is in development - [Official Status](http://www.telestream.net/telestream-support/wire-cast/support.htm?accordion=faqBigSur#faqs)
+
 
 
 

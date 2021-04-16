@@ -107,6 +107,14 @@ export const categories = {
         slug: 'vpns-security-and-privacy',
     },
 
+    'live-production-and-performance': {
+        id: 10,
+        ...categoryTemplate,
+        label: 'Live Production and Performance',
+        pluralLabel: 'Live Production and Performance Software',
+        slug: 'live-production',
+    },
+
     // Special Lists
     'games': {
         id: 100,
