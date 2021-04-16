@@ -588,7 +588,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [AnyTrans](https://www.imobie.com/anytrans/download.htm) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/anytrans)
 * [AppCleaner](https://freemacsoft.net/appcleaner/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/559#issue-803995485)
 * [Archiver App](https://archiverapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/archiver)
-* [Backblaze](https://www.backblaze.com/) - ✳️ Yes, works via Rosetta 2 - [Verification #1](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-744336558) [Verification #2](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-777878266)
+* [Backblaze](https://www.backblaze.com/) - ✅ Yes, Full Native Apple Silicon Support as of v7.0.2.494 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/409#issuecomment-821298155)
 * [balenaEtcher](https://github.com/balena-io/etcher/releases) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/294#issuecomment-737011519)
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/) [View on Setapp](https://setapp.sjv.io/c/2708043/443665/5114)
 * [Beamer](https://beamer-app.com/) - ✳️ Yes, works via Rosetta 2 Translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/815231/5114)
