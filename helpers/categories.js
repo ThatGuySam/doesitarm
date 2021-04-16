@@ -112,7 +112,7 @@ export const categories = {
         ...categoryTemplate,
         label: 'Live Production and Performance',
         pluralLabel: 'Live Production and Performance Software',
-        slug: 'live-production',
+        slug: 'live-production-and-performance',
     },
 
     // Special Lists
