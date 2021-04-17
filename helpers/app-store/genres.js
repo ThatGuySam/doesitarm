@@ -1,3 +1,4 @@
+// Source 1: https://42matters.com/docs/app-market-data/ios/apps/appstore-genres
 export default {
     '0':    ['Mobile Software Application'],
     '6018': ['Book'],
