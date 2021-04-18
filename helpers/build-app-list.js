@@ -1,7 +1,6 @@
 
 import { promises as fs } from 'fs'
 import MarkdownIt from 'markdown-it'
-import slugify from 'slugify'
 import axios from 'axios'
 
 import statuses, { getStatusName } from './statuses'
@@ -9,16 +8,10 @@ import appStoreGenres from './app-store/genres.js'
 import parseDate from './parse-date'
 import { eitherMatches } from './matching.js'
 import { getAppEndpoint } from './app-derived'
+import { makeSlug } from './slug.js'
 
 
 const md = new MarkdownIt()
-
-
-const makeSlug = name => slugify(name, {
-    lower: true,
-    strict: true
-})
-
 
 const getTokenLinks = function ( childTokens ) {
 
@@ -264,10 +257,7 @@ export default async function () {
 
         if (isHeading && token.type === 'inline') {
             categoryTitle = token.content
-            categorySlug = slugify(token.content, {
-                lower: true,
-                strict: true
-            })
+            categorySlug = makeSlug( token.content )
 
             // appList[categorySlug] = []
         }

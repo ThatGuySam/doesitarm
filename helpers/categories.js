@@ -1,12 +1,8 @@
 // Universal JS imports only
-import slugify from 'slugify'
-
+import { makeSlug } from './slug.js'
 
 export function makeCategorySlug ( categoryName ) {
-    return slugify(categoryName, {
-        lower: true,
-        strict: true
-    })
+    return makeSlug( categoryName )
 }
 
 

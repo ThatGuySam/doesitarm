@@ -1,10 +1,8 @@
-
-import { promises as fs } from 'fs'
-import slugify from 'slugify'
 import axios from 'axios'
 
 // import { statuses } from './build-app-list'
 import { getAppEndpoint } from './app-derived'
+import { makeSlug } from './slug.js'
 
 
 // console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
@@ -101,10 +99,7 @@ export default async function () {
         if (isPlayable(game) && statusesTranslations.hasOwnProperty(environmentName(game)) === false) continue
 
         // Generate slug
-        const slug = slugify(game.Games, {
-            lower: true,
-            strict: true
-        })
+        const slug = makeSlug( game.Games )
 
         // Find index of game is list so far
         const gameIndex = gameList.findIndex(game => {

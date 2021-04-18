@@ -1,11 +1,11 @@
 
-import slugify from 'slugify'
 import axios from 'axios'
 
 import { fuzzyMatchesWholeWord } from './matching.js'
 import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
 import parseDate from './parse-date'
+import { makeSlug } from './slug.js'
 
 
 const inTimestamps = ( name, video ) => {
@@ -150,10 +150,7 @@ export default async function ( applist ) {
         if (fetchedVideos[videoId].title === 'Deleted video') continue
 
         // Build video slug
-        const slug = slugify(`${fetchedVideos[videoId].title}-i-${videoId}`, {
-            lower: true,
-            strict: true
-        })
+        const slug = makeSlug( `${fetchedVideos[videoId].title}-i-${videoId}` )
 
         const apps = []
         // Generate new tag set based on api data
