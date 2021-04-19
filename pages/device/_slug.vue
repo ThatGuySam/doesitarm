@@ -2,15 +2,33 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
-                App support for {{ device.name }}
+                {{ device.name }}
             </h1>
 
-            <h2
-                v-if="supportedAppList.length !== 0"
-                class="subtitle md:text-xl text-center"
-            >
-                Supported apps include {{ supportedAppList.join(', ') }}.
-            </h2>
+            <div class="summary space-y-4 max-w-2xl">
+                <div class="flex justify-center py-3">
+                    <LinkButton
+                        v-if="device.amazonUrl"
+                        :href="device.amazonUrl"
+                        target="_blank"
+                    >
+                        Check Pricing
+                    </LinkButton>
+                </div>
+
+                <h2
+                    class="subtitle md:text-lg text-center"
+                >
+                    App support for {{ device.name }}
+                </h2>
+
+                <h2
+                    v-if="supportedAppList.length !== 0"
+                    class="subtitle md:text-lg text-center"
+                >
+                    Supported apps include {{ supportedAppList.join(', ') }}.
+                </h2>
+            </div>
 
             <Search
                 :app-list="deviceAppList"
@@ -67,8 +85,7 @@ export default {
 
         const { allList } = await import('~/helpers/get-list.js')
         const { default: deviceList } = await import('~/static/device-list.json')
-        // const { default: gameList } = await import('~/static/game-list.json')
-        // const { default: videoList } = await import('~/static/video-list.json')
+
 
         const charCode = slug.charCodeAt( slug.length-2 )
         const shuffler = new Chance( charCode )
@@ -76,6 +93,8 @@ export default {
         const device = deviceList.find( device => {
             return device.slug === slug
         })
+
+        // console.log( 'device', device )
 
         const deviceAppList = allList.map( app => {
             const appIsSupported = deviceSupportsApp( device, app )
