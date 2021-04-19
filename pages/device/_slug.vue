@@ -57,41 +57,7 @@ import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 
 // import { categories } from '~/helpers/categories.js'
-import { getStatusName } from '~/helpers/statuses.js'
-
-const macAppleSiliconStatuses = new Set([
-    'native',
-    'rosetta'
-])
-
-function deviceSupportsApp ( device, app ) {
-
-    // const statuses = {
-    //     '✅': 'native',
-    //     '✳️': 'rosetta',
-    //     '⏹': 'no-in-progress',
-    //     '🚫': 'no',
-    //     '🔶': 'unreported',
-    // }
-    const appStatus = getStatusName( app.text )
-
-    if ( device.type === 'intel') {
-
-        return true
-    }
-
-    if ( device.type === 'mac-apple-silicon') {
-
-        return macAppleSiliconStatuses.has( appStatus )
-    }
-
-    // if ( device.type === 'ios') {
-
-    //     return
-    // }
-
-    return false
-}
+import { deviceSupportsApp } from '~/helpers/devices.js'
 
 export default {
     async asyncData ({ params: { slug } }) {
