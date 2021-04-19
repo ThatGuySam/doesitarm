@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import config from '../nuxt.config.js'
 
 import { getAppType } from '../helpers/app-derived.js'
+import { deviceSupportsApp } from '../helpers/devices.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 
 
@@ -84,9 +85,23 @@ export class AppTemplate {
 
     render( data ) {
 
-        const { app: { payload: { app, relatedVideos = [] } } } = data
+        const {
+            app: { payload: { app, relatedVideos = [] } },
+            'device-list': deviceList
+        } = data
+
+        // console.log('deviceList', deviceList)
 
         // console.log('video.payload', Object.keys(video.payload))
+
+        const appDeviceSupport = deviceList.map( device => {
+            const supportsApp = deviceSupportsApp( device, app )
+            return {
+                ...device,
+                emoji: supportsApp ? '✅' : '🚫',
+                ariaLabel: `${app.name} has ${ supportsApp ? '' : 'not' } been reported to work on ${device.name}`
+            }
+        })
 
         const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
 
@@ -108,6 +123,24 @@ export class AppTemplate {
 
                     <div class="links space-y-6 sm:space-x-6 mb-8">
                         ${ relatedLinksHtml }
+                    </div>
+
+                    <div class="device-support w-full">
+                        <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                            Device Support
+                        </h2>
+                        <div class="device-support-apps overflow-x-auto overflow-y-visible md:whitespace-no-wrap py-2 space-x-2 space-y-3">
+
+                            ${ appDeviceSupport.map( device => /* html */`
+                                <a
+                                    href="${ device.endpoint }"
+                                    role="button"
+                                    class="relative inline-flex items-center leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out text-xs rounded-lg px-4 py-2"
+                                    aria-label="${ device.ariaLabel }"
+                                >${ device.emoji } ${ device.name }</a>
+                            `).join('') }
+
+                        </div>
                     </div>
                 </div>
 
