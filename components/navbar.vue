@@ -148,6 +148,10 @@ export default {
                     url: '/categories',
                 },
                 {
+                    label: 'Devices',
+                    url: '/devices',
+                },
+                {
                     label: 'Benchmarks',
                     url: '/benchmarks',
                 },
