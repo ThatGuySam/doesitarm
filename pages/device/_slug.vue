@@ -95,32 +95,57 @@ function deviceSupportsApp ( device, app ) {
 
 export default {
     async asyncData ({ params: { slug } }) {
+        const { default: Chance } = await import('chance')
+
         const { allList } = await import('~/helpers/get-list.js')
         const { default: deviceList } = await import('~/static/device-list.json')
         // const { default: gameList } = await import('~/static/game-list.json')
         // const { default: videoList } = await import('~/static/video-list.json')
 
+        const charCode = slug.charCodeAt( slug.length-2 )
+        const shuffler = new Chance( charCode )
+
         const device = deviceList.find( device => {
             return device.slug === slug
         })
 
+        const deviceAppList = allList.map( app => {
+            const appIsSupported = deviceSupportsApp( device, app )
+
+            return {
+                name: app.name,
+                status: app.status,
+                slug: app.slug,
+                // endpoint: app.endpoint,
+                text: appIsSupported ? `✅ Supported on ${device.name}` : `🚫 Not yet reported working on ${device.name}`,
+                lastUpdated: app.lastUpdated,
+                category: app.category,
+                // searchLinks: makeAppSearchLinks( app, (new Set(videoList)) )
+            }
+        })
+
+        const supportedApps = deviceAppList.filter( app => {
+            const supported = app.text.startsWith('✅')
+            const hasNotAllowedCategory = ([
+                'no-category',
+                'homebrew',
+                'games',
+            ]).some( categorySlug => (app.category.slug === categorySlug) )
+
+            // console.log('hasNonStandardCategory', app.category.slug, hasNonStandardCategory)
+
+            return supported && !hasNotAllowedCategory
+        })
+
+        const featuredApps = shuffler.shuffle( supportedApps ).slice(0, 12)
+
+        // console.log('featuredApps', featuredApps[0])
+
         return {
             slug,
             device,
-            deviceAppList: allList.map( app => {
-                const appIsSupported = deviceSupportsApp( device, app )
-
-                return {
-                    name: app.name,
-                    status: app.status,
-                    slug: app.slug,
-                    // endpoint: app.endpoint,
-                    text: appIsSupported ? `✅ Supported on ${device.name}` : `🚫 Not yet reported working on ${device.name}`,
-                    lastUpdated: app.lastUpdated,
-                    category: app.category,
-                    // searchLinks: makeAppSearchLinks( app, (new Set(videoList)) )
-                }
-            })
+            featuredApps,
+            deviceAppList
         }
     },
     components: {
@@ -135,9 +160,7 @@ export default {
     },
     computed: {
         supportedAppList () {
-            return this.deviceAppList.filter(app => {
-                return app.text.startsWith('✅')
-            }).slice(0, 12).map(app => app.name)
+            return this.featuredApps.map(app => app.name)
         },
         title () {
             return `App support list for ${this.device.name}`
