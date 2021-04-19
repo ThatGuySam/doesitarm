@@ -15,6 +15,7 @@
             <Search
                 :app-list="deviceAppList"
                 :quick-buttons="quickButtons"
+                :autofocus="false"
                 @update:query="query = $event"
             >
                 <template v-slot:before-search>
