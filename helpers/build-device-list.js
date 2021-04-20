@@ -21,7 +21,7 @@ export default async function () {
             console.warn('Error fetching device list', error)
         })
 
-    return rawDeviceList.filter( device => ( device.type !== 'ios' ) ).map( device => {
+    return rawDeviceList.filter( device => ( device.enabled !== 'no' ) ).map( device => {
         const slug = makeSlug( device.name )
 
         return {
