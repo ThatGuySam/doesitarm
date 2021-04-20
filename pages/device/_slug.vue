@@ -1,11 +1,27 @@
 <template>
     <section class="container py-24">
-        <div class="flex flex-col items-center">
-            <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
-                {{ device.name }}
-            </h1>
+        <div class="flex flex-col items-center space-y-12">
 
-            <div class="summary space-y-4 max-w-2xl">
+            <div class="summary space-y-6 max-w-2xl">
+
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center">
+                    {{ device.name }}
+                </h1>
+
+                <div
+                    v-if="device.description"
+                    class="md:text-md text-center"
+                >
+                    {{ device.description }}
+                </div>
+
+                <div
+                    v-if="supportedAppList.length !== 0"
+                    class="md:text-md text-center"
+                >
+                    Supported apps include {{ supportedAppList.join(', ') }}.
+                </div>
+
                 <div class="flex justify-center py-3">
                     <LinkButton
                         v-if="device.amazonUrl"
@@ -16,32 +32,30 @@
                     </LinkButton>
                 </div>
 
-                <h2
-                    class="subtitle md:text-lg text-center"
-                >
-                    App support for {{ device.name }}
-                </h2>
-
-                <h2
-                    v-if="supportedAppList.length !== 0"
-                    class="subtitle md:text-lg text-center"
-                >
-                    Supported apps include {{ supportedAppList.join(', ') }}.
-                </h2>
             </div>
 
-            <Search
-                :app-list="deviceAppList"
-                :quick-buttons="quickButtons"
-                :autofocus="false"
-                :initial-limit="50"
-                @update:query="query = $event"
-            >
-                <template v-slot:before-search>
-                    <div class="empty-div" />
-                </template>
-            </Search>
 
+            <div class="search-apps w-full flex flex-col items-center space-y-4">
+
+                <h2
+                    class="subtitle md:text-lg font-bold text-center"
+                >
+                    Search app support for {{ device.name }}
+                </h2>
+
+                <Search
+                    :app-list="deviceAppList"
+                    :quick-buttons="quickButtons"
+                    :autofocus="false"
+                    :initial-limit="50"
+                    @update:query="query = $event"
+                >
+                    <template v-slot:before-search>
+                        <div class="empty-div" />
+                    </template>
+                </Search>
+
+            </div>
 
             <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
 
