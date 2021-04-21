@@ -252,7 +252,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Lightroom Classic](https://www.adobe.com/products/photoshop-lightroom-classic.html) - ✳️ Yes, works via Rosetta 2 with some known issues - [Known Issues](https://helpx.adobe.com/lightroom-classic/kb/macos-big-sur-compatibility.html#AppleSiliconcompatibility) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Logoist 4](https://www.syniumsoftware.com/logoist) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Official News](https://www.syniumsoftware.com/synium-blog/apple-silicon-is-here-and-we-are-ready)
 * [Luminar](https://skylum.com/luminar) - ✳️ Yes, works via Rosetta 2 - [Source](https://youtu.be/CKA1YW9l8j0?t=43)
-* [MacTeX](https://www.tug.org/mactex/mactex-download.html) - ✳️ Runs via Rosetta with native support currently in development - [Article](https://www.tug.org/mactex/aboutarm.html)
+* [MacTeX](https://www.tug.org/mactex/mactex-download.html) - ✅ Yes, Full Native Apple Silicon Support as of MacTeX-2021 - [Official FAQ](https://www.tug.org/mactex/faq/index.html#qm08)
 * [Mail Designer 365](https://maildesigner365.com) - ✅ Yes, fully native support as of v2.0 - [Official page](https://www.maildesigner365.com/new-mail-designer-365-2-0-with-big-sur-optimization/)
 * [Optimage](https://optimage.app/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Pika](https://superhighfives.com/pika) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
