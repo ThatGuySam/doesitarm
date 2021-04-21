@@ -674,6 +674,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
 * [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
 * [SweetWater Compatibility Guide](https://www.sweetwater.com/sweetcare/articles/macos-11-big-sur-compatibility-guide/) - Big Sur and Apple Silicon reports for producstion and live performance software
+* [Toolfarm Apple Silicon Compatibility](https://www.toolfarm.com/news/apple-silicon-compatibility/) - Product Compatibility for Apple M1 Silicon Macs
+* [Toolfarm Big Sur Compatibility](https://www.toolfarm.com/news/apple-silicon-compatibility/) - Product Compatibility for macOS Big Sur
 * [Ported2M1](https://ported2m1.com/) - Beautiful list with app support discussion
 * [MacRumors List](https://forums.macrumors.com/threads/universal-and-native-apple-silicon-apps.2267176/) - List of Universal and Native Apple Silicon Apps
 * [RoaringApps](https://roaringapps.com/collections/list-of-apple-silicon-native-apps) - List of apps ready for Apple Silicon M1 chip Macs
