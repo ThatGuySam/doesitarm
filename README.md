@@ -305,6 +305,9 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Live Production and Performance
 * [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
+* [Dante Controller](https://my.audinate.com/support/downloads/download-latest-dante-software) - 🚫 No, not yet supported only recommended for Intel-based Macs - [Official Article](https://www.audinate.com/learning/faqs/dante-software-on-macos-big-sur-and-apple-m1-based-computers)
+* [Dante Via](https://my.audinate.com/support/downloads/download-latest-dante-software) - ✳️ Yes, works via Rosetta 2 translation but not yet recommended - [Official Article](https://www.audinate.com/learning/faqs/dante-software-on-macos-big-sur-and-apple-m1-based-computers)
+* [Dante Virtual Soundcard](https://my.audinate.com/support/downloads/download-latest-dante-software) - 🚫 No, not yet supported only works on Intel-based Macs - [Official Article](https://www.audinate.com/learning/faqs/dante-software-on-macos-big-sur-and-apple-m1-based-computers)
 * [djay](https://www.algoriddim.com/) - ✅ Yes, Full Native Apple Silicon Support as of v3.0 - [Release Notes](https://www.algoriddim.com/djay-pro-mac/releasenotes)
 * [Ecamm Live](https://www.ecamm.com/mac/ecammlive/?fp_ref=lsp) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.ecamm.com/en/articles/4616420-ecamm-live-on-macos-11-big-sur-and-apple-silicon-m1-macs)
 * [Farrago](https://rogueamoeba.com/farrago/) - ✅ Yes, Initial Native Apple Silicon Support as of v1.6.0 - [Release Notes](https://rogueamoeba.com/farrago/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
