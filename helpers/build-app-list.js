@@ -5,6 +5,7 @@ import axios from 'axios'
 
 import statuses, { getStatusName } from './statuses'
 import appStoreGenres from './app-store/genres.js'
+import { findCategoryForTagsSet } from './categories.js'
 import parseDate from './parse-date'
 import { eitherMatches } from './matching.js'
 import { getAppEndpoint } from './app-derived'
@@ -110,7 +111,7 @@ async function fetchBundleGenres () {
 function generateTagsSetFromGenres( bundleId, bundleGenres ) {
     // If we don't have this bundleID
     // then return empty
-    if ( !bundleGenres.has( bundleId ) ) return []
+    if ( !bundleGenres.has( bundleId ) ) return new Set()
 
     const genres = new Set()
 
@@ -188,6 +189,19 @@ export default async function () {
 
                 const tags = generateTagsSetFromGenres( appScan.bundleIdentifier, bundleGenres )
 
+                // Move productivity tag to the end since it's a more generic tag
+                if ( tags.has('Productivity') ) {
+                    tags.delete('Productivity')
+                    tags.add('Productivity')
+                }
+
+                const foundCategory = findCategoryForTagsSet( tags )
+
+                const category = {
+                    label: foundCategory ? foundCategory.label : undefined,
+                    slug: foundCategory ? foundCategory.slug : 'uncategorized'
+                }
+
                 // Add to scanned app list
                 scanListMap.set( appSlug, {
                     name: appName,
@@ -204,9 +218,7 @@ export default async function () {
                         },
                         slug: appSlug
                     }),
-                    category: {
-                        slug: 'uncategorized'
-                    },
+                    category,
                     tags: Array.from(tags),
                     relatedLinks
                 })
