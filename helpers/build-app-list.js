@@ -107,7 +107,7 @@ async function fetchBundleGenres () {
 }
 
 
-function generateTagsFromGenres( bundleId, bundleGenres ) {
+function generateTagsSetFromGenres( bundleId, bundleGenres ) {
     // If we don't have this bundleID
     // then return empty
     if ( !bundleGenres.has( bundleId ) ) return []
@@ -186,7 +186,7 @@ export default async function () {
 
                 // console.log('appScan', appScan)
 
-                const tags = generateTagsFromGenres( appScan.bundleIdentifier, bundleGenres )
+                const tags = generateTagsSetFromGenres( appScan.bundleIdentifier, bundleGenres )
 
                 // Add to scanned app list
                 scanListMap.set( appSlug, {
@@ -207,7 +207,7 @@ export default async function () {
                     category: {
                         slug: 'uncategorized'
                     },
-                    tags,
+                    tags: Array.from(tags),
                     relatedLinks
                 })
             })
