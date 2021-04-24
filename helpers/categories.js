@@ -104,7 +104,7 @@ export const categories = {
     },
 
     'live-production-and-performance': {
-        id: 10,
+        id: 11,
         ...categoryTemplate,
         label: 'Live Production and Performance',
         pluralLabel: 'Live Production and Performance Software',
