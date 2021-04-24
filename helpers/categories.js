@@ -111,6 +111,14 @@ export const categories = {
         slug: 'live-production-and-performance',
     },
 
+    'system-tools': {
+        id: 12,
+        ...categoryTemplate,
+        label: 'System Tools',
+        pluralLabel: 'System Tools',
+        slug: 'system-tools',
+    },
+
     // Special Lists
     'games': {
         id: 100,
