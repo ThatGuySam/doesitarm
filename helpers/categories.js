@@ -9,7 +9,6 @@ const categoryMap = new Map([
     [ 'Business', 2 ],
     [ 'Entertainment', 5 ],
     [ 'Finance', 2 ],
-    [ 'Games', 100 ],
     [ 'Music', 6 ],
     [ 'Photo & Video', 7 ],
     [ 'Productivity', 2 ],
@@ -17,6 +16,11 @@ const categoryMap = new Map([
     [ 'Graphics & Design', 7 ],
     [ 'Developer Tools', 1 ],
     // [ 'Name', 1 ],
+
+    // Needs work before apps can be assign games category
+    // so for now 'Games' genre is Entertainment
+    // [ 'Games', 100 ],
+    [ 'Games', 5 ],
 ])
 
 
