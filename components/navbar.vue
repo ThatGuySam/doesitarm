@@ -2,7 +2,8 @@
 
     <nav
         :class="[
-            'fixed top-0 left-0 right-0 flex z-navbar'
+            'fixed top-0 left-0 right-0 flex z-navbar',
+            'bg-gradient-to-bl from-dark to-darker bg-fixed'
         ]"
     >
         <div class="mobile-menu-container flex items-center lg:hidden p-2">
