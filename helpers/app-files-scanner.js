@@ -581,7 +581,7 @@ export default class AppFilesScanner {
             } )
         })
 
-        const scanTimeoutSeconds = 30
+        const scanTimeoutSeconds = 60
 
         // Scan for archives
         await Promise.all( this.files.map( ( file, scanIndex ) => {

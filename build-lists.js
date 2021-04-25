@@ -5,6 +5,7 @@ import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
+import buildDeviceList from './helpers/build-device-list.js'
 
 import { videosRelatedToApp } from './helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
@@ -14,6 +15,7 @@ import {
     getAppType,
     getAppEndpoint,
     getVideoEndpoint,
+    isVideo
 } from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
@@ -60,6 +62,11 @@ class BuildLists {
             name: 'homebrew',
             path: '/static/homebrew-list.json',
             buildMethod: buildHomebrewList,
+        },
+        {
+            name: 'device',
+            path: '/static/device-list.json',
+            buildMethod: buildDeviceList,
         },
 
         // Secondary Derivative built lists
@@ -225,10 +232,10 @@ class BuildLists {
 
             this.lists[listKey].forEach( app => {
 
-                const isVideo = (app.category === undefined)
+                // const isVideo = (app.category === undefined)
                 const appType = getAppType( app )
 
-                if ( isVideo ) {
+                if ( isVideo( app ) ) {
                     // this.endpointMaps.eleventy.add({
                     //     route: getVideoEndpoint(app),
                     //     payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
@@ -273,9 +280,14 @@ class BuildLists {
                         relatedVideos
                     } )
 
+                } else if ( appType === 'device' ) {
+                    // Add device endpoint
+                    // console.log('Added to nuxt endpoints', app.endpoint )
+                    this.endpointMaps.nuxt.set( app.endpoint , { listing: app } )
+
                 } else {
                     // Add game or other endpoint
-                    // console.log('Added to nuxt endpoints', getAppEndpoint(app))
+                    // console.log('Added to nuxt endpoints', app.endpoint )
                     this.endpointMaps.nuxt.set( getAppEndpoint(app), { app } )
                 }
 

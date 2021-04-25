@@ -1,14 +1,36 @@
 // Universal JS imports only
-import slugify from 'slugify'
-
+import { makeSlug } from './slug.js'
 
 export function makeCategorySlug ( categoryName ) {
-    return slugify(categoryName, {
-        lower: true,
-        strict: true
-    })
+    return makeSlug( categoryName )
 }
 
+const categoryMap = new Map([
+    [ 'Business', 2 ],
+    [ 'Entertainment', 5 ],
+    [ 'Finance', 2 ],
+    [ 'Games', 100 ],
+    [ 'Music', 6 ],
+    [ 'Photo & Video', 7 ],
+    [ 'Productivity', 2 ],
+    [ 'Utilities', 12 ],
+    [ 'Graphics & Design', 7 ],
+    [ 'Developer Tools', 1 ],
+    // [ 'Name', 1 ],
+])
+
+
+
+// Maps App Store Genre to categort IDS
+export function getCategoryIdForGenre ( genreName ) {
+
+    // If we don't have this genre mapped
+    // then return nothing
+    if ( !categoryMap.has(genreName) ) return null
+
+    // return this category id mapped to this genre
+    return categoryMap.get( genreName )
+}
 
 // Contains all types of properies to keep data consistent
 export const categoryTemplate = {
@@ -108,11 +130,19 @@ export const categories = {
     },
 
     'live-production-and-performance': {
-        id: 10,
+        id: 11,
         ...categoryTemplate,
         label: 'Live Production and Performance',
         pluralLabel: 'Live Production and Performance Software',
         slug: 'live-production-and-performance',
+    },
+
+    'system-tools': {
+        id: 12,
+        ...categoryTemplate,
+        label: 'System Tools',
+        pluralLabel: 'System Tools',
+        slug: 'system-tools',
     },
 
     // Special Lists
@@ -152,6 +182,8 @@ export const categories = {
 }
 
 
+export const categoriesById = Object.fromEntries( Object.entries( categories ).map( ([ key, category ]) => [category.id, { ...category, key } ] ) )
+
 export function getAppCategory (app) {
     if (typeof app.category === 'undefined') {
         console.log('app', app)
@@ -173,4 +205,24 @@ export function getAppCategory (app) {
     }
 
     return categories[app.category.slug]
+}
+
+
+export function findCategoryForTagsSet ( tags ) {
+
+    for ( const tag of tags ) {
+        const categoryIdForGenre = getCategoryIdForGenre( tag )
+
+        // Skip non-mapped genres
+        if ( categoryIdForGenre === null ) continue
+
+        // const foundCategory = categoriesById[ categoryIdForGenre ]
+
+        // category.label = foundCategory.label
+        // category.slug = foundCategory.slug
+
+        return categoriesById[ categoryIdForGenre ]
+    }
+
+    return null
 }

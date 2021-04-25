@@ -25,6 +25,13 @@
   status = 301
 
 
+# imac redirect
+[[redirects]]
+  from = "/device/apple-silicon-imac"
+  to = "/device/m1-imac/"
+  status = 307
+
+
 # Category Redirects
 [[redirects]]
   from = "/kind/entertainment"
