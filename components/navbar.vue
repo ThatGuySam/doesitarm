@@ -11,7 +11,7 @@
             <!-- Mobile menu button -->
             <a
                 :class="[
-                    'mobile-menu-toggle rounded-md focus:pointer-events-none p-2',
+                    'mobile-menu-toggle rounded-md p-2',
                     'inline-flex items-center justify-center',
                     'text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white',
                     'transition duration-150 ease-in-out'
@@ -58,7 +58,7 @@
             <!-- Mobile menu button -->
             <a
                 :class="[
-                    'mobile-menu-close rounded-md focus:pointer-events-none p-2',
+                    'mobile-menu-close rounded-md p-2',
                     'inline-flex items-center justify-center',
                     'text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white',
                     'transition duration-150 ease-in-out'
