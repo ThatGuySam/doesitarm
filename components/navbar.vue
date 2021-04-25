@@ -8,8 +8,14 @@
         <div class="mobile-menu-container flex items-center lg:hidden p-2">
 
             <!-- Mobile menu button -->
-            <button
-                class="mobile-menu-toggle inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
+            <a
+                :class="[
+                    'mobile-menu-toggle rounded-md focus:pointer-events-none p-2',
+                    'inline-flex items-center justify-center',
+                    'text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white',
+                    'transition duration-150 ease-in-out'
+                ]"
+                href="#mobile-menu"
                 aria-label="Main menu"
             >
                 <!-- Icon when menu is closed. -->
@@ -37,30 +43,56 @@
                         d="M6 18L18 6M6 6l12 12" />
                 </svg>
 
-                <div
+            </a>
+
+        </div>
+
+
+        <div
+            id="mobile-menu"
+            :class="[
+                'mobile-menu hidden target:visible lg:hidden absolute bg-blur top-0 left-0 right-0 w-full py-3 px-2',
+            ]"
+        >
+            <!-- Mobile menu button -->
+            <a
+                :class="[
+                    'mobile-menu-close rounded-md focus:pointer-events-none p-2',
+                    'inline-flex items-center justify-center',
+                    'text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white',
+                    'transition duration-150 ease-in-out'
+                ]"
+                href="#"
+                aria-label="Main menu"
+            >
+                <!-- Icon when menu is open. -->
+                <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </a>
+
+            <div class="px-2 pt-2 pb-3 lg:px-3">
+                <a
+                    v-for="(item, index) in items"
+                    :key="index"
+                    :href="item.url"
                     :class="[
-                        'mobile-menu hidden parent-focus:visible lg:hidden absolute bg-blur pt-16 top-0 left-0 right-0 w-full',
+                        'mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                        ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
                     ]"
-                    style="z-index: -1;"
                 >
-                    <div class="px-2 pt-2 pb-3 lg:px-3">
-                        <a
-                            v-for="(item, index) in items"
-                            :key="index"
-                            :href="item.url"
-                            :class="[
-                                'mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
-                            ]"
-                        >
-                            {{ item.label }}
-                        </a>
-                    </div>
-                    <hr>
-                </div>
-
-            </button>
-
+                    {{ item.label }}
+                </a>
+            </div>
+            <hr>
         </div>
 
         <div class="reponsive-menu-container relative w-full max-w-7xl mx-auto lg:px-6">

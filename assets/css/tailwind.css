@@ -171,3 +171,7 @@ button:focus .parent-focus\:hidden,
 button:active .parent-focus\:hidden {
     display: none;
 }
+
+.target\:visible:target {
+    display: block;
+}
