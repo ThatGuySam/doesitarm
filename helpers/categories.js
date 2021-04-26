@@ -17,7 +17,7 @@ const categoryMap = new Map([
     [ 'Developer Tools', 1 ],
     // [ 'Name', 1 ],
 
-    // Needs work before apps can be assign games category
+    // Needs work before apps can be assigned games category
     // so for now 'Games' genre is Entertainment
     // [ 'Games', 100 ],
     [ 'Games', 5 ],
