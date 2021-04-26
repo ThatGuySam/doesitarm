@@ -83,10 +83,10 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [GitKraken](https://www.gitkraken.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/244#issuecomment-736760318)
 * [Go (golang)](https://golang.org/) - ✅ Yes, full native support as of 1.16 - [Golang M1 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=342445681) [Release Notes](https://tip.golang.org/doc/go1.16) [Go 1.16 is released](https://blog.golang.org/go1.16)
 * [GoLand](https://www.jetbrains.com/go/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
-* [Godot Engine](https://godotengine.org/) - ⏹ No official binaries yet, but can be compiled from source - [Master PR](https://github.com/godotengine/godot/pull/39788), [v3.2 PR](https://github.com/godotengine/godot/pull/39943)
+* [Godot Engine](https://godotengine.org/download/osx) - ✅ Yes, Full Native Apple Silicon Support as of v3.3 - [Release Notes](https://godotengine.org/article/godot-3-3-has-arrived#macos)
 * [GNU Compiler Collection](https://gcc.gnu.org/) - ✳️ Yes, runs via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/105#issuecomment-732795155) [Bugzilla Issue](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96168)
 * [hadolint](https://github.com/hadolint/hadolint) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://github.com/Homebrew/brew/issues/10744#issuecomment-787498421)
-* [Haskell](https://www.haskell.org/platform/mac.html) - 🚫 Not yet supported only works on Intel-based Macs - [Gitlab Issue](https://gitlab.haskell.org/ghc/ghc/-/issues/18664)
+* [Haskell](https://www.haskell.org/platform/mac.html) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/73#issuecomment-826065143)
 * [Hex Fiend](https://github.com/HexFiend/HexFiend/releases) - ✅ Yes, full native support as of v2.14.0 - [Source](https://github.com/ThatGuySam/doesitarm/issues/429)
 * [Homebrew](https://brew.sh/) - ✅ Yes, fully supported as of v3.0.0 - [Release Notes](https://brew.sh/2021/02/05/homebrew-3.0.0/). 
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
@@ -160,6 +160,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [VS Code](https://code.visualstudio.com/) - ✅ Yes, Full Native Apple Silicon Support as of v1.54 - [Release Notes](https://code.visualstudio.com/updates/v1_54)
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
+* [Wechat Devtools](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) - 🔶 App has not yet been reported to be native to Apple Silicon - [Release Notes](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
 * [Xamarin](https://dotnet.microsoft.com/apps/xamarin) - ✳️ Yes, works via Rosetta 2 - [Souorce](https://github.com/xamarin/xamarin-macios/issues/10005#issue-732495019) [Video Demo](https://doesitarm.com/tv/xamarin-and-visual-studio-on-apple-macbook-pro-13-m1-in-4k-i-rwpspmmlos/)
 * [XAMPP](https://www.apachefriends.org/download.html) - ✳️ Yes, works via Rosetta 2 - [Video Demonstration](https://doesitarm.com/tv/watch-this-before-buying-apple-m1-macbook-for-xampp-or-apple-silicon-tests-in-4k-i-ebwwewsis8s/)
@@ -520,6 +521,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [JustStream](https://www.electronic.us/products/just-stream/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/juststream)
 * [Meta for Mac](https://www.nightbirdsevolve.com/meta/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/840201/5114)
 * [Minecraft](https://www.minecraft.net/en-us/about-minecraft) - ✳️ Yes, works via Rosetta 2 - [Native Apple Silicon Workaround](https://github.com/yusefnapora/m1-multimc-hack)
+* [Moonlight](https://github.com/moonlight-stream/moonlight-qt/releases) - ✅ Yes, Full Native Apple Silicon Support as of v3.1.0 - [Release Notes](https://github.com/moonlight-stream/moonlight-qt/releases/tag/v3.1.0)
 * [Movist](https://movistprime.com/) - ✅ Yes, Full Native Apple Silicon Support as of v2.6 - [Changelog](https://movistprime.com/changelog.html) [View on Setapp](https://setapp.sjv.io/c/2708043/628489/5114)
 * [NetEase Music](https://music.163.com/#/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.4 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/528#issue-789094015)
 * [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.11 - [Blog Post](https://betamagic.nl/news/2020/2020_09.html) [View on Setapp](https://setapp.sjv.io/c/2708043/368247/5114)
