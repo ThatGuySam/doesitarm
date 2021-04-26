@@ -83,7 +83,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [GitKraken](https://www.gitkraken.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/244#issuecomment-736760318)
 * [Go (golang)](https://golang.org/) - ✅ Yes, full native support as of 1.16 - [Golang M1 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=342445681) [Release Notes](https://tip.golang.org/doc/go1.16) [Go 1.16 is released](https://blog.golang.org/go1.16)
 * [GoLand](https://www.jetbrains.com/go/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
-* [Godot Engine](https://godotengine.org/) - ⏹ No official binaries yet, but can be compiled from source - [Master PR](https://github.com/godotengine/godot/pull/39788), [v3.2 PR](https://github.com/godotengine/godot/pull/39943)
+* [Godot Engine](https://godotengine.org/download/osx) - ✅ Yes, Full Native Apple Silicon Support as of v3.3 - [Release Notes](https://godotengine.org/article/godot-3-3-has-arrived#macos)
 * [GNU Compiler Collection](https://gcc.gnu.org/) - ✳️ Yes, runs via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/105#issuecomment-732795155) [Bugzilla Issue](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96168)
 * [hadolint](https://github.com/hadolint/hadolint) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://github.com/Homebrew/brew/issues/10744#issuecomment-787498421)
 * [Haskell](https://www.haskell.org/platform/mac.html) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/73#issuecomment-826065143)
