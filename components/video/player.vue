@@ -275,7 +275,7 @@ export default {
         // },
 
         addPrefetch(kind, url, as) {
-            console.log('prefetching', url)
+            // console.log('prefetching', url)
 
             const linkEl = document.createElement('link')
 
@@ -375,7 +375,7 @@ export default {
 
             await onReady()
 
-            console.log('Youtube Player API ready', JSON.stringify(this.player))
+            // console.log('Youtube Player API ready', JSON.stringify(this.player))
         },
         initializeApi () {
             return new Promise( resolve => {
