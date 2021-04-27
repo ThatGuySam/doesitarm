@@ -26,6 +26,7 @@
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@zip.js/zip.js": "^2.2.6",
     "axios": "^0.21.0",
+    "can-autoplay": "^3.0.0",
     "chance": "^1.1.7",
     "cross-env": "^5.2.0",
     "jsdom": "^16.4.0",
