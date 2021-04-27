@@ -9,21 +9,75 @@
         class="video-canvas w-screen flex flex-col justify-center items-center bg-black"
     >
         <div class="ratio-wrapper w-full max-w-4xl">
-            <div class="relative overflow-hidden w-full pb-16/9">
+            <div
+                class="relative overflow-hidden w-full pb-16/9"
+                @pointerover.once="warmConnections()"
+            >
+                <div
+                    v-if="playerLoaded === false"
+                    class="player-poster cursor-pointer"
+                    @click="startPlayerLoad()"
+                >
+                    <picture
+                        class=""
+                    >
+                        <source
+                            v-for="(source, key) in posterSources"
+                            :key="key"
+                            :sizes="source.sizes"
+                            :data-srcset="source.srcset"
+                            :type="`image/${ key }`"
+                        >
+                        <img
+                            :data-src="video.thumbnail.src"
+                            :alt="video.name"
+                            class="absolute inset-0  h-full w-full object-cover lazyload"
+                        >
+                    </picture>
+                    <div
+                        class="video-card-overlay absolute inset-0 flex justify-center items-center bg-gradient-to-tr from-black to-transparent p-4"
+                        style="--gradient-from-color:rgba(0, 0, 0, 1); --gradient-to-color:rgba(0, 0, 0, 0.7);"
+                    >
+                        <div class="play-circle w-16 h-16 bg-white-2 flex justify-center items-center outline-0 rounded-full ease">
+                            <svg
+                                viewBox="0 0 18 18"
+                                style="width:18px;height:18px;margin-left:3px"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M15.562 8.1L3.87.225c-.818-.562-1.87 0-1.87.9v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
                 <iframe
+                    v-else
                     ref="frame"
                     :id="frameId"
                     :src="`https://www.youtube-nocookie.com/embed/${video.id}?enablejsapi=1&autoplay=1&modestbranding=1&playsinline=1`"
-                    class="absolute h-full w-full"
+                    class="absolute inset-0 h-full w-full object-cover"
                     frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
                 />
             </div>
+
+            <pre>
+                hasPlayer: {{ hasPlayer }}
+            </pre>
+
+            <!-- <pre>
+                player: {{ player }}
+            </pre> -->
+
+            <!-- <pre>
+                timstamps: {{ video.timestamps }}
+            </pre> -->
         </div>
 
         <div
-            v-if="hasTimestamps && hasPlayer"
+            v-if="hasTimestamps"
             class="video-timestamps w-full max-w-4xl"
         >
             <div
@@ -43,7 +97,7 @@
                     :class-groups="{
                         shadow: 'neumorphic-shadow-inner'
                     }"
-                    @click.stop="seekTo(timestamp.inSeconds); player.playVideo()"
+                    @click.stop="seekTo(timestamp.inSeconds)"
                 >{{ timestamp.fullText }}</button>
             </div>
 
@@ -54,6 +108,8 @@
 </template>
 
 <script>
+import 'lazysizes'
+
 import LinkButton from '~/components/link-button.vue'
 
 export default {
@@ -68,13 +124,27 @@ export default {
     },
     data: function () {
         return {
+            playerLoaded: false,
             player: null,
             playing: false,
             progressInterval: null,
-            playerTime: 0
+            playerTime: 0,
+            preconnected: false
         }
     },
     computed: {
+        posterSources () {
+            const webpSource = {
+                ...this.video.thumbnail,
+                srcset: this.video.thumbnail.srcset.replaceAll('ytimg.com/vi/', 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
+            }
+
+            return {
+                webp: webpSource,
+                jpeg: this.video.thumbnail
+            }
+        },
+
         frameId () {
             return `youtube-player-${this.video.id}-${this._uid}`
         },
@@ -149,7 +219,9 @@ export default {
         // Set frame ID here so that it's the same when Youtube API looks for it
         // this.frameId = `youtube-bg-${this._uid}`
 
-        this.initializePlayer()
+        // this.initializeLitePlayer()
+
+        // this.initializePlayer()
     },
     methods: {
         scrollRow ( timestamp ) {
@@ -166,21 +238,83 @@ export default {
 
             timestampsScroller.scroll({ left: newScrollPosition, behavior: 'smooth' })
         },
-        seekTo (timestampInSeconds) {
+
+        async seekTo (timestampInSeconds) {
+
+            if (this.playerLoaded === false) {
+                await this.startPlayerLoad()
+            }
+
             this.player.seekTo(timestampInSeconds)
         },
+
+        // async playVideo() {
+
+        //     if (this.playerLoaded === false) {
+        //         await this.startPlayerLoad()
+        //     }
+
+        //     this.$nextTick(() => {
+        //         // console.log('this.player', JSON.stringify(this.player))
+        //         this.player.playVideo()
+        //     })
+        // },
+
+        addPrefetch(kind, url, as) {
+            console.log('prefetching', url)
+
+            const linkEl = document.createElement('link')
+
+            linkEl.rel = kind
+            linkEl.href = url
+
+            if (as) {
+                linkEl.as = as;
+            }
+
+            document.head.append(linkEl)
+        },
+
+        warmConnections() {
+            if (this.preconnected) return
+
+            // The iframe document and most of its subresources come right off youtube.com
+            this.addPrefetch('preconnect', 'https://www.youtube-nocookie.com')
+            // The botguard script is fetched off from google.com
+            this.addPrefetch('preconnect', 'https://www.google.com')
+
+            // Not certain if these ad related domains are in the critical path. Could verify with domain-specific throttling.
+            this.addPrefetch('preconnect', 'https://googleads.g.doubleclick.net')
+            this.addPrefetch('preconnect', 'https://static.doubleclick.net')
+
+            this.preconnected = true
+        },
+
+        async startPlayerLoad () {
+            this.playerLoaded = true
+
+            await this.initializePlayer()
+
+            // this.$nextTick(() => {
+            //     this.initializePlayer()
+            // })
+        },
+
         async initializePlayer () {
             // console.log('Youtube Embed API Ready')
 
             // Clear player
             this.player = null
 
-            // Clear tprogession interval
+            // Clear progession interval
             clearInterval(this.progressInterval)
 
             // If there are no timestamps
             // then stop
-            if (!this.hasTimestamps) return
+            if (!this.hasTimestamps) {
+                this.playerLoaded = true
+                return
+            }
 
             if (typeof YT === 'undefined') {
                 await this.initializeApi()
@@ -204,18 +338,30 @@ export default {
             // console.log('frame', this.$refs['frame'])
             // console.log('frame id', this.$refs['frame'].id)
 
-            this.player = new YT.Player(this.$refs['frame'].id, {
-                events: {
-                    'onReady': this.onPlayerReady,
-                    'onStateChange': event => {
-                        // console.log('state changed', event)
+            const onReady = () => new Promise( resolve => {
 
-                        const stateHandler = stateHandlers[String(event.data)]
-                        // console.log('stateHandler', stateHandler)
-                        stateHandler(event)
+                this.player = new YT.Player(this.$refs['frame'].id, {
+                    events: {
+                        'onReady': readyEvent => {
+                            this.onPlayerReady( readyEvent )
+
+                            resolve( readyEvent )
+                        },
+                        'onStateChange': event => {
+                            // console.log('state changed', event)
+
+                            const stateHandler = stateHandlers[String(event.data)]
+                            // console.log('stateHandler', stateHandler)
+                            stateHandler(event)
+                        }
                     }
-                }
+                })
+
             })
+
+            await onReady()
+
+            console.log('Youtube Player API ready', JSON.stringify(this.player))
         },
         initializeApi () {
             return new Promise( resolve => {
@@ -257,7 +403,7 @@ export default {
             clearInterval(this.progressInterval)
         },
         onPlayerReady (event) {
-            console.log('Player is ready', this.player)
+            console.log('Player is ready', event, this.player )
         }
     }
 }
