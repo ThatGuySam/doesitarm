@@ -152,7 +152,7 @@ export class AppTemplate {
                     <div
                         class="related-videos w-full"
                     >
-                        <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                        <h2 class="subtitle text-xl md:text-2xl text-center font-bold mb-3">
                             Related Videos
                         </h2>
 
