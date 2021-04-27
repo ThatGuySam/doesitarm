@@ -122,11 +122,8 @@ export default {
 
         // Manually get payload as fallback
         if ( payload === undefined ) {
-            const { promises: fs } = await import('fs')
-
             // Read back the JSON we just wrote to ensure it exists
-            const savedListJSON = await fs.readFile('./static/nuxt-endpoints.json', 'utf-8')
-            const savedList = JSON.parse( savedListJSON )
+            const { default: savedList } = await import('~/static/nuxt-endpoints.json')
 
             const endpoint = savedList.find( resource => {
                 return resource.route === route.path
