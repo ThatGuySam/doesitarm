@@ -63,9 +63,9 @@
                 />
             </div>
 
-            <pre>
+            <!-- <pre>
                 hasPlayer: {{ hasPlayer }}
-            </pre>
+            </pre> -->
 
             <!-- <pre>
                 player: {{ player }}
