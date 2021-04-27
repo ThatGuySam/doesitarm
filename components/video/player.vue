@@ -219,9 +219,8 @@ export default {
         // Set frame ID here so that it's the same when Youtube API looks for it
         // this.frameId = `youtube-bg-${this._uid}`
 
-        // this.initializeLitePlayer()
-
-        // this.initializePlayer()
+        this.detectAutoplay()
+            .then( statuses => console.log(statuses) )
     },
     methods: {
         scrollRow ( timestamp ) {
@@ -237,6 +236,21 @@ export default {
             const newScrollPosition = timestampButton.offsetLeft - timestampsScroller.offsetLeft
 
             timestampsScroller.scroll({ left: newScrollPosition, behavior: 'smooth' })
+        },
+
+        async detectAutoplay () {
+
+            if ( !process.client ) return false
+
+            const { default: canAutoPlay } = await import('can-autoplay')
+
+            const willAutoplay = await canAutoPlay.video()
+            const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
+
+            return {
+                willAutoplay,
+                willAutoplayMuted
+            }
         },
 
         async seekTo (timestampInSeconds) {
