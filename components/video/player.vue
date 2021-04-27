@@ -220,7 +220,13 @@ export default {
         // this.frameId = `youtube-bg-${this._uid}`
 
         this.detectAutoplay()
-            .then( statuses => console.log(statuses) )
+            .then( ({ willAutoplay }) => {
+                // If we're allowed to autoplay
+                // then start loading the player
+                if ( willAutoplay === true ) {
+                    this.startPlayerLoad()
+                }
+            })
     },
     methods: {
         scrollRow ( timestamp ) {
@@ -240,16 +246,15 @@ export default {
 
         async detectAutoplay () {
 
-            if ( !process.client ) return false
+            if ( !process.client ) return { willAutoplay: false }
 
             const { default: canAutoPlay } = await import('can-autoplay')
 
             const willAutoplay = await canAutoPlay.video()
-            const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
+            // const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
 
             return {
-                willAutoplay,
-                willAutoplayMuted
+                willAutoplay: willAutoplay.result
             }
         },
 
