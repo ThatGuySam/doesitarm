@@ -121,16 +121,17 @@ export default {
 
 
         // Manually get payload as fallback
-        if ( payload === undefined ) {
-            // Read back the JSON we just wrote to ensure it exists
-            const { default: savedList } = await import('~/static/nuxt-endpoints.json')
+        // Uncomment for dev
+        // if ( payload === undefined ) {
+        //     // Read back the JSON we just wrote to ensure it exists
+        //     const { default: savedList } = await import('~/static/nuxt-endpoints.json')
 
-            const endpoint = savedList.find( resource => {
-                return resource.route === route.path
-            } )
+        //     const endpoint = savedList.find( resource => {
+        //         return resource.route === route.path
+        //     } )
 
-            payload = endpoint.payload
-        }
+        //     payload = endpoint.payload
+        // }
 
         return {
             app: payload.app,
