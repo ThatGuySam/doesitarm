@@ -145,7 +145,7 @@
                             ]"
                             href="https://amzn.to/334Oyu6"
                         >
-                            🖥 The M1 iMac is now available for preorder
+                            🖥 M1 iMac is now available for preorder
                         </a>
                     </div>
                 </div>
