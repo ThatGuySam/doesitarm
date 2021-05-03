@@ -97,7 +97,7 @@ function buildVideoStructuredData ( video, featuredApps ) {
     // console.log('video', video)
 
     const thumbnailUrls = video.thumbnail.srcset.split(',').map( srcSetImage => {
-        const [ imageUrl ] = srcSetImage.split(' ')
+        const [ imageUrl ] = srcSetImage.trim().split(' ')
 
         return imageUrl
     })
