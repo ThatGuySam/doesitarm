@@ -78,6 +78,44 @@ import VideoRow from '~/components/video/row.vue'
 import VideoPlayer from '~/components/video/player.vue'
 import ChannelCredit from '~/components/video/channel-credit.vue'
 
+
+function makeFeaturedAppsString ( featuredApps ) {
+    return featuredApps.slice(0, 5).map(app => app.name).join(', ')
+}
+
+
+function buildVideoStructuredData ( video, featuredApps ) {
+    // console.log('video', video)
+
+    const thumbnailUrls = video.thumbnail.srcset.split(',').map( srcSetImage => {
+        const [ imageUrl ] = srcSetImage.split(' ')
+
+        return imageUrl
+    })
+
+    const featuredAppsString = makeFeaturedAppsString( featuredApps )
+
+    return {
+        "@context": "https://schema.org",
+        // https://developers.google.com/search/docs/data-types/video
+        // https://schema.org/VideoObject
+        "@type": "VideoObject",
+        "name": video.name,
+        "description": `Includes the following apps: ${featuredAppsString}`,
+        "thumbnailUrl": thumbnailUrls,
+        // https://en.wikipedia.org/wiki/ISO_8601
+        "uploadDate": video.lastUpdated.raw,
+        // "duration": "PT1M54S", // Need to updaet Youtube API Request for this
+        // "contentUrl": "https://www.example.com/video/123/file.mp4",
+        // "embedUrl": "https://www.example.com/embed/123",
+        // "interactionStatistic": {
+        //     "@type": "InteractionCounter",
+        //     "interactionType": { "@type": "http://schema.org/WatchAction" },
+        //     "userInteractionCount": 5647018
+        // },
+        // "regionsAllowed": "US,NL"
+    }
+}
 export default {
     components: {
         LinkButton,
@@ -86,19 +124,32 @@ export default {
         VideoPlayer,
         ChannelCredit
     },
-    asyncData ({ params: { slug }, payload: { video, featuredApps, relatedVideos } }) {
+    async asyncData ( data ) {
 
-        // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
-        // const { default: videoList } = await import('~/static/video-list.json')
 
-        // Find the video for our current page
-        // const video = videoList.find(video => (video.slug === slug))
+        const {
+            params: { slug },
+            route
+        } = data
 
-        // Get featured apps
-        // const featuredApps = appsRelatedToVideo(video)
+        let {
+            payload
+        } = data
 
-        // // Get related videos
-        // const relatedVideos = videosRelatedToVideo(video)
+
+
+        // Manually get payload as fallback
+        // Uncomment for dev
+        // if ( payload === undefined ) {
+        //     // Read back the JSON we just wrote to ensure it exists
+        //     const { default: savedList } = await import('~/static/nuxt-endpoints.json')
+
+        //     const endpoint = savedList.find( resource => {
+        //         return resource.route === route.path
+        //     } )
+
+        //     payload = endpoint.payload
+        // }
 
         // console.log({
         //     video,
@@ -107,9 +158,9 @@ export default {
         // })
 
         return {
-            video,
-            featuredApps,
-            relatedVideos
+            video: payload.video,
+            featuredApps: payload.featuredApps,
+            relatedVideos: payload.relatedVideos
         }
     },
     computed: {
@@ -117,10 +168,11 @@ export default {
             return `${this.video.name} - Does It ARM`
         },
         description () {
-            const featuredAppsString = this.featuredApps.slice(0, 5).map(app => app.name).join(', ')
+            const featuredAppsString = makeFeaturedAppsString( this.featuredApps )
 
             return `Apple Silicon performance and support videos for ${featuredAppsString}`
-        }
+        },
+
     },
     methods: {
         getAppEndpoint
@@ -151,7 +203,10 @@ export default {
                     'property':  'twitter:url',
                     'content': `${process.env.URL}${this.$nuxt.$route.path}`
                 },
-            ]
+            ],
+
+            __dangerouslyDisableSanitizers: ['script'],
+            script: [{ innerHTML: JSON.stringify( buildVideoStructuredData( this.video, this.featuredApps ) ), type: 'application/ld+json' }]
         }
     }
 }

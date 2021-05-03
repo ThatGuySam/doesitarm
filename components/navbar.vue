@@ -143,9 +143,9 @@
                                 'underline px-3 py-2 rounded-md text-xs font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
                                 //($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
-                            href="https://prf.hn/l/7JG0bEj"
+                            href="https://amzn.to/334Oyu6"
                         >
-                            ✅ Parallels is now fully native!
+                            🖥 M1 iMac is now available for preorder
                         </a>
                     </div>
                 </div>
