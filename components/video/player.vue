@@ -35,10 +35,17 @@
                         >
                     </picture>
                     <div
-                        class="video-card-overlay absolute inset-0 flex justify-center items-center bg-gradient-to-tr from-black to-transparent p-4"
+                        class="video-card-overlay absolute inset-0 flex flex-col justify-center items-center bg-gradient-to-tr from-black to-transparent p-4"
                         style="--gradient-from-color:rgba(0, 0, 0, 1); --gradient-to-color:rgba(0, 0, 0, 0.7);"
                     >
-                        <div class="play-circle w-16 h-16 bg-white-2 flex justify-center items-center outline-0 rounded-full ease">
+                        <div class="cover-top h-full">
+                            <slot name="cover-top">
+                                <!-- Top -->
+                            </slot>
+                        </div>
+
+
+                        <div class="play-circle bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease p-4">
                             <svg
                                 viewBox="0 0 18 18"
                                 style="width:18px;height:18px;margin-left:3px"
@@ -49,6 +56,15 @@
                                 />
                             </svg>
                         </div>
+
+                        <div class="cover-bottom h-full">
+
+                            <slot name="cover-bottom">
+                                <!-- Bottom -->
+                            </slot>
+
+                        </div>
+
                     </div>
                 </div>
                 <iframe

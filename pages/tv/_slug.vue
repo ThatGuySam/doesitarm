@@ -4,14 +4,23 @@
             <VideoPlayer
                 :video="video"
                 class="pt-16"
-            />
+            >
+
+                <template v-slot:cover-bottom>
+                    <div class="page-heading h-full flex items-end md:p-4">
+                        <h1 class="title text-xs text-left md:text-2xl font-bold">
+                            {{ video.name }}
+                        </h1>
+                    </div>
+                </template>
+            </VideoPlayer>
 
             <div
                 class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10"
             >
-                <h1 class="title text-lg md:text-2xl font-bold">
+                <!-- <h1 class="title text-lg md:text-2xl font-bold">
                     {{ video.name }}
-                </h1>
+                </h1> -->
 
                 <ChannelCredit
                     :video="video"
@@ -150,12 +159,6 @@ export default {
 
         //     payload = endpoint.payload
         // }
-
-        // console.log({
-        //     video,
-        //     featuredApps,
-        //     relatedVideos
-        // })
 
         return {
             video: payload.video,
