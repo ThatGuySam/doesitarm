@@ -4,14 +4,23 @@
             <VideoPlayer
                 :video="video"
                 class="pt-16"
-            />
+            >
+
+                <template v-slot:cover-bottom>
+                    <div class="page-heading h-full flex items-end md:p-4">
+                        <h1 class="title text-xs text-left md:text-2xl font-bold">
+                            {{ video.name }}
+                        </h1>
+                    </div>
+                </template>
+            </VideoPlayer>
 
             <div
                 class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10"
             >
-                <h1 class="title text-lg md:text-2xl font-bold">
+                <!-- <h1 class="title text-lg md:text-2xl font-bold">
                     {{ video.name }}
-                </h1>
+                </h1> -->
 
                 <ChannelCredit
                     :video="video"
@@ -88,12 +97,17 @@ function buildVideoStructuredData ( video, featuredApps ) {
     // console.log('video', video)
 
     const thumbnailUrls = video.thumbnail.srcset.split(',').map( srcSetImage => {
-        const [ imageUrl ] = srcSetImage.split(' ')
+        const [ imageUrl ] = srcSetImage.trim().split(' ')
 
         return imageUrl
     })
 
     const featuredAppsString = makeFeaturedAppsString( featuredApps )
+
+    const embedUrl = new URL( `${ this.$config.siteUrl }/embed/rich-results-player` )
+
+    embedUrl.searchParams.append( 'youtube-id', video.id )
+    embedUrl.searchParams.append( 'name', video.name )
 
     return {
         "@context": "https://schema.org",
@@ -107,7 +121,7 @@ function buildVideoStructuredData ( video, featuredApps ) {
         "uploadDate": video.lastUpdated.raw,
         // "duration": "PT1M54S", // Need to updaet Youtube API Request for this
         // "contentUrl": "https://www.example.com/video/123/file.mp4",
-        // "embedUrl": "https://www.example.com/embed/123",
+        "embedUrl": embedUrl.href,
         // "interactionStatistic": {
         //     "@type": "InteractionCounter",
         //     "interactionType": { "@type": "http://schema.org/WatchAction" },
@@ -136,8 +150,6 @@ export default {
             payload
         } = data
 
-
-
         // Manually get payload as fallback
         // Uncomment for dev
         // if ( payload === undefined ) {
@@ -150,12 +162,6 @@ export default {
 
         //     payload = endpoint.payload
         // }
-
-        // console.log({
-        //     video,
-        //     featuredApps,
-        //     relatedVideos
-        // })
 
         return {
             video: payload.video,
@@ -178,6 +184,9 @@ export default {
         getAppEndpoint
     },
     head() {
+        const structuredData = buildVideoStructuredData.bind(this)( this.video, this.featuredApps )
+
+
         return {
             title: this.title,
             meta: [
@@ -206,7 +215,7 @@ export default {
             ],
 
             __dangerouslyDisableSanitizers: ['script'],
-            script: [{ innerHTML: JSON.stringify( buildVideoStructuredData( this.video, this.featuredApps ) ), type: 'application/ld+json' }]
+            script: [{ innerHTML: JSON.stringify( structuredData ), type: 'application/ld+json' }]
         }
     }
 }
