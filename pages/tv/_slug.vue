@@ -104,6 +104,11 @@ function buildVideoStructuredData ( video, featuredApps ) {
 
     const featuredAppsString = makeFeaturedAppsString( featuredApps )
 
+    const embedUrl = new URL( `${ this.$config.siteUrl }/embed/rich-results-player` )
+
+    embedUrl.searchParams.append( 'youtube-id', video.id )
+    embedUrl.searchParams.append( 'name', video.name )
+
     return {
         "@context": "https://schema.org",
         // https://developers.google.com/search/docs/data-types/video
@@ -116,7 +121,7 @@ function buildVideoStructuredData ( video, featuredApps ) {
         "uploadDate": video.lastUpdated.raw,
         // "duration": "PT1M54S", // Need to updaet Youtube API Request for this
         // "contentUrl": "https://www.example.com/video/123/file.mp4",
-        // "embedUrl": "https://www.example.com/embed/123",
+        "embedUrl": embedUrl.href,
         // "interactionStatistic": {
         //     "@type": "InteractionCounter",
         //     "interactionType": { "@type": "http://schema.org/WatchAction" },
@@ -144,8 +149,6 @@ export default {
         let {
             payload
         } = data
-
-
 
         // Manually get payload as fallback
         // Uncomment for dev
@@ -181,6 +184,9 @@ export default {
         getAppEndpoint
     },
     head() {
+        const structuredData = buildVideoStructuredData.bind(this)( this.video, this.featuredApps )
+
+
         return {
             title: this.title,
             meta: [
@@ -209,7 +215,7 @@ export default {
             ],
 
             __dangerouslyDisableSanitizers: ['script'],
-            script: [{ innerHTML: JSON.stringify( buildVideoStructuredData( this.video, this.featuredApps ) ), type: 'application/ld+json' }]
+            script: [{ innerHTML: JSON.stringify( structuredData ), type: 'application/ld+json' }]
         }
     }
 }
