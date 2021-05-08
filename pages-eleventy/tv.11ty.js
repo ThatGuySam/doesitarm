@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import config from '../nuxt.config'
 
 import VideoRow from '../components-eleventy/video/row.js'
-import { isVideo } from '../helpers/app-derived'
+import { isVideo, getRouteType } from '../helpers/app-derived'
 
 // Setup dotenv
 dotenv.config()
@@ -35,10 +35,9 @@ class TV {
                 alias: 'payload',
                 before: function( data ) {
                     return data.filter( entry => {
-                        // Skip endpoints with no payload
-                        if ( entry === undefined || !entry.hasOwnProperty('payload') ) return false
+                        const routeType = getRouteType( entry.route )
 
-                        return entry.payload.hasOwnProperty('video') && isVideo( entry.payload.video )
+                        return routeType === 'tv'
                     })
                 }
             },

@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config.js'
 
-import { getAppType } from '../helpers/app-derived.js'
+import { getAppType, getRouteType } from '../helpers/app-derived.js'
 import { deviceSupportsApp } from '../helpers/devices.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 
@@ -56,12 +56,10 @@ export class AppTemplate {
 
                 before: function( data ) {
                     return data.filter( entry => {
-                        // Skip endpoints with no payload
-                        if ( entry === undefined || !entry.hasOwnProperty('payload') ) return false
+                        // const [ _, routeType ] = entry.route.split('/')
+                        const routeType = getRouteType( entry.route )
 
-                        const appType = getAppType( entry.payload.app )
-
-                        return appType === 'app'
+                        return routeType === 'app'
                     })
                 }
             },

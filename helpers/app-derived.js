@@ -56,4 +56,10 @@ export function getVideoEndpoint ( video ) {
     return `/tv/${video.slug}`
 }
 
+export function getRouteType ( routeString ) {
+    // Remove first slash and split by remaining
+    // slashes to get first part of route
+    const [ routeType ] = routeString.substring(1).split('/')
 
+    return routeType
+}
