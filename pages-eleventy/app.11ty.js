@@ -86,12 +86,14 @@ export class AppTemplate {
         }
     }
 
-    render( data ) {
+    async render( data ) {
 
         const {
             app: { payload: { app, relatedVideos = [] } },
             'device-list': deviceList
         } = data
+
+        const hasRelatedVideos = relatedVideos.length > 0
 
         // console.log('deviceList', deviceList)
 
@@ -109,6 +111,9 @@ export class AppTemplate {
         const lastUpdatedFriendly = makeLastUpdatedFriendly( app.lastUpdated )
 
         const relatedLinksHtml = renderPageLinksHtml( app.relatedLinks )
+
+
+        const relatedVideosRowHtml = hasRelatedVideos ? await this.boundComponent(VideoRow)( relatedVideos ) : null
 
         return /* html */`
             <section class="container py-32">
@@ -151,7 +156,7 @@ export class AppTemplate {
                     </div>
                 </div>
 
-                ${ relatedVideos.length > 0 ? /* html */`
+                ${ hasRelatedVideos ? /* html */`
                     <div
                         class="related-videos w-full"
                     >
@@ -159,7 +164,7 @@ export class AppTemplate {
                             Related Videos
                         </h2>
 
-                        ${ this.boundComponent(VideoRow)( relatedVideos ) }
+                        ${ relatedVideosRowHtml }
 
                     </div>
                 ` : '' }
