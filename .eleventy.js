@@ -14,6 +14,8 @@ function getAssetFilePath(componentName) {
 	return `./${componentName}`
 }
 
+const inlineAssetCache = new Map()
+
 module.exports = function ( eleventyConfig ) {
     // console.log('eleventyConfig', eleventyConfig)
 
@@ -31,12 +33,24 @@ module.exports = function ( eleventyConfig ) {
 
         const assetFileName = getAssetFilePath( componentName )
 
+        // console.log('Cache size', inlineAssetCache)
+
         if ( componentName.includes('.js') ) {
 
             // If a never before seen component, add the JS code
-            if(!jsManager.hasComponentCode(componentName)) {
+            if( !inlineAssetCache.has( assetFileName ) ) {
 
                 let contents = ''
+
+                // if ( inlineAssetCache.has( assetFileName ) ) {
+                //     console.log('Reading component from cache', componentName)
+                //     console.log('Cache size', inlineAssetCache.size)
+
+                //     contents = inlineAssetCache.get( assetFileName )
+
+                // } else {
+
+                // }
 
                 console.log('Reading component file', componentName)
                 const javascriptCode = fs.readFileSync( assetFileName, { encoding: "UTF-8" })
@@ -45,6 +59,8 @@ module.exports = function ( eleventyConfig ) {
                 const minified = await minify( javascriptCode )
 
                 contents = minified.code
+
+                inlineAssetCache.set( assetFileName, contents )
 
                 // console.log('Got component', componentName, componentCss)
 
