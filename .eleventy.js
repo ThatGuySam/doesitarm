@@ -107,6 +107,10 @@ module.exports = function ( eleventyConfig ) {
 
 
     return {
+        // https://www.11ty.dev/docs/config/#template-formats
+        // Default: html,liquid,ejs,md,hbs,mustache,haml,pug,njk,11ty.js
+        templateFormats: [ '11ty.js' ],
+
         dir: {
             input: 'pages-eleventy',
             output: 'dist',
