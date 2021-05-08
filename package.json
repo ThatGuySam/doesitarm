@@ -39,6 +39,7 @@
     "pretty-bytes": "^5.5.0",
     "scroll-into-view-if-needed": "^2.2.26",
     "slugify": "^1.4.6",
+    "terser": "^4.8.0",
     "vue-full-screen-file-drop": "^2.0.0"
   },
   "devDependencies": {
