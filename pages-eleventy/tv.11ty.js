@@ -57,9 +57,13 @@ class TV {
         }
     }
 
-    render({ payload: { video } }) {
+    async render({ payload: { video } }) {
 
         // console.log('video.payload', Object.keys(video.payload))
+
+        const rowHtml = await this.boundComponent(VideoRow)( video.payload.relatedVideos )
+
+        // const rowHtml = renderedRow.join('')
 
         return /* html */`
             <section class="container pb-16">
@@ -87,7 +91,7 @@ class TV {
                     <div class="related-videos w-full">
                         <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">Related Videos</h2>
 
-                        ${ this.boundComponent(VideoRow)( video.payload.relatedVideos ) }
+                        ${ rowHtml }
 
                     </div>
 

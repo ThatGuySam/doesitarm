@@ -25,7 +25,7 @@ module.exports = function ( eleventyConfig ) {
     const cssManager = new InlineCodeManager()
     const jsManager = new InlineCodeManager()
 
-    eleventyConfig.addJavaScriptFunction('usingComponent', function ( componentName ) {
+    eleventyConfig.addJavaScriptFunction('usingComponent', async function ( componentName ) {
         // console.log('Getting component', componentName)
 
         if ( componentName.includes('.js') ) {

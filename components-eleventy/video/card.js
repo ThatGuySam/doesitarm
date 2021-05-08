@@ -9,14 +9,14 @@ function pill ( text ) {
     `
 }
 
-export default function ( video, options = {} ) {
+export default async function ( video, options = {} ) {
     const {
         width = '325px',
         classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
     } = options
 
     // Setup inline lazysizes
-    this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
+    await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
 
