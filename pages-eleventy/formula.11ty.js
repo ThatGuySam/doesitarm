@@ -33,6 +33,9 @@ class FormulaTemplate extends AppTemplate {
                 alias: 'app',
                 before: function( data ) {
                     return data.filter( entry => {
+                        // Skip endpoints with no payload
+                        if ( entry === undefined || !entry.hasOwnProperty('payload') ) return false
+
                         const appType = getAppType( entry.payload.app )
 
                         return appType === 'formula'

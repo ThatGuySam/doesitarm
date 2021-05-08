@@ -35,6 +35,9 @@ class TV {
                 alias: 'payload',
                 before: function( data ) {
                     return data.filter( entry => {
+                        // Skip endpoints with no payload
+                        if ( entry === undefined || !entry.hasOwnProperty('payload') ) return false
+
                         return entry.payload.hasOwnProperty('video') && isVideo( entry.payload.video )
                     })
                 }
