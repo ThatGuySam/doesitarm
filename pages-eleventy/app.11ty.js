@@ -114,7 +114,8 @@ export class AppTemplate {
         const relatedVideosRowHtml = hasRelatedVideos ? await this.boundComponent(VideoRow)( relatedVideos ) : null
 
         return /* html */`
-            <section class="container py-32">
+            <section class="container space-y-8 py-32">
+
                 <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0 space-y-8">
                     <h1 class="title text-sm md:text-2xl font-bold">
                         ${ data.mainHeading }
