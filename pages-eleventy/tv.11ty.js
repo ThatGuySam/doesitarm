@@ -8,16 +8,16 @@ import { isVideo, getRouteType } from '../helpers/app-derived'
 // Setup dotenv
 dotenv.config()
 
-export const makeTitle = function ( video ) {
-    return `${ video.name } - ${ config.head.title }`
+export const makeTitle = function ( tvEntry ) {
+    return `${ tvEntry.name } - ${ config.head.title }`
 }
 
-export const makeDescription = function ( video ) {
-    if ( video.payload.featuredApps.length === 0 ) return 'Apple Silicon performance and support videos'
+export const makeDescription = function ( tvEntry ) {
+    if ( tvEntry.payload.featuredApps.length === 0 ) return 'Apple Silicon performance and support videos'
 
-    const featuredAppsString = video.payload.featuredApps.slice(0, 5).map(app => app.name).join(', ')
+    const featuredAppsString = tvEntry.payload.featuredApps.slice(0, 5).map(app => app.name).join(', ')
 
-    // console.log('video.payload.featuredApps', video.payload.featuredApps)
+    // console.log('tvEntry.payload.featuredApps', tvEntry.payload.featuredApps)
 
     return `Apple Silicon performance and support videos for ${ featuredAppsString }`
 }
@@ -32,7 +32,7 @@ class TV {
             pagination: {
                 data: 'eleventy-endpoints',
                 size: 1,
-                alias: 'payload',
+                alias: 'tvEntry',
                 before: function( data ) {
                     return data.filter( entry => {
                         const routeType = getRouteType( entry.route )
@@ -43,27 +43,44 @@ class TV {
             },
 
             eleventyComputed: {
-                title: ({ payload: { video } }) => {
+                title: ( { tvEntry } ) => {
                     // console.log('data', data)
-                    return makeTitle( video )
+                    return makeTitle( tvEntry )
                 },
-                description: ({ payload: { video } }) => {
-                    return makeDescription( video )
+                description: ( { tvEntry } ) => {
+                    return makeDescription( tvEntry )
                 },
             },
 
-            permalink: ({ payload: { video } }) => {
+            permalink: ( { tvEntry: { route } } ) => {
                 // console.log('data', data)
-                return `tv/${ video.slug }/`
+                // return `tv/${ video.slug }/`
+
+                return route.substring(1) + '/'
             }
         }
     }
 
-    async render({ payload: { video } }) {
+    async render( data ) {
+
+        const {
+            tvEntry: {
+                // route,
+                payload: {
+                    video,
+                    relatedVideos = []
+                }
+            },
+            // tvEntry: {
+            //     video,
+            //     relatedVideos = []
+            // },
+            // 'device-list': deviceList
+        } = data
 
         // console.log('video.payload', Object.keys(video.payload))
 
-        const rowHtml = await this.boundComponent(VideoRow)( video.payload.relatedVideos )
+        const rowHtml = await this.boundComponent(VideoRow)( relatedVideos )
 
         // const rowHtml = renderedRow.join('')
 
