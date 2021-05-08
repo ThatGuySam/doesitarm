@@ -16,7 +16,7 @@ export default async function ( video, options = {} ) {
     } = options
 
     // Setup inline lazysizes
-    await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
+    // await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
 

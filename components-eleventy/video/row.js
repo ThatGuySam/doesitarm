@@ -23,8 +23,11 @@ export default async function ( videos, options = {} ) {
     const uid = Math.random().toString(36).substr(2, 9)
     const rowId = `row-${ uid }`
 
-    // Setup inline lazysizes
+    // Setup inline scroll script
     await this.usingComponent( 'helpers/scroll.js' )
+
+    // Setup inline lazysizes
+    await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
 
