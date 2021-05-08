@@ -2,6 +2,7 @@ import fs from 'fs'
 import replace_css_url from 'replace-css-url'
 import dotenv from 'dotenv'
 import { InlineCodeManager } from '@11ty/eleventy-assets'
+import { minify } from 'terser'
 
 import nuxtConfig from './nuxt.config'
 
@@ -28,14 +29,26 @@ module.exports = function ( eleventyConfig ) {
     eleventyConfig.addJavaScriptFunction('usingComponent', async function ( componentName ) {
         // console.log('Getting component', componentName)
 
+        const assetFileName = getAssetFilePath( componentName )
+
         if ( componentName.includes('.js') ) {
+
             // If a never before seen component, add the JS code
             if(!jsManager.hasComponentCode(componentName)) {
-                const fileContents = fs.readFileSync(getAssetFilePath(componentName), { encoding: "UTF-8" })
+
+                let contents = ''
+
+                console.log('Reading component file', componentName)
+                const javascriptCode = fs.readFileSync( assetFileName, { encoding: "UTF-8" })
+
+                console.log('Minifying code', componentName)
+                const minified = await minify( javascriptCode )
+
+                contents = minified.code
 
                 // console.log('Got component', componentName, componentCss)
 
-                jsManager.addComponentCode(componentName, fileContents)
+                jsManager.addComponentCode(componentName, contents)
             }
 
             // Log usage for this url
@@ -44,7 +57,7 @@ module.exports = function ( eleventyConfig ) {
         } else if ( componentName.includes('.css') ) {
             // If a never before seen component, add the CSS code
             if(!cssManager.hasComponentCode(componentName)) {
-                const fileContents = fs.readFileSync(getAssetFilePath(componentName), { encoding: "UTF-8" })
+                const fileContents = fs.readFileSync( assetFileName, { encoding: "UTF-8" })
 
                 // Replace urls in css with relative urls for dist folder
                 const parsedCss = replace_css_url(
