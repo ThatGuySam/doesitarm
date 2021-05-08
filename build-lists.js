@@ -236,12 +236,12 @@ class BuildLists {
                 const appType = getAppType( app )
 
                 if ( isVideo( app ) ) {
-                    // this.endpointMaps.eleventy.add({
-                    //     route: getVideoEndpoint(app),
-                    //     payload: buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
-                    // })
+                    this.endpointMaps.eleventy.set(
+                        getVideoEndpoint(app),
+                        buildVideoPayload( app, this.allVideoAppsList, this.lists.video )
+                    )
 
-                    this.endpointMaps.nuxt.set( getVideoEndpoint(app), buildVideoPayload( app, this.allVideoAppsList, this.lists.video ) )
+                    // this.endpointMaps.nuxt.set( getVideoEndpoint(app), buildVideoPayload( app, this.allVideoAppsList, this.lists.video ) )
 
                     return
                 }
