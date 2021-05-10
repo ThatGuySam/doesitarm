@@ -679,6 +679,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Rocket for Mac](https://matthewpalmer.net/rocket/) - ✅ Yes, Full Native Apple Silicon Support - [Verifcation](https://github.com/ThatGuySam/doesitarm/issues/605#issue-835338120)
 * [SheepShaver](https://www.emaculation.com/forum/viewtopic.php?f=20&t=7360) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.emaculation.com/sheepshaver/build-history.txt) [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Silenz](https://silenzapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/653749/5114)
+* [sndcpy](https://github.com/rom1v/sndcpy) - 🔶 Unknown, more info needed - [Report Update](https://github.com/ThatGuySam/doesitarm/issues/645)
 * [start for Mac](https://apps.apple.com/us/app/start/id1329701389?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/752736/5114)
 * [Swish for macOS](https://highlyopinionated.co/swish/) - ✅ Yes, Full Native Apple Silicon Support as of v1.7.1 - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/swish)
 * [TG Pro](https://www.tunabellysoftware.com/tgpro/) - ✅ Yes, Full Native Apple Silicon Support as of v2.53 - [Release Notes](https://www.tunabellysoftware.com/tgpro/releasenotes/)
