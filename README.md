@@ -514,6 +514,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 * [2048 Game](https://apps.apple.com/us/app/2048-game/id871033113?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Amazon Music](https://music.amazon.com/NA/help/apps) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/634#issue-870540625)
+* [BlueStacks](https://www.bluestacks.com/) - 🚫 No, not yet supported only works on Intel-based Macs - [Report #1](https://www.reddit.com/r/BlueStacks/comments/n9f9wn/apple_silicon/gxowg9g?utm_source=share&utm_medium=web2x&context=3) [Report #2](https://www.reddit.com/r/BlueStacks/comments/kea3uw/macos_bigsur_111_with_m1_issue/gg3xi2r?utm_source=share&utm_medium=web2x&context=3)
 * [Celeste](http://www.celestegame.com/) - ⏹ No, not yet but can be made to run with a work around - [Apple Silicon Work Around](https://github.com/AbeJellinek/celeste-on-m1) [View on Itch.io](https://mattmakesgames.itch.io/celeste?ac=QWRPsg4sVvG)
 * [Cog Player](https://cog.losno.co/download) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [DeSmuME](https://desmume.org/download/) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/611#issue-840038939)
