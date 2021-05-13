@@ -1,3 +1,29 @@
+/**
+ *
+ * Eleventy command line debugging codes
+ *
+ *
+ * Eleventy:Config
+ * Eleventy:UserConfig
+ * Eleventy:TemplateConfig
+ *
+ * Eleventy:CommandCheck
+ *
+ * Eleventy:EleventyFiles
+ * Eleventy:TemplateWriter
+ * Eleventy:TemplatePassthroughManager
+ * Eleventy:TemplatePassthrough
+ * Eleventy:TemplateData
+ * Eleventy:Template
+ *
+ * Eleventy:ComputedData
+ *
+ * Eleventy:Benchmark
+ *
+ * EleventyAssets
+ */
+
+
 import fs from 'fs'
 import replace_css_url from 'replace-css-url'
 import dotenv from 'dotenv'
