@@ -196,7 +196,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Music and Audio Tools
 
-* [Adobe Audition](https://www.adobe.com/products/audition.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
+* [Adobe Audition](https://www.adobe.com/products/audition.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://helpx.adobe.com/audition/user-guide.html/audition/using/whats-new/2021-1.ug.html) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Airfoil](https://rogueamoeba.com/airfoil/mac/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.10.0 - [Release Notes](https://rogueamoeba.com/airfoil/mac/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Ardour](https://community.ardour.org/download) - ✳️ Yes, it works via Rosetta 2 with native support in progress - [Apple Silicon Pre-release](https://discourse.ardour.org/t/ardour-for-apple-m1-arm-pre-release/105174)
 * [Audacity](https://www.audacityteam.org/download/) - ✳️ Yes, it works via Rosetta 2 with no reported issues - [Github Issue Comment](https://github.com/audacity/audacity/issues/684#issuecomment-710726323)
