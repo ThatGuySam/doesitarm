@@ -28,7 +28,8 @@ import fs from 'fs'
 import replace_css_url from 'replace-css-url'
 import dotenv from 'dotenv'
 import { InlineCodeManager } from '@11ty/eleventy-assets'
-import { minify } from 'terser'
+import { transformSync } from 'esbuild'
+
 
 import nuxtConfig from './nuxt.config'
 
@@ -82,7 +83,14 @@ module.exports = function ( eleventyConfig ) {
                 const javascriptCode = fs.readFileSync( assetFileName, { encoding: "UTF-8" })
 
                 console.log('Minifying code', componentName)
-                const minified = await minify( javascriptCode )
+                const minified = await transformSync(javascriptCode, {
+                    // loader: 'ts',
+                    // bundle: true,
+                    minify: true,
+                    // format: 'iife',
+                })//minify( javascriptCode )
+
+                // console.log('minified', minified)
 
                 contents = minified.code
 
