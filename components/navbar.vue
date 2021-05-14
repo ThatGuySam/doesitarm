@@ -143,9 +143,9 @@
                                 'underline px-3 py-2 rounded-md text-xs font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
                                 //($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
-                            href="https://amzn.to/334Oyu6"
+                            href="https://track.adtraction.com/t/t?a=1404987138&as=1609291769&t=2&tk=1&url=https://surfshark.com/blog/m1-chip-compatibility"
                         >
-                            🖥 M1 iMac is now available for preorder
+                            ✅ Surfshark VPN is now Apple Silicon native!
                         </a>
                     </div>
                 </div>
