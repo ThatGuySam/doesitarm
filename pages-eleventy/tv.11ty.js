@@ -3,13 +3,15 @@ import dotenv from 'dotenv'
 import config from '../nuxt.config'
 
 import VideoRow from '../components-eleventy/video/row.js'
-import { isVideo, getRouteType } from '../helpers/app-derived'
+import { getRouteType } from '../helpers/app-derived'
 
 // Setup dotenv
 dotenv.config()
 
-export const makeTitle = function ( tvEntry ) {
-    return `${ tvEntry.name } - ${ config.head.title }`
+export const makeTitle = function ( name ) {
+    // console.log('tvEntry', tvEntry)
+
+    return `${ name } - ${ config.head.title }`
 }
 
 export const makeDescription = function ( tvEntry ) {
@@ -31,32 +33,42 @@ class TV {
 
             pagination: {
                 data: 'eleventy-endpoints',
+                // data: 'collections.tv',
                 size: 1,
                 alias: 'tvEntry',
-                before: function( data ) {
-                    return data.filter( entry => {
+                before: function( endpoint ) {
+                    // console.log('Before runs')
+
+                    return endpoint.filter( entry => {
                         const routeType = getRouteType( entry.route )
 
                         return routeType === 'tv'
                     })
-                }
+                },
             },
+
+            // tags: [ 'tv' ],
 
             eleventyComputed: {
-                title: ( { tvEntry } ) => {
-                    // console.log('data', data)
-                    return makeTitle( tvEntry )
+                title: data => {
+                    // Declare dependencies for Eleventy
+                    // https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies
+                    data.tvEntry
+
+                    return makeTitle( data.tvEntry.payload.video.name )
                 },
-                description: ( { tvEntry } ) => {
-                    return makeDescription( tvEntry )
+                description: ( data ) => {
+                    // Declare dependencies for Eleventy
+                    // https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies
+                    data.tvEntry
+
+                    return makeDescription( data.tvEntry )
                 },
             },
 
-            permalink: ( { tvEntry: { route } } ) => {
-                // console.log('data', data)
-                // return `tv/${ video.slug }/`
+            permalink: ( data ) => {
 
-                return route.substring(1) + '/'
+                return data.tvEntry.route.substring(1) + '/'
             }
         }
     }
@@ -71,12 +83,9 @@ class TV {
                     relatedVideos = []
                 }
             },
-            // tvEntry: {
-            //     video,
-            //     relatedVideos = []
-            // },
             // 'device-list': deviceList
         } = data
+
 
         // console.log('video.payload', Object.keys(video.payload))
 
