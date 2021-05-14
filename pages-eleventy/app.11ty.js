@@ -65,7 +65,7 @@ export class AppTemplate {
             },
 
             eleventyComputed: {
-                title: ({ app: { payload: { app } }  }) => {
+                title: ({ app: { payload: { app } } }) => {
                     // console.log('data', data)
                     return makeTitle( app )
                 },
