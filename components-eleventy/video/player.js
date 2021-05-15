@@ -1,3 +1,22 @@
+function renderTimestamps ( video ) {
+    const timestampsForRender = video.timestamps.map( timestamp => {
+        const [ minutes, seconds ] = timestamp.time.split(':')
+
+        return {
+            ...timestamp,
+            inSeconds: (minutes * 60) + Number(seconds)
+        }
+    })
+
+    return timestampsForRender.map( timestamp => (/* html */`
+<button
+    time="${timestamp.time}"
+    class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">
+        ${ timestamp.fullText }
+</button>
+    `) ).join('')
+}
+
 export default async function ( video, options = {} ) {
     const {
         width = '325px',
@@ -13,6 +32,8 @@ export default async function ( video, options = {} ) {
     await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
+
+    const timestampsHtml = renderTimestamps( video )
 
     return /* html */`
 <lite-youtube
@@ -46,8 +67,10 @@ export default async function ( video, options = {} ) {
             </div>
         </div>
     </div>
-    <div class="video-timestamps w-full max-w-4xl">
-        <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2"><button data-time="00:00" class-groups="[object Object]" class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">00:00 What is Parallels?</button><button data-time="00:35" class-groups="[object Object]" class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">00:35 What’s New In Version 16.5?</button><button data-time="01:42" class-groups="[object Object]" class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">01:42 Performance Improvements</button><button data-time="03:11" class-groups="[object Object]" class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">03:11 Windows 10 Gaming Improvements</button><button data-time="05:11" class-groups="[object Object]" class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">05:11 Does Valorant Work?</button></div>
+    <div class="player-timestamps w-full max-w-4xl">
+        <div class="player-timestamps-wrapper overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
+            ${ timestampsHtml }
+        </div>
     </div>
 </lite-youtube>
     `

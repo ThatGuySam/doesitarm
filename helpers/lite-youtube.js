@@ -21,6 +21,14 @@ class LiteYTEmbed extends HTMLElement {
         super()
 
         this._uid = Date.now()
+        this.$refs = {}
+
+        this.playerLoaded = false
+        this.player = null
+        this.playing = false
+        this.progressInterval = null
+        this.playerTime = 0
+        this.preconnected = false
     }
 
     connectedCallback() {
@@ -46,7 +54,10 @@ class LiteYTEmbed extends HTMLElement {
         // Once the user clicks, add the real iframe and drop our play button
         // TODO: In the future we could be like amp-youtube and silently swap in the iframe during idle time
         //   We'd want to only do this for in-viewport or near-viewport ones: https://github.com/ampproject/amphtml/pull/5003
-        this.playerPoster.addEventListener('click', e => this.addIframe())
+        this.playerPoster.addEventListener('click', e => {
+            this.addIframe()
+            this.startPlayerLoad()
+        })
 
 
         // Mounted
@@ -114,6 +125,8 @@ class LiteYTEmbed extends HTMLElement {
 
         const iframeEl = document.createElement('iframe')
 
+        this.$refs['frame'] = iframeEl
+
         iframeEl.width = '100%'
         iframeEl.height = '100%'
         // No encoding necessary as [title] is safe. https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#:~:text=Safe%20HTML%20Attributes%20include
@@ -168,7 +181,7 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     hasTimestamps () {
-        return this.timestamps.length > 0
+        return this.timestamps().length > 0
     }
 
     hasPlayer () {
@@ -179,7 +192,7 @@ class LiteYTEmbed extends HTMLElement {
         const currentTime = this.playerTime// / 100
 
         const reversesTimestamps = [
-            ...this.timestamps
+            ...this.timestamps()
         ]
 
         // reversesTimestamps.reverse()
@@ -256,7 +269,7 @@ class LiteYTEmbed extends HTMLElement {
     // },
 
     static addPrefetch(kind, url, as) {
-        console.log('prefetching', url)
+        // console.log('prefetching', url)
 
         const linkEl = document.createElement('link')
 
@@ -288,6 +301,8 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     async startPlayerLoad () {
+        // console.log('Starting player load')
+
         this.playerLoaded = true
 
         await this.initializePlayer()
@@ -298,7 +313,7 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     async initializePlayer () {
-        // console.log('Youtube Embed API Ready')
+        console.log('Initializing player')
 
         // Clear player
         this.player = null
@@ -308,7 +323,9 @@ class LiteYTEmbed extends HTMLElement {
 
         // If there are no timestamps
         // then stop
-        if (!this.hasTimestamps) {
+        if ( !this.hasTimestamps() ) {
+            console.log('No timestamps. Skipping Youtube API initialization')
+
             this.playerLoaded = true
             return
         }
@@ -337,9 +354,13 @@ class LiteYTEmbed extends HTMLElement {
 
         const onReady = () => new Promise( resolve => {
 
+            // console.log('Started onReady')
+
             this.player = new YT.Player(this.$refs['frame'].id, {
                 events: {
                     'onReady': readyEvent => {
+                        // console.log('Resolving onReady')
+
                         this.onPlayerReady( readyEvent )
 
                         resolve( readyEvent )
@@ -356,9 +377,11 @@ class LiteYTEmbed extends HTMLElement {
 
         })
 
-        await onReady()
+        // console.log('Waiting for ready')
 
-        // console.log('Youtube Player API ready', JSON.stringify(this.player))
+        const readyEvent = await onReady()
+
+        // console.log('Youtube Player API ready', readyEvent, JSON.stringify(this.player))
     }
 
     initializeApi () {
@@ -375,8 +398,8 @@ class LiteYTEmbed extends HTMLElement {
         })
     }
 
-    onPlayerPlaying () {
-        console.log('Player playing')
+    onPlayerPlaying = () => {
+        // console.log('Player playing')
         this.playing = true
 
         this.progressInterval = setInterval(() => {
