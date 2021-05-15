@@ -90,7 +90,7 @@ class TV {
 
         // console.log('video.payload', Object.keys(video.payload))
 
-        const playerHtml = await this.boundComponent(VideoPlayer)()
+        const playerHtml = await this.boundComponent(VideoPlayer)( video )
 
         const rowHtml = await this.boundComponent(VideoRow)( relatedVideos )
 
