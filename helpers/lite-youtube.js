@@ -15,6 +15,10 @@
  *   https://github.com/Daugilas/lazyYT
  *   https://github.com/vb/lazyframe
  */
+
+function isObject( maybeObject ) {
+    return maybeObject === Object( maybeObject )
+}
 class LiteYTEmbed extends HTMLElement {
     constructor() {
         // Always call super first in constructor
@@ -23,12 +27,16 @@ class LiteYTEmbed extends HTMLElement {
         this._uid = Date.now()
         this.$refs = {}
 
+        this.$refs['timestamps-scroll-container'] = this.querySelector('.player-timestamps-wrapper')
+
         this.playerLoaded = false
         this.player = null
         this.playing = false
         this.progressInterval = null
         this.playerTime = 0
         this.preconnected = false
+
+        this.highlightedTimestampElement = null
     }
 
     connectedCallback() {
@@ -51,11 +59,22 @@ class LiteYTEmbed extends HTMLElement {
         // On hover (or tap), warm up the TCP connections we're (likely) about to use.
         this.playerContainer.addEventListener('pointerover', this.warmConnections, {once: true})
 
+        if ( this.hasTimestamps() ) {
+            // Array.from( this.querySelectorAll(`.player-timestamps [time]`) )
+
+            this.timestamps().map( timestamp => {
+                const timestampButton = this.querySelector(`.player-timestamps [time="${timestamp.time}"]`)
+
+                timestampButton.addEventListener('click', e => {
+                    this.seekTo(timestamp.inSeconds)
+                })
+            })
+        }
+
         // Once the user clicks, add the real iframe and drop our play button
         // TODO: In the future we could be like amp-youtube and silently swap in the iframe during idle time
         //   We'd want to only do this for in-viewport or near-viewport ones: https://github.com/ampproject/amphtml/pull/5003
         this.playerPoster.addEventListener('click', e => {
-            this.addIframe()
             this.startPlayerLoad()
         })
 
@@ -217,18 +236,58 @@ class LiteYTEmbed extends HTMLElement {
         return null
     }
 
+    highlightActiveTimestamp = () => {
+        const activeClassList = 'border-opacity-100 bg-darkest'
+        const inactiveClassList = 'border-opacity-0 neumorphic-shadow-inner'
 
-    scrollRow ( timestamp ) {
+        const activeTimestamp = this.activeTimestamp()
+
+        // If there's no active timestamp
+        // then stop
+        if ( activeTimestamp === null ) return
+
+        // console.log('activeTimestamp', activeTimestamp)
+
+        if ( isObject( this.highlightedTimestampElement ) && this.highlightedTimestampElement.time === activeTimestamp.time) return
+
+        // Change active timestamp
+
+        const newActiveTimestamp = this.querySelector(`[time="${activeTimestamp.time}"]`)
+
+        // If there's already a highlited time stamp
+        // then unhighlight it
+        if ( isObject( this.highlightedTimestampElement ) ) {
+            this.highlightedTimestampElement.classList.remove(...activeClassList.split(' '))
+            this.highlightedTimestampElement.classList.add(...inactiveClassList.split(' '))
+        }
+
+        newActiveTimestamp.classList.remove(...inactiveClassList.split(' '))
+        newActiveTimestamp.classList.add(...activeClassList.split(' '))
+
+        // Scroll to new timestamp
+        this.scrollToTimestampButton( newActiveTimestamp )
+
+        this.highlightedTimestampElement = newActiveTimestamp
+
+        // console.log('newActiveTimestamp', newActiveTimestamp)
+        // console.log('this.highlightedTimestampElement', this.highlightedTimestampElement)
+    }
+
+    scrollToTimestampButton ( timestampButton ) {
 
         // If timestamp button doesn't exist
         // then stop
-        if (!this.$refs[`timestamp-${timestamp.time}`]) return
+        if ( !isObject( timestampButton ) ) return
 
         const timestampsScroller = this.$refs['timestamps-scroll-container']
-        const [ timestampButton ] = this.$refs[`timestamp-${timestamp.time}`]
+        // const [ timestampButton ] = this.$refs[`timestamp-${timestamp.time}`]
 
         // https://stackoverflow.com/a/63773123/1397641
         const newScrollPosition = timestampButton.offsetLeft - timestampsScroller.offsetLeft
+
+        // console.log('timestampsScroller', timestampsScroller)
+        // console.log('timestampButton', timestampButton)
+        // console.log('newScrollPosition', newScrollPosition)
 
         timestampsScroller.scroll({ left: newScrollPosition, behavior: 'smooth' })
     }
@@ -302,6 +361,8 @@ class LiteYTEmbed extends HTMLElement {
 
     startPlayerLoad = async () => {
         // console.log('Starting player load')
+
+        this.addIframe()
 
         this.playerLoaded = true
 
@@ -415,6 +476,9 @@ class LiteYTEmbed extends HTMLElement {
             // console.log('this.player', this.player.hasOwnProperty('getCurrentTime'))
 
             this.playerTime = this.player.getCurrentTime()
+
+            this.highlightActiveTimestamp()
+
         }, 500)
     }
 
@@ -426,7 +490,7 @@ class LiteYTEmbed extends HTMLElement {
     }
 
     onPlayerReady (event) {
-        console.log('Player is ready', event, this.player )
+        // console.log('Player is ready', event, this.player )
     }
 }
 // Register custom element
