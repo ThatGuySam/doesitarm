@@ -10,6 +10,8 @@ import { getRouteType } from '../helpers/app-derived'
 // Setup dotenv
 dotenv.config()
 
+export const myChannelId = 'UCB3jOb5QVjX7lYecvyCoTqQ'
+
 export const makeTitle = function ( name ) {
     // console.log('tvEntry', tvEntry)
 
@@ -103,8 +105,20 @@ class TV {
                     ${ playerHtml }
 
                     <div class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10">
-                        <h1 class="title text-lg md:text-2xl font-bold">${ video.name }</h1>
-                        <div class="channel-credit"><a href="https://www.youtube.com/channel/UCptwuAv0XQHo1OQUSaO6NHw" target="_blank" rel="noopener" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow focus:shadow-outline-indigo bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out">Subscribe to Max Tech</a></div>
+
+                        ${ video.channel.id !== myChannelId ? /* html */`
+                            <div
+                                class="channel-credit"
+                            >
+                                <a
+                                    href="https://www.youtube.com/channel/${ video.channel.id }?sub_confirmation=1"
+                                    target="_blank"
+                                    rel="noopener"
+                                    role="button"
+                                    class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow focus:shadow-outline-indigo bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out"
+                                >Subscribe to ${ video.channel.name }</a>
+                            </div>
+                        ` : '' }
                     </div>
 
                     <hr class="w-full">
