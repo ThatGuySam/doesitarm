@@ -268,6 +268,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Typeface for Mac](https://typefaceapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/507348/5114)
 * [Vectornator](https://www.vectornator.io/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1300)
 * [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan/releases) - ✅ Yes, Full Native Apple Silicon Support as of v20210102 - [Release Notes](https://github.com/nihui/waifu2x-ncnn-vulkan/releases/tag/20210102)
+* [Wonderdraft](https://www.wonderdraft.net/) - ✳️ Yes, works via Rosetta 2 translation - [Report #1](https://community.folivora.ai/t/m1-mac-trackpad-disappearing-laggy-pointer/21069/9)
 
 
 
@@ -501,6 +502,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Time Out for Mac](https://www.dejal.com/timeout/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/689682/5114)
 * [Timing for Mac](https://timingapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344474/5114)
 * [Tuple](https://tuple.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/514#issuecomment-761276719)
+* [TurboTax](https://turbotax.intuit.com/personal-taxes/cd-download/) - ✳️ Runs via Rosetta with no immediate plans for native support - [Discussion](https://ttlc.intuit.com/community/taxes/discussion/re-turbotax-deluxe-under-macos-bigsur-on-macbook-air-apple-m1-chip-turbotax-app-doesn-t-open/01/2273549#M815580)
 * [UctoX](https://software.charliemonroe.net/uctox/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](http://blog.charliemonroe.net/big-sur-and-apple-silicon/) [View on Setapp](https://setapp.sjv.io/uctox)
 * [Ulysses](https://ulysses.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/120#issuecomment-750041670) [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/) [View on Setapp](https://setapp.sjv.io/c/2708043/344477/5114)
 * [Unibox](https://www.uniboxapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/368242/5114)

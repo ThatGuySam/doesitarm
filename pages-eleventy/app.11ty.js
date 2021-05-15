@@ -23,6 +23,20 @@ export const makeDescription = function ( app ) {
     return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors.`
 }
 
+// https://stackoverflow.com/a/15069646/1397641
+function makeEnglishList ( array, conjunction = 'and' ) {
+    const total = array.length
+
+    if ( total < 3 ) return array.join(` ${conjunction} `)
+
+    array = array.slice()
+
+    // Prepend conjunction to final part
+    array[ total-1 ] = `${ conjunction } ${ array[ total-1 ] }`
+
+    return array.join(', ')
+}
+
 export function renderPageLinksHtml ( links ) {
     return links.map( (link, i) => {
 
@@ -97,6 +111,8 @@ export class AppTemplate {
 
         // console.log('video.payload', Object.keys(video.payload))
 
+        const hasMultipleAliases = !!app.aliases && app.aliases.length > 1
+
         const appDeviceSupport = deviceList.map( device => {
             const supportsApp = deviceSupportsApp( device, app )
             return {
@@ -123,6 +139,10 @@ export class AppTemplate {
                     <h2 class="subtitle text-2xl md:text-5xl font-bold">
                         ${ app.text }
                     </h2>
+
+                    ${ hasMultipleAliases ? /* html */`
+                        <small class="text-xs opacity-75">May also be known as ${ makeEnglishList( app.aliases, 'or' ) }</small>
+                    ` : '' }
 
                     <div class="subscribe">
                         <iframe src="/embed-subscribe" loading="lazy" style="width: 350px; height: 150px;" class="-my-10"></iframe>
