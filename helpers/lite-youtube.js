@@ -153,7 +153,7 @@ class LiteYTEmbed extends HTMLElement {
 
     // Computed methods
 
-    posterSources () {
+    posterSources = () => {
         const webpSource = {
             ...this.video.thumbnail,
             srcset: this.video.thumbnail.srcset.replaceAll('ytimg.com/vi/', 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
@@ -165,11 +165,11 @@ class LiteYTEmbed extends HTMLElement {
         }
     }
 
-    frameId () {
+    frameId = () => {
         return `youtube-player-${this.video.id}-${this._uid}`
     }
 
-    timestamps () {
+    timestamps = () => {
         return this.video.timestamps.map( timestamp => {
             const [ minutes, seconds ] = timestamp.time.split(':')
 
@@ -180,15 +180,15 @@ class LiteYTEmbed extends HTMLElement {
         })
     }
 
-    hasTimestamps () {
+    hasTimestamps = () => {
         return this.timestamps().length > 0
     }
 
-    hasPlayer () {
+    hasPlayer = () => {
         return this.player !== null
     }
 
-    activeTimestamp () {
+    activeTimestamp = () => {
         const currentTime = this.playerTime// / 100
 
         const reversesTimestamps = [
@@ -233,7 +233,7 @@ class LiteYTEmbed extends HTMLElement {
         timestampsScroller.scroll({ left: newScrollPosition, behavior: 'smooth' })
     }
 
-    async detectAutoplay () {
+    detectAutoplay = async () => {
 
         // if ( !process.client ) return { willAutoplay: false }
 
@@ -247,7 +247,7 @@ class LiteYTEmbed extends HTMLElement {
         }
     }
 
-    async seekTo (timestampInSeconds) {
+    seekTo = async (timestampInSeconds) => {
 
         if (this.playerLoaded === false) {
             await this.startPlayerLoad()
@@ -268,7 +268,7 @@ class LiteYTEmbed extends HTMLElement {
     //     })
     // },
 
-    static addPrefetch(kind, url, as) {
+    addPrefetch = (kind, url, as) => {
         // console.log('prefetching', url)
 
         const linkEl = document.createElement('link')
@@ -283,24 +283,24 @@ class LiteYTEmbed extends HTMLElement {
         document.head.append(linkEl)
     }
 
-    warmConnections () {
-        if (LiteYTEmbed.preconnected) return
+    warmConnections = () => {
+        if (this.preconnected) return
 
         console.log('Warming connections')
 
         // The iframe document and most of its subresources come right off youtube.com
-        LiteYTEmbed.addPrefetch('preconnect', 'https://www.youtube-nocookie.com')
+        this.addPrefetch('preconnect', 'https://www.youtube-nocookie.com')
         // The botguard script is fetched off from google.com
-        LiteYTEmbed.addPrefetch('preconnect', 'https://www.google.com')
+        this.addPrefetch('preconnect', 'https://www.google.com')
 
         // Not certain if these ad related domains are in the critical path. Could verify with domain-specific throttling.
-        LiteYTEmbed.addPrefetch('preconnect', 'https://googleads.g.doubleclick.net')
-        LiteYTEmbed.addPrefetch('preconnect', 'https://static.doubleclick.net')
+        this.addPrefetch('preconnect', 'https://googleads.g.doubleclick.net')
+        this.addPrefetch('preconnect', 'https://static.doubleclick.net')
 
-        LiteYTEmbed.preconnected = true
+        this.preconnected = true
     }
 
-    async startPlayerLoad () {
+    startPlayerLoad = async () => {
         // console.log('Starting player load')
 
         this.playerLoaded = true
@@ -312,7 +312,7 @@ class LiteYTEmbed extends HTMLElement {
         // })
     }
 
-    async initializePlayer () {
+    initializePlayer = async () => {
         console.log('Initializing player')
 
         // Clear player
@@ -384,7 +384,7 @@ class LiteYTEmbed extends HTMLElement {
         // console.log('Youtube Player API ready', readyEvent, JSON.stringify(this.player))
     }
 
-    initializeApi () {
+    initializeApi = () => {
         return new Promise( resolve => {
             const tag = document.createElement('script')
             tag.id = `youtube-api-script-${this._uid}`
@@ -418,7 +418,7 @@ class LiteYTEmbed extends HTMLElement {
         }, 500)
     }
 
-    onPlayerPaused () {
+    onPlayerPaused = () => {
         console.log('Player paused')
         this.playing = false
 
