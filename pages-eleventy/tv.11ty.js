@@ -1,11 +1,12 @@
 import dotenv from 'dotenv'
 
-import config from '../nuxt.config'
+import config from '../nuxt.config.js'
 
 import VideoPlayer from '../components-eleventy/video/player.js'
 import VideoRow from '../components-eleventy/video/row.js'
 
-import { getRouteType } from '../helpers/app-derived'
+import { getRouteType } from '../helpers/app-derived.js'
+import { buildVideoStructuredData } from '../helpers/structured-data.js'
 
 // Setup dotenv
 dotenv.config()
@@ -67,6 +68,15 @@ class TV {
 
                     return makeDescription( data.tvEntry )
                 },
+                structuredData: data => {
+                    // Declare dependencies for Eleventy
+                    // https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies
+                    data.tvEntry
+
+                    return buildVideoStructuredData( data.tvEntry.payload.video,  data.tvEntry.payload.featuredApps, {
+                        siteUrl: process.env.URL
+                    } )
+                }
             },
 
             permalink: ( data ) => {
