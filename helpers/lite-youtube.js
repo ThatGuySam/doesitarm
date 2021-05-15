@@ -172,18 +172,6 @@ class LiteYTEmbed extends HTMLElement {
 
     // Computed methods
 
-    posterSources = () => {
-        const webpSource = {
-            ...this.video.thumbnail,
-            srcset: this.video.thumbnail.srcset.replaceAll('ytimg.com/vi/', 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
-        }
-
-        return {
-            webp: webpSource,
-            jpeg: this.video.thumbnail
-        }
-    }
-
     frameId = () => {
         return `youtube-player-${this.video.id}-${this._uid}`
     }

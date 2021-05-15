@@ -68,6 +68,23 @@ class TV {
 
                     return makeDescription( data.tvEntry )
                 },
+
+                headLinkTags: data => {
+                    // Declare dependencies for Eleventy
+                    // https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies
+                    data.tvEntry
+
+                    return [
+                        // Preload video thumbnail
+                        // <link rel="preload" as="image" href="img.png" />
+                        {
+                            'rel': 'preload',
+                            'as': 'image',
+                            'href': `https://i.ytimg.com/vi_webp/${ data.tvEntry.payload.video.id }/sddefault.webp`
+                        },
+                    ]
+                },
+
                 structuredData: data => {
                     // Declare dependencies for Eleventy
                     // https://www.11ty.dev/docs/data-computed/#declaring-your-dependencies

@@ -1,3 +1,34 @@
+function renderPoster ( video ) {
+    const webpSource = {
+        ...video.thumbnail,
+        srcset: video.thumbnail.srcset.replaceAll('ytimg.com/vi/', 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
+    }
+
+    const mergedSources = {
+        webp: webpSource,
+        jpeg: video.thumbnail
+    }
+
+    return /* html */`
+<picture>
+
+    ${ Object.entries( mergedSources ).map( ([ key, source ]) => (/* html */`
+        <source
+            sizes="${ source.sizes }"
+            data-srcset="${ source.srcset }"
+            type="image/${ key }"
+        >
+    `) ).join('') }
+
+    <img
+        :data-src="${ video.thumbnail.src }"
+        alt="${ video.name }"
+        class="absolute inset-0  h-full w-full object-cover lazyload"
+    >
+</picture>
+    `
+}
+
 function renderTimestamps ( video ) {
     const timestampsForRender = video.timestamps.map( timestamp => {
         const [ minutes, seconds ] = timestamp.time.split(':')
@@ -33,6 +64,8 @@ export default async function ( video, options = {} ) {
 
     // console.log('video', video)
 
+    const posterHtml = renderPoster( video )
+
     const timestampsHtml = renderTimestamps( video )
 
     return /* html */`
@@ -48,11 +81,7 @@ export default async function ( video, options = {} ) {
         <div class="player-container relative overflow-hidden w-full pb-16/9">
             <div class="player-poster cursor-pointer">
 
-                <picture>
-                    <source sizes="(max-width: 640px) 100vw, 640px" data-srcset="https://i.ytimg.com/vi_webp/IJbmCNGPAbc/default.webp 120w, https://i.ytimg.com/vi_webp/IJbmCNGPAbc/mqdefault.webp 320w, https://i.ytimg.com/vi_webp/IJbmCNGPAbc/hqdefault.webp 480w, https://i.ytimg.com/vi_webp/IJbmCNGPAbc/sddefault.webp 640w" type="image/webp">
-                    <source sizes="(max-width: 640px) 100vw, 640px" data-srcset="https://i.ytimg.com/vi/IJbmCNGPAbc/default.jpg 120w, https://i.ytimg.com/vi/IJbmCNGPAbc/mqdefault.jpg 320w, https://i.ytimg.com/vi/IJbmCNGPAbc/hqdefault.jpg 480w, https://i.ytimg.com/vi/IJbmCNGPAbc/sddefault.jpg 640w" type="image/jpeg">
-                    <img data-src="https://i.ytimg.com/vi/IJbmCNGPAbc/default.jpg" alt="M1 Macs + Windows 10 GAMING and PERFORMANCE Improvements with Parallels 16.5!" class="absolute inset-0 h-full w-full object-cover lazyload">
-                </picture>
+                ${ posterHtml }
 
                 <div class="video-card-overlay absolute inset-0 flex flex-col justify-center items-center bg-gradient-to-tr from-black to-transparent p-4" style="--gradient-from-color:rgba(0, 0, 0, 1); --gradient-to-color:rgba(0, 0, 0, 0.7);">
                     <div class="cover-top h-full"></div>
