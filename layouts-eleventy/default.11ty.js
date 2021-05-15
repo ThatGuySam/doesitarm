@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { JSDOM } from 'jsdom'
 
-import config from '../nuxt.config'
+import config from '../nuxt.config.js'
 
 
 console.log('Running Default Layout file')
@@ -95,6 +95,9 @@ const cleanNuxtLayout = ( layout ) => {
     document.querySelector('title').insertAdjacentHTML('afterend', templateVar('link-tags') )
 
     // Add meta tags after title node
+    document.querySelector('title').insertAdjacentHTML('afterend', templateVar('structured-data') )
+
+    // Add meta tags after title node
     document.querySelector('title').insertAdjacentHTML('afterend', templateVar('meta-tags') )
 
     // Set page css
@@ -172,6 +175,21 @@ class DefaultLayout {
         return Object.values(meta).join('')
     }
 
+    generateStructuredData = function ( renderData ) {
+
+        const {
+            structuredData = null
+        } = renderData
+
+        // console.log('renderData', Object.keys(renderData))
+
+        if ( structuredData === null ) return ''
+
+        const structuredDataJson = JSON.stringify( structuredData )
+
+        return `<script type="application/ld+json">${ structuredDataJson }</script>`
+    }
+
     generateLinkTags = ( pageLinkTags = [] ) => {
 
         const linkTags = {
@@ -210,6 +228,9 @@ class DefaultLayout {
         // Add meta tags after title node
         // this.generateMetaTags( data )
         workingLayoutString = workingLayoutString.replace( templateVar('meta-tags'), this.generateMetaTags( data ) )
+
+        // Add structured data
+        workingLayoutString = workingLayoutString.replace( templateVar('structured-data'), this.generateStructuredData( data ) )
 
         // Set page css
         // document.querySelector('head').insertAdjacentHTML('beforeend', this.getCss() )
