@@ -81,7 +81,7 @@
 
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
-import { buildVideoStructuredData } from '~/helpers/structure-data.js'
+import { buildVideoStructuredData } from '~/helpers/structured-data.js'
 
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
