@@ -92,7 +92,15 @@ class TV {
 
         // console.log('video.payload', Object.keys(video.payload))
 
-        const playerHtml = await this.boundComponent(VideoPlayer)( video )
+        const coverBottomHtml = /* html */`
+            <div class="page-heading h-full flex items-end md:p-4">
+                <h1 class="title text-xs text-left md:text-2xl font-bold">${ video.name }</h1>
+            </div>
+        `
+
+        const playerHtml = await this.boundComponent(VideoPlayer)( video, {
+            coverBottomHtml
+        } )
 
         const rowHtml = await this.boundComponent(VideoRow)( relatedVideos )
 

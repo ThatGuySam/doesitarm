@@ -19,8 +19,8 @@ function renderTimestamps ( video ) {
 
 export default async function ( video, options = {} ) {
     const {
-        width = '325px',
-        classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
+        coverBottomHtml = ''
+        // classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
     } = options
 
     // Setup inline player script
@@ -43,14 +43,17 @@ export default async function ( video, options = {} ) {
     <script class="video-data" type="application/json">
         ${ JSON.stringify( video ) }
     </script>
+
     <div class="ratio-wrapper w-full max-w-4xl">
         <div class="player-container relative overflow-hidden w-full pb-16/9">
             <div class="player-poster cursor-pointer">
+
                 <picture>
                     <source sizes="(max-width: 640px) 100vw, 640px" data-srcset="https://i.ytimg.com/vi_webp/IJbmCNGPAbc/default.webp 120w, https://i.ytimg.com/vi_webp/IJbmCNGPAbc/mqdefault.webp 320w, https://i.ytimg.com/vi_webp/IJbmCNGPAbc/hqdefault.webp 480w, https://i.ytimg.com/vi_webp/IJbmCNGPAbc/sddefault.webp 640w" type="image/webp">
                     <source sizes="(max-width: 640px) 100vw, 640px" data-srcset="https://i.ytimg.com/vi/IJbmCNGPAbc/default.jpg 120w, https://i.ytimg.com/vi/IJbmCNGPAbc/mqdefault.jpg 320w, https://i.ytimg.com/vi/IJbmCNGPAbc/hqdefault.jpg 480w, https://i.ytimg.com/vi/IJbmCNGPAbc/sddefault.jpg 640w" type="image/jpeg">
                     <img data-src="https://i.ytimg.com/vi/IJbmCNGPAbc/default.jpg" alt="M1 Macs + Windows 10 GAMING and PERFORMANCE Improvements with Parallels 16.5!" class="absolute inset-0 h-full w-full object-cover lazyload">
                 </picture>
+
                 <div class="video-card-overlay absolute inset-0 flex flex-col justify-center items-center bg-gradient-to-tr from-black to-transparent p-4" style="--gradient-from-color:rgba(0, 0, 0, 1); --gradient-to-color:rgba(0, 0, 0, 0.7);">
                     <div class="cover-top h-full"></div>
                     <div class="play-circle bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease p-4">
@@ -58,11 +61,7 @@ export default async function ( video, options = {} ) {
                             <path fill="currentColor" d="M15.562 8.1L3.87.225c-.818-.562-1.87 0-1.87.9v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8z"></path>
                         </svg>
                     </div>
-                    <div class="cover-bottom h-full">
-                        <div class="page-heading h-full flex items-end md:p-4">
-                            <h1 class="title text-xs text-left md:text-2xl font-bold">M1 Macs + Windows 10 GAMING and PERFORMANCE Improvements with Parallels 16.5!</h1>
-                        </div>
-                    </div>
+                    <div class="cover-bottom h-full">${ coverBottomHtml }</div>
                 </div>
             </div>
         </div>
