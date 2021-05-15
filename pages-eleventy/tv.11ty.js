@@ -2,7 +2,9 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config'
 
+import VideoPlayer from '../components-eleventy/video/player.js'
 import VideoRow from '../components-eleventy/video/row.js'
+
 import { getRouteType } from '../helpers/app-derived'
 
 // Setup dotenv
@@ -33,7 +35,6 @@ class TV {
 
             pagination: {
                 data: 'eleventy-endpoints',
-                // data: 'collections.tv',
                 size: 1,
                 alias: 'tvEntry',
                 before: function( endpoint ) {
@@ -89,6 +90,8 @@ class TV {
 
         // console.log('video.payload', Object.keys(video.payload))
 
+        const playerHtml = await this.boundComponent(VideoPlayer)()
+
         const rowHtml = await this.boundComponent(VideoRow)( relatedVideos )
 
         // const rowHtml = renderedRow.join('')
@@ -96,14 +99,9 @@ class TV {
         return /* html */`
             <section class="container pb-16">
                 <div class="flex flex-col items-center text-center space-y-6">
-                    <div class="video-canvas w-screen flex flex-col justify-center items-center bg-black pt-16" style="left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;">
-                        <div class="ratio-wrapper w-full max-w-4xl">
-                            <div class="relative overflow-hidden w-full pb-16/9">
-                                <iframe id="youtube-player-${ video.id }-17212" src="https://www.youtube-nocookie.com/embed/${ video.id }?enablejsapi=1&autoplay=1&modestbranding=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="absolute h-full w-full"></iframe>
-                            </div>
-                        </div>
-                        <!---->
-                    </div>
+
+                    ${ playerHtml }
+
                     <div class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10">
                         <h1 class="title text-lg md:text-2xl font-bold">${ video.name }</h1>
                         <div class="channel-credit"><a href="https://www.youtube.com/channel/UCptwuAv0XQHo1OQUSaO6NHw" target="_blank" rel="noopener" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow focus:shadow-outline-indigo bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out">Subscribe to Max Tech</a></div>
