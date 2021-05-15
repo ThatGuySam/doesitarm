@@ -49,6 +49,18 @@ class LiteYTEmbed extends HTMLElement {
         this.playerPoster.addEventListener('click', e => this.addIframe())
 
 
+        // Mounted
+
+        this.detectAutoplay()
+            .then( ({ willAutoplay }) => {
+                console.log('willAutoplay', willAutoplay)
+
+                // If we're allowed to autoplay
+                // then start loading the player
+                if ( willAutoplay === true ) {
+                    this.startPlayerLoad()
+                }
+            })
     }
 
     // // TODO: Support the the user changing the [videoid] attribute
@@ -210,11 +222,11 @@ class LiteYTEmbed extends HTMLElement {
 
     async detectAutoplay () {
 
-        if ( !process.client ) return { willAutoplay: false }
+        // if ( !process.client ) return { willAutoplay: false }
 
-        const { default: canAutoPlay } = await import('can-autoplay')
+        // const { default: canAutoPlay } = await import('can-autoplay')
 
-        const willAutoplay = await canAutoPlay.video()
+        const willAutoplay = await canAutoplay.video()
         // const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
 
         return {
