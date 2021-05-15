@@ -190,11 +190,15 @@ class DefaultLayout {
         return `<script type="application/ld+json">${ structuredDataJson }</script>`
     }
 
-    generateLinkTags = ( pageLinkTags = [] ) => {
+    generateLinkTags = ( renderData ) => {
+
+        const {
+            headLinkTags = []
+        } = renderData
 
         const linkTags = {
             ...defaultLinkTags,
-            ...Object.fromEntries(pageLinkTags.map( mapLinkTag ))
+            ...Object.fromEntries( headLinkTags.map( mapLinkTag ) )
         }
 
         return Object.values( linkTags ).join('')
@@ -223,7 +227,7 @@ class DefaultLayout {
 
         // Set link tags
         // this.generateLinkTags()
-        workingLayoutString = workingLayoutString.replace( templateVar('link-tags'), this.generateLinkTags() )
+        workingLayoutString = workingLayoutString.replace( templateVar('link-tags'), this.generateLinkTags( data ) )
 
         // Add meta tags after title node
         // this.generateMetaTags( data )
