@@ -2,7 +2,7 @@ import renderPoster from './poster.js'
 
 function renderTimestamps ( video ) {
 
-    if ( video.timestamps.length > 0 ) return ''
+    if ( video.timestamps.length === 0 ) return ''
 
     const timestampsForRender = video.timestamps.map( timestamp => {
         const [ minutes, seconds ] = timestamp.time.split(':')
