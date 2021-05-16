@@ -1,3 +1,4 @@
+import renderPoster from './poster.js'
 
 function pill ( text ) {
     return /* html */`
@@ -20,6 +21,8 @@ export default async function ( video, options = {} ) {
 
     // console.log('video', video)
 
+    const posterHtml = renderPoster( video )
+
     return /* html */`
 <div class="video-card ${ classes }" style="max-width: ${ width }; flex-basis: ${ width }; scroll-snap-align: start;">
     <a
@@ -29,18 +32,7 @@ export default async function ( video, options = {} ) {
         <div class="video-card-container relative overflow-hidden bg-black">
             <div class="video-card-image ratio-wrapper">
                 <div class="relative overflow-hidden w-full pb-16/9">
-                    <picture>
-                        <source
-                            sizes="${video.thumbnail.sizes}"
-                            data-srcset="${video.thumbnail.srcset}"
-                            type="image/jpg"
-                        >
-                        <img
-                            data-src="${video.thumbnail.src}"
-                            alt="${video.name}"
-                            class="lazyload absolute h-full w-full object-cover"
-                        >
-                    </picture>
+                    ${ posterHtml }
                 </div>
             </div>
             <div
