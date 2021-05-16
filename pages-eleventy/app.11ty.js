@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config.js'
 
-import { getAppType } from '../helpers/app-derived.js'
+import { getAppType, getRouteType } from '../helpers/app-derived.js'
 import { deviceSupportsApp } from '../helpers/devices.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date'
 
@@ -21,6 +21,20 @@ export const makeTitle = function ( app ) {
 
 export const makeDescription = function ( app ) {
     return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors.`
+}
+
+// https://stackoverflow.com/a/15069646/1397641
+function makeEnglishList ( array, conjunction = 'and' ) {
+    const total = array.length
+
+    if ( total < 3 ) return array.join(` ${conjunction} `)
+
+    array = array.slice()
+
+    // Prepend conjunction to final part
+    array[ total-1 ] = `${ conjunction } ${ array[ total-1 ] }`
+
+    return array.join(', ')
 }
 
 export function renderPageLinksHtml ( links ) {
@@ -56,15 +70,16 @@ export class AppTemplate {
 
                 before: function( data ) {
                     return data.filter( entry => {
-                        const appType = getAppType( entry.payload.app )
+                        // const [ _, routeType ] = entry.route.split('/')
+                        const routeType = getRouteType( entry.route )
 
-                        return appType === 'app'
+                        return routeType === 'app'
                     })
                 }
             },
 
             eleventyComputed: {
-                title: ({ app: { payload: { app } }  }) => {
+                title: ({ app: { payload: { app } } }) => {
                     // console.log('data', data)
                     return makeTitle( app )
                 },
@@ -83,16 +98,20 @@ export class AppTemplate {
         }
     }
 
-    render( data ) {
+    async render( data ) {
 
         const {
             app: { payload: { app, relatedVideos = [] } },
             'device-list': deviceList
         } = data
 
+        const hasRelatedVideos = relatedVideos.length > 0
+
         // console.log('deviceList', deviceList)
 
         // console.log('video.payload', Object.keys(video.payload))
+
+        const hasMultipleAliases = !!app.aliases && app.aliases.length > 1
 
         const appDeviceSupport = deviceList.map( device => {
             const supportsApp = deviceSupportsApp( device, app )
@@ -107,8 +126,12 @@ export class AppTemplate {
 
         const relatedLinksHtml = renderPageLinksHtml( app.relatedLinks )
 
+
+        const relatedVideosRowHtml = hasRelatedVideos ? await this.boundComponent(VideoRow)( relatedVideos ) : null
+
         return /* html */`
-            <section class="container py-32">
+            <section class="container space-y-8 py-32">
+
                 <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0 space-y-8">
                     <h1 class="title text-sm md:text-2xl font-bold">
                         ${ data.mainHeading }
@@ -116,6 +139,10 @@ export class AppTemplate {
                     <h2 class="subtitle text-2xl md:text-5xl font-bold">
                         ${ app.text }
                     </h2>
+
+                    ${ hasMultipleAliases ? /* html */`
+                        <small class="text-xs opacity-75">May also be known as ${ makeEnglishList( app.aliases, 'or' ) }</small>
+                    ` : '' }
 
                     <div class="subscribe">
                         <iframe src="/embed-subscribe" loading="lazy" style="width: 350px; height: 150px;" class="-my-10"></iframe>
@@ -148,7 +175,7 @@ export class AppTemplate {
                     </div>
                 </div>
 
-                ${ relatedVideos.length > 0 ? /* html */`
+                ${ hasRelatedVideos ? /* html */`
                     <div
                         class="related-videos w-full"
                     >
@@ -156,7 +183,7 @@ export class AppTemplate {
                             Related Videos
                         </h2>
 
-                        ${ this.boundComponent(VideoRow)( relatedVideos ) }
+                        ${ relatedVideosRowHtml }
 
                     </div>
                 ` : '' }

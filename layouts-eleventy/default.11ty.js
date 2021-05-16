@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { JSDOM } from 'jsdom'
 
-import config from '../nuxt.config'
+import config from '../nuxt.config.js'
 
 
 console.log('Running Default Layout file')
@@ -95,6 +95,9 @@ const cleanNuxtLayout = ( layout ) => {
     document.querySelector('title').insertAdjacentHTML('afterend', templateVar('link-tags') )
 
     // Add meta tags after title node
+    document.querySelector('title').insertAdjacentHTML('afterend', templateVar('structured-data') )
+
+    // Add meta tags after title node
     document.querySelector('title').insertAdjacentHTML('afterend', templateVar('meta-tags') )
 
     // Set page css
@@ -172,11 +175,30 @@ class DefaultLayout {
         return Object.values(meta).join('')
     }
 
-    generateLinkTags = ( pageLinkTags = [] ) => {
+    generateStructuredData = function ( renderData ) {
+
+        const {
+            structuredData = null
+        } = renderData
+
+        // console.log('renderData', Object.keys(renderData))
+
+        if ( structuredData === null ) return ''
+
+        const structuredDataJson = JSON.stringify( structuredData )
+
+        return `<script type="application/ld+json">${ structuredDataJson }</script>`
+    }
+
+    generateLinkTags = ( renderData ) => {
+
+        const {
+            headLinkTags = []
+        } = renderData
 
         const linkTags = {
             ...defaultLinkTags,
-            ...Object.fromEntries(pageLinkTags.map( mapLinkTag ))
+            ...Object.fromEntries( headLinkTags.map( mapLinkTag ) )
         }
 
         return Object.values( linkTags ).join('')
@@ -205,11 +227,14 @@ class DefaultLayout {
 
         // Set link tags
         // this.generateLinkTags()
-        workingLayoutString = workingLayoutString.replace( templateVar('link-tags'), this.generateLinkTags() )
+        workingLayoutString = workingLayoutString.replace( templateVar('link-tags'), this.generateLinkTags( data ) )
 
         // Add meta tags after title node
         // this.generateMetaTags( data )
         workingLayoutString = workingLayoutString.replace( templateVar('meta-tags'), this.generateMetaTags( data ) )
+
+        // Add structured data
+        workingLayoutString = workingLayoutString.replace( templateVar('structured-data'), this.generateStructuredData( data ) )
 
         // Set page css
         // document.querySelector('head').insertAdjacentHTML('beforeend', this.getCss() )
