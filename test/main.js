@@ -65,6 +65,18 @@ test.before(async t => {
     t.context.sitemapUrls = sitemap.urlset.url.map( tag => new URL( tag.loc ) )
 })
 
+test('Sitemap contains no double slashes in paths', (t) => {
+    // console.log('t.context.sitemapUrls', t.context.sitemapUrls)
+
+    const urlsWithDoubleSlashes = t.context.sitemapUrls.filter( url => url.pathname.includes('//') )
+
+    if ( urlsWithDoubleSlashes.length > 0) {
+        t.fail( `${ urlsWithDoubleSlashes.length } urls with doubles slashes found including ${ urlsWithDoubleSlashes[0] }` )
+    }
+
+    t.pass()
+})
+
 test('All Category pages have valid FAQPage structured data', async (t) => {
 
     const categoryUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/kind/') )
