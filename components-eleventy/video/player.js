@@ -1,6 +1,9 @@
 import renderPoster from './poster.js'
 
 function renderTimestamps ( video ) {
+
+    if ( video.timestamps.length > 0 ) return ''
+
     const timestampsForRender = video.timestamps.map( timestamp => {
         const [ minutes, seconds ] = timestamp.time.split(':')
 
@@ -10,13 +13,21 @@ function renderTimestamps ( video ) {
         }
     })
 
-    return timestampsForRender.map( timestamp => (/* html */`
+    const timestampButtonsHtml = timestampsForRender.map( timestamp => (/* html */`
 <button
     time="${timestamp.time}"
     class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">
         ${ timestamp.fullText }
 </button>
     `) ).join('')
+
+    return /* html */`
+<div class="player-timestamps w-full max-w-4xl">
+    <div class="player-timestamps-wrapper overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
+        ${ timestampButtonsHtml }
+    </div>
+</div>
+    `
 }
 
 export default async function ( video, options = {} ) {
@@ -66,11 +77,9 @@ export default async function ( video, options = {} ) {
             </div>
         </div>
     </div>
-    <div class="player-timestamps w-full max-w-4xl">
-        <div class="player-timestamps-wrapper overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
-            ${ timestampsHtml }
-        </div>
-    </div>
+
+    ${ timestampsHtml }
+
 </lite-youtube>
     `
 }
