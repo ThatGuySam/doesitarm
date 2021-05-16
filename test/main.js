@@ -75,6 +75,7 @@ test('Sitemap contains no double slashes in paths', (t) => {
         t.fail( `${ urlsWithDoubleSlashes.length } urls with doubles slashes found including ${ urlsWithDoubleSlashes[0] }` )
     }
 
+    t.log( `${t.context.sitemapUrls.length} valid sitemap listings` )
     t.pass()
 })
 
@@ -138,6 +139,7 @@ test('All Category pages have valid FAQPage structured data', async (t) => {
         t.fail( error.message )
     }
 
+    t.log( `${categoryUrls.length} valid pages` )
     t.pass()
 
 })
@@ -164,8 +166,8 @@ test('All Device pages have valid FAQPage structured data', async (t) => {
         t.fail( error.message )
     }
 
+    t.log( `${deviceUrls.length} valid pages` )
     t.pass()
-
 })
 
 
@@ -186,6 +188,7 @@ test('All TV pages have valid VideoObject structured data', async (t) => {
         t.fail( error.message )
     }
 
+    t.log( `${tvUrls.length} valid pages` )
     t.pass()
 
 })
