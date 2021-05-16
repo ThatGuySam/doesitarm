@@ -29,6 +29,28 @@ export const makeDescription = function ( tvEntry ) {
     return `Apple Silicon performance and support videos for ${ featuredAppsString }`
 }
 
+
+function renderFeaturedApps ( featuredApps ) {
+    return /* html */`
+<div
+    class="related-apps w-full"
+>
+    <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+        Related Apps
+    </h2>
+    <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
+        ${ featuredApps.map( app => ( /* html */`
+            <a
+                href="${ app.endpoint }"
+                role="button"
+                class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2"
+            >${ app.name }</a>
+        `) ).join('') }
+    </div>
+</div>
+    `
+}
+
 class TV {
     // or `async data() {`
     // or `get data() {`
@@ -110,7 +132,8 @@ class TV {
                 // route,
                 payload: {
                     video,
-                    relatedVideos = []
+                    relatedVideos = [],
+                    featuredApps = []
                 }
             },
             // 'device-list': deviceList
@@ -128,6 +151,9 @@ class TV {
         const playerHtml = await this.boundComponent(VideoPlayer)( video, {
             coverBottomHtml
         } )
+
+        const hasFeaturedApps = featuredApps.length > 0
+        const featuredAppsHtml = hasFeaturedApps ? renderFeaturedApps( featuredApps ) : ''
 
         const rowHtml = await this.boundComponent(VideoRow)( relatedVideos )
 
@@ -158,10 +184,7 @@ class TV {
 
                     <hr class="w-full">
 
-                    <div class="related-apps w-full">
-                        <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">Related Apps</h2>
-                        <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2"><a href="/app/xcode" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Xcode</a><a href="/app/logic-pro" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Logic Pro</a><a href="/app/lightroom" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Lightroom</a><a href="/app/lightroom-classic" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Lightroom Classic</a><a href="/app/cinebench" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Cinebench</a><a href="/app/final-cut-pro" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Final Cut Pro</a><a href="/app/geekbench" role="button" class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-lg py-1 px-2">Geekbench</a></div>
-                    </div>
+                    ${ featuredAppsHtml }
 
                     <div class="related-videos w-full">
                         <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">Related Videos</h2>
