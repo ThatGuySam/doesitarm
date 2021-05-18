@@ -711,7 +711,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 
-## More Apple Silicon Lists
+## More Apple Silicon and ARM Lists
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
 * [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
 * [Apple Gaming Wiki](https://www.applegamingwiki.com/wiki/Home) - Aggregates reports on Apple Silicon compatibility under different environments
@@ -727,6 +727,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Does It ARM Twitter Thread](https://twitter.com/DoesItARM/status/1330027384041508865) - Does It ARM's own twitter thread for reporting and suggecting apps
 * [Official Adobe M1 List](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html) - Adobe's official list of app support for M1
 * [Official Apple List](https://apps.apple.com/us/story/id1540024103) - Apple is a small tech company in Cupertino, CA
+* [Is Windows on ARM Ready](https://iswindowsonarmready.netlify.app/) - List of apps 
 
 
 ## Apple Silicon Testing Tools
