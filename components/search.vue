@@ -16,12 +16,12 @@
             <input
                 id="search"
                 ref="search"
+                :autofocus="autofocus"
                 v-model="query"
                 aria-label="Type here to Search"
                 class="appearance-none w-full text-white font-hairline sm:text-5xl outline-none bg-transparent p-3"
                 type="search"
                 placeholder="Type to Search"
-                autofocus
                 autocomplete="off"
                 @keyup="queryResults(query); scrollInputToTop()"
             >
@@ -221,6 +221,10 @@ export default {
         initialLimit: {
             type: Number,
             default: null
+        },
+        autofocus: {
+            type: Boolean,
+            default: true
         },
         quickButtons: {
             type: Array,

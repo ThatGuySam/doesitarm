@@ -10,7 +10,7 @@ function getCardType ( video ) {
     return VideoCard
 }
 
-export default function ( videos, options = {} ) {
+export default async function ( videos, options = {} ) {
 
     const {
         cardWidth = '325',
@@ -23,18 +23,23 @@ export default function ( videos, options = {} ) {
     const uid = Math.random().toString(36).substr(2, 9)
     const rowId = `row-${ uid }`
 
+    // Setup inline scroll script
+    await this.usingComponent( 'helpers/scroll.js' )
+
     // Setup inline lazysizes
-    this.usingComponent( 'helpers/scroll.js' )
+    await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
 
-    const cardsHtml = videos.map( video => {
+    const renderedCards = await Promise.all(videos.map( async video => {
         const Card = getCardType( video )
 
         // console.log('Card', this.boundComponent(Card)( video ) )
 
-        return this.boundComponent(Card)( video )
-    } ).join('')
+        return await this.boundComponent(Card)( video )
+    } ))
+
+    const cardsHtml = renderedCards.join('')
 
     // console.log( 'cardsHtml', cardsHtml )
 

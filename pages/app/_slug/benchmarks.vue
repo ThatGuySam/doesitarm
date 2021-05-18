@@ -107,33 +107,36 @@ export default {
         VideoPlayer,
         ChannelCredit
     },
-    asyncData ({ params: { slug }, payload: { app, allVideos, submitVideoCard } }) {
+    async asyncData ( data ) {
 
-        // const { allVideoAppsList } = await import('~/helpers/get-list.js')
-        // // const { default: videoList } = await import('~/static/video-list.json')
+        const {
+            params: { slug },
+            route
+        } = data
 
-        // const { videosRelatedToApp } = await import('~/helpers/related.js')
+        let {
+            payload
+        } = data
 
-        // const app = allVideoAppsList.find(app => (app.slug === slug))
 
-        // const submitVideoCard = {
-        //     endpoint: `https://docs.google.com/forms/d/e/1FAIpQLSeEVGM9vE7VcfLMy6fJkfU70X2VZ60rHDyhDQLtnAN4nso0WA/viewform?usp=pp_url&entry.1018125313=${app.name}`
+
+        // Manually get payload as fallback
+        // Uncomment for dev
+        // if ( payload === undefined ) {
+        //     // Read back the JSON we just wrote to ensure it exists
+        //     const { default: savedList } = await import('~/static/nuxt-endpoints.json')
+
+        //     const endpoint = savedList.find( resource => {
+        //         return resource.route === route.path
+        //     } )
+
+        //     payload = endpoint.payload
         // }
 
-        // // const featuredApps = []
-
-        // const relatedVideos = videosRelatedToApp( app ).map(video => {
-        //     // console.log('video', video)
-        //     return {
-        //         ...video,
-        //         // endpoint: `#${video.id}`
-        //     }
-        // })
-
         return {
-            app,
-            allVideos,
-            submitVideoCard
+            app: payload.app,
+            allVideos: payload.allVideos,
+            submitVideoCard: payload.submitVideoCard
         }
     },
     data: function () {

@@ -1,6 +1,7 @@
 [build]
   publish = "dist/"
   command = "npm run generate --quiet"
+  # functions = "functions/"
 
 
 
@@ -16,12 +17,19 @@
   from = "/app/node"
   to = "/app/nodejs"
   status = 301
-  
+
 # old git redirect
 [[redirects]]
   from = "/app/git"
   to = "/app/git-version-control"
   status = 301
+
+
+# imac redirect
+[[redirects]]
+  from = "/device/apple-silicon-imac"
+  to = "/device/m1-imac/"
+  status = 307
 
 
 # Category Redirects
@@ -34,16 +42,16 @@
   from = "/kind/photo-tools"
   to = "/kind/photo-and-graphic-tools/"
   status = 301
-  
-  
+
+
  # Other Redirects
- 
+
 # Random broken link from Chinese sites
 [[redirects]]
   from = "/。"
   to = "/"
   status = 301
-  
+
 [[redirects]]
   from = "/%E3%80%82"
   to = "/"

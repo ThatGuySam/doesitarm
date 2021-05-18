@@ -1,5 +1,10 @@
 // App Data that is derived from other app data
 
+export function isDevice ( listing ) {
+    if ( !listing.hasOwnProperty('endpoint') ) return false
+
+    return listing.endpoint.startsWith('/device/')
+}
 
 export function isVideo ( app ) {
     return app.hasOwnProperty('thumbnail') && app.hasOwnProperty('timestamps')
@@ -11,6 +16,10 @@ export function getAppType ( app ) {
     // so we check for videos here
     if ( isVideo( app ) ) {
         return 'video'
+    }
+
+    if ( isDevice( app ) ) {
+        return 'device'
     }
 
     if(app.category !== Object(app.category)) {
@@ -47,4 +56,10 @@ export function getVideoEndpoint ( video ) {
     return `/tv/${video.slug}`
 }
 
+export function getRouteType ( routeString ) {
+    // Remove first slash and split by remaining
+    // slashes to get first part of route
+    const [ routeType ] = routeString.substring(1).split('/')
 
+    return routeType
+}

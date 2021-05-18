@@ -158,18 +158,6 @@
             </div>
 
 
-            <!-- <pre class="w-full">{{ appsBeingScanned }}</pre> -->
-
-            <AllUpdatesSubscribe
-                :input-class-groups="{
-                    shadow: 'hover:neumorphic-shadow',
-                    bg: '',
-                    focus: 'bg-transparent neumorphic-shadow pl-8',
-                    blur: 'placeholder-white text-center border border-transparent bg-transparent opacity-50 hover:opacity-100 px-3',
-                }"
-                class="my-12"
-            />
-
         </div>
 
         <!-- <client-only>
@@ -221,15 +209,38 @@ export default {
                 [
                     'Non-native Apps (🔶)',
                     `
+                    When an App scan is reported and Non-native (as indicated by an 🔶), that means the app file provided does not have native compatibility with Apple Silicon, and we have not had any reports of native versions of the app yet.
+                    This doesn't necessarily mean the app won't work, it just means it hasn't been updated for Apple Silicon specifically and can't say for certain that it will definitely work.
+                    Most apps reported as Non-native will usually still work under Rosetta 2 Translation with similar performance to the app's experience under an Intel-based Mac.
                     You can try getting the latest version from the developer\'s the download page scan that.
                     You can also request a manual review to determine the current status of the app on Rosetta 2.
+                    `
+                ],
+                [
+                    'App Decompression Error (❔)',
+                    `
+                    This means we weren't able to extract an App Binary from the file provided.
+                    If your app is contained within a PKG or a DMG file, you can extract the Mac App file from that Package/Archive and scan it directly.
+
+                    If you are scanning from Windows, an EXE file is not scannable; however, you can download the Mac version of the app and extract it onto your Windows system, and that Mac App file can be scanned from your Windows computer.
+                    This also applies when scanning apps from Linux-based Systems, ChromeOS, iOS, and, in theory, any system capable of running modern Javascript in a browser and extracting compressed files.
+
+
+                    Currently, the supported formats are Mac Apps, Zip files containing Mac Apps, and specific rare DMG files. Bigger files take longer to scan.
+                    `
+                ],
+                [
+                    'What if the scan never ends?',
+                    `
+                    Currently, some random apps will cause the scan to hang indefinitely.
+                    If this happens, you can try scanning a few apps at a time or one at a time until it hangs again and skip scanning that app for now.
                     `
                 ],
                 [
                     'Why can\'t it tell me if an app will work on Rosetta 2? ',
                     `
                     Currently, Rosetta 2 is a proprietary Apple software that is only available on macOS on Apple Silicon devices.
-                    This means there isn't any way to test Rosetta 2 compatibility with an app without a physical Apple Silicon device and so you definitely can't test that with just a website alone... for now...
+                    This means there isn't any way to test Rosetta 2 compatibility with an app without a physical Apple Silicon device, and so you definitely can't test that with just a website alone... for now...
 
                     Feel free to signup for email updates.
                     `
@@ -237,16 +248,16 @@ export default {
                 [
                     'Don\'t all previous Mac Apps work via Rosetta 2 translation? ',
                     `
-                    Most apps will work with Rosetta 2 translation well but it's not a perfect technology.
-                    Some apps will have various small issues and graphical bugs but will work well enough, a few apps will fail to launch entirely and some apps will runs with virtually no issues and perform even faster than an equivalent Intel-based Mac.
-                    For now the best way to determine how well an app will run under Rosetta 2 is by human review.
+                    Most apps will work with Rosetta 2 translation well, but it's not a perfect technology.
+                    Some apps will have various small issues and graphical bugs but will work well enough, a few apps will fail to launch entirely, and some apps will run with virtually no problems and perform even faster than on an equivalent Intel-based Mac.
+                    For now, the best way to determine how well an app will run under Rosetta 2 is by human review.
                     `
                 ]
             ]
         },
 
         title ()  {
-            return `Apple Silicon Compatibility`
+            return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
             return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an M1 Mac. `

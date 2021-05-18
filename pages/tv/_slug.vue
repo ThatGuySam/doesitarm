@@ -4,14 +4,23 @@
             <VideoPlayer
                 :video="video"
                 class="pt-16"
-            />
+            >
+
+                <template v-slot:cover-bottom>
+                    <div class="page-heading h-full flex items-end md:p-4">
+                        <h1 class="title text-xs text-left md:text-2xl font-bold">
+                            {{ video.name }}
+                        </h1>
+                    </div>
+                </template>
+            </VideoPlayer>
 
             <div
                 class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10"
             >
-                <h1 class="title text-lg md:text-2xl font-bold">
+                <!-- <h1 class="title text-lg md:text-2xl font-bold">
                     {{ video.name }}
-                </h1>
+                </h1> -->
 
                 <ChannelCredit
                     :video="video"
@@ -72,11 +81,19 @@
 
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
+import { buildVideoStructuredData } from '~/helpers/structured-data.js'
+
 import LinkButton from '~/components/link-button.vue'
 import EmailSubscribe from '~/components/email-subscribe.vue'
 import VideoRow from '~/components/video/row.vue'
 import VideoPlayer from '~/components/video/player.vue'
 import ChannelCredit from '~/components/video/channel-credit.vue'
+
+
+function makeFeaturedAppsString ( featuredApps ) {
+    return featuredApps.slice(0, 5).map(app => app.name).join(', ')
+}
+
 
 export default {
     components: {
@@ -86,30 +103,35 @@ export default {
         VideoPlayer,
         ChannelCredit
     },
-    asyncData ({ params: { slug }, payload: { video, featuredApps, relatedVideos } }) {
+    async asyncData ( data ) {
 
-        // const { appsRelatedToVideo, videosRelatedToVideo } = await import('~/helpers/related.js')
-        // const { default: videoList } = await import('~/static/video-list.json')
 
-        // Find the video for our current page
-        // const video = videoList.find(video => (video.slug === slug))
+        const {
+            params: { slug },
+            route
+        } = data
 
-        // Get featured apps
-        // const featuredApps = appsRelatedToVideo(video)
+        let {
+            payload
+        } = data
 
-        // // Get related videos
-        // const relatedVideos = videosRelatedToVideo(video)
+        // Manually get payload as fallback
+        // Uncomment for dev
+        // if ( payload === undefined ) {
+        //     // Read back the JSON we just wrote to ensure it exists
+        //     const { default: savedList } = await import('~/static/nuxt-endpoints.json')
 
-        // console.log({
-        //     video,
-        //     featuredApps,
-        //     relatedVideos
-        // })
+        //     const endpoint = savedList.find( resource => {
+        //         return resource.route === route.path
+        //     } )
+
+        //     payload = endpoint.payload
+        // }
 
         return {
-            video,
-            featuredApps,
-            relatedVideos
+            video: payload.video,
+            featuredApps: payload.featuredApps,
+            relatedVideos: payload.relatedVideos
         }
     },
     computed: {
@@ -117,15 +139,21 @@ export default {
             return `${this.video.name} - Does It ARM`
         },
         description () {
-            const featuredAppsString = this.featuredApps.slice(0, 5).map(app => app.name).join(', ')
+            const featuredAppsString = makeFeaturedAppsString( this.featuredApps )
 
             return `Apple Silicon performance and support videos for ${featuredAppsString}`
-        }
+        },
+
     },
     methods: {
         getAppEndpoint
     },
     head() {
+        const structuredData = buildVideoStructuredData( this.video, this.featuredApps, {
+            siteUrl: this.$config.siteUrl
+        } )
+
+
         return {
             title: this.title,
             meta: [
@@ -151,7 +179,10 @@ export default {
                     'property':  'twitter:url',
                     'content': `${process.env.URL}${this.$nuxt.$route.path}`
                 },
-            ]
+            ],
+
+            __dangerouslyDisableSanitizers: ['script'],
+            script: [{ innerHTML: JSON.stringify( structuredData ), type: 'application/ld+json' }]
         }
     }
 }

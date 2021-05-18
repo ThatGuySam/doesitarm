@@ -1,23 +1,18 @@
 
 import { promises as fs } from 'fs'
 import MarkdownIt from 'markdown-it'
-import slugify from 'slugify'
 import axios from 'axios'
 
 import statuses, { getStatusName } from './statuses'
+import appStoreGenres from './app-store/genres.js'
+import { findCategoryForTagsSet } from './categories.js'
 import parseDate from './parse-date'
 import { eitherMatches } from './matching.js'
 import { getAppEndpoint } from './app-derived'
+import { makeSlug } from './slug.js'
 
 
 const md = new MarkdownIt()
-
-
-const makeSlug = name => slugify(name, {
-    lower: true,
-    strict: true
-})
-
 
 const getTokenLinks = function ( childTokens ) {
 
@@ -98,6 +93,41 @@ const lookForLastUpdated = function (app, commits) {
     return null
 }
 
+// Fetch list of genres for each bundle
+async function fetchBundleGenres () {
+    const genresJsonUrl = `${process.env.VFUNCTIONS_URL}/app-store/listings-sheet?fields=bundleId,genreIds`
+
+    return await axios.get( genresJsonUrl )
+        .then( response => {
+            return new Map( response.data.apps )
+        })
+        .catch(function (error) {
+            // handle error
+            console.warn('Error fetching bundle genres', error)
+        })
+}
+
+
+function generateTagsSetFromGenres( bundleId, bundleGenres ) {
+    // If we don't have this bundleID
+    // then return empty
+    if ( !bundleGenres.has( bundleId ) ) return new Set()
+
+    const genres = new Set()
+
+    bundleGenres.get( bundleId ).split(',').forEach( genreId => {
+        if ( !appStoreGenres.hasOwnProperty(genreId) ) {
+            console.warn('Not known genre ID', genreId)
+        }
+
+        appStoreGenres[genreId].forEach( genreName => {
+            genres.add(genreName)
+        })
+    })
+
+    return genres
+}
+
 
 export default async function () {
 
@@ -113,6 +143,7 @@ export default async function () {
     // Save commits to file just in case
     // await fs.writeFile('./commits-data.json', JSON.stringify(commits))
 
+    const bundleGenres = await fetchBundleGenres()
 
     const scanListMap = new Map()
 
@@ -154,10 +185,28 @@ export default async function () {
                     href: 'https://doesitarm.com/apple-silicon-app-test/',
                 })
 
+                // console.log('appScan', appScan)
+
+                const tags = generateTagsSetFromGenres( appScan.bundleIdentifier, bundleGenres )
+
+                // Move productivity tag to the end since it's a more generic tag
+                if ( tags.has('Productivity') ) {
+                    tags.delete('Productivity')
+                    tags.add('Productivity')
+                }
+
+                const foundCategory = findCategoryForTagsSet( tags )
+
+                const category = {
+                    label: foundCategory ? foundCategory.label : undefined,
+                    slug: foundCategory ? foundCategory.slug : 'uncategorized'
+                }
+
                 // Add to scanned app list
                 scanListMap.set( appSlug, {
                     name: appName,
                     aliases: appScan['aliases'],
+                    bundleId: appScan.bundleIdentifier,
                     status: statusName,
                     lastUpdated: parseDate( appScan['Date'] ),
                     // url,
@@ -169,9 +218,8 @@ export default async function () {
                         },
                         slug: appSlug
                     }),
-                    category: {
-                        slug: 'uncategorized'
-                    },
+                    category,
+                    tags: Array.from(tags),
                     relatedLinks
                 })
             })
@@ -221,10 +269,7 @@ export default async function () {
 
         if (isHeading && token.type === 'inline') {
             categoryTitle = token.content
-            categorySlug = slugify(token.content, {
-                lower: true,
-                strict: true
-            })
+            categorySlug = makeSlug( token.content )
 
             // appList[categorySlug] = []
         }
@@ -236,14 +281,27 @@ export default async function () {
 
             const [ name, url ] = link.substring(1, link.length-1).split('](')
 
+            let bundleId = null
+            let tags = []
+
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
 
-                for ( const alias of scannedApp.aliases) {
+                for ( const alias of scannedApp.aliases ) {
                     // console.log( key, alias, name, eitherMatches(alias, name) )
 
                     if ( eitherMatches(alias, name) ) {
-                        console.log(`Removing ${alias} from scanned apps`)
+                        // If we don't have a bundleId yet
+                        // Set this app's bundleId
+                        if ( bundleId === null ) { bundleId = scannedApp.bundleId }
+
+                        // Merge this scanned app's tags into the matching app
+                        tags = Array.from(new Set([
+                            ...tags,
+                            ...scannedApp.tags
+                        ]))
+
+                        console.log(`Merged ${alias} (${scannedApp.bundleId}) from scanned apps into ${name} from README`)
                         scanListMap.delete( key )
                     }
                 }
@@ -285,15 +343,22 @@ export default async function () {
             appList.push({
                 name,
                 status,
+                bundleId,
                 lastUpdated,
                 // url,
                 text,
                 slug: appSlug,
                 endpoint,
                 category,
+                tags,
                 // content: token.content,
-                relatedLinks
+                relatedLinks,
             })
+
+
+            // if ( tags.length > 1 ) {
+            //     console.log('tags', name, bundleId, tags)
+            // }
         }
 
         // appList[categorySlug]

@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 import config from '../nuxt.config.js'
 
-import { getAppType } from '../helpers/app-derived.js'
+import { getAppType, getRouteType } from '../helpers/app-derived.js'
 
 import { AppTemplate } from './app.11ty.js'
 
@@ -33,9 +33,9 @@ class FormulaTemplate extends AppTemplate {
                 alias: 'app',
                 before: function( data ) {
                     return data.filter( entry => {
-                        const appType = getAppType( entry.payload.app )
+                        const routeType = getRouteType( entry.route )
 
-                        return appType === 'formula'
+                        return routeType === 'formula'
                     })
                 }
             },

@@ -1,21 +1,33 @@
 
-import slugify from 'slugify'
 import axios from 'axios'
 
-import { matchesWholeWord } from './matching.js'
+import { fuzzyMatchesWholeWord } from './matching.js'
 import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
 import parseDate from './parse-date'
+import { makeSlug } from './slug.js'
+
+
+const inTimestamps = ( name, video ) => {
+    // If this is empty
+    // then reutrn false
+    if ( video.timestamps.length === 0 ) return false
+
+    for ( const timestamp of video.timestamps ) {
+        if ( fuzzyMatchesWholeWord(name, timestamp.fullText ) ) return true
+    }
+
+    return false
+}
 
 const videoFeaturesApp = function (app, video) {
     const appFuzzyName = app.name.toLowerCase()
-    if (video.title.toLowerCase().includes(appFuzzyName)) return true
 
-    const appIsInTimestamps = video.timestamps.map( timestamp => timestamp.fullText.toLowerCase()).includes(appFuzzyName)
+    if ( fuzzyMatchesWholeWord(appFuzzyName, video.title ) ) return true
 
-    if (appIsInTimestamps) return true
+    if ( inTimestamps(appFuzzyName, video) ) return true
 
-    if (matchesWholeWord(appFuzzyName, video.description.toLowerCase())) return true
+    if ( fuzzyMatchesWholeWord(appFuzzyName, video.description ) ) return true
 
     return false
 }
@@ -63,7 +75,7 @@ const generateVideoTags = function ( video ) {
             if (videoTags.has(tagKey)) break
 
             // Check title
-            if (matchesWholeWord(tagWord.toLowerCase(), video.title.toLowerCase())) {
+            if (fuzzyMatchesWholeWord( tagWord, video.title )) {
                 videoTags.add(tagKey)
 
                 // console.log(video.title, 'has', tagKey, 'tag')
@@ -73,7 +85,7 @@ const generateVideoTags = function ( video ) {
             }
 
             // Check description
-            if (matchesWholeWord(tagWord.toLowerCase(), video.description.toLowerCase())) {
+            if (fuzzyMatchesWholeWord( tagWord, video.description )) {
                 videoTags.add(tagKey)
 
                 // console.log(video.title, 'has', tagKey, 'tag')
@@ -84,22 +96,30 @@ const generateVideoTags = function ( video ) {
     return videoTags
 }
 
-const makeThumbnailData = function ( thumbnails ) {
+const makeThumbnailData = function ( thumbnails, widthLimit = null ) {
+
+    const thumbnailEntries = Object.entries( thumbnails )
+    const srcsetArray = []
 
     let maxWidth = 0
-    Object.entries( thumbnails ).forEach(([thumbnailKey, thumbnail]) => {
+
+    thumbnailEntries.forEach(([thumbnailKey, thumbnail]) => {
+        if ( widthLimit !== null &&  widthLimit < thumbnail.width) return
+
+        // If this width is more than known maxWidth
+        // then set maxWidth
         if (thumbnail.width > maxWidth) maxWidth = thumbnail.width
+
+        // Add this width to our srcset
+        srcsetArray.push(`${thumbnail.url} ${thumbnail.width}w`)
     })
 
+
     const sizes = `(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`
-
-    const srcset = Object.entries( thumbnails ).map(([thumbnailKey, thumbnail]) => {
-        // console.log('thumbnail', thumbnail)
-        return `${thumbnail.url} ${thumbnail.width}w`
-    }).join(', ')
-
-
+    const srcset = srcsetArray.join(', ')
     const src = thumbnails.default.url
+
+    // console.log('srcsetArray', srcsetArray)
 
     return {
         sizes,
@@ -110,8 +130,10 @@ const makeThumbnailData = function ( thumbnails ) {
 
 export default async function ( applist ) {
 
+    const videosJsonUrl = `${process.env.VFUNCTIONS_URL}/videos.json`
+
     // Fetch Commits
-    const response = await axios.get(process.env.VIDEO_SOURCE)
+    const response = await axios.get( videosJsonUrl )
     // Extract commit from response data
     const fetchedVideos = response.data
 
@@ -128,10 +150,7 @@ export default async function ( applist ) {
         if (fetchedVideos[videoId].title === 'Deleted video') continue
 
         // Build video slug
-        const slug = slugify(`${fetchedVideos[videoId].title}-i-${videoId}`, {
-            lower: true,
-            strict: true
-        })
+        const slug = makeSlug( `${fetchedVideos[videoId].title}-i-${videoId}` )
 
         const apps = []
         // Generate new tag set based on api data
@@ -168,7 +187,7 @@ export default async function ( applist ) {
             tags: Array.from(tags),
             timestamps: fetchedVideos[videoId].timestamps,
             // thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
-            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails ),
+            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails, 700 ),
             endpoint: getVideoEndpoint({
                 slug
             })

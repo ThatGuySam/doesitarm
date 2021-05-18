@@ -8,7 +8,8 @@ export default {
 
     publicRuntimeConfig: {
         allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
-        testResultStore: process.env.TEST_RESULT_STORE
+        testResultStore: process.env.TEST_RESULT_STORE,
+        siteUrl: process.env.URL
     },
 
     /*
@@ -142,6 +143,7 @@ export default {
     },
 
     buildModules: [
+        '@nuxt/postcss8',
         '@nuxtjs/tailwindcss'
     ],
 

@@ -1,3 +1,4 @@
+import renderPoster from './poster.js'
 
 function pill ( text ) {
     return /* html */`
@@ -9,16 +10,18 @@ function pill ( text ) {
     `
 }
 
-export default function ( video, options = {} ) {
+export default async function ( video, options = {} ) {
     const {
         width = '325px',
         classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
     } = options
 
     // Setup inline lazysizes
-    this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
+    // await this.usingComponent( 'node_modules/lazysizes/lazysizes.min.js' )
 
     // console.log('video', video)
+
+    const posterHtml = renderPoster( video )
 
     return /* html */`
 <div class="video-card ${ classes }" style="max-width: ${ width }; flex-basis: ${ width }; scroll-snap-align: start;">
@@ -29,18 +32,7 @@ export default function ( video, options = {} ) {
         <div class="video-card-container relative overflow-hidden bg-black">
             <div class="video-card-image ratio-wrapper">
                 <div class="relative overflow-hidden w-full pb-16/9">
-                    <picture>
-                        <source
-                            sizes="${video.thumbnail.sizes}"
-                            data-srcset="${video.thumbnail.srcset}"
-                            type="image/jpg"
-                        >
-                        <img
-                            data-src="${video.thumbnail.src}"
-                            alt="${video.name}"
-                            class="lazyload absolute h-full w-full object-cover"
-                        >
-                    </picture>
+                    ${ posterHtml }
                 </div>
             </div>
             <div
