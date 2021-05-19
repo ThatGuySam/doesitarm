@@ -140,7 +140,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [SmartGit](https://www.syntevo.com/smartgit/) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/541#issuecomment-806068252)
 * [SourceTree](https://www.sourcetreeapp.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/200)
 * [SubEthaEdit](https://subethaedit.net/) - ✅ Yes, full native Apple Silicon Support as of v5.1.5 - [Release Notes](https://github.com/subethaedit/SubEthaEdit/releases/tag/SubEthaEdit-MacFull-5.1.5)
-* [Sublime Text](https://www.sublimetext.com/) - ✅ Yes, Full Native Apple Silicon Support as of Build 4100 - [Release Notes](https://gist.github.com/jfcherng/7bf4103ea486d1f67b7970e846b3a619#build-4100)
+* [Sublime Text](https://www.sublimetext.com/) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Release Notes](https://gist.github.com/jfcherng/7bf4103ea486d1f67b7970e846b3a619#build-4100)
 * [Surge](https://nssurge.com/) - ✅ Yes, full native Apple Silicon Support as of v4.0.0 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/157)
 * [TablePlus](https://tableplus.com/) - ✅ Yes, Full Native Apple Silicon Support as of Build 352 - [Release Notes](https://twitter.com/TablePlus/status/1327650704295489536) [View on Setapp](https://setapp.sjv.io/c/2708043/455094/5114)
 * [TeaCode](https://www.apptorium.com/teacode) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/teacode)
