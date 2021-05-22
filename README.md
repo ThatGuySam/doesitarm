@@ -534,7 +534,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
 * [NVIDIA GeForce NOW](https://www.nvidia.com/en-us/geforce-now/download/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0.27 - [Release Notes](https://www.nvidia.com/pt-br/geforce/release-notes/GFN/2_0_27/Rich/gfn-v2_0_27-rich-release-highlights/)
 * [IINA](https://iina.io/download/) - ✅ Yes, Full Native Apple Silicon Support as of 1.2.0 - [Github Release](https://github.com/iina/iina/releases/tag/v1.2.0)
-* [Infuse](https://apps.apple.com/cn/app/infuse-6/id1136220934) - ⏹ Not released yet, macOS support is currently in alpha test and it runs via Rosetta 2 - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/458) [Sign up for Alpha](http://firecore.com/macos)
+* [Infuse](https://apps.apple.com/app/infuse-7/id1136220934) - ✅ Yes, Native Apple Silicon Support as of v7 - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/458)
 * [JustStream](https://www.electronic.us/products/just-stream/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/juststream)
 * [Meta for Mac](https://www.nightbirdsevolve.com/meta/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/840201/5114)
 * [Minecraft](https://www.minecraft.net/en-us/about-minecraft) - ✳️ Yes, works via Rosetta 2 - [Native Apple Silicon Workaround](https://github.com/yusefnapora/m1-multimc-hack)
