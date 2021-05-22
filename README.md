@@ -691,6 +691,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Rectangle for Mac](https://rectangleapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [restic](https://restic.net/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/492#issuecomment-754580871)
 * [Rocket for Mac](https://matthewpalmer.net/rocket/) - ✅ Yes, Full Native Apple Silicon Support - [Verifcation](https://github.com/ThatGuySam/doesitarm/issues/605#issue-835338120)
+* [Samsung Portable SSD](https://www.samsung.com/semiconductor/minisite/ssd/download/portable/) - ✅ Yes, Native Apple Silicon Support as of v1.7.3.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/660#issue-898754377)
 * [SheepShaver](https://www.emaculation.com/forum/viewtopic.php?f=20&t=7360) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.emaculation.com/sheepshaver/build-history.txt) [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Silenz](https://silenzapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/653749/5114)
 * [sndcpy](https://github.com/rom1v/sndcpy) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/645#issuecomment-839911450)
