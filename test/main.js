@@ -2,6 +2,7 @@ import { promises as fs } from 'fs'
 
 import test from 'ava'
 import parser from 'fast-xml-parser'
+import axios from 'axios'
 import { structuredDataTest } from 'structured-data-testing-tool'
 import { Google, Twitter } from 'structured-data-testing-tool/presets'
 
@@ -74,6 +75,53 @@ test('Sitemap contains no double slashes in paths', (t) => {
         t.fail( `${ urlsWithDoubleSlashes.length } urls with doubles slashes found including ${ urlsWithDoubleSlashes[0] }` )
     }
 
+    t.log( `${t.context.sitemapUrls.length} valid sitemap listings` )
+    t.pass()
+})
+
+
+test('Sitemap mostly matches production', async (t) => {
+    // console.log('t.context.sitemapUrls', t.context.sitemapUrls)
+
+    const theshold = 10
+
+    const urlsNotOnLive = new Set()
+    // const newLocalUrls = new Set()
+
+    const liveSitemapXml = await axios( 'https://doesitarm.com/sitemap.xml' ).then( response => response.data )
+    const liveSitemap = parser.parse( liveSitemapXml )
+
+    // Store sitemap urls to context
+    const liveSitemapUrls = new Map( liveSitemap.urlset.url.map( tag => [ tag.loc, new URL( tag.loc )] ) )
+
+
+    for ( const localUrl of t.context.sitemapUrls ) {
+        const theoreticalLiveUrl = `https://doesitarm.com${ localUrl.pathname }`
+
+        if ( liveSitemapUrls.has( theoreticalLiveUrl ) ) {
+            liveSitemapUrls.delete( theoreticalLiveUrl )
+            continue
+        }
+
+        // localUrl is either: Missing or New
+        urlsNotOnLive.add( theoreticalLiveUrl )
+
+    }
+
+    const message = `${ urlsNotOnLive.size } new or missing from live and ${ liveSitemapUrls.size } not found locally`
+    const totalDifferences = urlsNotOnLive.size + liveSitemapUrls.size
+
+
+    if ( totalDifferences >= 0 ) {
+        t.log( 'Missing from live', urlsNotOnLive )
+        t.log( 'Not found locally', liveSitemapUrls )
+    }
+
+    if ( totalDifferences >= theshold ) {
+        t.fail( message )
+    }
+
+    t.log( message )
     t.pass()
 })
 
@@ -98,6 +146,7 @@ test('All Category pages have valid FAQPage structured data', async (t) => {
         t.fail( error.message )
     }
 
+    t.log( `${categoryUrls.length} valid pages` )
     t.pass()
 
 })
@@ -124,8 +173,8 @@ test('All Device pages have valid FAQPage structured data', async (t) => {
         t.fail( error.message )
     }
 
+    t.log( `${deviceUrls.length} valid pages` )
     t.pass()
-
 })
 
 
@@ -146,6 +195,7 @@ test('All TV pages have valid VideoObject structured data', async (t) => {
         t.fail( error.message )
     }
 
+    t.log( `${tvUrls.length} valid pages` )
     t.pass()
 
 })
