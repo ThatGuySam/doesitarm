@@ -283,6 +283,8 @@ export default async function () {
 
             let bundleId = null
             let tags = []
+            let aliases = []
+            const relatedLinksMap = new Map( getTokenLinks(token.children).map( link => [ link.href, link ] ) )
 
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
@@ -301,13 +303,32 @@ export default async function () {
                             ...scannedApp.tags
                         ]))
 
+                        // Merge as set then convert to array to prevent duplicates
+                        aliases = Array.from(new Set([
+                            ...aliases,
+                            ...scannedApp.aliases
+                        ]))
+
+                        // Merge relatated links
+                        for ( const link of scannedApp.relatedLinks ) {
+
+                            relatedLinksMap.set( link.href, {
+                                ...link,
+                                label: (link.label === 'View') ? 'App Website' : link.label
+                            } )
+                        }
+
                         console.log(`Merged ${alias} (${scannedApp.bundleId}) from scanned apps into ${name} from README`)
                         scanListMap.delete( key )
                     }
                 }
             })
 
-            const relatedLinks = getTokenLinks(token.children)
+
+            // Convert link map values into array for JSON
+            const relatedLinks = Array.from( relatedLinksMap.values() )
+
+            // console.log('relatedLinks', relatedLinks)
 
             const appSlug = makeSlug( name )
 
@@ -342,6 +363,7 @@ export default async function () {
 
             appList.push({
                 name,
+                aliases,
                 status,
                 bundleId,
                 lastUpdated,
