@@ -283,6 +283,7 @@ export default async function () {
 
             let bundleId = null
             let tags = []
+            let aliases = []
 
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
@@ -299,6 +300,12 @@ export default async function () {
                         tags = Array.from(new Set([
                             ...tags,
                             ...scannedApp.tags
+                        ]))
+
+                        // Merge as set then convert to array to prevent duplicates
+                        aliases = Array.from(new Set([
+                            ...aliases,
+                            ...scannedApp.aliases
                         ]))
 
                         console.log(`Merged ${alias} (${scannedApp.bundleId}) from scanned apps into ${name} from README`)
@@ -342,6 +349,7 @@ export default async function () {
 
             appList.push({
                 name,
+                aliases,
                 status,
                 bundleId,
                 lastUpdated,
