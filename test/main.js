@@ -111,10 +111,11 @@ test('Sitemap mostly matches production', async (t) => {
     const message = `${ urlsNotOnLive.size } new or missing from live and ${ liveSitemapUrls.size } not found locally`
     const totalDifferences = urlsNotOnLive.size + liveSitemapUrls.size
 
+    const liveSitemapUrlStrings = new Set( liveSitemapUrls.keys() )
 
     if ( totalDifferences >= 0 ) {
         t.log( 'Missing from live', urlsNotOnLive )
-        t.log( 'Not found locally', liveSitemapUrls )
+        t.log( 'Not found locally', liveSitemapUrlStrings )
     }
 
     if ( totalDifferences >= theshold ) {
