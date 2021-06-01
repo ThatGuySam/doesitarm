@@ -24,6 +24,12 @@
   to = "/app/git-version-control"
   status = 301
 
+# old electron redirect
+[[redirects]]
+  from = "/app/electron"
+  to = "/app/electron-framework"
+  status = 301
+
 
 # imac redirect
 [[redirects]]

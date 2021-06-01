@@ -69,7 +69,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Dreamweaver](https://www.adobe.com/products/dreamweaver.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [eDEX-UI](https://github.com/GitSquared/edex-ui) - ✅ Yes, Full Native Apple Silicon Support reported as of v2.2.6 - [Release Notes](https://github.com/GitSquared/edex-ui/releases/tag/v2.2.6)
 * [Emacs](https://www.gnu.org/software/emacs/) - ✅ Yes, Full Native Apple Silicon Support reported as of v27.2-1 - [Release Notes](https://emacsformacosx.com/download/emacs-builds/Emacs-27.2-2.changes)
-* [Electron](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
+* [Electron Framework](https://www.electronjs.org/releases/stable) - ✅ Yes, full native support as of v11.0 - [Announcement](https://www.electronjs.org/blog/apple-silicon)
 * [Espresso for macOS](https://www.espressoapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Release Notes](https://www.espressoapp.com/updates/) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/espresso)
 * [FFmpeg](https://ffmpeg.org/download.html) - ✅ Yes, Full Native Apple Silicon Support via Homebrew - [Homebrew ARM Binary Available](https://formulae.brew.sh/formula/ffmpeg#default)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
