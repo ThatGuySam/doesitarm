@@ -680,7 +680,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
 * [Logitech Options](https://www.logitech.com/en-us/product/options) - ✳️ Yes, works via Rosetta 2. Some users report issues with the Flow feature. - [MacRumors Discussion](https://forums.macrumors.com/threads/does-logitech-options-works.2270516)
-* [Lunar for Mac](https://lunar.fyi/) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue #1](https://github.com/alin23/Lunar/issues/210) [Issue #2](https://github.com/alin23/Lunar/issues/215)
+* [Lunar for Mac](https://lunar.fyi/) - ✅ Yes, Native Apple Silicon Support as of v4.0.0 - [Support Notes](https://lunar.fyi/#m1)
 * [Lungo](https://sindresorhus.com/lungo) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/400141/5114)
 * [Maccy](https://maccy.app/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://github.com/p0deje/Maccy/releases/tag/0.19.0) [Mac App Store](https://apps.apple.com/us/app/maccy/id1527619437)
 * [MacPilot](https://www.koingosw.com/products/macpilot/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/550030/5114)
