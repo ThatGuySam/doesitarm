@@ -655,6 +655,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Bartender](https://www.macbartender.com/) - ✅ Yes, fully supported as of v4.0.20 - [Blog](https://www.macbartender.com/b4blog/Apple-Silicon-Support/) [View on Setapp](https://setapp.sjv.io/c/2708043/443665/5114)
 * [Beamer](https://beamer-app.com/) - ✳️ Yes, works via Rosetta 2 Translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/815231/5114)
 * [BetterZip](https://macitbetter.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/354709/5114)
+* [Boom 3D](https://www.globaldelight.com/boom/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/679#issue-906756300)
 * [Burn for Mac](https://burn-osx.sourceforge.io/Pages/English/home.html) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.0 - [Release Notes](https://burn-osx.sourceforge.io/Pages/English/news.html)
 * [CalHash](https://titanium-software.fr/en/calhash.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://titanium-software.fr/en/release_calhash.html)
 * [Camo Studio](https://reincubate.com/camo/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://reincubate.com/support/camo/release-notes/#1.1.3.122)
