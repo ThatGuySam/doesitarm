@@ -130,6 +130,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PyTorch](https://pytorch.org/) - ✅ Yes, Initial Native Apple Silicon Support for CPU only - [GPU Acceleration Status](https://github.com/pytorch/pytorch/issues/47702) [Report Update](https://github.com/ThatGuySam/doesitarm/issues/432)
 * [RapidWeaver](https://www.realmacsoftware.com/rapidweaver/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [Release Notes](https://www.realmacsoftware.com/rapidweaver/releasenotes/) [View on Setapp](https://setapp.sjv.io/rapidweaver)
 * [React Native](https://reactnative.dev/) - ✳️ Yes, works on supported Node versions - [Check Node Support](https://doesitarm.com/app/nodejs/)
+* [Reveal App](https://revealapp.com/free-trial/) - ✅ Yes, Native Apple Silicon Support as of v28 - [Release Notes](https://revealapp.com/updates/28/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/682#issue-909119625)
 * [Redis](https://redis.io/download) - ✅ Yes, full native Apple Silicon support as of v6 - [v6.0.9 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1002181585) [Verification](https://github.com/ThatGuySam/doesitarm/issues/298)
 * [Robo 3T (formerly Robomongo)](https://robomongo.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/175#issuecomment-782071460)
 * [RubyMine](https://www.jetbrains.com/ruby/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
