@@ -20,17 +20,17 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 ## Categories
-* [Developer Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#developer-tools)
-* [Science and Research Software](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#science-and-research-software)
-* [Music and Audio Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#music-and-audio-tools)
-* [Photo and Graphic Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#photo-and-graphic-tools)
-* [Video and Motion Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#video-and-motion-tools)
+* [Developer Tools](#developer-tools)
+* [Science and Research Software](#science-and-research-software)
+* [Music and Audio Tools](#music-and-audio-tools)
+* [Photo and Graphic Tools](#photo-and-graphic-tools)
+* [Video and Motion Tools](#video-and-motion-tools)
 * [Live Production and Performance](#live-production-and-performance)
-* [3D and Architecture](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#3d-and-architecture)
-* [Productivity Tools](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#productivity-tools)
-* [Entertainment and Media Apps](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#entertainment-and-media-apps)
-* [Social and Communication](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#social-and-communication)
-* [VPNs, Security, and Privacy](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#vpns-security-and-privacy)
+* [3D and Architecture](#3d-and-architecture)
+* [Productivity Tools](#productivity-tools)
+* [Entertainment and Media Apps](#entertainment-and-media-apps)
+* [Social and Communication](#social-and-communication)
+* [VPNs, Security, and Privacy](#vpns-security-and-privacy)
 * [System Tools](#system-tools)
 
 
