@@ -683,6 +683,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Jamf Self Service](https://docs.jamf.com/10.26.0/jamf-pro/administrator-guide/About_Jamf_Self_Service_for_macOS.html) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
+* [Logitech G HUB](https://www.logitechg.com/en-us/innovation/g-hub.html) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/683#issue-912290618)
 * [Logitech Options](https://www.logitech.com/en-us/product/options) - ✳️ Yes, works via Rosetta 2. Some users report issues with the Flow feature. - [MacRumors Discussion](https://forums.macrumors.com/threads/does-logitech-options-works.2270516)
 * [Lunar for Mac](https://lunar.fyi/) - ✅ Yes, Native Apple Silicon Support as of v4.0.0 - [Support Notes](https://lunar.fyi/#m1)
 * [Lungo](https://sindresorhus.com/lungo) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/400141/5114)
