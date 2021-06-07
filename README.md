@@ -561,6 +561,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PS Remote Play](https://remoteplay.dl.playstation.net/remoteplay/lang/en/ps5_mac.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/441#issuecomment-748282150)
 * [Remote Buddy](https://www.iospirit.com/products/remotebuddy/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/556#issue-802733637)
 * [RetroArch](https://www.retroarch.com/?page=platforms) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/348)
+* [Roblox Player](https://www.roblox.com/games/54865335/view?rbxp=70385145) - ✳️ Yes, works via Rosetta 2 translation - [Report #1](https://www.reddit.com/r/macgaming/comments/lymrje/running_roblox_on_the_m1_macbook_pro/)
 * [Rottenwood](https://software.charliemonroe.net/rottenwood/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](http://blog.charliemonroe.net/big-sur-and-apple-silicon/)
 * [Shaza‪m‬](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
 * [Snap Camera](https://snapcamera.snapchat.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/627#issue-860435755) [Supported Hardware](https://snapcamera.snapchat.com/download/)
