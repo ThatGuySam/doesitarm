@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 
-const TOML = require('@iarna/toml')
+import { default as TOML } from '@iarna/toml'
+
 
 
 export async function getNetlifyConfig () {
