@@ -36,6 +36,7 @@
     "dependencies": {
         "@11ty/eleventy-assets": "^1.0.5",
         "@fontsource/inter": "^4.0.1",
+        "@iarna/toml": "^2.2.5",
         "@nuxtjs/sitemap": "^2.4.0",
         "@open-wc/webpack-import-meta-loader": "^0.4.7",
         "@zip.js/zip.js": "^2.2.6",
