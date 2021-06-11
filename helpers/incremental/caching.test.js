@@ -4,7 +4,8 @@ import { isObject, isString } from '../type-checks.js'
 import {
     getNetlifyConfig,
     hasCachedPublishFolder,
-    cachePublishFolder
+    cachePublishFolder,
+    CACHE_PATH
 } from './caching.js'
 
 
@@ -43,6 +44,6 @@ test('Can cache publish folder', async (t) => {
         return
     }
 
-    t.log('Publish folder has been cached already')
+    t.log(`Cached publish folder at ${ CACHE_PATH }`)
     t.pass()
 })
