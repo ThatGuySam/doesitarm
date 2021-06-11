@@ -80,6 +80,9 @@ dist
 # IDE
 .idea
 
+# Incremental Cache
+/.app_build_cache
+
 
 # Other
 /static/app-list.json
@@ -88,3 +91,4 @@ dist
 /commits-data.json
 .DS_Store
 /static/tailwind.css
+
