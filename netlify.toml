@@ -12,6 +12,8 @@
   CI = "1"
 
 
+[[plugins]]
+  package = "netlify-plugin-cache-folder"
 
 
 # Production context: all deploys from the Production branch set in your site’s

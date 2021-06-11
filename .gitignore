@@ -92,3 +92,4 @@ dist
 .DS_Store
 /static/tailwind.css
 
+/_cache
