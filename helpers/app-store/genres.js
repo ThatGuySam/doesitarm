@@ -1,5 +1,5 @@
 // Source 1: https://42matters.com/docs/app-market-data/ios/apps/appstore-genres
-export default {
+const genresByID = {
     '0':    ['Mobile Software Application'],
     '6018': ['Book'],
     '6000': ['Business'],
@@ -75,3 +75,9 @@ export default {
     '13029': ['Newsstand', 'Travel & Regional'],
     '13030': ['Newsstand', 'Women\'s Interest'],
 }
+
+export const allGenres = Array.from( new Set( Object.values(genresByID).map( genreId => genreId.flat(1) ) ))
+
+
+
+export default genresByID

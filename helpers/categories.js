@@ -185,6 +185,18 @@ export const categories = {
     },
 }
 
+const nonAppCategorySlugs = [
+    'games',
+    'homebrew',
+    'no-category'
+]
+
+export const appCategories = Object.fromEntries(
+    Object.entries(categories).filter( ([ slug ]) => {
+        return !nonAppCategorySlugs.includes( slug )
+    })
+)
+
 
 export const categoriesById = Object.fromEntries( Object.entries( categories ).map( ([ key, category ]) => [category.id, { ...category, key } ] ) )
 

@@ -55,7 +55,7 @@ class BuildLists {
             name: 'app',
             path: '/static/app-list.json',
             buildMethod: async () => (await Promise.all([
-                buildFakeList({ totalApps: !isProduction ? 500 : 0 }),
+                !isProduction && buildFakeList(),
                 buildAppList()
             ])).flat(1)
         },
