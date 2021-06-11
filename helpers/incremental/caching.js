@@ -14,7 +14,7 @@ import { isNetlify, rootDir } from '../environment.js'
 //     : path.join(rootDir, '.app_build_cache')//path.resolve(__dirname, '.app_build_cache')
 
 
-export const CACHE_PATH = path.join(rootDir, '_cache')
+export const CACHE_PATH = path.join('_cache')
 
 
 export async function getNetlifyConfig () {
