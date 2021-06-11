@@ -6,6 +6,8 @@ import axios from 'axios'
 import { structuredDataTest } from 'structured-data-testing-tool'
 import { Google, Twitter } from 'structured-data-testing-tool/presets'
 
+import { isProduction } from '../helpers/environment.js'
+
 // require('dotenv').config()
 
 
@@ -81,6 +83,12 @@ test('Sitemap contains no double slashes in paths', (t) => {
 
 
 test('Sitemap mostly matches production', async (t) => {
+    if ( !isProduction ) {
+        t.log('🔶 Test skipped')
+        t.pass()
+        return
+    }
+
     // console.log('t.context.sitemapUrls', t.context.sitemapUrls)
 
     const theshold = 10
@@ -180,6 +188,12 @@ test('All Device pages have valid FAQPage structured data', async (t) => {
 
 
 test('All TV pages have valid VideoObject structured data', async (t) => {
+
+    if ( !isProduction ) {
+        t.log('🔶 Test skipped')
+        t.pass()
+        return
+    }
 
     const tvUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/tv/') )
 
