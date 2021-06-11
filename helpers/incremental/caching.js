@@ -4,12 +4,12 @@ import { default as TOML } from '@iarna/toml'
 // https://github.com/jprichardson/node-fs-extra
 import fs from 'fs-extra'
 
-import { isProduction, rootDir } from '../environment.js'
+import { isNetlify, rootDir } from '../environment.js'
 
 
 
 // https://github.com/hanbyul-here/nuxt-incremental-build-exp/blob/cb3ef6b001b283de77efee64733db273d991129b/cache-me.js
-export const CACHE_PATH = isProduction
+export const CACHE_PATH = isNetlify
     ? path.join('/', 'opt', 'build', 'cache', 'app_build') // Netlify cache path
     : path.join(rootDir, '.app_build_cache')//path.resolve(__dirname, '.app_build_cache')
 
