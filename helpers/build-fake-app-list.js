@@ -117,7 +117,7 @@ export default async function ( options = {} ) {
 
         const appVariant = makeAppVariation( variationOptions )
 
-        console.log('appVariant', appVariant)
+        // console.log('appVariant', appVariant)
 
         appList.push( appVariant )
 
