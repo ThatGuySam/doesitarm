@@ -28,6 +28,8 @@ test('Can cache publish folder', async (t) => {
     if ( await hasCachedPublishFolder() ) {
         t.log('Publish folder has been cached already')
         t.pass()
+
+        return
     }
 
     t.log('No prexisting cache folder found')
