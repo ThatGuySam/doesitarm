@@ -49,7 +49,7 @@ export async function cachePublishFolder () {
 
     const publishDirectoryPath = await getPublishDirectoryPath()
 
-    console.log('publishDirectoryPath', publishDirectoryPath)
+    // console.log('publishDirectoryPath', publishDirectoryPath)
 
     // Make sure cache folder exists
     await fs.ensureDir( CACHE_PATH )
