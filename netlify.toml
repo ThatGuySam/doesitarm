@@ -10,6 +10,17 @@
   CI = "1"
 
 
+
+
+# Production context: all deploys from the Production branch set in your site’s
+# deploy contexts will inherit these settings.
+[context.production]
+  command = "npm run generate --quiet && npm test"
+  environment =  { NODE_ENV = "PRODUCTION" }
+
+
+
+
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
 
 # old node redirect
