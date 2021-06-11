@@ -1,12 +1,15 @@
 import { promises as fs } from 'fs'
 import dotenv from 'dotenv'
 
+import buildFakeList from './helpers/build-fake-app-list.js'
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
 import buildDeviceList from './helpers/build-device-list.js'
 
+
+import { isProduction } from './helpers/environment.js'
 import { videosRelatedToApp } from './helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
 
@@ -51,7 +54,10 @@ class BuildLists {
         {
             name: 'app',
             path: '/static/app-list.json',
-            buildMethod: buildAppList,
+            buildMethod: async () => (await Promise.all([
+                buildFakeList({ totalApps: !isProduction ? 500 : 0 }),
+                buildAppList()
+            ])).flat(1)
         },
         {
             name: 'game',
