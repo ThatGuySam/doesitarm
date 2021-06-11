@@ -1,3 +1,5 @@
+# https://docs.netlify.com/configure-builds/file-based-configuration/#sample-file
+
 [build]
   publish = "dist/"
   command = "npm run generate --quiet && npm test"
