@@ -26,7 +26,7 @@ test('Can cache publish folder', async (t) => {
     // we check if a cached file already exists
 
     if ( await hasCachedPublishFolder() ) {
-        t.log(`Found cached publich folder at ${ CACHE_PATH }`)
+        t.log(`Found cached publish folder at ${ CACHE_PATH }`)
         t.pass()
 
         return
