@@ -219,6 +219,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [forScore](https://forscore.co/) - ✅ Yes, Full Native Apple Silicon Support as of v12 - [Official News](https://forscore.co/forscore-comes-to-the-mac/)
 * [Fretello](https://apps.apple.com/us/app/fretello-guitar-lessons/id1107957482) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.3 - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Garageband](https://www.apple.com/mac/garageband/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1033)
+* [Ivory II](https://www.synthogy.com/index.php/buy) - 🚫 Not yet supported only works on Intel-based Macs - [Release Notes](https://www.synthogy.com/index.php/support/updates/mac)
 * [Logic Pro](https://www.apple.com/logic-pro/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1037)
 * [Native Access](https://www.native-instruments.com/en/specials/native-access/) - ✳️ Yes, works via Rosetta 2 translation with the exception of MASSIVE X - [Official Status](https://support.native-instruments.com/hc/en-us/articles/360013515618-macOS-11-Big-Sur-Compatibility-News) [Official Post](https://support.native-instruments.com/hc/en-us/articles/360014683497)
 * [n-Track Studio](https://ntrack.com/download.php) - 🚫 Not yet supported only works on Intel-based Macs - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/354737/5114)
