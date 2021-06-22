@@ -257,7 +257,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [GraphicConverter](https://www.lemkesoft.de/en/products/graphicconverter/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/483#issuecomment-752342847)
 * [Graphite Sketchbook](https://www.digitalmasterpieces.com/graphite/) - ✅ Yes, it was shown at the November 10th event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1303)
 * [iCalamus](https://www.lemkesoft.de/en/products/icalamus/download/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
-* [Illustrator](https://www.adobe.com/products/illustrator.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
+* [Illustrator](https://www.adobe.com/products/illustrator.html) - ✅ Yes, Native Apple Silicon Support - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [InCopy](https://www.adobe.com/products/incopy.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [InDesign](https://www.adobe.com/products/indesign.html) - ✅ Yes, Full Native Apple Silicon Support - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Inkscape](https://inkscape.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/11#issuecomment-731507162)
