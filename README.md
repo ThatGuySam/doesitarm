@@ -422,6 +422,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Due for Mac](https://www.dueapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/due)
 * [EasyConnect](https://lstratman.github.io/EasyConnect/) - 🔶 Unknown, more info needed - [Contribute](https://github.com/ThatGuySam/doesitarm/issues/219)
 * [EndNote](https://endnote.com/product-details) - ✅ Yes, Native Apple Silicon Support as of v20.1.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/704#issue-925503816)
+* [EndNote X9](https://support.clarivate.com/Endnote/s/article/EndNote-X9?language=en_US) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/704#issuecomment-867321265)
 * [Eon Timer](https://software.charliemonroe.net/eon/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](http://blog.charliemonroe.net/big-sur-and-apple-silicon/)
 * [Evernote](https://evernote.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/411#issuecomment-748291114)
 * [Euclid](https://euclid.pr1mer.tech/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/euclid)
