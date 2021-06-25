@@ -477,7 +477,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Newton Mail](https://newtonhq.com/#app) - ✅ Yes, Full Native Apple Silicon Support
 * [Nisus Writer Pro](https://nisus.com/pro/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
 * [Nisus Writer Express](https://nisus.com/Express/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2 (some file conversion helpers run in Rosetta) - [Release notes](https://www.nisus.com/pro//whatsnew.php)
-* [Notability](https://www.gingerlabs.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/417#issue-760864996)
+* [Notability](https://www.gingerlabs.com/) - ✅ Yes, Native Apple Silicon Support as of v10.4.4 - [App Store Version History](https://apps.apple.com/us/app/notability/id360593530?mt=8&ign-mpt=uo%3D4)
 * [Noted for macOS](https://apps.apple.com/us/app/noted/id1541403993) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [NotePlan](https://noteplan.co/) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.16 - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/noteplan)
 * [Notion Desktop](https://www.notion.so) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/NotionHQ/status/1333867094463582208?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Etweet) [Verification](https://github.com/ThatGuySam/doesitarm/issues/378#issue-755529762)
