@@ -3,6 +3,7 @@ import path from 'path'
 import { default as TOML } from '@iarna/toml'
 // https://github.com/jprichardson/node-fs-extra
 import fs from 'fs-extra'
+import Rsync from 'rsync'
 
 import { isNetlify, rootDir } from '../environment.js'
 
@@ -41,7 +42,6 @@ export class IncrementalCache {
         this.cachePath = options.cachePath || path.join( CACHE_PATH, 'prod_publish' )
         this.publishDirectoryName = options.publishDirectoryName || null
         this.publishDirectoryPath = options.publishDirectoryPath || null
-
     }
 
     // export async function
@@ -100,8 +100,8 @@ export class IncrementalCache {
 
         // Copy concurrently for speed
         await Promise.all( endpoints.map( endpoint => {
-            const cachedPagePath = path.join( this.cachePath, endpoint.route )
-            const publishPagePath = path.join( this.publishDirectoryPath, endpoint.route )
+            const cachedPagePath = path.join( this.cachePath, endpoint.route, '/index.html' )
+            const publishPagePath = path.join( this.publishDirectoryPath, endpoint.route, '/index.html' )
 
             return fs.copy( cachedPagePath, publishPagePath )
         }))
@@ -109,25 +109,68 @@ export class IncrementalCache {
 
     async restoreCachedNuxtFiles ( options = {} ) {
 
-        const cachedNuxtAssetsPath = path.resolve( this.cachePath, '_nuxt')
-        const publishNuxtAssetsPath = path.resolve( this.publishDirectoryPath, '_nuxt')
+        const nonEndpointPaths = [
+            '_nuxt',
+            'index.html',
+            'sitemap-endpoints.json',
+            'nuxt-endpoints.json'
+        ]
 
-        await fs.copy( cachedNuxtAssetsPath, publishNuxtAssetsPath )
+        for ( const assetPath of nonEndpointPaths ) {
+            const cachedNuxtAssetsPath = path.resolve( this.cachePath, assetPath)
+            const publishNuxtAssetsPath = path.resolve( this.publishDirectoryPath, assetPath)
 
-        const nuxtEndpointsPath = path.resolve( rootDir, 'static/nuxt-endpoints.json')
+            await fs.copy( cachedNuxtAssetsPath, publishNuxtAssetsPath )
+        }
+
+        // await fs.copy( cachedNuxtAssetsPath, publishNuxtAssetsPath )
+
+        // await fs.copy( this.cachePath + '/index.html', this.publishDirectoryPath + '/index.html' )
+        // await fs.copy( this.cachePath + '/static', this.publishDirectoryPath + '/index.html' )
+
+        const nuxtEndpointsPath = path.resolve( this.publishDirectoryPath, 'nuxt-endpoints.json')
         const nuxtEndpoints = await readFromJSON( nuxtEndpointsPath )
 
         await this.restoreCachedEndpoints({
             endpoints: nuxtEndpoints,
+            shouldOverwrite: true,
             ...options
         })
     }
+
+    // Original concept: https://github.com/hanbyul-here/nuxt-incremental-build-exp/blob/master/cache-me.js
+    rsyncCacheToPublish = () => new Promise( ( resolve, reject ) => {
+        const rsync = new Rsync()
+            .shell('ssh')
+            .flags('azq')
+            .source(this.cachePath + '/')
+            .destination(this.publishDirectoryPath)
+
+        try {
+            // await fs.ensureDir(CACHE_PATH)
+            rsync.execute(async function(error, code, cmd) {
+                if (!error) {
+                    // await fs.copy(CACHE_PATH, BUILD_PATH)
+                    // await cacheFinalFiles()
+                    console.log('Rsync finished')
+
+                    resolve()
+                } else console.error('error')
+            })
+        } catch (err) {
+            // handle error
+            console.warn('Rsync error', err)
+            reject(err)
+        }
+    })
 
     async syncInCachedPublishFolder () {
 
         if ( (await this.hasPublishFolder()) !== true ) {
             throw new Error('Publish folder not found')
         }
+
+        await this.rsyncCacheToPublish()
 
         // const publishDirectoryPath = await this.getPublishDirectoryPath()
 
@@ -140,13 +183,21 @@ export class IncrementalCache {
 
     }
 
-    async findMissingEndpoints () {
-        const sitemapEndpointsPath = path.resolve( rootDir, 'static/sitemap-endpoints.json')
+    async getPublishSitemapEndpoints () {
+        const sitemapEndpointsPath = path.resolve( this.publishDirectoryPath, 'sitemap-endpoints.json')
         const sitemapEndpoints = await readFromJSON( sitemapEndpointsPath )
+
+        return sitemapEndpoints
+    }
+
+    async findMissingEndpoints ( options = {} ) {
+        const {
+            endpoints
+        } = options
 
         const missingEndpoints = []
 
-        for ( const endpoint of sitemapEndpoints ) {
+        for ( const endpoint of endpoints ) {
             const publishPageFile = `${ this.publishDirectoryPath }/index.html`
             const exists = await fs.pathExists( publishPageFile )
 

@@ -101,20 +101,17 @@ test.serial('Can restore publish folder from cache', async (t) => {
     // would during a build
     await cache.restoreCachedNuxtFiles()
 
-    // await cache.emptyPublishDirectory()
 
-
-    // t.log('No prexisting cache folder found')
-
-
-    // // If there's no files there already
-    // // then we can write to the directory with
-    // await cache.cachePublishFolder()
-
+    // Sync remain cached files into publish folder
+    // so Eleventy only has to build updated endpoints
+    await cache.syncInCachedPublishFolder()
 
     // List missing endpoints
-    // so we can compare
-    const missingEndpoints = await cache.findMissingEndpoints()
+    // so we can compare for this test
+    const sitemapEndpoints = await cache.getPublishSitemapEndpoints()
+    const missingEndpoints = await cache.findMissingEndpoints({
+        endpoints: sitemapEndpoints
+    })
 
 
     // t.log(`Cached publish folder at ${ testingCachePath }`)
