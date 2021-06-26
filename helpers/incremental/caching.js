@@ -26,37 +26,65 @@ export async function getNetlifyConfig () {
 }
 
 
-export async function getPublishDirectoryName () {
-    const netlifyConfig = await getNetlifyConfig()
+export class IncrementalCache {
 
-    return netlifyConfig.build.publish
-}
+    constructor( options = {} ) {
+        this.cachePath = options.cachePath || CACHE_PATH
+        this.publishDirectoryName = options.publishDirectoryName || null
+        this.publishDirectoryPath = options.publishDirectoryPath || null
+
+    }
+
+    // export async function
+
+    async hasCachedPublishFolder () {
+        const homePageFile = `${ this.cachePath }/index.html`
+
+        // https://github.com/jprichardson/node-fs-extra/blob/master/docs/pathExists.md
+        return await fs.pathExists( homePageFile )
+    }
+
+    async getPublishDirectoryName () {
+        const netlifyConfig = await getNetlifyConfig()
+
+        return netlifyConfig.build.publish
+    }
+
+    async getPublishDirectoryPath () {
+        // const publishDirectoryPath = await this.getPublishDirectoryName()
+
+        return path.resolve( rootDir, this.publishDirectoryName )
+    }
+
+    async cachePublishFolder () {
+
+        // const publishDirectoryPath = await this.getPublishDirectoryPath()
+
+        // console.log('publishDirectoryPath', publishDirectoryPath)
+
+        // Make sure cache folder exists
+        await fs.ensureDir( this.cachePath )
+
+        await fs.copy( this.publishDirectoryPath, this.cachePath )
+
+    }
+
+    async emptyPublishDirectory () {
+        // const publishDirectoryPath = await this.getPublishDirectoryName()
+
+        return await fs.emptyDir( this.publishDirectoryPath, 'utf-8' )
+    }
 
 
-export async function getPublishDirectoryPath () {
-    const publishDirectoryPath = await getPublishDirectoryName()
+    async init () {
 
-    return path.resolve( rootDir, publishDirectoryPath )
-}
+        if ( this.publishDirectoryName === null ) {
+            this.publishDirectoryName = await this.getPublishDirectoryName()
+        }
 
+        if ( this.publishDirectoryPath === null ) {
+            this.publishDirectoryPath = await this.getPublishDirectoryPath()
+        }
 
-export async function hasCachedPublishFolder () {
-    const homePageFile = `${ CACHE_PATH }/index.html`
-
-    // https://github.com/jprichardson/node-fs-extra/blob/master/docs/pathExists.md
-    return await fs.pathExists( homePageFile )
-}
-
-
-export async function cachePublishFolder () {
-
-    const publishDirectoryPath = await getPublishDirectoryPath()
-
-    // console.log('publishDirectoryPath', publishDirectoryPath)
-
-    // Make sure cache folder exists
-    await fs.ensureDir( CACHE_PATH )
-
-    await fs.copy( publishDirectoryPath, CACHE_PATH )
-
+    }
 }
