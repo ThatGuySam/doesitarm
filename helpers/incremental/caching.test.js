@@ -3,25 +3,32 @@ import path from 'path'
 import test from 'ava'
 
 import { isObject, isString } from '../type-checks.js'
+import { rootDir } from '../environment.js'
 import {
     getNetlifyConfig,
-    CACHE_PATH,
+    readFromJSON,
+    // CACHE_PATH,
 
     IncrementalCache
 } from './caching.js'
 
 
 // Keeps tests from messing up production publish folder and files
-const testingCachePath = path.join( CACHE_PATH, 'test' )
+const testingCachePath = path.join( 'temp', '_test_cache' )
+const testingPublishPath = path.join( 'temp', '_test_publish' )
 
 
 test.before(async t => {
 
+    // Clone publish
+    // testingPublishPath
+
     t.context.cache = new IncrementalCache({
-        cachePath: testingCachePath
+        cachePath: testingCachePath,
+        publishDirectoryPath: testingPublishPath
     })
 
-    // Set up cache
+    // Let cache pull in environment context
     await t.context.cache.init()
 
 })
@@ -41,9 +48,18 @@ test.serial('Can read netlify.toml', async (t) => {
 
 test.serial('Can cache publish folder', async (t) => {
 
-    const {
-        cache
-    } = t.context
+    // Special caching instance that pulls from live publish directory
+    // but stores to testing cache directory
+    // so that we can copy the live data into an empty testing directory
+    // and not the live directory.
+    // This means we won't wipe out the build we just did with cached data
+    const cache = new IncrementalCache({
+        cachePath: testingCachePath
+    })
+
+    // Let cache pull in environment context
+    await cache.init()
+
 
     // So that we don't overwrite the cached files
     // we check if a cached file already exists
@@ -80,11 +96,10 @@ test.serial('Can restore publish folder from cache', async (t) => {
         cache
     } = t.context
 
-    if ( (await cache.hasCachedPublishFolder( testingCachePath )) === false ) {
-        t.log(`Could not find publish folder at ${ testingCachePath }`)
-        t.fail()
-        return
-    }
+    // Set up nuxt endpoints
+    // so that the publish directory looks like it
+    // would during a build
+    await cache.restoreCachedNuxtFiles()
 
     // await cache.emptyPublishDirectory()
 
@@ -94,12 +109,14 @@ test.serial('Can restore publish folder from cache', async (t) => {
 
     // // If there's no files there already
     // // then we can write to the directory with
-    await cache.cachePublishFolder()
+    // await cache.cachePublishFolder()
 
 
-
+    // List missing endpoints
+    // so we can compare
+    const missingEndpoints = await cache.findMissingEndpoints()
 
 
     // t.log(`Cached publish folder at ${ testingCachePath }`)
-    t.pass()
+    t.is( missingEndpoints.length, 0 )
 })

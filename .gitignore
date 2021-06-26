@@ -93,3 +93,5 @@ dist
 /static/tailwind.css
 
 /_cache
+/test/_temp*
+/temp
