@@ -308,6 +308,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Filma](https://apps.apple.com/app/filma-best-video-editor/id1456095438) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Final Cut Pro](https://www.apple.com/final-cut-pro/) - ✅ Yes, it will available on Apple Silicon launch - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1173) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5844)
 * [Final Cut Library Manager](https://www.arcticwhiteness.com/finalcutlibrarymanager/download/) - ✅ Yes, Full Native Apple Silicon Support as of v3.9 - [Release Notes](https://www.arcticwhiteness.com/blog/fclm390-fcpx1052/)
+* [GoPro Fusion Studio](https://gopro.com/en/us/news/fusion-end-of-life) - 🚫 No, not supported and no plans for support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/349#issuecomment-869347313) [Official Article](https://gopro.com/en/us/news/fusion-end-of-life)
+* [GoPro VR Player](https://community.gopro.com/t5/en/GoPro-VR-Player-for-desktop-FAQ/ta-p/394345) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/349#issuecomment-869347313)
 * [Handbrake](https://handbrake.fr/) - ✅ Yes, natively supported as of v1.4.0 - [Github Issue](https://github.com/HandBrake/HandBrake/issues/2951)
 * [Houdini](https://www.sidefx.com/products/houdini/) - ✳️ Yes, works via Rosetta 2 - [Source](https://www.reddit.com/r/Houdini/comments/jzg1wj/houdini_running_on_apple_silicon_m1_macs_demo/)
 * [MKVToolNix](https://mkvtoolnix.download/downloads.html#macosx) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/344)
