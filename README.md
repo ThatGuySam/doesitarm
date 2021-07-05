@@ -565,7 +565,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Dolphin](https://dolphin-emu.org/download/) - ✅ Yes, Native Apple Silicon Support as of v5.0-14295 - [Pull Request](https://github.com/dolphin-emu/dolphin/pull/9441)
 * [DOSBox](https://sourceforge.net/projects/dosbox/) - ✳️ Yes, it works via Rosetta 2 - [Project Ticket 149](https://sourceforge.net/p/dosbox/feature-requests/149/)
 * [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
-* [Elmedia Player](https://www.elmedia-video-player.com/) - ✳️ Yes, it works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/669#issue-899202639)
+* [Elmedia Player](https://www.elmedia-video-player.com/) - ✅ Yes, full native support as of 8.0 - [Release Notes](https://www.eltima.com/blog/2021/06/elmedia-8-0-is-out.html)
 * [FS-UAE](https://fs-uae.net/) - ✅ Yes, Native Apple Silicon Support as of v3.1.17 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/706#issuecomment-865237294) [Apple Silicon Download](https://fs-uae.net/2021/06/09/builds-for-macos-arm64-m1-apple-silicon-have-arrived/comment-page-1?unapproved=1015254&moderation-hash=7ab3b3425385d84f331ec6d4faa54ff7)
 * [Hue Sync](https://www.philips-hue.com/en-us/explore-hue/propositions/entertainment/sync-with-pc#get_the_app) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/709#issue-930809920)
 * [IINA](https://iina.io/download/) - ✅ Yes, Full Native Apple Silicon Support as of 1.2.0 - [Github Release](https://github.com/iina/iina/releases/tag/v1.2.0)
