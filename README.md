@@ -200,7 +200,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Stata](https://www.stata.com/) - ✅ Yes, Full Native Apple Silicon Support as of v16, update level 10 Nov 2020 - [Blog Post](https://blog.stata.com/2020/11/10/stata-for-mac-with-apple-silicon/)
 * [Tableau Desktop](https://www.tableau.com/products/desktop) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Video Demonstration](https://youtu.be/vyPm2fOyS7Y?t=625) [Previous version via Rosetta 2](https://www.tableau.com/support/releases/desktop/2020.3.5)
 * [Tableau Prep](https://www.tableau.com/products/prep) - 🚫 No, not yet supported only works on Intel-based Macs - [Issue](https://kb.tableau.com/articles/issue/Tableau-Mac-Software-Does-Not-Yet-Support-Apple-Silicon-CPU) [Previous version via Rosetta 2](https://www.tableau.com/support/releases/prep/2020.3.3)
-* [Wolfram Mathematica](https://www.wolfram.com/mathematica/) - ✳️ Yes, works via Rosetta 2 as of v12 - [Discussion](https://community.wolfram.com/groups/-/m/t/2118125#_19_message_2121051)
+* [Wolfram Mathematica](https://www.wolfram.com/mathematica/) - ✅ Yes, Native Apple Silicon Support as of v12.3.1 - [Release Notes](https://www.wolfram.com/mathematica/quick-revision-history.html) [Discussion](https://community.wolfram.com/groups/-/m/t/2118125#_19_message_2121051)
 
 
 
