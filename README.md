@@ -594,6 +594,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PPSSPP](https://build.ppsspp.org/?page/downloads#osx) - ✅ Yes, Full Native Apple Silicon Support as of v1.11 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/347#issuecomment-776444965)
 * [PS Remote Play](https://remoteplay.dl.playstation.net/remoteplay/lang/en/ps5_mac.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/441#issuecomment-748282150)
 * [QQ音乐(QQ Music)](https://apps.apple.com/cn/app/qq音乐-让生活充满音乐/id595615424?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/368)
+* [Q-emuLator](http://www.terdina.net/ql/q-emulator.html) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/104#issuecomment-869404710)
 * [Remote Buddy](https://www.iospirit.com/products/remotebuddy/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/556#issue-802733637)
 * [RetroArch](https://www.retroarch.com/?page=platforms) - ✳️ Yes, works via Rosetta 2 with native support in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/348)
 * [Roblox Player](https://www.roblox.com/games/54865335/view?rbxp=70385145) - ✳️ Yes, works via Rosetta 2 translation - [Report #1](https://www.reddit.com/r/macgaming/comments/lymrje/running_roblox_on_the_m1_macbook_pro/)
