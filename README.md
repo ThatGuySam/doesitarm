@@ -84,10 +84,10 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Git Version Control](https://git-scm.com/download/mac) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/54#issuecomment-730568063)
 * [GitHub Desktop](https://desktop.github.com/) - ✅ Yes, Native Apple Silicon Support as of v2.8.3 - [Release Notes](https://desktop.github.com/release-notes/)
 * [GitKraken](https://www.gitkraken.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/244#issuecomment-736760318)
+* [GNU Compiler Collection](https://gcc.gnu.org/) - ✳️ Yes, runs via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/105#issuecomment-732795155) [Bugzilla Issue](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96168)
 * [Go (golang)](https://golang.org/) - ✅ Yes, full native support as of 1.16 - [Golang M1 Benchmark](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=342445681) [Release Notes](https://tip.golang.org/doc/go1.16) [Go 1.16 is released](https://blog.golang.org/go1.16)
 * [GoLand](https://www.jetbrains.com/go/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [Godot Engine](https://godotengine.org/download/osx) - ✅ Yes, Full Native Apple Silicon Support as of v3.3 - [Release Notes](https://godotengine.org/article/godot-3-3-has-arrived#macos)
-* [GNU Compiler Collection](https://gcc.gnu.org/) - ✳️ Yes, runs via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/105#issuecomment-732795155) [Bugzilla Issue](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96168)
 * [Gradle Build Tool](https://gradle.org/) - ✅ Yes, Native Apple Silicon Support as of v6.9 - [Release Notes](https://docs.gradle.org/6.9/release-notes.html)
 * [hadolint](https://github.com/hadolint/hadolint) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://github.com/Homebrew/brew/issues/10744#issuecomment-787498421)
 * [Haskell](https://www.haskell.org/platform/mac.html) - ✳️ Yes, runs via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/73#issuecomment-826065143)
