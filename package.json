@@ -73,6 +73,7 @@
     "node-fetch": "^2.6.1",
     "nodemon": "^1.11.0",
     "nuxt": "^2.14.11",
+    "nuxt-vite": "^0.1.1",
     "postcss": "^8.2.4",
     "postcss-cli": "^8.3.1",
     "prettier": "1.14.3",
