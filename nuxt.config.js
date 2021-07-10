@@ -143,6 +143,7 @@ export default {
     },
 
     buildModules: [
+        'nuxt-vite',
         '@nuxt/postcss8',
         '@nuxtjs/tailwindcss'
     ],
