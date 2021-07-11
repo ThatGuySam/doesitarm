@@ -313,6 +313,14 @@ class BuildLists {
         // // Save Eleventy Endpoints
         // await this.saveToJson(Array.from(this.endpointMaps.eleventy), './static/eleventy-endpoints.json')
 
+        // console.log('this.endpointMaps.eleventy /app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' ))
+
+
+        // Filter eleventy endpoints
+        // this.endpointMaps.eleventy = new Set([
+        //     ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
+        // ])
+
         for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
             // Save Endpoints
             await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
