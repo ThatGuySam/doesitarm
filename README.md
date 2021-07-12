@@ -121,6 +121,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Nova](https://nova.app) - ✅ Yes, Full Native Apple Silicon Support as of v3 - [Official Tweet](https://twitter.com/panic/status/1326977997732134912?s=20)
 * [OCaml](https://ocaml.org/) - ✅ Yes, Native Apple Silicon Support as of v4.12.0 - [Release Notes](https://github.com/ocaml/ocaml/releases/tag/4.12.0)
 * [Onivim2](https://v2.onivim.io/early-access-portal) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/601#issue-834313049) [Github Issue](https://github.com/onivim/oni2/issues/2708)
+* [OpenOCD](http://openocd.org/) - ✅ Yes, Native Apple Silicon Support - [Homebrew Listing](https://formulae.brew.sh/formula/open-ocd#default)
 * [OpenJDK](https://openjdk.java.net/install/) - ✅ Yes, Full Native Apple Silicon Support via Azul Zulu
 Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1469348209) [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
 * [Pants for Python](https://www.pantsbuild.org/) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://blog.pantsbuild.org/how-we-added-apple-silicon-support-to-pants/)
