@@ -131,6 +131,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PhpStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✅ Yes, full native Apple Silicon support as of v2020.3.1
 * [Postman](https://www.postman.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/160#issuecomment-736772593)
 * [PowerShell Core](https://github.com/PowerShell/PowerShell) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/125#issuecomment-736775191)
+* [Processing IDE](https://processing.org/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/342#issuecomment-869373970)
 * [Proxyman](https://proxyman.io) - ✅ Yes, fully supported ARM and Intel Chip - [Issue](https://github.com/ProxymanApp/Proxyman/issues/686) [View on Setapp](https://setapp.sjv.io/c/2708043/635279/5114)
 * [psycopg2](https://www.psycopg.org/) - ✅ Yes, Native Apple Silicon Support as of v2.8.6 via 1 or more workarounds - [Workaround #1](https://github.com/psycopg/psycopg2/issues/1200#issuecomment-820571339) [Workaround #2](https://github.com/psycopg/psycopg2/issues/1216#issuecomment-767892042) [Workaround #3](https://github.com/ThatGuySam/doesitarm/issues/628#issue-862441710)
 * [Pure Data](https://puredata.info/downloads/pure-data) - ✳️ Yes, works via Rosetta and builds as Apple Silicon - [Verification](https://github.com/ThatGuySam/doesitarm/issues/694#issue-916037556)
