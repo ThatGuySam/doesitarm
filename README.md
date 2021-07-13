@@ -574,6 +574,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [WriteMapper](https://writemapper.com/) - ✅ Yes, Native Apple Silicon Support as of v3.0 - [Official Article](https://writemapper.com/support/is-the-apple-m1-silicone-chip-supported-on-mac-computers/)
 * [Workspaces](https://www.apptorium.com/workspaces) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/389439/5114)
 * [WPS Office](https://apps.apple.com/cn/app/wps-office/id1443749478?l=en&mt=12) - ✅ Yes, full native support as of v3.0.1 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/149)
+* [XMind](https://apps.apple.com/us/app/xmind-mind-map/id1286983622) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/714#issue-932361182)
 * [Yoink](https://eternalstorms.at/yoink/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v3.5.11 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Zettlr](https://www.zettlr.com/download) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/587#issue-817891514)
 
