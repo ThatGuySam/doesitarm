@@ -27,12 +27,9 @@ export default {
 
     generate: {
         crawler: false,
-        cache: {
-            ignore: [
-                // When something changed in the docs folder, do not re-build via webpack
-                'assets'
-            ]
-        },
+
+        // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-generate#cache
+        cache: false,
         routes() {
             return fs.readFile('./static/nuxt-endpoints.json', 'utf-8')
                 .then( endpointsJson => {
@@ -153,7 +150,7 @@ export default {
     build: {
         // parallel: true,
         // hardSource: true,
-        cache: true,
+        cache: false,
         html: {
             minify: {
                 minifyCSS: false,
