@@ -5,7 +5,7 @@ Lists of reported app support for macOS on ARM so far.
 
 Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
-[Search List](https://doesitarm.com/) | [🧪 Apple Silicon App Test](https://doesitarm.com/apple-silicon-app-test/) | [Benchmarks and Performance](https://doesitarm.com/benchmarks/) | [Twitter Updates](https://twitter.com/DoesItARM) | [More Lists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#more-apple-silicon-lists) | [Youtube Playlists](https://github.com/ThatGuySam/doesitarm/blob/master/README.md#youtube-apple-silicon-playlists)
+[Search List](https://doesitarm.com/) | [Get Email Updates](https://doesitarm.com/embed-subscribe/) | [🧪 Apple Silicon App Test](https://doesitarm.com/apple-silicon-app-test/) | [Does It ARM on Twitter](https://twitter.com/DoesItARM)
 
 
 
@@ -32,6 +32,12 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Social and Communication](#social-and-communication)
 * [VPNs, Security, and Privacy](#vpns-security-and-privacy)
 * [System Tools](#system-tools)
+
+
+## Additional Resources
+* [More Apple Silicon and ARM Lists](#more-apple-silicon-and-arm-lists)
+* [Apple Silicon Testing Tools](#apple-silicon-testing-tools)
+* [Youtube Apple Silicon Playlists](#youtube-apple-silicon-playlists)
 
 
 ## The Apps
