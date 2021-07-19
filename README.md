@@ -1,4 +1,4 @@
-Does it ARM
+Does It ARM
 ----
 
 Lists of reported app support for macOS on ARM so far. 
