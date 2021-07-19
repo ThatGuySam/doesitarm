@@ -41,6 +41,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 ## The Apps
+[🔍 Search List](https://doesitarm.com/)
 
 #### Developer Tools
 
