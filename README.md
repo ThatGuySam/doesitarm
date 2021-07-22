@@ -121,7 +121,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [MAMP](https://www.mamp.info/en/mamp/mac/) - ✅ Yes, Native Apple Silicon Support as of v6.4 - [Release Notes](https://www.mamp.info/en/release-notes/mac/)
 * [MongoDB](https://www.mongodb.com/try/download/community) - ✳️ Yes, works via Rosetta 2 - [Issue](https://jira.mongodb.org/browse/SERVER-50115) [Test Video](https://youtu.be/b_S3CjGRQis?t=227)
 * [MongoKitte‪n‬](https://apps.apple.com/us/app/id1484086700) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/502#issue-778010353)
-* [MySQL Community Server](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
+* [MySQL Community Server](https://dev.mysql.com/downloads/) - ✅ Yes, Native Apple Silicon Support as of v8.0.26 - [Release Notes](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-26.html) [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
 * [MySQL Workbench](https://dev.mysql.com/downloads/) - ✳️ Yes, works via Rosetta 2 for v8.0.21 with issues reported on newer versions - [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003) [Issues](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-763269306)
 * [Navicat Premium](https://www.navicat.com/en/products/navicat-premium) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/161#issuecomment-759768321)
 * [NixOS](https://nixos.org/download.html) - ⏹ Not yet, but it’s in development - [Github Issue](https://github.com/NixOS/nixpkgs/issues/95903)
