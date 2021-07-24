@@ -51,6 +51,11 @@ const appBundles = new Map()
 module.exports = function ( eleventyConfig ) {
     // console.log('eleventyConfig', eleventyConfig)
 
+    eleventyConfig.addPlugin(EleventyServerlessBundlerPlugin, {
+        name: "eleventy-builder", // The serverless function name from your permalink object
+        functionsDir: "./netlify/functions/",
+    })
+
     // Global Nuxt data
     eleventyConfig.addJavaScriptFunction('getNuxt', function () {
         return nuxtConfig
@@ -174,12 +179,6 @@ module.exports = function ( eleventyConfig ) {
     eleventyConfig.addJavaScriptFunction('boundComponent', function ( Component ) {
 		return Component.bind(this)
 	})
-
-
-    eleventyConfig.addPlugin(EleventyServerlessBundlerPlugin, {
-        name: "eleventy-builder", // The serverless function name from your permalink object
-        functionsDir: "./netlify/functions/",
-    })
 
 
     return {
