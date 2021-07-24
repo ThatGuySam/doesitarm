@@ -27,13 +27,14 @@
 import fs from 'fs-extra'
 import replace_css_url from 'replace-css-url'
 import dotenv from 'dotenv'
+import { EleventyServerlessBundlerPlugin } from '@11ty/eleventy'
 import { InlineCodeManager } from '@11ty/eleventy-assets'
 import { transformSync } from 'esbuild'
 
 
 import nuxtConfig from './nuxt.config'
 
-const { EleventyServerlessBundlerPlugin } = require("@11ty/eleventy");
+
 
 // Setup dotenv
 dotenv.config()
