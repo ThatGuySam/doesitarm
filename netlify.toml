@@ -12,6 +12,13 @@
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
 
+
+[[redirects]]
+  from = "/app/*"
+  to = "/.netlify/functions/eleventy-builder"
+  status = 200
+  force = true
+
 # old node redirect
 [[redirects]]
   from = "/app/node"
@@ -50,7 +57,7 @@
   status = 301
 
 
- # Other Redirects
+# Other Redirects
 
 # Random broken link from Chinese sites
 [[redirects]]
