@@ -123,6 +123,7 @@ export class AppTemplate {
                 data: 'eleventy-endpoints',
                 size: 1,
                 alias: 'app',
+                serverless: 'eleventy.app.slug',
 
                 before: function( data ) {
                     return data.filter( entry => {
@@ -149,7 +150,12 @@ export class AppTemplate {
 
             permalink: ({ app }) => {
                 // console.log('payload', app.payload)
-                return app.route.substring(1) + '/'
+                return {
+                    'build': app.route.substring(1) + '/',
+                    'eleventy-builder': '/app/:slug/'//app.route.substring(1) + '/'
+                }
+
+
             }
         }
     }
