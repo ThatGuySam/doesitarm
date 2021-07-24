@@ -24,7 +24,7 @@
  */
 
 
-import fs from 'fs'
+import fs from 'fs-extra'
 import replace_css_url from 'replace-css-url'
 import dotenv from 'dotenv'
 import { InlineCodeManager } from '@11ty/eleventy-assets'
@@ -43,6 +43,8 @@ function getAssetFilePath(componentName) {
 
 const inlineAssetCache = new Map()
 
+const appBundles = new Map()
+
 module.exports = function ( eleventyConfig ) {
     // console.log('eleventyConfig', eleventyConfig)
 
@@ -54,6 +56,22 @@ module.exports = function ( eleventyConfig ) {
 
     const cssManager = new InlineCodeManager()
     const jsManager = new InlineCodeManager()
+
+    eleventyConfig.addJavaScriptFunction('getAppVersions', async function ( bundleIdentifier ) {
+        if (appBundles.size === 0) {
+            const appBundlesFromJson = await fs.readJson('./static/app-bundles.json')
+            appBundlesFromJson.forEach(([ jsonAppBundleIdentifier, versions ]) => {
+                appBundles.set( jsonAppBundleIdentifier, versions )
+            })
+        }
+
+        if ( appBundles.has( bundleIdentifier ) ) {
+            return appBundles.get( bundleIdentifier )
+        }
+
+        // Bundle not found
+        return null
+    })
 
     eleventyConfig.addJavaScriptFunction('usingComponent', async function ( componentName ) {
         // console.log('Getting component', componentName)

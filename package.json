@@ -14,6 +14,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
+    "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
     "build-lists": "node -r esm build-lists.js",
     "generate-nuxt": "NODE_OPTIONS=--max-old-space-size=60000 nuxt generate",
@@ -26,7 +27,8 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
-    "clone-readme": "cp ./README.md README-temp.md"
+    "clone-readme": "cp ./README.md README-temp.md",
+    "cloudflare-deploy": "npm run generate"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",
@@ -39,6 +41,7 @@
     "chance": "^1.1.7",
     "cross-env": "^5.2.0",
     "esbuild": "^0.11.20",
+    "fs-extra": "^8.1.0",
     "jsdom": "^16.4.0",
     "lazysizes": "^5.3.0-beta1",
     "markdown-it": "^11.0.1",

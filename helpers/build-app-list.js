@@ -1,9 +1,11 @@
 
-import { promises as fs } from 'fs'
+// import { promises as fs } from 'fs'
+
+import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import axios from 'axios'
 
-import statuses, { getStatusName } from './statuses'
+import statuses, { getStatusName } from './statuses.js'
 import appStoreGenres from './app-store/genres.js'
 import { findCategoryForTagsSet } from './categories.js'
 import parseDate from './parse-date'
@@ -150,6 +152,27 @@ export default async function () {
     // Store app scans
     await axios
         .get(process.env.SCANS_SOURCE)
+
+        .then( async response => {
+            const appBundles = []
+
+            for (const appScan of response.data.appList) {
+
+                // Add app to bundle list
+                appBundles.push([
+                    // bundleId as key
+                    appScan.bundleIdentifier,
+
+                    // Versions as value
+                    appScan.versions
+                ])
+
+            }
+
+            await fs.writeJson('./static/app-bundles.json', appBundles)
+
+            return response
+        })
         .then(function (response) {
 
             response.data.appList.forEach( appScan => {
@@ -206,7 +229,7 @@ export default async function () {
                 scanListMap.set( appSlug, {
                     name: appName,
                     aliases: appScan['aliases'],
-                    bundleId: appScan.bundleIdentifier,
+                    bundleIds: [ appScan.bundleIdentifier ],
                     status: statusName,
                     lastUpdated: parseDate( appScan['Date'] ),
                     // url,
@@ -281,8 +304,10 @@ export default async function () {
 
             const [ name, url ] = link.substring(1, link.length-1).split('](')
 
-            let bundleId = null
+            const bundleIds = []
             let tags = []
+            let aliases = []
+            const relatedLinksMap = new Map( getTokenLinks(token.children).map( link => [ link.href, link ] ) )
 
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
@@ -291,9 +316,9 @@ export default async function () {
                     // console.log( key, alias, name, eitherMatches(alias, name) )
 
                     if ( eitherMatches(alias, name) ) {
-                        // If we don't have a bundleId yet
-                        // Set this app's bundleId
-                        if ( bundleId === null ) { bundleId = scannedApp.bundleId }
+                        // If we don't have any bundleIds yet
+                        // Add this app's bundleId to the list
+                        if ( !bundleIds.includes( scannedApp.bundleIds[0] ) ) { bundleIds.push(scannedApp.bundleIds[0]) }
 
                         // Merge this scanned app's tags into the matching app
                         tags = Array.from(new Set([
@@ -301,13 +326,32 @@ export default async function () {
                             ...scannedApp.tags
                         ]))
 
-                        console.log(`Merged ${alias} (${scannedApp.bundleId}) from scanned apps into ${name} from README`)
+                        // Merge as set then convert to array to prevent duplicates
+                        aliases = Array.from(new Set([
+                            ...aliases,
+                            ...scannedApp.aliases
+                        ]))
+
+                        // Merge relatated links
+                        for ( const link of scannedApp.relatedLinks ) {
+
+                            relatedLinksMap.set( link.href, {
+                                ...link,
+                                label: (link.label === 'View') ? 'App Website' : link.label
+                            } )
+                        }
+
+                        console.log(`Merged ${alias} (${scannedApp.bundleIds[0]}) from scanned apps into ${name} from README`)
                         scanListMap.delete( key )
                     }
                 }
             })
 
-            const relatedLinks = getTokenLinks(token.children)
+
+            // Convert link map values into array for JSON
+            const relatedLinks = Array.from( relatedLinksMap.values() )
+
+            // console.log('relatedLinks', relatedLinks)
 
             const appSlug = makeSlug( name )
 
@@ -342,8 +386,9 @@ export default async function () {
 
             appList.push({
                 name,
+                aliases,
                 status,
-                bundleId,
+                bundleIds,
                 lastUpdated,
                 // url,
                 text,
@@ -357,7 +402,7 @@ export default async function () {
 
 
             // if ( tags.length > 1 ) {
-            //     console.log('tags', name, bundleId, tags)
+            //     console.log('tags', name, bundleIds, tags)
             // }
         }
 

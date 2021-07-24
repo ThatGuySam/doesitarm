@@ -15,6 +15,14 @@
 			"problemMatcher": [],
 			"label": "npm: generate",
 			"detail": "nuxt generate",
+			"group": "build"
+		},
+		{
+			"type": "npm",
+			"script": "generate-dev",
+			"problemMatcher": [],
+			"label": "npm: generate-dev",
+			"detail": "npm run generate && npm test",
 			"group": {
 				"kind": "build",
 				"isDefault": true
