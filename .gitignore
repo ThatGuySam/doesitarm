@@ -88,3 +88,5 @@ dist
 /commits-data.json
 .DS_Store
 /static/tailwind.css
+netlify/functions/eleventy-builder/**
+!netlify/functions/eleventy-builder/index.js

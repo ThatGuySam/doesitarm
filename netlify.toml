@@ -1,71 +1,56 @@
 [build]
-  publish = "dist/"
-  command = "npm run generate --quiet"
-  functions = "netlify/functions/"
+    publish = "dist/"
+    command = "npm run generate --quiet"
+    functions = "netlify/functions/"
 
+    [build.environment]
+        NPM_FLAGS = "--no-optional"
+        CI = "1"
 
-
-[build.environment]
-  NPM_FLAGS = "--no-optional"
-  CI = "1"
-
-
-# https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
+[[redirects]]
+    from = "/app/:slug"
+    to = "/.netlify/functions/eleventy-builder"
+    status = 200
+    force = true
+    _generated_by_eleventy_serverless = "serverless"
 
 
 [[redirects]]
-  from = "/app/*"
-  to = "/.netlify/functions/eleventy-builder"
-  status = 200
-  force = true
-
-# old node redirect
-[[redirects]]
-  from = "/app/node"
-  to = "/app/nodejs"
-  status = 301
-
-# old git redirect
-[[redirects]]
-  from = "/app/git"
-  to = "/app/git-version-control"
-  status = 301
-
-# old electron redirect
-[[redirects]]
-  from = "/app/electron"
-  to = "/app/electron-framework"
-  status = 301
-
-
-# imac redirect
-[[redirects]]
-  from = "/device/apple-silicon-imac"
-  to = "/device/m1-imac/"
-  status = 307
-
-
-# Category Redirects
-[[redirects]]
-  from = "/kind/entertainment"
-  to = "/kind/entertainment-and-media-apps/"
-  status = 301
+    from = "/app/node"
+    to = "/app/nodejs"
+    status = 301
 
 [[redirects]]
-  from = "/kind/photo-tools"
-  to = "/kind/photo-and-graphic-tools/"
-  status = 301
-
-
-# Other Redirects
-
-# Random broken link from Chinese sites
-[[redirects]]
-  from = "/。"
-  to = "/"
-  status = 301
+    from = "/app/git"
+    to = "/app/git-version-control"
+    status = 301
 
 [[redirects]]
-  from = "/%E3%80%82"
-  to = "/"
-  status = 301
+    from = "/app/electron"
+    to = "/app/electron-framework"
+    status = 301
+
+[[redirects]]
+    from = "/device/apple-silicon-imac"
+    to = "/device/m1-imac/"
+    status = 307
+
+[[redirects]]
+    from = "/kind/entertainment"
+    to = "/kind/entertainment-and-media-apps/"
+    status = 301
+
+[[redirects]]
+    from = "/kind/photo-tools"
+    to = "/kind/photo-and-graphic-tools/"
+    status = 301
+
+[[redirects]]
+    from = "/。"
+    to = "/"
+    status = 301
+
+[[redirects]]
+    from = "/%E3%80%82"
+    to = "/"
+    status = 301

@@ -33,6 +33,8 @@ import { transformSync } from 'esbuild'
 
 import nuxtConfig from './nuxt.config'
 
+const { EleventyServerlessBundlerPlugin } = require("@11ty/eleventy");
+
 // Setup dotenv
 dotenv.config()
 
@@ -172,6 +174,11 @@ module.exports = function ( eleventyConfig ) {
 		return Component.bind(this)
 	})
 
+
+    eleventyConfig.addPlugin(EleventyServerlessBundlerPlugin, {
+        name: "eleventy-builder", // The serverless function name from your permalink object
+        functionsDir: "./netlify/functions/",
+    })
 
 
     return {
