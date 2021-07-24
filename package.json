@@ -13,7 +13,7 @@
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "npm run dev-eleventy",
     "clean-install": "rm -rf node_modules && npm install",
     "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
