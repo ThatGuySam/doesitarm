@@ -70,7 +70,7 @@ module.exports = function ( eleventyConfig ) {
         }
 
         // Bundle not found
-        return null
+        return {}
     })
 
     eleventyConfig.addJavaScriptFunction('usingComponent', async function ( componentName ) {
