@@ -317,9 +317,9 @@ class BuildLists {
 
 
         // Filter eleventy endpoints
-        // this.endpointMaps.eleventy = new Set([
-        //     ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
-        // ])
+        this.endpointMaps.eleventy = new Set([
+            ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
+        ])
 
         for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
             // Save Endpoints
