@@ -2,7 +2,7 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-4xl md:text-6xl font-hairline leading-tight text-center">
-                Does it ARM?
+                Does It ARM?
             </h1>
             <h2 class="subtitle md:text-xl text-center">
                 Apps that are reported to support Apple Silicon

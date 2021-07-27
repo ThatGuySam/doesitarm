@@ -46,7 +46,7 @@ export default {
         htmlAttrs: {
             lang: 'en',
         },
-        title: 'Does it ARM',
+        title: 'Does It ARM',
         description: pkg.description,
         meta: [
             { charset: 'utf-8' },
