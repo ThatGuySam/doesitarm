@@ -348,6 +348,15 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Live Production and Performance
 * [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
+* [AJA Control Room](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
+* [AJA ControlPanel](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
+* [AJA eMini-Setup](https://www.aja.com/family/software) - 🔶 App has not yet been reported to be native to Apple Silicon
+* [AJA Mini-Config](https://www.aja.com/family/software) - 🔶 App has not yet been reported to be native to Apple Silicon
+* [AJA NMOS](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
+* [AJA Multi-Channel Config](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
+* [AJA RovoControl](https://www.aja.com/products/rovocontrol#support) - 🔶 App has not yet been reported to be native to Apple Silicon
+* [AJA System Test](https://www.aja.com/products/aja-system-test#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
+* [AJA U-TAP Updater](https://www.aja.com/products/u-tap-hdmi#support) - 🔶 App has not yet been reported to be native to Apple Silicon
 * [Dante Controller](https://my.audinate.com/support/downloads/download-latest-dante-software) - 🚫 No, not yet supported only recommended for Intel-based Macs - [Official Article](https://www.audinate.com/learning/faqs/dante-software-on-macos-big-sur-and-apple-m1-based-computers)
 * [Dante Via](https://my.audinate.com/support/downloads/download-latest-dante-software) - ✳️ Yes, works via Rosetta 2 translation but not yet recommended - [Official Article](https://www.audinate.com/learning/faqs/dante-software-on-macos-big-sur-and-apple-m1-based-computers)
 * [Dante Virtual Soundcard](https://my.audinate.com/support/downloads/download-latest-dante-software) - 🚫 No, not yet supported only works on Intel-based Macs - [Official Article](https://www.audinate.com/learning/faqs/dante-software-on-macos-big-sur-and-apple-m1-based-computers)
