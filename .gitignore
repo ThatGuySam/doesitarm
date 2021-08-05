@@ -89,3 +89,5 @@ dist
 .DS_Store
 /static/tailwind.css
 /.vscode/snipsnap.code-snippets
+# Layer0 generated build directory
+.layer0
