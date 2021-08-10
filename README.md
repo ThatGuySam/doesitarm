@@ -687,7 +687,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [AdGuard](https://adguard.com/en/welcome.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/565#issue-808854867) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/850840/5114)
 * [AdLock](https://adlock.com/adlock-for-macos/) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://adlock.com/blog/adlock-for-m1-chip/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/680#issue-908198983)
 * [Bitdefender Virus Scanner](https://www.bitdefender.com/solutions/virus-scanner-for-mac.html) - ✅ Yes, Native Apple Silicon Support as of v3.16
-* [Bitwarden](https://bitwarden.com/) - ✳️ Yes, works via Rosetta 2 with a patch in development - [Issue Tracker](https://github.com/bitwarden/desktop/issues/567)
+* [Bitwarden](https://bitwarden.com/) - ✅ Yes, Native Apple Silicon Support as of v1.27.1
 * [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/416#issue-760860704)
 * [Cisco Packet Tracer](https://www.netacad.com/courses/packet-tracer) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/658#issue-898710471)
 * [ClashX](https://github.com/yichengchen/clashX#install) - ✅ Yes, Full Native Apple Silicon Support as of v1.31.1.1 - [Release Notes](https://github.com/yichengchen/clashX/releases/tag/1.31.1)
