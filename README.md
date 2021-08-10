@@ -267,6 +267,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Affinity Photo](https://affinity.serif.com/en-us/publisher/) - ✅ Yes, fully supported as of v1.8.6 - [Press Release](https://affinity.serif.com/en-us/press/newsroom/affinity-apps-accelerate-with-macos-big-sur-and-native-m1-support/)
 * [Affinity Publisher](https://affinity.serif.com/en-us/publisher/) - ✅ Yes, fully supported as of v1.8.6 - [Press Release](https://affinity.serif.com/en-us/press/newsroom/affinity-apps-accelerate-with-macos-big-sur-and-native-m1-support/) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1286)
 * [ArmorPaint](https://armorpaint.org/) - 🚫 No, not yet supported only works on Intel-based Macs
+* [Aseprite](https://www.aseprite.org/download/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/740#issue-962905091)
 * [BiggerPicture](https://apps.apple.com/app/bigger-picture/id1406088493?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.0 - [Release Notes](https://basilsalad.com/kitchen/bigger-picture-big-sur/)
 * [Blocs](https://blocsapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Capture One](https://www.captureone.com/) - ✅ Yes, Native Apple Silicon Support as of v14.2.0 - [Release Notes](https://support.captureone.com/hc/en-us/articles/360020418257-Capture-One-21-14-2-0-release-notes)
