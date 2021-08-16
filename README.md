@@ -772,6 +772,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Logitech Options](https://www.logitech.com/en-us/product/options) - ✳️ Yes, works via Rosetta 2. Some users report issues with the Flow feature. - [MacRumors Discussion](https://forums.macrumors.com/threads/does-logitech-options-works.2270516)
 * [Lunar for Mac](https://lunar.fyi/) - ✅ Yes, Native Apple Silicon Support as of v4.0.0 - [Support Notes](https://lunar.fyi/#m1)
 * [Lungo](https://sindresorhus.com/lungo) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/400141/5114)
+* [macFUSE](https://osxfuse.github.io/) - ✅ Yes, Native Apple Silicon Support as of v4.12 - [Release Notes](https://github.com/osxfuse/osxfuse/releases/tag/macfuse-4.1.2)
 * [Maccy](https://maccy.app/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://github.com/p0deje/Maccy/releases/tag/0.19.0) [Mac App Store](https://apps.apple.com/us/app/maccy/id1527619437)
 * [MacPilot](https://www.koingosw.com/products/macpilot/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/550030/5114)
 * [MacUpdater](https://www.corecode.io/macupdater/) - ✅ Yes, Native Apple Silicon Support as of v2.0.0 - [Release Notes](https://www.corecode.io/macupdater/history2.html)
