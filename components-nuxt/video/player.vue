@@ -150,9 +150,12 @@ export default {
     },
     computed: {
         posterSources () {
+            const standardYTPath = 'ytimg.com/vi/'
+            const standardYTPathRegex = new RegExp(standardYTPath, 'g');
+
             const webpSource = {
                 ...this.video.thumbnail,
-                srcset: this.video.thumbnail.srcset.replaceAll('ytimg.com/vi/', 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
+                srcset: this.video.thumbnail.srcset.replace(standardYTPathRegex, 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
             }
 
             return {
