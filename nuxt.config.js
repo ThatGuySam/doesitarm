@@ -163,14 +163,20 @@ export default {
         */
         extend(config, ctx) {
 
+
+            // Always run
+            
+            // Push meta import rule for zip.js
+            config.module.rules.push({
+                test: /\.js$/,
+                loader: require.resolve('@open-wc/webpack-import-meta-loader')
+            })
+
+
+
             // Client
-            if (ctx.isClient) {
-                // Push meta import rule for zip.js
-                config.module.rules.push({
-                    test: /\.js$/,
-                    loader: require.resolve('@open-wc/webpack-import-meta-loader')
-                })
-            }
+            // if (ctx.isClient) {
+            // }
 
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
