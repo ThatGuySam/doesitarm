@@ -3,6 +3,8 @@ import { promises as fs } from 'fs'
 import pkg from './package'
 
 
+const removeAllScripts = html => html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+
 export default {
     target: 'static',
 
@@ -17,6 +19,14 @@ export default {
     * https://nuxtjs.org/api/configuration-hooks/
     */
     hooks: {
+        // This hook is called before generatic static html files for SPA mode
+        'generate:page': (page) => {
+            page.html = removeAllScripts(page.html)
+        },
+        // This hook is called before rendering the html to the browser
+        'render:route': (url, page, { req, res }) => {
+            page.html = removeAllScripts(page.html)
+        }
         // build: {
         //     before: storeAppLists
         // },
@@ -165,7 +175,7 @@ export default {
 
 
             // Always run
-            
+
             // Push meta import rule for zip.js
             config.module.rules.push({
                 test: /\.js$/,
