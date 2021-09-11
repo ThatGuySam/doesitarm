@@ -41,13 +41,13 @@ export async function getStaticProps({ params }) {
         //         return JSON.parse(endpointsJson)
         //     })
 
-        const allEndpointListings = await fs.stat('./static/eleventy-endpoints.json')
+        // const allEndpointListings = await fs.stat('./static/eleventy-endpoints.json')
         const currentDirectory = await fs.readdir('./')
 
         // console.log('endpointListings', endpointListings[0])
 
         let pageListing = {
-            allEndpointListings,
+            // allEndpointListings,
             currentDirectory
         }
 
