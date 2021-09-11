@@ -1,5 +1,11 @@
+import Layout from '@/components/layout/default.js'
+
 function HomePage() {
-    return <div>Welcome to Neuxteventy.js!</div>
+    return (
+        <Layout>
+            <div>Welcome to Neuxteventy.js!</div>
+        </Layout>
+    )
 }
 
 export default HomePage
