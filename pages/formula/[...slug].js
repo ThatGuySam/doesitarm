@@ -43,23 +43,23 @@ export async function getStaticProps({ params }) {
 
         // console.log('endpointListings', endpointListings[0])
 
-        let pageListing = allEndpointListings[0]
+        let pageListing = { allEndpointListings }
 
         const start = '/formula/'
 
-        for ( const listing of allEndpointListings ) {
-            // if ( listing.route.includes( '/ack' ) ) {
-            //     console.log('listing', listing)
-            // }
+        // for ( const listing of allEndpointListings ) {
+        //     // if ( listing.route.includes( '/ack' ) ) {
+        //     //     console.log('listing', listing)
+        //     // }
 
-            if ( !listing.route.startsWith( start ) ) continue
+        //     if ( !listing.route.startsWith( start ) ) continue
 
-            if ( !listing.route.includes( slug ) ) continue
+        //     if ( !listing.route.includes( slug ) ) continue
 
-            pageListing = listing
+        //     pageListing = listing
 
-            break
-        }
+        //     break
+        // }
 
         console.log('pageListing', pageListing)
 
