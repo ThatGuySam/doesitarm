@@ -31,7 +31,7 @@
     "lint-next": "next lint",
     "precommit": "npm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
-    "vercel-deploy": "npm run clone-readme && next build && next export -o dist",
+    "vercel-deploy": "npm run clone-readme && next build",
     "cloudflare-deploy": "npm run generate"
   },
   "dependencies": {
