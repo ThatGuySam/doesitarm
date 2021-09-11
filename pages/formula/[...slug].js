@@ -2,7 +2,7 @@ import { promises as fs } from 'fs'
 
 import Layout from '@/components/layout/default.js'
 
-function HomebrewFormula({ payload }) {
+function HomebrewFormula( props ) {
     // const {
     //     app
     // } = payload
@@ -10,7 +10,7 @@ function HomebrewFormula({ payload }) {
     return (
         <Layout>
             {/* <div className='text-9xl font-bold'>{ app.name }</div> */}
-            <pre>{ JSON.stringify(payload, null, '\t') }</pre>
+            <pre>{ JSON.stringify(props, null, '\t') }</pre>
         </Layout>
     )
 }
@@ -43,7 +43,7 @@ export async function getStaticProps({ params }) {
 
         // console.log('endpointListings', endpointListings[0])
 
-        let pageListing = null
+        let pageListing = allEndpointListings[0]
 
         const start = '/formula/'
 
@@ -70,7 +70,7 @@ export async function getStaticProps({ params }) {
     } catch (error) {
         // The Twitter API most likely died
         console.error(error)
-        return { notFound: true }
+        return { notFound: true, error }
     }
 }
 
