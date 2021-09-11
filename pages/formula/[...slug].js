@@ -46,6 +46,7 @@ export async function getStaticProps({ params }) {
         const dotnext = await fs.readdir('./.next')
         const server = await fs.readdir('./.next/server')
         const chunks = await fs.readdir('./.next/server/chunks')
+        const static = await fs.readdir('./.next/server/chunks/static')
 
         // console.log('endpointListings', endpointListings[0])
 
@@ -54,7 +55,8 @@ export async function getStaticProps({ params }) {
             currentDirectory,
             dotnext,
             server,
-            chunks
+            chunks,
+            static
         }
 
         const start = '/formula/'
