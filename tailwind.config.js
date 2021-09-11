@@ -6,7 +6,8 @@ module.exports = {
             'components-nuxt/**/*.{js,ts,jsx,tsx,vue}',
             'layouts-eleventy/**/*.js',
             'layouts/**/*.vue',
-            'pages/**/*.vue',
+            'pages/**/*.{js,ts,jsx,tsx}',
+            'pages-nuxt/**/*.vue',
             'pages-eleventy/**/*.js',
             'plugins/**/*.js',
             'nuxt.config.js'
