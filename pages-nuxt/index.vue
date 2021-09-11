@@ -68,10 +68,10 @@ import axios from 'axios'
 
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
-import Search from '~/components/search.vue'
-import LinkButton from '~/components/link-button.vue'
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
-import ListSummary from '~/components/list-summary.vue'
+import Search from '~/components-nuxt/search.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+import AllUpdatesSubscribe from '~/components-nuxt/all-updates-subscribe.vue'
+import ListSummary from '~/components-nuxt/list-summary.vue'
 
 export default {
     async asyncData () {

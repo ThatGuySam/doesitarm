@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import Search from '~/components/search.vue'
-import LinkButton from '~/components/link-button.vue'
+import Search from '~/components-nuxt/search.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
 
 // import appList from '~/static/app-list.json'
 // import gamelist from '~/static/game-list.json'

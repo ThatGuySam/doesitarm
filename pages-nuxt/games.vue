@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import Search from '~/components/search.vue'
-import LinkButton from '~/components/link-button.vue'
-import ThomasCredit from '~/components/thomas-credit.vue'
+import Search from '~/components-nuxt/search.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+import ThomasCredit from '~/components-nuxt/thomas-credit.vue'
 
 import gameList from '~/static/game-list.json'
 

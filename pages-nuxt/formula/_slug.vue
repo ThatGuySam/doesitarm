@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import LinkButton from '~/components/link-button.vue'
-// import EmailSubscribe from '~/components/email-subscribe.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+// import EmailSubscribe from '~/components-nuxt/email-subscribe.vue'
 
 // import homebrewList from '~/static/homebrew-list.json'
 

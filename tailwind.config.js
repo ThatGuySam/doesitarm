@@ -2,7 +2,8 @@ module.exports = {
     purge: {
         enabled: true,//process.env.NODE_ENV === 'production',
         content: [
-            'components/**/*.vue',
+            'components/**/*.{js,ts,jsx,tsx,vue}',
+            'components-nuxt/**/*.{js,ts,jsx,tsx,vue}',
             'layouts-eleventy/**/*.js',
             'layouts/**/*.vue',
             'pages/**/*.vue',

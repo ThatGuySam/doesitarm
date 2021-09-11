@@ -55,9 +55,9 @@
 
 import '@fontsource/inter/variable.css'
 
-import Navbar from '~/components/navbar.vue'
-// import TwitterFollow from '~/components/twitter-follow.vue'
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+import Navbar from '~/components-nuxt/navbar.vue'
+// import TwitterFollow from '~/components-nuxt/twitter-follow.vue'
+import AllUpdatesSubscribe from '~/components-nuxt/all-updates-subscribe.vue'
 
 export default {
     components: {

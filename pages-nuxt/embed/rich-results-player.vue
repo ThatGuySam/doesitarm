@@ -16,7 +16,7 @@
 
 <script>
 
-import VideoPlayer from '~/components/video/player.vue'
+import VideoPlayer from '~/components-nuxt/video/player.vue'
 
 export default {
     layout: 'embed',

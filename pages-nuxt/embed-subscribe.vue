@@ -6,7 +6,7 @@
 
 <script>
 
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+import AllUpdatesSubscribe from '~/components-nuxt/all-updates-subscribe.vue'
 
 export default {
     layout: 'embed',

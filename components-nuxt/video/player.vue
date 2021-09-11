@@ -126,7 +126,7 @@
 <script>
 import 'lazysizes'
 
-import LinkButton from '~/components/link-button.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
 
 export default {
     components: {

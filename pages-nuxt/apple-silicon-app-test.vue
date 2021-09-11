@@ -173,8 +173,8 @@
 // import AppFilesScanner from '~/helpers/app-files-scanner.js'
 
 
-import LinkButton from '~/components/link-button.vue'
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+import AllUpdatesSubscribe from '~/components-nuxt/all-updates-subscribe.vue'
 
 export default {
     // async asyncData () {
@@ -186,7 +186,7 @@ export default {
     //     }
     // },
     components: {
-        // FullScreenFileDrop: () => process.client ? import('~/components/fullscreen-file-drop.vue') : null,
+        // FullScreenFileDrop: () => process.client ? import('~/components-nuxt/fullscreen-file-drop.vue') : null,
         LinkButton,
         AllUpdatesSubscribe
     },

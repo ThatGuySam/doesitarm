@@ -87,8 +87,8 @@
 </template>
 
 <script>
-import Search from '~/components/search.vue'
-import LinkButton from '~/components/link-button.vue'
+import Search from '~/components-nuxt/search.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
 
 // import { categories } from '~/helpers/categories.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'

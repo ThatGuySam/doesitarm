@@ -81,11 +81,11 @@
 
 import { getVideoEndpoint, getAppEndpoint } from '~/helpers/app-derived.js'
 
-import LinkButton from '~/components/link-button.vue'
-import EmailSubscribe from '~/components/email-subscribe.vue'
-import VideoRow from '~/components/video/row.vue'
-import BgPlayer from '~/components/video/bg-player.vue'
-import ChannelCredit from '~/components/video/channel-credit.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+import EmailSubscribe from '~/components-nuxt/email-subscribe.vue'
+import VideoRow from '~/components-nuxt/video/row.vue'
+import BgPlayer from '~/components-nuxt/video/bg-player.vue'
+import ChannelCredit from '~/components-nuxt/video/channel-credit.vue'
 
 export default {
     components: {

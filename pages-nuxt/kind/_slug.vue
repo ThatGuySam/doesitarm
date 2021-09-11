@@ -59,8 +59,8 @@
 </template>
 
 <script>
-import Search from '~/components/search.vue'
-import LinkButton from '~/components/link-button.vue'
+import Search from '~/components-nuxt/search.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
 
 import { categories, getAppCategory } from '~/helpers/categories.js'
 

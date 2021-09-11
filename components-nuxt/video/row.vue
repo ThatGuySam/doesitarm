@@ -69,8 +69,8 @@
 
 <script>
 
-import SubmitCard from '~/components/video/submit-card.vue'
-import VideoCard from '~/components/video/card.vue'
+import SubmitCard from '~/components-nuxt/video/submit-card.vue'
+import VideoCard from '~/components-nuxt/video/card.vue'
 
 
 export default {

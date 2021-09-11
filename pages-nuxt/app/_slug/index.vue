@@ -62,9 +62,9 @@
 import { makeLastUpdatedFriendly } from '~/helpers/parse-date'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
-import LinkButton from '~/components/link-button.vue'
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
-import VideoRow from '~/components/video/row.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+import AllUpdatesSubscribe from '~/components-nuxt/all-updates-subscribe.vue'
+import VideoRow from '~/components-nuxt/video/row.vue'
 
 import appList from '~/static/app-list.json'
 // import buildAppList from '~/helpers/build-app-list'

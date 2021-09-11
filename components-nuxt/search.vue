@@ -197,17 +197,17 @@ import { getAppCategory } from '~/helpers/categories.js'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 // import appList from '~/static/app-list.json'
 
-import LinkButton from '~/components/link-button.vue'
-// import RelativeTime from '~/components/relative-time.vue'
-import ListSummary from '~/components/list-summary.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+// import RelativeTime from '~/components-nuxt/relative-time.vue'
+import ListSummary from '~/components-nuxt/list-summary.vue'
 
 
 export default {
     components: {
-        // EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
+        // EmailSubscribe: () => process.client ? import('~/components-nuxt/email-subscribe.vue') : null,
         ListSummary,
         LinkButton,
-        RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
+        RelativeTime: () => process.client ? import('~/components-nuxt/relative-time.vue') : null
     },
     props: {
         appList: {

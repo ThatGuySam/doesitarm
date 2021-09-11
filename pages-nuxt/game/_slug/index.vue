@@ -106,9 +106,9 @@
 <script>
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
-import VideoRow from '~/components/video/row.vue'
-import LinkButton from '~/components/link-button.vue'
-import ThomasCredit from '~/components/thomas-credit.vue'
+import VideoRow from '~/components-nuxt/video/row.vue'
+import LinkButton from '~/components-nuxt/link-button.vue'
+import ThomasCredit from '~/components-nuxt/thomas-credit.vue'
 
 export default {
     components: {
