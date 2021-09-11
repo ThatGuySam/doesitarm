@@ -43,12 +43,18 @@ export async function getStaticProps({ params }) {
 
         // const allEndpointListings = await fs.stat('./static/eleventy-endpoints.json')
         const currentDirectory = await fs.readdir('./')
+        const dotnext = await fs.readdir('./.next')
+        const server = await fs.readdir('./.next/server')
+        const chunks = await fs.readdir('./.next/server/chunks')
 
         // console.log('endpointListings', endpointListings[0])
 
         let pageListing = {
             // allEndpointListings,
-            currentDirectory
+            currentDirectory,
+            dotnext,
+            server,
+            chunks
         }
 
         const start = '/formula/'
