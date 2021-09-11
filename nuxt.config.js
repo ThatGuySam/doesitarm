@@ -6,6 +6,11 @@ import pkg from './package'
 export default {
     target: 'static',
 
+    dir: {
+        // Rename `pages` directory to `routes`
+        pages: 'pages-nuxt'
+    },
+
     publicRuntimeConfig: {
         allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
         testResultStore: process.env.TEST_RESULT_STORE,
