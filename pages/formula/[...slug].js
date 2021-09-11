@@ -28,6 +28,8 @@ const defaultStaticProps = {
     revalidate: ONE_MINUTE
 }
 
+
+// https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation
 export async function getStaticProps({ params }) {
     const { slug } = params
 
