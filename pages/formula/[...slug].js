@@ -36,14 +36,20 @@ export async function getStaticProps({ params }) {
     // }
 
     try {
-        const allEndpointListings = await fs.readFile('./static/eleventy-endpoints.json', 'utf-8')
-            .then( endpointsJson => {
-                return JSON.parse(endpointsJson)
-            })
+        // const allEndpointListings = await fs.readFile('./static/eleventy-endpoints.json', 'utf-8')
+        //     .then( endpointsJson => {
+        //         return JSON.parse(endpointsJson)
+        //     })
+
+        const allEndpointListings = await fs.stat('./static/eleventy-endpointsdddd.json')
+        const currentDirectory = await fs.readdir('./')
 
         // console.log('endpointListings', endpointListings[0])
 
-        let pageListing = { allEndpointListings }
+        let pageListing = {
+            allEndpointListings,
+            currentDirectory
+        }
 
         const start = '/formula/'
 
@@ -64,13 +70,18 @@ export async function getStaticProps({ params }) {
         console.log('pageListing', pageListing)
 
         return pageListing ? {
-            props: pageListing,
-            ...defaultStaticProps
+            props: {
+                ...pageListing
+            },
+            revalidate: ONE_MINUTE
         } : { notFound: true }
     } catch (error) {
         // The Twitter API most likely died
         console.error(error)
-        return { notFound: true, error }
+        return {
+            notFound: true,
+            props: { error }
+        }
     }
 }
 
