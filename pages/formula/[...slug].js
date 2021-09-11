@@ -22,11 +22,17 @@ export async function getStaticPaths() {
     }
 }
 
+const ONE_MINUTE = 60
+
+const defaultStaticProps = {
+    revalidate: ONE_MINUTE
+}
+
 export async function getStaticProps({ params }) {
     const { slug } = params
 
     // if (slug.length > 40 || !TWEET_ID.test(tweet)) {
-    //     return { notFound: true };
+    //     return { notFound: true, ...defaultStaticProps };
     // }
 
     try {
@@ -57,7 +63,10 @@ export async function getStaticProps({ params }) {
 
         console.log('pageListing', pageListing)
 
-        return pageListing ? { props: pageListing } : { notFound: true }
+        return pageListing ? {
+            props: pageListing,
+            ...defaultStaticProps
+        } : { notFound: true }
     } catch (error) {
         // The Twitter API most likely died
         console.error(error)
