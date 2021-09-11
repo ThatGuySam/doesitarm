@@ -12,7 +12,7 @@
   "scripts": {
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
-    "build": "npm run vercel-deploy",
+    "build": "npm run clone-readme && next build",
     "start": "nuxt start",
     "build-next": "next build",
     "generate-dev": "npm run generate && npm test",
