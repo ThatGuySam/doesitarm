@@ -680,7 +680,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Twitter](https://apps.apple.com/app/twitter/id1482454543?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/580#issue-816729668)
 * [Unite for Mac](https://www.bzgapps.com/unite) - ✳️ Runs via Rosetta with native support currently in development - [Verification](https://github.com/ThatGuySam/doesitarm/issues/606#issuecomment-803009445) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/unite)
 * [Uplet](https://getuplet.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/uplet)
-* [WeChat](https://apps.apple.com/cn/app/wechat/id836500024?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/369)
+* [WeChat](https://mac.weixin.qq.com/?t=mac) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/759)
 * [Welly BBS](https://wellybbs.com/) - ✅ Yes, Full Native Apple Silicon Support as of Version 2020.9 - [App Store](https://apps.apple.com/us/app/id1521402269)
 * [WhatsApp](https://www.whatsapp.com/download/) - ✳️ Yes, works via Rosetta 2 as of v2.2049.10 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/479)
 * [Zoom](https://zoom.us/download) - ✅ Yes, full native Apple Silicon support as of 5.4.7 (59780.1220) - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/134)
