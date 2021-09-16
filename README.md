@@ -646,7 +646,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Rottenwood](https://software.charliemonroe.net/rottenwood/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](http://blog.charliemonroe.net/big-sur-and-apple-silicon/)
 * [Shaza‪m‬](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
 * [Snap Camera](https://snapcamera.snapchat.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/627#issue-860435755) [Supported Hardware](https://snapcamera.snapchat.com/download/)
-* [Spotify](https://www.spotify.com/us/download/mac/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/172) [Native Beta](https://community.spotify.com/t5/Live-Ideas/Desktop-Developer-Add-support-for-Apple-Silicon-ARM64-on-Mac/idc-p/5229838#M226146)
+* [Spotify](https://www.spotify.com/download/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/768)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
 * [Tidal](https://tidal.com/download) - ✳️ Yes, working via Rosetta 2 but with occasional force quits as of 2.23.0.488 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/314)
 * [Twitch](https://www.twitch.tv/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/387)
