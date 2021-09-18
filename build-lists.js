@@ -34,8 +34,11 @@ class BuildLists {
             // Where Nuxt Routes and Payloads get stored
             nuxt: new Map(),
 
+            // Where Next Routes and Payloads get stored
+            next: new Map(),
+
             // Where Eleventy Endpoints get stored
-            eleventy: new Map()
+            eleventy: new Map(),
         }
 
         this.allVideoAppsList = new Set()
@@ -275,7 +278,7 @@ class BuildLists {
                     })
 
                     // Add app or formula endpoint
-                    this.endpointMaps.eleventy.set( getAppEndpoint(app), {
+                    this.endpointMaps.next.set( getAppEndpoint(app), {
                         app,
                         relatedVideos
                     } )
