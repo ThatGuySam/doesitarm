@@ -1,4 +1,4 @@
-import { getJsonDirectory } from '@/helpers/get-json-directory.js'
+import { getJsonDirectory } from '../../helpers/get-json-directory.js'
 
 let jsonDirectory
 
