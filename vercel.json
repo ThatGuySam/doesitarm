@@ -1,5 +1,10 @@
 {
     "github": {
         "enabled": true
+    },
+    "functions": {
+        "api/*.js": {
+            "includeFiles": "static/**"
+        }
     }
 }
