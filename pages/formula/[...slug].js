@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 
 import Layout from '@/components/layout/default.js'
-import { getJsonDirectory } from '@/helpers/get-json-directory.js';
+import { getJsonDirectory } from '@/helpers/get-json-directory.js'
 
 // Based on
 // https://github.com/lfades/static-tweet/blob/b2a1044d881cca88e7761491d4f22c8908497d92/pages/t/%5Btweet%5D.js
