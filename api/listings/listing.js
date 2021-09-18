@@ -1,3 +1,5 @@
+import fs from 'fs-extra'
+
 import { getJsonDirectory } from '../../helpers/get-json-directory.js'
 
 let jsonDirectory
