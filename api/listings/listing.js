@@ -24,10 +24,11 @@ class Listing {
 
         const directoriestoCheck = [
             './',
-            './.next',
-            './.next/server',
-            './.next/server/chunks',
-            './.next/server/chunks/static'
+            './___vc',
+            // './.next',
+            // './.next/server',
+            // './.next/server/chunks',
+            // './.next/server/chunks/static'
         ]
 
         const directoriesLookedIn = {}
