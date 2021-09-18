@@ -20,7 +20,27 @@ class Listing {
     async handler (req, res) {
         // const requestUrl = new URL(req.url, 'https://localhost:3000')
 
-        jsonDirectory = await getJsonDirectory()
+        const directoriestoCheck = [
+            './',
+            './.next',
+            './.next/server',
+            './.next/server/chunks',
+            './.next/server/chunks/static'
+        ]
+
+        const directoriesLookedIn = {}
+
+        try {
+            for ( const directory of directoriestoCheck ) {
+                const contents = await fs.readdir( directory )
+
+                directoriesLookedIn[directory] = contents
+            }
+        } catch( error ) {
+            console.log('', error)
+        }
+
+        // jsonDirectory = await getJsonDirectory()
         // console.log('resultInfo', resultInfo)
 
         // Set JSON Header
@@ -28,7 +48,8 @@ class Listing {
 
         // Repond with JSON Data
         res.json( {
-            jsonDirectory
+            // jsonDirectory
+            directoriesLookedIn
         } )
     }
 
