@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 
 import Layout from '@/components/layout/default.js'
+import { getJsonDirectory } from '@/helpers/get-json-directory.js'
 
 // Based on
 // https://github.com/lfades/static-tweet/blob/b2a1044d881cca88e7761491d4f22c8908497d92/pages/t/%5Btweet%5D.js
@@ -54,6 +55,10 @@ export async function getStaticProps({ params }) {
         const server = await fs.readdir('./.next/server')
         const chunks = await fs.readdir('./.next/server/chunks')
         const staticDirectory = await fs.readdir('./.next/server/chunks/static')
+        const jsonDirectory = await getJsonDirectory()
+
+
+        console.log('jsonDirectory', jsonDirectory)
 
         // console.log('endpointListings', endpointListings[0])
 
@@ -63,7 +68,8 @@ export async function getStaticProps({ params }) {
             dotnext,
             server,
             chunks,
-            staticDirectory
+            staticDirectory,
+            jsonDirectory
         }
 
         const start = '/formula/'
