@@ -25,6 +25,7 @@ class Listing {
         const directoriestoCheck = [
             './',
             './___vc',
+            './api',
             // './.next',
             // './.next/server',
             // './.next/server/chunks',
