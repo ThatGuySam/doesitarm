@@ -841,6 +841,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Is Apple silicon ready?](https://isapplesiliconready.com/) - Great list with detailed app status
 * [Apple Silicon Games](https://applesilicongames.com/) - List of reported Games support including performance info. 
 * [Apple Gaming Wiki](https://www.applegamingwiki.com/wiki/Home) - Aggregates reports on Apple Silicon compatibility under different environments
+* [iMobie M1 App Checker List](https://www.imobie.com/m1-app-checker/) - App Scan Results from the iMobie M1 App Checker
 * [SweetWater Compatibility Guide](https://www.sweetwater.com/sweetcare/articles/macos-11-big-sur-compatibility-guide/) - Big Sur and Apple Silicon reports for producstion and live performance software
 * [Toolfarm Apple Silicon Compatibility](https://www.toolfarm.com/news/apple-silicon-compatibility/) - Product Compatibility for Apple M1 Silicon Macs
 * [Toolfarm Big Sur Compatibility](https://www.toolfarm.com/news/apple-silicon-compatibility/) - Product Compatibility for macOS Big Sur
@@ -861,6 +862,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Silicon by DigiDNA](https://github.com/DigiDNA/Silicon) - Identify Intel-Only Apps on your Mac with ease 
 * [ascheck](https://github.com/harryzcy/ascheck) - A command-line app that bulk-checks your apps for the Apple Silicon support. 
 * [Silicon Info](https://github.com/billycastelli/Silicon-Info) - Mac menu bar tool to view the architecture of the running application
+* [iMobie M1 App Checker List](https://www.imobie.com/m1-app-checker/) - Scan apps accross your system
 * [Does It ARM App Test](https://doesitarm.com/apple-silicon-app-test/) - Test any app for Native Apple Silicon support or check for reported native versions all in the browser
 
 
