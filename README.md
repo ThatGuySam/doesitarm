@@ -590,6 +590,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [TP-Link Deco](https://apps.apple.com/ae/app/tp-link-deco/id1186159417) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/667#issue-899018925)
 * [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
 * [Trello](https://apps.apple.com/de/app/trello/id1278508951?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/581#issue-816735691)
+* [Trezor Suite](https://suite.trezor.io/) - ✅ Yes, Native Apple Silicon Support as of 21.9.2 - [Release Notes](https://github.com/trezor/trezor-suite/releases/tag/v21.9.2) [Article](https://blog.trezor.io/trezor-suite-and-firmware-updates-september-2021-a490f2ea16c1)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
 * [Time Out for Mac](https://www.dejal.com/timeout/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/689682/5114)
 * [Timing for Mac](https://timingapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344474/5114)
