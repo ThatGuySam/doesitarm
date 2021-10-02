@@ -12,7 +12,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 [Do you want to help with M1 testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
 
 ## Legend
-* ✅ Yes, Full Native Apple Silicon Support
+* ✅ Yes, Native Apple Silicon Support
 * ✳️ Yes, works via Translation or Virtualization
 * ⏹ No, not working at all but support is in development
 * 🚫 No, not yet supported only works on Intel-based Macs
