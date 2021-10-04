@@ -511,6 +511,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [iMazing 2](https://imazing.com/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Release notes](https://downloads.imazing.com/mac/iMazing/2.13.1.14452/release-notes.html)
 * [InstaCal](https://apps.apple.com/us/app/instacal-menu-bar-calendar/id1247292524) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/instacal)
 * [Internal Phone Numbers](https://lighthouse16.com/internal-phone-numbers/) - ✅ Yes, fully supported as of v1.2.2 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
+* [Jira Cloud for Mac](https://www.atlassian.com/software/jira/mac) - ✅ Yes, Full Native Apple Silicon Support as of v136.0 - [Release Notes](https://support.atlassian.com/jira-cloud-macos/docs/whats-new-in-jira-cloud-for-macos/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/775)
 * [Jump Desktop](https://jumpdesktop.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.7.15 - [Changelog](https://changelog.jumpdesktop.com/jump-desktop-8.7.15-for-mac-3cSLeM)
 * [Keep It](http://reinventedsoftware.com/keepit/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9 - [Official News](http://reinventedsoftware.com/news/)
 * [Key Codes](https://manytricks.com/keycodes/) - ✅ Yes, Full Native Apple Silicon Support as of v2.2 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
