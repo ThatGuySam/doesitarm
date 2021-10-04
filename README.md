@@ -45,7 +45,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 #### Developer Tools
 
-* [Adobe XD](https://www.adobe.com/products/xd.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
+* [Adobe XD](https://www.adobe.com/products/xd.html) - ✅ Yes, Native Apple Silicon Support as of v42 - [Official Article](https://helpx.adobe.com/in/xd/kb/big-sur-apple-silicon-rosetta-emulation.html) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Alacritty](https://github.com/alacritty/alacritty/releases) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/600#issue-834311784)
 * [Anaconda](https://www.anaconda.com/products/individual#Downloads) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/123)
 * [Android Studio](https://developer.android.com/studio) - ✳️ Yes, works via Rosetta 2 with native support in preview. - [Source](https://github.com/ThatGuySam/doesitarm/issues/48#issuecomment-732143252) [Native Preview](https://androidstudio.googleblog.com/2021/04/android-studio-arctic-fox-canary-15.html)
