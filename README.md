@@ -860,11 +860,12 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 ## Apple Silicon Testing Tools
 * [Uni Detetector](https://apps.apple.com/app/id1531249804) - Check all your Mac's apps and display Binary Architecture and more. 
-* [Silicon by DigiDNA](https://github.com/DigiDNA/Silicon) - Identify Intel-Only Apps on your Mac with ease 
+* [Silicon by DigiDNA](https://github.com/DigiDNA/Silicon) - Identify Intel-Only Apps on your Mac with ease. 
 * [ascheck](https://github.com/harryzcy/ascheck) - A command-line app that bulk-checks your apps for the Apple Silicon support. 
-* [Silicon Info](https://github.com/billycastelli/Silicon-Info) - Mac menu bar tool to view the architecture of the running application
-* [iMobie M1 App Checker List](https://www.imobie.com/m1-app-checker/) - Scan apps accross your system
-* [Does It ARM App Test](https://doesitarm.com/apple-silicon-app-test/) - Test any app for Native Apple Silicon support or check for reported native versions all in the browser
+* [Silicon Info](https://github.com/billycastelli/Silicon-Info) - Mac menu bar tool to view the architecture of the running application. 
+* [Does it arm? 🚀](https://github.com/mik3sw/doesitarm) - (no relation) Check support for apps on your Mac with arm processor M1. 
+* [iMobie M1 App Checker List](https://www.imobie.com/m1-app-checker/) - Scan apps accross your system. 
+* [Does It ARM App Test](https://doesitarm.com/apple-silicon-app-test/) - Test any app for Native Apple Silicon support or check for reported native versions all in the browser. 
 
 
 ## Youtube Apple Silicon Playlists
