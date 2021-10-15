@@ -713,7 +713,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 #### VPNs, Security, and Privacy
 
 * [1Password](https://1password.com/) - ✅ Yes, full native Apple Silicon support as of 7.8 - [Release Notes](https://app-updates.agilebits.com/product_history/OPM7#v70800000)
-* [AdGuard](https://adguard.com/en/welcome.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/565#issue-808854867) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/850840/5114)
+* [AdGuard](https://adguard.com/en/welcome.html) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/788) [View on Setapp](https://setapp.sjv.io/c/2708043/850840/5114)
 * [AdLock](https://adlock.com/adlock-for-macos/) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://adlock.com/blog/adlock-for-m1-chip/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/680#issue-908198983)
 * [Bitdefender Virus Scanner](https://www.bitdefender.com/solutions/virus-scanner-for-mac.html) - ✅ Yes, Native Apple Silicon Support as of v3.16
 * [Bitwarden](https://bitwarden.com/) - ✅ Yes, Native Apple Silicon Support as of v1.27.1
