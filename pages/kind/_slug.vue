@@ -144,7 +144,7 @@ export default {
             return `List of ${this.pluralLabel || this.category.label} that work on Apple Silicon?`
         },
         description () {
-            return `Check the the latest reported support status of ${this.pluralLabel || this.category.label} on Apple Silicon and Apple M1 Processors. `
+            return `Check the the latest reported support status of ${this.pluralLabel || this.category.label} on Apple Silicon and Apple M1 Pro and M1 Max Processors. `
         },
         structuredData () {
             return {
@@ -156,7 +156,7 @@ export default {
                     return {
                         // https://schema.org/Question
                         "@type": "Question",
-                        "name": `Does ${app.name} work on Apple Silicon and Apple M1 Macs?`,
+                        "name": `Does ${app.name} work on Apple Silicon and Apple M1 Pro and M1 Max Macs?`,
                         "acceptedAnswer": {
                             // https://schema.org/Answer
                             "@type": "Answer",

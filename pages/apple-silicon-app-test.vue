@@ -16,7 +16,7 @@
                 </div>
 
                 <h2 class="subtitle md:text-xl text-center">
-                    Check for Apple Silicon compatibility for your apps before you buy an M1 Mac.
+                    Check for Apple Silicon compatibility for your apps before you buy an M1 Pro or M1 Max Mac.
                 </h2>
 
             </header>
@@ -260,7 +260,7 @@ export default {
             return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
-            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an M1 Mac. `
+            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an M1 Pro or M1 Max Mac. `
         }
     },
     mounted () {
