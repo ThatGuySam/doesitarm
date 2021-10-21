@@ -81,7 +81,8 @@ const cleanNuxtLayout = ( layout ) => {
         subscribeEmbed.setAttribute('data-src', '/embed-subscribe')
         // https://web.dev/iframe-lazy-loading/
         subscribeEmbed.setAttribute('loading', 'lazy')
-        subscribeEmbed.classList.add('lazyload') //.setAttribute('loading', 'lazy')
+        subscribeEmbed.setAttribute('title', 'Get email updates')
+        subscribeEmbed.classList.add('lazyload')
         subscribeEmbed.style.width = '350px'
         subscribeEmbed.style.height = '150px'
 
