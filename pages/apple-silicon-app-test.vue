@@ -31,6 +31,7 @@
                             'rounded-xl text-3xl font-semibold scale-150 bg-darkest neumorphic-shadow focus:outline-none py-4 px-6',
                             isLoadingFiles ? 'shimmer' : ''
                         ]"
+                        aria-label="Pick an app to scan"
                         @click="triggerFilepicker"
                     >{{ isLoadingFiles ? 'Loading Files' : 'Select Apps' }}</button>
 

@@ -16,6 +16,7 @@ function renderTimestamps ( video ) {
     const timestampButtonsHtml = timestampsForRender.map( timestamp => (/* html */`
 <button
     time="${timestamp.time}"
+    aria-label="Jump to ${timestamp.fullText}"
     class="inline-block text-xs rounded-lg py-1 px-2 border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner">
         ${ timestamp.fullText }
 </button>
