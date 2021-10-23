@@ -182,7 +182,7 @@ export default async function () {
                 // 'native' or 'unreported'
                 const statusName = getStatusName( appScan['Result'] )
 
-                const statusText = (statusName === 'native') ? `✅ Yes, Full Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
+                const statusText = (statusName === 'native') ? `✅ Yes, Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
 
                 const appSlug = makeSlug( appName )
 

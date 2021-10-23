@@ -34,7 +34,7 @@ const statusesTranslations = {
 }
 
 const statusesMessages = {
-    '🥇': '✅ Yes, Full Native Apple Silicon Support',
+    '🥇': '✅ Yes, Native Apple Silicon Support',
     '🥈': '✳️ Yes, works via Rosetta 2',
     '🥉': '⏹ Known issues on macOS 11, though most features work',
     '⚠️': '⏹ No, not yet, support is still in progress',
@@ -221,7 +221,7 @@ class MakeHomebrewList {
 
         //     const isNative = this.hasArm64Formula( formula )
         //     const status = isNative ? 'native' : 'unreported'
-        //     const statusText = isNative ? '✅ Yes, Full Native Apple Silicon Support' : '🔶 Formula has not yet been reported to be native to Apple Silicon'
+        //     const statusText = isNative ? '✅ Yes, Native Apple Silicon Support' : '🔶 Formula has not yet been reported to be native to Apple Silicon'
         //     const slug = formula.full_name
 
         //     formulaeList.set(formula.full_name, {

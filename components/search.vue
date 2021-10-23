@@ -231,7 +231,7 @@ export default {
             type: Array,
             default: () => [
                 {
-                    label: '✅ Full Native Support',
+                    label: '✅ Native Support',
                     query: 'status:native'
                 },
                 {
