@@ -146,7 +146,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Pelemay](https://github.com/zeam-vm/pelemay/releases) - ✅ Yes, Full Native Apple Silicon Support as of v0.0.14 - [Release Notes](https://github.com/zeam-vm/pelemay/releases/tag/0.0.14)
 * [PhpStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✅ Yes, full native Apple Silicon support as of v2020.3.1
 * [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/743#issue-971743459)
-* [Postman](https://www.postman.com/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/160#issuecomment-736772593)
+* [Postman](https://www.postman.com/downloads/) - ✅ Yes, Native Apple Silicon Support as of v9.0.7 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/795#issue-1031318387) [Release Notes](https://www.postman.com/downloads/release-notes/)
 * [PowerShell Core](https://github.com/PowerShell/PowerShell) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/125#issuecomment-736775191)
 * [Processing IDE](https://processing.org/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/342#issuecomment-869373970)
 * [Proxyman](https://proxyman.io) - ✅ Yes, fully supported ARM and Intel Chip - [Issue](https://github.com/ProxymanApp/Proxyman/issues/686) [View on Setapp](https://setapp.sjv.io/c/2708043/635279/5114)
