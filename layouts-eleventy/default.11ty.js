@@ -78,9 +78,11 @@ const cleanNuxtLayout = ( layout ) => {
     // Convert subscribe to iframe embed
     Array.from(document.querySelectorAll('form.all-updates-subscribe')).forEach( domNode => {
         const subscribeEmbed = document.createElement('iframe')
-        subscribeEmbed.setAttribute('src', '/embed-subscribe')
+        subscribeEmbed.setAttribute('data-src', '/embed-subscribe')
         // https://web.dev/iframe-lazy-loading/
         subscribeEmbed.setAttribute('loading', 'lazy')
+        subscribeEmbed.setAttribute('title', 'Get email updates')
+        subscribeEmbed.classList.add('lazyload')
         subscribeEmbed.style.width = '350px'
         subscribeEmbed.style.height = '150px'
 

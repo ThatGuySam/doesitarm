@@ -1,7 +1,7 @@
 {
   "name": "doesitarm",
   "version": "1.0.0",
-  "description": "Find out the latest app support for Apple Silicon and the Apple M1 Processor",
+  "description": "Find out the latest app support for Apple Silicon and the Apple M1 Pro and M1 Max Processors",
   "author": "Sam Carlton",
   "private": true,
   "ava": {

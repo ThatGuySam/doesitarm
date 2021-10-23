@@ -25,7 +25,7 @@ export const makeTitle = function ( app ) {
 }
 
 export const makeDescription = function ( app ) {
-    return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors.`
+    return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Pro and M1 Max Processors.`
 }
 
 // https://stackoverflow.com/a/15069646/1397641

@@ -39,7 +39,7 @@
                     >🦾 Does It ARM Contributors. </a>
                 </p>
                 <p class="mt-8 text-center text-base leading-6 text-gray-400">
-                    &copy; {{ currentYear }} Does it ARM All rights reserved. This site is supported by Affiliate links.
+                    &copy; {{ currentYear }} Does It ARM All rights reserved. This site is supported by Affiliate links.
                 </p>
             </div>
         </footer>

@@ -35,6 +35,7 @@
                         'border-2 border-white focus:outline-none',
                         query.includes(button.query) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
                     ]"
+                    :aria-label="`Filter list by ${button.label}`"
                     @click="toggleFilter(button.query); queryResults(query)"
                 >{{ button.label }}</button>
             </div>
@@ -230,7 +231,7 @@ export default {
             type: Array,
             default: () => [
                 {
-                    label: '✅ Full Native Support',
+                    label: '✅ Native Support',
                     query: 'status:native'
                 },
                 {

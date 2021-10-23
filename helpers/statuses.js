@@ -22,7 +22,7 @@ export function getStatusOfScan ( appScan, includeVersion = true ) {
 
     if (statusName === 'native') {
         return [
-            '✅ Yes, Full Native Apple Silicon Support',
+            '✅ Yes, Native Apple Silicon Support',
             includeVersion ? `reported as of v${appScan['App Version']}` : ''
         ].join('')
     }

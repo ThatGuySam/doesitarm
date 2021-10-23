@@ -88,3 +88,4 @@ dist
 /commits-data.json
 .DS_Store
 /static/tailwind.css
+/.vscode/snipsnap.code-snippets

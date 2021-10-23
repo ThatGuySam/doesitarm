@@ -130,7 +130,7 @@ const makeThumbnailData = function ( thumbnails, widthLimit = null ) {
 
 export default async function ( applist ) {
 
-    const videosJsonUrl = `${process.env.VFUNCTIONS_URL}/videos.json`
+    const videosJsonUrl = process.env.VIDEO_SOURCE || `${process.env.VFUNCTIONS_URL}/videos.json`
 
     // Fetch Commits
     const response = await axios.get( videosJsonUrl )
