@@ -73,7 +73,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Cyberduck](https://cyberduck.io/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/333)
 * [Dash for macOS](https://kapeli.com/dash) - ✅ Yes, Full Native Apple Silicon Support as of v6 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/575#issue-812547431) [Release Notes](https://blog.kapeli.com/dash-6)
 * [DataGrip](https://www.jetbrains.com/datagrip/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
-* [DBeaver](https://dbeaver.io/) - ✳️ Yes, works via Rosetta 2 using the pkg installer - [Issue Tracking](https://github.com/dbeaver/dbeaver/issues/10470)
+* [DBeaver](https://dbeaver.io/) - ✅ Yes, Native Apple Silicon Support as of v21.2.2 - [Release Notes](https://dbeaver.io/2021/10/03/dbeaver-21-2-2/)
 * [Deno](https://deno.land/) - ✅ Yes, Full Native Apple Silicon Support - [Issue](https://github.com/denoland/deno/issues/8346)
 * [Eclipse IDE](https://www.eclipse.org/downloads/) - ✳️ Yes, runs via Rosetta 2 translation and natively for SDK - [Release Details](https://download.eclipse.org/eclipse/downloads/drops4/R-4.20-202106111600/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/626#issue-860190467)
 * [Gitfox](https://www.gitfox.app/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.com/apps/gitfox)
