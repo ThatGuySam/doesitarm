@@ -197,7 +197,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [XAMPP](https://www.apachefriends.org/download.html) - ✳️ Yes, works via Rosetta 2 - [Video Demonstration](https://doesitarm.com/tv/watch-this-before-buying-apple-m1-macbook-for-xampp-or-apple-silicon-tests-in-4k-i-ebwwewsis8s/)
 * [Xcode](https://apps.apple.com/us/app/xcode/id497799835) - ✅ Yes, Full Native Apple Silicon Support as of v12.2 - [Release Notes](https://developer.apple.com/documentation/xcode-release-notes/xcode-12_2-release-notes)
 * [XCOrganizer](https://xcorganizer.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/872077/5114)
-* [Xojo](https://www.xojo.com/download/) - ⏹ Not yet, but it’s in development - [Blog Post](https://blog.xojo.com/2020/11/10/apple-silicon-and-big-sur-support-coming-in-xojo-2020r2/)
+* [Xojo](https://www.xojo.com/download/) - ✅ Yes, Native Apple Silicon Support as of v2020r2 - [Release Notes](https://docs.xojo.com/Resources:2020r2_Release_Notes)
 * [XQuartz](https://www.xquartz.org/index.html) - ✅ Yes, Full Native Apple Silicon Support as of v2.8.0 - [Release Notes](https://www.xquartz.org/releases/index.html)
 * [.NET](https://dotnet.microsoft.com/download) - ⏹ .NET Core nightly builds available, ongoing work for other frameworks - [Project Board](https://github.com/orgs/dotnet/projects/18)
 
