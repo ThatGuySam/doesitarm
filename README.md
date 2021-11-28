@@ -106,7 +106,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Hex Fiend](https://github.com/HexFiend/HexFiend/releases) - ✅ Yes, full native support as of v2.14.0 - [Source](https://github.com/ThatGuySam/doesitarm/issues/429)
 * [Homebrew](https://brew.sh/) - ✅ Yes, fully supported as of v3.0.0 - [Release Notes](https://brew.sh/2021/02/05/homebrew-3.0.0/). 
 * [Hopper Disassembler](https://www.hopperapp.com/download.html) - ✅ Yes, Full Native Apple Silicon Support as of v4.6 - [Release Notes](https://www.hopperapp.com/blog/?p=263)
-* [IDA Pro](https://www.hex-rays.com/products/ida/support/download_freeware/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/405#issue-759952494)
+* [IDA Pro](https://www.hex-rays.com/products/ida/support/download_freeware/) - ✅ Yes, Native Apple Silicon Support as of v7.6 - [Release Notes](https://hex-rays.com/products/ida/news/7_6/)
 * [Insomnia Designer](https://insomnia.rest/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/456#issuecomment-748260642)
 * [Insomnia Core](https://insomnia.rest/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/456#issuecomment-748260642)
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac) - ✅ Yes, fully supported as of v2020.3.1 - [Release Notes](https://confluence.jetbrains.com/display/IDEADEV/IntelliJ+IDEA+2020.3.1+%28203.6682.168+build%29+Release+Notes)
