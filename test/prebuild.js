@@ -40,9 +40,18 @@ test('README Apps are formated correctly', (t) => {
 
     // t.log('readmeAppList', readmeAppList.length)
 
+    const foundApps = new Set()
+
 
     for (const readmeApp of readmeAppList) {
         const cleanedAppName = readmeApp.name//.toLowerCase()
+
+        // Check that app has not already been found
+        if (foundApps.has(cleanedAppName)) {
+            t.fail(`Duplicate app found: ${readmeApp.name}`)
+            return
+        }
+        foundApps.add(cleanedAppName)
 
         // Check that all related links urls are valid
         for (const relatedLink of readmeApp.relatedLinks) {
@@ -52,7 +61,7 @@ test('README Apps are formated correctly', (t) => {
                 t.fail(`README App ${readmeApp.name} does not have valid url`, readmeApp.url)
             }
         }
-        // t.log('All urls valid and secure')
+
 
         // Check that status text is free of markdown
         if ( readmeApp.text.includes('](') ) {
@@ -86,7 +95,8 @@ test('README Apps are formated correctly', (t) => {
     //     t.fail( `${ urlsWithDoubleSlashes.length } urls with doubles slashes found including ${ urlsWithDoubleSlashes[0] }` )
     // }
 
-    t.log( `${readmeAppList.length} valid alpanumeric app titles in readme` )
+    t.log( `${readmeAppList.length} apps in readme` )
+
     t.pass()
 })
 
