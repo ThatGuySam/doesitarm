@@ -386,8 +386,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [AJA ControlPanel](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA eMini-Setup](https://www.aja.com/family/software) - 🔶 App has not yet been reported to be native to Apple Silicon
 * [AJA Mini-Config](https://www.aja.com/family/software) - 🔶 App has not yet been reported to be native to Apple Silicon
-* [AJA NMOS](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA Multi-Channel Config](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
+* [AJA NMOS](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA RovoControl](https://www.aja.com/products/rovocontrol#support) - 🔶 App has not yet been reported to be native to Apple Silicon
 * [AJA System Test](https://www.aja.com/products/aja-system-test#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA U-TAP Updater](https://www.aja.com/products/u-tap-hdmi#support) - 🔶 App has not yet been reported to be native to Apple Silicon
@@ -410,8 +410,8 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [MOTU Audio Tools](https://motu.com/proaudio/index.html) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
 * [MOTU ClockWorks](https://motu.com/techsupport/technotes/document.2004-04-08.7757361768) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
 * [MOTU CueMix](https://motu.com/techsupport/technotes/what-is-cuemix) - ✅ Yes, Native Apple Silicon Support as of v5 - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
-* [MOTU Discovery](https://motu.com/download) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
 * [MOTU Digital Performer](https://motu.com/en-us/products/software/dp/) - ✅ Yes, Native Apple Silicon Support as of v11 - [System Requirements](https://motu.com/en-us/products/software/dp/tech-specs/)
+* [MOTU Discovery](https://motu.com/download) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
 * [MOTU Gen 5 System Extension](https://motu.com/en-us/products/gen5/ultralite-mk5/) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
 * [MOTU M Series System Extension](https://motu.com/en-us/products/m-series/) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
 * [MOTU Pro Audio System Extension](https://motu.com/proaudio/index.html) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://motu.com/en-us/news/motu-and-macos-big-sur/)
