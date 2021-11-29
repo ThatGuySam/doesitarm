@@ -4,16 +4,20 @@ export function isString( maybeString ) {
     return (typeof maybeString === 'string' || maybeString instanceof String)
 }
 
-export function isValidHttpUrl( string ) {
-    if ( !isString( string ) ) return false
+export function isValidHttpUrl( maybeUrl, allowUnsecure = false ) {
+    if ( !isString( maybeUrl ) ) return false
 
     let url
 
     try {
-        url = new URL(string)
+        url = new URL(maybeUrl)
     } catch (_) {
         return false
     }
 
     return url.protocol === "http:" || url.protocol === "https:"
+}
+
+export function isObject( maybeObject ) {
+    return maybeObject === Object( maybeObject )
 }

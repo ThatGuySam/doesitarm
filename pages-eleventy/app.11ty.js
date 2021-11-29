@@ -6,6 +6,7 @@ import { getAppType, getRouteType } from '../helpers/app-derived.js'
 import { deviceSupportsApp } from '../helpers/devices.js'
 import { makeLastUpdatedFriendly } from '../helpers/parse-date.js'
 import { getStatusOfScan } from '../helpers/statuses.js'
+import { isString } from '../helpers/check-types.js'
 
 
 import VideoRow from '../components-eleventy/video/row.js'
@@ -15,10 +16,6 @@ import VideoRow from '../components-eleventy/video/row.js'
 
 // Setup dotenv
 dotenv.config()
-
-function isString( maybeString ) {
-    return (typeof maybeString === 'string' || maybeString instanceof String)
-}
 
 export const makeTitle = function ( app ) {
     return `Does ${app.name} work on Apple Silicon? - ${ config.head.title }`

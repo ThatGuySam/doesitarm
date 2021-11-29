@@ -1,6 +1,7 @@
 import plist from 'plist'
 import axios from 'axios'
 
+import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
 
 const prettyBytes = require('pretty-bytes')
@@ -26,24 +27,6 @@ const knownAppExtensions =  new Set([
     '.app',
     '.app.zip'
 ])
-
-function isString( maybeString ) {
-    return (typeof maybeString === 'string' || maybeString instanceof String)
-}
-
-function isValidHttpUrl( string ) {
-    if ( !isString( string ) ) return false
-
-    let url
-
-    try {
-        url = new URL(string)
-    } catch (_) {
-        return false
-    }
-
-    return url.protocol === "http:" || url.protocol === "https:"
-}
 
 function callWithTimeout(timeout, func) {
     return new Promise((resolve, reject) => {

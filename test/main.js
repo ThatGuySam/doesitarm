@@ -7,12 +7,10 @@ import parser from 'fast-xml-parser'
 import axios from 'axios'
 import { structuredDataTest } from 'structured-data-testing-tool'
 import { Google, Twitter } from 'structured-data-testing-tool/presets'
+// import { isString } from '../helpers/check-types.js'
 
 require('dotenv').config()
 
-function isString( maybeString ) {
-    return (typeof maybeString === 'string' || maybeString instanceof String)
-}
 
 async function pageContains ( needle, pageUrlString ) {
     const pageUrlInstance = new URL( pageUrlString )
