@@ -9,7 +9,7 @@ require('dotenv').config()
 
 // const md = new MarkdownIt()
 
-const allowedTitleCharacters = new Set( 'ABCDEFGHIJKMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -.'.split('') )
+const allowedTitleCharacters = new Set( 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -_.®/\()音乐体验版'.split('') )
 
 
 function isString( maybeString ) {
@@ -19,9 +19,6 @@ function isString( maybeString ) {
 
 test.before(async t => {
     const readmeFileContent = await fs.readFile('./README.md', 'utf-8')
-    // const readmeMarkdown = md.parse( readmeFileContent )
-
-    // t.log( 'readmeMarkdown', readmeMarkdown )
 
 
     // Store sitemap urls to context
@@ -37,17 +34,12 @@ test('README App Titles are alphanumeric only', (t) => {
         commits: []
     })
 
-
     // console.log('readmeAppList', readmeAppList)
     t.log('readmeAppList', readmeAppList.length)
 
 
     for (const readmeApp of readmeAppList) {
         const cleanedAppName = readmeApp.name//.toLowerCase()
-
-        // const firstInvisbleCharacterIndex = cleanedAppName.search( invisibleCharacerRegex )
-
-        // const standardSpaceCharCode = 32
 
         for ( const character of cleanedAppName ) {
             if ( !allowedTitleCharacters.has( character ) ) {
@@ -61,11 +53,6 @@ test('README App Titles are alphanumeric only', (t) => {
             }
         }
 
-        // if ( readmeApp.name.includes('Apple Trans') ) {
-        //     const normalNameLength = 'Apple Transporter'.length
-        //     t.log( 'normalNameLength', normalNameLength )
-        //     t.log( readmeApp.name, readmeApp.name.length )
-        // }
     }
 
     // const urlsWithDoubleSlashes = t.context.sitemapUrls.filter( url => url.pathname.includes('//') )
