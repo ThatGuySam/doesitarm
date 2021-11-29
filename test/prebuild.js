@@ -2,6 +2,7 @@ import fs from 'fs-extra'
 import test from 'ava'
 // import MarkdownIt from 'markdown-it'
 
+import { isValidHttpUrl } from '../helpers/check-types.js'
 import { buildReadmeAppList } from '../helpers/build-app-list.js'
 
 
@@ -10,11 +11,6 @@ require('dotenv').config()
 // const md = new MarkdownIt()
 
 const allowedTitleCharacters = new Set( 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -_.®/\()音乐体验版'.split('') )
-
-
-function isString( maybeString ) {
-    return (typeof maybeString === 'string' || maybeString instanceof String)
-}
 
 
 test.before(async t => {
@@ -30,7 +26,7 @@ test.before(async t => {
     })
 })
 
-test('README App Titles are alphanumeric only', (t) => {
+test('README Apps are formated correctly', (t) => {
     // console.log('t.context.sitemapUrls', t.context.sitemapUrls)
 
     const {
@@ -43,6 +39,15 @@ test('README App Titles are alphanumeric only', (t) => {
 
     for (const readmeApp of readmeAppList) {
         const cleanedAppName = readmeApp.name//.toLowerCase()
+
+        // Check that all related links urls are valid
+        for (const relatedLink of readmeApp.relatedLinks) {
+            if ( !isValidHttpUrl( relatedLink.href ) ) {
+                t.log('relatedLink.href', readmeApp.name, relatedLink.href)
+
+                t.fail(`README App ${readmeApp.name} does not have valid url`, readmeApp.url)
+            }
+        }
 
         for ( const character of cleanedAppName ) {
             if ( !allowedTitleCharacters.has( character ) ) {
