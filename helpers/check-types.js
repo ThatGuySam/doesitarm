@@ -15,7 +15,11 @@ export function isValidHttpUrl( maybeUrl, allowUnsecure = false ) {
         return false
     }
 
-    return url.protocol === "http:" || url.protocol === "https:"
+    if ( allowUnsecure ) {
+        return url.protocol === "http:" || url.protocol === "https:"
+    }
+
+    return url.protocol === "https:"
 }
 
 export function isObject( maybeObject ) {
