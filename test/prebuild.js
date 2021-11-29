@@ -8,8 +8,6 @@ import { buildReadmeAppList } from '../helpers/build-app-list.js'
 
 require('dotenv').config()
 
-// const md = new MarkdownIt()
-
 const allowedTitleCharacters = new Set( 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -_.®/\()音乐体验版'.split('') )
 
 // Detect Emojis(Extended Pictograph) in string
@@ -38,9 +36,11 @@ test('README Apps are formated correctly', (t) => {
         readmeAppList
     } = t.context
 
-    // t.log('readmeAppList', readmeAppList.length)
-
+    // Store found apps so we can check for duplicates
     const foundApps = new Set()
+
+    // Store found invalid apps so we can count and report them
+    const invalidApps = new Set()
 
 
     for (const readmeApp of readmeAppList) {
@@ -49,8 +49,9 @@ test('README Apps are formated correctly', (t) => {
         // Check that app has not already been found
         if (foundApps.has(cleanedAppName)) {
             t.fail(`Duplicate app found: ${readmeApp.name}`)
-            return
+            invalidApps.add(cleanedAppName)
         }
+        // Store this app so we can check for future duplicates
         foundApps.add(cleanedAppName)
 
         // Check that all related links urls are valid
@@ -59,6 +60,7 @@ test('README Apps are formated correctly', (t) => {
                 t.log('relatedLink.href', readmeApp.name, relatedLink.href)
 
                 t.fail(`README App ${readmeApp.name} does not have valid url`, readmeApp.url)
+                invalidApps.add(cleanedAppName)
             }
         }
 
@@ -66,11 +68,13 @@ test('README Apps are formated correctly', (t) => {
         // Check that status text is free of markdown
         if ( readmeApp.text.includes('](') ) {
             t.fail(`README App ${readmeApp.name} markdown in status text`)
+            invalidApps.add(cleanedAppName)
         }
 
         // Check that status has an emoji
         if ( hasEmoji( readmeApp.text ) === false ) {
             t.fail(`README App ${readmeApp.name} does not have emoji`)
+            invalidApps.add(cleanedAppName)
         }
 
         // Check for not allowed characters in app name
@@ -81,21 +85,14 @@ test('README Apps are formated correctly', (t) => {
 
                 // t.log( readmeApp )
                 t.fail(`README App Title ${readmeApp.name} has non-alphanumeric character ${character}(charCode ${character.charCodeAt(0)})`)
-
-                break
+                invalidApps.add(cleanedAppName)
             }
         }
-        // t.log('All titles alphanumeric')
 
     }
 
-    // const urlsWithDoubleSlashes = t.context.sitemapUrls.filter( url => url.pathname.includes('//') )
-
-    // if ( urlsWithDoubleSlashes.length > 0) {
-    //     t.fail( `${ urlsWithDoubleSlashes.length } urls with doubles slashes found including ${ urlsWithDoubleSlashes[0] }` )
-    // }
-
-    t.log( `${readmeAppList.length} apps in readme` )
+    t.log( readmeAppList.length - invalidApps.size, 'valid apps found' )
+    t.log( readmeAppList.length, 'apps found in README' )
 
     t.pass()
 })
