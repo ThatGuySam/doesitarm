@@ -12,6 +12,11 @@ require('dotenv').config()
 
 const allowedTitleCharacters = new Set( 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -_.®/\()音乐体验版'.split('') )
 
+// Detect Emojis(Extended Pictograph) in string
+// https://stackoverflow.com/a/64007175/1397641
+function hasEmoji ( string ) {
+    return /\p{Extended_Pictographic}/u.test( string )
+}
 
 test.before(async t => {
     const readmeFileContent = await fs.readFile('./README.md', 'utf-8')
@@ -54,6 +59,12 @@ test('README Apps are formated correctly', (t) => {
             t.fail(`README App ${readmeApp.name} markdown in status text`)
         }
 
+        // Check that status has an emoji
+        if ( hasEmoji( readmeApp.text ) === false ) {
+            t.fail(`README App ${readmeApp.name} does not have emoji`)
+        }
+
+        // Check for not allowed characters in app name
         for ( const character of cleanedAppName ) {
             if ( !allowedTitleCharacters.has( character ) ) {
 
