@@ -206,6 +206,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 #### Science and Research Software
 
 * [COMSOL Multiphysics](https://www.comsol.com/comsol-multiphysics) - ✳️ Yes, works via Rosetta 2 - [Report #1](https://www.comsol.com/forum/thread/272202/new-apple-m1-machines-and-rosetta-2-intel-emulator?last=2021-02-04T17:09:35Z) [Report #2](https://www.reddit.com/r/mac/comments/kfp8tg/comsol_with_m1/glvd947?utm_source=share&utm_medium=web2x&context=3)
+* [CoppeliaSim](https://www.coppeliarobotics.com/downloads) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/808#issue-1045206608)
 * [Dixer](https://dixer.stgo.do/) - ✅ Yes, Native Apple Silicon Support - [Release Notes](https://dixer.stgo.do/Changelog/#170-_-june-03-2021)
 * [Gephi](https://gephi.org/users/download/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/311#issuecomment-869409099)
 * [GeoGebra Classic 5](https://www.geogebra.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/418#issue-760869359)
