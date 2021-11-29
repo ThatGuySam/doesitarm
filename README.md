@@ -610,7 +610,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [TextSniper](https://textsniper.app/) - ✅ Yes, Full Native Apple Silicon Support as of v1.3.1 - [Release Notes](https://textsniper.app/release-notes) [Verification](https://github.com/ThatGuySam/doesitarm/issues/571#issue-811238095)
 * [Thunderbird](https://www.thunderbird.net/en-US/) - ✅ Yes, Full Native Apple Silicon Support as of v87 - [Bugzilla Tracker](https://bugzilla.mozilla.org/show_bug.cgi?id=1678775) [Verification](https://github.com/ThatGuySam/doesitarm/issues/591#issue-824609519)
 * [TP-Link Deco](https://apps.apple.com/ae/app/tp-link-deco/id1186159417) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/667#issue-899018925)
-* [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
+* [Transmission](https://transmissionbt.com/) - ✳️ Yes, works via Rosetta 2 with native support on nightly - [Source](https://github.com/ThatGuySam/doesitarm/issues/326)
 * [Trello](https://apps.apple.com/de/app/trello/id1278508951?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/581#issue-816735691)
 * [Trezor Suite](https://suite.trezor.io/) - ✅ Yes, Native Apple Silicon Support as of 21.9.2 - [Release Notes](https://github.com/trezor/trezor-suite/releases/tag/v21.9.2) [Article](https://blog.trezor.io/trezor-suite-and-firmware-updates-september-2021-a490f2ea16c1)
 * [Things](https://culturedcode.com/things/mac/appstore/) - ✅ Yes, fully supported as of 3.13.2 - [Official Announcement](https://culturedcode.com/things/blog/2020/11/new-things-for-macos-big-sur/)
