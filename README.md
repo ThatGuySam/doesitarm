@@ -139,7 +139,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Onivim2](https://v2.onivim.io/early-access-portal) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/601#issue-834313049) [Github Issue](https://github.com/onivim/oni2/issues/2708)
 * [OpenJDK](https://openjdk.java.net/install/) - ✅ Yes, Full Native Apple Silicon Support via Azul Zulu
 Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1469348209) [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
-* [OpenOCD](http://openocd.org/) - ✅ Yes, Native Apple Silicon Support - [Homebrew Listing](https://formulae.brew.sh/formula/open-ocd#default)
+* [OpenOCD](https://openocd.org/) - ✅ Yes, Native Apple Silicon Support - [Homebrew Listing](https://formulae.brew.sh/formula/open-ocd#default)
 * [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) - ✅ Yes, Native Apple Silicon Support as of v17 - [Release Notes](https://www.oracle.com/java/technologies/javase/17all-relnotes.html)
 * [Pants for Python](https://www.pantsbuild.org/) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://blog.pantsbuild.org/how-we-added-apple-silicon-support-to-pants/)
 * [Parallels Desktop](https://prf.hn/l/6qOdLPB) - ✅ Yes, Initial Native Apple Silicon Support for Windows 10 on ARM as of v16 - [Release Notes](https://prf.hn/l/7QA4VvN) [Blog Post](https://prf.hn/l/Kmo9gqd)
@@ -240,7 +240,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Audio Hijack](https://rogueamoeba.com/audiohijack/) - ✅ Yes, Initial Native Apple Silicon Support as of v3.8.0 - [Release Notes](https://rogueamoeba.com/audiohijack/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Avid Pro Tools](https://www.avid.com/pro-tools) - ✳️ Yes, it works via Rosetta 2 translation - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
 * [Avid Sibelius](https://www.avid.com/sibelius) - ✅ Yes, Full Native Apple Silicon Support as of v2021.2 - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
-* [Capo](http://supermegaultragroovy.com/products/capo/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v4 - [Official Post](https://supermegaultragroovy.com/products/capo/press/pr/2020-11-17/)
+* [Capo](https://supermegaultragroovy.com/products/capo/mac/) - ✅ Yes, Full Native Apple Silicon Support as of v4 - [Official Post](https://supermegaultragroovy.com/products/capo/press/pr/2020-11-17/)
 * [Colibri](https://apps.apple.com/us/app/colibri/id1178295426?ls=1&mt=12) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/684#issue-912866711)
 * [Colibri DAC DSD Test](https://apps.apple.com/us/app/colibri-dac-dsd-test/id1455508413?ls=1&mt=12) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/691#issue-913934536)
 * [eqMac](https://eqmac.app) - ✅ Yes, Native Apple Silicon binary, works well as of v0.3.7, Rosetta 2 lacks performance - [Tracked Issue](https://github.com/bitgapp/eqMac/issues/413)
@@ -309,7 +309,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Pixelmator Classic](https://apps.apple.com/cn/app/pixelmator-classic/id407963104?l=en&mt=12) - ✳️ Yes, works via Rosetta 2, no native upgrade planned - [Verification](https://github.com/ThatGuySam/doesitarm/issues/367)
 * [Pixelmator Pro](https://pixelmator.com/pro) - ✅ Yes, full native support as of v2.0
 * [Seashore](https://apps.apple.com/us/app/seashore/id1448648921?mt=12&app=apps&ign-mpt=uo%3D4) - ✳️ Yes, works via Rosetta 2, an experimental Apple Silicon build is available - [Verification](https://github.com/ThatGuySam/doesitarm/issues/544#issue-799623568) [Apple Silicon Build](https://github.com/leoplan2/seashore/releases/tag/v2.5.10)
-* [Simple Comic](http://dancingtortoise.com/simplecomic/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/407)
+* [Simple Comic](https://github.com/arauchfuss/Simple-Comic) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/407)
 * [Simple Comic (Community Fork)](https://github.com/MaddTheSane/Simple-Comic) - ✅ Yes, full native Apple Silicon support as of v1.9.1 - [App Store](https://apps.apple.com/us/app/simple-comic/id1497435571?l=en&mt=12) [Github Repo](https://github.com/MaddTheSane/Simple-Comic) [Verification](https://github.com/ThatGuySam/doesitarm/issues/407)
 * [Sip for Mac](https://sipapp.io/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344463/5114)
 * [Textify](https://apps.apple.com/app/id1522041836) - ✅ Yes, full native support as of v2.0.1 - [Macrumors Thread](https://forums.macrumors.com/threads/textify-text-recognition-ocr-made-easy-and-accurate-1-product-of-the-day-ph.2245225/page-2?post=29016938#post-29016938)
@@ -455,7 +455,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Timebox 3D Collage Maker](https://timeboxapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.1 - [Release Notes](https://timeboxapp.com/whats-new-81)
 * [Ultimaker Cura](https://ultimaker.com/software/ultimaker-cura) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/424#issue-761853484)
 * [VRay for SketchUp](https://www.chaosgroup.com/vray/sketchup) - 🚫 No, not yet supported but support is in development - [Article on Support](https://architosh.com/2020/11/chaos-group-real-time-rendering-comes-to-v-ray-5-for-sketchup/) [Discussion](https://forums.sketchup.com/t/v-ray-5-is-now-included-in-a-studio-subscription/159878/38)
-* [ZBrush](http://pixologic.com/zbrush/downloadcenter/#) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.pixologic.com/article/447-support-for-apple-silicon)
+* [ZBrush](https://pixologic.com/zbrush/downloadcenter/#) - ✳️ Yes, works via Rosetta 2 - [Official Article](https://support.pixologic.com/article/447-support-for-apple-silicon)
 
 
 #### Productivity Tools
