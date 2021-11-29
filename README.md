@@ -51,7 +51,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [Android Studio](https://developer.android.com/studio) - ✳️ Yes, works via Rosetta 2 with native support in preview. - [Source](https://github.com/ThatGuySam/doesitarm/issues/48#issuecomment-732143252) [Native Preview](https://androidstudio.googleblog.com/2021/04/android-studio-arctic-fox-canary-15.html)
 * [Apache Maven](https://maven.apache.org/download.cgi) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/215#issuecomment-742910724)
 * [Aptana Studio](https://github.com/aptana/studio3/releases) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/16#issuecomment-869452511)
-* [Apple Transporte‪r‬](https://apps.apple.com/app/transporter/id1450874784?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.1
+* [Apple Transporter](https://apps.apple.com/app/transporter/id1450874784?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.1
 * [AppCode](https://www.jetbrains.com/objc/download/) - ✅ Yes, Native Apple Silicon Support as of v2020.3.1 - [Release Notes](https://blog.jetbrains.com/objc/2021/01/appcode-2020-3-1/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/687#issue-913066017)
 * [App Preview Video Converter](https://apps.apple.com/us/app/app-preview-video-converter/id1137451860) - ✅ Yes, full native support as of v1.7.4 - [Release Notes](https://www.bridgetech.io)
 * [Arduino IDE](https://www.arduino.cc/en/software) - ✳️ Reported working via Rosetta with native support currently in development - [Issue](https://github.com/arduino/Arduino/issues/10836)
@@ -125,7 +125,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [MacPorts](https://www.macports.org/install.php) - ✳️ Yes, some ports are native while others work via Rosetta 2. - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/302). 
 * [MAMP](https://www.mamp.info/en/mamp/mac/) - ✅ Yes, Native Apple Silicon Support as of v6.4 - [Release Notes](https://www.mamp.info/en/release-notes/mac/)
 * [MongoDB](https://www.mongodb.com/try/download/community) - ✳️ Yes, works via Rosetta 2 - [Issue](https://jira.mongodb.org/browse/SERVER-50115) [Test Video](https://youtu.be/b_S3CjGRQis?t=227)
-* [MongoKitte‪n‬](https://apps.apple.com/us/app/id1484086700) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/502#issue-778010353)
+* [MongoKitten](https://apps.apple.com/us/app/id1484086700) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/502#issue-778010353)
 * [Mono MDK](https://www.mono-project.com/download/stable/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/722#issue-947000557)
 * [Mutagen](https://mutagen.io/documentation/introduction/installation) - ✅ Yes, Native Apple Silicon Support as of v0.12.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/762#issuecomment-962439413)
 * [MySQL Community Server](https://dev.mysql.com/downloads/) - ✅ Yes, Native Apple Silicon Support as of v8.0.26 - [Release Notes](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-26.html) [Source](https://github.com/ThatGuySam/doesitarm/issues/173#issuecomment-730553003)
@@ -550,7 +550,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Microsoft OneNote](https://apps.apple.com/cn/app/microsoft-onenote/id784801555?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft Outlook](https://apps.apple.com/app/microsoft-outlook/id985367838?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [Microsoft PowerPoint](https://apps.apple.com/cn/app/microsoft-powerpoint/id462062816?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
-* [Microsoft Remote Deskto‪p](https://apps.apple.com/au/app/microsoft-remote-desktop/id1295203466?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v10.6.0 - [App Store Version History](https://apps.apple.com/gb/app/microsoft-remote-desktop/id1295203466?mt=12)
+* [Microsoft Remote Desktop](https://apps.apple.com/au/app/microsoft-remote-desktop/id1295203466?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v10.6.0 - [App Store Version History](https://apps.apple.com/gb/app/microsoft-remote-desktop/id1295203466?mt=12)
 * [Microsoft Word](https://apps.apple.com/cn/app/microsoft-word/id462054704?l=en&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v16.44
 * [MindNode](https://mindnode.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103) [View on Setapp](https://setapp.sjv.io/c/2708043/557413/5114)
 * [Moment for macOS](https://fireball.studio/moment) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/896739/5114)
@@ -673,7 +673,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [RetroArch](https://www.retroarch.com/?page=platforms) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://www.libretro.com/index.php/retroarch-for-apple-mac-m1-softlaunches-today/)
 * [Roblox Player](https://www.roblox.com/games/54865335/view?rbxp=70385145) - ✳️ Yes, works via Rosetta 2 translation - [Report #1](https://www.reddit.com/r/macgaming/comments/lymrje/running_roblox_on_the_m1_macbook_pro/)
 * [Rottenwood](https://software.charliemonroe.net/rottenwood/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](http://blog.charliemonroe.net/big-sur-and-apple-silicon/)
-* [Shaza‪m‬](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
+* [Shazam](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
 * [Snap Camera](https://snapcamera.snapchat.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/627#issue-860435755) [Supported Hardware](https://snapcamera.snapchat.com/download/)
 * [Spotify](https://www.spotify.com/download/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/768)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
