@@ -23,16 +23,19 @@ test.before(async t => {
 
     // Store sitemap urls to context
     t.context.readmeFileContent = readmeFileContent
+    t.context.readmeAppList = buildReadmeAppList({
+        readmeContent: t.context.readmeFileContent,
+        scanListMap: new Map(),
+        commits: []
+    })
 })
 
 test('README App Titles are alphanumeric only', (t) => {
     // console.log('t.context.sitemapUrls', t.context.sitemapUrls)
 
-    const readmeAppList = buildReadmeAppList({
-        readmeContent: t.context.readmeFileContent,
-        scanListMap: new Map(),
-        commits: []
-    })
+    const {
+        readmeAppList
+    } = t.context
 
     // console.log('readmeAppList', readmeAppList)
     t.log('readmeAppList', readmeAppList.length)
@@ -64,3 +67,53 @@ test('README App Titles are alphanumeric only', (t) => {
     t.log( `${readmeAppList.length} valid alpanumeric app titles in readme` )
     t.pass()
 })
+
+
+function sortAppsAlphabetically ( a, b ) {
+    return a.name.localeCompare(b.name)
+}
+
+
+test('README Apps are in alphbetical order', (t) => {
+
+    const {
+        readmeAppList
+    } = t.context
+
+    const appsByCategory = new Map()
+
+
+
+    // Group apps by category
+    for ( const readmeApp of readmeAppList ) {
+        const category = readmeApp.category.slug
+
+        if ( !appsByCategory.has(category) ) {
+            appsByCategory.set(category, [])
+        }
+
+        appsByCategory.get( category ).push(readmeApp)
+    }
+
+    // Sort apps in groups alphabetically
+    for ( const [ category, apps ] of appsByCategory ) {
+
+        const unsortedApps = apps.slice()
+
+        // Sort apps in category in place
+        apps.sort(sortAppsAlphabetically)
+
+        // Check sorted sorted apps against unsorted apps
+        for ( const [ index, unsortedApp ] of unsortedApps.entries() ) {
+            const sortedApp = apps[index]
+
+            if ( sortedApp.slug !== unsortedApp.slug ) {
+                t.fail(`README App at index ${index} of ${category} is ${unsortedApp.name} but should be ${sortedApp.name}`)
+            }
+        }
+    }
+
+    t.pass()
+})
+
+
