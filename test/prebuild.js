@@ -33,8 +33,7 @@ test('README Apps are formated correctly', (t) => {
         readmeAppList
     } = t.context
 
-    // console.log('readmeAppList', readmeAppList)
-    t.log('readmeAppList', readmeAppList.length)
+    // t.log('readmeAppList', readmeAppList.length)
 
 
     for (const readmeApp of readmeAppList) {
@@ -48,6 +47,12 @@ test('README Apps are formated correctly', (t) => {
                 t.fail(`README App ${readmeApp.name} does not have valid url`, readmeApp.url)
             }
         }
+        // t.log('All urls valid and secure')
+
+        // Check that status text is free of markdown
+        if ( readmeApp.text.includes('](') ) {
+            t.fail(`README App ${readmeApp.name} markdown in status text`)
+        }
 
         for ( const character of cleanedAppName ) {
             if ( !allowedTitleCharacters.has( character ) ) {
@@ -60,6 +65,7 @@ test('README Apps are formated correctly', (t) => {
                 break
             }
         }
+        // t.log('All titles alphanumeric')
 
     }
 
