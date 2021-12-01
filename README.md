@@ -460,6 +460,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Productivity Tools
 
+* [ABBYY FineReader PDF](https://pdf.abbyy.com/finereader-pdf-for-mac/) - ✳️ Yes, works via Rosetta 2 as of v15.0.2 - [Official Article](https://support.abbyy.com/hc/articles/360021357240-FineReader-PDF-for-Mac-and-Apple-M1-chip) [Release Notes](https://support.abbyy.com/hc/articles/4403148990994)
 * [AccountEdge Pro](https://www.myob.com/au/accounting-software/accountedge) - 🚫 No, not yet supported only works on Intel-based Macs
 * [Acrobat Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) - ✅ Yes, Native Apple Silicon Support as of v21.007.20091 - [Known Issues](https://helpx.adobe.com/acrobat/kb/mac-os11-big-sur-compatibility.html#KnownIssues) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Acrobat Reader](https://get.adobe.com/reader/) - ✅ Yes, Native Apple Silicon Support as of v21.007.20091 - [Official Article #1](https://helpx.adobe.com/acrobat/kb/mac-os11-big-sur-compatibility.html#WhendoesAdobeplantonativelysupportAppleSilicondevices) [Official Article #2](https://helpx.adobe.com/acrobat/kb/apple-silicon-m1-processor-support.html)
