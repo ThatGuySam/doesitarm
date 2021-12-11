@@ -854,6 +854,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Swish for macOS](https://highlyopinionated.co/swish/) - ✅ Yes, Full Native Apple Silicon Support as of v1.7.1 - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/swish)
 * [System Watcher](https://apps.apple.com/us/app/system-watcher/id1269106895?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v4.3.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/793#issue-1030009696) 
 * [TG Pro](https://www.tunabellysoftware.com/tgpro/) - ✅ Yes, Full Native Apple Silicon Support as of v2.53 - [Release Notes](https://www.tunabellysoftware.com/tgpro/releasenotes/)
+* [TinkerTool](https://www.bresink.com/osx/TinkerTool.html) - ✅ Yes, Native Apple Silicon Support - [Release Notes](https://www.bresink.com/osx/0TinkerTool/history.html)
 * [Timeless for Mac](https://www.dangercove.com/timeless/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/timeless)
 * [ToothFairy](https://c-command.com/toothfairy/) - ✅ Yes, Full Native Apple Silicon Support as of v2.7.1 - [Release Notes](https://c-command.com/blog/2021/01/14/toothfairy-2-7-1/) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/560495/5114)
 * [TouchSwitcher](https://hazeover.com/touchswitcher.html) - ✅ Yes, Full Native Apple Silicon Support as of 1.4 - [Official News](https://hazeover.com/news.html)
