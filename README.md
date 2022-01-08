@@ -266,6 +266,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Spectrasonics Trilian](https://www.spectrasonics.net/products/trilian/index.php) - ✅ Yes, Native Apple Silicon Support - [Knowledgebase Article](https://www.spectrasonics.net/support/knowledgebase_view_topic.php?id=243&categoryID=9) [Reddit Post](https://www.reddit.com/r/omnisphere/comments/o24iu7/all_spectrasonics_products_updated_with_vst3/) 
 * [TunesArt](https://www.jibapps.com/apps/tunesart/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.6 - [Source](https://twitter.com/jibapps/status/1334055652055003137)
 * [TwistedWave](https://twistedwave.com/mac) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Verification](https://github.com/ThatGuySam/doesitarm/issues/508#issue-781561446)
+* [Universal Audio Software](https://www.uaudio.com/downloads) - ✳️ Yes, by setting the "Reduced Security option" security policy using macOS Recovery - [Knowledgebase Article](https://help.uaudio.com/hc/en-us/articles/360057137692-Apple-Silicon-M1-Compatibility-Info)
 * [X Lossless Decoder (XLD)](https://sourceforge.net/projects/xld/) - ✅ Yes, Full Native Apple Silicon Support as of 2021/1/1 - [Scroll to version history here](https://tmkk.undo.jp/xld/index_e.html)
 
 
