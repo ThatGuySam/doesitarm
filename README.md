@@ -670,6 +670,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [NetEase Music](https://music.163.com/#/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.4 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/528#issue-789094015)
 * [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.11 - [Blog Post](https://betamagic.nl/news/2020/2020_09.html) [View on Setapp](https://setapp.sjv.io/c/2708043/368247/5114)
 * [NVIDIA GeForce NOW](https://www.nvidia.com/en-us/geforce-now/download/) - ✅ Yes, Full Native Apple Silicon Support as of v2.0.27 - [Release Notes](https://www.nvidia.com/pt-br/geforce/release-notes/GFN/2_0_27/Rich/gfn-v2_0_27-rich-release-highlights/)
+* [OpenRCT2](https://openrct2.io/) - ✅ Yes, Native Apple Silicon Support as of v0.3.5 - [Release Notes](https://raw.githubusercontent.com/OpenRCT2/OpenRCT2/develop/distribution/changelog.txt)
 * [Parsec](https://parsec.app/downloads) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/513#issue-782309694)
 * [PPSSPP](https://build.ppsspp.org/?page/downloads#osx) - ✅ Yes, Full Native Apple Silicon Support as of v1.11 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/347#issuecomment-776444965)
 * [PS Remote Play](https://remoteplay.dl.playstation.net/remoteplay/lang/en/ps5_mac.html) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/441#issuecomment-748282150)
