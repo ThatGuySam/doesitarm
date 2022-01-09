@@ -744,7 +744,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Elpass](https://elpass.app/) - ✅ Yes, full native Apple Silicon Support as of v1.1.10 - [Issue](https://github.com/ThatGuySam/doesitarm/issues/176)
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
-* [IVPN](https://www.ivpn.net/apps-macos/) - ✳️ Yes, works via Rosetta 2 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/315)
+* [IVPN](https://www.ivpn.net/apps-macos/) - ✅ Yes, Native Apple Silicon Support as of v3.4.0 - [Release Notes](https://github.com/ivpn/desktop-app/blob/master/CHANGELOG.md)
 * [Jamf Protect](https://www.jamf.com/products/jamf-protect/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.0.217 - [Release Notes](https://docs.jamf.com/jamf-protect/administrator-guide/Release_History.html)
 * [KeePassXC](https://keepassxc.org/download/#mac) - ✅ Yes, Full Native Apple Silicon Support as of v2.6.4 - [Release Notes](https://keepassxc.org/blog/2021-01-31-2.6.4-released/)
 * [KeeWeb](https://keeweb.info/) - ✅ Yes, Full Native Apple Silicon Support - [Official Tweet](https://twitter.com/kee_web/status/1334885117584609295)
