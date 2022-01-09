@@ -704,7 +704,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Guilded](https://www.guilded.gg/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/781#issue-1014658498)
 * [Krisp](https://krisp.ai/) - ✅ Yes, Native Apple Silicon Support as of v1.28.7 - [Release Notes](https://whatsnew.krisp.ai/announcements/mac-1-28-7-native-support-on-m1-chip)
 * [LINE for macOS](https://apps.apple.com/app/line/id539883307) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/690#issue-913425598)
-* [Mattermost](https://mattermost.com/download/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/245#issuecomment-735282100)
+* [Mattermost](https://mattermost.com/download/) - ✅ Yes, Native Apple Silicon Support as of v4.7.0 - [Release Notes](https://docs.mattermost.com/install/desktop-app-changelog.html)
 * [MeetInOne](https://meetinone.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/meet-in-one)
 * [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/191#issuecomment-730561942)
 * [NetEase POPO](https://archive.fo/3hwrq) - ✅ Yes, Native Apple Silicon Support as of v3.25.8 - [Release Notes](https://archive.fo/0jMF4)
