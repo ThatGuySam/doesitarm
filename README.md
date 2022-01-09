@@ -185,7 +185,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Textmate](https://macromates.com/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/585#issue-817594010)
 * [Tinkerwell](https://tinkerwell.app/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/592#issue-824958336)
 * [Tower](https://www.git-tower.com/mac) - ✅ Yes, Full Native Apple Silicon Support as of v6 - [Release Notes](https://www.git-tower.com/blog/tower-mac-6/)
-* [Transmit](https://panic.com/transmit/) - ✅ Yes, Full Native Apple Silicon Support as of v5.7 - [Official Tweet](https://twitter.com/panic/status/1326978002576666624?s=20)
+* [Transmit](https://panic.com/transmit/) - ✅ Yes, Full Native Apple Silicon Support as of v5.7 - [Official Tweet](https://twitter.com/panic/status/1326978002576666624?s=20) [Release Notes](https://library.panic.com/releasenotes/transmit5/)
 * [Typora](https://typora.io/#download) - ✅ Yes, fully supported as of v0.9.9.36 - [Release Notes](https://typora.io/dev_release.html)
 * [Unity](https://store.unity.com/download) - ✳️ Runs via Rosetta with native support currently in development - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator)
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) - 🚫 No, not yet supported only works on Intel-based Macs - [Discussion](https://forums.virtualbox.org/viewtopic.php?f=8&t=98742)
