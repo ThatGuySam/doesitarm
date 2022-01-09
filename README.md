@@ -771,6 +771,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 * [Access Menu for macOS](https://titanium-software.fr/en/accessmenu.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://titanium-software.fr/en/release_accessmenu.html)
 * [AlDente](https://github.com/davidwernhart/AlDente/releases) - ✅ Yes, Full Native Apple Silicon Support as of v2.0 - [Release Notes](https://github.com/davidwernhart/AlDente/releases)
+* [AltTab](https://alt-tab-macos.netlify.app/) - ✅ Yes, Native Apple Silicon Support as of v6.28.0 - [Release Notes](https://alt-tab-macos.netlify.app/changelog)
 * [AmorphousDiskMark](https://apps.apple.com/us/app/amorphousdiskmark/id1168254295) - ✅ Yes, full native Apple Silicon support as of v3.1
 * [Amphetamine](https://apps.apple.com/app/amphetamine/id937984704) - ✅ Yes, full native Apple Silicon support from 5.1 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/295)
 * [Android File Transfer](https://www.android.com/filetransfer/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/707#issue-929848818)
