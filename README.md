@@ -703,6 +703,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Canary Download](https://discord.com/api/download/canary?platform=osx) [Rosseta Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
 * [Facebook Messenger Desktop](https://www.messenger.com/desktop) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/520)
 * [Guilded](https://www.guilded.gg/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/781#issue-1014658498)
+* [Keybase](https://keybase.io/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/143#issuecomment-1015904302)
 * [Krisp](https://krisp.ai/) - ✅ Yes, Native Apple Silicon Support as of v1.28.7 - [Release Notes](https://whatsnew.krisp.ai/announcements/mac-1-28-7-native-support-on-m1-chip)
 * [LINE for macOS](https://apps.apple.com/app/line/id539883307) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/690#issue-913425598)
 * [Mattermost](https://mattermost.com/download/) - ✅ Yes, Native Apple Silicon Support as of v4.7.0 - [Release Notes](https://docs.mattermost.com/install/desktop-app-changelog.html)
