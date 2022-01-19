@@ -71,7 +71,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [CodeRunner](https://coderunnerapp.com/) - ✳️ Yes, works via Rosetta 2 Translation with native support in beta - [Verification](https://github.com/ThatGuySam/doesitarm/issues/486#issuecomment-806065818)
 * [Core Shell](https://coreshell.app/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/core-shell)
 * [CotEditor](https://coteditor.com) - ✅ Yes, full native support as of 4.0.0 - [App Store](https://itunes.apple.com/app/coteditor/id1024640650)
-* [Cyberduck](https://cyberduck.io/download/) - ✳️ Yes, works via Rosetta 2 with native build in development - [Source](https://github.com/ThatGuySam/doesitarm/issues/333)
+* [Cyberduck](https://cyberduck.io/download/) - ✅ Yes, Native Apple Silicon Support as of v8.1.0 - [Release Notes](https://cyberduck.io/changelog/)
 * [Dash for macOS](https://kapeli.com/dash) - ✅ Yes, Full Native Apple Silicon Support as of v6 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/575#issue-812547431) [Release Notes](https://blog.kapeli.com/dash-6)
 * [DataGrip](https://www.jetbrains.com/datagrip/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [DBeaver](https://dbeaver.io/) - ✅ Yes, Native Apple Silicon Support as of v21.2.2 - [Release Notes](https://dbeaver.io/2021/10/03/dbeaver-21-2-2/)
