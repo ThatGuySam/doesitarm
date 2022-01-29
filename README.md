@@ -77,7 +77,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 * [DataGrip](https://www.jetbrains.com/datagrip/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
 * [DBeaver](https://dbeaver.io/) - ✅ Yes, Native Apple Silicon Support as of v21.2.2 - [Release Notes](https://dbeaver.io/2021/10/03/dbeaver-21-2-2/)
 * [Deno](https://deno.land/) - ✅ Yes, Full Native Apple Silicon Support - [Issue](https://github.com/denoland/deno/issues/8346)
-* [Docker](https://hub.docker.com/editions/community/docker-ce-desktop-mac) - ✳️ Yes, works via Rosetta 2 translation as of v3.3.1 - [Release Notes](https://docs.docker.com/docker-for-mac/release-notes/#docker-desktop-331) [Github Issue](https://github.com/docker/for-mac/issues/4733#issuecomment-653444409)
+* [Docker](https://hub.docker.com/editions/community/docker-ce-desktop-mac) - ✅ Yes, Native Apple Silicon Support as of v4.3.0 - [Release Notes](https://docs.docker.com/desktop/mac/release-notes/#docker-desktop-430)
 * [Dreamweaver](https://www.adobe.com/products/dreamweaver.html) - ✅ Yes, Native Apple Silicon Support as of v21.2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Eclipse IDE](https://www.eclipse.org/downloads/) - ✳️ Yes, runs via Rosetta 2 translation and natively for SDK - [Release Details](https://download.eclipse.org/eclipse/downloads/drops4/R-4.20-202106111600/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/626#issue-860190467)
 * [eDEX-UI](https://github.com/GitSquared/edex-ui) - ✅ Yes, Full Native Apple Silicon Support reported as of v2.2.6 - [Release Notes](https://github.com/GitSquared/edex-ui/releases/tag/v2.2.6)
