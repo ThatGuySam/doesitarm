@@ -714,7 +714,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Postbox](https://www.postbox-inc.com) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/35)
 * [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
 * [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/) - ✳️ Runs via Rosetta 2 
-* [Signal](https://www.signal.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/337)
+* [Signal](https://signal.org/) - ✅ Yes, Native Apple Silicon Support as of v5.27.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/853) [Release Notes](https://github.com/signalapp/Signal-Desktop/releases)
 * [Skype](https://www.skype.com/en/get-skype/) - ✳️ Yes, works via Rosetta 2 - [Video](https://doesitarm.com/tv/the-new-m1-macbook-running-microsoft-office-business-apps-teams-skype-excel-cpu-and-ram-usage-i-ibseaue3se8/)
 * [Skype for Business](https://www.microsoft.com/en-us/microsoft-365/skype-for-business/download-app) - ✳️ Yes, works via Rosetta 2 - [Video](https://doesitarm.com/tv/the-new-m1-macbook-running-microsoft-office-business-apps-teams-skype-excel-cpu-and-ram-usage-i-ibseaue3se8/)
 * [Slack](https://slack.com/) - ✅ Yes, Full Native Apple Silicon Support as of 4.13.0 - [Release Notes](https://slack.com/intl/en-au/release-notes/mac)
