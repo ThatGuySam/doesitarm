@@ -147,6 +147,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Pelemay](https://github.com/zeam-vm/pelemay/releases) - ✅ Yes, Full Native Apple Silicon Support as of v0.0.14 - [Release Notes](https://github.com/zeam-vm/pelemay/releases/tag/0.0.14)
 * [PhpStorm](https://www.jetbrains.com/phpstorm/download/#section=mac) - ✅ Yes, full native Apple Silicon support as of v2020.3.1
 * [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/743#issue-971743459)
+* [Postico](https://eggerapps.at/postico/) - ✅ Yes, Native Apple Silicon Support as of v1.5.15 - [Release Notes](https://eggerapps.at/postico/docs/v1.5.15/changelist.html) - [Verification](https://github.com/ThatGuySam/doesitarm/issues/851)
 * [Postman](https://www.postman.com/downloads/) - ✅ Yes, Native Apple Silicon Support as of v9.0.7 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/795#issue-1031318387) [Release Notes](https://www.postman.com/downloads/release-notes/)
 * [PowerShell Core](https://github.com/PowerShell/PowerShell) - ✅ Yes, Native Apple Silicon Support as of v7.2.0 - [Release Notes](https://github.com/PowerShell/PowerShell/releases/tag/v7.2.0)
 * [Processing IDE](https://processing.org/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/342#issuecomment-869373970)
