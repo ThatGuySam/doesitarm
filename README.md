@@ -768,7 +768,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Surfshark](https://surfshark.com/download/macos) - ✅ Yes, Native Apple Silicon Support as of v3.4.0 - [Press Release](https://surfshark.com/blog/m1-chip-compatibility)
 * [Tor Browser](https://www.torproject.org/download/) - ✳️ Yes, works via Rosetta 2 translation - [Release Notes](https://blog.torproject.org/new-release-tor-browser-1008) [Source](https://github.com/ThatGuySam/doesitarm/issues/436) [Issue tracker for tab crashes](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/40262)
 * [Tunnelblick](https://tunnelblick.net/) - ✅ Yes, Native Apple Silicon Support reported as of v3.8.6 - [Official Website](https://tunnelblick.net/cAppleSilicon.html)
-* [VeraCrypt](https://www.veracrypt.fr/en/Downloads.html) - ✳️ Yes, works via Rosetta 2 as of 1.24-Update8 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/355)
+* [VeraCrypt](https://www.veracrypt.fr/en/Downloads.html) - ✅ Yes, Native Apple Silicon Support as of v1.25.4 - [Release Notes](https://github.com/veracrypt/VeraCrypt/releases/tag/VeraCrypt_1.25.4)
 * [Vivaldi](https://vivaldi.com/download/) - ✅ Yes, native support as of v3.7 - [Source](https://vivaldi.com/blog/vivaldi-fires-up-performance-2/)
 * [VPN Tracker 365](https://www.vpntracker.com) - ✅ Yes, fully native IPsec, L2TP, OpenVPN, SonicWALL SSL VPN support as of v 21.0 - [Official page](https://www.vpntracker.com/us/VPN-Client-for-macOS-Big-Sur.html)
 * [Windscribe](https://windscribe.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/442#issuecomment-748251300)
