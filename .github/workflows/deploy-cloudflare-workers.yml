@@ -1,4 +1,4 @@
-- name: Deploy to Cloudflare Workers with Wrangler
+name: Deploy to Cloudflare Workers with Wrangler
 
 on:
   push:
