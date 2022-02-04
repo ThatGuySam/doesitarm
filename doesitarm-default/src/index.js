@@ -8,7 +8,7 @@
 //     event.respondWith(gaHandleRequest(event.request, event))
 // });
 
-// TODO: Try rebuilding this library as local ESM
+// TODO: Try rebuilding this library as local ES module
 // https://github.com/peaksandpies/universal-analytics
 // import ua from 'universal-analytics'
 
