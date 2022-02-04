@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild --bundle --sourcemap --outdir=dist ./src/index.js",
+    "build": "npx esbuild --bundle --sourcemap --outdir=dist ./src/index.js",
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "dev": "npx miniflare --watch --debug"
   },
