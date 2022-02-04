@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@master
     - name: Write Wrangler config
       run: |
-          echo "$WRANGLER_TOML" >> doesitarm-default/wrangler.toml
+          echo ${{ secrets.WRANGLER_TOML }} | base64 -d > doesitarm-default/wrangler.toml
           cat doesitarm-default/wrangler.toml
     - name: Publish
       uses: cloudflare/wrangler-action@1.3.0
