@@ -1,5 +1,4 @@
 - name: Deploy to Cloudflare Workers with Wrangler
-  uses: cloudflare/wrangler-action@1.3.0
 
 on:
   push:
