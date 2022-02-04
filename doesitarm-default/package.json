@@ -10,7 +10,16 @@
   },
   "author": "Sam Carlton <sam@sam.lc>",
   "license": "MIT",
+  "dependencies": {
+    "accept-language-parser": "^1.5.0",
+    "nodealytics": "^0.0.6",
+    "query-string": "^6.11.0",
+    "uuid": "^3.4.0"
+  },
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "dotenv": "^8.2.0",
+    "esbuild": "^0.14.18",
+    "prettier": "^1.18.2",
+    "webpack": "4.33.0"
   }
 }
