@@ -3,10 +3,12 @@
   "name": "doesitarm-default",
   "version": "1.0.0",
   "description": "A template for kick starting a Cloudflare Workers project",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write '**/*.{js,css,json,md}'"
+    "build": "esbuild --bundle --sourcemap --outdir=dist ./src/index.js",
+    "format": "prettier --write '**/*.{js,css,json,md}'",
+    "dev": "npx miniflare --watch --debug"
   },
   "author": "Sam Carlton <sam@sam.lc>",
   "license": "MIT",
