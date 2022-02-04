@@ -8,6 +8,9 @@
 //     event.respondWith(gaHandleRequest(event.request, event))
 // });
 
+// TODO: Try rebuilding this library as local ESM
+// https://github.com/peaksandpies/universal-analytics
+// import ua from 'universal-analytics'
 
 addEventListener('fetch', event => {
     event.respondWith(handleRequest(event.request))
@@ -16,7 +19,10 @@ addEventListener('fetch', event => {
 
 // Alter Headers - https://developers.cloudflare.com/workers/examples/alter-headers
 async function handleRequest(request) {
+    // const visitor = ua( process.env.GA_TRACKING_ID )
+
     const response = await fetch(request)
+
 
     // Clone the response so that it's no longer immutable
     const newResponse = new Response(response.body, response)
