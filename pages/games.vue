@@ -2,7 +2,7 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-4xl md:text-6xl font-hairline leading-tight text-center">
-                Does it ARM?
+                Does It ARM?
             </h1>
             <h2 class="subtitle md:text-xl text-center">
                 Games that are reported to support Apple Silicon
@@ -66,7 +66,7 @@ export default {
             query: '',
             quickButtons: [
                 {
-                    label: '✅ Full Native Support',
+                    label: '✅ Native Support',
                     query: 'status:native'
                 },
                 {
@@ -87,7 +87,7 @@ export default {
     },
     head() {
         return {
-            title: `Games supported on Apple Silicon - Does it ARM`,
+            title: `Games supported on Apple Silicon - Does It ARM`,
             // meta: [
             //     // hid is used as unique identifier. Do not use `vmid` for it as it will not work
             //     {

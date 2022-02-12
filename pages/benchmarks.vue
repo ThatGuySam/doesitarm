@@ -186,7 +186,7 @@ export default {
     },
     computed: {
         title () {
-            return `Benchmarks for Apple M1 and Apple Silicon - Does It ARM`
+            return `Benchmarks for Apple M1 Pro and M1 Max Processors and Apple Silicon - Does It ARM`
         },
         description () {
             // const featuredAppsString = this.featuredApps.slice(0, 5).map(app => app.name).join(', ')

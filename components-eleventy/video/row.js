@@ -62,6 +62,7 @@ export default async function ( videos, options = {} ) {
         distance="${ cardWidth * -1 }"
         scroll-target="#${ rowId }"
         onclick="scrollHorizontalCarousel( event )"
+        aria-label="Scroll to previous videos"
     >
         <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-gray-400" style="transform: scaleX(-1);">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -73,6 +74,7 @@ export default async function ( videos, options = {} ) {
         distance="${ cardWidth }"
         scroll-target="#${ rowId }"
         onclick="scrollHorizontalCarousel( event )"
+        aria-label="Scroll to next videos"
     >
         <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-gray-400">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>

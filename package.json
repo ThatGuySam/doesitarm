@@ -1,7 +1,7 @@
 {
   "name": "doesitarm",
   "version": "1.0.0",
-  "description": "Find out the latest app support for Apple Silicon and the Apple M1 Processor",
+  "description": "Find out the latest app support for Apple Silicon and the Apple M1 Pro and M1 Max Processors",
   "author": "Sam Carlton",
   "private": true,
   "ava": {
@@ -10,13 +10,14 @@
     ]
   },
   "scripts": {
+    "test-prebuild": "ava ./test/prebuild.js --verbose",
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
-    "build-lists": "node -r esm build-lists.js",
+    "build-lists": "npm run test-prebuild && node -r esm build-lists.js",
     "generate-nuxt": "NODE_OPTIONS=--max-old-space-size=60000 nuxt generate",
     "generate-eleventy": "node --max-old-space-size=60000  -r esm node_modules/.bin/eleventy --quiet",
     "generate-postcss": "ENV=production postcss assets/css/tailwind.css --o static/tailwind.css",
@@ -27,7 +28,8 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
-    "clone-readme": "cp ./README.md README-temp.md"
+    "clone-readme": "cp ./README.md README-temp.md",
+    "cloudflare-deploy": "npm run generate"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",
@@ -40,6 +42,7 @@
     "chance": "^1.1.7",
     "cross-env": "^5.2.0",
     "esbuild": "^0.11.20",
+    "fs-extra": "^8.1.0",
     "jsdom": "^16.4.0",
     "lazysizes": "^5.3.0-beta1",
     "markdown-it": "^11.0.1",
@@ -51,7 +54,7 @@
     "scroll-into-view-if-needed": "^2.2.26",
     "slugify": "^1.4.6",
     "terser": "^4.8.0",
-    "vue-full-screen-file-drop": "^2.0.0"
+    "vue-gtag": "^1.16.1"
   },
   "devDependencies": {
     "@11ty/eleventy": "^0.11.1",

@@ -1,14 +1,24 @@
-import { promises as fs } from 'fs'
+// import { promises as fs } from 'fs'
 
+
+import fs from 'fs-extra'
 import test from 'ava'
 import parser from 'fast-xml-parser'
 import axios from 'axios'
 import { structuredDataTest } from 'structured-data-testing-tool'
 import { Google, Twitter } from 'structured-data-testing-tool/presets'
+// import { isString } from '../helpers/check-types.js'
 
-// require('dotenv').config()
+require('dotenv').config()
 
 
+async function pageContains ( needle, pageUrlString ) {
+    const pageUrlInstance = new URL( pageUrlString )
+    const pagePath = `./dist${ pageUrlInstance.pathname }/index.html`
+    const pageHtml = await fs.readFile( pagePath , 'utf-8' )
+
+    return pageHtml.includes( needle )
+}
 
 async function testStructuredData ( options ) {
     const {
@@ -111,10 +121,11 @@ test('Sitemap mostly matches production', async (t) => {
     const message = `${ urlsNotOnLive.size } new or missing from live and ${ liveSitemapUrls.size } not found locally`
     const totalDifferences = urlsNotOnLive.size + liveSitemapUrls.size
 
+    const liveSitemapUrlStrings = new Set( liveSitemapUrls.keys() )
 
     if ( totalDifferences >= 0 ) {
         t.log( 'Missing from live', urlsNotOnLive )
-        t.log( 'Not found locally', liveSitemapUrls )
+        t.log( 'Not found locally', liveSitemapUrlStrings )
     }
 
     if ( totalDifferences >= theshold ) {
@@ -196,6 +207,36 @@ test('All TV pages have valid VideoObject structured data', async (t) => {
     }
 
     t.log( `${tvUrls.length} valid pages` )
+    t.pass()
+
+})
+
+test('All App pages with bundle data have bundle data visuals', async (t) => {
+
+    const appUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/app/') )
+
+    const appsWithBundleIds = await fs.readJson('./static/app-list.json', 'utf-8').then( appList => {
+        return appList.filter( app => {
+            return app.bundleIds.length > 0
+        })
+    })
+
+    t.log(`${appsWithBundleIds.length} apps with bundle IDs`)
+
+    try {
+
+        for ( const app of appsWithBundleIds ) {
+            const hasAppBundlesSection = await pageContains( 'App Bundles', `${ process.env.URL }${app.endpoint}` )
+
+            if ( !hasAppBundlesSection ) throw new Error(`Couldn't find App Bundles section on ${ app.endpoint }`)
+        }
+
+    } catch ( error ) {
+        console.log('failed', error)
+        t.fail( error.message )
+    }
+
+    t.log( `${appsWithBundleIds.length} valid app pages` )
     t.pass()
 
 })

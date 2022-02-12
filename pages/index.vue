@@ -2,7 +2,7 @@
     <section class="container py-24">
         <div class="flex flex-col items-center">
             <h1 class="title text-4xl md:text-6xl font-hairline leading-tight text-center">
-                Does it ARM?
+                Does It ARM?
             </h1>
             <h2 class="subtitle md:text-xl text-center">
                 Apps that are reported to support Apple Silicon
@@ -133,7 +133,7 @@ export default {
             fetchedAppList: [],
             quickButtons: [
                 {
-                    label: '✅ Full Native Support',
+                    label: '✅ Native Support',
                     query: 'status:native'
                 },
                 {
@@ -177,10 +177,10 @@ export default {
     },
     computed: {
         title ()  {
-            return `Apple Silicon and Apple M1 app and game compatibility list`
+            return `Apple Silicon and Apple M1 Pro and M1 Max app and game compatibility list`
         },
         description ()  {
-            return `List of compatibility apps and games for Apple Silicon and the Apple M1 including performance reports and benchmarks`
+            return `List of compatibility apps and games for Apple Silicon and the Apple M1 Pro and M1 Max Processors including performance reports and benchmarks`
         },
         allList () {
             return [

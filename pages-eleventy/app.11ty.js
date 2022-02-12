@@ -4,7 +4,9 @@ import config from '../nuxt.config.js'
 
 import { getAppType, getRouteType } from '../helpers/app-derived.js'
 import { deviceSupportsApp } from '../helpers/devices.js'
-import { makeLastUpdatedFriendly } from '../helpers/parse-date'
+import { makeLastUpdatedFriendly } from '../helpers/parse-date.js'
+import { getStatusOfScan } from '../helpers/statuses.js'
+import { isString } from '../helpers/check-types.js'
 
 
 import VideoRow from '../components-eleventy/video/row.js'
@@ -20,7 +22,7 @@ export const makeTitle = function ( app ) {
 }
 
 export const makeDescription = function ( app ) {
-    return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Processors.`
+    return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Pro and M1 Max Processors.`
 }
 
 // https://stackoverflow.com/a/15069646/1397641
@@ -54,6 +56,57 @@ export function renderPageLinksHtml ( links ) {
             >${ isMainLink ? 'View' : link.label }</a>
         `
     } ).join('')
+}
+
+export function supportedArchitectures ( appScan ) {
+    // if ( Array.isArray(appScan['Macho Meta']) ) {
+    //     return appScan['Macho Meta'].map( architecture => architecture.processorType)
+    // }
+
+    // console.log('meta', appScan['Macho Meta'])
+
+    if ( appScan['Macho Meta'].architectures === undefined ) return []
+
+    return appScan['Macho Meta'].architectures
+        .map( architecture => architecture.processorType)
+        .filter(processorType => Number(processorType) !== 0)
+}
+
+function renderBundleDataLevel ( bundleLevelData, depth = 0 ) {
+
+    const levelContainerClassses = 'border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4'
+    const maxDepth = 2
+
+    if ( isString(bundleLevelData) ) {
+        return bundleLevelData
+    }
+
+    if ( depth >= maxDepth ) {
+        return /* html */`<pre class="border-dashed ${ levelContainerClassses }">${ JSON.stringify(bundleLevelData, undefined, 2) }</pre>`
+    }
+
+    if ( Array.isArray( bundleLevelData ) ) {
+        const htmlList = bundleLevelData.map( ( bundleLevel ) => {
+            return /* html */`<li>${ renderBundleDataLevel( bundleLevel, depth + 1 ) }</li>`
+        } ).join('')
+
+        return /* html */`<ul class="${ levelContainerClassses }">${ htmlList }</ul>`
+    }
+
+    if ( Object(bundleLevelData) === bundleLevelData ) {
+        const htmlList = Object.entries(bundleLevelData).map( ( [key, bundleLevel] ) => {
+            return /* html */`<li>${key} : ${ renderBundleDataLevel( bundleLevel, depth + 1 ) }</li>`
+        } ).join('')
+
+        return /* html */`
+            <details>
+                <summary>Details</summary>
+                <ul class="${ levelContainerClassses }">${ htmlList }</ul>
+            </details>
+        `
+    }
+
+    return /* html */`${ JSON.stringify(bundleLevelData) }`
 }
 
 export class AppTemplate {
@@ -102,8 +155,12 @@ export class AppTemplate {
 
         const {
             app: { payload: { app, relatedVideos = [] } },
-            'device-list': deviceList
+            'device-list': deviceList,
+            // 'app-bundles': appBundlesFromFile
         } = data
+
+
+        // console.log('appBundlesFromFile', appBundlesFromFile)
 
         const hasRelatedVideos = relatedVideos.length > 0
 
@@ -112,6 +169,8 @@ export class AppTemplate {
         // console.log('video.payload', Object.keys(video.payload))
 
         const hasMultipleAliases = !!app.aliases && app.aliases.length > 1
+
+        const hasBundleIdentifiers = !!app.bundleIds && app.bundleIds.length > 0
 
         const appDeviceSupport = deviceList.map( device => {
             const supportsApp = deviceSupportsApp( device, app )
@@ -128,6 +187,16 @@ export class AppTemplate {
 
 
         const relatedVideosRowHtml = hasRelatedVideos ? await this.boundComponent(VideoRow)( relatedVideos ) : null
+
+        const appBundles = [] //hasBundleIdentifiers ? app.bundleIds.map( bundleId => this.getAppBundles() ) : null
+
+        if ( hasBundleIdentifiers ) {
+            for ( const bundleIdentifier of app.bundleIds ) {
+                const versions = await this.getAppVersions( bundleIdentifier )
+                appBundles.push( [bundleIdentifier, versions] )
+            }
+        }
+
 
         return /* html */`
             <section class="container space-y-8 py-32">
@@ -184,6 +253,79 @@ export class AppTemplate {
                         </h2>
 
                         ${ relatedVideosRowHtml }
+
+                    </div>
+                ` : '' }
+
+
+                ${ hasBundleIdentifiers ? /* html */`
+                    <div class="app-bundles w-full">
+
+                        <h2 class="subtitle text-xl md:text-2xl text-center font-bold mb-3">
+                            App Bundles
+                        </h2>
+
+                        <div class="app-bundles-container border rounded-lg">
+
+                            <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+
+                                ${ appBundles.map( ( [bundleIdentifier, versions] ) => /* html */`
+                                    <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
+                                        <a
+                                            href="#bundle_identifier=${ bundleIdentifier }"
+                                            role="button"
+                                            class="bundle-link block rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow p-2"
+                                            aria-label="${ bundleIdentifier }"
+                                        >${ bundleIdentifier }</a>
+
+                                    </div>
+                                `).join('') }
+
+                            </div>
+
+
+                            <div class="app-bundle-detail-view space-y-12 py-6 px-5">
+                                ${ appBundles.map( ( [bundleIdentifier, versions] ) => /* html */`
+                                    <div id="bundle_identifier=${ bundleIdentifier }" class="bundle-detail-container w-full space-y-2 px-2">
+                                        <h3
+                                            class="text-2xl font-bold"
+                                        >${ bundleIdentifier }</h3>
+
+                                        <div class="bundle-versions-container border rounded-lg bg-black bg-opacity-10">
+
+                                            <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+
+                                                ${ Object.entries(versions).sort((a, b) => new Date(b[1]['Date']) - new Date(a[1]['Date'])).map( ( [ version, report ] ) => /* html */`
+                                                    <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 p-4">
+                                                        <div class="version-heading font-bold text-xl">v${ version }</div>
+                                                        <div class="version-body divide-y-0 py-2">
+                                                            <div class="version-status">
+                                                                ${ getStatusOfScan( report, false ) }
+                                                            </div>
+                                                            <div class="version-architecture">
+                                                                🖥 Supported Architectures <span class="rounded bg-black bg-opacity-50 p-1">${ supportedArchitectures( report ).join(', ') }</span>
+                                                            </div>
+                                                        </div>
+                                                        <details>
+                                                            <summary class="text-xs">Full Info Plist</summary>
+                                                            <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">${ JSON.stringify(report['Info Plist'], undefined, 2) }</pre>
+                                                        </details>
+                                                        <details>
+                                                            <summary class="text-xs">Full Meta Details</summary>
+                                                            <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">${ JSON.stringify(report['Macho Meta'], undefined, 2) }</pre>
+                                                        </details>
+                                                    </div>
+                                                `).join('') }
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                `).join('') }
+                            </div>
+
+                        </div>
+
 
                     </div>
                 ` : '' }

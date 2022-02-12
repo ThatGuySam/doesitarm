@@ -1,9 +1,11 @@
 
-import { promises as fs } from 'fs'
+// import { promises as fs } from 'fs'
+
+import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import axios from 'axios'
 
-import statuses, { getStatusName } from './statuses'
+import statuses, { getStatusName } from './statuses.js'
 import appStoreGenres from './app-store/genres.js'
 import { findCategoryForTagsSet } from './categories.js'
 import parseDate from './parse-date'
@@ -13,6 +15,27 @@ import { makeSlug } from './slug.js'
 
 
 const md = new MarkdownIt()
+
+// Find the end of our list
+export function getEndOfListTokenIndex ( parsedMarkdown ) {
+
+    return parsedMarkdown.findIndex((Token) => {
+        // JSON.stringify(Token).includes('end-of-list')
+        const matches = Token.content.includes('end-of-list')
+
+        // if (matches) {
+        //     console.log('Token', Token)
+        // }
+
+        return matches
+    })
+}
+
+export function getReadmeTokenList ( parsedMarkdown ) {
+    const endOfListIndex = getEndOfListTokenIndex( parsedMarkdown )
+
+    return parsedMarkdown.slice(0, endOfListIndex)
+}
 
 const getTokenLinks = function ( childTokens ) {
 
@@ -51,6 +74,160 @@ const getTokenLinks = function ( childTokens ) {
     }
 
     return tokenList
+}
+
+
+export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
+
+    // Parse markdown
+    const result = md.parse(readmeContent)
+
+    // console.log('results', result.length)
+    // console.log('results', result)
+
+
+    // Find the end of our list
+    // const endOfListIndex = getEndOfListIndex( result )
+
+    const appListTokens = getReadmeTokenList( result )
+
+    const appList = []
+
+    let categorySlug = 'start'
+    let categoryTitle = 'Start'
+    let isHeading = false
+    let isParagraph = false
+
+    for (const token of appListTokens) {
+        // On heading close switch off heading mode
+        if (token.type.includes('heading_')) isHeading = !isHeading
+
+        // On heading close switch off heading mode
+        if (token.type.includes('paragraph_')) isParagraph = !isParagraph
+
+        if (isHeading && token.type === 'inline') {
+            categoryTitle = token.content
+            categorySlug = makeSlug( token.content )
+
+            // appList[categorySlug] = []
+        }
+
+
+        if ( isParagraph && token.type === 'inline' && token.content.includes(' - ') ) {
+
+            const [ link, text ] = token.content.split(' - ').map(string => string.trim())
+
+            const [ name, url ] = link.substring(1, link.length-1).split('](')
+
+            const bundleIds = []
+            let tags = []
+            let aliases = []
+            const relatedLinksMap = new Map( getTokenLinks(token.children).map( link => [ link.href, link ] ) )
+
+            // Search for this app in the scanList and remove duplicates
+            scanListMap.forEach( ( scannedApp, key ) => {
+
+                for ( const alias of scannedApp.aliases ) {
+                    // console.log( key, alias, name, eitherMatches(alias, name) )
+
+                    if ( eitherMatches(alias, name) ) {
+                        // If we don't have any bundleIds yet
+                        // Add this app's bundleId to the list
+                        if ( !bundleIds.includes( scannedApp.bundleIds[0] ) ) { bundleIds.push(scannedApp.bundleIds[0]) }
+
+                        // Merge this scanned app's tags into the matching app
+                        tags = Array.from(new Set([
+                            ...tags,
+                            ...scannedApp.tags
+                        ]))
+
+                        // Merge as set then convert to array to prevent duplicates
+                        aliases = Array.from(new Set([
+                            ...aliases,
+                            ...scannedApp.aliases
+                        ]))
+
+                        // Merge relatated links
+                        for ( const link of scannedApp.relatedLinks ) {
+
+                            relatedLinksMap.set( link.href, {
+                                ...link,
+                                label: (link.label === 'View') ? 'App Website' : link.label
+                            } )
+                        }
+
+                        console.log(`Merged ${alias} (${scannedApp.bundleIds[0]}) from scanned apps into ${name} from README`)
+                        scanListMap.delete( key )
+                    }
+                }
+            })
+
+
+            // Convert link map values into array for JSON
+            const relatedLinks = Array.from( relatedLinksMap.values() )
+
+            // console.log('relatedLinks', relatedLinks)
+
+            const appSlug = makeSlug( name )
+
+            const endpoint = getAppEndpoint({
+                category: {
+                    slug: null
+                },
+                slug: appSlug
+            })// `/app/${appSlug}`
+
+            let status = 'unknown'
+
+            for (const statusKey in statuses) {
+                if (text.includes(statusKey)) {
+                    status = statuses[statusKey]
+                    break
+                }
+            }
+
+            const category = {
+                label: categoryTitle,
+                slug: categorySlug
+            }
+
+            const lastUpdatedRaw = lookForLastUpdated({ name, slug: appSlug, endpoint, category }, commits)
+
+            const lastUpdated = (lastUpdatedRaw) ? {
+                raw: lastUpdatedRaw,
+                timestamp: parseDate(lastUpdatedRaw).timestamp,
+            } : null
+
+
+            appList.push({
+                name,
+                aliases,
+                status,
+                bundleIds,
+                lastUpdated,
+                // url,
+                text,
+                slug: appSlug,
+                endpoint,
+                category,
+                tags,
+                // content: token.content,
+                relatedLinks,
+            })
+
+
+            // if ( tags.length > 1 ) {
+            //     console.log('tags', name, bundleIds, tags)
+            // }
+        }
+
+        // appList[categorySlug]
+
+
+        // console.log('token', token)
+    }
+
+    return appList
 }
 
 
@@ -150,6 +327,27 @@ export default async function () {
     // Store app scans
     await axios
         .get(process.env.SCANS_SOURCE)
+
+        .then( async response => {
+            const appBundles = []
+
+            for (const appScan of response.data.appList) {
+
+                // Add app to bundle list
+                appBundles.push([
+                    // bundleId as key
+                    appScan.bundleIdentifier,
+
+                    // Versions as value
+                    appScan.versions
+                ])
+
+            }
+
+            await fs.writeJson('./static/app-bundles.json', appBundles)
+
+            return response
+        })
         .then(function (response) {
 
             response.data.appList.forEach( appScan => {
@@ -159,7 +357,7 @@ export default async function () {
                 // 'native' or 'unreported'
                 const statusName = getStatusName( appScan['Result'] )
 
-                const statusText = (statusName === 'native') ? `✅ Yes, Full Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
+                const statusText = (statusName === 'native') ? `✅ Yes, Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
 
                 const appSlug = makeSlug( appName )
 
@@ -206,7 +404,7 @@ export default async function () {
                 scanListMap.set( appSlug, {
                     name: appName,
                     aliases: appScan['aliases'],
-                    bundleId: appScan.bundleIdentifier,
+                    bundleIds: [ appScan.bundleIdentifier ],
                     status: statusName,
                     lastUpdated: parseDate( appScan['Date'] ),
                     // url,
@@ -232,162 +430,7 @@ export default async function () {
         })
 
 
-    // Parse markdown
-    const result = md.parse(readmeContent)
-
-    // console.log('results', result.length)
-    // console.log('results', result)
-
-
-    // Finf the end of our list
-    const endOfListIndex = result.findIndex((Token) => {
-        // JSON.stringify(Token).includes('end-of-list')
-        const matches = Token.content.includes('end-of-list')
-
-        // if (matches) {
-        //     console.log('Token', Token)
-        // }
-
-        return matches
-    })
-
-    const appListTokens = result.slice(0, endOfListIndex)
-
-    const appList = []
-
-    let categorySlug = 'start'
-    let categoryTitle = 'Start'
-    let isHeading = false
-    let isParagraph = false
-
-    for (const token of appListTokens) {
-        // On heading close switch off heading mode
-        if (token.type.includes('heading_')) isHeading = !isHeading
-
-        // On heading close switch off heading mode
-        if (token.type.includes('paragraph_')) isParagraph = !isParagraph
-
-        if (isHeading && token.type === 'inline') {
-            categoryTitle = token.content
-            categorySlug = makeSlug( token.content )
-
-            // appList[categorySlug] = []
-        }
-
-
-        if ( isParagraph && token.type === 'inline' && token.content.includes(' - ') ) {
-
-            const [ link, text ] = token.content.split(' - ').map(string => string.trim())
-
-            const [ name, url ] = link.substring(1, link.length-1).split('](')
-
-            let bundleId = null
-            let tags = []
-            let aliases = []
-            const relatedLinksMap = new Map( getTokenLinks(token.children).map( link => [ link.href, link ] ) )
-
-            // Search for this app in the scanList and remove duplicates
-            scanListMap.forEach( ( scannedApp, key ) => {
-
-                for ( const alias of scannedApp.aliases ) {
-                    // console.log( key, alias, name, eitherMatches(alias, name) )
-
-                    if ( eitherMatches(alias, name) ) {
-                        // If we don't have a bundleId yet
-                        // Set this app's bundleId
-                        if ( bundleId === null ) { bundleId = scannedApp.bundleId }
-
-                        // Merge this scanned app's tags into the matching app
-                        tags = Array.from(new Set([
-                            ...tags,
-                            ...scannedApp.tags
-                        ]))
-
-                        // Merge as set then convert to array to prevent duplicates
-                        aliases = Array.from(new Set([
-                            ...aliases,
-                            ...scannedApp.aliases
-                        ]))
-
-                        // Merge relatated links
-                        for ( const link of scannedApp.relatedLinks ) {
-
-                            relatedLinksMap.set( link.href, {
-                                ...link,
-                                label: (link.label === 'View') ? 'App Website' : link.label
-                            } )
-                        }
-
-                        console.log(`Merged ${alias} (${scannedApp.bundleId}) from scanned apps into ${name} from README`)
-                        scanListMap.delete( key )
-                    }
-                }
-            })
-
-
-            // Convert link map values into array for JSON
-            const relatedLinks = Array.from( relatedLinksMap.values() )
-
-            // console.log('relatedLinks', relatedLinks)
-
-            const appSlug = makeSlug( name )
-
-            const endpoint = getAppEndpoint({
-                category: {
-                    slug: null
-                },
-                slug: appSlug
-            })// `/app/${appSlug}`
-
-            let status = 'unknown'
-
-            for (const statusKey in statuses) {
-                if (text.includes(statusKey)) {
-                    status = statuses[statusKey]
-                    break
-                }
-            }
-
-            const category = {
-                label: categoryTitle,
-                slug: categorySlug
-            }
-
-            const lastUpdatedRaw = lookForLastUpdated({ name, slug: appSlug, endpoint, category }, commits)
-
-            const lastUpdated = (lastUpdatedRaw) ? {
-                raw: lastUpdatedRaw,
-                timestamp: parseDate(lastUpdatedRaw).timestamp,
-            } : null
-
-
-            appList.push({
-                name,
-                aliases,
-                status,
-                bundleId,
-                lastUpdated,
-                // url,
-                text,
-                slug: appSlug,
-                endpoint,
-                category,
-                tags,
-                // content: token.content,
-                relatedLinks,
-            })
-
-
-            // if ( tags.length > 1 ) {
-            //     console.log('tags', name, bundleId, tags)
-            // }
-        }
-
-        // appList[categorySlug]
-
-
-        // console.log('token', token)
-    }
+    const appList = buildReadmeAppList({ readmeContent, scanListMap, commits })
 
     // console.log('appList', appList)
 

@@ -8,4 +8,4 @@ _The Name of the App being added_
 - [ ] App status is consistent with already used verbiage. 
 
 #### Standard App Line Format
-`* [App Name](https://app-download.link/) - ✅ App Status - [Relevant Link 1](https://github.com/) [Relevant Link 2](https://someforum.com/)`
+`* [App Name](https://app-download.link/) - ✅ App Status - [Relevant Link 1](https://github.com/) [Relevant Link 2](https://someforum.com/) [Verification](https://link-to-github-issue-with-screenshot)`

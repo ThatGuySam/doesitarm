@@ -116,7 +116,7 @@ export default {
                 {
                     'hid': 'description',
                     'name': 'description',
-                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors`
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Pro and M1 Max Processors`
                 },
 
                 // Twitter Card
@@ -128,7 +128,7 @@ export default {
                 {
                     'hid': 'twitter:description',
                     'property':  'twitter:description',
-                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Processors`
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Pro and M1 Max Processors`
                 },
                 {
                     'property':  'twitter:url',

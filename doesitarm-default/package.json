@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "doesitarm-default",
+  "version": "1.0.0",
+  "description": "A template for kick starting a Cloudflare Workers project",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx esbuild --bundle --sourcemap --outdir=dist ./src/index.js",
+    "format": "prettier --write '**/*.{js,css,json,md}'",
+    "dev": "npx miniflare --watch --debug"
+  },
+  "author": "Sam Carlton <sam@sam.lc>",
+  "license": "MIT",
+  "dependencies": {
+    "accept-language-parser": "^1.5.0",
+    "query-string": "^6.11.0",
+    "universal-analytics": "^0.5.3",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "esbuild": "^0.14.18",
+    "prettier": "^1.18.2",
+    "webpack": "4.33.0"
+  }
+}
