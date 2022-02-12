@@ -48,6 +48,7 @@ export default {
         },
         title: 'Does It ARM',
         description: pkg.description,
+
         meta: [
             { charset: 'utf-8' },
             {
@@ -98,7 +99,20 @@ export default {
                 'content': `${process.env.URL}/images/mark.png`
             }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+        link: [
+            // Favicon
+            {
+                rel: 'icon',
+                type: 'image/x-icon',
+                href: '/favicon.ico'
+            },
+
+            // Gtag Preconnect
+            {
+                rel: 'preconnect',
+                href: 'https://www.googletagmanager.com'
+            },
+        ],
     },
 
     /*
