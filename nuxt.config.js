@@ -114,7 +114,9 @@ export default {
     /*
     ** Plugins to load before mounting the App
     */
-    plugins: [],
+    plugins: [
+        '@/plugins/gtag'
+    ],
 
     /*
     ** Nuxt.js modules
