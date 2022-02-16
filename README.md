@@ -859,6 +859,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Silenz](https://silenzapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/653749/5114)
 * [Sleep Warden](https://apps.apple.com/us/app/sleep-warden/id1571743175) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/697#issue-918718225)
 * [sndcpy](https://github.com/rom1v/sndcpy) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/645#issuecomment-839911450)
+* [Soduto](https://soduto.com/downloads/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/879#issue-1127062742)
 * [Sound Control](https://staticz.com/soundcontrol/) - ✅ Yes, Native Apple Silicon Support as of v2.6 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/361#issuecomment-869339643)
 * [Speedtest by Ookla](https://apps.apple.com/ae/app/speedtest-by-ookla/id1153157709?mt=12) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/666#issue-899017910)
 * [start for Mac](https://apps.apple.com/us/app/start/id1329701389?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/752736/5114)
