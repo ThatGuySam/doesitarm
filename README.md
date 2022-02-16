@@ -700,6 +700,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Social and Communication
 
+* [AirMessage](https://airmessage.org/install/) - ✅ Yes, Native Apple Silicon Support as of v3.2.1 - [Release Notes](https://github.com/airmessage/airmessage-server-legacy/releases/tag/rel-3.2.1) [Verification](https://github.com/ThatGuySam/doesitarm/issues/881#issue-1130176479)
 * [AliWangWang](https://wangwang.taobao.com/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/221#issuecomment-869537398)
 * [Aviary Twitter Client](https://apps.apple.com/us/app/aviary/id1522043420) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Canary Mail](https://canarymail.io/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/482429/5114)
