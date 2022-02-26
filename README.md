@@ -195,6 +195,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [VisualDiffer](https://apps.apple.com/us/app/visualdiffer/id412386481?ls=1&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.8.0 - [Mantis issue](https://visualdiffer.com/mantis/view.php?id=334)
 * [VS Code](https://code.visualstudio.com/) - ✅ Yes, Full Native Apple Silicon Support as of v1.54 - [Release Notes](https://code.visualstudio.com/updates/v1_54)
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
+* [Warp Terminal](https://www.warp.dev/) - ✅ Yes, Native Apple Silicon Support as of v0.2022.01.31.09.03.stable_00 - [Release Notes](https://docs.warp.dev/help/changelog) [Verification](https://github.com/ThatGuySam/doesitarm/issues/882#issue-1130192136)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
 * [Wechat Devtools](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) - ✅ Yes, full native support as of v1.05.2108130 - [Release Notes](https://developers.weixin.qq.com/community/minihome/doc/000cea19598d10ff619c5c8565bc01)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
