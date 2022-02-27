@@ -38,6 +38,7 @@
     "@fontsource/inter": "^4.0.1",
     "@nuxtjs/sitemap": "^2.4.0",
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
+    "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.2.6",
     "axios": "^0.21.0",
     "can-autoplay": "^3.0.0",
