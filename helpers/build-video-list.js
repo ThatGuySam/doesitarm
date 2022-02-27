@@ -1,5 +1,6 @@
 
 import axios from 'axios'
+import { PromisePool } from '@supercharge/promise-pool'
 
 import { fuzzyMatchesWholeWord } from './matching.js'
 import { byTimeThenNull } from './sort-list.js'
@@ -128,6 +129,59 @@ const makeThumbnailData = function ( thumbnails, widthLimit = null ) {
     }
 }
 
+async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
+
+    // Skip private videos
+    if (fetchedVideo.title === 'Private video') return
+
+    // Skip deleted videos
+    if (fetchedVideo.title === 'Deleted video') return
+
+    // Build video slug
+    const slug = makeSlug( `${fetchedVideo.title}-i-${videoId}` )
+
+    const apps = []
+    // Generate new tag set based on api data
+    const tags = generateVideoTags(fetchedVideo)
+
+    for ( const app of applist ) {
+        if (videoFeaturesApp(app, fetchedVideo)) {
+            apps.push(app.slug)
+
+            tags.add(app.category.slug)
+        }
+    }
+
+    // console.log('fetchedVideo.rawData.snippet', fetchedVideo.rawData.snippet)
+
+    const lastUpdated = {
+        raw: fetchedVideo.rawData.snippet.publishedAt,
+        timestamp: parseDate(fetchedVideo.rawData.snippet.publishedAt).timestamp,
+    }
+
+    // console.log('fetchedVideo.thumbnails', fetchedVideo.thumbnails)
+
+    return {
+        name: fetchedVideo.title,
+        id: videoId,
+        lastUpdated,
+        apps,
+        slug,
+        channel: {
+            name: fetchedVideo.rawData.snippet.channelTitle,
+            id: fetchedVideo.rawData.snippet.channelId
+        },
+        // Convert tags set into array
+        tags: Array.from(tags),
+        timestamps: fetchedVideo.timestamps,
+        // thumbnails: fetchedVideo.rawData.snippet.thumbnails,
+        thumbnail: makeThumbnailData( fetchedVideo.rawData.snippet.thumbnails, 700 ),
+        endpoint: getVideoEndpoint({
+            slug
+        })
+    }
+}
+
 export default async function ( applist ) {
 
     const videosJsonUrl = process.env.VIDEO_SOURCE || `${process.env.VFUNCTIONS_URL}/videos.json`
@@ -137,62 +191,19 @@ export default async function ( applist ) {
     // Extract commit from response data
     const fetchedVideos = response.data
 
-    // console.log('fetchedVideos', fetchedVideos)
-
     const videos = []
 
-    for (const videoId in fetchedVideos) {
+    await PromisePool
+        .withConcurrency(1000)
+        .for( Object.entries( fetchedVideos ) )
+        .process(async ( [ videoId, fetchedVideo ], index, pool ) => {
+            const mappedVideo = await handleFetchedVideo ( fetchedVideo, videoId, applist )
 
-        // Skip private videos
-        if (fetchedVideos[videoId].title === 'Private video') continue
+            // Skip if this video is not an object
+            if ( Object( mappedVideo ) !== mappedVideo ) return
 
-        // Skip deleted videos
-        if (fetchedVideos[videoId].title === 'Deleted video') continue
-
-        // Build video slug
-        const slug = makeSlug( `${fetchedVideos[videoId].title}-i-${videoId}` )
-
-        const apps = []
-        // Generate new tag set based on api data
-        const tags = generateVideoTags(fetchedVideos[videoId])
-
-        for ( const app of applist ) {
-            if (videoFeaturesApp(app, fetchedVideos[videoId])) {
-                apps.push(app.slug)
-
-                tags.add(app.category.slug)
-            }
-        }
-
-        // console.log('fetchedVideos[videoId].rawData.snippet', fetchedVideos[videoId].rawData.snippet)
-
-        const lastUpdated = {
-            raw: fetchedVideos[videoId].rawData.snippet.publishedAt,
-            timestamp: parseDate(fetchedVideos[videoId].rawData.snippet.publishedAt).timestamp,
-        }
-
-        // console.log('fetchedVideos[videoId].thumbnails', fetchedVideos[videoId].thumbnails)
-
-        videos.push({
-            name: fetchedVideos[videoId].title,
-            id: videoId,
-            lastUpdated,
-            apps,
-            slug,
-            channel: {
-                name: fetchedVideos[videoId].rawData.snippet.channelTitle,
-                id: fetchedVideos[videoId].rawData.snippet.channelId
-            },
-            // Convert tags set into array
-            tags: Array.from(tags),
-            timestamps: fetchedVideos[videoId].timestamps,
-            // thumbnails: fetchedVideos[videoId].rawData.snippet.thumbnails,
-            thumbnail: makeThumbnailData( fetchedVideos[videoId].rawData.snippet.thumbnails, 700 ),
-            endpoint: getVideoEndpoint({
-                slug
-            })
+            videos.push( mappedVideo )
         })
-    }
 
     // console.log('videos', videos)
 
