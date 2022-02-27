@@ -14,7 +14,7 @@
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
-    "build-api": "npm run clone-readme && npm run build-lists",
+    "build-api": "npm run clone-readme && npm run build-lists -- --with-api",
     "start": "nuxt start",
     "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
