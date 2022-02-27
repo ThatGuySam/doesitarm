@@ -41,7 +41,10 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 ## The Apps
-[🔍 Search List](https://doesitarm.com/)
+Apps are manually reported here and automatically reported from the internet via the Does It ARM Bot. 
+These are the manually reported apps. You can search all apps onn the website.  
+
+[🔍 Search all apps](https://doesitarm.com/)
 
 #### Developer Tools
 
