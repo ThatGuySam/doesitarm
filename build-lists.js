@@ -2,6 +2,7 @@ import { dirname } from 'path'
 
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
+import { PromisePool } from '@supercharge/promise-pool'
 
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
@@ -191,38 +192,47 @@ class BuildLists {
     }
 
     saveApiEndpoints = async function ( listOptions ) {
+
+        await PromisePool
+            .withConcurrency(100)
+            .for( Array.from( this.lists[listOptions.name] ) )
+            .process(async ( listEntry, index, pool ) => {
+                // console.log('listEntry', listEntry)
+
+                const {
+                    // name,
+                    // aliases,
+                    // status,
+                    // bundleIds,
+                    endpoint,
+
+                } = listEntry
+
+                const endpointPath = `./static/api${endpoint}.json`
+                const endpointDirectory = dirname(endpointPath)
+
+                // Stop if the endpoint is already exists
+                if (fs.existsSync(endpointPath)) {
+                    console.log(`Path "${endpointPath}" already exists`)
+
+                    return
+                }
+
+                // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
+
+                // Ensure the directory exists
+                await fs.ensureDir( endpointDirectory )
+
+                // Write the endpoint to JSON
+                await this.saveToJson( listEntry, endpointPath )
+            })
+
+
         // Save each enpoint's data
-        for ( const listEntry of this.lists[listOptions.name] ) {
+        // for ( const listEntry of this.lists[listOptions.name] ) {
 
-            // console.log('listEntry', listEntry)
 
-            const {
-                // name,
-                // aliases,
-                // status,
-                // bundleIds,
-                endpoint,
-
-            } = listEntry
-
-            const endpointPath = `./static/api${endpoint}.json`
-            const endpointDirectory = dirname(endpointPath)
-
-            // Stop if the endpoint is already exists
-            if (fs.existsSync(endpointPath)) {
-                console.log(`Path "${endpointPath}" already exists`)
-
-                continue
-            }
-
-            // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
-
-            // Ensure the directory exists
-            await fs.ensureDir( endpointDirectory )
-
-            // Write the endpoint to JSON
-            await this.saveToJson( listEntry, endpointPath )
-        }
+        // }
     }
 
     // Save app lists to JSON
