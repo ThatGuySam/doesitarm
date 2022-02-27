@@ -1,4 +1,6 @@
-import { promises as fs } from 'fs'
+import { dirname } from 'path'
+
+import fs from 'fs-extra'
 import dotenv from 'dotenv'
 
 import buildAppList from './helpers/build-app-list.js'
@@ -21,6 +23,9 @@ import { makeSearchableList } from './helpers/searchable-list.js'
 
 // Setup dotenv
 dotenv.config()
+
+const commandArguments = process.argv
+const withApi = commandArguments.includes('--with-api')
 
 
 
@@ -185,6 +190,41 @@ class BuildLists {
         return
     }
 
+    saveApiEndpoints = async function ( listOptions ) {
+        // Save each enpoint's data
+        for ( const listEntry of this.lists[listOptions.name] ) {
+
+            // console.log('listEntry', listEntry)
+
+            const {
+                // name,
+                // aliases,
+                // status,
+                // bundleIds,
+                endpoint,
+
+            } = listEntry
+
+            const endpointPath = `./static/api${endpoint}.json`
+            const endpointDirectory = dirname(endpointPath)
+
+            // Stop if the endpoint is already exists
+            if (fs.existsSync(endpointPath)) {
+                console.log(`Path "${endpointPath}" already exists`)
+
+                continue
+            }
+
+            // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
+
+            // Ensure the directory exists
+            await fs.ensureDir( endpointDirectory )
+
+            // Write the endpoint to JSON
+            await this.saveToJson( listEntry, endpointPath )
+        }
+    }
+
     // Save app lists to JSON
     saveAppLists = async function () {
 
@@ -208,8 +248,18 @@ class BuildLists {
             // Save a searchable list
             await this.saveToJson( Array.from(searchableList), `./static/${listOptions.name}-list-searchable.json` )
 
-
             console.timeEnd(methodName)
+
+            if ( withApi ) {
+                console.log('Saving individual endpoints...')
+
+                const endpointMethodName = `Saved /${ listOptions.name } endpoints`
+                console.time(endpointMethodName)
+
+                await this.saveApiEndpoints( listOptions )
+
+                console.timeEnd(endpointMethodName)
+            }
         }
 
         console.log('Save lists finished')
@@ -222,6 +272,8 @@ class BuildLists {
         await this.buildLists()
 
         await this.saveAppLists()
+
+
 
         // console.log('appList', appList)
 

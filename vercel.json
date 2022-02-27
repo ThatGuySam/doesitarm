@@ -1,4 +1,11 @@
 {
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": { "distDir": "static" }
+        }
+    ],
     "github": {
         "silent": true
     }
