@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import fs from 'fs-extra'
 import dotenv from 'dotenv'
 
 import buildAppList from './helpers/build-app-list.js'
