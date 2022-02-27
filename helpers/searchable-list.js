@@ -43,6 +43,11 @@ export function makeSearchableList ( listSet ) {
     ])
 
     listSet.forEach( ( searchableItem ) => {
+
+        if ( typeof searchableItem === 'undefined' ) {
+            throw new Error('searchableItem is undefined')
+        }
+
         // If this is the first items
         // then store the keys
         if ( firstLoop ) {
