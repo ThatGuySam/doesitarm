@@ -41,7 +41,11 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 ## The Apps
-[🔍 Search List](https://doesitarm.com/)
+Apps are manually reported here and automatically reported from the internet via the Does It ARM Bot. 
+<br>
+These are the manually reported apps. You can search all apps on the website.  
+
+[🔍 Search all apps](https://doesitarm.com/)
 
 #### Developer Tools
 
@@ -188,12 +192,14 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Transmit](https://panic.com/transmit/) - ✅ Yes, Full Native Apple Silicon Support as of v5.7 - [Official Tweet](https://twitter.com/panic/status/1326978002576666624?s=20) [Release Notes](https://library.panic.com/releasenotes/transmit5/#57)
 * [Typora](https://typora.io/#download) - ✅ Yes, fully supported as of v0.9.9.36 - [Release Notes](https://typora.io/dev_release.html)
 * [Unity](https://store.unity.com/download) - ✳️ Runs via Rosetta with native support currently in development - [CNET Article](https://www.cnet.com/news/microsoft-365-and-adobe-creative-cloud-will-support-mac-arm-natively/#:~:text=At%20its%20annual%20Worldwide%20Developers,which%20it%20calls%20Apple%20silicon.&text=Adobe's%20Creative%20Cloud%20software%20includes,InDesign%2C%20Premiere%20Pro%20and%20Illustrator)
+* [UTM](https://mac.getutm.app/) - ✅ Yes, Native Apple Silicon Support as of v3.0.0 - [Release Notes](https://github.com/utmapp/UTM/releases/tag/v3.0.0) [Verification](https://github.com/ThatGuySam/doesitarm/issues/880#issue-1130007382)
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) - 🚫 No, not yet supported only works on Intel-based Macs - [Discussion](https://forums.virtualbox.org/viewtopic.php?f=8&t=98742)
 * [VirtualHostX](https://clickontyler.com/virtualhostx/) - 🚫 Not yet supported only works on Intel-based Macs - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/833643/5114)
 * [Visual Studio for Mac](https://visualstudio.microsoft.com/vs/mac/) - ✳️ Yes, works via Rosetta 2 but debugging is not supported - [Verification](https://github.com/ThatGuySam/doesitarm/issues/401#issuecomment-748295469)
 * [VisualDiffer](https://apps.apple.com/us/app/visualdiffer/id412386481?ls=1&mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.8.0 - [Mantis issue](https://visualdiffer.com/mantis/view.php?id=334)
 * [VS Code](https://code.visualstudio.com/) - ✅ Yes, Full Native Apple Silicon Support as of v1.54 - [Release Notes](https://code.visualstudio.com/updates/v1_54)
 * [Vysor](https://www.vysor.io/download/) - ✳️ Yes, works via Rosetta 2 - [Tweet](https://twitter.com/vysorapp/status/1329298424278093825) [Source](https://github.com/ThatGuySam/doesitarm/issues/275#issuecomment-747208601)
+* [Warp Terminal](https://www.warp.dev/) - ✅ Yes, Native Apple Silicon Support as of v0.2022.01.31.09.03.stable_00 - [Release Notes](https://docs.warp.dev/help/changelog) [Verification](https://github.com/ThatGuySam/doesitarm/issues/882#issue-1130192136)
 * [WebStorm](https://www.jetbrains.com/webstorm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1 - [Official Download](https://www.jetbrains.com/webstorm/download/#section=mac)
 * [Wechat Devtools](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) - ✅ Yes, full native support as of v1.05.2108130 - [Release Notes](https://developers.weixin.qq.com/community/minihome/doc/000cea19598d10ff619c5c8565bc01)
 * [Wireshark](https://www.wireshark.org/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/336)
@@ -700,11 +706,12 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Social and Communication
 
+* [AirMessage](https://airmessage.org/install/) - ✅ Yes, Native Apple Silicon Support as of v3.2.1 - [Release Notes](https://github.com/airmessage/airmessage-server-legacy/releases/tag/rel-3.2.1) [Verification](https://github.com/ThatGuySam/doesitarm/issues/881#issue-1130176479)
 * [AliWangWang](https://wangwang.taobao.com/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/221#issuecomment-869537398)
 * [Aviary Twitter Client](https://apps.apple.com/us/app/aviary/id1522043420) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Canary Mail](https://canarymail.io/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/482429/5114)
 * [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/530#issue-790322821)
-* [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 with native support in beta - [Canary Download](https://discord.com/api/download/canary?platform=osx) [Rosseta Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
+* [Discord](https://discord.com/download) - ✳️ Yes, works via Rosetta 2 with native support in beta - [PTB Download](https://discord.com/api/download/ptb?platform=osx) [Rosseta Verification](https://github.com/ThatGuySam/doesitarm/issues/192#issuecomment-734753133)
 * [Facebook Messenger Desktop](https://www.messenger.com/desktop) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/520)
 * [Guilded](https://www.guilded.gg/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/781#issue-1014658498)
 * [Keybase](https://keybase.io/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/143#issuecomment-1015904302)
@@ -859,6 +866,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Silenz](https://silenzapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/653749/5114)
 * [Sleep Warden](https://apps.apple.com/us/app/sleep-warden/id1571743175) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/697#issue-918718225)
 * [sndcpy](https://github.com/rom1v/sndcpy) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/645#issuecomment-839911450)
+* [Soduto](https://soduto.com/downloads/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/879#issue-1127062742)
 * [Sound Control](https://staticz.com/soundcontrol/) - ✅ Yes, Native Apple Silicon Support as of v2.6 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/361#issuecomment-869339643)
 * [Speedtest by Ookla](https://apps.apple.com/ae/app/speedtest-by-ookla/id1153157709?mt=12) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/666#issue-899017910)
 * [start for Mac](https://apps.apple.com/us/app/start/id1329701389?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/752736/5114)
