@@ -249,7 +249,9 @@ class BuildLists {
 
             const listOptions = this.listsOptions[listOptionsKey]
 
-            await this.saveList( listOptions )
+            if ( !withApi ) {
+                await this.saveList( listOptions )
+            }
 
             const searchableList = makeSearchableList( this.lists[listOptions.name] )
 
@@ -383,15 +385,17 @@ class BuildLists {
         //     ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
         // ])
 
-        for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
-            // Save Endpoints
-            await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
-        }
+        if ( !withApi ) {
+            for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
+                // Save Endpoints
+                await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
+            }
 
-        // Save sitemap endpoints
-        await this.saveToJson(Object.values(this.endpointMaps).map( endpointSet => {
-            return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
-        } ).flat(1), './static/sitemap-endpoints.json')
+            // Save sitemap endpoints
+            await this.saveToJson(Object.values(this.endpointMaps).map( endpointSet => {
+                return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
+            } ).flat(1), './static/sitemap-endpoints.json')
+        }
 
         console.log('Total Nuxt Endpoints', this.endpointMaps.nuxt.size )
         console.log('Total Eleventy Endpoints', this.endpointMaps.eleventy.size )
