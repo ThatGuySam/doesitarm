@@ -5,6 +5,8 @@ Lists of reported app support for macOS on ARM so far.
 
 Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitarm/issues). PRs welcome :) 
 
+Applications for Official Does It ARM Volunteer Maintainers are now open: [Apply](https://forms.gle/3EwUSmLuYNgUo8AX6)
+
 [Search List](https://doesitarm.com/) | [Get Email Updates](https://doesitarm.com/embed-subscribe/) | [🧪 Apple Silicon App Test](https://doesitarm.com/apple-silicon-app-test/) | [Does It ARM on Twitter](https://twitter.com/DoesItARM)
 
 
