@@ -61,6 +61,9 @@ html {
     box-sizing: border-box;
 
     background: #191a1d;
+
+    /* height of sticky header = 80px */
+    scroll-padding-top: 100px;
 }
 
 *,
@@ -85,6 +88,9 @@ html {
  * @import "utilities/skew-transforms";
  */
 
+ .container {
+    max-width: 1140px;
+ }
 
 .ease {
     transition-property: all;
