@@ -26,28 +26,7 @@
                 </template>
             </Search>
 
-            <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
-                <LinkButton
-                    :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
-                    class="text-xs"
-                >
-                    Request an App with Github
-                </LinkButton>
-
-                <LinkButton
-                    :href="`https://twitter.com/DoesItARM/status/1330027384041508865`"
-                    class="text-xs"
-                >
-                    Request an App with Twitter
-                </LinkButton>
-
-                <LinkButton
-                    :href="`/apple-silicon-app-test/`"
-                    class="text-xs"
-                >
-                    Scan Your Own App
-                </LinkButton>
-            </div>
+            <ListEndButtons :query="query" />
 
             <AllUpdatesSubscribe
                 :input-class-groups="{
@@ -72,6 +51,7 @@ import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import ListSummary from '~/components/list-summary.vue'
+import ListEndButtons from '~/components/list-end-buttons.vue'
 
 export default {
     async asyncData () {
@@ -125,7 +105,8 @@ export default {
         Search,
         LinkButton,
         AllUpdatesSubscribe,
-        ListSummary
+        ListSummary,
+        ListEndButtons
     },
     data: function () {
         return {

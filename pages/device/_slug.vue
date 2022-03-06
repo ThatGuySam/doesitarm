@@ -57,30 +57,7 @@
 
             </div>
 
-            <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
-
-                <LinkButton
-                    :href="`https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${query}`"
-                    class="text-xs"
-                >
-                    Request an App with Github
-                </LinkButton>
-
-                <LinkButton
-                    :href="`https://twitter.com/DoesItARM/status/1330027384041508865`"
-                    class="text-xs"
-                >
-                    Request an App with Twitter
-                </LinkButton>
-
-                <LinkButton
-                    :href="`/apple-silicon-app-test/`"
-                    class="text-xs"
-                >
-                    Scan Your Own App
-                </LinkButton>
-
-            </div>
+            <ListEndButtons :query="query" />
 
         </div>
     </section>
@@ -89,6 +66,7 @@
 <script>
 import Search from '~/components/search.vue'
 import LinkButton from '~/components/link-button.vue'
+import ListEndButtons from '~/components/list-end-buttons.vue'
 
 // import { categories } from '~/helpers/categories.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
@@ -151,7 +129,8 @@ export default {
     },
     components: {
         Search,
-        LinkButton
+        LinkButton,
+        ListEndButtons
     },
     data: function () {
         return {
