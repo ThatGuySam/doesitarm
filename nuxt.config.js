@@ -123,6 +123,7 @@ export default {
                 async: true,
                 type: 'text/javascript',
                 id: '_carbonads_js',
+                class: 'include-on-static',
                 body: true
             }
         ]

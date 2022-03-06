@@ -71,7 +71,9 @@ const cleanNuxtLayout = ( layout ) => {
     })
 
     // Strip out existing scripts
-    Array.from(document.querySelectorAll('script[src*=".js"]')).forEach( domNode => {
+    const scriptSelector = 'script[src*=".js"]:not(.include-on-static)'
+
+    Array.from(document.querySelectorAll( scriptSelector )).forEach( domNode => {
         domNode.remove()
     })
 
