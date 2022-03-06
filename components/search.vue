@@ -1,5 +1,8 @@
 <template>
-    <div class="search w-full">
+    <div
+        ref="search-container"
+        class="search-container w-full"
+    >
 
         <slot name="before-search">
             <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
@@ -503,7 +506,7 @@ export default {
             ]
         },
         scrollInputToTop () {
-            scrollIntoView(this.$refs['search'], {
+            scrollIntoView(this.$refs['search-container'], {
                 block: 'start',
                 behavior: 'smooth'
             })
