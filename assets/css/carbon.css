@@ -1,0 +1,62 @@
+/* Hidden on mobile for now */
+#carbonads {
+    @apply hidden;
+
+    /* avoid layout shift on mobile */
+    /* min-height: 105.38px;  */
+}
+
+
+/* Immediate wrapper */
+#carbonads > span {
+    @apply flex;
+    @apply flex-col;
+
+    @apply justify-center;
+
+    @apply gap-2;
+}
+
+#carbonads .carbon-wrap {
+    @apply flex;
+    @apply flex-col;
+
+    @apply justify-center;
+
+    @apply gap-2;
+}
+
+
+@media only screen and (min-width: 1350px) {
+    #carbonads {
+        @apply block;
+
+        @apply text-gray-300;
+        font-size: 0.65rem;
+
+        @apply bg-black-1;
+        @apply rounded;
+
+        @apply fixed;
+        right: 15px;
+        bottom: 15px;
+
+        z-index: 100;
+
+        max-width: 160px;
+
+        @apply p-3
+    }
+}
+
+#carbonads .carbon-text {
+    @apply opacity-50;
+}
+
+#carbonads .carbon-poweredby {
+    @apply uppercase;
+    @apply text-center;
+    @apply opacity-25;
+
+    font-size: 0.5rem;
+}
