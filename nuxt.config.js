@@ -112,6 +112,20 @@ export default {
                 rel: 'preconnect',
                 href: 'https://www.googletagmanager.com'
             },
+
+            // Carbon Preconnects
+            {
+                rel: 'preconnect',
+                href: 'https://cdn.carbonads.com'
+            },
+            {
+                rel: 'preconnect',
+                href: 'https://srv.carbonads.net'
+            },
+            {
+                rel: 'preconnect',
+                href: 'https://cdn4.buysellads.net'
+            },
         ],
 
         script: [
