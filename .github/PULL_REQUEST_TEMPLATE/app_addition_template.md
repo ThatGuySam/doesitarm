@@ -1,3 +1,10 @@
+
+#### Getting Started
+You can get start a fork by simply editing the App List directly on GitHub with the link below: 
+<br>
+[Create fork of App List](https://github.com/ThatGuySam/doesitarm/edit/master/README.md)
+
+
 ## App Being Added
 _The Name of the App being added_
 
