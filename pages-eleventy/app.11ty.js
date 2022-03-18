@@ -225,7 +225,7 @@ export class AppTemplate {
                         <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
                             Device Support
                         </h2>
-                        <div class="device-support-apps md:inline-flex max-w-4xl overflow-x-auto overflow-y-visible md:whitespace-no-wrap border rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+                        <div class="device-support-apps md:inline-flex md:w-full max-w-4xl overflow-x-auto overflow-y-visible md:whitespace-no-wrap border rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
 
                             ${ appDeviceSupport.map( device => /* html */`
                                 <div class="device-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
