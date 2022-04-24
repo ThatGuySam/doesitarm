@@ -1,7 +1,13 @@
+function escapeRegex ( string ) {
+    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+}
 
 // Match whole word
 export function matchesWholeWord (needle, haystack) {
-    return new RegExp('\\b' + needle + '\\b').test(haystack)
+    // console.log('haystack', haystack)
+    // console.trace('needle', needle)
+
+    return new RegExp('\\b' + escapeRegex( needle ) + '\\b').test(haystack)
 }
 
 export function fuzzyMatchesWholeWord (needle, haystack) {
