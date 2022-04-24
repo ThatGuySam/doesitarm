@@ -83,15 +83,6 @@
     @apply h-full;
 }
 
-.carbon-inline-wide .carbon-img {
-    @apply h-full;
-}
-
-    .carbon-inline-wide .carbon-img img {
-        @apply h-full;
-        @apply w-auto;
-    }
-
 .carbon-inline-wide .carbon-text {
     @apply flex;
     @apply items-center;
@@ -118,6 +109,15 @@
 @media only screen and (min-width: 480px) {
     .carbon-inline-wide {
         height: 90px;
+    }
+
+    .carbon-inline-wide .carbon-img {
+        @apply h-full;
+    }
+
+    .carbon-inline-wide .carbon-img img {
+        @apply h-full;
+        @apply w-auto;
     }
 
     .carbon-inline-wide .carbon-text {
