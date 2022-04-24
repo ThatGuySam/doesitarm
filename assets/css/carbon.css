@@ -65,7 +65,13 @@
     height: 300px;
 }
 
+/* Hide any extra loading ads */
+.carbon-inline-wide > div {
+    display: none;
+}
+
 .carbon-inline-wide #carbonads {
+    @apply block;
     @apply relative;
 
     @apply border;
