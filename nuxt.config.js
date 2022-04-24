@@ -129,17 +129,17 @@ export default {
         ],
 
         script: [
-            // Carbon Ads
-            // https://sell.buysellads.com/zones/1294/ad-tags#z=js
-            {
-                // <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom" id="_carbonads_js"></script>
-                src: 'https://cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom',
-                async: true,
-                type: 'text/javascript',
-                id: '_carbonads_js',
-                class: 'include-on-static',
-                body: true
-            }
+            // // Carbon Ads
+            // // https://sell.buysellads.com/zones/1294/ad-tags#z=js
+            // {
+            //     // <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom" id="_carbonads_js"></script>
+            //     src: 'https://cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom',
+            //     async: true,
+            //     type: 'text/javascript',
+            //     id: '_carbonads_js',
+            //     class: 'include-on-static carbon-inline-wide',
+            //     body: true
+            // }
         ]
     },
 
