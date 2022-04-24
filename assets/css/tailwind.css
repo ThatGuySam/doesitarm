@@ -50,11 +50,6 @@
 /* @tailwind utilities; */
 @import "tailwindcss/utilities";
 
-/* Carbon ads */
-@import "./carbon.css";
-
-
-
 
 html {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont,

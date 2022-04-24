@@ -11,3 +11,10 @@
         />
     </div>
 </template>
+
+<script>
+/* Carbon ads */
+import '~/assets/css/carbon.css'
+
+export default {}
+</script>
