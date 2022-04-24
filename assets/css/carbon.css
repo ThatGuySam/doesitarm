@@ -60,10 +60,6 @@
     font-size: 0.5rem;
 }
 
-.carbon-inline-wide {
-    height: 90px;
-}
-
 .carbon-inline-wide #carbonads {
     @apply relative;
 
@@ -91,9 +87,14 @@
     }
 
 .carbon-inline-wide .carbon-text {
-    @apply w-full;
+    @apply flex;
+    @apply items-center;
 
-    @apply p-3;
+    @apply w-full;
+    @apply h-full;
+
+    @apply px-3;
+    @apply py-6;
 }
 
 .carbon-inline-wide .carbon-poweredby {
@@ -101,8 +102,19 @@
     @apply bottom-0;
     @apply right-0;
 
-    @apply border;
+    @apply border-t;
+    @apply border-l;
     @apply rounded-tl;
 
-    @apply p-1;
+    @apply px-1;
+}
+
+@media only screen and (min-width: 480px) {
+    .carbon-inline-wide {
+        height: 90px;
+    }
+
+    .carbon-inline-wide .carbon-text {
+        @apply py-3;
+    }
 }
