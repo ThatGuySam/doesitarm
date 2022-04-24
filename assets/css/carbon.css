@@ -60,6 +60,11 @@
     font-size: 0.5rem;
 }
 
+
+.carbon-inline-wide {
+    height: 300px;
+}
+
 .carbon-inline-wide #carbonads {
     @apply relative;
 
