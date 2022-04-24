@@ -60,6 +60,10 @@
     font-size: 0.5rem;
 }
 
+.carbon-inline-wide {
+    height: 90px;
+}
+
 .carbon-inline-wide #carbonads {
     @apply relative;
 
@@ -68,7 +72,7 @@
 
     overflow: hidden;
 
-    height: 90px;
+    height: 100%;
 }
 
 .carbon-inline-wide #carbonads .carbon-wrap {
