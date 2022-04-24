@@ -1,14 +1,13 @@
 /* Hidden on mobile for now */
-#carbonads {
+.float-corner #carbonads {
     @apply hidden;
 
     /* avoid layout shift on mobile */
     /* min-height: 105.38px;  */
 }
 
-
 /* Immediate wrapper */
-#carbonads > span {
+.float-corner #carbonads > span {
     @apply flex;
     @apply flex-col;
 
@@ -19,33 +18,33 @@
 
 #carbonads .carbon-wrap {
     @apply flex;
-    @apply flex-col;
 
     @apply justify-center;
 
     @apply gap-2;
 }
 
-
 @media only screen and (min-width: 1350px) {
     #carbonads {
         @apply block;
 
         @apply text-gray-300;
-        font-size: 0.65rem;
 
         @apply bg-black-1;
         @apply rounded;
+    }
 
+    .float-corner #carbonads {
         @apply fixed;
+
+        font-size: 0.65rem;
+
         right: 15px;
         bottom: 15px;
 
         z-index: 100;
 
         max-width: 160px;
-
-        @apply p-3
     }
 }
 
@@ -59,4 +58,47 @@
     @apply opacity-25;
 
     font-size: 0.5rem;
+}
+
+.carbon-inline-wide #carbonads {
+    @apply relative;
+
+    @apply border;
+    @apply rounded-lg;
+
+    overflow: hidden;
+
+    height: 90px;
+}
+
+.carbon-inline-wide #carbonads .carbon-wrap {
+    @apply justify-start;
+    @apply items-center;
+    @apply h-full;
+}
+
+.carbon-inline-wide .carbon-img {
+    @apply h-full;
+}
+
+    .carbon-inline-wide .carbon-img img {
+        @apply h-full;
+        @apply w-auto;
+    }
+
+.carbon-inline-wide .carbon-text {
+    @apply w-full;
+
+    @apply p-3;
+}
+
+.carbon-inline-wide .carbon-poweredby {
+    @apply absolute;
+    @apply bottom-0;
+    @apply right-0;
+
+    @apply border;
+    @apply rounded-tl;
+
+    @apply p-1;
 }
