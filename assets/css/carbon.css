@@ -64,6 +64,7 @@
     @apply relative;
 
     @apply border;
+    @apply border-gray-700;
     @apply rounded-lg;
 
     overflow: hidden;
