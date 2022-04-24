@@ -4,6 +4,11 @@ import test from 'ava'
 
 import { isValidHttpUrl } from '../helpers/check-types.js'
 import { buildReadmeAppList } from '../helpers/build-app-list.js'
+import {
+    matchesWholeWord,
+    fuzzyMatchesWholeWord,
+    eitherMatches
+} from '../helpers/matching.js'
 
 
 require('dotenv').config()
@@ -140,6 +145,33 @@ test('README Apps are in alphbetical order', (t) => {
                 t.fail(`README App at index ${index} of ${category} is ${unsortedApp.name} but should be ${sortedApp.name}`)
             }
         }
+    }
+
+    t.pass()
+})
+
+
+
+const namesWithPlusses = [
+    'Xournal++',
+    'Notepad++'
+]
+
+test('Can match names with pluses', (t) => {
+
+
+
+    // Sort apps in groups alphabetically
+    for ( const nameWithPluses of namesWithPlusses ) {
+
+        const haystack = `FDKLS:KF ${nameWithPluses}NDFLSKFLSJDK`
+
+        t.assert( matchesWholeWord( nameWithPluses, haystack ) )
+
+        t.assert( fuzzyMatchesWholeWord( nameWithPluses, haystack ) )
+
+        t.assert( eitherMatches( nameWithPluses, haystack ) )
+        t.assert( eitherMatches( haystack, nameWithPluses ) )
     }
 
     t.pass()
