@@ -1,12 +1,14 @@
 <template>
     <section class="container py-24">
-        <div class="flex flex-col items-center">
-            <h1 class="title text-4xl md:text-6xl font-hairline leading-tight text-center">
-                Does It ARM?
-            </h1>
-            <h2 class="subtitle md:text-xl text-center">
-                Apps that are reported to support Apple Silicon
-            </h2>
+        <div class="flex flex-col items-center space-y-4">
+            <div class="hero">
+                <h1 class="title text-3xl md:text-6xl font-hairline leading-tight text-center">
+                    Does It ARM?
+                </h1>
+                <h2 class="subtitle md:text-xl text-center">
+                    Apps that are reported to support Apple Silicon
+                </h2>
+            </div>
 
             <Search
                 :app-list="allList"
@@ -15,7 +17,7 @@
                 @update:query="onQueryUpdate"
             >
                 <template v-slot:before-search>
-                    <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
+                    <div class="list-summary-wrapper flex justify-center text-center text-sm">
 
                         <ListSummary
                             :custom-numbers="customSummaryNumbers"

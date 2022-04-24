@@ -1,11 +1,11 @@
 <template>
     <div
         ref="search-container"
-        class="search-container w-full"
+        class="search-container w-full space-y-4"
     >
 
         <slot name="before-search">
-            <div class="list-summary-wrapper flex justify-center text-center text-sm my-4">
+            <div class="list-summary-wrapper flex justify-center text-center text-sm">
 
                 <ListSummary
                     :app-list="appList"
@@ -15,21 +15,23 @@
             </div>
         </slot>
 
-        <div class="search-input relative">
-            <input
-                id="search"
-                ref="search"
-                :autofocus="autofocus"
-                v-model="query"
-                aria-label="Type here to Search"
-                class="appearance-none w-full text-white font-hairline sm:text-5xl outline-none bg-transparent p-3"
-                type="search"
-                placeholder="Type to Search"
-                autocomplete="off"
-                @keyup="queryResults(query); scrollInputToTop()"
-            >
-            <div class="search-input-separator border-white border-t-2" />
-            <div class="quick-buttons overflow-x-auto whitespace-no-wrap py-2 space-x-2">
+        <div class="search-input relative space-y-4">
+            <div>
+                <input
+                    id="search"
+                    ref="search"
+                    :autofocus="autofocus"
+                    v-model="query"
+                    aria-label="Type here to Search"
+                    class="appearance-none w-full text-white font-hairline sm:text-5xl outline-none bg-transparent p-3"
+                    type="search"
+                    placeholder="Type to Search"
+                    autocomplete="off"
+                    @keyup="queryResults(query); scrollInputToTop()"
+                >
+                <div class="search-input-separator border-white border-t-2" />
+            </div>
+            <div class="quick-buttons overflow-x-auto whitespace-no-wrap space-x-2">
                 <button
                     v-for="button in quickButtons"
                     :key="button.query"
@@ -43,6 +45,9 @@
                 >{{ button.label }}</button>
             </div>
         </div>
+
+        <Carbon class="carbon-inline-wide" />
+
         <div
             ref="search-container"
             class="search-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark my-8 px-5"
@@ -201,6 +206,7 @@ import { getAppCategory } from '~/helpers/categories.js'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 // import appList from '~/static/app-list.json'
 
+import Carbon from '~/components/carbon-inline.vue'
 import LinkButton from '~/components/link-button.vue'
 // import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
@@ -208,6 +214,7 @@ import ListSummary from '~/components/list-summary.vue'
 
 export default {
     components: {
+        Carbon,
         // EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
         ListSummary,
         LinkButton,
