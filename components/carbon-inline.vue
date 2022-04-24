@@ -1,6 +1,7 @@
 <template>
     <div class="doesitarm-carbon-wrapper">
         <component
+            v-once
             id="_carbonads_js"
 
             :is="'script'"
