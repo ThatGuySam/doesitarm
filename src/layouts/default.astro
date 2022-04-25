@@ -9,22 +9,48 @@ const {
 } = Astro.props
 
 ---
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width">
-	<title>{ headTitle }</title>
+    <head>
+        <title>{ headTitle }</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
 
-	<meta name="Description" content={ headDescription }>
+        <meta property="og:image" content="https://doesitarm.com/images/og-image.png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="627">
+        <meta property="og:image:alt" content="Does It ARM Logo">
 
-	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta property="twitter:card" content="summary">
+        <meta property="twitter:title" content="Does It ARM">
+        <meta property="twitter:description" content="Find out the latest app support for Apple Silicon and the Apple M1 Pro and M1 Max Processors">
+        <meta property="twitter:url" content="https://doesitarm.com">
+        <meta property="twitter:image" content="https://doesitarm.com/images/mark.png">
 
-	<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-</head>
-<body>
-    <VueBaseLayout>
-        <slot />
-    </VueBaseLayout>
-</body>
+        <meta data-hid="description" name="description" content={ headDescription }>
 
+        <meta data-hid="twitter:title" property="twitter:title" content="Apple Silicon and Apple M1 Pro and M1 Max app and game compatibility list">
+        <meta data-hid="twitter:description" property="twitter:description" content="List of compatibility apps and games for Apple Silicon and the Apple M1 Pro and M1 Max Processors including performance reports and benchmarks">
+        <meta property="twitter:url" content="https://doesitarm.com/">
+
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+        <!-- Preconnect Assets -->
+        <link rel="preconnect" href="https://www.googletagmanager.com">
+        <link rel="preconnect" href="https://cdn.carbonads.com">
+        <link rel="preconnect" href="https://srv.carbonads.net">
+        <link rel="preconnect" href="https://cdn4.buysellads.net">
+
+        <!-- Preload Assets -->
+        <!-- <link rel="preload" href="/_nuxt/static/1650919862/state.js" as="script"> -->
+    </head>
+    <body>
+        <VueBaseLayout>
+            <slot />
+        </VueBaseLayout>
+
+        <!-- <script defer src="/_nuxt/static/1650919862/state.js"></script> -->
+    </body>
 </html>
+
+
