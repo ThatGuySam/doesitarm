@@ -252,7 +252,7 @@ class BuildLists {
 
             const listOptions = this.listsOptions[listOptionsKey]
 
-            if ( noLists ) {
+            if ( !noLists ) {
                 await this.saveList( listOptions )
             }
 
