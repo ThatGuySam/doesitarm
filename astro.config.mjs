@@ -4,7 +4,6 @@ import tailwind from '@astrojs/tailwind'
 
 // https://astro.build/config
 export default defineConfig({
-    srcDir: './src-astro',
     publicDir: './static',
     site: 'https://doesitarm.com',
 
