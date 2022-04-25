@@ -87,7 +87,7 @@
                     :href="item.url"
                     :class="[
                         'mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                        ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
+                        (currentPath === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
                     ]"
                 >
                     {{ item.label }}
@@ -109,7 +109,7 @@
                             :href="item.url"
                             :class="[
                                 'px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                ($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                                (currentPath === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
                         >
                             {{ item.label }}
@@ -141,7 +141,7 @@
                         <a
                             :class="[
                                 'underline px-3 py-2 rounded-md text-xs font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                //($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                                //(currentPath === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
                             href="https://prf.hn/l/7JG0bEj"
                         >
@@ -203,6 +203,16 @@ export default {
             ])
         }
     },
+    computed: {
+        currentPath () {
+            // If we have a nuxt context, use that.
+            if (this.$nuxt) {
+                return this.$nuxt.$route.path
+            }
+
+            return '/'
+        }
+    }
     // data: function () {
     //     return {
     //         // isOpen: false
