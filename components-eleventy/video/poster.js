@@ -23,9 +23,9 @@ export default function ( video ) {
     `) ).join('') }
 
     <img
-        :data-src="${ video.thumbnail.src }"
+        data-src="${ video.thumbnail.src }"
         alt="${ video.name }"
-        class="absolute inset-0  h-full w-full object-cover lazyload"
+        class="absolute inset-0 h-full w-full object-cover lazyload"
     >
 </picture>
     `
