@@ -14,7 +14,8 @@
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
-    "build-api": "npm run clone-readme && npm run build-lists -- --with-api",
+    "build-api": "npm run clone-readme && npm run build-lists -- --with-api --no-lists",
+    "build-lists-and-api": "npm run clone-readme && npm run build-lists -- --with-api",
     "start": "nuxt start",
     "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
@@ -31,7 +32,7 @@
     "precommit": "npm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
-    "vercel-build": "npm run build-api"
+    "vercel-build": "npm run build-lists-and-api"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",

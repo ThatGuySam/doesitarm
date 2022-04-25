@@ -26,7 +26,10 @@ import { makeSearchableList } from './helpers/searchable-list.js'
 dotenv.config()
 
 const commandArguments = process.argv
+
+
 const withApi = commandArguments.includes('--with-api')
+const noLists = commandArguments.includes('--no-lists')
 
 
 
@@ -169,7 +172,7 @@ class BuildLists {
     // Run all listsOprions methods
     // and store them to this.lists
     async buildLists () {
-        console.log('Build Lists started')
+        console.log( 'Build Lists started', commandArguments )
 
 
         for ( const listOptions of this.listsOptions ) {
@@ -249,7 +252,7 @@ class BuildLists {
 
             const listOptions = this.listsOptions[listOptionsKey]
 
-            if ( !withApi ) {
+            if ( noLists ) {
                 await this.saveList( listOptions )
             }
 
