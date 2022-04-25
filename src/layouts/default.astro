@@ -1,0 +1,30 @@
+---
+import '~/assets/css/tailwind.css'
+
+import VueBaseLayout from '../../layouts/base.vue'
+
+const {
+    headTitle,
+    headDescription
+} = Astro.props
+
+---
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>{ headTitle }</title>
+
+	<meta name="Description" content={ headDescription }>
+
+	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+	<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+</head>
+<body>
+    <VueBaseLayout>
+        <slot />
+    </VueBaseLayout>
+</body>
+
+</html>
