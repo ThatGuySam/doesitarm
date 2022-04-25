@@ -26,10 +26,10 @@ import { makeSearchableList } from './helpers/searchable-list.js'
 dotenv.config()
 
 const commandArguments = process.argv
-
-
-const withApi = commandArguments.includes('--with-api')
-const noLists = commandArguments.includes('--no-lists')
+const cliOptions = {
+    withApi: commandArguments.includes('--with-api'),
+    noLists: commandArguments.includes('--no-lists'),
+}
 
 
 
@@ -172,7 +172,7 @@ class BuildLists {
     // Run all listsOprions methods
     // and store them to this.lists
     async buildLists () {
-        console.log( 'Build Lists started', commandArguments )
+        console.log( 'Build Lists started', cliOptions )
 
 
         for ( const listOptions of this.listsOptions ) {
@@ -252,7 +252,7 @@ class BuildLists {
 
             const listOptions = this.listsOptions[listOptionsKey]
 
-            if ( !noLists ) {
+            if ( !cliOptions.noLists ) {
                 await this.saveList( listOptions )
             }
 
@@ -265,7 +265,7 @@ class BuildLists {
 
             console.timeEnd(methodName)
 
-            if ( withApi ) {
+            if ( cliOptions.withApi ) {
                 console.log('Saving individual endpoints...')
 
                 const endpointMethodName = `Saved /${ listOptions.name } endpoints`
@@ -388,7 +388,7 @@ class BuildLists {
         //     ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
         // ])
 
-        if ( !withApi ) {
+        if ( !cliOptions.withApi ) {
             for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
                 // Save Endpoints
                 await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
