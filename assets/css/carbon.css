@@ -20,8 +20,6 @@
     @apply flex;
 
     @apply justify-center;
-
-    @apply gap-2;
 }
 
 @media only screen and (min-width: 1350px) {
@@ -57,12 +55,14 @@
     @apply text-center;
     @apply opacity-25;
 
-    font-size: 0.5rem;
+    font-size: 0.45rem;
 }
 
 
 .carbon-inline-wide {
-    height: 300px;
+    height: 90px;
+
+    font-size: 0.55rem;
 }
 
 /* Hide any extra loading ads */
@@ -96,8 +96,8 @@
     @apply w-full;
     @apply h-full;
 
-    @apply px-3;
-    @apply py-6;
+    @apply px-2;
+    @apply py-2;
 }
 
 .carbon-inline-wide .carbon-poweredby {
@@ -114,7 +114,7 @@
 
 @media only screen and (min-width: 480px) {
     .carbon-inline-wide {
-        height: 90px;
+        font-size: 0.8rem;
     }
 
     .carbon-inline-wide .carbon-img {
@@ -127,6 +127,7 @@
     }
 
     .carbon-inline-wide .carbon-text {
+        @apply px-3;
         @apply py-3;
     }
 }
