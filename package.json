@@ -20,6 +20,8 @@
     "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
     "build-lists": "npm run test-prebuild && node -r esm build-lists.js",
+    "dev-astro": "astro dev",
+    "generate-astro": "astro build",
     "generate-nuxt": "NODE_OPTIONS=--max-old-space-size=60000 nuxt generate",
     "generate-eleventy": "node --max-old-space-size=60000  -r esm node_modules/.bin/eleventy --quiet",
     "generate-postcss": "ENV=production postcss assets/css/tailwind.css --o static/tailwind.css",
