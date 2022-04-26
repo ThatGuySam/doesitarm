@@ -12,7 +12,7 @@
     # node_bundler = "esbuild"
 
     # Flags "astro" as an external node module for all functions
-    external_node_modules = ["astro"]
+    # external_node_modules = ["astro"]
 
     # Includes all Markdown files inside the "files/" directory.
     # included_files = ["files/*.md"]
