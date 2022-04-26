@@ -159,20 +159,15 @@ class BuildLists {
 
         const saveableList = saveMethod( this.lists[listOptions.name] )
 
-        console.log('saveableList', typeof saveableList)
+        // console.log('saveableList', typeof saveableList)
+
+        // Stringify one at a time to allow for large lists
+        const saveableListJSON = '[' + saveableList.map(el => JSON.stringify(el)).join(',') + ']'
 
         // Write the list to JSON
-        await fs.writeFile(listFullPath, JSON.stringify( saveableList ))
+        await fs.writeFile(listFullPath, saveableListJSON)
 
-        // Read back the JSON we just wrote to ensure it exists
-        const savedListJSON = await fs.readFile(listFullPath, 'utf-8')
-
-        // console.log('savedListJSON', savedListJSON)
-
-        const savedList = JSON.parse(savedListJSON)
-
-        // Import the created JSON File
-        return savedList
+        return
     }
 
     // Run all listsOprions methods
