@@ -38,7 +38,8 @@ const apiUrl = `${ import.meta.env.PUBLIC_API_DOMAIN }/api/app/spotify.json`
 
 console.log('Astro.params', Astro.params )
 console.log('apiUrl', apiUrl )
-console.log('Astro.request.parsedURL', Astro.request.parsedURL )
+console.log('Astro.request', Object.keys( Astro.request ) )
+console.log('Astro.request.url', Astro.request.url )
 
 const appEntry = await axios.get(apiUrl)
     .then( response => {
