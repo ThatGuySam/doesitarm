@@ -34,7 +34,7 @@ const {
 } = Astro.params
 
 
-const apiUrl = `${ import.meta.env.API_DOMAIN }/api/app/spotify.json`
+const apiUrl = `${ import.meta.env.PUBLIC_API_DOMAIN }/api/app/spotify.json`
 const cookie = Astro.request.headers.get('cookie')
 
 console.log('Astro.params', Astro.params )
