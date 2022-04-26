@@ -229,13 +229,6 @@ class BuildLists {
                 // Write the endpoint to JSON
                 await this.saveToJson( listEntry, endpointPath )
             })
-
-
-        // Save each enpoint's data
-        // for ( const listEntry of this.lists[listOptions.name] ) {
-
-
-        // }
     }
 
     // Save app lists to JSON
