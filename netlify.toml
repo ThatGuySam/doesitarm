@@ -13,7 +13,7 @@
 
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
-
+# These redirect are lower priority than _redirects in the root or dist
 # old node redirect
 [[redirects]]
   from = "/app/node"
