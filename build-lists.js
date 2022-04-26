@@ -124,6 +124,12 @@ class BuildLists {
         }
     ]
 
+    shouldHaveRelatedVideos ( app ) {
+        const appType = getAppType( app )
+
+        return appType === 'app' || appType === 'formula' 
+    }
+
     getAllVideoAppsList = () => {
         return new Set([
             ...this.lists.app,
