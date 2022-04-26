@@ -202,8 +202,10 @@ class BuildLists {
 
     saveApiEndpoints = async function ( listOptions ) {
 
+        const poolSize = 1000
+
         await PromisePool
-            .withConcurrency(1000)
+            .withConcurrency( poolSize )
             .for( Array.from( this.lists[listOptions.name] ) )
             .process(async ( listEntry, index, pool ) => {
                 // console.log('listEntry', listEntry)
