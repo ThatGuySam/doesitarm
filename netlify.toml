@@ -3,6 +3,9 @@
   command = "npm run netlify-build"
 
 
+[functions]
+  directory = "dist/functions"
+
 
 [build.environment]
   NPM_FLAGS = "--no-optional"
