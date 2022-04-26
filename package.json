@@ -78,9 +78,6 @@
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
     "eslint": "^8.14.0",
-    "eslint-config-prettier": "^3.1.0",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-prettier": "2.6.2",
     "eslint-plugin-vue": "^8.7.1",
     "esm": "^3.2.25",
     "fast-xml-parser": "^3.19.0",
@@ -89,7 +86,6 @@
     "nuxt": "^2.14.11",
     "postcss": "^8.2.4",
     "postcss-cli": "^8.3.1",
-    "prettier": "1.14.3",
     "replace-css-url": "^1.2.6",
     "structured-data-testing-tool": "^4.5.0",
     "tailwindcss": "^1.9.6"
