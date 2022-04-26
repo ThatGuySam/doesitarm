@@ -3,8 +3,20 @@
   command = "npm run netlify-build"
 
 
+# https://docs.netlify.com/configure-builds/file-based-configuration/#functions
 [functions]
-  directory = "dist/functions"
+    # Sets a custom directory for Netlify Functions
+    directory = "dist/functions"
+
+    # Specifies `esbuild` for functions bundling
+    # node_bundler = "esbuild"
+
+    # Flags "astro" as an external node module for all functions
+    # external_node_modules = ["astro"]
+
+    # Includes all Markdown files inside the "files/" directory.
+    # included_files = ["files/*.md"]
+
 
 
 [build.environment]
