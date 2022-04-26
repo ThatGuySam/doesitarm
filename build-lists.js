@@ -222,12 +222,7 @@ class BuildLists {
                 const endpointPath = `./static/api${endpoint}.json`
                 const endpointDirectory = dirname(endpointPath)
 
-                // Stop if the endpoint is already exists
-                if (fs.existsSync(endpointPath)) {
-                    console.log(`Path "${endpointPath}" already exists`)
-
-                    return
-                }
+                
 
                 // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
 
