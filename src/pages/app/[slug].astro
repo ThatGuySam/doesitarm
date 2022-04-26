@@ -35,11 +35,10 @@ const {
 
 
 const apiUrl = `${ import.meta.env.PUBLIC_API_DOMAIN }/api/app/spotify.json`
-const cookie = Astro.request.headers.get('cookie')
 
 console.log('Astro.params', Astro.params )
 console.log('apiUrl', apiUrl )
-console.log('cookie', cookie )
+console.log('Astro.request', Astro.request )
 
 const appEntry = await axios.get(apiUrl)
     .then( response => {
