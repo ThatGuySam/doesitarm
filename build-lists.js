@@ -327,7 +327,7 @@ class BuildLists {
                 }
 
                 // Add standard app endpoint
-                if ( appType === 'app' || appType === 'formula' ) {
+                if ( this.shouldHaveRelatedVideos( app ) ) {
 
                     const relatedVideos = videosRelatedToApp( app, this.lists.video ).map(video => {
                         // console.log('video', video)
