@@ -45,7 +45,9 @@ const {
         <!-- <link rel="preload" href="/_nuxt/static/1650919862/state.js" as="script"> -->
     </head>
     <body>
-        <VueBaseLayout>
+        <VueBaseLayout
+            client:load
+        >
             <slot />
         </VueBaseLayout>
 
