@@ -64,7 +64,7 @@
     "slugify": "^1.4.6",
     "terser": "^4.8.0",
     "vue": "^3.2.30",
-    "vue-gtag": "^1.16.1"
+    "vue-gtag": "^2.0.1"
   },
   "devDependencies": {
     "@11ty/eleventy": "^0.11.1",
@@ -77,11 +77,11 @@
     "babel-eslint": "^8.2.1",
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
-    "eslint": "^5.16.0",
+    "eslint": "^8.14.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-prettier": "2.6.2",
-    "eslint-plugin-vue": "^4.0.0",
+    "eslint-plugin-vue": "^8.7.1",
     "esm": "^3.2.25",
     "fast-xml-parser": "^3.19.0",
     "node-fetch": "^2.6.1",
