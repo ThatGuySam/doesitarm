@@ -36,7 +36,11 @@ const {
 
 const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
 
-apiUrl.pathname = `/api/${ Astro.site.pathname }.json`
+// Parse the request url
+const requestUrl = new URL( Astro.request.url )
+
+// Use request path to get api url path
+apiUrl.pathname = `/api${ requestUrl.pathname }.json`
 
 
 // Astro Request reference
