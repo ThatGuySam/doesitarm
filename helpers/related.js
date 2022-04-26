@@ -50,14 +50,16 @@ export function videosRelatedToApp ( app, videoListSet ) {
 
     // console.log('videoListSet', videoListSet)
 
-    const relatedVideos = {}
+    const relatedVideos = []
 
     // Find other videos that also feature this video's app
     for (const video of videoListSet) {
         if (!video.apps.includes(app.slug)) continue
 
-        relatedVideos[video.id] = video
+        relatedVideos.push( video )
+
+        if ( relatedVideos.length > 20 ) break
     }
 
-    return Object.values(relatedVideos)
+    return relatedVideos
 }
