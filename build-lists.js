@@ -217,7 +217,16 @@ class BuildLists {
                 const endpointPath = `./static/api${endpoint}.json`
                 const endpointDirectory = dirname(endpointPath)
 
-                
+                // Add related videos
+                if ( this.shouldHaveRelatedVideos( listEntry ) ) {
+                    listEntry.relatedVideos = videosRelatedToApp( listEntry, this.lists.video ).map(video => {
+                        // console.log('video', video)
+                        return {
+                            ...video,
+                            endpoint: `${getAppEndpoint(listEntry)}/benchmarks#${video.id}`
+                        }
+                    })
+                }
 
                 // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
 
