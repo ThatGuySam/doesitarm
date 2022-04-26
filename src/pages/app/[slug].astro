@@ -40,6 +40,7 @@ console.log('Astro.params', Astro.params )
 console.log('apiUrl', apiUrl )
 console.log('Astro.request', Object.keys( Astro.request ) )
 console.log('Astro.request.url', Astro.request.url )
+console.log('Astro.site.pathname', Astro.site.pathname )
 
 const appEntry = await axios.get(apiUrl)
     .then( response => {
