@@ -266,6 +266,11 @@ class BuildLists {
                     })
                 }
 
+                // Add App Bundles
+                if ( !!listEntry?.bundleIds ) {
+                    listEntry.bundles = await this.getAppBundles( listEntry )
+                }
+
                 // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
 
                 // Ensure the directory exists
