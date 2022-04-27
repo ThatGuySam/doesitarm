@@ -266,7 +266,7 @@ class BuildLists {
                 }
 
                 // Add App Bundles
-                if ( !!listEntry?.bundleIds ) {
+                if ( Array.isArray( listEntry.bundleIds ) ) {
                     listEntry.bundles = await this.getAppBundles( listEntry )
                 }
 
