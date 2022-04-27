@@ -1,0 +1,14 @@
+---
+const {
+  listing
+} = Astro.props
+
+const hasMultipleAliases = Array.isArray( listing.aliases ) && listing.aliases.length > 1
+
+
+const listFormatter = new Intl.ListFormat('en', { style: 'short', type: 'disjunction' });
+
+---
+{ hasMultipleAliases ?
+    <small class="text-xs opacity-75">May also be known as ${ listFormatter.format( listing.aliases, 'or' ) }</small>
+: '' }

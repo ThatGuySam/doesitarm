@@ -5,6 +5,8 @@ import {
     ListingDetails
 } from '~/helpers/listing-page.js'
 
+import Aliases from '~/src/components/listing/aliases.astro'
+
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
 
@@ -24,6 +26,8 @@ const details = new ListingDetails( listing )
         <h2 class="subtitle text-2xl md:text-5xl font-bold">
             { details.subtitle }
         </h2>
+
+        <Aliases listing={ listing } />
 
 
 
