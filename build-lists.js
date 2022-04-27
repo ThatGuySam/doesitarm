@@ -245,7 +245,7 @@ class BuildLists {
 
         const poolSize = 1000
 
-        await PromisePool
+        const { errors } = await PromisePool
             .withConcurrency( poolSize )
             .for( Array.from( this.lists[listOptions.name] ) )
             .process(async ( listEntry, index, pool ) => {
@@ -287,6 +287,11 @@ class BuildLists {
                 // Write the endpoint to JSON
                 await this.saveToJson( listEntry, endpointPath )
             })
+
+        if ( errors.length !== 0 ) {
+            throw new Error( errors )
+        }
+
     }
 
     // Save app lists to JSON
