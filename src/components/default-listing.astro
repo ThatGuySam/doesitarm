@@ -1,0 +1,40 @@
+---
+// Default Listing template for Apps, Games, and formulas
+
+import {
+    ListingDetails
+} from '~/helpers/listing-page.js'
+
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+
+
+const {
+  listing
+} = Astro.props
+
+const details = new ListingDetails( listing )
+
+---
+<section class="container space-y-8 py-32">
+
+    <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0 space-y-8">
+        <h1 class="title text-sm md:text-xl font-bold">
+            { details.mainHeading }
+        </h1>
+        <h2 class="subtitle text-2xl md:text-5xl font-bold">
+            { details.subtitle }
+        </h2>
+
+
+
+        <AllUpdatesSubscribe
+            client:visible
+        />
+
+        <div class="links space-y-6 sm:space-x-6">
+            <!-- { relatedLinksHtml } -->
+        </div>
+
+    </div>
+
+</section>

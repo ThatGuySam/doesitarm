@@ -5,12 +5,12 @@
 import axios from 'axios'
 
 import Layout from '../../layouts/default.astro'
+import Listing from '../../components/default-listing.astro'
 
 import { makeLastUpdatedFriendly } from '~/helpers/parse-date'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 
 import LinkButton from '~/components/link-button.vue'
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import VideoRow from '~/components/video/row.vue'
 
 // import appList from '~/static/app-list.json'
@@ -29,9 +29,9 @@ import VideoRow from '~/components/video/row.vue'
 // }
 
 
-const {
-  slug
-} = Astro.params
+// const {
+//   appPath
+// } = Astro.params
 
 
 // Parse the request url
@@ -58,7 +58,7 @@ console.log('Astro.request.url', Astro.request.url )
 console.log('Astro.site.pathname', Astro.site.pathname )
 // console.log('Astro.request', Astro.request )
 
-const appEntry = await axios.get( apiUrl.toString() )
+const appListing = await axios.get( apiUrl.toString() )
     .then( response => {
         // console.log( 'response', response )
         return response.data
@@ -80,15 +80,15 @@ const lastUpdatedFriendly = null
 
 ---
 <Layout
-	headTitle={ `${ appEntry.name } | Does It ARM` }
+	headTitle={ `${ appListing.name } | Does It ARM` }
 	headDescription={ 'Test' }
 >
-    { slug }
-    <br>
-    <br>
-    { JSON.stringify( appEntry ) }
 
-    <AllUpdatesSubscribe
-        client:visible
+    <Listing
+        listing={ appListing }
     />
+    <!-- <div>
+        { JSON.stringify( appListing ) }
+    </div> -->
+
 </Layout>
