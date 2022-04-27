@@ -143,22 +143,26 @@ class BuildLists {
     }
 
     bundles = []
-    async getSavedAppBundles ({ keepBundlesInMemory = true }) {
+    async getSavedAppBundles ( options = {} ) {
+        const {
+            keepBundlesInMemory = true
+        } = options
+
         if ( !keepBundlesInMemory ) {
+            // console.log('Getting bundles from file')
             return await fs.readJson('./static/app-bundles.json')
         }
 
         // From here we get and store bundles
-
-        console.log('this.bundles.length', this.bundles.length)
+        
 
         // Check if any bundles are already in memory
-        if ( this.bundles.length > 0 ) {
-            return this.bundles
+        if ( this.bundles.length === 0 ) {
+            // console.log('Storing bundles to memory')
+            this.bundles = await fs.readJson('./static/app-bundles.json')
         }
-
-        this.bundles = await fs.readJson('./static/app-bundles.json')
-
+        
+        // console.log('Getting bundles from memory')
         return this.bundles
     }
 
