@@ -245,6 +245,11 @@ class BuildLists {
 
         const poolSize = 1000
 
+        // Store app bundles to memory
+        await this.getSavedAppBundles({
+            keepBundlesInMemory: true
+        })
+
         const { errors } = await PromisePool
             .withConcurrency( poolSize )
             .for( Array.from( this.lists[listOptions.name] ) )
