@@ -2,13 +2,22 @@ module.exports = {
     purge: {
         enabled: true,//process.env.NODE_ENV === 'production',
         content: [
+
+            // Nuxt
+            'nuxt.config.js',
             'components/**/*.vue',
-            'layouts-eleventy/**/*.js',
             'layouts/**/*.vue',
             'pages/**/*.vue',
-            'pages-eleventy/**/*.js',
             'plugins/**/*.js',
-            'nuxt.config.js'
+
+            // Eleventy
+            'layouts-eleventy/**/*.js',
+            'pages-eleventy/**/*.js',
+
+            // Astro
+            'src/**/*.astro',
+            'src/**/*.vue',
+            'src/**/*.js',
         ]
     },
     future: {
