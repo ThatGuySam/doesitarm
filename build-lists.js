@@ -241,7 +241,10 @@ class BuildLists {
         return
     }
 
-    saveApiEndpoints = async function ( listOptions ) {
+    saveApiEndpoints = async ( listOptions ) => {
+
+        const apiDirectory = './static/api'
+        const apiListDirectory = `${ apiDirectory }/${ listOptions.endpointPrefix }`
 
         const poolSize = 1000
 
@@ -265,7 +268,7 @@ class BuildLists {
 
                 } = listEntry
 
-                const endpointPath = `./static/api${endpoint}.json`
+                const endpointPath = `${ apiDirectory }${ endpoint }.json`
                 const endpointDirectory = dirname(endpointPath)
 
                 // Add related videos
@@ -297,6 +300,15 @@ class BuildLists {
             throw new Error( errors )
         }
 
+        // Count saved files
+        const fileCount = fs.readdirSync( apiListDirectory ).length
+
+        console.log( fileCount, 'Files saved in', apiListDirectory )
+        console.log( this.lists[listOptions.name].size, 'Entries' )
+
+        if ( fileCount !== this.lists[listOptions.name].size ) {
+            throw new Error( `Files don\'t match list count in ${ apiListDirectory }` )
+        }
     }
 
     // Save app lists to JSON
