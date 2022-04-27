@@ -7,28 +7,6 @@ import axios from 'axios'
 import Layout from '../../layouts/default.astro'
 import Listing from '../../components/default-listing.astro'
 
-import { makeLastUpdatedFriendly } from '~/helpers/parse-date'
-import { getAppEndpoint } from '~/helpers/app-derived.js'
-
-import LinkButton from '~/components/link-button.vue'
-import VideoRow from '~/components/video/row.vue'
-
-// import appList from '~/static/app-list.json'
-
-// export async function getStaticPaths () {
-//     return appList.map(app => {
-
-//         // console.log('app.slug', app.slug )
-
-//         return {
-//             params: {
-//                 slug: app.slug
-//             }
-//         }
-//     })
-// }
-
-
 // const {
 //   appPath
 // } = Astro.params
@@ -53,7 +31,6 @@ apiUrl.pathname = `/api/${ pathType }/${ pathSlug }.json`
 // https://docs.astro.build/en/reference/api-reference/#astrorequests
 
 console.log('Astro.params', Astro.params )
-console.log('apiUrl', apiUrl )
 console.log('Astro.request.url', Astro.request.url )
 console.log('Astro.site.pathname', Astro.site.pathname )
 // console.log('Astro.request', Astro.request )
@@ -64,20 +41,6 @@ const appListing = await axios.get( apiUrl.toString() )
         return response.data
     })
 
-// const {
-//   head,
-//   entry
-// } = Astro.props
-
-const app = {}
-
-const hasMultipleAliases = false
-const appDeviceSupport = []
-const hasRelatedVideos = false
-const relatedVideosRowHtml = []
-const hasBundleIdentifiers = false
-const lastUpdatedFriendly = null
-
 ---
 <Layout
 	headTitle={ `${ appListing.name } | Does It ARM` }
@@ -87,8 +50,5 @@ const lastUpdatedFriendly = null
     <Listing
         listing={ appListing }
     />
-    <!-- <div>
-        { JSON.stringify( appListing ) }
-    </div> -->
 
 </Layout>
