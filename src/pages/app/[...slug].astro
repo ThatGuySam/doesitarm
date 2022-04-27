@@ -34,13 +34,19 @@ const {
 } = Astro.params
 
 
-const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
-
 // Parse the request url
 const requestUrl = new URL( Astro.request.url )
 
-// Use request path to get api url path
-apiUrl.pathname = `/api${ requestUrl.pathname }.json`
+// Get type and slug from the request path
+// so that we don't have extra parts for
+// urls like /:type/:slug/benchmarks
+const [ , pathType, pathSlug ] = requestUrl.pathname.split('/')
+
+// Create an empty API URL
+const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
+
+// Use request path parts to set api url path
+apiUrl.pathname = `/api/${ pathType }/${ pathSlug }.json`
 
 
 // Astro Request reference
@@ -50,7 +56,7 @@ console.log('Astro.params', Astro.params )
 console.log('apiUrl', apiUrl )
 console.log('Astro.request.url', Astro.request.url )
 console.log('Astro.site.pathname', Astro.site.pathname )
-console.log('Astro.request', Astro.request )
+// console.log('Astro.request', Astro.request )
 
 const appEntry = await axios.get( apiUrl.toString() )
     .then( response => {
@@ -81,8 +87,6 @@ const lastUpdatedFriendly = null
     <br>
     <br>
     { JSON.stringify( appEntry ) }
-
-    <AllUpdatesSubscribe />
 
     <AllUpdatesSubscribe
         client:visible
