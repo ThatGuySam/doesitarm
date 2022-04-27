@@ -169,7 +169,6 @@ class BuildLists {
     }
 
     async getAppBundles ( app ) {
-        console.log('app', app)
         return await Promise.all( app.bundleIds.map( async bundleIdentifier => {
             return await this.findAppBundle( bundleIdentifier )
         } ) )
