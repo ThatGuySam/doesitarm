@@ -9,15 +9,15 @@ const {
 const hasRelatedVideos = listing.relatedVideos.length > 0
 
 ---
-<div
-    class="related-videos w-full"
->
-    <Heading text="Related Videos" />
-    <VideoRow
-        videos={listing.relatedVideos}
-    />
-    <VideoRow
-        videos={listing.relatedVideos}
-    />
-</div>
+{ hasRelatedVideos && (
+    <div
+        class="related-videos w-full"
+    >
+        <Heading text="Related Videos" />
+
+        <VideoRow
+            videos={listing.relatedVideos}
+        />
+    </div>
+)}
 
