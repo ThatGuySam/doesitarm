@@ -137,6 +137,44 @@ class BuildLists {
         ])
     }
 
+    bundles = []
+    async getSavedAppBundles ({ keepBundlesInMemory = true }) {
+        if ( !keepBundlesInMemory ) {
+            return await fs.readJson('./static/app-bundles.json')
+        }
+
+        // From here we get and store bundles
+
+        console.log('this.bundles.length', this.bundles.length)
+
+        // Check if any bundles are already in memory
+        if ( this.bundles.length > 0 ) {
+            return this.bundles
+        }
+
+        this.bundles = await fs.readJson('./static/app-bundles.json')
+
+        return this.bundles
+    }
+
+    // Load the bundles from files
+    // so that we don't have to keep them in memory
+    async findAppBundle ( needleBundleIdentifier ) {
+        const bundles = await this.getSavedAppBundles()
+
+        return bundles.find( ([ 
+            storedAppBundleIdentifier, 
+            // versions 
+        ]) => storedAppBundleIdentifier === needleBundleIdentifier )
+    }
+
+    async getAppBundles ( app ) {
+        console.log('app', app)
+        return await Promise.all( app.bundleIds.map( async bundleIdentifier => {
+            return await this.findAppBundle( bundleIdentifier )
+        } ) )
+    }
+
     saveToJson = async function ( content, path ) {
 
         // Write the list to JSON
