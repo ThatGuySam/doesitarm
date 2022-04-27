@@ -59,21 +59,25 @@ class BuildLists {
         // Main build methods
         {
             name: 'app',
+            endpointPrefix: 'app',
             path: '/static/app-list.json',
             buildMethod: buildAppList,
         },
         {
             name: 'game',
+            endpointPrefix: 'game',
             path: '/static/game-list.json',
             buildMethod: buildGamesList,
         },
         {
             name: 'homebrew',
+            endpointPrefix: 'formula',
             path: '/static/homebrew-list.json',
             buildMethod: buildHomebrewList,
         },
         {
             name: 'device',
+            endpointPrefix: 'device',
             path: '/static/device-list.json',
             buildMethod: buildDeviceList,
         },
@@ -83,6 +87,7 @@ class BuildLists {
         // since it depend on them
         {
             name: 'video',
+            endpointPrefix: 'tv',
             path: '/static/video-list.json',
             buildMethod: async () => {
 
