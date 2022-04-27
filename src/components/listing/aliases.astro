@@ -6,7 +6,7 @@ const {
 const hasMultipleAliases = Array.isArray( listing.aliases ) && listing.aliases.length > 1
 
 
-const listFormatter = new Intl.ListFormat('en', { style: 'short', type: 'disjunction' });
+const listFormatter = new Intl.ListFormat('en', { style: 'short', type: 'disjunction' })
 
 ---
 { hasMultipleAliases ?
