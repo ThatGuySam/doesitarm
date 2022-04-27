@@ -304,14 +304,15 @@ class BuildLists {
             console.timeEnd(methodName)
 
             if ( cliOptions.withApi ) {
-                console.log('Saving individual endpoints...')
+                console.log('\n', `-- Starting individual /${ listOptions.name } endpoints`)
 
-                const endpointMethodName = `Saved /${ listOptions.name } endpoints`
+                const endpointMethodName = `Finished individual /${ listOptions.name } endpoints`
                 console.time(endpointMethodName)
 
                 await this.saveApiEndpoints( listOptions )
 
                 console.timeEnd(endpointMethodName)
+                console.log( '\n\n' )
             }
         }
 
