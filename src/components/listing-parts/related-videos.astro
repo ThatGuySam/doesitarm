@@ -1,0 +1,23 @@
+---
+import Heading from './heading.astro'
+import VideoRow from '~/src/components/video/row.astro'
+
+const {
+  listing
+} = Astro.props
+
+const hasRelatedVideos = listing.relatedVideos.length > 0
+
+---
+<div
+    class="related-videos w-full"
+>
+    <Heading text="Related Videos" />
+    <VideoRow
+        videos={listing.relatedVideos}
+    />
+    <VideoRow
+        videos={listing.relatedVideos}
+    />
+</div>
+
