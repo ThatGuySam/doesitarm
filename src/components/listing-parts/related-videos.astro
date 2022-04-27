@@ -6,7 +6,7 @@ const {
   listing
 } = Astro.props
 
-const hasRelatedVideos = listing.relatedVideos.length > 0
+const hasRelatedVideos = Array.isArray( listing.relatedVideos ) && listing.relatedVideos.length > 0
 
 ---
 { hasRelatedVideos && (
