@@ -40,15 +40,7 @@ const hasBundleIdentifiers = Array.isArray( listing.bundles )
 
 
             <div class="app-bundle-detail-view space-y-12 py-6 md:px-5">
-                { listing.bundles.map( ( [ bundleIdentifier, unsortedVersions ] ) => {
-                    // console.log( 'unsortedVersions', Object.entries( unsortedVersions )[0] )
-                    // Sort versions by semver
-                    const versions = Object.entries( unsortedVersions ).sort( ( [ aVersionRaw ], [ bVersionRaw ] ) => {
-                        // const aVersion = aVersionRaw || '0.0.0'
-                        // const bVersion = bVersionRaw || '0.0.0'
-
-                        return semver.compare( bVersionRaw, aVersionRaw )
-                    } )
+                { listing.bundles.map( ( [ bundleIdentifier, versions ] ) => {
 
                     return (
                         <div
@@ -64,38 +56,38 @@ const hasBundleIdentifiers = Array.isArray( listing.bundles )
                                 <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
 
                                     { versions.map( ( [ version, report ] ) => (
-                                            <div
-                                                class="bundle-listing-container w-full md:w-auto inline-flex flex-col p-4"
-                                                style="min-width: 300px;"
-                                            >
-                                                <div class="version-heading font-bold text-xl">v{ version }</div>
-                                                <div class="version-body divide-y-0 py-2">
-                                                    <div class="version-status">
-                                                        { getStatusOfScan( report, false ) }
-                                                    </div>
-                                                    <div class="version-architecture">
-                                                        🖥 Supported Architectures <span class="rounded bg-black bg-opacity-50 p-1">{ supportedArchitectures( report ).join(', ') }</span>
-                                                    </div>
+                                        <div
+                                            class="bundle-listing-container w-full md:w-auto inline-flex flex-col p-4"
+                                            style="min-width: 300px;"
+                                        >
+                                            <div class="version-heading font-bold text-xl">v{ version }</div>
+                                            <div class="version-body divide-y-0 py-2">
+                                                <div class="version-status">
+                                                    { getStatusOfScan( report, false ) }
                                                 </div>
-                                                <details>
-                                                    <summary
-                                                        class="text-xs cursor-pointer hover:bg-black-7 rounded px-2 py-1"
-                                                    >Full Info Plist</summary>
-                                                    <pre
-                                                        class="inline-block border-dashed border rounded-lg space-y-4 p-4 mt-4"
-                                                        style="background-color: #0d1117"
-                                                    >{ JSON.stringify( report['Info Plist'], undefined, 2) }</pre>
-                                                </details>
-                                                <details>
-                                                    <summary
-                                                        class="text-xs cursor-pointer hover:bg-black-7 rounded px-2 py-1"
-                                                    >Full Meta Details</summary>
-                                                    <pre
-                                                        class="inline-block border-dashed border rounded-lg space-y-4 p-4 mt-4"
-                                                        style="background-color: #0d1117"
-                                                    >{ JSON.stringify( report['Macho Meta'], undefined, 2) }</pre>
-                                                </details>
+                                                <div class="version-architecture">
+                                                    🖥 Supported Architectures <span class="rounded bg-black bg-opacity-50 p-1">{ supportedArchitectures( report ).join(', ') }</span>
+                                                </div>
                                             </div>
+                                            <details>
+                                                <summary
+                                                    class="text-xs cursor-pointer hover:bg-black-7 rounded px-2 py-1"
+                                                >Full Info Plist</summary>
+                                                <pre
+                                                    class="inline-block border-dashed border rounded-lg space-y-4 p-4 mt-4"
+                                                    style="background-color: #0d1117"
+                                                >{ JSON.stringify( report['Info Plist'], undefined, 2) }</pre>
+                                            </details>
+                                            <details>
+                                                <summary
+                                                    class="text-xs cursor-pointer hover:bg-black-7 rounded px-2 py-1"
+                                                >Full Meta Details</summary>
+                                                <pre
+                                                    class="inline-block border-dashed border rounded-lg space-y-4 p-4 mt-4"
+                                                    style="background-color: #0d1117"
+                                                >{ JSON.stringify( report['Macho Meta'], undefined, 2) }</pre>
+                                            </details>
+                                        </div>
                                     )) }
 
                                 </div>
