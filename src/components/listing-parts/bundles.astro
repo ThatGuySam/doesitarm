@@ -1,6 +1,8 @@
 ---
 import semver from 'semver'
 
+// import { Code } from 'astro/components'
+
 import { getStatusOfScan } from '~/helpers/statuses.js'
 import { supportedArchitectures } from '~/helpers/bundles.js'
 
@@ -25,10 +27,10 @@ const hasBundleIdentifiers = Array.isArray( listing.bundles )
                 { listing.bundles.map( ( [bundleIdentifier, versions] ) => (
                     <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
                         <a
-                            href="#bundle_identifier={ bundleIdentifier }"
+                            href={ `#bundle_identifier=${bundleIdentifier}` }
                             role="button"
                             class="bundle-link block rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow p-2"
-                            aria-label="{ bundleIdentifier }"
+                            aria-label={ bundleIdentifier }
                         >{ bundleIdentifier }</a>
 
                     </div>
@@ -37,46 +39,71 @@ const hasBundleIdentifiers = Array.isArray( listing.bundles )
             </div>
 
 
-            <div class="app-bundle-detail-view space-y-12 py-6 px-5">
-                { listing.bundles.map( ( [bundleIdentifier, versions] ) => (
-                    <div id="bundle_identifier={ bundleIdentifier }" class="bundle-detail-container w-full space-y-2 px-2">
-                        <h3
-                            class="text-2xl font-bold"
-                        >{ bundleIdentifier }</h3>
+            <div class="app-bundle-detail-view space-y-12 py-6 md:px-5">
+                { listing.bundles.map( ( [ bundleIdentifier, unsortedVersions ] ) => {
+                    // console.log( 'unsortedVersions', Object.entries( unsortedVersions )[0] )
+                    // Sort versions by semver
+                    const versions = Object.entries( unsortedVersions ).sort( ( [ aVersionRaw ], [ bVersionRaw ] ) => {
+                        // const aVersion = aVersionRaw || '0.0.0'
+                        // const bVersion = bVersionRaw || '0.0.0'
 
-                        <div class="bundle-versions-container border rounded-lg bg-black bg-opacity-10">
+                        return semver.compare( bVersionRaw, aVersionRaw )
+                    } )
 
-                            <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+                    return (
+                        <div
+                            id={ `bundle_identifier=${bundleIdentifier}` }
+                            class="bundle-detail-container w-full overflow-hidden space-y-2 px-2"
+                        >
+                            <h3
+                                class="md:text-2xl font-bold"
+                            >{ bundleIdentifier }</h3>
 
-                                { Object.entries(versions)
-                                    .sort((a, b) => new Date(b[1]['Date']) - new Date(a[1]['Date']))
-                                    .map( ( [ version, report ] ) => (
-                                        <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 p-4">
-                                            <div class="version-heading font-bold text-xl">v{ version }</div>
-                                            <div class="version-body divide-y-0 py-2">
-                                                <div class="version-status">
-                                                    { getStatusOfScan( report, false ) }
+                            <div class="bundle-versions-container border rounded-lg bg-black bg-opacity-10">
+
+                                <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+
+                                    { versions.map( ( [ version, report ] ) => (
+                                            <div
+                                                class="bundle-listing-container w-full md:w-auto inline-flex flex-col p-4"
+                                                style="min-width: 300px;"
+                                            >
+                                                <div class="version-heading font-bold text-xl">v{ version }</div>
+                                                <div class="version-body divide-y-0 py-2">
+                                                    <div class="version-status">
+                                                        { getStatusOfScan( report, false ) }
+                                                    </div>
+                                                    <div class="version-architecture">
+                                                        🖥 Supported Architectures <span class="rounded bg-black bg-opacity-50 p-1">{ supportedArchitectures( report ).join(', ') }</span>
+                                                    </div>
                                                 </div>
-                                                <div class="version-architecture">
-                                                    🖥 Supported Architectures <span class="rounded bg-black bg-opacity-50 p-1">{ supportedArchitectures( report ).join(', ') }</span>
-                                                </div>
+                                                <details>
+                                                    <summary
+                                                        class="text-xs cursor-pointer hover:bg-black-7 rounded px-2 py-1"
+                                                    >Full Info Plist</summary>
+                                                    <pre
+                                                        class="inline-block border-dashed border rounded-lg space-y-4 p-4 mt-4"
+                                                        style="background-color: #0d1117"
+                                                    >{ JSON.stringify( report['Info Plist'], undefined, 2) }</pre>
+                                                </details>
+                                                <details>
+                                                    <summary
+                                                        class="text-xs cursor-pointer hover:bg-black-7 rounded px-2 py-1"
+                                                    >Full Meta Details</summary>
+                                                    <pre
+                                                        class="inline-block border-dashed border rounded-lg space-y-4 p-4 mt-4"
+                                                        style="background-color: #0d1117"
+                                                    >{ JSON.stringify( report['Macho Meta'], undefined, 2) }</pre>
+                                                </details>
                                             </div>
-                                            <details>
-                                                <summary class="text-xs cursor-pointer">Full Info Plist</summary>
-                                                <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">{ JSON.stringify(report['Info Plist'], undefined, 2) }</pre>
-                                            </details>
-                                            <details>
-                                                <summary class="text-xs cursor-pointer">Full Meta Details</summary>
-                                                <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">{ JSON.stringify(report['Macho Meta'], undefined, 2) }</pre>
-                                            </details>
-                                        </div>
-                                )) }
+                                    )) }
+
+                                </div>
 
                             </div>
-
                         </div>
-                    </div>
-                )) }
+                    )
+                }) }
             </div>
 
         </div>
