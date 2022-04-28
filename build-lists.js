@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
+import mapValues from 'just-map-values'
 
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
@@ -192,7 +193,7 @@ class BuildLists {
     }
 
     sortBundleVersions ( bundles ) {
-        return Object.entries( bundles ).map( ( [ bundleIdentifier, unsortedVersions ] ) => {
+        return mapValues( bundles, ( unsortedVersions ) => {
             // console.log( 'unsortedVersions', Object.entries( unsortedVersions )[0] )
 
             // Sort versions by semver
@@ -203,7 +204,7 @@ class BuildLists {
                 return semver.compare( bVersion, aVersion )
             } )
 
-            return [ bundleIdentifier, versions ]
+            return versions
         } )
     }
 
