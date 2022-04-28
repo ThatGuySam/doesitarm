@@ -9,6 +9,7 @@ import buildGamesList from './helpers/build-game-list.js'
 import buildHomebrewList from './helpers/build-homebrew-list.js'
 import buildVideoList from './helpers/build-video-list.js'
 import buildDeviceList from './helpers/build-device-list.js'
+import { deviceSupportsApp } from './helpers/devices.js'
 
 import { videosRelatedToApp } from './helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
@@ -132,7 +133,13 @@ class BuildLists {
     shouldHaveRelatedVideos ( app ) {
         const appType = getAppType( app )
 
-        return appType === 'app' || appType === 'formula' 
+        return appType === 'app' || appType === 'formula'
+    }
+
+    shouldHaveDeviceSupport ( app ) {
+        const appType = getAppType( app )
+
+        return appType === 'app' || appType === 'formula' || appType === 'game'
     }
 
     getAllVideoAppsList = () => {
@@ -154,14 +161,14 @@ class BuildLists {
         }
 
         // From here we get and store bundles
-        
+
 
         // Check if any bundles are already in memory
         if ( this.bundles.length === 0 ) {
             // console.log('Storing bundles to memory')
             this.bundles = await fs.readJson('./static/app-bundles.json')
         }
-        
+
         // console.log('Getting bundles from memory')
         return this.bundles
     }
@@ -171,9 +178,9 @@ class BuildLists {
     async findAppBundle ( needleBundleIdentifier ) {
         const bundles = await this.getSavedAppBundles()
 
-        return bundles.find( ([ 
-            storedAppBundleIdentifier, 
-            // versions 
+        return bundles.find( ([
+            storedAppBundleIdentifier,
+            // versions
         ]) => storedAppBundleIdentifier === needleBundleIdentifier )
     }
 
@@ -285,6 +292,19 @@ class BuildLists {
                 // Add App Bundles
                 if ( Array.isArray( listEntry.bundleIds ) ) {
                     listEntry.bundles = await this.getAppBundles( listEntry )
+                }
+
+
+                // Add device support
+                if ( this.shouldHaveDeviceSupport( listEntry ) ) {
+                    listEntry.deviceSupport = this.lists[ 'device' ].map( device => {
+                        const supportsApp = deviceSupportsApp( device, listEntry )
+                        return {
+                            ...device,
+                            emoji: supportsApp ? '✅' : '🚫',
+                            ariaLabel: `${ listEntry.name } has ${ supportsApp ? '' : 'not' } been reported to work on ${ device.name }`
+                        }
+                    })
                 }
 
                 // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
