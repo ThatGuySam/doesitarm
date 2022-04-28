@@ -1,0 +1,85 @@
+---
+import { getStatusOfScan } from '~/helpers/statuses.js'
+import { supportedArchitectures } from '~/helpers/bundles.js'
+
+import Heading from './heading.astro'
+
+const {
+  listing
+} = Astro.props
+
+const hasBundleIdentifiers = Array.isArray( listing.bundles )
+---
+{ hasBundleIdentifiers && (
+
+    <div class="app-bundles w-full">
+
+        <Heading text='App Bundles' />
+
+        <div class="app-bundles-container border rounded-lg">
+
+            <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+
+                { listing.bundles.map( ( [bundleIdentifier, versions] ) => (
+                    <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
+                        <a
+                            href="#bundle_identifier={ bundleIdentifier }"
+                            role="button"
+                            class="bundle-link block rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow p-2"
+                            aria-label="{ bundleIdentifier }"
+                        >{ bundleIdentifier }</a>
+
+                    </div>
+                 )) }
+
+            </div>
+
+
+            <div class="app-bundle-detail-view space-y-12 py-6 px-5">
+                { listing.bundles.map( ( [bundleIdentifier, versions] ) => (
+                    <div id="bundle_identifier={ bundleIdentifier }" class="bundle-detail-container w-full space-y-2 px-2">
+                        <h3
+                            class="text-2xl font-bold"
+                        >{ bundleIdentifier }</h3>
+
+                        <div class="bundle-versions-container border rounded-lg bg-black bg-opacity-10">
+
+                            <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+
+                                { Object.entries(versions)
+                                    .sort((a, b) => new Date(b[1]['Date']) - new Date(a[1]['Date']))
+                                    .map( ( [ version, report ] ) => (
+                                        <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 p-4">
+                                            <div class="version-heading font-bold text-xl">v{ version }</div>
+                                            <div class="version-body divide-y-0 py-2">
+                                                <div class="version-status">
+                                                    { getStatusOfScan( report, false ) }
+                                                </div>
+                                                <div class="version-architecture">
+                                                    🖥 Supported Architectures <span class="rounded bg-black bg-opacity-50 p-1">{ supportedArchitectures( report ).join(', ') }</span>
+                                                </div>
+                                            </div>
+                                            <details>
+                                                <summary class="text-xs">Full Info Plist</summary>
+                                                <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">{ JSON.stringify(report['Info Plist'], undefined, 2) }</pre>
+                                            </details>
+                                            <details>
+                                                <summary class="text-xs">Full Meta Details</summary>
+                                                <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">{ JSON.stringify(report['Macho Meta'], undefined, 2) }</pre>
+                                            </details>
+                                        </div>
+                                )) }
+
+                            </div>
+
+                        </div>
+                    </div>
+                )) }
+            </div>
+
+        </div>
+
+
+    </div>
+
+)}
