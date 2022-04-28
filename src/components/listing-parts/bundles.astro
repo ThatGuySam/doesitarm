@@ -1,4 +1,6 @@
 ---
+import semver from 'semver'
+
 import { getStatusOfScan } from '~/helpers/statuses.js'
 import { supportedArchitectures } from '~/helpers/bundles.js'
 
@@ -60,11 +62,11 @@ const hasBundleIdentifiers = Array.isArray( listing.bundles )
                                                 </div>
                                             </div>
                                             <details>
-                                                <summary class="text-xs">Full Info Plist</summary>
+                                                <summary class="text-xs cursor-pointer">Full Info Plist</summary>
                                                 <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">{ JSON.stringify(report['Info Plist'], undefined, 2) }</pre>
                                             </details>
                                             <details>
-                                                <summary class="text-xs">Full Meta Details</summary>
+                                                <summary class="text-xs cursor-pointer">Full Meta Details</summary>
                                                 <pre class="border-dashed border rounded-lg bg-black bg-opacity-10 space-y-4 p-4 mt-4">{ JSON.stringify(report['Macho Meta'], undefined, 2) }</pre>
                                             </details>
                                         </div>
