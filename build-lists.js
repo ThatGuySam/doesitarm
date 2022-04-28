@@ -35,7 +35,26 @@ const cliOptions = {
 }
 
 
+function normalizeVersion ( rawVersion ) {
+    const containsNumbers = /\d+/.test( rawVersion )
 
+    if ( !containsNumbers ) {
+        return '0.0.0'
+    }
+
+    let version = rawVersion
+
+    // Parse each part
+    version = version
+        .split('.')
+        .map( part => {
+            // Trim leading zeros
+            return part.replace(/^0+/, '')
+        } )
+        .join('.')
+
+    return semver.coerce(version)
+}
 class BuildLists {
 
     constructor () {
@@ -193,18 +212,24 @@ class BuildLists {
     }
 
     sortBundleVersions ( bundles ) {
-        return mapValues( bundles, ( unsortedVersions ) => {
-            // console.log( 'unsortedVersions', Object.entries( unsortedVersions )[0] )
+        return bundles.map( bundle => {
+            const [
+                bundleIdentifier,
+                versionsObject
+            ] = bundle
 
             // Sort versions by semver
-            const versions = Object.entries( unsortedVersions ).sort( ( [ aVersionRaw ], [ bVersionRaw ] ) => {
-                const aVersion = semver.coerce( aVersionRaw )
-                const bVersion = semver.coerce( bVersionRaw )
+            const versions = Object.entries( versionsObject ).sort( ( [ aVersionRaw ], [ bVersionRaw ] ) => {
+                const aVersion = normalizeVersion( aVersionRaw )
+                const bVersion = normalizeVersion( bVersionRaw )
 
                 return semver.compare( bVersion, aVersion )
             } )
 
-            return versions
+            return [
+                bundleIdentifier,
+                versions
+            ]
         } )
     }
 
