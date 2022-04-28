@@ -2,6 +2,7 @@ import { dirname } from 'path'
 
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
+import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
 
 import buildAppList from './helpers/build-app-list.js'
@@ -190,6 +191,22 @@ class BuildLists {
         } ) )
     }
 
+    sortBundleVersions ( bundles ) {
+        return Object.entries( bundles ).map( ( [ bundleIdentifier, unsortedVersions ] ) => {
+            // console.log( 'unsortedVersions', Object.entries( unsortedVersions )[0] )
+
+            // Sort versions by semver
+            const versions = Object.entries( unsortedVersions ).sort( ( [ aVersionRaw ], [ bVersionRaw ] ) => {
+                const aVersion = semver.coerce( aVersionRaw )
+                const bVersion = semver.coerce( bVersionRaw )
+
+                return semver.compare( bVersion, aVersion )
+            } )
+
+            return [ bundleIdentifier, versions ]
+        } )
+    }
+
     saveToJson = async function ( content, path ) {
 
         // Write the list to JSON
@@ -292,6 +309,8 @@ class BuildLists {
                 // Add App Bundles
                 if ( Array.isArray( listEntry.bundleIds ) ) {
                     listEntry.bundles = await this.getAppBundles( listEntry )
+
+                    listEntry.bundles = this.sortBundleVersions( listEntry.bundles )
                 }
 
 
