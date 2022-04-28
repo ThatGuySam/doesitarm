@@ -297,7 +297,9 @@ class BuildLists {
 
                 // Add device support
                 if ( this.shouldHaveDeviceSupport( listEntry ) ) {
-                    listEntry.deviceSupport = this.lists[ 'device' ].map( device => {
+                    const deviceList = Array.from( this.lists[ 'device' ] )
+
+                    listEntry.deviceSupport = deviceList.map( device => {
                         const supportsApp = deviceSupportsApp( device, listEntry )
                         return {
                             ...device,
