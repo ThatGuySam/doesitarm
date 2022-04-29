@@ -213,6 +213,11 @@ export default {
                 return this.$nuxt.$route.path
             }
 
+            // If we have a location object, use that.
+            if ( typeof window !== 'undefined' && typeof window.location === 'object' ) {
+                return window.location.pathname
+            }
+
             return '/'
         }
     }
