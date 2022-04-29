@@ -30,9 +30,9 @@ apiUrl.pathname = `/api/${ pathType }/${ pathSlug }.json`
 // Astro Request reference
 // https://docs.astro.build/en/reference/api-reference/#astrorequests
 
-console.log('Astro.params', Astro.params )
-console.log('Astro.request.url', Astro.request.url )
-console.log('Astro.site.pathname', Astro.site.pathname )
+// console.log('Astro.params', Astro.params )
+// console.log('Astro.request.url', Astro.request.url )
+// console.log('Astro.site.pathname', Astro.site.pathname )
 // console.log('Astro.request', Astro.request )
 
 const appListing = await axios.get( apiUrl.toString() )
