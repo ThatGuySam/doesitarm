@@ -23,7 +23,7 @@ const hasBundleIdentifiers = Array.isArray( listing.bundles )
 
             <div class="app-bundles-list md:inline-flex w-full overflow-x-auto overflow-y-visible md:whitespace-no-wrap divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
 
-                { listing.bundles.map( ( [bundleIdentifier, versions] ) => (
+                { listing.bundles.map( ( [ bundleIdentifier ] ) => (
                     <div class="bundle-listing-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
                         <a
                             href={ `#bundle_identifier=${bundleIdentifier}` }
