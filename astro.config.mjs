@@ -15,6 +15,8 @@ export default defineConfig({
         netlify({
             dist: new URL('./dist/', import.meta.url)
         }),
+        // Astro Vue Reference
+        // https://github.com/withastro/astro/tree/main/packages/integrations/vue
         vue(),
         tailwind()
     ]
