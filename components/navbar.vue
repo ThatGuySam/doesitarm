@@ -162,6 +162,9 @@
 </template>
 
 <script>
+// https://anguscroll.com/just/just-has
+import has from 'just-has'
+
 import LinkButton from '~/components/link-button.vue'
 
 export default {
@@ -206,7 +209,7 @@ export default {
     computed: {
         currentPath () {
             // If we have a nuxt context, use that.
-            if (this.$nuxt) {
+            if ( has( this, [ '$nuxt' ]) ) {
                 return this.$nuxt.$route.path
             }
 
