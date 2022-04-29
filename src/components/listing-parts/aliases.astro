@@ -10,5 +10,5 @@ const listFormatter = new Intl.ListFormat('en', { style: 'short', type: 'disjunc
 
 ---
 { hasMultipleAliases ?
-    <small class="text-xs opacity-75">May also be known as ${ listFormatter.format( listing.aliases, 'or' ) }</small>
+    <small class="text-xs opacity-75">May also be known as { listFormatter.format( listing.aliases, 'or' ) }</small>
 : '' }
