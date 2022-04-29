@@ -61,6 +61,8 @@
 
 import axios from 'axios'
 
+import { v4 as uuid } from 'uuid'
+
 export default {
     props: {
         // appName: {
@@ -78,6 +80,10 @@ export default {
         inputClassGroups: {
             type: Object,
             default: () => {}
+        },
+        uuid: {
+            type: String,
+            default: uuid()
         }
     },
     data: function () {
@@ -90,7 +96,7 @@ export default {
     },
     computed: {
         inputId () {
-            return `all-updates-subscribe-${this._uid}`
+            return `all-updates-subscribe-${ this.uuid }`
         },
         inputClasslist () {
             const defaultClassGroups = {
