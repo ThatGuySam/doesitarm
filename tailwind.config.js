@@ -1,25 +1,22 @@
 module.exports = {
-    purge: {
-        enabled: true,//process.env.NODE_ENV === 'production',
-        content: [
+    content: [
 
-            // Nuxt
-            'nuxt.config.js',
-            'components/**/*.vue',
-            'layouts/**/*.vue',
-            'pages/**/*.vue',
-            'plugins/**/*.js',
+        // Nuxt
+        'nuxt.config.js',
+        'components/**/*.vue',
+        'layouts/**/*.vue',
+        'pages/**/*.vue',
+        'plugins/**/*.js',
 
-            // Eleventy
-            'layouts-eleventy/**/*.js',
-            'pages-eleventy/**/*.js',
+        // Eleventy
+        'layouts-eleventy/**/*.js',
+        'pages-eleventy/**/*.js',
 
-            // Astro
-            'src/**/*.astro',
-            'src/**/*.vue',
-            'src/**/*.js',
-        ]
-    },
+        // Astro
+        'src/**/*.astro',
+        'src/**/*.vue',
+        'src/**/*.js',
+    ],
     future: {
         purgeLayersByDefault: true,
     },
