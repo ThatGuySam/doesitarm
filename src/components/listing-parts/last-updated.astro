@@ -1,0 +1,31 @@
+---
+import { makeLastUpdatedFriendly } from '~/helpers/parse-date.js'
+
+const {
+  listing
+} = Astro.props
+
+console.log( 'listing.lastUpdated', listing.lastUpdated )
+
+const lastUpdatedFriendly = makeLastUpdatedFriendly( listing.lastUpdated )
+
+---
+<div class="report-update text-xs text-center w-full shadow-none py-24">
+    { lastUpdatedFriendly !== null &&
+        <div>
+            <time
+                datetime={ listing.lastUpdated.raw }
+            >
+                Last Updated { lastUpdatedFriendly }
+            </time>
+        </div>
+    }
+    <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
+    <a
+        href={ `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${ listing.name }` }
+        target="_blank"
+        class="underline"
+        rel="noopener"
+    >Report Update</a>
+</div>
+

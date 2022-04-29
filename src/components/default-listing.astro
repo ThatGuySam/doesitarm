@@ -10,6 +10,7 @@ import RelatedLinks from '~/src/components/listing-parts/related-links.astro'
 import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
 import Bundles from '~/src/components/listing-parts/bundles.astro'
+import LastUpdated from '~/src/components/listing-parts/last-updated.astro'
 
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
@@ -62,6 +63,10 @@ const details = new ListingDetails( listing )
     </div>
 
     <Bundles
+        listing={ listing }
+    />
+
+    <LastUpdated
         listing={ listing }
     />
 
