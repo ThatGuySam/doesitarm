@@ -6,7 +6,9 @@
   "private": true,
   "ava": {
     "require": [
-      "esm"
+      "dotenv/config",
+      "esm",
+      "tsconfig-paths/register"
     ]
   },
   "scripts": {
