@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
+        "allowJs": true,
         "baseUrl": ".",
         "paths": {
             "~/*": ["./*"],
-            "~/helpers": ["./helpers/*"]
+            "~helpers": ["./helpers/*"]
         }
     }
 }
