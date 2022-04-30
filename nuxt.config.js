@@ -1,6 +1,10 @@
 import { promises as fs } from 'fs'
 
-import pkg from './package'
+import pkg from './package.json'
+import { getSiteUrl } from '~/helpers/get-site-url.js'
+
+
+const siteUrl = getSiteUrl()
 
 
 export default {
@@ -62,7 +66,7 @@ export default {
             },
             {
                 'property':  'og:image',
-                'content': `${process.env.URL}/images/og-image.png`
+                'content': `${ siteUrl }/images/og-image.png`
             },
             {
                 'property':  'og:image:width',
@@ -92,11 +96,11 @@ export default {
             },
             {
                 'property':  'twitter:url',
-                'content': `${process.env.URL}`
+                'content': `${ siteUrl }`
             },
             {
                 'property':  'twitter:image',
-                'content': `${process.env.URL}/images/mark.png`
+                'content': `${ siteUrl }/images/mark.png`
             }
         ],
         link: [
