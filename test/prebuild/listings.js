@@ -163,7 +163,7 @@ test('Listings have valid headings', async t => {
 
             for( const element of elements ) {
                 for ( const [ check, checkMethod ] of Object.entries( checks ) ) {
-                    console.log( `Ckecking ${ selector } ${ check }` )
+                    // console.log( `Ckecking ${ selector } ${ check }` )
 
                     const value = element.getAttribute( check )
 
