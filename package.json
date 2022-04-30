@@ -12,10 +12,10 @@
     ]
   },
   "scripts": {
-    "test-prebuild": "ava ./test/prebuild/**/*.js --verbose && npm run test-listings",
+    "test-prebuild": "ava ./test/prebuild/**/*.js --verbose",
+    "test-prebuild-functions": "npm run test-prebuild && npm run test-listings",
     "test-postbuild-api": "npm run test-listings",
     "test-listings": "ava ./test/listings/**/*.js --verbose",
-
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
@@ -40,7 +40,7 @@
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
     "vercel-build": "npm run build-lists-and-api && test-postbuild-api",
-    "netlify-build": "test-prebuild && npm run generate-astro"
+    "netlify-build": "test-prebuild-functions && npm run generate-astro"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",
