@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "test-prebuild": "ava ./test/prebuild.js --verbose",
+    "test-prebuild": "ava ./test/prebuild/**/*.js --verbose",
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
