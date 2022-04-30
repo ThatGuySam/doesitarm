@@ -1,3 +1,4 @@
+import fs from 'fs-extra'
 import has from 'just-has'
 import test from 'ava'
 import axios from 'axios'
@@ -33,7 +34,18 @@ test.before(async t => {
     t.context.listings = await Promise.all(
         listings.map(async listing => {
             const { endpoint } = listing
-            const { data } = await axios.get(`${ process.env.PUBLIC_API_DOMAIN }/api${ endpoint }.json`)
+
+            const apiPath = `/api${ endpoint }.json`
+            const localPath = `./static/api${ endpoint }.json`
+
+            // Check if the endpoint exists locally
+            // so we don't have to wait for the API
+            if ( await fs.pathExists( localPath ) ) {
+                console.log('Using local endpoint data for', endpoint)
+                return await fs.readJson( localPath )
+            }
+
+            const { data } = await axios.get(`${ process.env.PUBLIC_API_DOMAIN }${ apiPath }`)
 
             return data
         })
