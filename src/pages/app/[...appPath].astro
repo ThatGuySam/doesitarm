@@ -4,6 +4,8 @@
 
 import axios from 'axios'
 
+import { ListingDetails } from '~/helpers/listing-page.js'
+
 import Layout from '../../layouts/default.astro'
 import Listing from '../../components/default-listing.astro'
 
@@ -41,10 +43,13 @@ const appListing = await axios.get( apiUrl.toString() )
         return response.data
     })
 
+const listingDetails = new ListingDetails( appListing )
+
 ---
 <Layout
 	headTitle={ `${ appListing.name } | Does It ARM` }
 	headDescription={ 'Test' }
+    headOptions={ listingDetails.headOptions }
 >
 
     <Listing
