@@ -179,7 +179,7 @@ test('Listings have valid headings', async t => {
 
                     const value = element.getAttribute( check )
 
-                    t.assert( checkMethod( value ), `${ check } on ${ selector } failed` )
+                    t.assert( checkMethod( value ), `${ check } on ${ selector } failed. Value is '${ value }'` )
                 }
             }
 
