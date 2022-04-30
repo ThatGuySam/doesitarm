@@ -5,6 +5,18 @@ export function getSiteUrl () {
     const hasImportMeta = typeof import.meta !== 'undefined'
     const hasImportMetaEnv = hasImportMeta && typeof import.meta.env !== 'undefined'
 
+    // Try PUBLIC_URL
+    if ( typeof process.env.PUBLIC_URL !== 'undefined' ) {
+        console.log('Has env.PUBLIC_URL')
+        return process.env.PUBLIC_URL
+    }
+
+    if ( hasImportMetaEnv && typeof import.meta.env.PUBLIC_URL !== 'undefined' ) {
+        console.log('Has PUBLIC_URL')
+        return import.meta.env.PUBLIC_URL
+    }
+
+
     // Try process.env.URL
     if ( typeof process.env.URL !== 'undefined' ) {
         console.log('Has env.URL')
@@ -21,12 +33,6 @@ export function getSiteUrl () {
     if ( hasImportMetaEnv && typeof import.meta.env.URL !== 'undefined' ) {
         console.log('Has URL')
         return import.meta.env.URL
-    }
-
-    // Try PUBLIC_URL
-    if ( hasImportMetaEnv && typeof import.meta.env.PUBLIC_URL !== 'undefined' ) {
-        console.log('Has PUBLIC_URL')
-        return import.meta.env.PUBLIC_URL
     }
 
     throw new Error('Could not find site URL')
