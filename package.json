@@ -92,6 +92,7 @@
     "postcss-cli": "^8.3.1",
     "replace-css-url": "^1.2.6",
     "structured-data-testing-tool": "^4.5.0",
-    "tailwindcss": "^1.9.6"
+    "tailwindcss": "^1.9.6",
+    "tsconfig-paths": "^3.14.1"
   }
 }
