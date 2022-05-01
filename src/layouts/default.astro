@@ -6,8 +6,8 @@ import { PageHead } from '~/helpers/config.js'
 import VueBaseLayout from '../../layouts/base.vue'
 
 const {
-    headTitle,
-    headDescription,
+    // headTitle,
+    // headDescription,
     headOptions = {}
 } = Astro.props
 
@@ -19,12 +19,11 @@ const pageHead = new PageHead({
     ...headOptions
 })
 
-console.log( 'pageHead', pageHead.meta )
 ---
 <!doctype html>
 <html lang="en">
     <head>
-        <title>{ headTitle }</title>
+        <title>{ pageHead.title }</title>
         <Fragment set:html={ pageHead.metaAndLinkMarkup } />
     </head>
     <body>

@@ -14,8 +14,16 @@ const description = 'Does It ARM?'
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 <Layout
-	headTitle={ title }
-	headDescription={ description }
+	headOptions={ {
+        title: 'Apple Silicon and Apple M1 Pro and M1 Max app and game compatibility list',
+        description: 'List of compatibility apps and games for Apple Silicon and the Apple M1 Pro and M1 Max Processors including performance reports and benchmarks',
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        pathname: '/',
+    } }
 >
 	Works!
 
