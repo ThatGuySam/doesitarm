@@ -2,6 +2,7 @@ import { promises as fs } from 'fs'
 
 import pkg from './package.json'
 import { getSiteUrl } from '~/helpers/get-site-url.js'
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 
 
 const siteUrl = getSiteUrl()
@@ -10,11 +11,7 @@ const siteUrl = getSiteUrl()
 export default {
     target: 'static',
 
-    publicRuntimeConfig: {
-        allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
-        testResultStore: process.env.TEST_RESULT_STORE,
-        siteUrl: process.env.URL
-    },
+    publicRuntimeConfig,
 
     /*
     ** Hooks

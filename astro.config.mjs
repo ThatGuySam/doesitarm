@@ -5,6 +5,7 @@ import tailwind from '@astrojs/tailwind'
 // https://github.com/withastro/astro/tree/main/packages/integrations/netlify
 import netlify from '@astrojs/netlify/functions'
 
+import { makeViteDefinitions } from './helpers/public-runtime-config.mjs'
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,5 +20,15 @@ export default defineConfig({
         // https://github.com/withastro/astro/tree/main/packages/integrations/vue
         vue(),
         tailwind()
-    ]
+    ],
+
+    // Vite options
+    // https://docs.astro.build/en/reference/configuration-reference/#vite
+    vite: {
+        // Vite: https://vitejs.dev/config/#define
+        // esbuild: https://esbuild.github.io/api/#define
+        define: {
+            ...makeViteDefinitions()
+        }
+    }
 });
