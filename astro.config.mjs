@@ -4,6 +4,8 @@ import tailwind from '@astrojs/tailwind'
 // Astro Netlify Reference
 // https://github.com/withastro/astro/tree/main/packages/integrations/netlify
 import netlify from '@astrojs/netlify/functions'
+import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
+
 
 import { makeViteDefinitions } from './helpers/public-runtime-config.mjs'
 
@@ -28,7 +30,10 @@ export default defineConfig({
         // Vite: https://vitejs.dev/config/#define
         // esbuild: https://esbuild.github.io/api/#define
         define: {
-            ...makeViteDefinitions()
-        }
+            ...makeViteDefinitions(),
+        },
+        plugins: [
+            viteCommonjs()
+        ]
     }
 });
