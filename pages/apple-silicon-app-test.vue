@@ -192,6 +192,12 @@ export default {
         LinkButton,
         AllUpdatesSubscribe
     },
+    props: {
+        config: {
+            type: Object,
+            default: null
+        }
+    },
     data: function () {
         return {
             query: '',
@@ -295,7 +301,7 @@ export default {
                 // Bring in code
                 const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
 
-                const testResultStore = isNuxt( this ) ? this.$config.testResultStore : global.$config.testResultStore
+                const testResultStore = this.config ? this.config.testResultStore : this.$config.testResultStore
 
                 // Initialize instance
                 this.scanner = new AppFilesScanner({

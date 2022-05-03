@@ -11,6 +11,7 @@ import AppTestPage from '~/pages/apple-silicon-app-test.vue'
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
+
 ---
 <Layout
 	headOptions={ {
@@ -26,6 +27,7 @@ import AppTestPage from '~/pages/apple-silicon-app-test.vue'
 >
 
 	<AppTestPage
+        config={ global.$config }
         client:load
     />
 
