@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 
 import pkg from './package.json'
-import { getSiteUrl } from '~/helpers/get-site-url.js'
+import { getSiteUrl } from '~/helpers/url.js'
 import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 
 
