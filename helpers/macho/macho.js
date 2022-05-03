@@ -119,7 +119,7 @@ export function MachoParser(file, callback) {
         var cmd = null;
         if(type == LOAD_COMMAND_TYPE.LC_SEGMENT) {
             if(data.length < 48) {
-                if(process.env.VERBOSE){ console.log('Segment command OOB'); }
+                // if(process.env.VERBOSE){ console.log('Segment command OOB'); }
                 return new LoadCommand(type, data, size, off);
             }
             let name = new Cstr(data.slice(0, (4*uint32_t)));
@@ -173,7 +173,7 @@ export function MachoParser(file, callback) {
             let data = new Uint8Array(e.target.result);
             let magics = FindMagic(data, false); //Try to find all Mach-O magics in the byte array
 
-            if ( process.env.DEBUG ) { console.log('Parsing all magics...'); }
+            // if ( process.env.DEBUG ) { console.log('Parsing all magics...'); }
 
             //If magics where found, parse the binary.
             if(magics.length > 0) {
