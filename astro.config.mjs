@@ -32,9 +32,9 @@ export default defineConfig({
         define: {
             ...makeViteDefinitions(),
         },
-        plugins: [
-            viteCommonjs()
-        ],
+        // plugins: [
+        //     viteCommonjs()
+        // ],
         build: {
             commonjsOptions: {
                 transformMixedEsModules: true,
