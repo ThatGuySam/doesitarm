@@ -48,6 +48,7 @@
     "@fontsource/inter": "^4.0.1",
     "@nuxtjs/sitemap": "^2.4.0",
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.2.6",
     "astro": "^1.0.0-beta.20",
