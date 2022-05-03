@@ -3,8 +3,7 @@ import axios from 'axios'
 
 import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
-
-const prettyBytes = require('pretty-bytes')
+import prettyBytes from 'pretty-bytes'
 
 
 const knownArchiveExtensions = new Set([
