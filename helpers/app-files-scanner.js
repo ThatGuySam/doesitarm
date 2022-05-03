@@ -37,7 +37,6 @@ function callWithTimeout(timeout, func) {
     })
 }
 
-let zip
 
 // https://stackoverflow.com/a/35610685/1397641
 const arrayChangeHandler = {
@@ -64,30 +63,29 @@ export function makeObservableArray () {
     }
 }
 
+let zip = null
 
 export default class AppFilesScanner {
 
     constructor( {
         observableFilesArray,
-        testResultStore
+        testResultStore,
+        zipModule = null
     } ) {
         // Files to process
         this.files = observableFilesArray
 
         this.testResultStore = testResultStore
 
-        // https://gildas-lormeau.github.io/zip.js/
-        zip = require('@zip.js/zip.js')
-
-        // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
-        zip.configure({
-            workerScripts: true,
-            // workerScripts: {
-            //     inflate: ["lib/z-worker-pako.js", "pako_inflate.min.js"]
-            // }
-        })
+        this.zipModule = zipModule
     }
 
+    get zip () {
+
+        if ( this.zipModule ) return this.zipModule
+
+        return zip
+    }
 
     isApp ( file ) {
 
@@ -141,7 +139,9 @@ export default class AppFilesScanner {
     // }
 
     async unzipFile ( file ) {
-        const fileReader = new zip.BlobReader( file.instance )//new FileReader()
+        if ( !this.zip ) throw new Error('Zip module not loaded')
+
+        const fileReader = new this.zip.BlobReader( file.instance )//new FileReader()
 
         fileReader.onload = function() {
 
@@ -171,7 +171,7 @@ export default class AppFilesScanner {
         // console.log('fileReader', fileReader)
 
         // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-reading
-        const zipReader = new zip.ZipReader( fileReader )
+        const zipReader = new this.zip.ZipReader( fileReader )
 
         // zipReader.onprogress = console.log
 
@@ -429,7 +429,7 @@ export default class AppFilesScanner {
         const infoXml = await rootInfoEntry.getData(
             // writer
             // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
-            new zip.TextWriter(),
+            new this.zip.TextWriter(),
             // options
             {
                 useWebWorkers: true,
@@ -503,7 +503,7 @@ export default class AppFilesScanner {
         const bundleExecutableBlob = await bundleExecutable.getData(
             // writer
             // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
-            new zip.BlobWriter(),
+            new this.zip.BlobWriter(),
             // options
             {
                 useWebWorkers: true
@@ -618,6 +618,34 @@ export default class AppFilesScanner {
 
 
         return
+    }
+
+    async setupZipReader () {
+        // https://gildas-lormeau.github.io/zip.js/
+        zip = await import('@zip.js/zip.js')
+
+        // console.log( 'zip', zip )
+
+        // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
+        zip.configure({
+            workerScripts: true,
+            // workerScripts: {
+            //     inflate: ["lib/z-worker-pako.js", "pako_inflate.min.js"]
+            // }
+        })
+    }
+
+    get isSetup () {
+        return this.zip === null
+    }
+
+    async setup () {
+
+        // Setup zip reader if not already done
+        if ( !this.zipModule && !zip ) {
+            await this.setupZipReader()
+        }
+
     }
 
 }

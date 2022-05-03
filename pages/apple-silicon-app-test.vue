@@ -308,6 +308,9 @@ export default {
                     observableFilesArray: this.appsBeingScanned,
                     testResultStore
                 })
+
+                // Setup scanner
+                await this.scanner.setup()
             }
 
             // console.log('fileInputChanged files', fileList)
