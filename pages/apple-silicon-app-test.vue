@@ -173,6 +173,7 @@
 
 // import AppFilesScanner from '~/helpers/app-files-scanner.js'
 
+import { isNuxt } from '~/helpers/environment.js'
 
 import LinkButton from '~/components/link-button.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
@@ -292,12 +293,14 @@ export default {
                 console.log('Initializing scanner instance')
 
                 // Bring in code
-                const { default: AppFilesScanner} = await import('~/helpers/app-files-scanner.js')
+                const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
+
+                const testResultStore = isNuxt( this ) ? this.$config.testResultStore : global.$config.testResultStore
 
                 // Initialize instance
                 this.scanner = new AppFilesScanner({
                     observableFilesArray: this.appsBeingScanned,
-                    testResultStore: this.$config.testResultStore
+                    testResultStore
                 })
             }
 
