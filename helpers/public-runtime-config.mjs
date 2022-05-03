@@ -16,6 +16,7 @@ export function makeViteDefinitions () {
     for ( const key in publicRuntimeConfig ) {
         definitions[`this.$config.${key}`] = JSON.stringify( publicRuntimeConfig[key] )
         definitions[`global.$config.${key}`] = JSON.stringify( publicRuntimeConfig[key] )
+        definitions[`global.$config`] = JSON.stringify( publicRuntimeConfig )
     }
 
     return definitions
