@@ -37,3 +37,15 @@ export function getSiteUrl () {
 
     throw new Error('Could not find site URL')
 }
+
+export function getPathPartsFromAstroRequest ( AstroRequest ) {
+    // Parse the request url
+    const requestUrl = new URL( AstroRequest.url )
+
+    const pathParts = requestUrl.pathname
+        .replace(/^\/+/, '') // Trim slashes from the beginning
+        .replace(/\/+$/, '') // Trim slashes from the end
+        .split('/')
+
+    return pathParts
+}
