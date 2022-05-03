@@ -39,6 +39,32 @@ function callWithTimeout(timeout, func) {
 
 let zip
 
+// https://stackoverflow.com/a/35610685/1397641
+const arrayChangeHandler = {
+    get: function( target, property ) {
+        console.log('getting ' + property + ' for ' + target)
+        // property is index in this case
+        return target[property]
+    },
+    set: function( target, property, value, receiver ) {
+        console.log('setting ' + property + ' for ' + target + ' with value ' + value)
+        target[property] = value
+        // you have to return true to accept the changes
+        return true
+    }
+}
+
+export function makeObservableArray () {
+    const originalArray = []
+    const proxyToArray = new Proxy( originalArray, arrayChangeHandler )
+
+    return {
+        originalArray,
+        proxyToArray
+    }
+}
+
+
 export default class AppFilesScanner {
 
     constructor( {
