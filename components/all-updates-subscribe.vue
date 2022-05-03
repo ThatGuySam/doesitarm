@@ -59,10 +59,10 @@
 
 <script>
 
-import has from 'just-has'
 import axios from 'axios'
-
 import { v4 as uuid } from 'uuid'
+
+import { isNuxt } from '~/helpers/environment.js'
 
 export default {
     props: {
@@ -132,9 +132,7 @@ export default {
 
             // const pagePath = $nuxt.$route.path
 
-            const isNuxt = has( this, [ '$nuxt' ])
-
-            const allUpdateSubscribe = isNuxt ? this.$config.allUpdateSubscribe : global.$config.allUpdateSubscribe
+            const allUpdateSubscribe = isNuxt( this ) ? this.$config.allUpdateSubscribe : global.$config.allUpdateSubscribe
 
             console.log('allUpdateSubscribe', allUpdateSubscribe)
 
