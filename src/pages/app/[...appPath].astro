@@ -5,6 +5,7 @@
 import axios from 'axios'
 
 import { ListingDetails } from '~/helpers/listing-page.js'
+import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
 
 import Layout from '../../layouts/default.astro'
 import Listing from '../../components/default-listing.astro'
@@ -14,13 +15,11 @@ import Listing from '../../components/default-listing.astro'
 // } = Astro.params
 
 
-// Parse the request url
-const requestUrl = new URL( Astro.request.url )
 
 // Get type and slug from the request path
 // so that we don't have extra parts for
 // urls like /:type/:slug/benchmarks
-const [ , pathType, pathSlug ] = requestUrl.pathname.split('/')
+const [ pathType, pathSlug ] = getPathPartsFromAstroRequest( Astro.request )
 
 // Create an empty API URL
 const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
