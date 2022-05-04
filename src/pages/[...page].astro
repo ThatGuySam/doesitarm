@@ -1,0 +1,28 @@
+---
+// import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+import { catchRedirectResponse } from '~/helpers/astro/request.js'
+
+import Layout from '../layouts/default.astro'
+
+// Component Script:
+// You can write any JavaScript/TypeScript that you'd like here.
+// It will run during the build, but never in the browser.
+// All variables are available to use in the HTML template below.
+
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+const redirectResponse = await catchRedirectResponse( Astro )
+
+if ( redirectResponse !== null ) {
+  return redirectResponse
+}
+
+// Not found
+return new Response(null, {
+    status: 404,
+    statusText: 'Not found'
+})
+
+---
+404
