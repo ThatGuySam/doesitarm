@@ -17,6 +17,9 @@
     # Includes all Markdown files inside the "files/" directory.
     # included_files = ["files/*.md"]
 
+[functions."entry"]
+    included_files = ["netlify.toml"]
+
 
 
 [build.environment]
