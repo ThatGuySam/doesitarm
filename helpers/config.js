@@ -1,7 +1,48 @@
+import TOML from '@iarna/toml'
+import fs from 'fs-extra'
+
 import nuxtConfig from '~/nuxt.config.js'
 
 
 export const nuxtHead = nuxtConfig.head
+
+export async function getNetlifyConfig () {
+    const configPath = './netlify.toml'
+    const tomlContent = await fs.readFile(configPath, 'utf-8')
+    const netlifyConfig = TOML.parse(tomlContent)
+
+    // console.log('netlifyConfig', netlifyConfig)
+    // console.log('tomlContent', tomlContent)
+
+    return netlifyConfig
+}
+
+export async function getNetlifyRedirect ( path ) {
+    // Check if the path is valid
+    // by checking if it starts with a slash
+    // and does not end with a slash
+    // if ( !path.startsWith('/') || path.endsWith('/') ) {
+    //     throw new Error(`Invalid Netlify redirect path: ${ path }`)
+    // }
+
+    const netlifyConfig = await getNetlifyConfig()
+    const redirects = netlifyConfig.redirects
+
+    for ( const redirect of redirects ) {
+        // Check if the from path is valid
+        // by checking if it starts with a slash
+        // and does not end with a slash
+        if ( !redirect.from.startsWith('/') || redirect.from.endsWith('/') ) {
+            throw new Error(`Invalid Netlify redirect.from path: ${ redirect.from }`)
+        }
+
+        if ( redirect.from === path ) {
+            return redirect
+        }
+    }
+
+    return null
+}
 
 export function makeTitle ( listing ) {
     return `Does ${ listing.name } work on Apple Silicon? - ${ nuxtHead.title }`
