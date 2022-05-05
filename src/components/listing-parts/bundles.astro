@@ -11,7 +11,7 @@ const {
   listing
 } = Astro.props
 
-const hasBundleIdentifiers = Array.isArray( listing.bundles )
+const hasBundleIdentifiers = Array.isArray( listing.bundles ) && listing.bundles.length > 0
 ---
 { hasBundleIdentifiers && (
 
