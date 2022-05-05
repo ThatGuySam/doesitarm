@@ -5,7 +5,7 @@ export async function catchRedirectResponse ( Astro ) {
 
     const netlifyRedirectUrl = await getNetlifyRedirect( requestUrl.pathname )
 
-    console.log('netlifyRedirectUrl', netlifyRedirectUrl)
+    // console.log('netlifyRedirectUrl', netlifyRedirectUrl)
 
     if ( netlifyRedirectUrl !== null ) {
         return Astro.redirect( netlifyRedirectUrl.to )
