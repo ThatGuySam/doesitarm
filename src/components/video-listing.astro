@@ -5,12 +5,8 @@ import {
     ListingDetails
 } from '~/helpers/listing-page.js'
 
-import Aliases from '~/src/components/listing-parts/aliases.astro'
-import RelatedLinks from '~/src/components/listing-parts/related-links.astro'
-import Devices from '~/src/components/listing-parts/devices.astro'
+// import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
-import Bundles from '~/src/components/listing-parts/bundles.astro'
-import LastUpdated from '~/src/components/listing-parts/last-updated.astro'
 
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
@@ -26,10 +22,36 @@ const {
 } = Astro.props
 
 const details = new ListingDetails( listing )
-
 ---
-<section class="container space-y-8 py-32">
+<section class="container pb-16">
+    <div class="flex flex-col items-center text-center space-y-6">
 
-    Video Listing
+        { "playerHtml" }
 
+        <div class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10">
+
+            { details.shouldHaveSubscribeButton &&
+                <div
+                    class="channel-credit"
+                >
+                    <a
+                        href="https://www.youtube.com/channel/{ video.channel.id }?sub_confirmation=1"
+                        target="_blank"
+                        rel="noopener"
+                        role="button"
+                        class="relative inline-flex items-center rounded-md px-4 py-2 leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow focus:shadow-outline-indigo bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out"
+                    >Subscribe to { details.initialVideo.channel.name }</a>
+                </div>
+             }
+        </div>
+
+        <hr class="w-full">
+
+        { "featuredAppsHtml" }
+
+        <RelatedVideos
+            listing={ listing }
+        />
+
+    </div>
 </section>
