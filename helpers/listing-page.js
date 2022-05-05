@@ -5,7 +5,12 @@ import {
 } from './app-derived.js'
 import { buildVideoStructuredData } from './structured-data.js'
 import { nuxtHead } from './config.js'
+import {
+    getPartPartsFromUrl
+} from './url.js'
 
+
+export const samChannelId = 'UCB3jOb5QVjX7lYecvyCoTqQ'
 
 function makeTitle ( listing ) {
     return `Does ${ listing.name } work on Apple Silicon? - ${ nuxtHead.title }`
@@ -41,6 +46,36 @@ export class ListingDetails {
 
     get pageDescription () {
         return makeDescription( this.listing )
+    }
+
+    get endpointParts () {
+        return getPartPartsFromUrl( this.listing.endpoint )
+    }
+
+    get hasRelatedVideos () {
+        return Array.isArray( this.listing.relatedVideos ) && this.listing.relatedVideos.length > 0
+    }
+
+    get hasBenchmarksPage () {
+        return this.hasRelatedVideos
+    }
+
+    get shouldHaveSubscribeButton () {
+        if ( this.initialVideo === null ) return false
+
+        return this.initialVideo.channel.id !== samChannelId
+    }
+
+    get initialVideo () {
+        if ( this.type === 'video' ) {
+            return this.listing.video
+        }
+
+        if ( this.hasRelatedVideos ) {
+            return this.listing.relatedVideos[0]
+        }
+
+        return null
     }
 
     get structuredData () {
