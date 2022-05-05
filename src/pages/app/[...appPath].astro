@@ -4,16 +4,19 @@
 
 import axios from 'axios'
 
+import { catchRedirectResponse } from '~/helpers/astro/request.js'
 import { ListingDetails } from '~/helpers/listing-page.js'
 import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
 
 import Layout from '../../layouts/default.astro'
 import Listing from '../../components/default-listing.astro'
 
-// const {
-//   appPath
-// } = Astro.params
 
+const redirectResponse = await catchRedirectResponse( Astro )
+
+if ( redirectResponse !== null ) {
+  return redirectResponse
+}
 
 
 // Get type and slug from the request path
