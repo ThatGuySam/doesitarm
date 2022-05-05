@@ -18,8 +18,8 @@
     # included_files = ["files/*.md"]
 
 # Astro Entry function
-# https://www.netlify.com/blog/2021/08/12/how-to-include-files-in-netlify-serverless-functions/
 [functions."entry"]
+    # https://www.netlify.com/blog/2021/08/12/how-to-include-files-in-netlify-serverless-functions/
     included_files = ["netlify.toml"]
 
 
