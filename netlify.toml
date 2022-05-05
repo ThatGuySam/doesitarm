@@ -17,6 +17,8 @@
     # Includes all Markdown files inside the "files/" directory.
     # included_files = ["files/*.md"]
 
+# Astro Entry function
+# https://www.netlify.com/blog/2021/08/12/how-to-include-files-in-netlify-serverless-functions/
 [functions."entry"]
     included_files = ["netlify.toml"]
 
