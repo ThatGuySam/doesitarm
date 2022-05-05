@@ -38,14 +38,21 @@ export function getSiteUrl () {
     throw new Error('Could not find site URL')
 }
 
-export function getPathPartsFromAstroRequest ( AstroRequest ) {
-    // Parse the request url
-    const requestUrl = new URL( AstroRequest.url )
+export function getPartPartsFromUrl ( urlString ) {
+    if ( typeof urlString !== 'string' ) throw new Error('urlString must be a string')
 
-    const pathParts = requestUrl.pathname
+    const url = new URL( urlString )
+
+    const pathParts = url.pathname
         .replace(/^\/+/, '') // Trim slashes from the beginning
         .replace(/\/+$/, '') // Trim slashes from the end
         .split('/')
 
     return pathParts
+}
+
+export function getPathPartsFromAstroRequest ( AstroRequest ) {
+    // Parse the request url
+
+    return getPartPartsFromUrl ( AstroRequest.url )
 }
