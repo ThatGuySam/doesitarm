@@ -39,7 +39,7 @@ const details = new ListingDetails( listing )
                     class="channel-credit"
                 >
                     <a
-                        href="https://www.youtube.com/channel/{ video.channel.id }?sub_confirmation=1"
+                        href={`https://www.youtube.com/channel/${ details.initialVideo.channel.id }?sub_confirmation=1`}
                         target="_blank"
                         rel="noopener"
                         role="button"
