@@ -29,6 +29,8 @@ const [
     subSlug = null
 ] = getPathPartsFromAstroRequest( Astro.request )
 
+const isBenchmarkPage = subSlug === 'benchmarks'
+
 // Create an empty API URL
 const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
 
@@ -52,11 +54,26 @@ const appListing = await axios.get( apiUrl.toString() )
 
 const listingDetails = new ListingDetails( appListing )
 
+const headOptions = listingDetails.headOptions
+
+
+if ( isBenchmarkPage ) {
+
+    // Preload video thumbnail
+    // <link rel="preload" as="image" href="img.png" />
+    headOptions.link.push({
+        'rel': 'preload',
+        'as': 'image',
+        'href': `https://i.ytimg.com/vi_webp/${ listingDetails.initialVideo.id }/sddefault.webp`
+    })
+
+}
+
 ---
 <Layout
-    headOptions={ listingDetails.headOptions }
+    headOptions={ headOptions }
 >
-    { subSlug === 'benchmarks' ? (
+    { isBenchmarkPage ? (
         <VideoListing
             listing={ appListing }
         />
