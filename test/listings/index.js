@@ -10,48 +10,89 @@ import {
     isNonEmptyString,
     isPositiveNumberString
 } from '~/helpers/check-types.js'
-import { ListingDetails } from '~/helpers/listing-page.js'
+import {
+    makeApiPathFromEndpoint,
+    ListingDetails
+} from '~/helpers/listing-page.js'
 import { PageHead } from '~/helpers/config.js'
 
 
 
-const listings = [
+const listingsCases = {
 
     // Spotify
-    {
-        endpoint: '/app/spotify'
+    '/app/spotify': {
+        endpoint: '/app/spotify',
+        apiEndpointPath: '/api/app/spotify.json',
     },
 
     // Electron
-    {
-        endpoint: '/app/electron-framework'
+    '/app/electron-framework': {
+        endpoint: '/app/electron-framework',
+        apiEndpointPath: '/api/app/electron-framework.json',
+    },
+
+    // Express VPN Benchmarks
+    '/app/expressvpn/benchmarks/': {
+        endpoint: '/app/expressvpn/benchmarks/',
+        apiEndpointPath: '/api/app/expressvpn.json',
     }
-]
+}
 
-
+const listingCaseEntries = Object.entries( listingsCases )
 
 test.before(async t => {
-    t.context.listings = await Promise.all(
-        listings.map(async listing => {
-            const { endpoint } = listing
 
-            const apiPath = `/api${ endpoint }.json`
-            const localPath = `./static/api${ endpoint }.json`
+    t.context.listings = {}
 
-            // Check if the endpoint exists locally
-            // so we don't have to wait for the API
-            if ( await fs.pathExists( localPath ) ) {
-                console.log('Using local endpoint data for', endpoint)
-                return await fs.readJson( localPath )
-            }
+    for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
+        const { endpoint } = listingCase
 
-            const { data } = await axios.get(`${ process.env.PUBLIC_API_DOMAIN }${ apiPath }`)
+        const apiPath = makeApiPathFromEndpoint( caseEndpoint )
+        const localPath = `./static${ apiPath }`
 
-            return data
-        })
-    )
+        // Check if the endpoint exists locally
+        // so we don't have to wait for the API
+        if ( await fs.pathExists( localPath ) ) {
+            console.log('Using local endpoint data for', endpoint)
+            t.context.listings[ caseEndpoint ] = await fs.readJson( localPath )
+            continue
+        }
+
+        const { data } = await axios.get(`${ process.env.PUBLIC_API_DOMAIN }${ apiPath }`)
+
+        t.context.listings[ caseEndpoint ] = data
+    }
+
+    t.context.listingsDetails = {}
+
+    for ( const [ caseEndpoint ] of listingCaseEntries ) {
+        t.context.listingsDetails[ caseEndpoint ] = new ListingDetails( t.context.listings[ caseEndpoint ] )
+    }
 })
 
+
+function parseHTML ( htmlString ) {
+    const dom = new JSDOM( htmlString )
+
+    return {
+        dom,
+        window: dom.window,
+        document: dom.window.document
+    }
+}
+
+test( 'Listings have valid api endpoints', async t => {
+    const { listingsDetails } = t.context
+
+
+    for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
+
+        const apiPath = listingsDetails[ caseEndpoint ].apiEndpointPath
+
+        t.assert( listingCase.apiEndpointPath === apiPath, `${ caseEndpoint } has a valid api endpoint` )
+    }
+})
 
 
 const headPropertyTypes = {
@@ -134,22 +175,14 @@ const headPropertyTypes = {
     },
 }
 
-function parseHTML ( htmlString ) {
-    const dom = new JSDOM( htmlString )
-
-    return {
-        dom,
-        window: dom.window,
-        document: dom.window.document
-    }
-}
-
 test('Listings have valid headings', async t => {
-    const { listings } = t.context
+    const { listingsDetails } = t.context
 
-    for ( const listing of listings ) {
+    for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
+
+
         // Build listing details
-        const listingDetails = new ListingDetails( listing )
+        const listingDetails = listingsDetails[ caseEndpoint ]
         const listingPageHead = new PageHead( listingDetails.headOptions )
 
         // console.log( 'pageMeta', listingPageHead.metaMarkup )
