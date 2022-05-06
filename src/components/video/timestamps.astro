@@ -1,0 +1,26 @@
+---
+const {
+    video
+} = Astro.props
+
+const hasTimeStamps = video.timestamps.length > 0
+
+---
+{ hasTimeStamps &&
+    <div class="player-timestamps w-full max-w-4xl">
+        <div class="player-timestamps-wrapper md:inline-flex md:w-full max-w-4xl overflow-x-auto overflow-y-visible md:whitespace-nowrap rounded-xl py-3">
+            { video.timestamps.map( timestamp => {
+                // const inSeconds = (minutes * 60) + Number(seconds)
+                return (
+                     <button
+                        time={ timestamp.time }
+                        aria-label={`Jump to ${ timestamp.fullText }`}
+                        class="inline-block text-xs rounded-lg border-2 border-white focus:outline-none border-opacity-0 neumorphic-shadow-inner px-3 py-2"
+                    >
+                        { timestamp.fullText }
+                    </button>
+                )
+            })}
+        </div>
+    </div>
+}
