@@ -56,6 +56,10 @@ export class ListingDetails {
         return Array.isArray( this.listing.relatedVideos ) && this.listing.relatedVideos.length > 0
     }
 
+    get hasRelatedApps () {
+        return false
+    }
+
     get hasBenchmarksPage () {
         return this.hasRelatedVideos
     }
