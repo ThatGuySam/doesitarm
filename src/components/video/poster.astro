@@ -1,21 +1,14 @@
 ---
+import { getVideoImages } from '~/helpers/listing-page.js'
 const {
     video
 } = Astro.props
 
-const webpSource = {
-    ...video.thumbnail,
-    srcset: video.thumbnail.srcset.replaceAll('ytimg.com/vi/', 'ytimg.com/vi_webp/').replace(/.png|.jpg|.jpeg/g, '.webp')
-}
-
-const mergedSources = {
-    webp: webpSource,
-    jpeg: video.thumbnail
-}
+const images = getVideoImages( video )
 ---
 <picture>
 
-    { Object.entries( mergedSources ).map( ([ key, source ]) => (
+    { Object.entries( images.srcset ).map( ([ key, source ]) => (
         <source
             sizes={ source.sizes }
             data-srcset={ source.srcset }
@@ -24,7 +17,7 @@ const mergedSources = {
     ) ) }
 
     <img
-        data-src={ video.thumbnail.src }
+        data-src={ images.srcset }
         alt={ video.name }
         class="absolute inset-0 h-full w-full object-cover lazyload"
     >
