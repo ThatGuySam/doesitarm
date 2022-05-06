@@ -41,7 +41,7 @@ export function getSiteUrl () {
 export function getPartPartsFromUrl ( urlString ) {
     if ( typeof urlString !== 'string' ) throw new Error('urlString must be a string')
 
-    const url = new URL( urlString )
+    const url = new URL( urlString, 'https://doesitarm.com' )
 
     const pathParts = url.pathname
         .replace(/^\/+/, '') // Trim slashes from the beginning
