@@ -1,5 +1,5 @@
 ---
-// Default Listing template for Apps, Games, and formulas
+// Video Listing template for Benchmarks and Videos
 
 import {
     ListingDetails
@@ -7,14 +7,7 @@ import {
 
 // import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
-
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
-
-// import { makeLastUpdatedFriendly } from '~/helpers/parse-date'
-// import { getAppEndpoint } from '~/helpers/app-derived.js'
-
-// import LinkButton from '~/components/link-button.vue'
-// import VideoRow from '~/components/video/row.vue'
+import HtmlPlayer from '~/src/components/video/player.astro'
 
 
 const {
@@ -26,7 +19,18 @@ const details = new ListingDetails( listing )
 <section class="container pb-16">
     <div class="flex flex-col items-center text-center space-y-6">
 
-        { "playerHtml" }
+        <HtmlPlayer
+            video={ details.initialVideo }
+        >
+
+            <div
+                slot="cover-bottom"
+                class="page-heading h-full flex items-end md:p-4"
+            >
+                <h1 class="title text-xs text-left md:text-2xl font-bold">{ details.initialVideo.name }</h1>
+            </div>
+
+        </HtmlPlayer>
 
         <div class="md:flex w-full justify-between space-y-4 md:space-y-0 md:px-10">
 
@@ -47,7 +51,9 @@ const details = new ListingDetails( listing )
 
         <hr class="w-full">
 
-        { "featuredAppsHtml" }
+        { details.hasRelatedApps &&
+            <div>{ "featuredAppsHtml/related apps" }</div>
+        }
 
         <RelatedVideos
             listing={ listing }
