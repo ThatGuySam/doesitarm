@@ -5,7 +5,10 @@
 import axios from 'axios'
 
 import { catchRedirectResponse } from '~/helpers/astro/request.js'
-import { ListingDetails } from '~/helpers/listing-page.js'
+import {
+    getVideoImages,
+    ListingDetails
+} from '~/helpers/listing-page.js'
 import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
 
 import Layout from '~/src/layouts/default.astro'
@@ -59,13 +62,13 @@ const headOptions = listingDetails.headOptions
 
 if ( isBenchmarkPage ) {
 
+    const { preloads } = getVideoImages( listingDetails.initialVideo )
+
     // Preload video thumbnail
-    // <link rel="preload" as="image" href="img.png" />
-    headOptions.link.push({
-        'rel': 'preload',
-        'as': 'image',
-        'href': `https://i.ytimg.com/vi_webp/${ listingDetails.initialVideo.id }/sddefault.webp`
-    })
+    headOptions.link = [
+        ...headOptions.link,
+        ...preloads
+    ]
 
 }
 
