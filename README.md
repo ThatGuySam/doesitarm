@@ -245,7 +245,6 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Music and Audio Tools
 
-* [Ableton Live 11](https://www.ableton.com/en/live/) - ✅ Yes, Live is Natively Compatible With Apple Silicon as of Live 11.1. - [Compatibility Notes](https://help.ableton.com/hc/en-us/articles/115001261150-Mac-Compatibility-with-Live)
 * [Adobe Audition](https://www.adobe.com/products/audition.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://helpx.adobe.com/audition/user-guide.html/audition/using/whats-new/2021-1.ug.html) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Airfoil](https://rogueamoeba.com/airfoil/mac/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.10.0 - [Release Notes](https://rogueamoeba.com/airfoil/mac/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
 * [Ardour](https://community.ardour.org/download) - ✳️ Yes, it works via Rosetta 2 with native support in progress - [Apple Silicon Pre-release](https://discourse.ardour.org/t/ardour-for-apple-m1-arm-pre-release/105174)
@@ -396,7 +395,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 #### Live Production and Performance
-* [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
+* [Ableton](https://www.ableton.com/en/live/) - ✅ Yes, Native Apple Silicon Support as of v11.1 - [Compatibility Notes](https://help.ableton.com/hc/en-us/articles/115001261150-Mac-Compatibility-with-Live)
 * [AJA Control Room](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA ControlPanel](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA eMini-Setup](https://www.aja.com/family/software) - 🔶 App has not yet been reported to be native to Apple Silicon
