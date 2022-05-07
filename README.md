@@ -162,6 +162,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [psycopg2](https://www.psycopg.org/) - ✅ Yes, Native Apple Silicon Support as of v2.8.6 via 1 or more workarounds - [Workaround #1](https://github.com/psycopg/psycopg2/issues/1200#issuecomment-820571339) [Workaround #2](https://github.com/psycopg/psycopg2/issues/1216#issuecomment-767892042) [Workaround #3](https://github.com/ThatGuySam/doesitarm/issues/628#issue-862441710)
 * [Pure Data](https://puredata.info/downloads/pure-data) - ✳️ Yes, works via Rosetta and builds as Apple Silicon - [Verification](https://github.com/ThatGuySam/doesitarm/issues/694#issue-916037556)
 * [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
+* [PyPy3](https://www.pypy.org/download.html) - ✳️ Yes, works via Translation or Virtualization - [GitLab Issue](https://foss.heptapod.net/pypy/pypy/-/issues/3283) [Mac meets Arm64](https://www.pypy.org/posts/2020/12/mac-meets-arm64-940822335619099039.html) [Verification](https://github.com/ThatGuySam/doesitarm/issues/916)
 * [Python](https://www.python.org/) - ✅ Yes, reported working for v2.7.16, v3.8.2, and v3.9 - [PyPerformance Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1795089557) [Python Tracker](https://bugs.python.org/issue41100) [Github Issue](https://github.com/python/cpython/pull/22855) [Github Issue #2](https://github.com/ThatGuySam/doesitarm/issues/111)
 * [PyTorch](https://pytorch.org/) - ✅ Yes, Initial Native Apple Silicon Support for CPU only - [GPU Acceleration Status](https://github.com/pytorch/pytorch/issues/47702) [Report Update](https://github.com/ThatGuySam/doesitarm/issues/432)
 * [Qt Creator](https://www.qt.io/product/development-tools) - ✅ Yes, Native Apple Silicon Support as of 6.0.0 - [Official Article](https://www.qt.io/blog/qt-creator-6-released) [Release Notes](https://code.qt.io/cgit/qt-creator/qt-creator.git/tree/dist/changes-6.0.0.md) [Verification](https://github.com/ThatGuySam/doesitarm/issues/836#issue-1070570518)
@@ -394,7 +395,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 #### Live Production and Performance
-* [Ableton](https://www.ableton.com/en/live/) - ✳️ Yes, it works via Rosetta 2 - [Reddit Post](https://www.reddit.com/r/ableton/comments/jrtpv6/ableton_live_11_on_apple_silicon_m1_processor/gbvxj9r?context=3)
+* [Ableton](https://www.ableton.com/en/live/) - ✅ Yes, Native Apple Silicon Support as of v11.1 - [Compatibility Notes](https://help.ableton.com/hc/en-us/articles/115001261150-Mac-Compatibility-with-Live)
 * [AJA Control Room](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA ControlPanel](https://www.aja.com/products/aja-control-room#support) - ✅ Yes, Native Apple Silicon Support as of v16.1 - [Release Notes](https://www.aja.com/pdf/2021/AJA-Software-Installer_macOS_v16.1_ReleaseNotes.pdf)
 * [AJA eMini-Setup](https://www.aja.com/family/software) - 🔶 App has not yet been reported to be native to Apple Silicon
@@ -515,12 +516,12 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Dropbox](https://www.dropbox.com/) - ✳️ Yes, works via Rosetta 2 as of v110.4.458 with native support in beta - [Official Article](https://help.dropbox.com/installs-integrations/apple-silicon-support) [Release Notes](https://www.dropboxforum.com/t5/Dropbox-desktop-client-builds/Beta-Build-140-3-1903/td-p/570154)
 * [Dropzone](https://aptonic.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/515891/5114)
 * [Due for Mac](https://www.dueapp.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/due)
-* [EasyConnect](https://lstratman.github.io/EasyConnect/) - 🔶 Unknown, more info needed - [Contribute](https://github.com/ThatGuySam/doesitarm/issues/219)
+* [EasyConnect](https://lstratman.github.io/EasyConnect/) - ✳️ Yes, works via Rosetta 2 translation as of v7.6.7 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/219)
 * [EndNote](https://endnote.com/product-details) - ✅ Yes, Native Apple Silicon Support as of v20.1.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/704#issue-925503816)
 * [EndNote X9](https://support.clarivate.com/Endnote/s/article/EndNote-X9?language=en_US) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/704#issuecomment-867321265)
 * [Eon Timer](https://software.charliemonroe.net/eon/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](https://blog.charliemonroe.net/big-sur-and-apple-silicon/)
 * [Euclid](https://euclid.pr1mer.tech/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/euclid)
-* [Evernote](https://evernote.com/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/411#issuecomment-748291114)
+* [Evernote](https://evernote.com/download) - ✅ Yes, Full Native Apple Silicon Support - [Official message](https://discussion.evernote.com/forums/topic/141189-evernote-for-mac-is-now-optimized-for-m1-apple-silicon/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/411#issuecomment-748291114)
 * [ExpanDrive](https://www.expandrive.com/desktop/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/675#issue-899219758)
 * [Fantastical](https://flexibits.com/fantastical) - ✅ Yes, Full Native Apple Silicon Support - [Media Post](https://www.macrumors.com/2020/11/12/fantastical-update-for-macos-big-sur-apple-silicon/)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ✅ Yes, Full Native Apple Silicon Support as of v84 - [Release Notes](https://www.mozilla.org/en-US/firefox/84.0/releasenotes/)
@@ -696,7 +697,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Snap Camera](https://snapcamera.snapchat.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/627#issue-860435755) [Supported Hardware](https://snapcamera.snapchat.com/download/)
 * [Spotify](https://www.spotify.com/download/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/768)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
-* [Tidal](https://tidal.com/download) - ✳️ Yes, working via Rosetta 2 but with occasional force quits as of 2.23.0.488 - [GitHub issue](https://github.com/ThatGuySam/doesitarm/issues/314)
+* [Tidal](https://tidal.com/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.30.0.465 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/915)
 * [Twitch](https://www.twitch.tv/downloads/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/387)
 * [UU Booster](https://uu.163.com/down/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/464#issue-771607189)
 * [Vienna](https://github.com/ViennaRSS/vienna-rss/releases/latest) - ✅ Yes, Full Native Apple Silicon Support as of v3.6 - [Release Notes](https://github.com/ViennaRSS/vienna-rss/releases/tag/v/3.6.0)
@@ -761,6 +762,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Enpass](https://www.enpass.io/) - ✳️ Runs via Rosetta 2 - [Forum Discussion](https://discussion.enpass.io/index.php?/topic/24222-enpass-on-m1-mac-arm-silicon/&tab=comments#comment-56371)
 * [GPG Suite](https://gpgtools.org/) - ✅ Yes, Full Native Apple Silicon Support as of 2020.2 - [Release notes](https://gpgtools.org/releases/gpgsuite/2020.2/release-notes.html?ni=1)
 * [HiddenApp](https://hiddenapp.com/en/) - ✳️ Yes, works via Rosetta 2 translation - [Release Notes](https://help.hiddenapp.com/collection/17-update-release-notes) [Report](https://github.com/ThatGuySam/doesitarm/issues/829#issue-1067135183)
+* [Hoplite Key Manager](https://hoplitekeymanager.com/index.php?page=download) - ✅ Yes, full native Apple Silicon Support as of v1.3 - [Release Notes](https://hoplitekeymanager.com/download/archives/desktop-application/#platforms_compatibility) [Verification](https://github.com/ThatGuySam/doesitarm/issues/904)
 * [IVPN](https://www.ivpn.net/apps-macos/) - ✅ Yes, Native Apple Silicon Support as of v3.4.0 - [Release Notes](https://github.com/ivpn/desktop-app/blob/master/CHANGELOG.md)
 * [Jamf Protect](https://www.jamf.com/products/jamf-protect/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.0.217 - [Release Notes](https://docs.jamf.com/jamf-protect/administrator-guide/Release_History.html)
 * [KeePassXC](https://keepassxc.org/download/#mac) - ✅ Yes, Full Native Apple Silicon Support as of v2.6.4 - [Release Notes](https://keepassxc.org/blog/2021-01-31-2.6.4-released/)
