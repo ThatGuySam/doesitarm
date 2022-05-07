@@ -45,8 +45,8 @@ export function getVideoImages ( video ) {
         jpeg: jpgSource
     }
 
-    // Responsive Preloads
-    // https://blog.laurenashpole.com/post/658079409151016960/preloading-images-in-a-responsive-webp-world
+    // Responsive Preloads - https://web.dev/preload-responsive-images/
+    // Responsive Preloads with image types - https://blog.laurenashpole.com/post/658079409151016960/preloading-images-in-a-responsive-webp-world
     // <link rel="preload" as="image" href="large-image.webp" media="(min-width: 768px)" imagesrcset="large-image.webp, large-image-2x.webp 2x" type="image/webp" />
     const preloads = Object.entries( sources ).map( ([ typeKey, typeSource ]) => {
         return {
