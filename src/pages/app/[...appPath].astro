@@ -62,9 +62,12 @@ const headOptions = listingDetails.headOptions
 
 if ( isBenchmarkPage ) {
 
+    // Set the page title
+    headOptions.title = `${ listingDetails.api.name } Benchmarks for Apple Silicon - Does It ARM`
+
     const { preloads } = getVideoImages( listingDetails.initialVideo )
 
-    // Preload video thumbnail
+    // Add image preloads for video thumbnail
     headOptions.link = [
         ...headOptions.link,
         ...preloads
