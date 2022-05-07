@@ -1,5 +1,7 @@
 
 import has from 'just-has'
+// https://anguscroll.com/just/just-replace-all
+import replaceAll from 'just-replace-all'
 
 import {
     getAppType
@@ -21,12 +23,20 @@ function makeDescription ( listing ) {
     return `Latest reported support status of ${ listing.name } on Apple Silicon and Apple M1 Pro and M1 Max Processors.`
 }
 
+function convertYoutubeImageUrl ( stringWithUrls, extension ) {
+    let workingString = stringWithUrls
+
+    workingString = replaceAll( stringWithUrls, 'ytimg.com/vi/', `ytimg.com/vi_${ extension }/`)
+
+    workingString = workingString.replace(/.png|.jpg|.jpeg/g, `.${ extension }`)
+
+    return workingString
+}
+
 export function getVideoImages ( video ) {
 
     // Catch the case where the video has no thumbnails
     if ( !has( video, 'thumbnail' ) ) throw new Error('No thumbnail found')
-
-    const convertYoutubeImageUrl = ( stringWithUrls, extension ) => stringWithUrls.replaceAll('ytimg.com/vi/', `ytimg.com/vi_${ extension }/`).replace(/.png|.jpg|.jpeg/g, `.${ extension }`)
 
     const webpSource = {
         ...video.thumbnail,
