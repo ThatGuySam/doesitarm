@@ -1,6 +1,6 @@
 // https://github.com/paulirish/lite-youtube-embed/blob/master/src/lite-yt-embed.js
 
-// import canAutoPlay from 'can-autoplay'
+import canAutoPlay from 'can-autoplay'
 
 
 /**
@@ -47,10 +47,10 @@ class LiteYTEmbed extends HTMLElement {
         this.playerContainer = this.querySelector('.player-container')
         this.playerPoster = this.querySelector('.player-poster')
 
-        // console.log('canAutoplay from connectedCallback', canAutoplay)
+        // console.log('canAutoPlay from connectedCallback', canAutoPlay)
 
-        console.log('video', this.video)
-        console.log('this.playerContainer', this.playerContainer)
+        // console.log('video', this.video)
+        // console.log('this.playerContainer', this.playerContainer)
 
 
         // Start watchers here
@@ -83,7 +83,7 @@ class LiteYTEmbed extends HTMLElement {
 
         this.detectAutoplay()
             .then( ({ willAutoplay }) => {
-                console.log('willAutoplay', willAutoplay)
+                // console.log('willAutoplay', willAutoplay)
 
                 // If we're allowed to autoplay
                 // then start loading the player
@@ -286,7 +286,7 @@ class LiteYTEmbed extends HTMLElement {
 
         // const { default: canAutoPlay } = await import('can-autoplay')
 
-        const willAutoplay = await canAutoplay.video()
+        const willAutoplay = await canAutoPlay.video()
         // const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
 
         return {
