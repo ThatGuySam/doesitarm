@@ -21,11 +21,16 @@ module.exports = {
         purgeLayersByDefault: true,
     },
     theme: {
-        container: {
-            center: true,
-            padding: '1.5rem',
-        },
         extend: {
+            container: {
+                center: true,
+                padding: '1.5rem',
+                screens: {
+                    lg: '1040px',
+                    xl: '1040px',
+                    '2xl': '1040px',
+                }
+            },
             colors: {
 
                 // Color Generator
