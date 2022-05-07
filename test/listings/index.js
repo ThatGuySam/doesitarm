@@ -4,16 +4,13 @@ import test from 'ava'
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
 
-import {
-    isValidHttpUrl,
-    isValidImageUrl,
-    isNonEmptyString,
-    isPositiveNumberString
-} from '~/helpers/check-types.js'
+
 import {
     makeApiPathFromEndpoint,
+    getVideoImages,
     ListingDetails
 } from '~/helpers/listing-page.js'
+import { headPropertyTypes } from '~/test/helpers/head.js'
 import { PageHead } from '~/helpers/config.js'
 
 
@@ -24,18 +21,21 @@ const listingsCases = {
     '/app/spotify': {
         endpoint: '/app/spotify',
         apiEndpointPath: '/api/app/spotify.json',
+        expectInitialVideo: true,
     },
 
     // Electron
     '/app/electron-framework': {
         endpoint: '/app/electron-framework',
         apiEndpointPath: '/api/app/electron-framework.json',
+        expectInitialVideo: false,
     },
 
     // Express VPN Benchmarks
     '/app/expressvpn/benchmarks/': {
         endpoint: '/app/expressvpn/benchmarks/',
         apiEndpointPath: '/api/app/expressvpn.json',
+        expectInitialVideo: true,
     }
 }
 
@@ -85,7 +85,6 @@ function parseHTML ( htmlString ) {
 test( 'Listings have valid api endpoints', async t => {
     const { listingsDetails } = t.context
 
-
     for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
 
         const apiPath = listingsDetails[ caseEndpoint ].apiEndpointPath
@@ -94,86 +93,39 @@ test( 'Listings have valid api endpoints', async t => {
     }
 })
 
+test( 'Listings with videos have preload data for initialVideo', async t => {
+    const { listingsDetails } = t.context
 
-const headPropertyTypes = {
-    'meta[charset]': {
-        charset: isNonEmptyString
-    },
+    for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
 
-    // <meta name="viewport" content="width=device-width,initial-scale=1">
-    'meta[name="viewport"]': {
-        content: isNonEmptyString
-    },
+        const listingDetails = listingsDetails[ caseEndpoint ]
 
-    // <meta property="og:image" content="https://doesitarm.com/images/og-image.png">
-    'meta[property="og:image"]': {
-        content: isValidImageUrl
-    },
+        t.assert( listingDetails.hasInitialVideo === listingCase.expectInitialVideo, `${ caseEndpoint } has initial video` )
 
-    // <meta property="og:image:width" content="1200">
-    'meta[property="og:image:width"]': {
-        content: isPositiveNumberString
-    },
+        // Stop here if we don't have an initial video
+        if ( !listingDetails.hasInitialVideo ) continue
 
-    // <meta property="og:image:height" content="627">
-    'meta[property="og:image:height"]': {
-        content: isPositiveNumberString
-    },
+        // t.log('listingDetails.initialVideo', listingDetails.initialVideo)
 
-    // <meta property="og:image:alt" content="Does It ARM Logo">
-    'meta[property="og:image:alt"]': {
-        content: isNonEmptyString
-    },
+        // Get headProperties for image preloading
+        const preloadHeadChecks = headPropertyTypes[ 'link[rel="preload"]' ]
 
-    // <meta property="twitter:card" content="summary">
-    'meta[property="twitter:card"]': {
-        content: isNonEmptyString
-    },
+        const images = getVideoImages( listingDetails.initialVideo )
 
-    // <meta property="twitter:title" content="Does It ARM">
-    'meta[property="twitter:title"]': {
-        content: isNonEmptyString
-    },
+        // Check if the head object properties are correct
+        for ( const preload of images.preloads ) {
+            for ( const [ propertyName, checkMethod ] of Object.entries( preloadHeadChecks ) ) {
+                // Skip count property
+                if ( propertyName === 'count' ) continue
 
-    // <meta property="twitter:description" content="Find out the latest app support for Apple Silicon and the Apple M1 Pro and M1 Max Processors">
-    'meta[property="twitter:description"]': {
-        content: isNonEmptyString
-    },
+                const value = preload[ propertyName ]
 
-    // <meta property="twitter:url" content="https://doesitarm.com">
-    'meta[property="twitter:url"]': {
-        content: isValidHttpUrl
-    },
+                t.assert( checkMethod( value ), `${ propertyName } failed. Value is '${ value }' for '${ images.imgSrc }'` )
+            }
+        }
+    }
+})
 
-    // <meta property="twitter:image" content="https://doesitarm.com/images/mark.png">
-    'meta[property="twitter:image"]': {
-        content: isValidImageUrl,
-    },
-
-    // <meta data-hid="description" name="description" content={ headDescription }>
-    'meta[name="description"]': {
-        content: isNonEmptyString
-    },
-
-    // <meta data-hid="twitter:title" property="twitter:title" content="Apple Silicon and Apple M1 Pro and M1 Max app and game compatibility list">
-    'meta[property="twitter:title"]': {
-        content: isNonEmptyString
-    },
-
-    // <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    'link[rel="icon"]': {
-        href: isNonEmptyString
-    },
-
-    // <!-- Preconnect Assets -->
-    // <link rel="preconnect" href="https://www.googletagmanager.com">
-    // <link rel="preconnect" href="https://cdn.carbonads.com">
-    // <link rel="preconnect" href="https://srv.carbonads.net">
-    // <link rel="preconnect" href="https://cdn4.buysellads.net"></link>
-    'link[rel="preconnect"]': {
-        href: isValidHttpUrl
-    },
-}
 
 test('Listings have valid headings', async t => {
     const { listingsDetails } = t.context
@@ -196,9 +148,9 @@ test('Listings have valid headings', async t => {
 
             let count = 1
 
-            if ( has( checks, ['count'] ) ) {
+            if ( has( checks, 'count' ) ) {
                 count = checks.count
-                delete checks.count
+                // delete checks.count
             }
 
             if ( count !== false ) {
