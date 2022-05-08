@@ -81,6 +81,9 @@ dist
 .idea
 
 
+# Stork Executable
+/stork-executable
+
 # Other
 /static/app-list.json
 /README-temp.md
