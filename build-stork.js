@@ -26,7 +26,7 @@ const execDownloadUrls = {
     // Delete any existing executable
     await fs.remove( storkExecutablePath )
 
-    // Download the executable
+    // Download the binary
     await execa( `curl`, [
         execDownloadUrl,
 
@@ -38,16 +38,21 @@ const execDownloadUrls = {
     // Make sure the executable is executable
     await fs.chmod( storkExecutablePath, '755' )
 
+    // Check that our downloaded binary is executable
+    // https://stackoverflow.com/a/69897809/1397641
     const stats = await fs.stat( storkExecutablePath )
     const isExecutable = !!(stats.mode & fs.constants.S_IXUSR)
     console.log( 'isExecutable', isExecutable )
 
+
     // const access = await fs.access( storkExecutablePath, fs.constants.X_OK)
     // console.log('access', access)
 
-    const output = await execa( storkExecutablePath, [
+    const { stdout } = await execa( storkExecutablePath, [
         '--version'
     ])
 
-    console.log( 'output', output )
+    console.log( 'Stork Version', stdout )
+
+
 })()
