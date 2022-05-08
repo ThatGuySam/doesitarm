@@ -128,7 +128,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [kitty](https://github.com/kovidgoyal/kitty/releases) - ✅ Yes, Full Native Apple Silicon Support - [Github Issue](https://github.com/kovidgoyal/kitty/issues/3238)
 * [Lens Studio](https://lensstudio.snapchat.com/download/) - ✳️ Yes, works via Rosetta 2 translation - [Supported Hardware](https://lensstudio.snapchat.com/download/)
 * [LLVM Clang](https://releases.llvm.org/download.html) - ✳️ Yes, it works via Rosetta 2 - [Apple Forums](https://developer.apple.com/forums/thread/649992)
-* [LTspice](https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/421#issuecomment-751876882)
+* [LTspice](https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/421#issuecomment-1116859670)
 * [MacDown](https://macdown.uranusjr.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/382)
 * [MacPorts](https://www.macports.org/install.php) - ✳️ Yes, some ports are native while others work via Rosetta 2. - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/302). 
 * [MAMP](https://www.mamp.info/en/mamp/mac/) - ✅ Yes, Native Apple Silicon Support as of v6.4 - [Release Notes](https://www.mamp.info/en/release-notes/mac/)
