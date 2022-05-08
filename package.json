@@ -11,6 +11,10 @@
       "tsconfig-paths/register"
     ]
   },
+  "stork": {
+    "in": "./public/stork-index.toml",
+    "out": "./public/stork-index.st"
+  },
   "scripts": {
     "test-prebuild": "ava ./test/prebuild/**/*.js --verbose",
     "test-prebuild-functions": "npm run test-prebuild && npm run test-listings",
@@ -25,6 +29,7 @@
     "generate-dev": "npm run generate && npm test",
     "generate": "npm run clone-readme && npm run build-lists && npm run generate-nuxt && npm run generate-eleventy",
     "build-lists": "npm run test-prebuild && node -r esm build-lists.js",
+    "build-stork": "node -r esm build-stork.js",
     "dev-astro": "astro dev",
     "generate-astro": "astro build --experimental-ssr",
     "generate-nuxt": "NODE_OPTIONS=--max-old-space-size=60000 nuxt generate",
