@@ -29,14 +29,12 @@ import {
     writeStorkToml
 } from './helpers/stork/toml.js'
 
+import {
+    cliOptions
+} from '~/helpers/cli-options.js'
+
 // Setup dotenv
 dotenv.config()
-
-const commandArguments = process.argv
-const cliOptions = {
-    withApi: commandArguments.includes('--with-api'),
-    noLists: commandArguments.includes('--no-lists'),
-}
 
 
 function normalizeVersion ( rawVersion ) {
