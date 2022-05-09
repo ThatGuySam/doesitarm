@@ -88,6 +88,8 @@ dist
 /static/app-list.json
 /README-temp.md
 /static/**/*.json
+/static/**/*.toml
+/static/**/*.st
 /commits-data.json
 .DS_Store
 /static/tailwind.css
