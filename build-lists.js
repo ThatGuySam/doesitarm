@@ -533,22 +533,21 @@ class BuildLists {
         //     ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
         // ])
 
-        if ( !cliOptions.withApi ) {
-            for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
-                // Save Endpoints
-                await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
-            }
 
-            const sitemapEndpoints = Object.values(this.endpointMaps).map( endpointSet => {
-                return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
-            } ).flat(1)
-
-            // Save sitemap endpoints
-            await this.saveToJson( sitemapEndpoints, './static/sitemap-endpoints.json')
-
-            // Save stork toml index
-            await writeStorkToml( sitemapEndpoints )
+        for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
+            // Save Endpoints
+            await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
         }
+
+        const sitemapEndpoints = Object.values(this.endpointMaps).map( endpointSet => {
+            return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
+        } ).flat(1)
+
+        // Save sitemap endpoints
+        await this.saveToJson( sitemapEndpoints, './static/sitemap-endpoints.json')
+
+        // Save stork toml index
+        await writeStorkToml( sitemapEndpoints )
 
         console.log('Total Nuxt Endpoints', this.endpointMaps.nuxt.size )
         console.log('Total Eleventy Endpoints', this.endpointMaps.eleventy.size )
