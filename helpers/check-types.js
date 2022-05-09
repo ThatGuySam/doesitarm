@@ -10,6 +10,12 @@ export function isNonEmptyString ( maybeString ) {
     return maybeString.length > 0
 }
 
+export function isNonEmptyArray ( maybeArray ) {
+    if ( !Array.isArray( maybeArray ) ) return false
+
+    return maybeArray.length > 0
+}
+
 export function isPositiveNumberString ( maybeNumber ) {
     if ( !isString( maybeNumber ) ) return false
 
