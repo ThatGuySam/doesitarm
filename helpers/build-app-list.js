@@ -13,6 +13,9 @@ import { eitherMatches } from './matching.js'
 import { getAppEndpoint } from './app-derived'
 import { makeSlug } from './slug.js'
 
+import {
+    cliOptions
+} from '~/helpers/cli-options.js'
 
 const md = new MarkdownIt()
 
@@ -156,7 +159,9 @@ export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
                             } )
                         }
 
-                        console.log(`Merged ${alias} (${scannedApp.bundleIds[0]}) from scanned apps into ${name} from README`)
+                        if ( cliOptions.showMerges || cliOptions.verbose ) {
+                            console.log(`Merged ${alias} (${scannedApp.bundleIds[0]}) from scanned apps into ${name} from README`)
+                        }
                         scanListMap.delete( key )
                     }
                 }
