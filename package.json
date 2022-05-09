@@ -51,7 +51,7 @@
     "precommit": "npm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
-    "vercel-build": "npm run build-lists-and-api && npm run test-postbuild-api",
+    "vercel-build": "run-s build-lists-and-api stork-netlify test-postbuild-api",
     "netlify-build": "run-s test-prebuild-functions download-stork-toml stork-netlify generate-astro"
   },
   "dependencies": {
