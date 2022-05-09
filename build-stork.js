@@ -1,17 +1,11 @@
 import fs from 'fs-extra'
 
 import {
-    downloadStorkToml
-} from './helpers/api/static.js'
-
-import {
     downloadStorkExecutable,
     writeStorkToml
 } from './helpers/stork/toml.js'
 
 ;(async () => {
-
-    await downloadStorkToml()
 
     await downloadStorkExecutable()
 
