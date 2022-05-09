@@ -25,6 +25,10 @@ import {
 } from './helpers/app-derived.js'
 import { makeSearchableList } from './helpers/searchable-list.js'
 
+import {
+    writeStorkToml
+} from './helpers/stork/toml.js'
+
 // Setup dotenv
 dotenv.config()
 
@@ -535,10 +539,15 @@ class BuildLists {
                 await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
             }
 
-            // Save sitemap endpoints
-            await this.saveToJson(Object.values(this.endpointMaps).map( endpointSet => {
+            const sitemapEndpoints = Object.values(this.endpointMaps).map( endpointSet => {
                 return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
-            } ).flat(1), './static/sitemap-endpoints.json')
+            } ).flat(1)
+
+            // Save sitemap endpoints
+            await this.saveToJson( sitemapEndpoints, './static/sitemap-endpoints.json')
+
+            // Save stork toml index
+            await writeStorkToml( sitemapEndpoints )
         }
 
         console.log('Total Nuxt Endpoints', this.endpointMaps.nuxt.size )
