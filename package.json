@@ -14,8 +14,8 @@
   "config": {
     "stork": {
       "executable": "stork-executable",
-      "toml": "static/stork.toml",
-      "binary": "static/search-index.st"
+      "toml": "stork.toml",
+      "binary": "search-index.st"
     }
   },
   "scripts": {
