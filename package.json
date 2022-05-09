@@ -36,6 +36,7 @@
     "build-stork-index": "./$npm_package_config_stork_executable build --input $npm_package_config_stork_toml --output $npm_package_config_stork_binary",
     "setup-stork": "run-s build-stork build-stork-index",
     "download-stork-toml": "node -r esm -r tsconfig-paths/register scripts/download-stork-toml.js",
+    "stork-netlify": "chmod +x stork/stork-netlify.sh && ./stork/stork-netlify.sh",
     "dev-astro": "astro dev",
     "generate-astro": "astro build --experimental-ssr",
     "generate-nuxt": "NODE_OPTIONS=--max-old-space-size=60000 nuxt generate",
@@ -51,7 +52,7 @@
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
     "vercel-build": "npm run build-lists-and-api && npm run test-postbuild-api",
-    "netlify-build": "run-s test-prebuild-functions download-stork-toml setup-stork generate-astro"
+    "netlify-build": "run-s test-prebuild-functions download-stork-toml stork-netlify generate-astro"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",
