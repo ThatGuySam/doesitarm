@@ -20,7 +20,8 @@ import {
 // https://stork-search.net/docs/install
 const execDownloadUrls = {
     darwin: `https://files.stork-search.net/releases/v${ storkVersion }/stork-macos-10-15`,
-    default: `https://files.stork-search.net/releases/v${ storkVersion }/stork-amazon-linux`
+    default: `https://files.stork-search.net/releases/v${ storkVersion }/stork-ubuntu-20-04`
+    // default: `https://files.stork-search.net/releases/v${ storkVersion }/stork-amazon-linux`
 }
 
 export async function downloadStorkExecutable () {
