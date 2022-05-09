@@ -11,9 +11,12 @@
       "tsconfig-paths/register"
     ]
   },
-  "stork": {
-    "in": "./public/stork-index.toml",
-    "out": "./public/stork-index.st"
+  "config": {
+    "stork": {
+      "executable": "stork-executable",
+      "toml": "./static/stork.toml",
+      "binary": "./static/search-index.st"
+    }
   },
   "scripts": {
     "test-prebuild": "ava ./test/prebuild/**/*.js --verbose",
