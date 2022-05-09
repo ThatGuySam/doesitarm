@@ -544,9 +544,11 @@ class BuildLists {
         } ).flat(1)
 
         // Save sitemap endpoints
+        console.log('Building Sitemap JSON')
         await this.saveToJson( sitemapEndpoints, './static/sitemap-endpoints.json')
 
         // Save stork toml index
+        console.log('Building Stork toml index')
         await writeStorkToml( sitemapEndpoints )
 
         console.log('Total Nuxt Endpoints', this.endpointMaps.nuxt.size )
