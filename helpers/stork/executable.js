@@ -1,3 +1,4 @@
+// Stork and Netlify - https://stork-search.net/docs/stork-and-netlify
 import fs from 'fs-extra'
 import execa from 'execa'
 
