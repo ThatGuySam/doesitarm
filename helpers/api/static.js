@@ -3,16 +3,16 @@ import axios from 'axios'
 import 'dotenv/config'
 
 import {
-    storkVersion,
-    storkExecutableName,
-    storkExecutablePath,
+    // storkVersion,
+    // storkExecutableName,
+    // storkExecutablePath,
     storkTomlPath,
 } from '~/helpers/stork/config.js'
 
 export async function downloadStorkToml () {
     const apiUrl = new URL( process.env.PUBLIC_API_DOMAIN )
 
-    apiUrl.pathname = storkTomlPath.replace('/static', '')
+    apiUrl.pathname = storkTomlPath.replace('static/', '')
 
     const response = await axios({
         method: "get",
@@ -23,6 +23,6 @@ export async function downloadStorkToml () {
 
     // Get toml file stats
     const stats = await fs.stat( storkTomlPath )
-    console.log('TOML is file', storkTomlPath, stats.isFile())
+    console.log( stats.isFile() ? '✅' : '❌', 'TOML is file', storkTomlPath )
     // console.log('TOML Stats', stats)
 }
