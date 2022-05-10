@@ -18,11 +18,16 @@ export async function downloadStorkToml () {
     // await axios( apiUrl.toString() )
 
 
-    axios({
+    await axios({
         method: "get",
         url:  apiUrl.toString(),
         responseType: "stream"
     }).then(function (response) {
         response.data.pipe(fs.createWriteStream( storkTomlPath ))
     })
+
+    // Get toml file stats
+    const stats = await fs.stat( storkTomlPath )
+    console.log('TOML Stats', storkTomlPath, stats)
+    // console.log('TOML Stats', stats)
 }
