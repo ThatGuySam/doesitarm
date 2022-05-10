@@ -94,3 +94,6 @@ dist
 .DS_Store
 /static/tailwind.css
 /.vscode/snipsnap.code-snippets
+
+# Local Netlify folder
+.netlify
