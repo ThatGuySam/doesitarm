@@ -90,9 +90,9 @@ html {
  * @import "utilities/skew-transforms";
  */
 
- .container {
+ /* .container {
     max-width: 1040px;
- }
+ } */
 
 .ease {
     transition-property: all;
