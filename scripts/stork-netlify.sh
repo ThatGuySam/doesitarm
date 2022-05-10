@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Hugo Bash Example https://github.com/jmooring/hugo-stork/blob/main/build.sh
+
 # curl https://files.stork-search.net/releases/latest/stork-amazon-linux -o stork-executable
 # curl https://files.stork-search.net/releases/v1.4.3/stork-macos-latest -o stork-executable
 
