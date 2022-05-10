@@ -4,6 +4,8 @@ export class StorkClient {
 
         this.name = options.name
         this.url = options.url
+
+        // Configuration - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/config.ts#L4
         this.config = options.config || {}
 
         // Stork instance
@@ -20,6 +22,7 @@ export class StorkClient {
     search ( query ) {
         if ( !this.isSetup ) throw new Error('Not setup')
 
+        // search() - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/main.ts#L55
         return this.stork.search( this.name, query )
     }
 
@@ -58,7 +61,10 @@ export class StorkClient {
             downloadIndex,
         } = this.stork
 
+        // initialize() - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/main.ts#L14
         const initPromise = initialize()
+
+        // downloadIndex() - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/main.ts#L20
         const downloadPromise = downloadIndex( this.name, this.url, this.config )
 
         // This silly `then` call turns a [(void), (void)] into a (void), which is
