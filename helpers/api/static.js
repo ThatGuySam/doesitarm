@@ -14,11 +14,6 @@ export async function downloadStorkToml () {
 
     apiUrl.pathname = storkTomlPath.replace('/static', '')
 
-    console.log('apiUrl', apiUrl)
-
-    // await axios( apiUrl.toString() )
-
-
     const response = await axios({
         method: "get",
         url:  apiUrl.toString(),
@@ -28,6 +23,6 @@ export async function downloadStorkToml () {
 
     // Get toml file stats
     const stats = await fs.stat( storkTomlPath )
-    console.log('TOML Stats', storkTomlPath, stats)
+    console.log('TOML is file', storkTomlPath, stats.isFile())
     // console.log('TOML Stats', stats)
 }
