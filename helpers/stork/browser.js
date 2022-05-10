@@ -24,7 +24,7 @@ export class StorkClient {
     }
 
     // Loads the Stork WASM and Index into the browser on first query
-    // so that we don;t have to load them initially.
+    // so that we don't have to load them initially.
     async lazyQuery ( query ) {
         if ( !this.isSetup ) await this.setup()
 
