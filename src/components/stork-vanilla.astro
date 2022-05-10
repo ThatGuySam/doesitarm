@@ -1,0 +1,46 @@
+---
+// Stork Vanilla search
+// Stork Eleventy Example - https://github.com/stork-search/netlify-11ty-example
+
+import {
+    storkVersion,
+    // storkExecutableName,
+    // storkExecutablePath,
+    // storkTomlPath,
+    // storkIndexPath
+} from '~/helpers/stork/config.js'
+
+// const {
+//   listing
+// } = Astro.props
+
+const storkStylesheetURL = `https://files.stork-search.net/releases/v${ storkVersion }/basic.css`
+const storkScriptURL = `https://files.stork-search.net/releases/v${ storkVersion }/stork.js`
+
+---
+<h1>Search</h1>
+<link rel="stylesheet" href={ storkStylesheetURL } />
+
+<div class="stork-wrapper">
+  <input data-stork="index" class="stork-input" />
+  <div data-stork="index-output" class="stork-output"></div>
+</div>
+
+<script is:inline src={ storkScriptURL }></script>
+
+<script>
+    import { StorkClient } from '~/helpers/stork/browser.js'
+
+    const stork = new StorkClient({
+        name: 'index',
+        url: '/search-index.st',
+        // config: {}
+
+        stork: window.stork
+    })
+
+    const queryResult = await stork.lazyQuery( 'spo' )
+
+    console.log('queryResult', queryResult)
+
+</script>
