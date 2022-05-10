@@ -23,7 +23,8 @@ export class StorkClient {
         return this.stork.search( this.name, query )
     }
 
-    // Loads the Stork executables into the browser.
+    // Loads the Stork WASM and Index into the browser on first query
+    // so that we don;t have to load them initially.
     async lazyQuery ( query ) {
         if ( !this.isSetup ) await this.setup()
 
@@ -63,7 +64,7 @@ export class StorkClient {
         // This silly `then` call turns a [(void), (void)] into a (void), which is
         // only necessary to make Typescript happy.
         // You begin to wonder if you write Typescript code, or if Typescript code writes you.
-        await Promise.all([initPromise, downloadPromise]).then()
+        await Promise.all([initPromise, downloadPromise])
 
         // Mark setup as complete
         this.setupState = 'complete'
