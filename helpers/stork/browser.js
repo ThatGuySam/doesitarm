@@ -4,7 +4,7 @@ export class StorkClient {
 
         this.name = options.name
         this.url = options.url
-        this.config = options.config
+        this.config = options.config || {}
 
         // Stork instance
         this.stork = options.stork
