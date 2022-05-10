@@ -1,17 +1,22 @@
 ---
-import Layout from '../layouts/default.astro'
-
 // Component Script:
 // You can write any JavaScript/TypeScript that you'd like here.
 // It will run during the build, but never in the browser.
 // All variables are available to use in the HTML template below.
-const title = 'Does It ARM?'
-
-const description = 'Does It ARM?'
-
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
+
+import Layout from '../layouts/default.astro'
+import Search from '~/components/search.vue'
+import ListSummary from '~/components/list-summary.vue'
+import ListEndButtons from '~/components/list-end-buttons.vue'
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+
+
+import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
+
+
 ---
 <Layout
 	headOptions={ {
@@ -25,7 +30,51 @@ const description = 'Does It ARM?'
         pathname: '/',
     } }
 >
-	Works!
+
+    <section class="container py-24">
+        <div class="flex flex-col items-center space-y-4">
+            <div class="hero">
+                <h1 class="title text-3xl md:text-6xl font-hairline leading-tight text-center">
+                    Does It ARM?
+                </h1>
+                <h2 class="subtitle md:text-xl text-center">
+                    Apps that are reported to support Apple Silicon
+                </h2>
+            </div>
+
+            <Search
+                app-list={[]}
+                quick-buttons={[]}
+                initial-limit={ 100 }
+
+                client:load
+            >
+                <template v-slot:before-search>
+                    <div class="list-summary-wrapper flex justify-center text-center text-sm">
+
+                        <ListSummary
+                            custom-numbers={{
+                                total: 4,
+                                nativePercent: 25,
+                                rosettaPercent: 25,
+                                unreportedPercent: 25,
+                                unsupportedPercent: 25
+                            }}
+                            class="max-w-4xl"
+                        />
+
+                    </div>
+                </template>
+            </Search>
+
+            <ListEndButtons query="query" />
+
+            <AllUpdatesSubscribe
+                class="my-12"
+            />
+
+        </div>
+    </section>
 
 	<!--
 
