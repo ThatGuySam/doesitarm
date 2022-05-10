@@ -49,7 +49,7 @@ export class StorkClient {
     async setup () {
         // Prevent multiple setups
         if ( this.setupState !== 'not-setup' ) {
-            await waitForSetup()
+            await this.waitForSetup()
             return
         }
 
