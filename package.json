@@ -66,7 +66,7 @@
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.2.6",
-    "astro": "^1.0.0-beta.20",
+    "astro": "^1.0.0-beta.27",
     "axios": "^0.21.0",
     "can-autoplay": "^3.0.0",
     "chance": "^1.1.7",
