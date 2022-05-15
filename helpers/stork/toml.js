@@ -2,6 +2,7 @@ import execa from 'execa'
 import fs from 'fs-extra'
 import has from 'just-has'
 import TOML from '@iarna/toml'
+import * as matter from 'gray-matter'
 
 
 import {
@@ -48,6 +49,8 @@ function makeDetailsFromListing ( listing ) {
 
     return [
         listing.content || 'No content',
+        // Brownmatter
+        matter.stringify( '', contents ),
     ].join('')
 }
 
