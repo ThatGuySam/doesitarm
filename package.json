@@ -35,6 +35,7 @@
     "setup-stork": "run-s download-stork-toml download-stork-executable",
     "build-stork-index": "./$npm_package_config_stork_executable build --input $npm_package_config_stork_toml --output $npm_package_config_stork_index",
     "build-stork-index-js": "node -r esm -r tsconfig-paths/register scripts/build-stork-index.js",
+    "stork-search": "./$npm_package_config_stork_executable search --index $npm_package_config_stork_index --query $1",
     "stork-index": "run-s setup-stork build-stork-index",
     "download-stork-toml": "node -r esm -r tsconfig-paths/register scripts/download-stork-toml.js",
     "download-stork-executable": "node -r esm -r tsconfig-paths/register scripts/download-stork-executable.js",
