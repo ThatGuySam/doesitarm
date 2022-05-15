@@ -28,6 +28,11 @@
   NPM_FLAGS = "--no-optional"
   CI = "1"
 
+[[headers]]
+    for = "/search-index.st"
+    [headers.values]
+        Content-Type = "application/wasm"
+        Cache-Control = "max-age=43200, must-revalidate"
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
 # These redirect are lower priority than _redirects in the root or dist
