@@ -376,7 +376,7 @@ class BuildLists {
         console.log( this.lists[listOptions.name].size, 'Entries' )
 
         if ( fileCount !== this.lists[listOptions.name].size ) {
-            throw new Error( `Files don\'t match list count in ${ apiListDirectory }` )
+            throw new Error( `Files (${ fileCount }) don\'t match list count in ${ apiListDirectory }(${ this.lists[listOptions.name].size }).` )
         }
     }
 
