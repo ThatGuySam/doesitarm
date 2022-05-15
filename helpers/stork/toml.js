@@ -16,7 +16,7 @@ import { downloadStorkExecutable } from '~/helpers/stork/executable.js'
 
 
 
-function makeIndexContentsFromListing ( listing ) {
+function makeDetailsFromListing ( listing ) {
 
     const propertiesToCheck = {
         text: isNonEmptyString,
@@ -27,7 +27,7 @@ function makeIndexContentsFromListing ( listing ) {
         tags: isNonEmptyArray,
     }
 
-    const contents = []
+    const contents = {}
 
     for ( const [ property, isValid ] of Object.entries( propertiesToCheck ) ) {
         if ( !has( listing, property ) ) continue
@@ -42,19 +42,18 @@ function makeIndexContentsFromListing ( listing ) {
         }
 
         // Property can be added to content
-
-        contents.push( value )
+        contents[ property ] = value
     }
 
-    let contentString = contents.join('\n')
 
-    if ( contentString.trim().length === 0 ) return 'No content'
-
-    return contentString
+    return [
+        listing.content || 'No content',
+    ].join('')
 }
 
 
 function mapSitemapEndpointsToToml ( sitemap ) {
+
     return {
         input: {
             // https://stork-search.net/docs/config-ref#base_directory
@@ -70,9 +69,9 @@ function mapSitemapEndpointsToToml ( sitemap ) {
 
                 // console.log( 'payload', route, payload )
 
-                const listing = payload.app || payload.listing || {}
+                const listing = payload.app || payload.listing || payload.video || {}
 
-                const contents = makeIndexContentsFromListing( listing )
+                const contents = makeDetailsFromListing( listing )
 
                 const title = listing.name || route
 
@@ -98,6 +97,9 @@ function mapSitemapEndpointsToToml ( sitemap ) {
 
 
 export async function writeStorkToml ( sitemap ) {
+
+
+
     const indexToml = mapSitemapEndpointsToToml( sitemap )
 
     // Build Stork Index TOML
