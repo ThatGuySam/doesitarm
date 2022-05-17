@@ -53,8 +53,8 @@ export function makeHighlightedResultTitle ( result ) {
         withElipsis: false
     })
 
-    console.log('highlightedTitleMarkup', highlightedTitleMarkup)
-    console.log('result', result)
+    // console.log('highlightedTitleMarkup', highlightedTitleMarkup)
+    // console.log('result', result)
 
     if ( !isString( highlightedTitleMarkup ) ) throw new Error('highlightedTitleMarkup is not a string')
 
