@@ -23,7 +23,7 @@ function makeDetailsFromListing ( listing ) {
         text: isNonEmptyString,
         content: isNonEmptyString,
         description: isNonEmptyString,
-        status: isNonEmptyString,
+        // status: isNonEmptyString,
         aliases: isNonEmptyArray,
         tags: isNonEmptyArray,
     }
@@ -49,6 +49,7 @@ function makeDetailsFromListing ( listing ) {
 
     return [
         listing.content || 'No content',
+        has( listing, 'status' ) ? `status:${ listing.status }` : '',
         // Brownmatter
         matter.stringify( '', contents ),
     ].join('')
