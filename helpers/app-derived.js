@@ -65,7 +65,9 @@ export function getRouteType ( routeString ) {
 
     // Remove first slash and split by remaining
     // slashes to get first part of route
-    const [ routeType ] = routeString.substring(1).split('/')
+    const [ routeType, , subType = null ] = routeString.substring(1).split('/')
+
+    if ( subType === 'benchmarks' ) return 'benchmarks'
 
     return routeType
 }
