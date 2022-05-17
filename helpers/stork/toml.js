@@ -62,6 +62,37 @@ function makeDetailsFromListing ({ listing, route }) {
 
 function mapSitemapEndpointsToToml ( sitemap ) {
 
+    const files = sitemap.map( sitemapEntry => {
+        const {
+            payload,
+            route
+        } = sitemapEntry
+
+        // console.log( 'payload', route, payload )
+
+        const listing = payload.app || payload.listing || payload.video || {}
+
+        const contents = makeDetailsFromListing({ listing, route })
+
+        const title = listing.name || route
+
+        // console.log( 'listing', listing )
+        // console.log( 'contents', contents )
+        // console.log( 'name', listing.name )
+
+        if ( contents.trim().length === 0 ) {
+            console.log( 'listing', listing )
+            throw new Error('Empty Content')
+        }
+
+        return {
+            // https://stork-search.net/docs/config-ref#title
+            title,
+            url: route,
+            contents
+        }
+    })
+
     return {
         input: {
             // https://stork-search.net/docs/config-ref#base_directory
@@ -69,36 +100,14 @@ function mapSitemapEndpointsToToml ( sitemap ) {
             url_prefix: 'https://doesitarm.com',
 
             // https://stork-search.net/docs/config-ref#files
-            files: sitemap.map( sitemapEntry => {
-                const {
-                    payload,
-                    route
-                } = sitemapEntry
-
-                // console.log( 'payload', route, payload )
-
-                const listing = payload.app || payload.listing || payload.video || {}
-
-                const contents = makeDetailsFromListing( listing )
-
-                const title = listing.name || route
-
-                // console.log( 'listing', listing )
-                // console.log( 'contents', contents )
-                // console.log( 'name', listing.name )
-
-                if ( contents.trim().length === 0 ) {
-                    console.log( 'listing', listing )
-                    throw new Error('Empty Content')
-                }
-
-                return {
-                    // https://stork-search.net/docs/config-ref#title
-                    title,
-                    url: route,
-                    contents
-                }
-            })
+            files
+        },
+        output: {
+            // debug: true,
+            // save_nearest_html_id: false,
+            // excerpt_buffer: 8,
+            // excerpts_per_result: 5,
+            displayed_results_count: 100,
         }
     }
 }
