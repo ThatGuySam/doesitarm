@@ -49,7 +49,7 @@ function makeDetailsFromListing ( listing ) {
 
     return [
         listing.content || '∅', // Null Symbol
-        has( listing, 'status' ) ? `status:${ listing.status }` : '',
+        has( listing, 'status' ) ? `status_${ listing.status }` : '',
         // Brownmatter
         matter.stringify( '', contents ),
     ].join('\r\n')
