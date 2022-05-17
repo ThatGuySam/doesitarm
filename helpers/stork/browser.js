@@ -10,8 +10,13 @@ export class StorkClient {
         this.name = options.name || 'index'
         this.url = options.url || storkIndexRelativeURL
 
-        // Configuration - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/config.ts#L4
-        this.config = options.config || {}
+        // Configuration Reference - https://stork-search.net/docs/js-ref#showProgress
+        // Example - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/config.ts#L4
+        this.config = {
+            minimumQueryLength: 1,
+            showScores: true,
+            ...options.config || {}
+        }
 
         // Stork instance
         this.stork = options.stork || null
