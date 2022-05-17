@@ -79,56 +79,67 @@
                 class="results-container divide-y divide-gray-700"
             >
                 <li
-                    v-for="(app, i) in results"
-                    :key="`${app.slug}-${i}`"
-                    :ref="`${app.slug}-row`"
-                    :data-app-slug="app.slug"
+                    v-for="(result, i) in results"
+                    :key="`${result.listing.slug}-${i}`"
+                    :ref="`${result.listing.slug}-row`"
+                    :data-app-slug="result.listing.slug"
                     class="relative"
                 >
                     <!-- app.endpoint: {{ app.endpoint }} -->
                     <a
-                        :href="getAppEndpoint(app)"
+                        :href="result.listing.endpoint"
                         class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5"
                         style="transition-property: border;"
                     >
-                        <template v-if="seenItems[app.slug] === false && hasStartedAnyQuery === false">
-                            {{ getAppCategory(app).icon ? `${getAppCategory(app).icon} ${app.name}` : app.name }}
-                            <div class="text-sm leading-5 font-bold">
-                                {{ app.text }}
-                            </div>
-                            <!-- app.endpoint: {{ app.endpoint }} -->
-                        </template>
-                        <template v-else>
-                            <client-only>
-                                <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
-                                    {{ app.name.charAt(0) }}
-                                </div>
-                            </client-only>
 
-                            {{ getAppCategory(app).icon ? `${getAppCategory(app).icon} ${app.name}` : app.name }}
-                            <div class="text-sm leading-5 font-bold">
-                                {{ app.text }}
+                        <client-only>
+                            <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                                {{ result.listing.name.charAt(0) }}
                             </div>
-                            <!-- app.lastUpdated: {{ app.lastUpdated }} -->
-                            <client-only v-if="app.lastUpdated">
-                                <small
-                                    class="text-xs opacity-50"
-                                >
-                                    <RelativeTime
-                                        :timestamp="app.lastUpdated.timestamp"
-                                        class="text-xs opacity-50"
-                                    />
-                                </small>
-                                <small
-                                    slot="placeholder"
-                                    class="text-xs opacity-50"
-                                >
-                                    ⏳
-                                </small>
-                            </client-only>
+                        </client-only>
 
-                            <!-- app.endpoint: {{ app.endpoint }} -->
-                        </template>
+                        <div
+                            v-if="getAppCategory(result.listing).icon"
+                            v-html="`${getAppCategory(result.listing).icon} ${ makeHighlightedResultTitle( result ) }`"
+                        />
+                        <div
+                            v-else
+                            v-html="makeHighlightedResultTitle( result )"
+                        />
+
+                        <div class="text-xs leading-5 font-light">
+                            <div
+                                v-for="(excerpt, i) in result.excerpts"
+                                :key="`excerpt-${i}`"
+                                class="result-excerpt space-y-3"
+                            >
+                                <div
+                                    v-for="(range, i) in makeHighlightedMarkup( excerpt )"
+                                    :key="`range-${i}`"
+
+                                    v-html="range"
+                                />
+                            </div>
+                        </div>
+                        <!-- result.listing.lastUpdated: {{ result.listing.lastUpdated }} -->
+                        <client-only v-if="result.listing.lastUpdated">
+                            <small
+                                class="text-xs opacity-50"
+                            >
+                                <RelativeTime
+                                    :timestamp="result.listing.lastUpdated.timestamp"
+                                    class="text-xs opacity-50"
+                                />
+                            </small>
+                            <small
+                                slot="placeholder"
+                                class="text-xs opacity-50"
+                            >
+                                ⏳
+                            </small>
+                        </client-only>
+
+                        <!-- result.listing.endpoint: {{ result.listing.endpoint }} -->
 
                     </a>
 
@@ -140,8 +151,8 @@
                         <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-4">
 
                             <LinkButton
-                                v-for="link in getSearchLinks(app)"
-                                :key="`${app.slug}-${link.label.toLowerCase()}`"
+                                v-for="link in getSearchLinks(result.listing)"
+                                :key="`${result.listing.slug}-${link.label.toLowerCase()}`"
                                 :href="link.href"
                                 :class="[
                                     'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
@@ -161,7 +172,7 @@
                             </LinkButton>
 
                             <LinkButton
-                                :href="getAppEndpoint(app)"
+                                :href="result.listing.endpoint"
                                 :class="[
                                     'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
                                     'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
@@ -204,7 +215,11 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 
 import { getAppCategory } from '~/helpers/categories.js'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
-import { StorkClient } from '~/helpers/stork/browser.js'
+import {
+    StorkClient,
+    makeHighlightedMarkup,
+    makeHighlightedResultTitle
+} from '~/helpers/stork/browser.js'
 
 import Carbon from '~/components/carbon-inline.vue'
 import LinkButton from '~/components/link-button.vue'
@@ -364,6 +379,9 @@ export default {
 
     },
     methods: {
+        makeHighlightedMarkup,
+        makeHighlightedResultTitle,
+
         getAppCategory,
         getAppEndpoint,
         getSearchLinks (app) {
@@ -563,20 +581,25 @@ export default {
             // Declare that at least one query has been made
             this.hasStartedAnyQuery = true
 
-            const { results } = await storkClient.lazyQuery( query )
+            const storkQuery = await storkClient.lazyQuery( query )
 
-            this.storkResults = results.map( result => {
+            console.log('storkQuery', storkQuery)
+
+            this.storkResults = storkQuery.results.map( result => {
                 return {
-                    name: result.entry.title,
-                    endpoint: result.entry.url,
-                    slug: '',
-                    category: {
-                        slug: 'uncategorized'
+                    ...result,
+                    listing: {
+                        name: result.entry.title,
+                        endpoint: result.entry.url,
+                        slug: '',
+                        category: {
+                            slug: 'uncategorized'
+                        }
                     }
                 }
             })
 
-            console.log('results', results)
+            console.log('storkQuery.results', storkQuery.results)
 
 
             // Search App List
