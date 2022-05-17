@@ -37,7 +37,7 @@ export function makeHighlightedMarkup ( options = {} ) {
         return [
             withElipsis ? '...' : '',
             before.trim(),
-            /* html */` <span class="stork-highlighted-text font-bold bg-green-800 rounded px-1">${ target.trim() }</span> `,
+            /* html */` <span class="stork-highlighted-text font-bold text-white bg-green-800 rounded px-1">${ target.trim() }</span> `,
             after.trim(),
             withElipsis ? '...' : '',
         ].join('')
