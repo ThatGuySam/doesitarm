@@ -1,5 +1,7 @@
 module.exports = {
     content: [
+        // General
+        'helpers/**/*.js',
 
         // Nuxt
         'nuxt.config.js',
