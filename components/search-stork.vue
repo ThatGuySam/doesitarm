@@ -258,36 +258,16 @@ export default {
             default: () => [
                 {
                     label: '✅ Native Support',
-                    query: 'status:native'
+                    query: 'status_native'
                 },
                 {
                     label: '✳️ Rosetta',
-                    query: 'status:rosetta'
+                    query: 'status_rosetta'
                 },
                 {
                     label: '🚫 Unsupported',
-                    query: 'status:no'
-                },
-                {
-                    label: 'Music Tools',
-                    query: 'Music'
-                },
-                {
-                    label: 'Developer Tools',
-                    query: 'Developer'
-                },
-                {
-                    label: 'Photo Tools',
-                    query: 'Photo'
-                },
-                {
-                    label: 'Video Tools',
-                    query: 'Video'
-                },
-                {
-                    label: 'Productivity Tools',
-                    query: 'Productivity'
-                },
+                    query: 'status_no'
+                }
             ]
         }
     },
