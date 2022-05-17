@@ -23,7 +23,7 @@ function makeDetailsFromListing ( listing ) {
         text: isNonEmptyString,
         content: isNonEmptyString,
         description: isNonEmptyString,
-        // status: isNonEmptyString,
+        status: isNonEmptyString,
         aliases: isNonEmptyArray,
         tags: isNonEmptyArray,
     }
