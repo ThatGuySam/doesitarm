@@ -52,7 +52,7 @@ function makeDetailsFromListing ( listing ) {
         has( listing, 'status' ) ? `status:${ listing.status }` : '',
         // Brownmatter
         matter.stringify( '', contents ),
-    ].join('')
+    ].join('\r\n')
 }
 
 
