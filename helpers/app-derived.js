@@ -57,6 +57,12 @@ export function getVideoEndpoint ( video ) {
 }
 
 export function getRouteType ( routeString ) {
+    // Catch non-string routes
+    if ( typeof routeString !== 'string' ) {
+        console.warn( 'routeString is not a string', routeString )
+        throw new Error('Route is not a string')
+    }
+
     // Remove first slash and split by remaining
     // slashes to get first part of route
     const [ routeType ] = routeString.substring(1).split('/')
