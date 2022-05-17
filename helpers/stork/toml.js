@@ -10,6 +10,9 @@ import {
     isNonEmptyArray
 } from '~/helpers/check-types.js'
 import {
+    getRouteType
+} from '~/helpers/app-derived.js'
+import {
     storkTomlPath,
 } from '~/helpers/stork/config.js'
 import { downloadStorkExecutable } from '~/helpers/stork/executable.js'
@@ -17,7 +20,7 @@ import { downloadStorkExecutable } from '~/helpers/stork/executable.js'
 
 
 
-function makeDetailsFromListing ( listing ) {
+function makeDetailsFromListing ({ listing, route }) {
 
     const propertiesToCheck = {
         text: isNonEmptyString,
@@ -50,6 +53,7 @@ function makeDetailsFromListing ( listing ) {
     return [
         listing.content || '∅', // Null Symbol
         has( listing, 'status' ) ? `status_${ listing.status }` : '',
+        `type_${ getRouteType( route ) }`,
         // Brownmatter
         matter.stringify( '', contents ),
     ].join('\r\n')
