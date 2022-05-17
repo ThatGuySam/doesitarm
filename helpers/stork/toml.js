@@ -68,13 +68,20 @@ function mapSitemapEndpointsToToml ( sitemap ) {
             route
         } = sitemapEntry
 
+        const routeType = getRouteType( route )
+
         // console.log( 'payload', route, payload )
 
         const listing = payload.app || payload.listing || payload.video || {}
 
         const contents = makeDetailsFromListing({ listing, route })
 
-        const title = listing.name || route
+        let title = listing.name || route
+
+        // If this route is a benchmark route, add the benchmark name
+        if ( routeType === 'benchmarks' ) {
+            title = `${ title } Benchmarks`
+        }
 
         // console.log( 'listing', listing )
         // console.log( 'contents', contents )
@@ -114,8 +121,6 @@ function mapSitemapEndpointsToToml ( sitemap ) {
 
 
 export async function writeStorkToml ( sitemap ) {
-
-
 
     const indexToml = mapSitemapEndpointsToToml( sitemap )
 
