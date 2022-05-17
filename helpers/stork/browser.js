@@ -1,4 +1,6 @@
 
+import { isString } from '~/helpers/check-types.js'
+
 import {
     storkIndexRelativeURL,
     storkScriptURL
@@ -42,6 +44,21 @@ export function makeHighlightedMarkup ( options = {} ) {
     } )
 
     return highlighted_text
+}
+
+export function makeHighlightedResultTitle ( result ) {
+    const [ highlightedTitleMarkup ] = makeHighlightedMarkup({
+        text: result.entry.title,
+        highlight_ranges: result.title_highlight_ranges,
+        withElipsis: false
+    })
+
+    console.log('highlightedTitleMarkup', highlightedTitleMarkup)
+    console.log('result', result)
+
+    if ( !isString( highlightedTitleMarkup ) ) throw new Error('highlightedTitleMarkup is not a string')
+
+    return highlightedTitleMarkup
 }
 
 export class StorkClient {
