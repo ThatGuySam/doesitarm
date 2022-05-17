@@ -111,6 +111,8 @@ export class StorkClient {
             downloadIndex,
         } = this.stork
 
+        // Stork JavaScript Reference - https://stork-search.net/docs/js-ref
+
         // initialize() - https://github.com/jameslittle230/stork/blob/ff49f163db06734e18ab690c188b45a3c68442ae/js/main.ts#L14
         const initPromise = initialize()
 
