@@ -10,6 +10,12 @@ import {
 } from '~/helpers/stork/config.js'
 
 export async function downloadStorkToml () {
+    // Check if the toml file exists
+    if (fs.existsSync(storkTomlPath)) {
+        console.log(`Stork toml file already exists at ${storkTomlPath}`)
+        return
+    }
+
     const apiUrl = new URL( process.env.PUBLIC_API_DOMAIN )
 
     apiUrl.pathname = storkTomlPath.replace('static/', '')
