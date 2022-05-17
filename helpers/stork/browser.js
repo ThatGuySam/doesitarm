@@ -4,6 +4,46 @@ import {
     storkScriptURL
 } from '~/helpers/stork/config.js'
 
+
+export function makeHighlightedMarkup ( options = {} ) {
+    const {
+        text,
+        highlight_ranges,
+        withElipsis = true,
+    } = options
+
+    if ( highlight_ranges.length === 0 ) return [ text ]
+
+    const highlighted_text = highlight_ranges.map( range => {
+        const {
+            beginning,
+            end
+        } = range
+
+        const before = text.slice( 0, beginning )
+        const target = text.slice( beginning, end + 1 )
+        const after = text.slice( end + 1 )
+
+        // console.log({
+        //     before,
+        //     target,
+        //     after
+        // })
+
+        // `<span class="stork-highlighted-text">${ highlighted_text }</span>`
+
+        return [
+            withElipsis ? '...' : '',
+            before.trim(),
+            /* html */` <span class="stork-highlighted-text font-bold bg-green-800 rounded px-1">${ target.trim() }</span> `,
+            after.trim(),
+            withElipsis ? '...' : '',
+        ].join('')
+    } )
+
+    return highlighted_text
+}
+
 export class StorkClient {
     constructor ( options = {} ) {
 
