@@ -1,5 +1,10 @@
 // App Data that is derived from other app data
 
+import {
+    categories,
+    categoryTemplate
+} from '~/helpers/categories.js'
+
 export function isDevice ( listing ) {
     if ( !listing.hasOwnProperty('endpoint') ) return false
 
@@ -70,4 +75,19 @@ export function getRouteType ( routeString ) {
     if ( subType === 'benchmarks' ) return 'benchmarks'
 
     return routeType
+}
+
+export function getIconForListing ( listing ) {
+    const routeType = getRouteType( listing.endpoint )
+
+    if ( routeType === 'tv' || routeType === 'benchmarks' ) return '📺'
+
+    if ( routeType === 'device' ) return '🖥'
+
+    if ( routeType === 'formula' ) return categories.homebrew.icon
+
+    if ( routeType === 'game' ) return categories.games.icon
+
+    // Just use default icon
+    return categoryTemplate.icon
 }
