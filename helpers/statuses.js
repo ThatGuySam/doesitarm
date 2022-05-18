@@ -35,6 +35,30 @@ const statusesByIcon = Object.keys( statuses ).reduce( ( acc, key ) => {
     return acc
 }, {} )
 
+
+export const statusFilterPrefix = 'status'
+
+export const statusFilterSeparator = '_'
+
+
+// Example:
+// {
+//     label: '✅ Native Support',
+//     query: 'status_native'
+// },
+export const defaultStatusFilters = Object.keys( statuses ).reduce( ( acc, key ) => {
+    const status = statuses[ key ]
+    acc[ statusFilterPrefix + statusFilterSeparator + key ] = status.filterLabel
+
+    acc = [...acc, {
+        label: `${ status.icon } ${ status.filterLabel }`,
+        query: statusFilterPrefix + statusFilterSeparator + status.snakeSlug
+    }]
+    return acc
+}, [] )
+
+
+
 export function getStatusName ( status ) {
     for (const key in statusesByIcon) {
         if (status.trim().startsWith( key )) return statusesByIcon[key]
