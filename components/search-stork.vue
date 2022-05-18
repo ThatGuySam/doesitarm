@@ -213,6 +213,11 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
+import {
+    defaultStatusFilters,
+    statusFilterPrefix,
+    statusFilterSeparator,
+} from '~/helpers/statuses.js'
 import { getAppCategory } from '~/helpers/categories.js'
 import { getAppEndpoint } from '~/helpers/app-derived.js'
 import {
@@ -255,20 +260,7 @@ export default {
         },
         quickButtons: {
             type: Array,
-            default: () => [
-                {
-                    label: '✅ Native Support',
-                    query: 'status_native'
-                },
-                {
-                    label: '✳️ Rosetta',
-                    query: 'status_rosetta'
-                },
-                {
-                    label: '🚫 Unsupported',
-                    query: 'status_no'
-                }
-            ]
+            default: () => defaultStatusFilters
         }
     },
     data: function () {
@@ -393,9 +385,10 @@ export default {
 
             // console.log('query', query)
 
-            if (!query.includes('status:')) return
+            if (!query.includes( statusFilterPrefix + statusFilterSeparator )) return
 
-            const [_, status] = query.split(':')
+            const status = query.substring(query.indexOf( statusFilterSeparator )+1)
+
 
             const matches = app.status.includes(status) || app.status === status
 
@@ -425,7 +418,7 @@ export default {
             let oldHasWords = false
 
             oldQueryWords.forEach( word => {
-                if (word.includes('status:')) {
+                if (word.includes( statusFilterPrefix + statusFilterSeparator )) {
                     oldHasStatus = true
                     return
                 }
@@ -499,7 +492,7 @@ export default {
 
             // Look through each word and separate the status words from the normal query words
             rawQuery.split(' ').forEach(word => {
-                if (word.includes('status:')) {
+                if (word.includes( statusFilterPrefix + statusFilterSeparator )) {
                     statusText.push(word)
                     return
                 }
