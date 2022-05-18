@@ -13,6 +13,9 @@ import {
     getRouteType
 } from '~/helpers/app-derived.js'
 import {
+    getAppCategory
+} from '~/helpers/categories.js'
+import {
     storkTomlPath,
 } from '~/helpers/stork/config.js'
 import { downloadStorkExecutable } from '~/helpers/stork/executable.js'
@@ -53,6 +56,7 @@ function makeDetailsFromListing ({ listing, route }) {
     return [
         listing.content || '∅', // Null Symbol
         has( listing, 'status' ) ? `status_${ listing.status }` : '',
+        has( listing, 'category' ) ? `category_${ getAppCategory( listing ).snakeSlug }` : '',
         `type_${ getRouteType( route ) }`,
         // Brownmatter
         matter.stringify( '', contents ),
