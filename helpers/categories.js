@@ -42,7 +42,8 @@ export const categoryTemplate = {
     pluralLabel: null,
     itemSuffixLabel: null,
     icon: null,
-    requestLinks: null
+    requestLinks: null,
+    icon: '💻',
 }
 
 export const categories = {
