@@ -185,8 +185,8 @@ test('Can paginate', async (t) => {
     const cases = [
         {
             from: {
-                list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                perPage: 2,
+                list: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+                perPage: 2
             },
             expect: {
                 pageCount: 5,
@@ -200,6 +200,13 @@ test('Can paginate', async (t) => {
                         number: 2,
                         items: [3, 4],
                         json: '[3,4]'
+                    },
+
+                    // Last page should have less than perPage items
+                    {
+                        number: 5,
+                        items: [9],
+                        json: '[9]'
                     }
                 ]
             }
