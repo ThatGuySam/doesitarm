@@ -92,15 +92,14 @@
                         style="transition-property: border;"
                     >
 
-                        <client-only>
-                            <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
-                                {{ result.listing.name.charAt(0) }}
-                            </div>
-                        </client-only>
+
+                        <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
+                            {{ getIconForListing( result.listing ) }}
+                        </div>
 
                         <div
                             v-if="getAppCategory(result.listing).icon"
-                            v-html="`${getAppCategory(result.listing).icon} ${ makeHighlightedResultTitle( result ) }`"
+                            v-html="`${ makeHighlightedResultTitle( result ) }`"
                         />
                         <div
                             v-else
@@ -219,7 +218,10 @@ import {
     statusFilterSeparator,
 } from '~/helpers/statuses.js'
 import { getAppCategory } from '~/helpers/categories.js'
-import { getAppEndpoint } from '~/helpers/app-derived.js'
+import {
+    getAppEndpoint,
+    getIconForListing
+} from '~/helpers/app-derived.js'
 import {
     StorkClient,
     makeHighlightedMarkup,
@@ -356,6 +358,8 @@ export default {
 
         getAppCategory,
         getAppEndpoint,
+        getIconForListing,
+
         getSearchLinks (app) {
             return app?.searchLinks || []
         },
