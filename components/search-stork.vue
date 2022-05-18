@@ -38,7 +38,7 @@
                     :class="[
                         'inline-block text-xs rounded-lg py-1 px-2',
                         'border-2 border-white focus:outline-none',
-                        query.includes(button.query) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
+                        hasQueryPart( button.query ) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
                     ]"
                     :aria-label="`Filter list by ${button.label}`"
                     @click="toggleFilter(button.query); queryResults(query)"
@@ -52,7 +52,6 @@
             ref="search-container"
             class="search-container relative divide-y divide-gray-700 w-full rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark my-8 px-5"
         >
-
             <svg style="display: none;">
                 <defs>
                     <path
@@ -121,7 +120,7 @@
                             </div>
                         </div>
                         <!-- result.listing.lastUpdated: {{ result.listing.lastUpdated }} -->
-                        <client-only v-if="result.listing.lastUpdated">
+                        <template v-if="result.listing.lastUpdated">
                             <small
                                 class="text-xs opacity-50"
                             >
@@ -136,7 +135,7 @@
                             >
                                 ⏳
                             </small>
-                        </client-only>
+                        </template>
 
                         <!-- result.listing.endpoint: {{ result.listing.endpoint }} -->
 
@@ -187,15 +186,15 @@
                                 }"
                             >
                                 <span>Details</span>
-                                <client-only>
-                                    <svg
-                                        class="h-5 w-5 -mr-2"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <use href="#chevron-right" />
-                                    </svg>
-                                </client-only>
+
+                                <svg
+                                    class="h-5 w-5 -mr-2"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <use href="#chevron-right" />
+                                </svg>
+
                             </LinkButton>
 
                         </div>
@@ -310,6 +309,9 @@ export default {
         hasSearchInputText () {
             return this.query.length > 0
         },
+        queryParts () {
+            return this.query.split(/\s+/).filter(part => part.length > 0)
+        },
     },
     beforeDestroy() {
         this.observer.disconnect()
@@ -408,13 +410,26 @@ export default {
             array.splice(index, 1)
             return pluckedItem
         },
+        getFilterKeyAndValue (query) {
+            const key = query.substring(0, query.indexOf( statusFilterSeparator ))
+            const value = query.substring(query.indexOf( statusFilterSeparator )+1)
+            return { key, value }
+        },
+        hasQueryPart (part) {
+            return this.queryParts.includes( part )
+        },
         toggleFilter ( newFilterQuery ) {
 
             // Get the key and value from our filter
-            const [
-                newFilterKey, // This will always have a value
-                newFilterValue = null
-            ] = newFilterQuery.split(':')
+            // const [
+            //     newFilterKey, // This will always have a value
+            //     newFilterValue = null
+            // ] = newFilterQuery.split( statusFilterSeparator )
+
+            const {
+                key: newFilterKey,
+                value: newFilterValue = null
+            } = this.getFilterKeyAndValue( newFilterQuery )
 
             const oldQueryWords = this.query.split(' ')
 
@@ -432,8 +447,10 @@ export default {
 
             // If this filter is already present
             // then remove it
-            if (this.query.includes(newFilterQuery)) {
-                this.query = this.query.replace(newFilterQuery, '').trim()
+            if ( this.hasQueryPart( newFilterQuery ) ) {
+                this.query = oldQueryWords.filter( word => word !== newFilterQuery ).join(' ')
+
+                //this.query.replace(newFilterQuery, '').trim()
 
                 return
             }
@@ -460,11 +477,11 @@ export default {
 
             // However, if the query already has a status
             // then update the existing status
-            if (this.query.includes(newFilterKey)) {
+            if ( this.hasQueryPart( newFilterQuery ) ) {
 
-                const queryWords = this.query.split(' ')
+                // const queryWords = this.query.split(' ')
 
-                this.query = queryWords.map( word => {
+                this.query = this.queryParts.map( word => {
                     // If this the filter word
                     // then update it to the new one
                     if (word.includes(newFilterKey)) return newFilterQuery
@@ -549,16 +566,18 @@ export default {
             if (rawQuery.length === 0) return
 
             // Separate status filters from the actual query text
-            const [
-                statusText,
-                query
-            ] = this.filterStatusFromText(rawQuery.toLowerCase())
+            // const [
+            //     statusText,
+            //     query
+            // ] = this.filterStatusFromText(rawQuery.toLowerCase())
 
 
             // Declare that at least one query has been made
             this.hasStartedAnyQuery = true
 
-            const storkQuery = await storkClient.lazyQuery( query )
+            // console.log('rawQuery', rawQuery)
+
+            const storkQuery = await storkClient.lazyQuery( rawQuery )
 
             console.log('storkQuery', storkQuery)
 
