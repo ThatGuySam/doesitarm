@@ -80,7 +80,7 @@ export function getRouteType ( routeString ) {
 export function getIconForListing ( listing ) {
     const routeType = getRouteType( listing.endpoint )
 
-    if ( routeType === 'tv' || routeType === 'benchmarks' ) return '📺'
+    if ( routeType === 'tv' || routeType === 'benchmarks' ) return '▶️'
 
     if ( routeType === 'device' ) return '🖥'
 
