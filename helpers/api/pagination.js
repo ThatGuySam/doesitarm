@@ -1,5 +1,7 @@
+export const defaultPerPage = 20
+
 export class PaginatedList {
-    constructor({ list, perPage }) {
+    constructor({ list, perPage = defaultPerPage }) {
         this.list = list
         this.perPage = perPage
     }
