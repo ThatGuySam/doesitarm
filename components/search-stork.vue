@@ -303,12 +303,8 @@ export default {
         },
     },
     mounted () {
-        // console.log(this.$el)
-
         // Setup stork client
         storkClient = new StorkClient()
-
-        console.log('storkClient', storkClient)
     },
     methods: {
         makeHighlightedMarkup,
