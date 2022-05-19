@@ -301,6 +301,12 @@ class BuildLists {
     saveKind = async function ( list, kindSlug ) {
         const apiKindListDirectory = `${ apiDirectory }/kind/${ kindSlug }`
 
+        console.log('\n', `-- Starting kind lists for /${ apiKindListDirectory }`)
+
+        const endpointMethodName = `Finished kind lists for /${ listOptions.name } endpoints`
+        console.time(endpointMethodName)
+
+
         const paginatedList = new PaginatedList({
             list,
         })
@@ -315,6 +321,9 @@ class BuildLists {
 
             await this.saveToJson( kindPage.items, kindPagePath )
         }
+
+        console.timeEnd(endpointMethodName)
+        console.log( '\n\n' )
     }
 
     saveApiEndpoints = async ( listOptions ) => {
