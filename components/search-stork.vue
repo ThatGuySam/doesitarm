@@ -303,19 +303,6 @@ export default {
             return this.query.split(/\s+/).filter(part => part.length > 0)
         },
     },
-    // watch: {
-    //     'store.mode': function (newMode) {
-    //         // If we're showing the search
-    //         // then focus on the search input
-    //         // on the next tick when our input
-    //         // exists
-    //         if (newMode === 'search') {
-    //             this.$nextTick(() => {
-    //                 this.$refs.search.focus()
-    //             })
-    //         }
-    //     }
-    // },
     mounted () {
         // console.log(this.$el)
 
