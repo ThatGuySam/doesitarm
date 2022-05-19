@@ -269,17 +269,11 @@ export default {
             // appList,
             query: '',
             hasStartedAnyQuery: false,
-            observer: null,
-            seenItems: Object.fromEntries(this.appList.map(app => {
-                return [app.slug, false]
-            })),
-            // results: [],
             titleStartsWithResults: [],
             titleContainsResults: [],
             categoryContainsResults: [],
             statusResults: [],
             storkResults: [],
-            // store: overlayStore.state
         }
     },
     computed: {
@@ -313,9 +307,6 @@ export default {
             return this.query.split(/\s+/).filter(part => part.length > 0)
         },
     },
-    beforeDestroy() {
-        this.observer.disconnect()
-    },
     // watch: {
     //     'store.mode': function (newMode) {
     //         // If we're showing the search
@@ -336,23 +327,6 @@ export default {
         storkClient = new StorkClient()
 
         console.log('storkClient', storkClient)
-
-        this.observer = new IntersectionObserver(this.onElementObserved, {
-            // root: this.$el,
-            threshold: 1.0,
-        })
-
-        // Start observing all search rows
-        this.initialList.forEach(app => {
-            if (this.$refs.hasOwnProperty(`${app.slug}-row`) === false) {
-                console.log('App Row not found', app)
-                return
-            }
-
-            // console.log('this.$refs[`${app.slug}-row`]', this.$refs[`${app.slug}-row`])
-            this.observer.observe(this.$refs[`${app.slug}-row`][0])
-        })
-
     },
     methods: {
         makeHighlightedMarkup,
@@ -532,21 +506,6 @@ export default {
                 behavior: 'smooth'
             })
         },
-        onElementObserved(entries) {
-            entries.forEach(({ target, isIntersecting }) => {
-                if (!isIntersecting) {
-                    return
-                }
-
-                this.observer.unobserve(target)
-
-                // console.log('Observed target', target)
-
-                const appSlug = target.getAttribute('data-app-slug')
-
-                this.seenItems[appSlug] = true
-            });
-        },
         async queryResults (rawQuery) {
             // Clear any results from before
             this.titleStartsWithResults = []
@@ -560,17 +519,9 @@ export default {
 
             this.$emit('update:query', rawQuery)
 
-
             // If our query is empty
             // then bail
             if (rawQuery.length === 0) return
-
-            // Separate status filters from the actual query text
-            // const [
-            //     statusText,
-            //     query
-            // ] = this.filterStatusFromText(rawQuery.toLowerCase())
-
 
             // Declare that at least one query has been made
             this.hasStartedAnyQuery = true
