@@ -27,7 +27,9 @@ export class PaginatedList {
         return {
             number: pageNumber,
             items,
-            json: JSON.stringify( items )
+            get json() {
+                return JSON.stringify( items )
+            }
         }
     }
 
