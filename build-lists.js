@@ -5,28 +5,28 @@ import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
 
-import buildAppList from './helpers/build-app-list.js'
-import buildGamesList from './helpers/build-game-list.js'
-import buildHomebrewList from './helpers/build-homebrew-list.js'
-import buildVideoList from './helpers/build-video-list.js'
-import buildDeviceList from './helpers/build-device-list.js'
-import { deviceSupportsApp } from './helpers/devices.js'
+import buildAppList from '~/helpers/build-app-list.js'
+import buildGamesList from '~/helpers/build-game-list.js'
+import buildHomebrewList from '~/helpers/build-homebrew-list.js'
+import buildVideoList from '~/helpers/build-video-list.js'
+import buildDeviceList from '~/helpers/build-device-list.js'
+import { deviceSupportsApp } from '~/helpers/devices.js'
 
-import { videosRelatedToApp } from './helpers/related.js'
-import { buildVideoPayload, buildAppBenchmarkPayload } from './helpers/build-payload.js'
+import { videosRelatedToApp } from '~/helpers/related.js'
+import { buildVideoPayload, buildAppBenchmarkPayload } from '~/helpers/build-payload.js'
 
-import { categories, getAppCategory } from './helpers/categories.js'
+import { categories, getAppCategory } from '~/helpers/categories.js'
 import {
     getAppType,
     getAppEndpoint,
     getVideoEndpoint,
     isVideo
-} from './helpers/app-derived.js'
-import { makeSearchableList } from './helpers/searchable-list.js'
+} from '~/helpers/app-derived.js'
+import { makeSearchableList } from '~/helpers/searchable-list.js'
 
 import {
     writeStorkToml
-} from './helpers/stork/toml.js'
+} from '~/helpers/stork/toml.js'
 import {
     PaginatedList
 } from '~/helpers/api/pagination.js'
