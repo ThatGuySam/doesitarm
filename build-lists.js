@@ -301,9 +301,9 @@ class BuildLists {
     saveKind = async function ( list, kindSlug ) {
         const apiKindListDirectory = `${ apiDirectory }/kind/${ kindSlug }`
 
-        console.log('\n', `-- Starting kind lists for /${ apiKindListDirectory }`)
+        console.log('\n', `-- Starting kind lists for ${ apiKindListDirectory }`)
 
-        const endpointMethodName = `Finished kind lists for /${ apiKindListDirectory } endpoints`
+        const endpointMethodName = `Finished kind lists for ${ apiKindListDirectory } endpoints`
         console.time(endpointMethodName)
 
 
