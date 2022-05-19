@@ -4,7 +4,6 @@ import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
-import mapValues from 'just-map-values'
 
 import buildAppList from './helpers/build-app-list.js'
 import buildGamesList from './helpers/build-game-list.js'
