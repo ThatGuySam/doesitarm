@@ -28,8 +28,8 @@ import {
     writeStorkToml
 } from '~/helpers/stork/toml.js'
 import {
-    PaginatedList
-} from '~/helpers/api/pagination.js'
+    KindList
+} from '~/helpers/api/kind.js'
 import {
     apiDirectory
 } from '~/helpers/api/config.js'
@@ -63,6 +63,10 @@ function normalizeVersion ( rawVersion ) {
 
     return semver.coerce(version)
 }
+
+
+
+
 class BuildLists {
 
     constructor () {
@@ -276,32 +280,63 @@ class BuildLists {
         return
     }
 
-    saveKind = async function ( list, kindSlug ) {
-        const apiKindListDirectory = `${ apiDirectory }/kind/${ kindSlug }`
+    makeKindLists () {
+        const getters = Object.fromEntries( Object.entries( this.lists ).map( ([ listName ]) => {
+            return [
+                // Key
+                listName,
+                () => Array.from( this.lists[ listName ] )
+            ]
+        } ) )
 
-        console.log('\n', `-- Starting kind lists for ${ apiKindListDirectory }`)
+        const kindLists = {}
 
-        const endpointMethodName = `Finished kind lists for ${ apiKindListDirectory }`
-        console.time(endpointMethodName)
+        for ( const kindSlug in getters ) {
 
-
-        const paginatedList = new PaginatedList({
-            list,
-        })
-
-        // Ensure the directory exists
-        await fs.ensureDir( apiKindListDirectory )
-
-        for ( const kindPage of paginatedList.pages ) {
-            const kindPagePath = `${ apiKindListDirectory }/${ kindPage.number }.json`
-
-            // console.log('kindPage.items', kindPage)
-
-            await this.saveToJson( kindPage.items, kindPagePath )
+            kindLists[ kindSlug ] = new KindList({
+                // Get list method
+                list: getters[ kindSlug ],
+                kindSlug
+            })
         }
 
-        console.timeEnd(endpointMethodName)
-        console.log( '\n\n' )
+        return kindLists
+    }
+
+    get kindRoutes () {
+        return Object.entries( this.makeKindLists() ).map( ([ kindSlug, kindList ]) => {
+            return kindList.routes
+        }).flat()
+    }
+
+    saveKinds = async function () {
+
+        const kindLists = this.makeKindLists()
+
+        // Save the lists
+        for ( const kindSlug in kindLists ) {
+
+            console.log('\n', `-- Starting kind lists for ${ kindSlug }`)
+
+            const endpointMethodName = `Finished kind lists for ${ kindSlug }`
+            console.time(endpointMethodName)
+
+
+            const kindList = kindLists[ kindSlug ]
+
+            // Ensure the base directory exists
+            await fs.ensureDir( kindList.basePath )
+
+            for ( const file of kindList.apiFiles ) {
+                // console.log('kindPage.items', kindPage)
+
+                await this.saveToJson( file.content, file.path )
+            }
+
+            console.timeEnd(endpointMethodName)
+            console.log( '\n\n' )
+        }
+
     }
 
     saveApiEndpoints = async ( listOptions ) => {
@@ -379,8 +414,6 @@ class BuildLists {
             throw new Error( errors )
         }
 
-        await this.saveKind( Array.from( this.lists[listOptions.name] ), listOptions.name )
-
         // Array.from( this.lists[listOptions.name] )
 
         // Count saved files
@@ -392,6 +425,10 @@ class BuildLists {
         if ( fileCount !== this.lists[listOptions.name].size ) {
             throw new Error( `Files (${ fileCount }) don\'t match list count in ${ apiListDirectory }(${ this.lists[listOptions.name].size }).` )
         }
+
+
+        // Save kinds
+        await this.saveKinds()
     }
 
     // Save app lists to JSON
@@ -541,6 +578,17 @@ class BuildLists {
         const sitemapEndpoints = Object.values(this.endpointMaps).map( endpointSet => {
             return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
         } ).flat(1)
+
+        // Add kind routes to sitemap
+        this.kindRoutes.forEach( route => {
+            sitemapEndpoints.push({
+                route,
+                payload: {}
+            })
+        } )
+
+        // Add paginated category lists to sitemap
+        // sitemapEndpoints.push( ...this.getKindListForCategories() )
 
         // Save sitemap endpoints
         console.log('Building Sitemap JSON')
