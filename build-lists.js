@@ -289,6 +289,11 @@ class BuildLists {
             ]
         } ) )
 
+        // Add getters for categories
+        for ( const categorySlug in categories ) {
+            getters[categorySlug] = () => Array.from( this.lists.app ).filter( app => app.category.slug === categorySlug )
+        }
+
         const kindLists = {}
 
         for ( const kindSlug in getters ) {
