@@ -266,7 +266,6 @@ export default {
     },
     data: function () {
         return {
-            // appList,
             query: '',
             hasStartedAnyQuery: false,
             storkResults: [],
