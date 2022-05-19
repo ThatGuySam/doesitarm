@@ -596,61 +596,6 @@ export default {
             })
 
             console.log('storkQuery.results', storkQuery.results)
-
-
-            // Search App List
-            // this.appList.filter( app => {
-            //     const filters = [
-            //         {
-            //             key: 'status',
-            //             method: this.statusIs,
-            //             queryArg: statusText
-            //         }
-            //     ]
-
-            //     // Does this app match every active filter
-            //     const filtersMatched = filters.every( ({ key, method, queryArg }) => {
-            //         // If the query does not contain the key for the filter
-            //         // then filter automatically passes
-            //         if (queryArg.includes(key) === false) return true
-
-            //         // console.log(queryArg, 'method', method)
-            //         return method(queryArg, app)
-            //     })
-
-            //     return filtersMatched
-            // }).forEach(app => {
-            //     // console.log('app', app)
-
-            //     const matchers = [
-            //         {
-            //             method: this.titleStartsWith,
-            //             queryArg: query
-            //         },
-            //         {
-            //             method: this.titleContains,
-            //             queryArg: query
-            //         },
-            //         {
-            //             method: this.categoryContains,
-            //             queryArg: query
-            //         }
-            //     ]
-
-            //     // Run through our search priorities
-            //     for (const { method, queryArg } of matchers){
-            //         // iterations++
-            //         const appMatches = method(queryArg, app)
-            //         if (appMatches) {
-            //             // We've found a match for this app
-            //             // so let's stop trying match methods
-            //             // and search the next app
-            //             break
-            //         }
-            //     }
-            // })
-            // console.log('query', query)
-            // console.log('iterations', iterations)
         }
     }
 }
