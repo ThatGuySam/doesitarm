@@ -30,6 +30,9 @@ import {
 import {
     PaginatedList
 } from '~/helpers/api/pagination.js'
+import {
+    apiDirectory
+} from '~/helpers/api/config.js'
 
 import {
     cliOptions
@@ -38,7 +41,6 @@ import {
 // Setup dotenv
 dotenv.config()
 
-export const apiDirectory = './static/api'
 
 
 function normalizeVersion ( rawVersion ) {
