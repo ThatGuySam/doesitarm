@@ -269,10 +269,6 @@ export default {
             // appList,
             query: '',
             hasStartedAnyQuery: false,
-            titleStartsWithResults: [],
-            titleContainsResults: [],
-            categoryContainsResults: [],
-            statusResults: [],
             storkResults: [],
         }
     },
@@ -339,28 +335,7 @@ export default {
         getSearchLinks (app) {
             return app?.searchLinks || []
         },
-        // Search priorities
-        titleStartsWith (query, app) {
-            const matches = app.name.toLowerCase().startsWith(query)
-            if (matches) {
-                this.titleStartsWithResults.push(app)
-            }
-            return matches
-        },
-        titleContains (query, app) {
-            const matches = app.name.toLowerCase().includes(query)
-            if (matches) {
-                this.titleContainsResults.push(app)
-            }
-            return matches
-        },
-        categoryContains (query, app) {
-            const matches = getAppCategory(app).label.toLowerCase().includes(query)
-            if (matches) {
-                this.categoryContainsResults.push(app)
-            }
-            return matches
-        },
+
         statusIs (query, app) {
 
             // console.log('query', query)
@@ -372,18 +347,9 @@ export default {
 
             const matches = app.status.includes(status) || app.status === status
 
-            // if (matches) {
-            //     this.statusResults.push(app)
-            // }
-
             return matches
         },
         // Search tools
-        pluck (array, index) {
-            const pluckedItem = array[index]
-            array.splice(index, 1)
-            return pluckedItem
-        },
         getFilterKeyAndValue (query) {
             const key = query.substring(0, query.indexOf( statusFilterSeparator ))
             const value = query.substring(query.indexOf( statusFilterSeparator )+1)
@@ -481,25 +447,6 @@ export default {
                 this.query = queryWords.join(' ')
             }
         },
-        filterStatusFromText (rawQuery) {
-            const statusText = []
-            const searchWords = []
-
-            // Look through each word and separate the status words from the normal query words
-            rawQuery.split(' ').forEach(word => {
-                if (word.includes( statusFilterPrefix + statusFilterSeparator )) {
-                    statusText.push(word)
-                    return
-                }
-
-                searchWords.push(word)
-            })
-
-            return [
-                statusText.join(' '),
-                searchWords.join(' ').trim()
-            ]
-        },
         scrollInputToTop () {
             scrollIntoView(this.$refs['search-container'], {
                 block: 'start',
@@ -507,12 +454,6 @@ export default {
             })
         },
         async queryResults (rawQuery) {
-            // Clear any results from before
-            this.titleStartsWithResults = []
-            this.titleContainsResults = []
-            this.categoryContainsResults = []
-            this.statusResults = []
-
 
             // Snap results scroll position back to top
             // this.$refs['search-container'].scrollTop = 0
