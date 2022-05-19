@@ -1,9 +1,19 @@
 export const defaultPerPage = 20
 
+
 export class PaginatedList {
     constructor({ list, perPage = defaultPerPage }) {
-        this.list = list
+        this.listArg = list
         this.perPage = perPage
+    }
+
+    get list () {
+        // if our list is a function, call it
+        if ( typeof this.listArg === 'function' ) {
+            return this.listArg()
+        }
+
+        return this.listArg
     }
 
     get total () {
@@ -44,5 +54,6 @@ export class PaginatedList {
         })
     }
 }
+
 
 
