@@ -28,6 +28,9 @@ import { makeSearchableList } from './helpers/searchable-list.js'
 import {
     writeStorkToml
 } from './helpers/stork/toml.js'
+import {
+    PaginatedList
+} from '~/helpers/api/pagination.js'
 
 import {
     cliOptions
@@ -35,6 +38,8 @@ import {
 
 // Setup dotenv
 dotenv.config()
+
+export const apiDirectory = './static/api'
 
 
 function normalizeVersion ( rawVersion ) {
@@ -293,9 +298,27 @@ class BuildLists {
         return
     }
 
+    saveKind = async function ( list, kindSlug ) {
+        const apiKindListDirectory = `${ apiDirectory }/kind/${ kindSlug }`
+
+        const paginatedList = new PaginatedList({
+            list,
+        })
+
+        // Ensure the directory exists
+        await fs.ensureDir( apiKindListDirectory )
+
+        for ( const kindPage of paginatedList.pages ) {
+            const kindPagePath = `${ apiKindListDirectory }/${ kindPage.number }.json`
+
+            // console.log('kindPage.items', kindPage)
+
+            await this.saveToJson( kindPage.items, kindPagePath )
+        }
+    }
+
     saveApiEndpoints = async ( listOptions ) => {
 
-        const apiDirectory = './static/api'
         const apiListDirectory = `${ apiDirectory }/${ listOptions.endpointPrefix }`
 
         const poolSize = 1000
@@ -369,6 +392,10 @@ class BuildLists {
             throw new Error( errors )
         }
 
+        await this.saveKind( Array.from( this.lists[listOptions.name] ), listOptions.name )
+
+        // Array.from( this.lists[listOptions.name] )
+
         // Count saved files
         const fileCount = fs.readdirSync( apiListDirectory ).length
 
@@ -417,8 +444,11 @@ class BuildLists {
 
                 console.timeEnd(endpointMethodName)
                 console.log( '\n\n' )
+
             }
         }
+
+        //
 
         console.log('Save lists finished')
 
