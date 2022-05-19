@@ -22,6 +22,8 @@ function makeKindFilePath ({ kindSlug, number }) {
     return `${ apiDirectory }${ makeKindEndpoint({ kindSlug, number }) }.json`
 }
 
+
+// This may provide better performance via memoization
 export class KindList extends PaginatedList {
     constructor({
         list,
