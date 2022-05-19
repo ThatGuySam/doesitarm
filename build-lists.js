@@ -303,7 +303,7 @@ class BuildLists {
 
         console.log('\n', `-- Starting kind lists for ${ apiKindListDirectory }`)
 
-        const endpointMethodName = `Finished kind lists for ${ apiKindListDirectory } endpoints`
+        const endpointMethodName = `Finished kind lists for ${ apiKindListDirectory }`
         console.time(endpointMethodName)
 
 
