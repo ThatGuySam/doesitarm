@@ -112,37 +112,14 @@ class BuildLists {
 
         // Secondary Derivative built lists
         // Always goes after initial lists
-        // since it depend on them
+        // since it depends on them
         {
             name: 'video',
             endpointPrefix: 'tv',
             path: '/static/video-list.json',
             buildMethod: async () => {
 
-                // console.log('this.getAllVideoAppsList()', this.getAllVideoAppsList())
-
                 return await buildVideoList( this.getAllVideoAppsList() )
-
-
-                // const videoList = await buildVideoList( this.getAllVideoAppsList() )
-
-                // const extraVideos = []
-
-                // const multiplier = 12
-
-                // for (let i = 0; i < multiplier; i++) {
-                //     videoList.forEach( video => {
-                //         extraVideos.push({
-                //             ...video,
-                //             slug: video.slug + '-' + i,
-                //         })
-                //     })
-                // }
-
-                // return new Set([
-                //     ...videoList,
-                //     ...extraVideos
-                // ].slice(0, 10 * 1000))
             },
             beforeSave: videoListSet => {
                 this.allVideoAppsList = this.getAllVideoAppsList()
@@ -554,22 +531,6 @@ class BuildLists {
             this.endpointMaps.nuxt.set( '/kind/' + slug, {} )
         })
 
-
-        // Save Nuxt Endpoints
-        // await this.saveToJson(Array.from(this.endpointMaps.nuxt), './static/nuxt-endpoints.json')
-
-        // // Save Eleventy Endpoints
-        // await this.saveToJson(Array.from(this.endpointMaps.eleventy), './static/eleventy-endpoints.json')
-
-        // console.log('this.endpointMaps.eleventy /app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' ))
-
-
-        // Filter eleventy endpoints
-        // this.endpointMaps.eleventy = new Set([
-        //     ['/app/chrome', this.endpointMaps.eleventy.get( '/app/chrome' )]
-        // ])
-
-
         for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
             // Save Endpoints
             await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
@@ -599,9 +560,3 @@ class BuildLists {
 const listBuilder = new BuildLists()
 
 listBuilder.build()
-
-// export default async function () {
-//     const listBuilder = new BuildLists()
-
-//     return await listBuilder.build()
-// }
