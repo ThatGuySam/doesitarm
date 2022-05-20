@@ -66,48 +66,43 @@
             <!-- hasStartedAnyQuery: {{ hasStartedAnyQuery }} -->
 
             <div
-                v-if="chunkedResults.length === 0"
+                v-if="chunkedListings.length === 0"
                 class="text-center py-4"
             >
                 No apps found
             </div>
 
             <ul
-                v-for="(results, i) in chunkedResults"
-                :key="`results-chunk-${i}`"
-                class="results-container divide-y divide-gray-700"
+                v-for="(listings, i) in chunkedListings"
+                :key="`listings-chunk-${i}`"
+                class="listings-container divide-y divide-gray-700"
             >
                 <li
-                    v-for="(result, i) in results"
-                    :key="`${result.listing.slug}-${i}`"
-                    :ref="`${result.listing.slug}-row`"
-                    :data-app-slug="result.listing.slug"
+                    v-for="(listing, i) in listings"
+                    :key="`${ listing.slug }-${i}`"
+                    :ref="`${ listing.slug }-row`"
+                    :data-app-slug="listing.slug"
                     class="relative"
                 >
                     <!-- app.endpoint: {{ app.endpoint }} -->
                     <a
-                        :href="result.listing.endpoint"
+                        :href="listing.endpoint"
                         class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5"
                         style="transition-property: border;"
                     >
 
 
                         <div class="absolute hidden left-0 h-12 w-12 rounded-full md:flex items-center justify-center bg-darker">
-                            {{ getIconForListing( result.listing ) }}
+                            {{ getIconForListing( listing ) }}
                         </div>
 
                         <div
-                            v-if="getAppCategory(result.listing).icon"
-                            v-html="`${ makeHighlightedResultTitle( result ) }`"
-                        />
-                        <div
-                            v-else
-                            v-html="makeHighlightedResultTitle( result )"
+                            v-html="makeHighlightedResultTitle( listing.storkResult )"
                         />
 
                         <div class="text-xs leading-5 font-light">
                             <div
-                                v-for="(excerpt, i) in result.excerpts"
+                                v-for="(excerpt, i) in listing.storkResult.excerpts"
                                 :key="`excerpt-${i}`"
                                 class="result-excerpt space-y-3"
                             >
@@ -119,13 +114,13 @@
                                 />
                             </div>
                         </div>
-                        <!-- result.listing.lastUpdated: {{ result.listing.lastUpdated }} -->
-                        <template v-if="result.listing.lastUpdated">
+                        <!-- listing.lastUpdated: {{ listing.lastUpdated }} -->
+                        <template v-if="listing.lastUpdated">
                             <small
                                 class="text-xs opacity-50"
                             >
                                 <RelativeTime
-                                    :timestamp="result.listing.lastUpdated.timestamp"
+                                    :timestamp="listing.lastUpdated.timestamp"
                                     class="text-xs opacity-50"
                                 />
                             </small>
@@ -137,7 +132,7 @@
                             </small>
                         </template>
 
-                        <!-- result.listing.endpoint: {{ result.listing.endpoint }} -->
+                        <!-- listing.endpoint: {{ listing.endpoint }} -->
 
                     </a>
 
@@ -149,8 +144,8 @@
                         <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-4">
 
                             <LinkButton
-                                v-for="link in getSearchLinks(result.listing)"
-                                :key="`${result.listing.slug}-${link.label.toLowerCase()}`"
+                                v-for="link in getSearchLinks( listing )"
+                                :key="`${ listing.slug }-${ link.label.toLowerCase() }`"
                                 :href="link.href"
                                 :class="[
                                     'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
@@ -170,7 +165,7 @@
                             </LinkButton>
 
                             <LinkButton
-                                :href="result.listing.endpoint"
+                                :href="listing.endpoint"
                                 :class="[
                                     'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
                                     'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
@@ -268,30 +263,30 @@ export default {
         return {
             query: '',
             hasStartedAnyQuery: false,
-            storkResults: [],
+            listingsResults: []
         }
     },
     computed: {
         initialList () {
             return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
         },
-        results () {
+        listings () {
             if (!this.hasSearchInputText) return this.initialList
 
-            return this.storkResults
+            return this.listingsResults
         },
         // Chunk results to avoid having a parent node with more than 60 child nodes.
-        chunkedResults () {
+        chunkedListings () {
 
-            const results = [
-                ...this.results
+            const listings = [
+                ...this.listings
             ]
 
             const size = 25
             const chunks = []
 
-            while (results.length > 0)
-                chunks.push(results.splice(0, size))
+            while (listings.length > 0)
+                chunks.push(listings.splice(0, size))
 
             return chunks
         },
@@ -455,17 +450,15 @@ export default {
 
             console.log('storkQuery', storkQuery)
 
-            this.storkResults = storkQuery.results.map( result => {
+            this.listingsResults = storkQuery.results.map( result => {
                 return {
-                    ...result,
-                    listing: {
-                        name: result.entry.title,
-                        endpoint: result.entry.url,
-                        slug: '',
-                        category: {
-                            slug: 'uncategorized'
-                        }
-                    }
+                    name: result.entry.title,
+                    endpoint: result.entry.url,
+                    slug: '',
+                    category: {
+                        slug: 'uncategorized'
+                    },
+                    storkResult: result
                 }
             })
 
