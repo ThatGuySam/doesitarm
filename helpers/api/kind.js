@@ -56,9 +56,17 @@ export class KindList extends PaginatedList {
 
     get apiFiles () {
         return this.pages.map( kindPage => {
+
+            // If we have a number, we need to add it to the file path
+            const nextPage = kindPage.hasNextPage ? makeKindEndpoint({
+                kindSlug: this.kindSlug,
+                number: kindPage.number+ 1
+            }) : ''
+
             return {
                 path: makeKindFilePath({ kindSlug: this.kindSlug, number: kindPage.number }),
                 content: {
+                    nextPage,
                     items: kindPage.items
                 }
             }
