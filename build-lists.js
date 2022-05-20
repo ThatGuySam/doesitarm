@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
+import memoize from 'fast-memoize'
 
 import buildAppList from '~/helpers/build-app-list.js'
 import buildGamesList from '~/helpers/build-game-list.js'
@@ -41,6 +42,9 @@ import {
 // Setup dotenv
 dotenv.config()
 
+
+let timeRunGetListArray = 0
+let timeRunGetListByCategories = 0
 
 
 function normalizeVersion ( rawVersion ) {
@@ -280,18 +284,53 @@ class BuildLists {
         return
     }
 
+    getListArray ( listName ) {
+        console.log(`getListArray run ${ timeRunGetListArray += 1 } times`)
+
+        return Array.from( this.lists[ listName ] )
+    }
+
+    getListArrayMemoized = memoize( this.getListArray.bind( this ) )
+
+    getListByCategories ( listName ) {
+        console.log(`getListByCategories run ${ timeRunGetListByCategories += 1 } times`)
+
+        const list = this.getListArrayMemoized( listName )
+
+        return list.reduce( ( categories, app ) => {
+
+            const category = app.category
+
+            if ( !categories[category] ) {
+                categories[category] = []
+            }
+
+            categories[category].push( app )
+
+            return categories
+        }, {} )
+    }
+
+    getListByCategoriesMemoized = memoize( this.getListByCategories.bind( this ) )
+
+    getCategoryList ( category, listName = 'app' ) {
+        const list = this.getListByCategoriesMemoized( listName )
+
+        return list[category] || []
+    }
+
     makeKindLists () {
         const getters = Object.fromEntries( Object.entries( this.lists ).map( ([ listName ]) => {
             return [
                 // Key
                 listName,
-                () => Array.from( this.lists[ listName ] )
+                () => this.getListArrayMemoized( listName )
             ]
         } ) )
 
         // Add getters for categories
         for ( const categorySlug in categories ) {
-            getters[categorySlug] = () => Array.from( this.lists.app ).filter( app => app.category.slug === categorySlug )
+            getters[categorySlug] = () => this.getCategoryList( categorySlug )
         }
 
         const kindLists = {}
