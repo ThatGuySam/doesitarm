@@ -28,7 +28,7 @@ import {
     writeStorkToml
 } from '~/helpers/stork/toml.js'
 import {
-    KindList
+    KindListMemoized as KindList
 } from '~/helpers/api/kind.js'
 import {
     apiDirectory

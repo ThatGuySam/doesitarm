@@ -1,3 +1,5 @@
+import memoizeGetters from 'memoize-getters'
+
 import {
     apiDirectory
 } from '~/helpers/api/config.js'
@@ -62,3 +64,5 @@ export class KindList extends PaginatedList {
     }
 
 }
+
+export const KindListMemoized = memoizeGetters( KindList )
