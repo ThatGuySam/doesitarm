@@ -58,7 +58,9 @@ export class KindList extends PaginatedList {
         return this.pages.map( kindPage => {
             return {
                 path: makeKindFilePath({ kindSlug: this.kindSlug, number: kindPage.number }),
-                content: this.list
+                content: {
+                    items: kindPage.items
+                }
             }
         })
     }
