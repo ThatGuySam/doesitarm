@@ -470,9 +470,6 @@ class BuildLists {
             throw new Error( `Files (${ fileCount }) don\'t match list count in ${ apiListDirectory }(${ this.lists[listOptions.name].size }).` )
         }
 
-
-        // Save kinds
-        await this.saveKinds()
     }
 
     // Save app lists to JSON
@@ -525,10 +522,14 @@ class BuildLists {
 
     async build () {
 
+        // Pull in and layer data from all sources
         await this.buildLists()
 
+        // Save the data to respective files as lists
         await this.saveAppLists()
 
+        // Save kind lists
+        await this.saveKinds()
 
 
         // console.log('appList', appList)
