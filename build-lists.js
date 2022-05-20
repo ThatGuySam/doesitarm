@@ -244,6 +244,8 @@ class BuildLists {
         const hasSaveMethod = listOptions.hasOwnProperty('beforeSave')
         const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
 
+
+
         // console.log('listFullPath', listFullPath)
 
         const saveableList = saveMethod( this.lists[listOptions.name] )
@@ -396,7 +398,7 @@ class BuildLists {
 
         const { errors } = await PromisePool
             .withConcurrency( poolSize )
-            .for( Array.from( this.lists[listOptions.name] ) )
+            .for( this.getListArray( listOptions.name ) )
             .process(async ( listEntry, index, pool ) => {
                 // console.log('listEntry', listEntry)
 
@@ -433,7 +435,7 @@ class BuildLists {
 
                 // Add device support
                 if ( this.shouldHaveDeviceSupport( listEntry ) ) {
-                    const deviceList = Array.from( this.lists[ 'device' ] )
+                    const deviceList = this.getListArray( 'device' )
 
                     listEntry.deviceSupport = deviceList.map( device => {
                         const supportsApp = deviceSupportsApp( device, listEntry )
@@ -457,8 +459,6 @@ class BuildLists {
         if ( errors.length !== 0 ) {
             throw new Error( errors )
         }
-
-        // Array.from( this.lists[listOptions.name] )
 
         // Count saved files
         const fileCount = fs.readdirSync( apiListDirectory ).length
