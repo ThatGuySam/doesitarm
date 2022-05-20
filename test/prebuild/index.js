@@ -193,11 +193,13 @@ test('Can paginate', async (t) => {
                 pages: [
                     {
                         number: 1,
+                        hasNextPage: true,
                         items: [1, 2],
                         json: '[1,2]'
                     },
                     {
                         number: 2,
+                        hasNextPage: true,
                         items: [3, 4],
                         json: '[3,4]'
                     },
@@ -205,6 +207,7 @@ test('Can paginate', async (t) => {
                     // Last page should have less than perPage items
                     {
                         number: 5,
+                        hasNextPage: false,
                         items: [9],
                         json: '[9]'
                     }

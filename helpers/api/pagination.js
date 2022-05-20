@@ -31,12 +31,17 @@ export class PaginatedList {
         return this.list.slice(start, end)
     }
 
+    hasPage ( pageNumber ) {
+        return pageNumber > 0 && pageNumber <= this.pageCount
+    }
+
     makePage ( pageNumber ) {
         const items = this.makePageItems( pageNumber )
 
         return {
             number: pageNumber,
             items,
+            hasNextPage: this.hasPage( pageNumber + 1 ),
             get json() {
                 return JSON.stringify( items )
             }
