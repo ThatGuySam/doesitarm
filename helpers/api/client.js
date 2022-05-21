@@ -27,7 +27,7 @@ const defaultFetchMethod = async function (...args) {
         })
 }
 
-
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
 const HTTP_METHODS = [
     'GET',
     // 'POST',
