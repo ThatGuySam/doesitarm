@@ -60,7 +60,7 @@ export class KindList extends PaginatedList {
             // If we have a number, we need to add it to the file path
             const nextPage = kindPage.hasNextPage ? makeKindEndpoint({
                 kindSlug: this.kindSlug,
-                number: kindPage.number+ 1
+                number: kindPage.number + 1
             }) : ''
 
             return {
