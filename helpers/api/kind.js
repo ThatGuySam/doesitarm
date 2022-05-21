@@ -1,4 +1,7 @@
+import memoize from 'fast-memoize'
 import memoizeGetters from 'memoize-getters'
+
+import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
 import {
     apiDirectory
@@ -37,9 +40,15 @@ export class KindList extends PaginatedList {
         this.kindSlug = kindSlug
     }
 
-    get baseRoute () {
-        return makeKindEndpoint({ kindSlug: this.kindSlug })
+    baseRoute = makeKindEndpoint({ kindSlug: this.kindSlug })
+
+    makeSummary () {
+        return getListSummaryNumbers({
+            list: this.list,
+        })
     }
+
+    summary = memoize( this.makeSummary.bind( this ) )
 
     get routes () {
         return this.pages.map( kindPage => {
@@ -67,6 +76,7 @@ export class KindList extends PaginatedList {
                 path: makeKindFilePath({ kindSlug: this.kindSlug, number: kindPage.number }),
                 content: {
                     nextPage,
+                    summary: this.summary,
                     items: kindPage.items
                 }
             }
