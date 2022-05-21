@@ -53,7 +53,7 @@ export function generateAPI ( {
     return new Proxy(callable, {
         get({ url }, propKey) {
             // If we're just getting the url, return it
-            if ( propKey === 'url' ) return url
+            if ( propKey === 'url' ) return `${ url }.json`
 
             // If we're using an HTTP method
             // then do a request to the url
