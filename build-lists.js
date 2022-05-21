@@ -398,7 +398,7 @@ class BuildLists {
 
         const { errors } = await PromisePool
             .withConcurrency( poolSize )
-            .for( this.getListArray( listOptions.name ) )
+            .for( this.getListArrayMemoized( listOptions.name ) )
             .process(async ( listEntry, index, pool ) => {
                 // console.log('listEntry', listEntry)
 
