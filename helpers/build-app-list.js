@@ -1,6 +1,3 @@
-
-// import { promises as fs } from 'fs'
-
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import axios from 'axios'
@@ -12,6 +9,7 @@ import parseDate from './parse-date'
 import { eitherMatches } from './matching.js'
 import { getAppEndpoint } from './app-derived'
 import { makeSlug } from './slug.js'
+import { byTimeThenNull }  from './sort-list.js'
 
 import {
     cliOptions
@@ -440,16 +438,8 @@ export default async function () {
     // console.log('appList', appList)
 
 
-    return [
+    return ([
         ...appList,
         ...Array.from( scanListMap, ([name, value]) => value )
-    ]
-
-    // fs.readFile('../README.md', 'utf8')
-    //     .then((err, data) => {
-    //         const result = md.parse(data)
-    //         console.log('result', result)
-
-    //         return result
-    //     })
+    ]).sort( byTimeThenNull )
 }
