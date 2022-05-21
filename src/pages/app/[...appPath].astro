@@ -2,8 +2,7 @@
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 
-import axios from 'axios'
-
+import { DoesItAPI } from '~/helpers/api/client.js'
 import { catchRedirectResponse } from '~/helpers/astro/request.js'
 import {
     getVideoImages,
@@ -27,33 +26,19 @@ if ( redirectResponse !== null ) {
 // so that we don't have extra parts for
 // urls like /:type/:slug/benchmarks
 const [
-    pathType,
+    ,
     pathSlug,
     subSlug = null
 ] = getPathPartsFromAstroRequest( Astro.request )
 
 const isBenchmarkPage = subSlug === 'benchmarks'
 
-// Create an empty API URL
-const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
-
-// Use request path parts to set api url path
-apiUrl.pathname = `/api/${ pathType }/${ pathSlug }.json`
-
 
 // Astro Request reference
 // https://docs.astro.build/en/reference/api-reference/#astrorequests
 
-// console.log('Astro.params', Astro.params )
-// console.log('Astro.request.url', Astro.request.url )
-// console.log('Astro.site.pathname', Astro.site.pathname )
-// console.log('Astro.request', Astro.request )
-
-const appListing = await axios.get( apiUrl.toString() )
-    .then( response => {
-        // console.log( 'response', response )
-        return response.data
-    })
+// Request App data from API
+const appListing = await DoesItAPI.app( pathSlug ).get()
 
 const listingDetails = new ListingDetails( appListing )
 
