@@ -30,10 +30,10 @@ const defaultFetchMethod = async function (...args) {
 
 const HTTP_METHODS = [
     'GET',
-    'POST',
-    'PUT',
-    'DELETE',
-    'PATCH'
+    // 'POST',
+    // 'PUT',
+    // 'DELETE',
+    // 'PATCH'
 ]
 
 const apiBaseUrl = `${ getApiUrl().replace(/\/$/, '') }/api`
