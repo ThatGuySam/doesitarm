@@ -4,15 +4,18 @@ import {
     generateAPI
 } from '~/helpers/api/client.js'
 
+import {
+    isString
+} from '~/helpers/check-types.js'
 
 const listingsCases = [
 
     // Spotify
     [
-        '/app/spotify',
+        '/api/app/spotify.json',
         {
             generateOptions: {},
-            method: DoesItAPI => DoesItAPI.app.spotify.get(),
+            method: DoesItAPI => DoesItAPI.app.spotify,
             expected: {
                 name: 'Spotify',
             }
@@ -21,37 +24,43 @@ const listingsCases = [
 
     // Electron
     [
-        '/app/electron-framework',
+        '/api/app/electron-framework.json',
         {
             generateOptions: {},
-            method: DoesItAPI => DoesItAPI.app('electron-framework').get(),
-            expected: {
-                name: 'Electron Framework',
-            }
+            method: DoesItAPI => DoesItAPI.app('electron-framework'),
+            expected: { name: 'Electron Framework' }
         }
     ],
 
-    // Express VPN Benchmarks
+    // Express VPN
     [
-        '/app/expressvpn/benchmarks/',
+        '/api/app/expressvpn.json',
         {
             generateOptions: {},
-            method: DoesItAPI => DoesItAPI.app.expressvpn.get(),
-            expected: {
-                name: 'ExpressVPN',
-            }
+            method: DoesItAPI => DoesItAPI.app.expressvpn,
+            expected: { name: 'ExpressVPN' }
         }
     ],
 
     // Solo App URL
     [
-        '/app/solo',
+        '/api/app/solo.json',
         {
             generateOptions: {},
-            method: DoesItAPI => DoesItAPI.app('solo').url,
-            expected: result => result.includes( '/app/solo' )
+            method: DoesItAPI => DoesItAPI.app('solo'),
+            expected: { name: 'SOLO' }
         }
     ],
+
+    // Page 2 of App Kinds
+    [
+        '/api/kind/app/2.json',
+        {
+            generateOptions: {},
+            method: DoesItAPI => DoesItAPI('kind/app')(2),
+            expected: result => isString( result.nextPage )
+        }
+    ]
 ]
 
 
@@ -64,7 +73,13 @@ test( 'API has valid responses', async t => {
 
         const DoesItAPI = generateAPI( listingCase.generateOptions )
 
-        const result = await listingCase.method( DoesItAPI )
+        const apiMethod = listingCase.method( DoesItAPI )
+
+        // Assert that the apiMethod url is correct
+        t.is( (new URL(apiMethod.url)).pathname, caseEndpoint, `API endpoint '${ caseEndpoint }'` )
+
+        // Run get request to fetch our data
+        const result = await apiMethod.get()
 
         // If expected is a function then call it
         // Otherwise, compare the result to the expected
