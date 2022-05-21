@@ -97,10 +97,13 @@
                         </div>
 
                         <div
-                            v-html="makeHighlightedResultTitle( listing.storkResult )"
+                            v-html="listing.name"
                         />
 
-                        <div class="text-xs leading-5 font-light">
+                        <div
+                            v-if="listing.storkResult"
+                            class="text-xs leading-5 font-light"
+                        >
                             <div
                                 v-for="(excerpt, i) in listing.storkResult.excerpts"
                                 :key="`excerpt-${i}`"
@@ -238,8 +241,8 @@ export default {
         RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
     },
     props: {
-        appList: {
-            type: Array,
+        kindPage: {
+            type: Object,
             required: true
         },
         noEmailSubscribe: {
@@ -267,6 +270,9 @@ export default {
         }
     },
     computed: {
+        appList () {
+            return this.kindPage.items
+        },
         initialList () {
             return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
         },
@@ -452,7 +458,7 @@ export default {
 
             this.listingsResults = storkQuery.results.map( result => {
                 return {
-                    name: result.entry.title,
+                    name: makeHighlightedResultTitle( result ),
                     endpoint: result.entry.url,
                     slug: '',
                     category: {

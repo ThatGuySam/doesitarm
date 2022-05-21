@@ -7,6 +7,8 @@
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 
+import { DoesItAPI } from '~/helpers/api/client.js'
+
 import Layout from '../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 import ListSummary from '~/components/list-summary.vue'
@@ -16,6 +18,7 @@ import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
+const homePageKindPage = await DoesItAPI.kind.app(1).get()
 
 ---
 <Layout
@@ -43,7 +46,7 @@ import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
             </div>
 
             <Search
-                app-list={[]}
+                kind-page={homePageKindPage}
 
                 client:load
             >
