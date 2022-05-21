@@ -72,6 +72,9 @@ export function generateAPI ( {
             return generateAPI({ apiUrl: `${url}/${propKey}` })
 
         },
+        // Handles when () goes after a property key
+        // Example: DoesItAPI() or DoesItAPI.app()
+        // Proxy.handler.apply - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/apply
         apply({ url }, thisArg, [arg] = []) {
             const apiUrl = arg ? `${url}/${arg}` : url
             return generateAPI({ apiUrl: apiUrl })
