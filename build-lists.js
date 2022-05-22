@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
 import memoize from 'fast-memoize'
+import has from 'just-has'
 
 import buildAppList from '~/helpers/build-app-list.js'
 import buildGamesList from '~/helpers/build-game-list.js'
@@ -294,31 +295,35 @@ class BuildLists {
 
     getListArrayMemoized = memoize( this.getListArray.bind( this ) )
 
-    getListByCategories ( listName ) {
-        console.log(`getListByCategories run ${ timeRunGetListByCategories += 1 } times`)
+    makeAppsByCategory () {
+        // Intialize empty category lists
+        // so empty categories still get defined
+        const emptyCategories = Object.fromEntries(
+            Object.keys( categories ).map( categorySlug => [ categorySlug, [] ])
+        )
 
-        const list = this.getListArrayMemoized( listName )
+        const appsByCategory = this.getListArrayMemoized( 'app' ).reduce( ( categories, app ) => {
 
-        return list.reduce( ( categories, app ) => {
+            const categorySlug = app.category.slug
 
-            const category = app.category
-
-            if ( !categories[category] ) {
-                categories[category] = []
+            if ( !categories[categorySlug] ) {
+                throw Error(`Category ${categorySlug} not defined`)
             }
 
-            categories[category].push( app )
+            categories[categorySlug].push( app )
 
             return categories
-        }, {} )
+        }, emptyCategories )
+
+        return appsByCategory
     }
 
-    getListByCategoriesMemoized = memoize( this.getListByCategories.bind( this ) )
+    getAppsByCategory = this.makeAppsByCategory//memoize( this.makeAppsByCategory.bind( this ) )
 
-    getCategoryList ( category, listName = 'app' ) {
-        const list = this.getListByCategoriesMemoized( listName )
+    getAppCategoryList ( category ) {
+        const categoryLists = this.getAppsByCategory()
 
-        return list[category] || []
+        return categoryLists[category]
     }
 
     makeKindLists () {
@@ -331,8 +336,9 @@ class BuildLists {
         } ) )
 
         // Add getters for categories
+        // Homebrew category overrides Homebrew app type from above
         for ( const categorySlug in categories ) {
-            getters[categorySlug] = () => this.getCategoryList( categorySlug )
+            getters[categorySlug] = () => this.getAppCategoryList( categorySlug )
         }
 
         const kindLists = {}
@@ -447,8 +453,6 @@ class BuildLists {
                     })
                 }
 
-                // console.log(`Saving endpoint "${endpoint}" to "${endpointPath}"`)
-
                 // Ensure the directory exists
                 await fs.ensureDir( endpointDirectory )
 
@@ -531,10 +535,6 @@ class BuildLists {
         // Save kind lists
         await this.saveKinds()
 
-
-        // console.log('appList', appList)
-
-        // console.log('this.allVideoAppsList', this.allVideoAppsList.length, this.allVideoAppsList[0])
 
         // Add list based routes
         for ( const listKey in this.lists ) {
