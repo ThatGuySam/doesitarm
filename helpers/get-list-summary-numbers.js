@@ -1,6 +1,9 @@
 import statuses from '~/helpers/statuses'
 
 export default function ( appList ) {
+    if ( !Array.isArray( appList ) ) {
+        throw new Error(`List must be an array but is ${typeof appList}`)
+    }
 
     const totalApps = appList.length
 
