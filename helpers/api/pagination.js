@@ -3,6 +3,12 @@ export const defaultPerPage = 20
 
 export class PaginatedList {
     constructor({ list, perPage = defaultPerPage }) {
+
+        // Catch errors if the list is not an array or a function
+        if ( !Array.isArray( list ) && typeof list !== 'function' ) {
+            throw new Error(`List must be an array or a function but is ${typeof list}`)
+        }
+
         this.listArg = list
         this.perPage = perPage
     }
@@ -17,6 +23,11 @@ export class PaginatedList {
     }
 
     get total () {
+        // Catch errors if the list is not an array or a function
+        if ( !Array.isArray( this.list ) ) {
+            throw new Error(`List must be an array or a function but is ${typeof list}`)
+        }
+
         return this.list.length
     }
 
