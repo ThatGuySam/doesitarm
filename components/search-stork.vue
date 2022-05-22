@@ -3,15 +3,13 @@
         ref="search-container"
         class="search-container w-full space-y-4"
     >
-
         <slot name="before-search">
             <div class="list-summary-wrapper flex justify-center text-center text-sm">
-
                 <ListSummary
-                    :app-list="appList"
+                    v-if="!!kindPage.summary"
+                    :custom-numbers="kindPage.summary"
                     class="max-w-4xl"
                 />
-
             </div>
         </slot>
 
