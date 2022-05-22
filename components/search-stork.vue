@@ -225,7 +225,7 @@ import {
 
 import Carbon from '~/components/carbon-inline.vue'
 import LinkButton from '~/components/link-button.vue'
-// import RelativeTime from '~/components/relative-time.vue'
+import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
 
 let storkClient = null
@@ -233,10 +233,9 @@ let storkClient = null
 export default {
     components: {
         Carbon,
-        // EmailSubscribe: () => process.client ? import('~/components/email-subscribe.vue') : null,
         ListSummary,
+        RelativeTime,
         LinkButton,
-        RelativeTime: () => process.client ? import('~/components/relative-time.vue') : null
     },
     props: {
         kindPage: {
