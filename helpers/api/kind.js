@@ -28,7 +28,8 @@ function makeKindFilePath ({ kindSlug, number }) {
 }
 
 
-// This may provide better performance via memoization
+// let timeSummaryRun = 0
+
 export class KindList extends PaginatedList {
     constructor({
         list,
@@ -43,12 +44,11 @@ export class KindList extends PaginatedList {
     baseRoute = makeKindEndpoint({ kindSlug: this.kindSlug })
 
     makeSummary () {
-        return getListSummaryNumbers({
-            list: this.list,
-        })
+        // console.log( `Summary run ${ timeSummaryRun += 1 } times` )
+        return getListSummaryNumbers( this.list )
     }
 
-    summary = memoize( this.makeSummary.bind( this ) )
+    summary = this.makeSummary()
 
     get routes () {
         return this.pages.map( kindPage => {
