@@ -484,7 +484,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Agenda](https://agenda.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Airmail](https://airmailapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v4.5.1 - [Release History](https://apps.apple.com/app/apple-store/id918858936)
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
-* [Anki](https://apps.ankiweb.net/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/495)
+* [Anki](https://apps.ankiweb.net/) - ✳️ Yes, fully supported as of 2.1.52 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/495)
 * [AnyDesk](https://anydesk.com/en/downloads/mac-os) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Avid Link](https://www.avid.com/products/avid-link#Downloads) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
 * [Avid MediaCentral](https://www.avid.com/products/mediacentral) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
