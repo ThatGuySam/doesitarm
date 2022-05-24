@@ -145,6 +145,10 @@ class BuildLists {
         }
     ]
 
+    getListOptions ( listName ) {
+        return this.listsOptions.find( listOption => listOption.name === listName )
+    }
+
     shouldHaveRelatedVideos ( app ) {
         const appType = getAppType( app )
 
@@ -328,9 +332,12 @@ class BuildLists {
 
     makeKindLists () {
         const getters = Object.fromEntries( Object.entries( this.lists ).map( ([ listName ]) => {
+
+            const listEndpointPrefix = this.getListOptions( listName ).endpointPrefix
+
             return [
                 // Key
-                listName,
+                listEndpointPrefix,
                 () => this.getListArrayMemoized( listName )
             ]
         } ) )
@@ -338,12 +345,17 @@ class BuildLists {
         // Add getters for categories
         // Homebrew category overrides Homebrew app type from above
         for ( const categorySlug in categories ) {
+            // Throw if category already defined
+            if ( getters[categorySlug] ) throw Error(`Category ${categorySlug} already defined`)
+
             getters[categorySlug] = () => this.getAppCategoryList( categorySlug )
         }
 
         const kindLists = {}
 
         for ( const kindSlug in getters ) {
+            // Throw if kindSlug already defined
+            if ( kindLists[kindSlug] ) throw Error(`Kind ${kindSlug} already defined`)
 
             kindLists[ kindSlug ] = new KindList({
                 // Get list method
