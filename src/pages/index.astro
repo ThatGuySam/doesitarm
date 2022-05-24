@@ -11,15 +11,14 @@ import { DoesItAPI } from '~/helpers/api/client.js'
 
 import Layout from '../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
-import ListSummary from '~/components/list-summary.vue'
+// import ListSummary from '~/components/list-summary.vue'
 import ListEndButtons from '~/components/list-end-buttons.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 
-
-import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
-
 const homePageKindPage = await DoesItAPI.kind.app(1).get()
+const allAppsSummary = await DoesItAPI('all-apps-summary').get()
 
+// console.log( allAppsSummary )
 ---
 <Layout
 	headOptions={ {
@@ -46,27 +45,11 @@ const homePageKindPage = await DoesItAPI.kind.app(1).get()
             </div>
 
             <Search
-                kind-page={homePageKindPage}
+                kind-page={ homePageKindPage }
+                list-summary={ allAppsSummary }
 
                 client:load
-            >
-                <template v-slot:before-search>
-                    <div class="list-summary-wrapper flex justify-center text-center text-sm">
-
-                        <ListSummary
-                            custom-numbers={{
-                                total: 4,
-                                nativePercent: 25,
-                                rosettaPercent: 25,
-                                unreportedPercent: 25,
-                                unsupportedPercent: 25
-                            }}
-                            class="max-w-4xl"
-                        />
-
-                    </div>
-                </template>
-            </Search>
+            />
 
             <ListEndButtons query="query" />
 
