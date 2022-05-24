@@ -6,8 +6,8 @@
         <slot name="before-search">
             <div class="list-summary-wrapper flex justify-center text-center text-sm">
                 <ListSummary
-                    v-if="!!kindPage.summary"
-                    :custom-numbers="kindPage.summary"
+                    v-if="summary !== null"
+                    :custom-numbers="summary"
                     class="max-w-4xl"
                 />
             </div>
@@ -257,7 +257,11 @@ export default {
         quickButtons: {
             type: Array,
             default: () => defaultStatusFilters
-        }
+        },
+        listSummary : {
+            type: Object,
+            default: () => null
+        },
     },
     data: function () {
         return {
@@ -299,6 +303,17 @@ export default {
         queryParts () {
             return this.query.split(/\s+/).filter(part => part.length > 0)
         },
+        summary () {
+            if ( this.listSummary !== null ) {
+                return this.listSummary
+            }
+
+            if ( !!this.kindPage.summary ) {
+                return this.kindPage.summary
+            }
+
+            return null
+        }
     },
     mounted () {
         // Setup stork client
