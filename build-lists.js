@@ -13,6 +13,7 @@ import buildHomebrewList from '~/helpers/build-homebrew-list.js'
 import buildVideoList from '~/helpers/build-video-list.js'
 import buildDeviceList from '~/helpers/build-device-list.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
+import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
 import { videosRelatedToApp } from '~/helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from '~/helpers/build-payload.js'
@@ -536,6 +537,18 @@ class BuildLists {
         return
     }
 
+    async saveAllAppsSummary () {
+        const summaryNumbers = getListSummaryNumbers( [
+            ...this.getListArray('app'),
+            ...this.getListArray('game'),
+            ...this.getListArray('homebrew'),
+        ] )
+
+        await this.saveToJson( summaryNumbers, `${apiDirectory}/all-apps-summary.json` )
+
+        return summaryNumbers
+    }
+
     async build () {
 
         // Pull in and layer data from all sources
@@ -543,6 +556,8 @@ class BuildLists {
 
         // Save the data to respective files as lists
         await this.saveAppLists()
+
+        await this.saveAllAppsSummary()
 
         // Save kind lists
         await this.saveKinds()
