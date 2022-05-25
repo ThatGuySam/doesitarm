@@ -3,7 +3,6 @@ import fs from 'fs-extra'
 
 import nuxtConfig from '~/nuxt.config.js'
 
-
 export const nuxtHead = nuxtConfig.head
 
 export async function getNetlifyConfig () {
@@ -143,6 +142,12 @@ export class PageHead {
         // console.log('this.defaultMeta', this.defaultMeta)
         return [
             ...this.defaultMeta,
+
+            {
+                'property':  'twitter:url',
+                'content': this.pageUrlString
+            },
+
             ...this.meta
         ]
     }
