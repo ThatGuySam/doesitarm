@@ -418,6 +418,8 @@ class BuildLists {
             if ( kindLists[ kindName ].list.length === 0 ) continue
 
             kindIndex[ categorySlug ].description = kindLists[ kindName ].summary.sampleNames
+            // Save kindName
+            kindIndex[ categorySlug ].kindName = kindName
         }
 
         // Save the index
