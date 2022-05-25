@@ -77,6 +77,8 @@ export class StorkClient {
 
         // Stork instance
         this.stork = options.stork || null
+
+        this.cancelCurrentQuery = null
     }
 
     setupState = 'not-setup'
@@ -95,9 +97,41 @@ export class StorkClient {
     // Loads the Stork WASM and Index into the browser on first query
     // so that we don't have to load them initially.
     async lazyQuery ( query ) {
-        if ( !this.isSetup ) await this.setup()
 
-        return this.search( query )
+        // Sleep
+        // await new Promise( resolve => setTimeout( resolve, 50000000 ) )
+
+        const result = await new Promise( async ( resolve, reject ) => {
+
+            // If there an existing query to cancel
+            // then cancel it
+            // so that we don't race bad conditions
+            // such as earrly queries beating the final one
+            if ( this.cancelCurrentQuery !== null ) {
+                this.cancelCurrentQuery()
+            }
+
+            // Plugin this promise to our cancel method
+            this.cancelCurrentQuery = () => { reject({ message: `Cancelled previous query for ${ query }`, canceled: true }) }
+
+            if ( !this.isSetup ) await this.setup()
+
+            // console.log('debounce', this.query)
+
+            const result = this.search( query )
+
+            // this.cancelCurrentQuery = null
+
+            resolve( result )
+
+        }).catch( err => {
+            console.log('Query rejected', err)
+            return null
+        })
+
+        console.log( 'result', result )
+
+        return result
     }
 
     waitForSetup () {
