@@ -201,6 +201,18 @@ export const categories = {
     },
 }
 
+// Respective directory for each category
+export function getCategoryKindName ( categorySlug ) {
+    if ( categorySlug === 'homebrew' ) {
+        return 'formula'
+    }
+
+    if ( categorySlug === 'games' ) {
+        return 'game'
+    }
+
+    return categories[ categorySlug ].slug
+}
 
 export const categoriesById = Object.fromEntries( Object.entries( categories ).map( ([ key, category ]) => [category.id, { ...category, key } ] ) )
 
