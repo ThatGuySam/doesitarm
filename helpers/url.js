@@ -74,5 +74,18 @@ export function getPartPartsFromUrl ( urlString ) {
 export function getPathPartsFromAstroRequest ( AstroRequest ) {
     // Parse the request url
 
-    return getPartPartsFromUrl ( AstroRequest.url )
+    const url = new URL( AstroRequest.url, 'https://doesitarm.com' )
+
+    const [
+        routeType,
+        pathSlug,
+        subSlug = null
+    ] = getPartPartsFromUrl ( AstroRequest.url )
+
+    return {
+        pathname: url.pathname,
+        routeType,
+        pathSlug,
+        subSlug
+    }
 }

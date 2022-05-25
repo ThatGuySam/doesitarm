@@ -25,11 +25,10 @@ if ( redirectResponse !== null ) {
 // Get type and slug from the request path
 // so that we don't have extra parts for
 // urls like /:type/:slug/benchmarks
-const [
-    ,
+const {
     pathSlug,
     subSlug = null
-] = getPathPartsFromAstroRequest( Astro.request )
+ } = getPathPartsFromAstroRequest( Astro.request )
 
 const isBenchmarkPage = subSlug === 'benchmarks'
 

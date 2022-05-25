@@ -19,10 +19,13 @@ import Listing from '../../components/default-listing.astro'
 // Get type and slug from the request path
 // so that we don't have extra parts for
 // urls like /:type/:slug/benchmarks
-const pathParts = getPathPartsFromAstroRequest( Astro.request )
+const {
+    pathname,
+    // pathSlug,
+    // subSlug = null
+ } = getPathPartsFromAstroRequest( Astro.request )
 
-// Create an empty API URL
-const apiUrl = new URL( import.meta.env.PUBLIC_API_DOMAIN )
+
 
 // Use request path parts to set api url path
 // apiUrl.pathname = `/api/${ pathType }/${ pathSlug }.json`
@@ -65,5 +68,5 @@ if ( redirectResponse !== null ) {
     }}
 >
 
-    Kind: { JSON.stringify( pathParts ) }
+    Kind: { JSON.stringify( pathname ) }
 </Layout>
