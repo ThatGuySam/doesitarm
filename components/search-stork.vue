@@ -169,6 +169,7 @@
                             </LinkButton>
 
                             <LinkButton
+                                v-if="listing.endpoint.length"
                                 :href="listing.endpoint"
                                 :class="[
                                     'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
