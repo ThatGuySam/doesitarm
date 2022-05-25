@@ -85,7 +85,10 @@
                     <!-- app.endpoint: {{ app.endpoint }} -->
                     <a
                         :href="listing.endpoint"
-                        class="flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5"
+                        :class="[
+                            'flex flex-col justify-center inset-x-0 hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-y-2 -mx-5 pl-5 md:pl-20 pr-6 md:pr-64 py-5',
+                            listing?.linkClass
+                        ]"
                         style="transition-property: border;"
                     >
 
