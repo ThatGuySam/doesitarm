@@ -18,7 +18,10 @@ import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 import { videosRelatedToApp } from '~/helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from '~/helpers/build-payload.js'
 
-import { categories, getAppCategory } from '~/helpers/categories.js'
+import {
+    categories,
+    makeSummaryOfListings
+} from '~/helpers/categories.js'
 import {
     getAppType,
     getAppEndpoint,
@@ -374,7 +377,7 @@ class BuildLists {
         }).flat()
     }
 
-    saveKinds = async function () {
+    async saveKinds () {
 
         const kindLists = this.makeKindLists()
 
@@ -401,6 +404,21 @@ class BuildLists {
             console.timeEnd(endpointMethodName)
             console.log( '\n\n' )
         }
+
+        const kindIndex = categories
+
+        // Delete no-category
+        delete kindIndex['no-category']
+
+        // Store sample names into kindIndex as description
+        for ( const categorySlug in kindIndex ) {
+            kindIndex[categorySlug].description = kindLists[categorySlug].summary.sampleNames
+        }
+
+        console.log( 'kindIndex', kindIndex )
+
+        // Save the index
+        await this.saveToJson( kindIndex, `${ apiDirectory }/kind/index.json` )
 
     }
 
