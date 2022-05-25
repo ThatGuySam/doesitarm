@@ -10,6 +10,9 @@ import {
     PaginatedList,
     defaultPerPage
 } from '~/helpers/api/pagination.js'
+import {
+    makeSummaryOfListings
+} from '~/helpers/categories.js'
 
 function makeKindEndpoint ({ kindSlug, number = null }) {
     if ( number ) {
@@ -45,7 +48,10 @@ export class KindList extends PaginatedList {
 
     makeSummary () {
         // console.log( `Summary run ${ timeSummaryRun += 1 } times` )
-        return getListSummaryNumbers( this.list )
+        return {
+            ...getListSummaryNumbers( this.list ),
+            sampleNames: makeSummaryOfListings({ list: this.list })
+        }
     }
 
     summary = this.makeSummary()
