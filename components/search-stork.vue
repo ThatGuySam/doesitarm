@@ -25,7 +25,7 @@
                     type="search"
                     placeholder="Type to Search"
                     autocomplete="off"
-                    @keyup="queryResults(query); scrollInputToTop()"
+                    @keyup="handleSearchInput"
                 >
                 <div class="search-input-separator border-white border-t-2" />
             </div>
@@ -75,6 +75,9 @@
                 :key="`listings-chunk-${i}`"
                 class="listings-container divide-y divide-gray-700"
             >
+                <!-- <pre>
+                    {{ listings }}
+                </pre> -->
                 <li
                     v-for="(listing, i) in listings"
                     :key="`${ listing.slug }-${i}`"
@@ -271,7 +274,8 @@ export default {
         return {
             query: '',
             hasStartedAnyQuery: false,
-            listingsResults: []
+            listingsResults: [],
+            waitingForQuery: false
         }
     },
     computed: {
@@ -282,6 +286,9 @@ export default {
             return this.initialLimit !== null ? this.appList.slice(0, this.initialLimit) : this.appList
         },
         listings () {
+            // Build filler listings to use while loading results
+            if ( this.waitingForQuery ) return Array( 10 ).fill({ name: 'Loading', slug: 'loading', endpoint: '', linkClass: 'shimmer pointer-events-none' })
+
             if (!this.hasSearchInputText) return this.initialList
 
             return this.listingsResults
@@ -452,16 +459,17 @@ export default {
                 behavior: 'smooth'
             })
         },
-        async queryResults (rawQuery) {
 
-            // Snap results scroll position back to top
-            // this.$refs['search-container'].scrollTop = 0
-
-            this.$emit('update:query', rawQuery)
+        // Called on input and when a filter is toggled
+        async queryResults ( rawQuery ) {
 
             // If our query is empty
             // then bail
-            if (rawQuery.length === 0) return
+            if ( rawQuery.trim().length === 0 ) return
+
+            this.waitingForQuery = true
+
+            this.$emit('update:query', rawQuery)
 
             // Declare that at least one query has been made
             this.hasStartedAnyQuery = true
@@ -470,7 +478,11 @@ export default {
 
             const storkQuery = await storkClient.lazyQuery( rawQuery )
 
-            console.log('storkQuery', storkQuery)
+            // If the query response is empty
+            // then return
+            if ( storkQuery === null ) {
+                return
+            }
 
             this.listingsResults = storkQuery.results.map( result => {
                 return {
@@ -484,8 +496,18 @@ export default {
                 }
             })
 
-            console.log('storkQuery.results', storkQuery.results)
-        }
+            // Switch from loading state and reveal the results
+            this.waitingForQuery = false
+
+            // console.log('this.listingsResults', this.listingsResults)
+        },
+
+        handleSearchInput ( event ) {
+            const inputValue = event.target.value
+
+            this.scrollInputToTop()
+            this.queryResults( inputValue )
+        },
     }
 }
 </script>
