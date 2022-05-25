@@ -246,3 +246,10 @@ export function findCategoryForTagsSet ( tags ) {
 
     return null
 }
+
+export function makeSummaryOfListings ({ list, length = 25 } = {}) {
+    return list
+        .slice(0, length)
+        .map( listing => listing.name )
+        .join(', ') + ', etc...'
+}
