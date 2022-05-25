@@ -20,7 +20,7 @@ import { buildVideoPayload, buildAppBenchmarkPayload } from '~/helpers/build-pay
 
 import {
     categories,
-    makeSummaryOfListings
+    getCategoryKindName
 } from '~/helpers/categories.js'
 import {
     getAppType,
@@ -412,10 +412,13 @@ class BuildLists {
 
         // Store sample names into kindIndex as description
         for ( const categorySlug in kindIndex ) {
-            kindIndex[categorySlug].description = kindLists[categorySlug].summary.sampleNames
-        }
+            const kindName = getCategoryKindName( categorySlug )
 
-        console.log( 'kindIndex', kindIndex )
+            // Skip empty categories
+            if ( kindLists[ kindName ].list.length === 0 ) continue
+
+            kindIndex[ categorySlug ].description = kindLists[ kindName ].summary.sampleNames
+        }
 
         // Save the index
         await this.saveToJson( kindIndex, `${ apiDirectory }/kind/index.json` )
