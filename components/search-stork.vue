@@ -97,7 +97,7 @@
                             {{ getIconForListing( listing ) }}
                         </div>
 
-                        <div
+                        <h3
                             v-html="listing.name"
                         />
 
