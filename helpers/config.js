@@ -3,6 +3,8 @@ import fs from 'fs-extra'
 
 import nuxtConfig from '~/nuxt.config.js'
 
+import { getSiteUrl } from '~/helpers/url.js'
+
 export const nuxtHead = nuxtConfig.head
 
 export async function getNetlifyConfig () {
@@ -100,7 +102,7 @@ export class PageHead {
             link = [],
             structuredData = null,
 
-            domain,
+            domain = getSiteUrl(),
             pathname,
         } = options
 
