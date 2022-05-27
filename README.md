@@ -13,6 +13,15 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 [Do you want to help with M1 testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
 
+
+## Sponsors
+
+Does It ARM is an open source project with its ongoing development made possible by the support by Affiliate Partners such as WP Engine. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
+[![WP Engine Banner](https://user-images.githubusercontent.com/2830379/170784040-be37bafd-382d-4ca5-8aa5-ee82fd389e64.png)](https://shareasale.com/r.cfm?b=394686&u=1686096&m=41388&urllink=https://wpengine.com/resources/github-wordpress-integration/&afftrack=)
+
+
+
+
 ## Legend
 * ✅ Yes, Native Apple Silicon Support
 * ✳️ Yes, works via Translation or Virtualization
