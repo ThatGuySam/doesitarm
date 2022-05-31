@@ -612,6 +612,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Prizmo](https://creaceed.com/prizmo) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Release Notes](https://creaceed.com/prizmo/history) [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/473005/5114)
 * [ProtonMail Bridge](https://proton.me/mail/bridge) - ✳️ Yes, runs via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/738#issue-960386072)
 * [qBittorrent](https://www.qbittorrent.org/) - ✳️ Yes, runs via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/595#issue-830367382) [Native Issue](https://github.com/qbittorrent/qBittorrent/issues/14379)
+* [QuickPresent App](https://www.quickpresent.app) - ✅ Yes, Full Native Apple Silicon Support 
 * [Quiet](https://lighthouse16.com/quiet/) - ✅ Yes, fully supported as of v2.6.7 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
 * [Receipts for Mac](https://www.receipts-app.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/635278/5114)
 * [Reeder](https://reederapp.com/) - ✅ Yes, Native Apple Silicon Support - [Report #1](https://github.com/ThatGuySam/doesitarm/issues/674#issue-899215422)
@@ -718,7 +719,6 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 #### Social and Communication
 
-* [QuickPresent App](https://www.quickpresent.app) - ✅ Yes, Full Native Apple Silicon Support 
 * [AirMessage](https://airmessage.org/install/) - ✅ Yes, Native Apple Silicon Support as of v3.2.1 - [Release Notes](https://github.com/airmessage/airmessage-server-legacy/releases/tag/rel-3.2.1) [Verification](https://github.com/ThatGuySam/doesitarm/issues/881#issue-1130176479)
 * [AliWangWang](https://wangwang.taobao.com/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/221#issuecomment-869537398)
 * [Aviary Twitter Client](https://apps.apple.com/us/app/aviary/id1522043420) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
