@@ -208,6 +208,28 @@
             </ul>
 
         </div>
+
+        <nav
+            v-if="showingInitialList"
+            class="pagination w-full flex justify-center"
+        >
+            <LinkButton
+                v-if="nextPageUrl"
+                :href="nextPageUrl"
+
+                class="border-2 border-gray-700 bg-dark hover:bg-darkest hover:border-white hover:border-opacity-50"
+            >
+                <span>Next</span>
+
+                <svg
+                    class="h-5 w-5 -mr-2"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <use href="#chevron-right" />
+                </svg>
+            </LinkButton>
+        </nav>
     </div>
 </template>
 
@@ -311,6 +333,9 @@ export default {
         hasSearchInputText () {
             return this.query.length > 0
         },
+        showingInitialList () {
+            return !this.hasSearchInputText
+        },
         queryParts () {
             return this.query.split(/\s+/).filter(part => part.length > 0)
         },
@@ -324,6 +349,16 @@ export default {
             }
 
             return null
+        },
+        nextPageUrl () {
+            if ( this.kindPage.nextPage.length === 0 ) return null
+
+            return this.kindPage.nextPage
+        },
+        previousPageUrl () {
+            if ( this.kindPage.previousPage.length === 0 ) return null
+
+            return this.kindPage.previousPage
         }
     },
     mounted () {
