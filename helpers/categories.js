@@ -1,4 +1,6 @@
 // Universal JS imports only
+import shuffle from 'just-shuffle'
+
 import { makeSlug } from './slug.js'
 
 export function makeCategorySlug ( categoryName ) {
@@ -262,9 +264,19 @@ export function findCategoryForTagsSet ( tags ) {
     return null
 }
 
-export function makeSummaryOfListings ({ list, length = 25 } = {}) {
-    return list
+const sampleListFormatter = new Intl.ListFormat( 'en', { style: 'long', type: 'unit' })
+
+export function makeSummaryOfListings ({
+    list,
+    length = 25,
+    random = false,
+    suffix = ', etc...',
+} = {}) {
+    const listToSample = random ? shuffle( list ) : list
+
+    const samples = listToSample
         .slice(0, length)
         .map( listing => listing.name )
-        .join(', ') + ', etc...'
+
+    return sampleListFormatter.format( samples ) + suffix
 }
