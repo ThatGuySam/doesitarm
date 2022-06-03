@@ -84,10 +84,16 @@ export class KindList extends PaginatedList {
                 number: kindPage.number + 1
             }) : ''
 
+            const previousPage = kindPage.hasPreviousPage ? makeKindEndpoint({
+                kindSlug: this.kindSlug,
+                number: kindPage.number - 1
+            }) : ''
+
             return {
                 path: makeKindFilePath({ kindSlug: this.kindSlug, number: kindPage.number }),
                 content: {
                     number: kindPage.number,
+                    previousPage,
                     nextPage,
                     summary: this.summary,
                     items: kindPage.items

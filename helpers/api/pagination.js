@@ -52,6 +52,7 @@ export class PaginatedList {
         return {
             number: pageNumber,
             items,
+            hasPreviousPage: this.hasPage( pageNumber - 1 ),
             hasNextPage: this.hasPage( pageNumber + 1 ),
             get json() {
                 return JSON.stringify( items )
