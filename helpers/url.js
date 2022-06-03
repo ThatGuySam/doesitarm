@@ -79,7 +79,7 @@ export function getPathPartsFromAstroRequest ( AstroRequest ) {
     const [
         routeType,
         pathSlug,
-        subSlug = null
+        subSlug
     ] = getPartPartsFromUrl ( AstroRequest.url )
 
     return {
