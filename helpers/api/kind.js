@@ -50,7 +50,13 @@ export class KindList extends PaginatedList {
         // console.log( `Summary run ${ timeSummaryRun += 1 } times` )
         return {
             ...getListSummaryNumbers( this.list ),
-            sampleNames: makeSummaryOfListings({ list: this.list })
+            sampleNames: makeSummaryOfListings({ list: this.list }),
+            sampleNamesShort: makeSummaryOfListings({
+                list: this.list,
+                length: 5,
+                random: true,
+                suffix: ''
+            }),
         }
     }
 
