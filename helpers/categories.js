@@ -215,8 +215,8 @@ export function getCategoryKindName ( categorySlug ) {
     return categoryToKind[ categorySlug ]
 }
 
-export function getKindToCategory ( kindSlug ) {
-    return Object.keys( categories ).find( key => categoryToKind[ key ] === kind )
+export function getKindToCategorySlug ( kindSlug ) {
+    return Object.keys( categories ).find( key => categoryToKind[ key ] === kindSlug )
 }
 
 export const categoriesById = Object.fromEntries( Object.entries( categories ).map( ([ key, category ]) => [category.id, { ...category, key } ] ) )
