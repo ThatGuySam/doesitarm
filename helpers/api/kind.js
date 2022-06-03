@@ -87,6 +87,7 @@ export class KindList extends PaginatedList {
             return {
                 path: makeKindFilePath({ kindSlug: this.kindSlug, number: kindPage.number }),
                 content: {
+                    number: kindPage.number,
                     nextPage,
                     summary: this.summary,
                     items: kindPage.items
