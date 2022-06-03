@@ -82,6 +82,7 @@
     "just-has": "^2.1.0",
     "just-map-values": "^3.0.2",
     "just-replace-all": "^2.0.1",
+    "just-shuffle": "^4.0.1",
     "lazysizes": "^5.3.0-beta1",
     "markdown-it": "^11.0.1",
     "marked": "^1.2.7",
