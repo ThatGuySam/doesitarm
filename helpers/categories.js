@@ -201,15 +201,17 @@ export const categories = {
     },
 }
 
+// Maps categories to kinds and vice versa
+const categoryToKind = {
+    ...Object.fromEntries( Object.keys( categories ).map( key => [ key, key ] ) ),
+    'homebrew': 'formula',
+    'games': 'game',
+}
+
 // Respective directory for each category
 export function getCategoryKindName ( categorySlug ) {
-    if ( categorySlug === 'homebrew' ) {
-        return 'formula'
-    }
-
-    if ( categorySlug === 'games' ) {
-        return 'game'
-    }
+    return categoryToKind[ categorySlug ]
+}
 
     return categories[ categorySlug ].slug
 }
