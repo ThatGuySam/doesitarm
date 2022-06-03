@@ -213,7 +213,8 @@ export function getCategoryKindName ( categorySlug ) {
     return categoryToKind[ categorySlug ]
 }
 
-    return categories[ categorySlug ].slug
+export function getKindToCategory ( kindSlug ) {
+    return Object.keys( categories ).find( key => categoryToKind[ key ] === kind )
 }
 
 export const categoriesById = Object.fromEntries( Object.entries( categories ).map( ([ key, category ]) => [category.id, { ...category, key } ] ) )
