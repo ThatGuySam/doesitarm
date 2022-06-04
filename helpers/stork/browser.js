@@ -226,3 +226,73 @@ export class StorkClient {
         return
     }
 }
+
+
+export class StorkFilters {
+    constructor({
+        initialFilters = {}
+    } = {}) {
+        this.filters = {
+            ...initialFilters
+        }
+    }
+
+
+
+    get filtersForQuery () {
+        return Object.entries( this.filters ).map( ([ filterKey, filterValue ]) => {
+            return `${ filterKey }_${ filterValue }`
+        } ).join(' ')
+    }
+
+    isQueryValue ( filterNameOrQueryValue ) {
+        return filterNameOrQueryValue.includes('_')
+    }
+
+    getKeyAndValue ( filterQueryValue ) {
+        const [ key, value ] = filterQueryValue.split('_')
+        return { key, value }
+    }
+
+    getFilterNameAndValueFromString ( filterNameOrQueryValue ) {
+        if ( this.isQueryValue( filterNameOrQueryValue ) ) {
+            return this.getKeyAndValue( filterNameOrQueryValue )
+        }
+
+        return {
+            key: filterNameOrQueryValue,
+            value: null
+        }
+    }
+
+    toggleFilter ( filterNameOrQueryValue, filterValue = null ) {
+
+        const fromString = this.getFilterNameAndValueFromString( filterNameOrQueryValue )
+
+        const filterName = fromString.key
+        filterValue = filterValue || fromString.value
+
+        if ( !!this.filters[ filterName ] ) {
+            delete this.filters[ filterName ]
+
+            return
+        }
+
+        // Throw error if filter value is not a string
+        if ( typeof filterValue !== 'string' ) {
+            throw new Error(`Filter value must be a string. Got ${ typeof filterValue }`)
+        }
+
+        this.filters[ filterName ] = filterValue
+    }
+
+    hasFilter ( filterNameOrQueryValue ) {
+
+        const {
+            key : filterName,
+        } = this.getFilterNameAndValueFromString( filterNameOrQueryValue )
+
+
+        return !!this.filters[ filterName ]
+    }
+}
