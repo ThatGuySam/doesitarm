@@ -211,8 +211,26 @@
 
         <nav
             v-if="showingInitialList"
-            class="pagination w-full flex justify-center"
+            class="pagination w-full flex gap-6 justify-center"
         >
+
+            <LinkButton
+                v-if="previousPageUrl"
+                :href="previousPageUrl"
+
+                class="border-2 border-gray-700 bg-dark hover:bg-darkest hover:border-white hover:border-opacity-50"
+            >
+                <svg
+                    class="-scale-x-100 h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <use href="#chevron-right" />
+                </svg>
+
+                <span>Previous</span>
+            </LinkButton>
+
             <LinkButton
                 v-if="nextPageUrl"
                 :href="nextPageUrl"
@@ -222,13 +240,14 @@
                 <span>Next</span>
 
                 <svg
-                    class="h-5 w-5 -mr-2"
+                    class="h-5 w-5"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                 >
                     <use href="#chevron-right" />
                 </svg>
             </LinkButton>
+
         </nav>
     </div>
 </template>
@@ -350,15 +369,15 @@ export default {
 
             return null
         },
-        nextPageUrl () {
-            if ( this.kindPage.nextPage.length === 0 ) return null
-
-            return this.kindPage.nextPage
-        },
         previousPageUrl () {
             if ( this.kindPage.previousPage.length === 0 ) return null
 
             return this.kindPage.previousPage
+        },
+        nextPageUrl () {
+            if ( this.kindPage.nextPage.length === 0 ) return null
+
+            return this.kindPage.nextPage
         }
     },
     mounted () {
