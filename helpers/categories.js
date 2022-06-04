@@ -250,6 +250,11 @@ export function makeCategoryFilterFromListing ( listing ) {
     return `${ categoryFilterPrefix }${ getAppCategory( listing ).snakeSlug }`
 }
 
+export function makeCategoryFilterFromCategorySlug ( categorySlug ) {
+    const category = categories[ categorySlug ]
+    return `${ categoryFilterPrefix }${ category.snakeSlug }`
+}
+
 export function findCategoryForTagsSet ( tags ) {
 
     for ( const tag of tags ) {
