@@ -194,12 +194,14 @@ test('Can paginate', async (t) => {
                     {
                         number: 1,
                         hasNextPage: true,
+                        hasPreviousPage: false,
                         items: [1, 2],
                         json: '[1,2]'
                     },
                     {
                         number: 2,
                         hasNextPage: true,
+                        hasPreviousPage: true,
                         items: [3, 4],
                         json: '[3,4]'
                     },
@@ -208,6 +210,7 @@ test('Can paginate', async (t) => {
                     {
                         number: 5,
                         hasNextPage: false,
+                        hasPreviousPage: true,
                         items: [9],
                         json: '[9]'
                     }
