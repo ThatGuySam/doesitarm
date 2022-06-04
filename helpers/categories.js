@@ -244,6 +244,11 @@ export function getAppCategory (app) {
     return categories[app.category.slug]
 }
 
+const categoryFilterPrefix = 'category_'
+
+export function makeCategoryFilterFromListing ( listing ) {
+    return `${ categoryFilterPrefix }${ getAppCategory( listing ).snakeSlug }`
+}
 
 export function findCategoryForTagsSet ( tags ) {
 
