@@ -10,6 +10,8 @@ import sitemap from '@astrojs/sitemap'
 
 import { makeViteDefinitions } from './helpers/public-runtime-config.mjs'
 
+console.log( 'Running Astro Config File' )
+
 // https://astro.build/config
 export default defineConfig({
     publicDir: './static',
