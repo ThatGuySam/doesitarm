@@ -1,4 +1,4 @@
-import execa from 'execa'
+// import execa from 'execa'
 import fs from 'fs-extra'
 import has from 'just-has'
 import TOML from '@iarna/toml'
@@ -18,7 +18,6 @@ import {
 import {
     storkTomlPath,
 } from '~/helpers/stork/config.js'
-import { downloadStorkExecutable } from '~/helpers/stork/executable.js'
 
 
 
