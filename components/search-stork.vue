@@ -36,13 +36,16 @@
                     :class="[
                         'inline-block text-xs rounded-lg py-1 px-2',
                         'border-2 border-white focus:outline-none',
-                        hasQueryPart( button.query ) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
+                        hasActiveFilter( button.query ) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
                     ]"
                     :aria-label="`Filter list by ${button.label}`"
                     @click="toggleFilter(button.query); queryResults(query)"
                 >{{ button.label }}</button>
             </div>
         </div>
+
+        <!-- activeFilters: {{ activeFilters }}
+        filterQueryList: {{ filterQueryList }} -->
 
         <Carbon class="carbon-inline-wide" />
 
@@ -255,14 +258,12 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
+import { StorkFilters } from '~/helpers/stork/browser.js'
+
 import {
     defaultStatusFilters,
-    statusFilterPrefix,
-    statusFilterSeparator,
 } from '~/helpers/statuses.js'
-import { getAppCategory } from '~/helpers/categories.js'
 import {
-    getAppEndpoint,
     getIconForListing
 } from '~/helpers/app-derived.js'
 import {
@@ -290,10 +291,6 @@ export default {
             type: Object,
             required: true
         },
-        noEmailSubscribe: {
-            type: Boolean,
-            default: false
-        },
         initialLimit: {
             type: Number,
             default: null
@@ -306,7 +303,11 @@ export default {
             type: Array,
             default: () => defaultStatusFilters
         },
-        listSummary : {
+        baseFilters: {
+            type: Array,
+            default: () => []
+        },
+        listSummary: {
             type: Object,
             default: () => null
         },
@@ -314,12 +315,20 @@ export default {
     data: function () {
         return {
             query: '',
+            filterQueryList: [],
             hasStartedAnyQuery: false,
+            userFilters: [],
             listingsResults: [],
             waitingForQuery: false
         }
     },
     computed: {
+        storkQuery () {
+            return [
+                this.query.trim(),
+                ...this.filterQueryList
+            ].join(' ')
+        },
         appList () {
             return this.kindPage.items
         },
@@ -350,13 +359,16 @@ export default {
             return chunks
         },
         hasSearchInputText () {
-            return this.query.length > 0
+            return this.storkQuery.length > 0
         },
         showingInitialList () {
             return !this.hasSearchInputText
         },
-        queryParts () {
-            return this.query.split(/\s+/).filter(part => part.length > 0)
+        activeFilters () {
+            return [
+                ...this.userFilters,
+                ...this.baseFilters
+            ]
         },
         summary () {
             if ( this.listSummary !== null ) {
@@ -383,129 +395,32 @@ export default {
     mounted () {
         // Setup stork client
         storkClient = new StorkClient()
+
+        // Store filter instance
+        this.storkFilters = new StorkFilters()
+
+        // Add initial filters
+        this.storkFilters.setFromStringArray( this.activeFilters )
+
     },
     methods: {
         makeHighlightedMarkup,
         makeHighlightedResultTitle,
 
-        getAppCategory,
-        getAppEndpoint,
         getIconForListing,
 
         getSearchLinks (app) {
             return app?.searchLinks || []
         },
-
-        statusIs (query, app) {
-
-            // console.log('query', query)
-
-            if (!query.includes( statusFilterPrefix + statusFilterSeparator )) return
-
-            const status = query.substring(query.indexOf( statusFilterSeparator )+1)
-
-
-            const matches = app.status.includes(status) || app.status === status
-
-            return matches
-        },
         // Search tools
-        getFilterKeyAndValue (query) {
-            const key = query.substring(0, query.indexOf( statusFilterSeparator ))
-            const value = query.substring(query.indexOf( statusFilterSeparator )+1)
-            return { key, value }
-        },
-        hasQueryPart (part) {
-            return this.queryParts.includes( part )
+        hasActiveFilter ( filter ) {
+            return this.filterQueryList.includes( filter )
         },
         toggleFilter ( newFilterQuery ) {
 
-            // Get the key and value from our filter
-            // const [
-            //     newFilterKey, // This will always have a value
-            //     newFilterValue = null
-            // ] = newFilterQuery.split( statusFilterSeparator )
+            this.storkFilters.toggleFilter( newFilterQuery )
 
-            const {
-                key: newFilterKey,
-                value: newFilterValue = null
-            } = this.getFilterKeyAndValue( newFilterQuery )
-
-            const oldQueryWords = this.query.split(' ')
-
-            let oldHasStatus = false
-            let oldHasWords = false
-
-            oldQueryWords.forEach( word => {
-                if (word.includes( statusFilterPrefix + statusFilterSeparator )) {
-                    oldHasStatus = true
-                    return
-                }
-
-                if (word.trim().length !== 0) oldHasWords = true
-            })
-
-            // If this filter is already present
-            // then remove it
-            if ( this.hasQueryPart( newFilterQuery ) ) {
-                this.query = oldQueryWords.filter( word => word !== newFilterQuery ).join(' ')
-
-                //this.query.replace(newFilterQuery, '').trim()
-
-                return
-            }
-
-            // If there is only an existing status and we're adding a plain words
-            // and the newQuery is not
-            // then prepend the words to the existing status
-            if (oldHasStatus && !oldHasWords && newFilterValue === null) {
-                this.query = [
-                    newFilterQuery,
-                    this.query.trim()
-                ].join(' ')
-
-                return
-            }
-
-            // There is no filter key
-            // then update the whole query
-            if (newFilterValue === null) {
-                this.query = newFilterQuery
-
-                return
-            }
-
-            // However, if the query already has a status
-            // then update the existing status
-            if ( this.hasQueryPart( newFilterQuery ) ) {
-
-                // const queryWords = this.query.split(' ')
-
-                this.query = this.queryParts.map( word => {
-                    // If this the filter word
-                    // then update it to the new one
-                    if (word.includes(newFilterKey)) return newFilterQuery
-
-                    return word.trim()
-                }).join(' ')
-
-                return
-
-
-            // Otherwise add to the end of our current query
-            } else {
-                const queryWords = []
-
-                // If the query is not empty
-                // then add it to our updated query
-                if (this.query.trim().length) queryWords.push(this.query.trim())
-
-                // Append the new filter
-                queryWords.push(newFilterQuery)
-
-                // Update the query
-                this.query = queryWords.join(' ')
-            }
+            this.filterQueryList = this.storkFilters.list
         },
         scrollInputToTop () {
             scrollIntoView(this.$refs['search-container'], {
@@ -517,9 +432,11 @@ export default {
         // Called on input and when a filter is toggled
         async queryResults ( rawQuery ) {
 
+            // console.log( 'query', this.storkQuery )
+
             // If our query is empty
             // then bail
-            if ( rawQuery.trim().length === 0 ) return
+            if ( this.storkQuery.trim().length === 0 ) return
 
             this.waitingForQuery = true
 
@@ -530,7 +447,7 @@ export default {
 
             // console.log('rawQuery', rawQuery)
 
-            const storkQuery = await storkClient.lazyQuery( rawQuery )
+            const storkQuery = await storkClient.lazyQuery( this.storkQuery )
 
             // If the query response is empty
             // then return
