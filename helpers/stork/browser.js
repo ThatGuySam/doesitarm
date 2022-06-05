@@ -228,29 +228,33 @@ export class StorkClient {
 }
 
 
+const statusFilterSeparator = '_'
+
 export class StorkFilters {
     constructor({
         initialFilters = {}
     } = {}) {
+        this.initialFilters = initialFilters
+
         this.filters = {
             ...initialFilters
         }
     }
 
-
-
     get filtersForQuery () {
         return Object.entries( this.filters ).map( ([ filterKey, filterValue ]) => {
-            return `${ filterKey }_${ filterValue }`
+            return `${ filterKey }${ statusFilterSeparator }${ filterValue }`
         } ).join(' ')
     }
 
     isQueryValue ( filterNameOrQueryValue ) {
-        return filterNameOrQueryValue.includes('_')
+        return filterNameOrQueryValue.includes( statusFilterSeparator )
     }
 
     getKeyAndValue ( filterQueryValue ) {
-        const [ key, value ] = filterQueryValue.split('_')
+        const key = filterQueryValue.substring(0, filterQueryValue.indexOf( statusFilterSeparator ))
+        const value = filterQueryValue.substring(filterQueryValue.indexOf( statusFilterSeparator )+1)
+
         return { key, value }
     }
 
@@ -265,6 +269,13 @@ export class StorkFilters {
         }
     }
 
+    removeFilter ( filterName ) {
+        // Throw error if it's not a valid filter name
+        if ( this.isQueryValue( filterName ) ) throw new Error(`${ filterName } is not a valid filter name`)
+
+        delete this.filters[ filterName ]
+    }
+
     toggleFilter ( filterNameOrQueryValue, filterValue = null ) {
 
         const fromString = this.getFilterNameAndValueFromString( filterNameOrQueryValue )
@@ -272,8 +283,9 @@ export class StorkFilters {
         const filterName = fromString.key
         filterValue = filterValue || fromString.value
 
-        if ( !!this.filters[ filterName ] ) {
-            delete this.filters[ filterName ]
+        // If the filter is already set, remove it
+        if ( this.hasFilter( filterName ) ) {
+            this.removeFilter( filterName )
 
             return
         }
@@ -290,8 +302,13 @@ export class StorkFilters {
 
         const {
             key : filterName,
+            value : filterValue = null
         } = this.getFilterNameAndValueFromString( filterNameOrQueryValue )
 
+        // If this filter is a name and value, check if it's set
+        if ( isString( filterValue ) ) {
+            return !!this.filters[ filterName ] && this.filters[ filterName ] === filterValue
+        }
 
         return !!this.filters[ filterName ]
     }
