@@ -277,6 +277,14 @@ export class StorkFilters {
         delete this.filters[ filterName ]
     }
 
+    setFromStringArray ( filterStringArray ) {
+        filterStringArray.forEach( filterString => {
+            const { key, value } = this.getFilterNameAndValueFromString( filterString )
+
+            this.filters[ key ] = value
+        })
+    }
+
     setFromString ( filterNameOrQueryValue ) {
         const {
             key,
