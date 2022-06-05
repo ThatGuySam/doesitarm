@@ -85,6 +85,16 @@
                     </template>
                 </div>
 
+                <div
+                    v-if="baseFilters.length > 0"
+                    class="w-full flex justify-center p-8"
+                >
+                    <LinkButton
+                        href="/"
+                    >
+                        <span>Search everything</span>
+                    </LinkButton>
+                </div>
             </template>
 
             <ul
