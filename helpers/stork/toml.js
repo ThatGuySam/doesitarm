@@ -13,7 +13,7 @@ import {
     getRouteType
 } from '~/helpers/app-derived.js'
 import {
-    getAppCategory
+    makeCategoryFilterFromListing
 } from '~/helpers/categories.js'
 import {
     storkTomlPath,
@@ -56,7 +56,7 @@ function makeDetailsFromListing ({ listing, route }) {
     return [
         listing.content || '∅', // Null Symbol
         has( listing, 'status' ) ? `status_${ listing.status }` : '',
-        has( listing, 'category' ) ? `category_${ getAppCategory( listing ).snakeSlug }` : '',
+        has( listing, 'category' ) ? makeCategoryFilterFromListing( listing ) : '',
         `type_${ getRouteType( route ) }`,
         // Brownmatter
         matter.stringify( '', contents ),
