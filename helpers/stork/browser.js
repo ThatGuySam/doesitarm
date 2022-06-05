@@ -284,7 +284,7 @@ export class StorkFilters {
         filterValue = filterValue || fromString.value
 
         // If the filter is already set, remove it
-        if ( this.hasFilter( filterName ) ) {
+        if ( this.hasFilter( filterNameOrQueryValue ) ) {
             this.removeFilter( filterName )
 
             return

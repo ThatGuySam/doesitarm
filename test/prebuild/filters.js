@@ -44,7 +44,18 @@ test('Can handle query values with multiple underscores', async t => {
     t.assert( filters.hasFilter( 'test_value_with_multiple_underscores' ) , 'Has correct filters for query' )
 })
 
-// Can handle query values with multiple underscores
+
+test( 'Can update existing filter', async t => {
+    const filters = new StorkFilters({
+        initialFilters: {
+            'test': 'works_no'
+        }
+    })
+
+    filters.toggleFilter('test_works_yes')
+
+    t.deepEqual( filters.filtersForQuery, 'test_works_yes', 'Has updated filter')
+})
 
 
-// Can update existing filter
+
