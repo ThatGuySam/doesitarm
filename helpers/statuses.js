@@ -1,4 +1,4 @@
-
+import { filterSeparator } from '~/helpers/constants.js'
 
 
 const statuses = {
@@ -38,8 +38,6 @@ const statusesByIcon = Object.keys( statuses ).reduce( ( acc, key ) => {
 
 export const statusFilterPrefix = 'status'
 
-export const statusFilterSeparator = '_'
-
 
 // Example:
 // {
@@ -48,11 +46,11 @@ export const statusFilterSeparator = '_'
 // },
 export const defaultStatusFilters = Object.keys( statuses ).reduce( ( acc, key ) => {
     const status = statuses[ key ]
-    acc[ statusFilterPrefix + statusFilterSeparator + key ] = status.filterLabel
+    acc[ statusFilterPrefix + filterSeparator + key ] = status.filterLabel
 
     acc = [...acc, {
         label: `${ status.icon } ${ status.filterLabel }`,
-        query: statusFilterPrefix + statusFilterSeparator + status.snakeSlug
+        query: statusFilterPrefix + filterSeparator + status.snakeSlug
     }]
     return acc
 }, [] )

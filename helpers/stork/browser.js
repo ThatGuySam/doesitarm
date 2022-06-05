@@ -1,3 +1,4 @@
+import { filterSeparator } from '~/helpers/constants.js'
 
 import { isString } from '~/helpers/check-types.js'
 
@@ -5,7 +6,6 @@ import {
     storkIndexRelativeURL,
     storkScriptURL
 } from '~/helpers/stork/config.js'
-
 
 export function makeHighlightedMarkup ( options = {} ) {
     const {
@@ -227,9 +227,6 @@ export class StorkClient {
     }
 }
 
-
-const statusFilterSeparator = '_'
-
 export class StorkFilters {
     constructor({
         initialFilters = {}
@@ -243,7 +240,7 @@ export class StorkFilters {
 
     get list () {
         return Object.entries( this.filters ).map( ([ filterKey, filterValue ]) => {
-            return `${ filterKey }${ statusFilterSeparator }${ filterValue }`
+            return `${ filterKey }${ filterSeparator }${ filterValue }`
         } )
     }
 
@@ -252,12 +249,12 @@ export class StorkFilters {
     }
 
     isQueryValue ( filterNameOrQueryValue ) {
-        return filterNameOrQueryValue.includes( statusFilterSeparator )
+        return filterNameOrQueryValue.includes( filterSeparator )
     }
 
     getKeyAndValue ( filterQueryValue ) {
-        const key = filterQueryValue.substring(0, filterQueryValue.indexOf( statusFilterSeparator ))
-        const value = filterQueryValue.substring(filterQueryValue.indexOf( statusFilterSeparator )+1)
+        const key = filterQueryValue.substring(0, filterQueryValue.indexOf( filterSeparator ))
+        const value = filterQueryValue.substring(filterQueryValue.indexOf( filterSeparator )+1)
 
         return { key, value }
     }
