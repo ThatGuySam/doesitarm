@@ -258,8 +258,6 @@
 <script>
 import scrollIntoView from 'scroll-into-view-if-needed'
 
-import { StorkFilters } from '~/helpers/stork/browser.js'
-
 import {
     defaultStatusFilters,
 } from '~/helpers/statuses.js'
@@ -268,6 +266,7 @@ import {
 } from '~/helpers/app-derived.js'
 import {
     StorkClient,
+    StorkFilters,
     makeHighlightedMarkup,
     makeHighlightedResultTitle
 } from '~/helpers/stork/browser.js'
@@ -447,13 +446,17 @@ export default {
 
             // console.log('rawQuery', rawQuery)
 
-            const storkQuery = await storkClient.lazyQuery( this.storkQuery )
+            const requiredTerms = this.storkQuery.split(' ')
+
+            const storkQuery = await storkClient.lazyQuery( this.storkQuery, requiredTerms )
 
             // If the query response is empty
             // then return
             if ( storkQuery === null ) {
                 return
             }
+
+            // console.log( 'storkQuery', storkQuery )
 
             this.listingsResults = storkQuery.results.map( result => {
                 return {

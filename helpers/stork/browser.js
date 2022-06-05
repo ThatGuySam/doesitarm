@@ -87,6 +87,42 @@ export class StorkClient {
         return this.setupState === 'complete'
     }
 
+    resultHasTerm ( result, term ) {
+        const {
+            entry: {
+                url,
+                title
+            },
+            excerpts
+        } = result
+
+        if ( title.toLowerCase().includes( term.toLowerCase() ) ) return true
+
+        if ( url.toLowerCase().includes( term.toLowerCase() ) ) return true
+
+        for ( const excerpt of excerpts ) {
+            if ( excerpt.text.toLowerCase().includes( term.toLowerCase() ) ) return true
+        }
+
+        return false
+    }
+
+    resultHasAnyTerm ( result, terms ) {
+        for ( const term of terms ) {
+            if ( this.resultHasTerm( result, term ) ) return true
+        }
+
+        return false
+    }
+
+    resultHasAllTerms ( result, terms ) {
+        for ( const term of terms ) {
+            if ( !this.resultHasTerm( result, term ) ) return false
+        }
+
+        return true
+    }
+
     search ( query ) {
         if ( !this.isSetup ) throw new Error('Not setup')
 
@@ -96,7 +132,7 @@ export class StorkClient {
 
     // Loads the Stork WASM and Index into the browser on first query
     // so that we don't have to load them initially.
-    async lazyQuery ( query ) {
+    async lazyQuery ( query, requiredTerms = [] ) {
 
         // Sleep
         // await new Promise( resolve => setTimeout( resolve, 50000000 ) )
@@ -118,11 +154,24 @@ export class StorkClient {
 
             // console.log('debounce', this.query)
 
-            const result = this.search( query )
+            const queryResponse = this.search( query )
 
-            // this.cancelCurrentQuery = null
+            if ( requiredTerms.length !== 0 ) {
+                // Filter out results that don't have the required terms
+                const filteredResults = queryResponse.results.filter( result => {
+                    return this.resultHasAllTerms( result, requiredTerms )
+                })
 
-            resolve( result )
+
+                resolve( {
+                    ...queryResponse,
+                    results: filteredResults
+                } )
+
+                return
+            }
+
+            resolve( queryResponse )
 
         }).catch( err => {
             console.log('Query rejected', err)
@@ -246,6 +295,10 @@ export class StorkFilters {
 
     get asQuery () {
         return this.list.join(' ')
+    }
+
+    getByKey ( key ) {
+        return `${ key }${ filterSeparator }${ this.filters[ key ] }`
     }
 
     isQueryValue ( filterNameOrQueryValue ) {
