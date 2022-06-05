@@ -44,9 +44,6 @@
             </div>
         </div>
 
-        <!-- activeFilters: {{ activeFilters }}
-        filterQueryList: {{ filterQueryList }} -->
-
         <Carbon class="carbon-inline-wide" />
 
         <div
@@ -66,12 +63,29 @@
 
             <!-- hasStartedAnyQuery: {{ hasStartedAnyQuery }} -->
 
-            <div
-                v-if="chunkedListings.length === 0"
-                class="text-center py-4"
-            >
-                No apps found
-            </div>
+            <template v-if="chunkedListings.length === 0">
+                <div
+                    class="text-center py-4"
+                >
+                    <span>No apps found for</span>
+                    <span
+                        v-for="term in userTerms"
+                        :key="term"
+                        class="font-bold border rounded px-1 pb-1 mx-1"
+                    >{{ term }}</span>
+
+                    <template v-if="isFilteredList">
+                        <span>within</span>
+
+                        <span
+                            v-for="term in baseFilters"
+                            :key="term"
+                            class="font-bold border rounded px-1 pb-1 mx-1"
+                        >{{ term }}</span>
+                    </template>
+                </div>
+
+            </template>
 
             <ul
                 v-for="(listings, i) in chunkedListings"
@@ -316,7 +330,6 @@ export default {
             query: '',
             filterQueryList: [],
             hasStartedAnyQuery: false,
-            userFilters: [],
             listingsResults: [],
             waitingForQuery: false
         }
@@ -338,7 +351,7 @@ export default {
             // Build filler listings to use while loading results
             if ( this.waitingForQuery ) return Array( 10 ).fill({ name: 'Loading', slug: 'loading', endpoint: '', linkClass: 'shimmer pointer-events-none' })
 
-            if (!this.hasSearchInputText) return this.initialList
+            if ( this.showingInitialList ) return this.initialList
 
             return this.listingsResults
         },
@@ -357,16 +370,37 @@ export default {
 
             return chunks
         },
+        isFilteredList () {
+            return this.baseFilters.length > 0
+        },
         hasSearchInputText () {
-            return this.storkQuery.length > 0
+            return this.query.length > 0
+        },
+        hasAnyUserFilters () {
+            return this.userFilters.length > 0
+        },
+        hasAnyUserTerms () {
+            return this.userTerms.length > 0
         },
         showingInitialList () {
-            return !this.hasSearchInputText
+            return !this.hasAnyUserTerms
         },
-        activeFilters () {
+        inputTerms () {
+            return this.query.trim().split(' ')
+        },
+        userFilters () {
+            // console.log('filterQueryList', )
+            return this.filterQueryList.filter( filterTerm => {
+                return !this.baseFilters.includes( filterTerm )
+            })
+        },
+        userTerms () {
+            // If out input is empty, return just the user filters
+            if ( !this.hasSearchInputText ) return this.userFilters
+
             return [
-                ...this.userFilters,
-                ...this.baseFilters
+                ...this.inputTerms,
+                ...this.userFilters
             ]
         },
         summary () {
@@ -399,7 +433,7 @@ export default {
         this.storkFilters = new StorkFilters()
 
         // Add initial filters
-        this.storkFilters.setFromStringArray( this.activeFilters )
+        this.storkFilters.setFromStringArray( this.baseFilters )
 
     },
     methods: {
