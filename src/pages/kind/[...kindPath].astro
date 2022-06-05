@@ -6,7 +6,11 @@
 import { DoesItAPI } from '~/helpers/api/client.js'
 import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
 import { catchRedirectResponse } from '~/helpers/astro/request.js'
-import { categories, getKindToCategorySlug } from '~/helpers/categories.js'
+import {
+    categories,
+    getKindToCategorySlug,
+    makeCategoryFilterFromCategorySlug
+} from '~/helpers/categories.js'
 
 import Layout from '../../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
@@ -34,6 +38,10 @@ const kindPage = await DoesItAPI.kind( pathSlug )( subSlug ).get()
 const categorySlug = getKindToCategorySlug( pathSlug )
 
 const category = categories[ categorySlug ]
+
+const baseFilters = [
+    makeCategoryFilterFromCategorySlug( categorySlug ),
+]
 
 const pageLabel = category?.pluralLabel || category.label
 
@@ -69,6 +77,7 @@ const pageLabel = category?.pluralLabel || category.label
 
             <Search
                 kind-page={ kindPage }
+                base-filters={ baseFilters }
 
                 client:load
             />
