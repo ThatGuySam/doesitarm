@@ -21,13 +21,18 @@ export default defineConfig({
             dist: new URL('./dist/', import.meta.url)
         }),
         // Astro Vue Reference
-        // https://github.com/withastro/astro/blob/main/packages/integrations/sitemap/src/index.ts
         // https://github.com/withastro/astro/tree/main/packages/integrations/vue
         vue(),
         tailwind(),
         // Sitemap Reference
+        // https://github.com/withastro/astro/blob/main/packages/integrations/sitemap/src/index.ts
         // https://github.com/withastro/astro/tree/main/packages/integrations/sitemap#configuration
-        sitemap()
+        sitemap({
+            customPages: [
+                '/relative-url',
+                'https://doesitarm.com/absolute-url',
+            ]
+        })
     ],
     // Vite options
     // https://docs.astro.build/en/reference/configuration-reference/#vite
