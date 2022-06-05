@@ -241,10 +241,14 @@ export class StorkFilters {
         }
     }
 
-    get filtersForQuery () {
+    get list () {
         return Object.entries( this.filters ).map( ([ filterKey, filterValue ]) => {
             return `${ filterKey }${ statusFilterSeparator }${ filterValue }`
-        } ).join(' ')
+        } )
+    }
+
+    get asQuery () {
+        return this.list.join(' ')
     }
 
     isQueryValue ( filterNameOrQueryValue ) {
@@ -269,11 +273,30 @@ export class StorkFilters {
         }
     }
 
-    removeFilter ( filterName ) {
+    remove ( filterName ) {
         // Throw error if it's not a valid filter name
         if ( this.isQueryValue( filterName ) ) throw new Error(`${ filterName } is not a valid filter name`)
 
         delete this.filters[ filterName ]
+    }
+
+    setFromString ( filterNameOrQueryValue ) {
+        const {
+            key,
+            value = ''
+        } = this.getFilterNameAndValueFromString( filterNameOrQueryValue )
+
+        // Throw for empty values
+        if ( value.trim().length === 0 ) throw new Error(`${ filterNameOrQueryValue } is not a valid filter value`)
+
+        this.set( key, value )
+    }
+
+    set ( filterName, filterValue ) {
+        // Throw error if it's not a valid filter name
+        if ( this.isQueryValue( filterName ) ) throw new Error(`${ filterName } is not a valid filter name`)
+
+        this.filters[ filterName ] = filterValue
     }
 
     toggleFilter ( filterNameOrQueryValue, filterValue = null ) {
@@ -284,8 +307,8 @@ export class StorkFilters {
         filterValue = filterValue || fromString.value
 
         // If the filter is already set, remove it
-        if ( this.hasFilter( filterNameOrQueryValue ) ) {
-            this.removeFilter( filterName )
+        if ( this.has( filterNameOrQueryValue ) ) {
+            this.remove( filterName )
 
             return
         }
@@ -295,10 +318,10 @@ export class StorkFilters {
             throw new Error(`Filter value must be a string. Got ${ typeof filterValue }`)
         }
 
-        this.filters[ filterName ] = filterValue
+        this.set( filterName, filterValue )
     }
 
-    hasFilter ( filterNameOrQueryValue ) {
+    has ( filterNameOrQueryValue ) {
 
         const {
             key : filterName,
