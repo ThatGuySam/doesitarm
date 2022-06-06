@@ -48,7 +48,7 @@ export default {
             lang: 'en',
         },
         title: 'Does It ARM',
-        description: process.env.npm_package_description,
+        description: process.env.npm_package_config_verbiage_description,
 
         meta: [
             { charset: 'utf-8' },
@@ -59,7 +59,7 @@ export default {
             {
                 hid: 'description',
                 name: 'description',
-                content: process.env.npm_package_description
+                content: process.env.npm_package_config_verbiage_description
             },
             {
                 'property':  'og:image',
