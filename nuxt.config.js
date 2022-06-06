@@ -87,10 +87,10 @@ export default {
                 'property':  'twitter:title',
                 'content': 'Does It ARM'
             },
-            {
-                'property':  'twitter:description',
-                'content': process.env.npm_package_description
-            },
+            // {
+            //     'property':  'twitter:description',
+            //     'content': process.env.npm_package_config_verbiage_description
+            // },
             {
                 'property':  'twitter:url',
                 'content': `${process.env.URL}`
