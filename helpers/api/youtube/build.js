@@ -4,7 +4,7 @@ import { google } from 'googleapis'
 import { playlists, benchmarksPlaylistId } from './playlists.js'
 
 
-const youtubeVideoPath = './static/api/youtube-videos.json'
+export const youtubeVideoPath = './static/api/youtube-videos.json'
 
 
 async function getPlaylistsItems ( { playlistId } = {} ) {
