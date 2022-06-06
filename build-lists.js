@@ -1,4 +1,4 @@
-import { dirname } from 'path'
+import { dirname, basename } from 'path'
 
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
@@ -52,6 +52,12 @@ dotenv.config()
 let timeRunGetListArray = 0
 let timeRunGetListByCategories = 0
 
+function getSymmetricDifference (a, b) {
+    return [
+        a.filter(x => !b.includes(x)),
+        b.filter(x => !a.includes(x))
+    ]
+}
 
 function normalizeVersion ( rawVersion ) {
     const containsNumbers = /\d+/.test( rawVersion )
@@ -508,6 +514,12 @@ class BuildLists {
         console.log( this.lists[listOptions.name].size, 'Entries' )
 
         if ( fileCount !== this.lists[listOptions.name].size ) {
+            const listSlugs = Array.from( this.lists[listOptions.name] ).map( listEntry => listEntry.slug )
+            const fileNames = fs.readdirSync( apiListDirectory ).map( fileName => basename(fileName).split('.')[0] )
+            const difference = getSymmetricDifference( listSlugs, fileNames )
+
+            console.log( 'List difference', difference )
+
             throw new Error( `Files (${ fileCount }) don\'t match list count in ${ apiListDirectory }(${ this.lists[listOptions.name].size }).` )
         }
 
