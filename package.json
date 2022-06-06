@@ -1,13 +1,19 @@
 {
   "name": "doesitarm",
   "version": "1.0.0",
-  "description": "Find out the latest app support for Apple Silicon and the Apple M1 Pro and M1 Max Processors",
+  "description": "Find out the latest app support for Apple Silicon and the $npm_package_config_verbiage_processors Processors",
   "author": "Sam Carlton",
   "private": true,
   "ava": {
     "require": [
       "esm"
     ]
+  },
+  "config": {
+    "verbiage": {
+      "processors": "Apple M2 and M1 Ultra",
+      "macs": "Apple M2 or M1 Ultra Mac"
+    }
   },
   "scripts": {
     "test-prebuild": "ava ./test/prebuild.js --verbose",

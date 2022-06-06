@@ -186,12 +186,12 @@ export default {
     },
     computed: {
         title () {
-            return `Benchmarks for Apple M1 Pro and M1 Max Processors and Apple Silicon - Does It ARM`
+            return `Benchmarks for ${ process.env.npm_package_config_verbiage_processors } Processors and Apple Silicon - Does It ARM`
         },
         description () {
             // const featuredAppsString = this.featuredApps.slice(0, 5).map(app => app.name).join(', ')
 
-            return `Apple Silicon benchmark, performance, and compatibility videos`
+            return `Apple Silicon benchmark, performance, and compatibility videos for Macs using the ${ process.env.npm_package_config_verbiage_processors } processors.`
         },
         activeVideoId () {
             return this.video.id

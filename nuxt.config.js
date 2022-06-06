@@ -9,7 +9,8 @@ export default {
     publicRuntimeConfig: {
         allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
         testResultStore: process.env.TEST_RESULT_STORE,
-        siteUrl: process.env.URL
+        siteUrl: process.env.URL,
+        ...pkg.config
     },
 
     /*
