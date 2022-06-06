@@ -5,8 +5,9 @@ import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
 import memoize from 'fast-memoize'
-import has from 'just-has'
+// import has from 'just-has'
 
+import { saveYouTubeVideos } from '~/helpers/api/youtube/build.js'
 import buildAppList from '~/helpers/build-app-list.js'
 import buildGamesList from '~/helpers/build-game-list.js'
 import buildHomebrewList from '~/helpers/build-homebrew-list.js'
@@ -573,6 +574,8 @@ class BuildLists {
     }
 
     async build () {
+
+        await saveYouTubeVideos()
 
         // Pull in and layer data from all sources
         await this.buildLists()
