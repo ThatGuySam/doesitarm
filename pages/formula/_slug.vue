@@ -59,7 +59,7 @@ export default {
                 {
                     'hid': 'description',
                     'name': 'description',
-                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Pro and M1 Max Processors when installed via Homebrew. `
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and ${ process.env.npm_package_config_verbiage_processors } Processors when installed via Homebrew. `
                 },
 
                 // Twitter Card
@@ -71,7 +71,7 @@ export default {
                 {
                     'hid': 'twitter:description',
                     'property':  'twitter:description',
-                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and Apple M1 Pro and M1 Max Processors when installed via Homebrew. `
+                    'content': `Check the the latest reported support status of ${this.app.name} on Apple Silicon and ${ process.env.npm_package_config_verbiage_processors } Processors when installed via Homebrew. `
                 },
                 {
                     'property':  'twitter:url',

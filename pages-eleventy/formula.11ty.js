@@ -17,7 +17,7 @@ export const makeTitle = function ( app ) {
 }
 
 export const makeDescription = function ( app ) {
-    return `Latest reported support status of ${ app.name } on Apple Silicon and Apple M1 Pro and M1 Max Processors when installed via Homebrew. `
+    return `Latest reported support status of ${ app.name } on Apple Silicon and ${ process.env.npm_package_config_verbiage_processors } Processors when installed via Homebrew. `
 }
 
 class FormulaTemplate extends AppTemplate {

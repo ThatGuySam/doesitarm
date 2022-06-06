@@ -160,10 +160,10 @@ export default {
     },
     computed: {
         title ()  {
-            return `Apple Silicon and Apple M1 Pro and M1 Max app and game compatibility list`
+            return `Apple Silicon and ${ process.env.npm_package_config_verbiage_processors } app and game compatibility list`
         },
         description ()  {
-            return `List of compatibility apps and games for Apple Silicon and the Apple M1 Pro and M1 Max Processors including performance reports and benchmarks`
+            return `List of compatibility apps and games for Apple Silicon and the ${ process.env.npm_package_config_verbiage_processors } Processors including performance reports and benchmarks`
         },
         allList () {
             return [

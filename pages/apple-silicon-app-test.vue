@@ -16,7 +16,7 @@
                 </div>
 
                 <h2 class="subtitle md:text-xl text-center">
-                    Check for Apple Silicon compatibility for your apps before you buy an M1 Pro or M1 Max Mac.
+                    Check for Apple Silicon compatibility for your apps before you buy an {{ npm_package_config_verbiage_macs }}.
                 </h2>
 
             </header>
@@ -206,6 +206,9 @@ export default {
         }
     },
     computed: {
+        npm_package_config_verbiage_macs () {
+            return process.env.npm_package_config_verbiage_macs
+        },
         foundFiles () {
             return this.appsBeingScanned.filter( appScan => {
                 return !appScan.statusMessage.includes('⏭')
@@ -268,7 +271,7 @@ export default {
             return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
-            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an M1 Pro or M1 Max Mac. `
+            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ process.env.npm_package_config_verbiage_macs }. `
         }
     },
     mounted () {
