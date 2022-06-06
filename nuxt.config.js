@@ -48,7 +48,7 @@ export default {
             lang: 'en',
         },
         title: 'Does It ARM',
-        description: pkg.description,
+        description: process.env.npm_package_description,
 
         meta: [
             { charset: 'utf-8' },
@@ -59,7 +59,7 @@ export default {
             {
                 hid: 'description',
                 name: 'description',
-                content: pkg.description
+                content: process.env.npm_package_description
             },
             {
                 'property':  'og:image',
@@ -89,7 +89,7 @@ export default {
             },
             {
                 'property':  'twitter:description',
-                'content': pkg.description
+                'content': process.env.npm_package_description
             },
             {
                 'property':  'twitter:url',
