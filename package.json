@@ -77,6 +77,7 @@
     "execa": "^5.1.1",
     "fast-memoize": "^2.5.2",
     "fs-extra": "^8.1.0",
+    "googleapis": "^100.0.0",
     "gray-matter": "^4.0.3",
     "jsdom": "^16.4.0",
     "just-has": "^2.1.0",
