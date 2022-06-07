@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind'
 // Astro Netlify Reference
 // https://github.com/withastro/astro/tree/main/packages/integrations/netlify
 import netlify from '@astrojs/netlify/functions'
-import sitemap from '@astrojs/sitemap'
+// import sitemap from '@astrojs/sitemap'
 
 // import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 
@@ -27,12 +27,12 @@ export default defineConfig({
         // Sitemap Reference
         // https://github.com/withastro/astro/blob/main/packages/integrations/sitemap/src/index.ts
         // https://github.com/withastro/astro/tree/main/packages/integrations/sitemap#configuration
-        sitemap({
-            customPages: [
-                '/relative-url',
-                'https://doesitarm.com/absolute-url',
-            ]
-        })
+        // sitemap({
+        //     customPages: [
+        //         '/relative-url',
+        //         'https://doesitarm.com/absolute-url',
+        //     ]
+        // })
     ],
     // Vite options
     // https://docs.astro.build/en/reference/configuration-reference/#vite
