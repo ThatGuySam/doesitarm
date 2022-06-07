@@ -99,7 +99,6 @@
     "pretty-bytes": "^5.5.0",
     "scroll-into-view-if-needed": "^2.2.26",
     "semver": "^7.3.7",
-    "sitemap-generator": "^8.5.1",
     "slugify": "^1.4.6",
     "stork-search": "^1.0.4",
     "terser": "^4.8.0",
