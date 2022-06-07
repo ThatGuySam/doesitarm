@@ -7,7 +7,9 @@ dotenv.config()
 export const publicRuntimeConfig = {
     allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
     testResultStore: process.env.TEST_RESULT_STORE,
-    siteUrl: process.env.URL
+    siteUrl: process.env.URL,
+    macsVerbiage: process.env.npm_package_config_verbiage_macs,
+    processorsVerbiage: process.env.npm_package_config_verbiage_processors,
 }
 
 export function makeViteDefinitions () {

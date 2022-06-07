@@ -207,7 +207,7 @@ export default {
     },
     computed: {
         npm_package_config_verbiage_macs () {
-            return process.env.npm_package_config_verbiage_macs
+            return this.config.macsVerbiage //process.env.npm_package_config_verbiage_macs
         },
         foundFiles () {
             return this.appsBeingScanned.filter( appScan => {
@@ -271,7 +271,7 @@ export default {
             return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
-            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ process.env.npm_package_config_verbiage_macs }. `
+            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ this.config.macsVerbiage }. `
         }
     },
     mounted () {
