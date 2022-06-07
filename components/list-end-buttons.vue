@@ -29,7 +29,7 @@ export default {
         links () {
             return [
                 {
-                    label: 'Scan Your Own App',
+                    label: 'Scan Apps',
                     href: '/apple-silicon-app-test/'
                 },
                 {
