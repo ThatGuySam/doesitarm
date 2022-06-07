@@ -13,6 +13,7 @@ import buildGamesList from '~/helpers/build-game-list.js'
 import buildHomebrewList from '~/helpers/build-homebrew-list.js'
 import buildVideoList from '~/helpers/build-video-list.js'
 import buildDeviceList from '~/helpers/build-device-list.js'
+import { saveSitemap } from '~/helpers/api/sitemap/build.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
@@ -697,12 +698,13 @@ class BuildLists {
             })
         } )
 
-        // Add paginated category lists to sitemap
-        // sitemapEndpoints.push( ...this.getKindListForCategories() )
-
         // Save sitemap endpoints
         console.log('Building Sitemap JSON')
         await this.saveToJson( sitemapEndpoints, './static/sitemap-endpoints.json')
+
+        // Save XML Sitemap
+        console.log('Building XML Sitemap')
+        await saveSitemap( sitemapEndpoints.map( ({ route }) => route ) )
 
         // Save stork toml index
         console.log('Building Stork toml index')
