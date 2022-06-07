@@ -174,12 +174,6 @@
                                     class="text-xs opacity-50"
                                 />
                             </small>
-                            <small
-                                slot="placeholder"
-                                class="text-xs opacity-50"
-                            >
-                                ⏳
-                            </small>
                         </template>
 
                         <!-- listing.endpoint: {{ listing.endpoint }} -->
