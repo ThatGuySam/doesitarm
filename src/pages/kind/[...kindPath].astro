@@ -44,15 +44,24 @@ const kindPage = {
     }) )
 }
 
+let pageLabel = 'Mac Apps'
+const baseFilters = []
+
 const categorySlug = getKindToCategorySlug( pathSlug )
 
-const category = categories[ categorySlug ]
+// If we have a category slug, add a filter
+if ( !!categorySlug ) {
+    const category = categories[ categorySlug ]
 
-const baseFilters = [
-    makeCategoryFilterFromCategorySlug( categorySlug ),
-]
+    console.log( 'pathSlug', pathSlug )
+    console.log( 'category', category )
 
-const pageLabel = category?.pluralLabel || category.label
+    const baseFilters = [
+        makeCategoryFilterFromCategorySlug( categorySlug ),
+    ]
+
+    pageLabel = category?.pluralLabel || category.label
+}
 
 ---
 <Layout
