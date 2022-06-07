@@ -33,7 +33,16 @@ if ( redirectResponse !== null ) {
 }
 
 
-const kindPage = await DoesItAPI.kind( pathSlug )( subSlug ).get()
+const rawKindPage = await DoesItAPI.kind( pathSlug )( subSlug ).get()
+
+// Clean up unused kind data
+const kindPage = {
+    ...rawKindPage,
+    items: rawKindPage.items.map( item => ({
+        ...item,
+        bundles: undefined,
+    }) )
+}
 
 const categorySlug = getKindToCategorySlug( pathSlug )
 
