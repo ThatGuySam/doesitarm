@@ -18,7 +18,7 @@
                 <input
                     id="search"
                     ref="search"
-                    v-model="query"
+                    v-model="userTextQuery"
                     :autofocus="autofocus"
                     aria-label="Type here to Search"
                     class="appearance-none w-full text-white font-hairline sm:text-5xl outline-none bg-transparent p-3"
@@ -87,12 +87,28 @@
 
                 <div
                     v-if="baseFilters.length > 0"
-                    class="w-full flex justify-center p-8"
+                    class="w-full flex justify-center p-6"
                 >
                     <LinkButton
                         href="/"
+                        :class="[
+                            'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                            'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                        ]"
+                        :class-groups="{
+                            shadow: 'hover:neumorphic-shadow',
+                            bg: 'hover:bg-darker',
+                        }"
                     >
                         <span>Search everything</span>
+
+                        <svg
+                            class="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <use href="#chevron-right" />
+                        </svg>
                     </LinkButton>
                 </div>
             </template>
@@ -288,6 +304,12 @@
             </ul>
         </div>
 
+        <div class="list-end-area flex justify-center py-6">
+            <ListEndButtons
+                :query="userTextQuery"
+            />
+        </div>
+
     </div>
 </template>
 
@@ -311,6 +333,7 @@ import Carbon from '~/components/carbon-inline.vue'
 import LinkButton from '~/components/link-button.vue'
 import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
+import ListEndButtons from '~/components/list-end-buttons.vue'
 
 let storkClient = null
 
@@ -320,6 +343,7 @@ export default {
         ListSummary,
         RelativeTime,
         LinkButton,
+        ListEndButtons
     },
     props: {
         kindPage: {
@@ -349,7 +373,7 @@ export default {
     },
     data: function () {
         return {
-            query: '',
+            userTextQuery: '',
             filterQueryList: [],
             hasStartedAnyQuery: false,
             listingsResults: [],
@@ -359,7 +383,7 @@ export default {
     computed: {
         storkQuery () {
             return [
-                this.query.trim(),
+                this.userTextQuery.trim(),
                 ...this.filterQueryList
             ].join(' ')
         },
@@ -396,7 +420,7 @@ export default {
             return this.baseFilters.length > 0
         },
         hasSearchInputText () {
-            return this.query.length > 0
+            return this.userTextQuery.length > 0
         },
         hasAnyUserFilters () {
             return this.userFilters.length > 0
@@ -408,7 +432,7 @@ export default {
             return !this.hasAnyUserTerms
         },
         inputTerms () {
-            return this.query.trim().split(' ')
+            return this.userTextQuery.trim().split(' ')
         },
         userFilters () {
             // console.log('filterQueryList', )
@@ -487,7 +511,7 @@ export default {
         // Called on input and when a filter is toggled
         async queryResults ( rawQuery ) {
 
-            // console.log( 'query', this.storkQuery )
+            console.log( 'query', this.storkQuery )
 
             // If our query is empty
             // then bail
