@@ -226,47 +226,68 @@
                         </div>
                     </div>
                 </li>
+
+                <li
+                    v-if="showingInitialList"
+                    class="list-navigation"
+                >
+                    <nav
+                        class="pagination w-full flex gap-6 justify-center py-4"
+                    >
+                        <LinkButton
+                            v-if="previousPageUrl"
+                            :href="previousPageUrl"
+
+                            :class="[
+                                'w-32 justify-end',
+                                'rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out px-3 py-2',
+                                'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                            ]"
+                            :class-groups="{
+                                shadow: 'hover:neumorphic-shadow',
+                                bg: 'hover:bg-darker',
+                            }"
+                        >
+                            <svg
+                                class="-scale-x-100 h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <use href="#chevron-right" />
+                            </svg>
+
+                            <span>Previous</span>
+                        </LinkButton>
+
+                        <LinkButton
+                            v-if="nextPageUrl"
+                            :href="nextPageUrl"
+
+                            :class="[
+                                'w-32',
+                                'px-3 py-2 rounded-md text-sm pointer-events-auto focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
+                                'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                            ]"
+                            :class-groups="{
+                                shadow: 'hover:neumorphic-shadow',
+                                bg: 'hover:bg-darker',
+                            }"
+                        >
+                            <span>Next</span>
+
+                            <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <use href="#chevron-right" />
+                            </svg>
+                        </LinkButton>
+                    </nav>
+                </li>
             </ul>
         </div>
 
-        <nav
-            v-if="showingInitialList"
-            class="pagination w-full flex gap-6 justify-center"
-        >
-            <LinkButton
-                v-if="previousPageUrl"
-                :href="previousPageUrl"
-
-                class="border-2 border-gray-700 bg-dark hover:bg-darkest hover:border-white hover:border-opacity-50"
-            >
-                <svg
-                    class="-scale-x-100 h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                >
-                    <use href="#chevron-right" />
-                </svg>
-
-                <span>Previous</span>
-            </LinkButton>
-
-            <LinkButton
-                v-if="nextPageUrl"
-                :href="nextPageUrl"
-
-                class="border-2 border-gray-700 bg-dark hover:bg-darkest hover:border-white hover:border-opacity-50"
-            >
-                <span>Next</span>
-
-                <svg
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                >
-                    <use href="#chevron-right" />
-                </svg>
-            </LinkButton>
-        </nav>
     </div>
 </template>
 
