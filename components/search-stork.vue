@@ -147,6 +147,10 @@
                             v-html="listing.name"
                         />
 
+                        <div class="text-sm leading-5 font-bold">
+                            {{ listing.text }}
+                        </div>
+
                         <div
                             v-if="listing.storkResult"
                             class="text-xs leading-5 font-light"
