@@ -45,6 +45,7 @@
     "stork-index": "run-s setup-stork build-stork-index",
     "download-stork-toml": "node -r esm -r tsconfig-paths/register scripts/download-stork-toml.js",
     "download-stork-executable": "node -r esm -r tsconfig-paths/register scripts/download-stork-executable.js",
+    "download-sitemaps": "node -r esm -r tsconfig-paths/register scripts/download-sitemaps.js",
     "stork-netlify": "chmod +x scripts/stork-netlify.sh && ./scripts/stork-netlify.sh",
     "dev-astro": "astro dev",
     "generate-astro": "astro build --experimental-ssr",
@@ -61,7 +62,7 @@
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
     "vercel-build": "run-s build-lists-and-api test-postbuild-api",
-    "netlify-build": "run-s test-prebuild-functions stork-index generate-astro"
+    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",
