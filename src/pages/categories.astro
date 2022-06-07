@@ -10,10 +10,17 @@
 import { DoesItAPI } from '~/helpers/api/client.js'
 
 import Layout from '../layouts/default.astro'
+import SimpleList from '../components/simple-list.astro'
 
 const kindIndex = await DoesItAPI.kind.index.get()
 
-const kinds = Object.values( kindIndex )
+const kinds = Object.values( kindIndex ).map( category => {
+    return {
+        href: `/kind/${ category.kindName }`,
+        heading: category.label,
+        description: category.description,
+    }
+})
 ---
 <Layout
 	headOptions={ {
@@ -36,28 +43,9 @@ const kinds = Object.values( kindIndex )
 
             <div class="line-separator border-white border-t-2 mb-12" />
 
-            <!-- categoryList: {{ categoryList }} -->
-
-            <ul class="categories-list space-y-3">
-                { kinds.map( category => (
-                    <li
-                        class="relative"
-                    >
-                        <a
-                            href={ `/kind/${ category.kindName }` }
-                            class="flex justify-start items-center inset-x-0 text-3xl md:text-4xl hover:bg-darkest border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none focus:bg-gray-50 duration-300 ease-in-out rounded-lg space-x-3 -mx-5 px-5 md:pr-64 py-3"
-                            style="transition-property: border;"
-                        >
-                            <div class="font-hairline">
-                                <h2>{ category.label }</h2>
-                                <div class="text-xs opacity-75 mb-3">{ category.description }</div>
-                            </div>
-                            <div>➔</div>
-                        </a>
-
-                    </li>
-                )) }
-            </ul>
+            <SimpleList
+                items={ kinds }
+            />
 
         </div>
     </main>
