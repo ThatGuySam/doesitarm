@@ -68,9 +68,6 @@ typings/
 # nuxt.js build output
 .nuxt
 
-# Nuxt generate
-dist
-
 # vuepress build output
 .vuepress/dist
 
@@ -80,20 +77,23 @@ dist
 # IDE
 .idea
 
-
 # Stork Executable
 /stork-executable
 
-# Other
+# Local Netlify folder
+.netlify
+
+# Build Output
+dist
+/static/sitemap*
 /static/app-list.json
-/README-temp.md
 /static/**/*.json
 /static/**/*.toml
 /static/**/*.st
 /commits-data.json
-.DS_Store
 /static/tailwind.css
-/.vscode/snipsnap.code-snippets
 
-# Local Netlify folder
-.netlify
+# Other
+/README-temp.md
+.DS_Store
+/.vscode/snipsnap.code-snippets
