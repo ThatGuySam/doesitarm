@@ -44,8 +44,7 @@ import {
         // Fetch Sitemap Index
         const sitemapXML = await axios.get( apiSitemapUrl.href ).then( response => response.data )
 
-        console.log( 'apiSitemapUrl', apiSitemapUrl )
-
+        // console.log( 'apiSitemapUrl', apiSitemapUrl )
 
         const sitemapFileName = apiSitemapUrl.pathname.split('/')[1]
         const sitemapIndexFilePath = `${ sitemapLocation }${ sitemapFileName }`
