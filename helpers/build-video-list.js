@@ -1,5 +1,4 @@
 import fs from 'fs-extra'
-import axios from 'axios'
 import { PromisePool } from '@supercharge/promise-pool'
 
 import { fuzzyMatchesWholeWord } from './matching.js'
