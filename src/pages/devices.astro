@@ -1,0 +1,65 @@
+---
+// Component Script:
+// You can write any JavaScript/TypeScript that you'd like here.
+// It will run during the build, but never in the browser.
+// All variables are available to use in the HTML template below.
+
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+import { DoesItAPI } from '~/helpers/api/client.js'
+
+import Layout from '../layouts/default.astro'
+import SimpleList from '../components/simple-list.astro'
+
+const deviceIndex = await DoesItAPI.kind.device(1).get()
+
+const kinds = deviceIndex.items.map( device => {
+    return {
+        href: device.endpoint,
+        heading: device.name,
+        description: device.description,
+    }
+})
+
+---
+<Layout
+	headOptions={ {
+        title: 'List of Apple Devices for Apple Silicon App Support',
+        description: 'List of devices for Apple Silicon and the Apple M1 Pro and M1 Max Processors',
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        pathname: '/devices',
+    } }
+>
+
+    <main class="container py-24">
+        <div class="flex flex-col">
+            <h1 class="title text-2xl leading-tight mb-6">
+                Categories
+            </h1>
+
+            <div class="line-separator border-white border-t-2 mb-12" />
+
+            <SimpleList
+                items={ kinds }
+            />
+
+        </div>
+    </main>
+
+	<!--
+
+	You can also use imported framework components directly in your markup!
+
+	Note: by default, these components are NOT interactive on the client.
+	The `:visible` directive tells Astro to make it interactive.
+
+	See https://docs.astro.build/core-concepts/component-hydration/
+
+	-->
+
+</Layout>
