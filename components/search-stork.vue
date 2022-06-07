@@ -98,16 +98,16 @@
             </template>
 
             <ul
-                v-for="(listings, i) in chunkedListings"
-                :key="`listings-chunk-${i}`"
+                v-for="(listingsChunk, chunkIndex) in chunkedListings"
+                :key="`listings-chunk-${ chunkIndex }`"
                 class="listings-container divide-y divide-gray-700"
             >
                 <!-- <pre>
-                    {{ listings }}
+                    {{ listingsChunk }}
                 </pre> -->
                 <li
-                    v-for="(listing, i) in listings"
-                    :key="`${ listing.slug }-${i}`"
+                    v-for="(listing, listingIndex) in listingsChunk"
+                    :key="`${ listing.slug }-${ listingIndex }`"
                     :ref="`${ listing.slug }-row`"
                     :data-app-slug="listing.slug"
                     class="relative"
@@ -136,13 +136,13 @@
                             class="text-xs leading-5 font-light"
                         >
                             <div
-                                v-for="(excerpt, i) in listing.storkResult.excerpts"
-                                :key="`excerpt-${i}`"
+                                v-for="(excerpt, excerptIndex) in listing.storkResult.excerpts"
+                                :key="`excerpt-${ excerptIndex }`"
                                 class="result-excerpt space-y-3"
                             >
                                 <div
-                                    v-for="(range, i) in makeHighlightedMarkup( excerpt )"
-                                    :key="`range-${i}`"
+                                    v-for="(range, rangeIndex) in makeHighlightedMarkup( excerpt )"
+                                    :key="`range-${ rangeIndex }`"
 
                                     v-html="range"
                                 />
@@ -174,9 +174,7 @@
                     <div
                         class="search-item-options relative md:absolute md:inset-0 w-full pointer-events-none"
                     >
-
                         <div class="search-item-options-container h-full flex justify-center md:justify-end items-center pb-4 md:py-4 md:px-4">
-
                             <LinkButton
                                 v-for="link in getSearchLinks( listing )"
                                 :key="`${ listing.slug }-${ link.label.toLowerCase() }`"
@@ -224,23 +222,17 @@
                                 >
                                     <use href="#chevron-right" />
                                 </svg>
-
                             </LinkButton>
-
                         </div>
-
                     </div>
-
                 </li>
             </ul>
-
         </div>
 
         <nav
             v-if="showingInitialList"
             class="pagination w-full flex gap-6 justify-center"
         >
-
             <LinkButton
                 v-if="previousPageUrl"
                 :href="previousPageUrl"
@@ -274,7 +266,6 @@
                     <use href="#chevron-right" />
                 </svg>
             </LinkButton>
-
         </nav>
     </div>
 </template>
