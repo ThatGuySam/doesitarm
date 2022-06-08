@@ -11,7 +11,7 @@ import {
     ListingDetails
 } from '~/helpers/listing-page.js'
 import { headPropertyTypes } from '~/test/helpers/head.js'
-import { PageHead } from '~/helpers/config.js'
+import { PageHead } from '~/helpers/config-node.js'
 
 
 

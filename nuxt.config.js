@@ -5,6 +5,7 @@ import { getSiteUrl } from '~/helpers/url.js'
 import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 
 
+
 const siteUrl = getSiteUrl()
 
 
@@ -42,107 +43,7 @@ export default {
     /*
     ** Headers of the page
     */
-    head: {
-        // this htmlAttrs you need
-        htmlAttrs: {
-            lang: 'en',
-        },
-        title: 'Does It ARM',
-        description: pkg.description,
-
-        meta: [
-            { charset: 'utf-8' },
-            {
-                name: 'viewport',
-                content: 'width=device-width, initial-scale=1'
-            },
-            {
-                hid: 'description',
-                name: 'description',
-                content: pkg.description
-            },
-            {
-                'property':  'og:image',
-                'content': `${ siteUrl }/images/og-image.png`
-            },
-            {
-                'property':  'og:image:width',
-                'content': '1200'
-            },
-            {
-                'property':  'og:image:height',
-                'content': '627'
-            },
-            {
-                'property':  'og:image:alt',
-                'content': 'Does It ARM Logo'
-            },
-
-            // Twitter Card
-            {
-                'property':  'twitter:card',
-                'content': 'summary'
-            },
-            {
-                'property':  'twitter:title',
-                'content': 'Does It ARM'
-            },
-            {
-                'property':  'twitter:description',
-                'content': pkg.description
-            },
-            {
-                'property':  'twitter:url',
-                'content': `${ siteUrl }`
-            },
-            {
-                'property':  'twitter:image',
-                'content': `${ siteUrl }/images/mark.png`
-            }
-        ],
-        link: [
-            // Favicon
-            {
-                rel: 'icon',
-                type: 'image/x-icon',
-                href: '/favicon.ico'
-            },
-
-            // Gtag Preconnect
-            {
-                rel: 'preconnect',
-                href: 'https://www.googletagmanager.com'
-            },
-
-            // Carbon Preconnects
-            {
-                rel: 'preconnect',
-                href: 'https://cdn.carbonads.com'
-            },
-            {
-                rel: 'preconnect',
-                href: 'https://srv.carbonads.net'
-            },
-            {
-                rel: 'preconnect',
-                href: 'https://cdn4.buysellads.net'
-            },
-        ],
-
-        script: [
-            // // Carbon Ads
-            // // https://sell.buysellads.com/zones/1294/ad-tags#z=js
-            // {
-            //     // <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom" id="_carbonads_js"></script>
-            //     src: 'https://cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom',
-            //     async: true,
-            //     type: 'text/javascript',
-            //     id: '_carbonads_js',
-            //     class: 'include-on-static carbon-inline-wide',
-            //     body: true
-            // }
-        ]
-    },
+    head: ,
 
     /*
     ** Customize the progress-bar color

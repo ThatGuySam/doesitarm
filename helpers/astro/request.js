@@ -1,4 +1,4 @@
-import { getNetlifyRedirect } from '~/helpers/config.js'
+import { getNetlifyRedirect } from '~/helpers/config-node.js'
 
 export async function catchRedirectResponse ( Astro ) {
     const requestUrl = new URL( Astro.request.url )

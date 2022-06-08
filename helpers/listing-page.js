@@ -7,7 +7,7 @@ import {
     getAppType
 } from './app-derived.js'
 import { buildVideoStructuredData } from './structured-data.js'
-import { nuxtHead } from './config.js'
+import { nuxtHead } from '~/helpers/config-node.js'
 import {
     getPartPartsFromUrl
 } from './url.js'
