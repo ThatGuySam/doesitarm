@@ -11,6 +11,7 @@ import { deviceSupportsApp } from '~/helpers/devices.js'
 
 import Layout from '../../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
+import LinkButton from '~/components/link-button.vue'
 
 
 // Get type and slug from the request path
@@ -88,6 +89,17 @@ const appPage = {
                     Supported apps include { appPage.summary.sampleNamesShort }.
                 </div>
             </div>
+
+            { !!device.amazonUrl &&
+                <div class="flex justify-center py-8">
+                    <LinkButton
+                        href={ device.amazonUrl }
+                        target="_blank"
+                    >
+                        Check Pricing
+                    </LinkButton>
+                </div>
+            }
 
             <Search
                 kind-page={ appPage }
