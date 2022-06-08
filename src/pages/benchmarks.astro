@@ -11,13 +11,104 @@ import { DoesItAPI } from '~/helpers/api/client.js'
 
 import Layout from '../layouts/default.astro'
 import BgPlayer from '~/src/components/video/bg-player.astro'
+import VideoRow from '~/src/components/video/row.astro'
 import LinkButton from '~/components/link-button.vue'
 
-const videosPage = await DoesItAPI.kind.tv(1).get()
 
-const video = videosPage.items[0]
+const pagesToGet = 10
 
-console.log('videos', video)
+const allVideos = []
+
+// Run through out newest video pages and get all the videos
+await Promise.all(
+  Array.from({ length: pagesToGet }, (_, i) => i + 1).map(async (page) => {
+
+    // console.log('Getting page', page)
+
+    const videoPage = await DoesItAPI.kind.tv( page ).get()
+
+    // Merge in the new videos
+    allVideos.push( ...videoPage.items )
+
+    return videoPage
+  })
+)
+
+// Our initial video for the hero
+const heroVideo = allVideos[0]
+
+// Setup video rows data for the page
+const videoRows = {
+    'video-benchmarks': {
+        heading: 'Video Editing Benchmarks',
+        matchesCondition: video => {
+            return video.tags.includes('benchmark') && video.tags.includes('video-and-motion-tools')
+        },
+        videos: []
+    },
+    'music-and-audio-tools': {
+        heading: 'Music and DAW Performance',
+        matchesCondition: video => {
+            return video.tags.includes('music-and-audio-tools')
+        },
+        videos: []
+    },
+    'science-and-research-software': {
+        heading: 'Science and Research',
+        matchesCondition: video => {
+            return video.tags.includes('science-and-research-software')
+        },
+        videos: []
+    },
+    'photo-and-graphic-tools': {
+        heading: 'Photography and Design Compatibility',
+        matchesCondition: video => {
+            return video.tags.includes('photo-and-graphic-tools')
+        },
+        videos: []
+    },
+    'games': {
+        heading: 'Gaming Benchmarks',
+        matchesCondition: video => {
+            return video.tags.includes('benchmark') && video.tags.includes('games')
+        },
+        videos: []
+    },
+    'benchmarks': {
+        heading: 'Other Benchmark Videos',
+        matchesCondition: video => video.tags.includes('benchmark'),
+        videos: []
+    },
+    'performance': {
+        heading: 'Performance Videos',
+        matchesCondition: video => video.tags.includes('performance'),
+        videos: []
+    },
+
+    'other': {
+        heading: 'More Videos',
+        // Always true
+        matchesCondition: () => true,
+        videos: []
+    }
+}
+
+
+// Move videos to relevant categories one at a time
+// so that we we don't get duplicates in the rows
+
+for (const video of allVideos) {
+    // Look through row conditions to see if video matches
+    for (const rowKey in videoRows) {
+        if( videoRows[ rowKey ].matchesCondition(video) ) {
+
+            // Add the matching video
+            videoRows[ rowKey ].videos.push(video)
+
+            continue
+        }
+    }
+}
 
 ---
 <Layout
@@ -36,7 +127,7 @@ console.log('videos', video)
     <main class="container relative md:static overflow-hidden md:overflow-visible pb-16">
         <div class="flex flex-col items-center text-center space-y-12">
             <BgPlayer
-                video={ video }
+                video={ heroVideo }
                 classes="absolute overflow-hidden w-2x-screen md:w-full pointer-events-none"
             />
 
@@ -49,7 +140,7 @@ console.log('videos', video)
             <div class="line-separator border-white border-t-2 mb-12" />
 
             <a
-                href={ video.endpoint }
+                href={ heroVideo.endpoint }
             >
                 <div
                     class="relative flex flex-col w-full justify-center items-center space-y-8 py-16 md:pt-0 md:pb-12 md:px-10"
@@ -68,13 +159,13 @@ console.log('videos', video)
                         </svg>
                     </div>
                     <h2 class="title text-lg md:text-2xl font-bold">
-                        { video.name }
+                        { heroVideo.name }
                     </h2>
                 </div>
             </a>
 
             <!-- <div
-                class="features-apps w-full"
+                class="featured-apps w-full"
             >
                 <hr class="w-full" >
                 <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
@@ -89,19 +180,25 @@ console.log('videos', video)
                 </div>
             </div> -->
 
+            { Object.entries(videoRows).map(([ rowKey, row ]) => {
+                // Skip rows that don't have enough videos
+                if ( row.videos.length < 3 ) return
 
-            { /* <div
-                v-for="(row, key) in videoRows"
-                class={ `${ key }-videos w-full max-w-4xl` }
-            >
-                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                    { row.heading }
-                </h2>
-                <!-- <pre class="text-left">{{ benchmarkVideos }}</pre> -->
-                <VideoRow
-                    videos={ "row.videos" }
-                />
-            </div> */ }
+                return (
+                    <div
+                        class={ `${ rowKey }-videos w-full max-w-4xl` }
+                    >
+                        <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                            { row.heading }
+                        </h2>
+                        <VideoRow
+                            client:load
+
+                            videos={ row.videos }
+                        />
+                    </div>
+                )
+            }) }
 
         </div>
     </main>
