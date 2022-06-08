@@ -10,7 +10,7 @@
 import { DoesItAPI } from '~/helpers/api/client.js'
 
 import Layout from '../layouts/default.astro'
-import BgPlayer from '~/components/video/bg-player.vue'
+import BgPlayer from '~/src/components/video/bg-player.astro'
 import LinkButton from '~/components/link-button.vue'
 
 const videosPage = await DoesItAPI.kind.tv(1).get()
@@ -36,8 +36,8 @@ console.log('videos', video)
     <main class="container relative md:static overflow-hidden md:overflow-visible pb-16">
         <div class="flex flex-col items-center text-center space-y-12">
             <BgPlayer
-                video={"video"}
-                class="absolute overflow-hidden w-2x-screen md:w-full pointer-events-none"
+                video={ video }
+                classes="absolute overflow-hidden w-2x-screen md:w-full pointer-events-none"
             />
 
             <div class="page-heading flex justify-start w-full">
