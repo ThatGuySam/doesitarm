@@ -1,0 +1,33 @@
+---
+const {
+    video,
+    classes = ''
+} = Astro.props
+
+//
+---
+<div
+    class={[
+        'video-canvas w-screen flex justify-center inset-x-1/2 bg-black transition-opacity duration-500 ease-in-out',
+        classes
+    ].join(' ')}
+    style="
+        margin-left: -50vw;
+        margin-right: -50vw;
+        -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.25));
+    "
+>
+    <div class="ratio-wrapper w-full">
+        <div class="relative overflow-hidden w-full pb-16/9">
+            <video
+                src={`https://vumbnail.com/${ video.id }.mp4`}
+                class="absolute w-full object-cover inset-0 blur-sm"
+                style="height: 200%;"
+                muted
+                autoplay
+                loop
+                playsinline
+            />
+        </div>
+    </div>
+</div>
