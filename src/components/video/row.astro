@@ -56,21 +56,12 @@ const rowSelector = `#${ rowId }`
 
 </div>
 
-<script is:inline>
-    function scrollHorizontalCarousel ( event ) {
-        event.stopPropagation()
+<script>
+    import { scrollHorizontalCarousel } from '~/helpers/scroll.js'
 
-        // console.log('event.target', event.currentTarget)
-        // console.log('distance', event.currentTarget.getAttribute('distance'))
-
-        const distance = Number(event.currentTarget.getAttribute('distance'))
-        const scrollTarget = document.querySelector(event.currentTarget.getAttribute('scroll-target'))
-
-        scrollTarget.scrollBy({ left: distance, behavior: 'smooth' })
-    }
 
     // Add Click listeners to all buttons
-    Array.from( document.querySelectorAll(`button.scroll-button`) ).forEach( button => {
+    Array.from( document.querySelectorAll(`.video-row button.scroll-button`) ).forEach( button => {
         // console.log('button', button)
         button.addEventListener('click', scrollHorizontalCarousel)
     })
