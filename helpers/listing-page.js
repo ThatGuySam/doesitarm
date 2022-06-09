@@ -93,6 +93,8 @@ export class ListingDetails {
 
     type = ''
 
+    isListingDetails = true
+
     get mainHeading () {
         if ( this.type === 'formula' ) {
             return `Does <code>${ this.api.name }</code> work on Apple Silicon when installed via Homebrew?`
@@ -175,4 +177,13 @@ export class ListingDetails {
             pathname: this.api.endpoint,
         }
     }
+}
+
+
+export function ensureListingDetails ( listing ) {
+    if ( listing.isListingDetails ) {
+        return listing
+    }
+
+    return new ListingDetails( listing )
 }
