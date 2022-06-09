@@ -1,6 +1,8 @@
 // import { allVideoAppsListSet } from '~/helpers/get-list.js'
 // import videoList from '~/static/video-list.json'
 
+import { getAppEndpoint, getAppType } from '~/helpers/app-derived.js'
+
 function videoHasAppEndpoint ( video, appEndpoint ) {
     for (const appLink of video.appLinks) {
         if ( appLink.endpoint === appEndpoint ) {
@@ -70,3 +72,13 @@ export function videosRelatedToApp ( app, videoListSet ) {
 
     return relatedVideos
 }
+
+export function videoBenchmarksRelatedToApp ( app, videoListSet ) {
+    return videosRelatedToApp( app, videoListSet ).map(video => {
+        return {
+            ...video,
+            endpoint: `${getAppEndpoint( app )}/benchmarks#${video.id}`
+        }
+    })
+}
+
