@@ -1,8 +1,10 @@
+import { getSiteUrl } from './url'
+
 function makeFeaturedAppsString ( featuredApps ) {
     return featuredApps.slice(0, 5).map(app => app.name).join(', ')
 }
 
-export function buildVideoStructuredData ( video, featuredApps, options ) {
+export function buildVideoStructuredData ( video, featuredApps, options = {} ) {
     // console.log('video', video)
 
     // Throw for missing featured apps
@@ -12,7 +14,7 @@ export function buildVideoStructuredData ( video, featuredApps, options ) {
     }
 
     const {
-        siteUrl
+        siteUrl = getSiteUrl(),
     } = options
 
     const thumbnailUrls = video.thumbnail.srcset.split(',').map( srcSetImage => {
