@@ -159,7 +159,7 @@ export class ListingDetails {
 
     get structuredData () {
         if ( this.type === 'video' ) {
-            return buildVideoStructuredData( this.api, this.api.featuredApps, { siteUrl: import.meta.site } )
+            return buildVideoStructuredData( this.api, this.api.appLinks )
         }
 
         return null
