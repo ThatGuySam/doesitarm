@@ -140,13 +140,16 @@ async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
     // Build video slug
     const slug = makeSlug( `${fetchedVideo.title}-i-${videoId}` )
 
-    const apps = []
+    const appLinks = []
     // Generate new tag set based on api data
     const tags = generateVideoTags(fetchedVideo)
 
     for ( const app of applist ) {
         if (videoFeaturesApp(app, fetchedVideo)) {
-            apps.push(app.slug)
+            appLinks.push({
+                name: app.name,
+                endpoint: app.endpoint
+            })
 
             tags.add(app.category.slug)
         }
@@ -165,7 +168,7 @@ async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
         name: fetchedVideo.title,
         id: videoId,
         lastUpdated,
-        apps,
+        appLinks,
         slug,
         channel: {
             name: fetchedVideo.rawData.snippet.channelTitle,
