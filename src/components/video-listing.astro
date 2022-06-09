@@ -53,7 +53,22 @@ const details = ensureListingDetails( listing )
         <hr class="w-full">
 
         { details.hasRelatedApps &&
-            <div>{ "featuredAppsHtml/related apps" }</div>
+            <div
+                class="related-apps w-full"
+            >
+                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
+                    Related Apps
+                </h2>
+                <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
+                    { details.initialVideo.appLinks.map( appLink => (
+                        <a
+                            href={ appLink.endpoint }
+                            role="button"
+                            class="relative items-center leading-5 font-bold text-white border border-transparent focus:outline-none focus:border-indigo-600 neumorphic-shadow-inner bg-darker hover:bg-indigo-400 active:bg-indigo-600 transition duration-150 ease-in-out inline-block text-xs rounded-md px-4 py-2"
+                        >{ appLink.name }</a>
+                    ) ) }
+                </div>
+            </div>
         }
 
         <RelatedVideos

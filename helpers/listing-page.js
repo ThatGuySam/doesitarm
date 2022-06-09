@@ -128,7 +128,7 @@ export class ListingDetails {
     }
 
     get hasRelatedApps () {
-        return false
+        return Array.isArray( this.api.appLinks ) && this.api.appLinks.length > 0
     }
 
     get hasBenchmarksPage () {
@@ -143,7 +143,7 @@ export class ListingDetails {
 
     get initialVideo () {
         if ( this.type === 'video' ) {
-            return this.api.video
+            return this.api
         }
 
         if ( this.hasRelatedVideos ) {
