@@ -2,7 +2,7 @@
 // Video Listing template for Benchmarks and Videos
 
 import {
-    ListingDetails
+    ensureListingDetails
 } from '~/helpers/listing-page.js'
 
 // import Devices from '~/src/components/listing-parts/devices.astro'
@@ -14,7 +14,8 @@ const {
   listing
 } = Astro.props
 
-const details = new ListingDetails( listing )
+const details = ensureListingDetails( listing )
+
 ---
 <section class="container pb-16">
     <div class="flex flex-col items-center text-center space-y-6">
