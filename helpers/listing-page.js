@@ -96,6 +96,11 @@ export class ListingDetails {
     isListingDetails = true
 
     get mainHeading () {
+        // Use the video title for videos
+        if ( this.type === 'video' ) {
+            return this.api.name
+        }
+
         if ( this.type === 'formula' ) {
             return `Does <code>${ this.api.name }</code> work on Apple Silicon when installed via Homebrew?`
         }
