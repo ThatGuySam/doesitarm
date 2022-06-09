@@ -82,3 +82,14 @@ export function videoBenchmarksRelatedToApp ( app, videoListSet ) {
     })
 }
 
+
+export function getRelatedVideos ( { listing, videoListSet, appListSet } = {} ) {
+    const listingType = getAppType( listing )
+
+    if ( listingType === 'video' ) {
+        return videosRelatedToVideo( listing, appListSet, videoListSet )
+    }
+
+    return videoBenchmarksRelatedToApp( listing, videoListSet )
+}
+
