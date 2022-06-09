@@ -5,6 +5,12 @@ function makeFeaturedAppsString ( featuredApps ) {
 export function buildVideoStructuredData ( video, featuredApps, options ) {
     // console.log('video', video)
 
+    // Throw for missing featured apps
+    if ( Array.isArray(featuredApps) === false ) {
+        console.warn( 'featuredApps not array', featuredApps )
+        throw new Error('featuredApps must be an array of objects')
+    }
+
     const {
         siteUrl
     } = options
