@@ -168,8 +168,7 @@ class BuildLists {
 
         const typeWithRelatedVideos = new Set([
             'app',
-            'formula',
-            // 'video'
+            'formula'
         ])
 
         return typeWithRelatedVideos.has( appType )
@@ -503,11 +502,16 @@ class BuildLists {
                     })
                 }
 
+                const hasSaveMethod = listOptions.hasOwnProperty('beforeSave')
+                const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
+
+                const [ saveableEntry ] = saveMethod( new Set( [ listEntry ] ) )
+
                 // Ensure the directory exists
                 await fs.ensureDir( endpointDirectory )
 
                 // Write the endpoint to JSON
-                await this.saveToJson( listEntry, endpointPath )
+                await this.saveToJson( saveableEntry, endpointPath )
             })
 
         if ( errors.length !== 0 ) {
