@@ -17,7 +17,9 @@ import { saveSitemap } from '~/helpers/api/sitemap/build.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 
-import { videosRelatedToApp } from '~/helpers/related.js'
+import {
+    getRelatedVideos
+} from '~/helpers/related.js'
 import { buildVideoPayload, buildAppBenchmarkPayload } from '~/helpers/build-payload.js'
 
 import {
@@ -164,7 +166,13 @@ class BuildLists {
     shouldHaveRelatedVideos ( app ) {
         const appType = getAppType( app )
 
-        return appType === 'app' || appType === 'formula'
+        const typeWithRelatedVideos = new Set([
+            'app',
+            'formula',
+            // 'video'
+        ])
+
+        return typeWithRelatedVideos.has( appType )
     }
 
     shouldHaveDeviceSupport ( app ) {
@@ -466,12 +474,10 @@ class BuildLists {
 
                 // Add related videos
                 if ( this.shouldHaveRelatedVideos( listEntry ) ) {
-                    listEntry.relatedVideos = videosRelatedToApp( listEntry, this.lists.video ).map(video => {
-                        // console.log('video', video)
-                        return {
-                            ...video,
-                            endpoint: `${getAppEndpoint(listEntry)}/benchmarks#${video.id}`
-                        }
+                    listEntry.relatedVideos = getRelatedVideos({
+                        listing: listEntry,
+                        videoListSet: this.lists.video,
+                        appListSet: this.allVideoAppsList
                     })
                 }
 
@@ -520,6 +526,7 @@ class BuildLists {
             const difference = getSymmetricDifference( listSlugs, fileNames )
 
             console.log( 'List difference', difference )
+            console.log( `List difference Count ${ difference[0].length } / ${ difference[1].length }`,  )
 
             throw new Error( `Files (${ fileCount }) don\'t match list count in ${ apiListDirectory }(${ this.lists[listOptions.name].size }).` )
         }
@@ -641,12 +648,10 @@ class BuildLists {
                 // Add standard app endpoint
                 if ( this.shouldHaveRelatedVideos( app ) ) {
 
-                    const relatedVideos = videosRelatedToApp( app, this.lists.video ).map(video => {
-                        // console.log('video', video)
-                        return {
-                            ...video,
-                            endpoint: `${getAppEndpoint(app)}/benchmarks#${video.id}`
-                        }
+                    const relatedVideos = getRelatedVideos({
+                        listing: app,
+                        videoListSet: this.lists.video,
+                        appListSet: this.allVideoAppsList
                     })
 
                     // Add app or formula endpoint
