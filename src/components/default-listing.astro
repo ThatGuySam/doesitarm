@@ -6,10 +6,12 @@ import {
 } from '~/helpers/listing-page.js'
 
 import Aliases from '~/src/components/listing-parts/aliases.astro'
+import ThomasCredit from '~/components/thomas-credit.vue'
 import RelatedLinks from '~/src/components/listing-parts/related-links.astro'
 import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
 import Bundles from '~/src/components/listing-parts/bundles.astro'
+import GameReports from '~/src/components/listing-parts/game-reports.astro'
 import LastUpdated from '~/src/components/listing-parts/last-updated.astro'
 
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
@@ -41,6 +43,10 @@ const details = new ListingDetails( listing )
             { details.subtitle }
         </h2>
 
+        { details.isGame && (
+            <ThomasCredit />
+        )}
+
         <Aliases listing={ listing } />
 
         <AllUpdatesSubscribe
@@ -64,6 +70,10 @@ const details = new ListingDetails( listing )
     </div>
 
     <Bundles
+        listing={ listing }
+    />
+
+    <GameReports
         listing={ listing }
     />
 
