@@ -93,6 +93,10 @@ export class ListingDetails {
 
     type = ''
 
+    get isGame () {
+        return this.type === 'game'
+    }
+
     isListingDetails = true
 
     get mainHeading () {
