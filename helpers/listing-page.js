@@ -128,8 +128,20 @@ export class ListingDetails {
         return makeApiPathFromEndpoint( this.api.endpoint )
     }
 
+    get relatedVideos () {
+        if ( Array.isArray( this.api.relatedVideos ) ) {
+            return this.api.relatedVideos
+        }
+
+        if ( !!this.api.payload && Array.isArray( this.api.payload.relatedVideos ) ) {
+            return this.api.payload.relatedVideos
+        }
+
+        return []
+    }
+
     get hasRelatedVideos () {
-        return Array.isArray( this.api.relatedVideos ) && this.api.relatedVideos.length > 0
+        return this.relatedVideos.length > 0
     }
 
     get hasRelatedApps () {
