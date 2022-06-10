@@ -168,7 +168,8 @@ class BuildLists {
 
         const typeWithRelatedVideos = new Set([
             'app',
-            'formula'
+            'formula',
+            'game'
         ])
 
         return typeWithRelatedVideos.has( appType )
