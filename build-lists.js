@@ -502,8 +502,8 @@ class BuildLists {
                     })
                 }
 
-                const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
                 const hasSaveMethod = has( listOptions, 'beforeSave' )
+                const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
 
                 const [ saveableEntry ] = saveMethod( new Set( [ listEntry ] ) )
 
