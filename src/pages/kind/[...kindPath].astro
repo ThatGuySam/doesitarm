@@ -9,6 +9,7 @@ import { catchRedirectResponse } from '~/helpers/astro/request.js'
 import {
     categories,
     getKindToCategorySlug,
+    getCategoryKindName,
     makeCategoryFilterFromCategorySlug
 } from '~/helpers/categories.js'
 
@@ -33,7 +34,11 @@ if ( redirectResponse !== null ) {
 }
 
 
-const rawKindPage = await DoesItAPI.kind( pathSlug )( subSlug ).get()
+// Try the pathSlug against categories
+// so we can load from category slugs
+const kindName = getCategoryKindName( pathSlug ) ? getCategoryKindName( pathSlug ) : pathSlug
+
+const rawKindPage = await DoesItAPI.kind( kindName )( subSlug ).get()
 
 // Clean up unused kind data
 const kindPage = {
@@ -47,7 +52,7 @@ const kindPage = {
 let pageLabel = 'Mac Apps'
 const baseFilters = []
 
-const categorySlug = getKindToCategorySlug( pathSlug )
+const categorySlug = getKindToCategorySlug( kindName )
 
 // If we have a category slug, add a filter
 if ( !!categorySlug ) {
