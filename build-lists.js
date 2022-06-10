@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import semver from 'semver'
 import { PromisePool } from '@supercharge/promise-pool'
 import memoize from 'fast-memoize'
-// import has from 'just-has'
+import has from 'just-has'
 
 import { saveYouTubeVideos } from '~/helpers/api/youtube/build.js'
 import buildAppList from '~/helpers/build-app-list.js'
@@ -502,8 +502,8 @@ class BuildLists {
                     })
                 }
 
-                const hasSaveMethod = listOptions.hasOwnProperty('beforeSave')
                 const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
+                const hasSaveMethod = has( listOptions, 'beforeSave' )
 
                 const [ saveableEntry ] = saveMethod( new Set( [ listEntry ] ) )
 
