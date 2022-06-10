@@ -1,11 +1,19 @@
 ---
+import { ensureListingDetails } from '~/helpers/listing-page.js'
 import { makeLastUpdatedFriendly } from '~/helpers/parse-date.js'
 
 const {
-  listing
+    listing
 } = Astro.props
 
+const details = ensureListingDetails( listing )
+
 const lastUpdatedFriendly = makeLastUpdatedFriendly( listing.lastUpdated )
+
+const gameReportUrl = 'https://forms.gle/29GWt85i1G1L7Ttj8'
+const defaultReportUrl = `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${ listing.name }`
+
+const reportUrl = details.isGame ? gameReportUrl : defaultReportUrl
 
 ---
 <div class="report-update text-xs text-center w-full shadow-none py-24">
@@ -20,7 +28,7 @@ const lastUpdatedFriendly = makeLastUpdatedFriendly( listing.lastUpdated )
     }
     <!-- https://eric.blog/2016/01/08/prefilling-github-issues/ -->
     <a
-        href={ `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${ listing.name }` }
+        href={ reportUrl }
         target="_blank"
         class="underline"
         rel="noopener"
