@@ -102,7 +102,7 @@ export class ListingDetails {
         }
 
         if ( this.type === 'formula' ) {
-            return `Does <code>${ this.api.name }</code> work on Apple Silicon when installed via Homebrew?`
+            return `Does <code class="bg-darkest rounded px-2 py-1">${ this.api.name }</code> work on Apple Silicon when installed via Homebrew?`
         }
 
         return `Does ${ this.api.name } work on Apple Silicon?`
