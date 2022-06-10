@@ -32,9 +32,10 @@ const details = new ListingDetails( listing )
 
     <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0 gap-8">
 
-        <h1 class="title text-sm md:text-xl font-bold">
-            { details.mainHeading }
-        </h1>
+        <div
+            class="title text-sm md:text-xl font-bold"
+            set:html={ details.mainHeading }
+        />
 
         <h2 class="subtitle text-2xl md:text-5xl font-bold">
             { details.subtitle }
