@@ -3,8 +3,9 @@ const {
   listing
 } = Astro.props
 
+const hasRelatedLinks = Array.isArray(listing.relatedLinks)
 ---
-{ listing.relatedLinks.map( (link, i) => {
+{ hasRelatedLinks && listing.relatedLinks.map( (link, i) => {
 
     const notAppTestLink = !link.label.includes('🧪')
 
