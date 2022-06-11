@@ -1,13 +1,13 @@
 import fs from 'fs-extra'
 import 'dotenv/config'
 import axios from 'axios'
-import { parse } from 'fast-xml-parser'
 
 import {
     sitemapLocation,
     sitemapIndexFileName,
 } from '~/helpers/constants.js'
 
+import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
 
 
 ;(async () => {
@@ -22,14 +22,7 @@ import {
     const sitemapIndexFilePath = `${ sitemapLocation }${ sitemapIndexFileName }`
     await fs.writeFile( sitemapIndexFilePath, sitemapIndexXML )
 
-    // Get URLs from index
-    const { sitemapindex } = parse( sitemapIndexXML )
-
-    const {
-        sitemap
-    } = sitemapindex
-
-    const urlEntries = Array.isArray( sitemap ) ? sitemap : [ sitemap ]
+    const urlEntries = parseSitemapXml( sitemapIndexXML )
 
 
     // Fetch each sitemap
@@ -43,6 +36,10 @@ import {
 
         // Fetch Sitemap Index
         const sitemapXML = await axios.get( apiSitemapUrl.href ).then( response => response.data )
+
+        // const sitemap = parse( sitemapXML )
+
+        // console.log( 'sitemap', sitemap )
 
         // console.log( 'apiSitemapUrl', apiSitemapUrl )
 
