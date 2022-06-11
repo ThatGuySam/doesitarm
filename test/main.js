@@ -6,8 +6,16 @@ import test from 'ava'
 import parser from 'fast-xml-parser'
 import axios from 'axios'
 import { structuredDataTest } from 'structured-data-testing-tool'
-import { Google, Twitter } from 'structured-data-testing-tool/presets'
-// import { isString } from '../helpers/check-types.js'
+import { Google } from 'structured-data-testing-tool/presets'
+
+import {
+    sitemapIndexFileName
+} from '~/helpers/constants.js'
+import { logArraysDifference } from '~/helpers/array.js'
+import {
+    parseSitemapXml,
+    getAllUrlsFromLocalSitemap
+} from '~/helpers/api/sitemap/parse.js'
 
 require('dotenv').config()
 
@@ -66,14 +74,30 @@ async function testStructuredData ( options ) {
 
 }
 
+const sitemapFilesToTry = [
+    sitemapIndexFileName,
+    'sitemap.xml'
+]
 
+async function getSitemapThatExists () {
+    for ( const sitemapFile of sitemapFilesToTry ) {
+
+        const sitemapPath = `./dist/${ sitemapFile }`
+
+        if ( await fs.pathExists( sitemapPath ) ) {
+            return sitemapPath
+        }
+    }
+}
 
 test.before(async t => {
-    const sitemapXml = await fs.readFile('./dist/sitemap.xml', 'utf-8')
-    const sitemap = parser.parse( sitemapXml )
+
+
+    const sitemapXml = await getSitemapThatExists()
+    const urls = await getAllUrlsFromLocalSitemap( sitemapXml )
 
     // Store sitemap urls to context
-    t.context.sitemapUrls = sitemap.urlset.url.map( tag => new URL( tag.loc ) )
+    t.context.sitemapUrls = urls.map( tag => new URL( tag.loc ) )
 })
 
 test('Sitemap contains no double slashes in paths', (t) => {
