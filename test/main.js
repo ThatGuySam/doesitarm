@@ -160,107 +160,55 @@ test('Sitemap mostly matches production', async (t) => {
     t.pass()
 })
 
-test('All Category pages have valid FAQPage structured data', async (t) => {
 
-    const categoryUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/kind/') )
+// test('All TV pages have valid VideoObject structured data', async (t) => {
 
-
-    try {
-
-        await testStructuredData({
-            pageUrls: categoryUrls,
-            schemas: [ 'FAQPage' ],
-            presets: [
-                Google,
-                // Twitter
-            ],
-        })
-
-    } catch ( error ) {
-        console.log('failed', error.failed)
-        t.fail( error.message )
-    }
-
-    t.log( `${categoryUrls.length} valid pages` )
-    t.pass()
-
-})
+//     const tvUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/tv/') )
 
 
-test('All Device pages have valid FAQPage structured data', async (t) => {
+//     try {
 
-    const deviceUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/device/') )
+//         await testStructuredData({
+//             pageUrls: tvUrls,
+//             schemas: [ 'VideoObject' ]
+//         })
 
+//     } catch ( error ) {
+//         console.log('failed', error.failed)
+//         t.fail( error.message )
+//     }
 
-    try {
+//     t.log( `${tvUrls.length} valid pages` )
+//     t.pass()
 
-        await testStructuredData({
-            pageUrls: deviceUrls,
-            schemas: [ 'FAQPage' ],
-            presets: [
-                Google,
-                // Twitter
-            ],
-        })
+// })
 
-    } catch ( error ) {
-        console.log('failed', error.failed)
-        t.fail( error.message )
-    }
+// test('All App pages with bundle data have bundle data visuals', async (t) => {
 
-    t.log( `${deviceUrls.length} valid pages` )
-    t.pass()
-})
+//     const appUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/app/') )
 
+//     const appsWithBundleIds = await fs.readJson('./static/app-list.json', 'utf-8').then( appList => {
+//         return appList.filter( app => {
+//             return app.bundleIds.length > 0
+//         })
+//     })
 
-test('All TV pages have valid VideoObject structured data', async (t) => {
+//     t.log(`${appsWithBundleIds.length} apps with bundle IDs`)
 
-    const tvUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/tv/') )
+//     try {
 
+//         for ( const app of appsWithBundleIds ) {
+//             const hasAppBundlesSection = await pageContains( 'App Bundles', `${ process.env.URL }${app.endpoint}` )
 
-    try {
+//             if ( !hasAppBundlesSection ) throw new Error(`Couldn't find App Bundles section on ${ app.endpoint }`)
+//         }
 
-        await testStructuredData({
-            pageUrls: tvUrls,
-            schemas: [ 'VideoObject' ]
-        })
+//     } catch ( error ) {
+//         console.log('failed', error)
+//         t.fail( error.message )
+//     }
 
-    } catch ( error ) {
-        console.log('failed', error.failed)
-        t.fail( error.message )
-    }
+//     t.log( `${appsWithBundleIds.length} valid app pages` )
+//     t.pass()
 
-    t.log( `${tvUrls.length} valid pages` )
-    t.pass()
-
-})
-
-test('All App pages with bundle data have bundle data visuals', async (t) => {
-
-    const appUrls = t.context.sitemapUrls.filter( url => url.pathname.startsWith('/app/') )
-
-    const appsWithBundleIds = await fs.readJson('./static/app-list.json', 'utf-8').then( appList => {
-        return appList.filter( app => {
-            return app.bundleIds.length > 0
-        })
-    })
-
-    t.log(`${appsWithBundleIds.length} apps with bundle IDs`)
-
-    try {
-
-        for ( const app of appsWithBundleIds ) {
-            const hasAppBundlesSection = await pageContains( 'App Bundles', `${ process.env.URL }${app.endpoint}` )
-
-            if ( !hasAppBundlesSection ) throw new Error(`Couldn't find App Bundles section on ${ app.endpoint }`)
-        }
-
-    } catch ( error ) {
-        console.log('failed', error)
-        t.fail( error.message )
-    }
-
-    t.log( `${appsWithBundleIds.length} valid app pages` )
-    t.pass()
-
-})
+// })
