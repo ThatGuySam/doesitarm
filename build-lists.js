@@ -16,6 +16,7 @@ import buildDeviceList from '~/helpers/build-device-list.js'
 import { saveSitemap } from '~/helpers/api/sitemap/build.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
+import { logArraysDifference } from '~/helpers/arrays.js'
 
 import {
     getRelatedVideos
@@ -55,12 +56,7 @@ dotenv.config()
 let timeRunGetListArray = 0
 let timeRunGetListByCategories = 0
 
-function getSymmetricDifference (a, b) {
-    return [
-        a.filter(x => !b.includes(x)),
-        b.filter(x => !a.includes(x))
-    ]
-}
+
 
 function normalizeVersion ( rawVersion ) {
     const containsNumbers = /\d+/.test( rawVersion )
@@ -528,10 +524,8 @@ class BuildLists {
         if ( fileCount !== this.lists[listOptions.name].size ) {
             const listSlugs = Array.from( this.lists[listOptions.name] ).map( listEntry => listEntry.slug )
             const fileNames = fs.readdirSync( apiListDirectory ).map( fileName => basename(fileName).split('.')[0] )
-            const difference = getSymmetricDifference( listSlugs, fileNames )
 
-            console.log( 'List difference', difference )
-            console.log( `List difference Count ${ difference[0].length } / ${ difference[1].length }`,  )
+            logArraysDifference( listSlugs, fileNames )
 
             throw new Error( `Files (${ fileCount }) don\'t match list count in ${ apiListDirectory }(${ this.lists[listOptions.name].size }).` )
         }
