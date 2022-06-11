@@ -4,13 +4,6 @@
   "description": "Find out the latest app support for Apple Silicon and the Apple M2 and M1 Ultra Processors",
   "author": "Sam Carlton",
   "private": true,
-  "ava": {
-    "require": [
-      "dotenv/config",
-      "esm",
-      "tsconfig-paths/register"
-    ]
-  },
   "config": {
     "verbiage": {
       "processors": "Apple M2 and M1 Ultra",
