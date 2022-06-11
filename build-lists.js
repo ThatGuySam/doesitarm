@@ -707,8 +707,12 @@ class BuildLists {
 
         // Add routes for Astro pages
         const astroPageUrls = await getUrlsForAstroDefinedPages()
-
-        console.log( 'astroPageUrls', astroPageUrls )
+        astroPageUrls.forEach( url => {
+            sitemapEndpoints.push({
+                route: url,
+                payload: {}
+            })
+        })
 
 
         // Save sitemap endpoints
