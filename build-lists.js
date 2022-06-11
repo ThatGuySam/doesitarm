@@ -13,7 +13,10 @@ import buildGamesList from '~/helpers/build-game-list.js'
 import buildHomebrewList from '~/helpers/build-homebrew-list.js'
 import buildVideoList from '~/helpers/build-video-list.js'
 import buildDeviceList from '~/helpers/build-device-list.js'
-import { saveSitemap } from '~/helpers/api/sitemap/build.js'
+import {
+    saveSitemap,
+    getUrlsForAstroDefinedPages
+} from '~/helpers/api/sitemap/build.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
 import { logArraysDifference } from '~/helpers/array.js'
@@ -701,6 +704,12 @@ class BuildLists {
                 payload: {}
             })
         } )
+
+        // Add routes for Astro pages
+        const astroPageUrls = await getUrlsForAstroDefinedPages()
+
+        console.log( 'astroPageUrls', astroPageUrls )
+
 
         // Save sitemap endpoints
         console.log('Building Sitemap JSON')
