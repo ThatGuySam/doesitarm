@@ -15,6 +15,16 @@ export const playlists = [
     {
         id: 'PLFbqxkNlqrHNK0i4WN99Jc8g-qSbKoZEy'
     },
+    // Andrew Tsai - Source Ports M1 Mac
+    // https://www.youtube.com/playlist?list=PLYzT4cEhhFvg5BPfy5-cOUNq7PtqzPr5s
+    {
+        id: 'PLYzT4cEhhFvg5BPfy5-cOUNq7PtqzPr5s'
+    },
+    // Andrew Tsai - Emulators M1 Mac
+    // https://www.youtube.com/playlist?list=PLYzT4cEhhFvh9IAsuic4paA_elCqNKs3J
+    {
+        id: 'PLYzT4cEhhFvh9IAsuic4paA_elCqNKs3J'
+    },
     // Max Tech - Apple Silicon Macs Explained
     // https://www.youtube.com/playlist?list=PLo11Rczpzuj05que94HF80LWD217ToJht
     {
