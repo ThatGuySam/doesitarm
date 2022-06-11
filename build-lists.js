@@ -16,7 +16,7 @@ import buildDeviceList from '~/helpers/build-device-list.js'
 import { saveSitemap } from '~/helpers/api/sitemap/build.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
-import { logArraysDifference } from '~/helpers/arrays.js'
+import { logArraysDifference } from '~/helpers/array.js'
 
 import {
     getRelatedVideos
