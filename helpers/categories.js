@@ -7,6 +7,8 @@ export function makeCategorySlug ( categoryName ) {
     return makeSlug( categoryName )
 }
 
+
+// Maps iTunes Genres titles to Category IDs
 const categoryMap = new Map([
     [ 'Business', 2 ],
     [ 'Entertainment', 5 ],
@@ -20,7 +22,12 @@ const categoryMap = new Map([
     // [ 'Name', 1 ],
 
     // Needs work before apps can be assigned games category
-    // so for now 'Games' genre is Entertainment
+    // Games will be assigned to the "Games" category
+    // but need to be put into games kind/list
+    // so the solution may be to separate games from apps
+    // during app list build and then merge "Game from Apps"
+    // into the "Games" list
+    // but for now 'Games' genre is Entertainment
     // [ 'Games', 100 ],
     [ 'Games', 5 ],
 ])
