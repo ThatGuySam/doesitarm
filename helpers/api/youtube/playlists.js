@@ -50,6 +50,21 @@ export const playlists = [
     {
         id: 'PL3XJJi5sAjD1sCicSKd0irf5TnQ1KJvPm'
     },
+    // M1 Pro / Max — High-Performance Macs! - Rene Ritchie
+    // https://www.youtube.com/playlist?list=PL3XJJi5sAjD1U4yadF-wNFS-k34L11jqp
+    {
+        id: 'PL3XJJi5sAjD1U4yadF-wNFS-k34L11jqp'
+    },
+    // Apple Silicon Deep Dives — A15 to M1 Pro & Max! - Rene Ritchie
+    // https://www.youtube.com/playlist?list=PL3XJJi5sAjD3IOyW5k_CObxQse3JlPI4A
+    {
+        id: 'PL3XJJi5sAjD3IOyW5k_CObxQse3JlPI4A'
+    },
+    // Apple Silicon Macs — M1, Pro, & Max! - Rene Ritchie
+    // https://www.youtube.com/playlist?list=PL3XJJi5sAjD3kMEU_xUQLRHAt4_2r3UtF
+    {
+        id: 'PL3XJJi5sAjD3kMEU_xUQLRHAt4_2r3UtF'
+    },
     // Apple M1 Silicon Benchmarks - Tonyisgaming
     // https://www.youtube.com/playlist?list=PLgz-h_Uy9AwOctqRcm6hEYEqTO9yIawoO
     {
