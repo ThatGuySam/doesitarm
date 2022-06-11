@@ -22,6 +22,7 @@
     "test-listings": "ava ./test/listings/**/*.js --verbose",
     "test-prebuild-functions": "run-s test-prebuild test-api-client test-listings",
     "test-postbuild-api": "run-s test-listings",
+    "test-postbuild-functions": "ava ./test/main.js --verbose",
     "test": "ava --timeout=1m --verbose",
     "dev": "nuxt",
     "build": "nuxt build",
@@ -55,7 +56,7 @@
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
     "vercel-build": "run-s build-lists-and-api test-postbuild-api",
-    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro"
+    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro test-postbuild-functions"
   },
   "dependencies": {
     "@11ty/eleventy-assets": "^1.0.5",
