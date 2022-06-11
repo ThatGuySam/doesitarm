@@ -170,6 +170,17 @@ export const playlists = [
     {
         id: 'PLy7gjSbRTE7M8QuYN6Uxp81whm2gAfwK9'
     },
+    // ProgramHub - M1 Pro / M1 Max Apple Silicon
+    // https://www.youtube.com/playlist?list=PLv-goqr3JHiT1_th-4G7KYt2ANT_nhN14
+    {
+        id: 'PLv-goqr3JHiT1_th-4G7KYt2ANT_nhN14'
+    },
+    // ProgramHub - MacBook M2
+    // https://www.youtube.com/playlist?list=PLv-goqr3JHiRlly49iSp69J-0eEeIBEXu
+    {
+        id: 'PLv-goqr3JHiRlly49iSp69J-0eEeIBEXu'
+    },
+
 
 
     // My Personal Benchmarks Playlist
