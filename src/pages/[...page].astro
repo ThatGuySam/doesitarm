@@ -19,6 +19,9 @@ if ( redirectResponse !== null ) {
   return redirectResponse
 }
 
+// https://docs.astro.build/en/reference/api-reference/#astroresponse
+Astro.response.status = 404
+Astro.response.statusText = 'Not found'
 ---
 <Layout
 	headOptions={ {
