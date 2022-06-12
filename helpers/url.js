@@ -86,6 +86,7 @@ export function getPathPartsFromAstroRequest ( AstroRequest ) {
         pathname: url.pathname,
         routeType,
         pathSlug,
-        subSlug
+        subSlug,
+        params: Object.fromEntries( url.searchParams )
     }
 }
