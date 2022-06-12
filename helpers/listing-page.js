@@ -20,7 +20,9 @@ function makeTitle ( listing ) {
 }
 
 function makeDescription ( listing ) {
-    return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ global.$config.processorsVerbiage } Processors.`
+    const processorsVerbiage = process.env.npm_package_config_verbiage_processors || this.$config.processorsVerbiage
+
+    return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ processorsVerbiage } Processors.`
 }
 
 function convertYoutubeImageUrl ( stringWithUrls, extension ) {
