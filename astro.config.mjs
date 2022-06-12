@@ -5,6 +5,8 @@ import tailwind from '@astrojs/tailwind'
 // https://github.com/withastro/astro/tree/main/packages/integrations/netlify
 import netlify from '@astrojs/netlify/functions'
 // import sitemap from '@astrojs/sitemap'
+import partytown from '@astrojs/partytown'
+
 
 // import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 
@@ -33,6 +35,11 @@ export default defineConfig({
         //         'https://doesitarm.com/absolute-url',
         //     ]
         // })
+        partytown({
+            // Add dataLayer.push as a forwarding-event.
+            // https://github.com/withastro/astro/tree/main/packages/integrations/partytown#configforward
+            config: { forward: [ 'dataLayer.push' ] },
+        }),
     ],
     // Vite options
     // https://docs.astro.build/en/reference/configuration-reference/#vite
