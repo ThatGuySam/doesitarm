@@ -1,4 +1,4 @@
-import memoize from 'fast-memoize'
+// import memoize from 'fast-memoize'
 import memoizeGetters from 'memoize-getters'
 
 import getListSummaryNumbers from '~/helpers/get-list-summary-numbers.js'
@@ -13,6 +13,25 @@ import {
 import {
     makeSummaryOfListings
 } from '~/helpers/categories.js'
+
+
+const defaultExludedProperties = [
+    'bundles',
+]
+
+function excludeExtaKindData ( { rawKindPage, excludes = defaultExludedProperties } = {} ) {
+
+    return {
+        ...rawKindPage,
+        items: rawKindPage.items.map( item => {
+            for ( const exclude of excludes ) {
+                delete item[ exclude ]
+            }
+
+            return item
+        })
+    }
+}
 
 function makeKindEndpoint ({ kindSlug, number = null }) {
     if ( number ) {
@@ -96,7 +115,9 @@ export class KindList extends PaginatedList {
                     previousPage,
                     nextPage,
                     summary: this.summary,
-                    items: kindPage.items
+                    items: excludeExtaKindData({
+                        rawKindPage: kindPage,
+                    }).items
                 }
             }
         })
