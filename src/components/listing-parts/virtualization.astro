@@ -44,7 +44,7 @@ const totalLinks = links.length
 
         <div class="text-xs opacity-75 mb-4">With Virtualization you can run apps on Apple Silicon Macs even if they are normally completely unsupported, such as Windows-only Apps, at the cost of some performance drop vs Native support. </div>
 
-        <span class="relative z-0 inline-flex shadow-sm divide-x divide-gray-700 border border-gray-300 rounded-md bg-darker py-3">
+        <span class="relative z-0 inline-flex text-center md:flex-row flex-col shadow-sm md:divide-x md:divide-y-0 divide-y divide-gray-700 border border-gray-300 rounded-md bg-darker md:py-3 md:px-0 px-4">
             { links.map( (link, i) => {
 
                 return (
@@ -52,17 +52,18 @@ const totalLinks = links.length
                         type="button"
                         href={ link.href }
                         class={ [
-                            'relative inline-flex items-centertext-sm font-medium  focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                            'relative inline-flex justify-center items-center font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                             'text-white group',
                         ].join(' ')}
                     >
                         <div
                             class={[
-                                'inner-link group-hover:bg-indigo-400 group-active:bg-indigo-600 rounded-md px-4 py-2 -my-3',
+                                'inner-link group-hover:bg-indigo-400 group-active:bg-indigo-600 rounded-md px-4 md:py-2 md:mx-0 md:-my-3',
+                                'py-3 -mx-4',
                                 // First Link
                                 // i === 0 && 'rounded-l-md',
                                 // Not first Link
-                                i !== 0 ? '-ml-px' : '',
+                                i !== 0 ? 'md:-ml-px' : '',
                                 // Last Link
                                 // i === totalLinks - 1 ? 'rounded-r-md' : ''
                             ].join(' ')}
