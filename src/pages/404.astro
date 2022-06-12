@@ -1,0 +1,62 @@
+---
+// import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+import { catchRedirectResponse } from '~/helpers/astro/request.js'
+
+import Layout from '../layouts/default.astro'
+import LinkButton from '~/components/link-button.vue'
+
+// Component Script:
+// You can write any JavaScript/TypeScript that you'd like here.
+// It will run during the build, but never in the browser.
+// All variables are available to use in the HTML template below.
+
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+---
+<Layout
+	headOptions={ {
+        title: `Page is not compatible with Apple Silicon - Does It ARM`,
+        description: `Check for Apple Silicon compatibility for any of your apps instantly before you buy an M1 Pro or M1 Max Mac. `,
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        // pathname: '/',
+    } }
+>
+
+    <section class="container py-24">
+        <div class="flex flex-col items-center gap-8">
+
+            <h1 class="title text-3xl md:text-6xl font-hairline leading-tight text-center">
+                🤷‍♀️ Page is not compatible with Apple Silicon
+            </h1>
+            <h2 class="subtitle md:text-xl text-center">
+                Page not found
+            </h2>
+
+            <div class="flex flex-col items-center">
+                Perhaps the archives are incomplete, the page moved, or was deleted.
+            </div>
+
+            <LinkButton href="/">
+                    Search
+            </LinkButton>
+
+        </div>
+    </section>
+
+	<!--
+
+	You can also use imported framework components directly in your markup!
+
+	Note: by default, these components are NOT interactive on the client.
+	The `:visible` directive tells Astro to make it interactive.
+
+	See https://docs.astro.build/core-concepts/component-hydration/
+
+	-->
+
+</Layout>
