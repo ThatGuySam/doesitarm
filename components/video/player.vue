@@ -59,6 +59,10 @@
 
                         <div class="cover-bottom h-full">
 
+                            <slot>
+                                <!-- Default slot -->
+                            </slot>
+
                             <slot name="cover-bottom">
                                 <!-- Bottom -->
                             </slot>
