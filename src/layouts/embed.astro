@@ -3,7 +3,7 @@ import '~/assets/css/tailwind.css'
 
 import { PageHead } from '~/helpers/config-node.js'
 
-import VueBaseLayout from '../../layouts/base.vue'
+import GoogleAnalytics from '~/src/components/google-analytics.astro'
 
 const {
     // headTitle,
@@ -25,6 +25,8 @@ const pageHead = new PageHead({
     <head>
         <title>{ pageHead.title }</title>
         <Fragment set:html={ pageHead.metaAndLinkMarkup } />
+
+        <GoogleAnalytics />
     </head>
     <body>
         <slot />
