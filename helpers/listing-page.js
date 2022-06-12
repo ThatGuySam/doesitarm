@@ -20,7 +20,9 @@ function makeTitle ( listing ) {
 }
 
 function makeDescription ( listing ) {
-    const processorsVerbiage = process.env.npm_package_config_verbiage_processors || this.$config.processorsVerbiage
+    // const processorsVerbiage = process.env.npm_package_config_verbiage_processors || this.$config.processorsVerbiage
+
+    const processorsVerbiage = 'Apple M2 and M1 Ultra'
 
     return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ processorsVerbiage } Processors.`
 }
