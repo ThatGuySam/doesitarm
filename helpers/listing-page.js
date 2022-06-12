@@ -20,7 +20,7 @@ function makeTitle ( listing ) {
 }
 
 function makeDescription ( listing ) {
-    return `Latest reported support status of ${ listing.name } on Apple Silicon and Apple M1 Pro and M1 Max Processors.`
+    return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ global.$config.processorsVerbiage } Processors.`
 }
 
 function convertYoutubeImageUrl ( stringWithUrls, extension ) {

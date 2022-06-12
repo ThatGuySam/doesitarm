@@ -154,7 +154,7 @@ export function makeTitle ( listing ) {
 }
 
 export function makeDescription ( listing ) {
-    return `Latest reported support status of ${ listing.name } on Apple Silicon and Apple M1 Pro and M1 Max Processors.`
+    return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ this.$config.processorsVerbiage } Processors.`
 }
 
 function makeTag ( tag, tagName = 'meta' ) {

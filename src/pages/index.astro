@@ -22,8 +22,8 @@ const allAppsSummary = await DoesItAPI('all-apps-summary').get()
 ---
 <Layout
 	headOptions={ {
-        title: 'Apple Silicon and Apple M1 Pro and M1 Max app and game compatibility list',
-        description: 'List of compatibility apps and games for Apple Silicon and the Apple M1 Pro and M1 Max Processors including performance reports and benchmarks',
+        title: `Apple Silicon and ${ global.$config.processorsVerbiage } app and game compatibility list`,
+        description: `List of compatibility apps and games for Apple Silicon and the ${ global.$config.processorsVerbiage } Processors including performance reports and benchmarks`,
         // meta,
         // link,
         // structuredData: this.structuredData,

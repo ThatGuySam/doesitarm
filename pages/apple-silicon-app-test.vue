@@ -207,7 +207,7 @@ export default {
     },
     computed: {
         npm_package_config_verbiage_macs () {
-            return this.config.macsVerbiage //process.env.npm_package_config_verbiage_macs
+            return this.$config.macsVerbiage //process.env.npm_package_config_verbiage_macs
         },
         foundFiles () {
             return this.appsBeingScanned.filter( appScan => {
@@ -271,7 +271,7 @@ export default {
             return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
-            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ this.config.macsVerbiage }. `
+            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ this.$config.macsVerbiage }. `
         }
     },
     mounted () {
@@ -304,7 +304,7 @@ export default {
                 // Bring in code
                 const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
 
-                const testResultStore = this.config ? this.config.testResultStore : this.$config.testResultStore
+                const testResultStore = this.config ? this.$config.testResultStore : this.$config.testResultStore
 
                 // Initialize instance
                 this.scanner = new AppFilesScanner({
