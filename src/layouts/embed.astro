@@ -1,0 +1,34 @@
+---
+import '~/assets/css/tailwind.css'
+
+import { PageHead } from '~/helpers/config-node.js'
+
+import VueBaseLayout from '../../layouts/base.vue'
+
+const {
+    // headTitle,
+    // headDescription,
+    headOptions = {}
+} = Astro.props
+
+// console.log('Astro.site', Astro.site )
+
+const pageHead = new PageHead({
+    domain: Astro.site.origin,
+
+    ...headOptions
+})
+
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>{ pageHead.title }</title>
+        <Fragment set:html={ pageHead.metaAndLinkMarkup } />
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>
+
+
