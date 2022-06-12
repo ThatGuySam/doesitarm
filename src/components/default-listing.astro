@@ -8,6 +8,7 @@ import {
 import Aliases from '~/src/components/listing-parts/aliases.astro'
 import ThomasCredit from '~/components/thomas-credit.vue'
 import RelatedLinks from '~/src/components/listing-parts/related-links.astro'
+import Virtualization from './listing-parts/virtualization.astro'
 import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
 import Bundles from '~/src/components/listing-parts/bundles.astro'
@@ -49,15 +50,18 @@ const details = new ListingDetails( listing )
 
         <Aliases listing={ listing } />
 
-        <AllUpdatesSubscribe
+        <!-- <AllUpdatesSubscribe
             client:visible
-        />
+        /> -->
 
         <div class="links space-y-6 sm:space-x-6">
             <RelatedLinks
                 listing={ listing }
             />
         </div>
+
+
+        <Virtualization listing={ listing } />
 
         <Devices
             listing={ listing }

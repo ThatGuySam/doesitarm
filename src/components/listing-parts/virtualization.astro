@@ -1,0 +1,87 @@
+---
+import { ensureListingDetails } from '~/helpers/listing-page.js'
+
+// import LinkButton from '~/components/link-button.js'
+import Heading from './heading.astro'
+
+const {
+  listing
+} = Astro.props
+
+
+const details = ensureListingDetails( listing )
+
+const isNonNativeGame = listing.status !== 'native' && details.isGame
+
+const links = [
+    {
+        label: '🔄 CrossOver Compatibility',
+        href: 'https://www.codeweavers.com/compatibility?ad=836'
+    },
+    {
+        label: '🔄 CrossOver Performance',
+        href: 'https://www.codeweavers.com/blog/jnewman/2020/11/23/more-crossover-m1-goodness-see-3-different-windows-games-running?ad=836'
+    },
+    {
+        label: '⏸ Parallels Compatibility',
+        href: 'https://prf.hn/l/pRelBQ5'
+    },
+    {
+        label: '⏸ Parallels Performance',
+        href: 'https://prf.hn/l/J9G0JeM'
+    }
+]
+
+
+// general: 'relative inline-flex items-center rounded-md px-4 py-2',
+// font: 'leading-5 font-bold',
+// text: 'text-white',
+// border: 'border border-transparent focus:outline-none focus:border-indigo-600',
+// shadow: 'neumorphic-shadow focus:shadow-outline-indigo',
+// bg: 'bg-darker hover:bg-indigo-400 active:bg-indigo-600',
+// transition: 'transition duration-150 ease-in-out'
+
+
+
+const totalLinks = links.length
+---
+{ isNonNativeGame && (
+    <div
+        class="related-videos w-full"
+    >
+        <Heading text="Virtualization Support" />
+
+        <div class="text-xs opacity-75 mb-4">With Virtualization you can run apps on Mac even if they are normally completely unsupported, such as Windows-only Apps. </div>
+
+        <span class="relative z-0 inline-flex shadow-sm divide-x divide-gray-700 border border-gray-300 rounded-md bg-darker py-3">
+            { links.map( (link, i) => {
+
+                return (
+                    <a
+                        type="button"
+                        href={ link.href }
+                        class={ [
+                            'relative inline-flex items-centertext-sm font-medium  focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                            'text-white group',
+                        ].join(' ')}
+                    >
+                        <div
+                            class={[
+                                'inner-link group-hover:bg-indigo-400 group-active:bg-indigo-600 rounded-md px-4 py-2 -my-3',
+                                // First Link
+                                // i === 0 && 'rounded-l-md',
+                                // Not first Link
+                                i !== 0 ? '-ml-px' : '',
+                                // Last Link
+                                // i === totalLinks - 1 ? 'rounded-r-md' : ''
+                            ].join(' ')}
+                        >
+                            { link.label }
+                        </div>
+                    </a>
+                )
+                }
+            )}
+        </span>
+    </div>
+)}
