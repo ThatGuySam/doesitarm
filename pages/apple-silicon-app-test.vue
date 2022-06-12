@@ -207,7 +207,7 @@ export default {
     },
     computed: {
         npm_package_config_verbiage_macs () {
-            return this.$config.macsVerbiage //process.env.npm_package_config_verbiage_macs
+            return this.config.macsVerbiage //process.env.npm_package_config_verbiage_macs
         },
         foundFiles () {
             return this.appsBeingScanned.filter( appScan => {
