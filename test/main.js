@@ -14,7 +14,8 @@ import {
 import { logArraysDifference } from '~/helpers/array.js'
 import {
     parseSitemapXml,
-    getAllUrlsFromLocalSitemap
+    getAllUrlsFromLocalSitemap,
+    fetchAllUrlsFromSitemaps
 } from '~/helpers/api/sitemap/parse.js'
 
 require('dotenv').config()
@@ -122,11 +123,12 @@ test('Sitemap mostly matches production', async (t) => {
     const urlsNotOnLive = new Set()
     // const newLocalUrls = new Set()
 
-    const liveSitemapXml = await axios( 'https://doesitarm.com/sitemap.xml' ).then( response => response.data )
-    const liveSitemap = parser.parse( liveSitemapXml )
+    const liveSitemapUrls = await fetchAllUrlsFromSitemaps( 'https://doesitarm.com' )
 
-    // Store sitemap urls to context
-    const liveSitemapUrls = new Map( liveSitemap.urlset.url.map( tag => [ tag.loc, new URL( tag.loc )] ) )
+    // Assert that any sitemap urls exist on live
+    t.assert( liveSitemapUrls.size > 0, 'No sitemap urls found on live.' )
+
+    // console.log( 'liveSitemapUrls', liveSitemapUrls )
 
 
     for ( const localUrl of t.context.sitemapUrls ) {
