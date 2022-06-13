@@ -1,5 +1,4 @@
-
-import axios from 'axios'
+import fs from 'fs-extra'
 import { PromisePool } from '@supercharge/promise-pool'
 
 import { fuzzyMatchesWholeWord } from './matching.js'
@@ -7,6 +6,7 @@ import { byTimeThenNull } from './sort-list.js'
 import { getVideoEndpoint } from './app-derived.js'
 import parseDate from './parse-date'
 import { makeSlug } from './slug.js'
+import { youtubeVideoPath } from '~/helpers/api/youtube/build.js'
 
 
 const inTimestamps = ( name, video ) => {
@@ -140,13 +140,16 @@ async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
     // Build video slug
     const slug = makeSlug( `${fetchedVideo.title}-i-${videoId}` )
 
-    const apps = []
+    const appLinks = []
     // Generate new tag set based on api data
     const tags = generateVideoTags(fetchedVideo)
 
     for ( const app of applist ) {
         if (videoFeaturesApp(app, fetchedVideo)) {
-            apps.push(app.slug)
+            appLinks.push({
+                name: app.name,
+                endpoint: app.endpoint
+            })
 
             tags.add(app.category.slug)
         }
@@ -165,7 +168,7 @@ async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
         name: fetchedVideo.title,
         id: videoId,
         lastUpdated,
-        apps,
+        appLinks,
         slug,
         channel: {
             name: fetchedVideo.rawData.snippet.channelTitle,
@@ -184,12 +187,12 @@ async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
 
 export default async function ( applist ) {
 
-    const videosJsonUrl = process.env.VIDEO_SOURCE || `${process.env.VFUNCTIONS_URL}/videos.json`
+    // const videosJsonUrl = process.env.VIDEO_SOURCE || `${process.env.VFUNCTIONS_URL}/videos.json`
 
     // Fetch Commits
-    const response = await axios.get( videosJsonUrl )
+    // const response = await axios.get( videosJsonUrl )
     // Extract commit from response data
-    const fetchedVideos = response.data
+    const fetchedVideos = await fs.readJson( youtubeVideoPath )//response.data
 
     const videos = []
 

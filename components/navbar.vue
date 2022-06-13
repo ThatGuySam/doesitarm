@@ -87,7 +87,7 @@
                     :href="item.url"
                     :class="[
                         'mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                        ($nuxt.$route.path === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
+                        (currentPath === item.url) ? 'text-white bg-gray-900 hover:text-white' : 'text-gray-300 hover:bg-gray-700'
                     ]"
                 >
                     {{ item.label }}
@@ -109,7 +109,7 @@
                             :href="item.url"
                             :class="[
                                 'px-3 py-2 rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                ($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                                (currentPath === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
                         >
                             {{ item.label }}
@@ -141,7 +141,7 @@
                         <a
                             :class="[
                                 'underline px-3 py-2 rounded-md text-xs font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
-                                //($nuxt.$route.path === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
+                                //(currentPath === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
                             href="https://prf.hn/l/7JG0bEj"
                         >
@@ -162,6 +162,9 @@
 </template>
 
 <script>
+// https://anguscroll.com/just/just-has
+import has from 'just-has'
+
 import LinkButton from '~/components/link-button.vue'
 
 export default {
@@ -203,6 +206,21 @@ export default {
             ])
         }
     },
+    computed: {
+        currentPath () {
+            // If we have a nuxt context, use that.
+            if ( has( this, [ '$nuxt' ]) ) {
+                return this.$nuxt.$route.path
+            }
+
+            // If we have a location object, use that.
+            if ( typeof window !== 'undefined' && typeof window.location === 'object' ) {
+                return window.location.pathname
+            }
+
+            return '/'
+        }
+    }
     // data: function () {
     //     return {
     //         // isOpen: false

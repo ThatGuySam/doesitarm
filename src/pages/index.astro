@@ -1,0 +1,72 @@
+---
+// Component Script:
+// You can write any JavaScript/TypeScript that you'd like here.
+// It will run during the build, but never in the browser.
+// All variables are available to use in the HTML template below.
+
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+import { DoesItAPI } from '~/helpers/api/client.js'
+
+import Layout from '../layouts/default.astro'
+import Search from '~/components/search-stork.vue'
+// import ListSummary from '~/components/list-summary.vue'
+import ListEndButtons from '~/components/list-end-buttons.vue'
+import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+
+const homePageKindPage = await DoesItAPI.kind.app(1).get()
+const allAppsSummary = await DoesItAPI('all-apps-summary').get()
+
+// console.log( allAppsSummary )
+---
+<Layout
+	headOptions={ {
+        title: `Apple Silicon and ${ global.$config.processorsVerbiage } app and game compatibility list`,
+        description: `List of compatibility apps and games for Apple Silicon and the ${ global.$config.processorsVerbiage } Processors including performance reports and benchmarks`,
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        pathname: '/',
+    } }
+>
+
+    <section class="container py-24">
+        <div class="flex flex-col items-center space-y-4">
+            <div class="hero">
+                <h1 class="title text-3xl md:text-6xl font-hairline leading-tight text-center">
+                    Does It ARM?
+                </h1>
+                <h2 class="subtitle md:text-xl text-center">
+                    Apps that are reported to support Apple Silicon
+                </h2>
+            </div>
+
+            <Search
+                kind-page={ homePageKindPage }
+                list-summary={ allAppsSummary }
+
+                client:load
+            />
+
+            <AllUpdatesSubscribe
+                class="my-12"
+            />
+
+        </div>
+    </section>
+
+	<!--
+
+	You can also use imported framework components directly in your markup!
+
+	Note: by default, these components are NOT interactive on the client.
+	The `:visible` directive tells Astro to make it interactive.
+
+	See https://docs.astro.build/core-concepts/component-hydration/
+
+	-->
+
+</Layout>

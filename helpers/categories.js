@@ -1,10 +1,14 @@
 // Universal JS imports only
+import shuffle from 'just-shuffle'
+
 import { makeSlug } from './slug.js'
 
 export function makeCategorySlug ( categoryName ) {
     return makeSlug( categoryName )
 }
 
+
+// Maps iTunes Genres titles to Category IDs
 const categoryMap = new Map([
     [ 'Business', 2 ],
     [ 'Entertainment', 5 ],
@@ -18,7 +22,12 @@ const categoryMap = new Map([
     // [ 'Name', 1 ],
 
     // Needs work before apps can be assigned games category
-    // so for now 'Games' genre is Entertainment
+    // Games will be assigned to the "Games" category
+    // but need to be put into games kind/list
+    // so the solution may be to separate games from apps
+    // during app list build and then merge "Game from Apps"
+    // into the "Games" list
+    // but for now 'Games' genre is Entertainment
     // [ 'Games', 100 ],
     [ 'Games', 5 ],
 ])
@@ -42,7 +51,8 @@ export const categoryTemplate = {
     pluralLabel: null,
     itemSuffixLabel: null,
     icon: null,
-    requestLinks: null
+    requestLinks: null,
+    icon: '💻',
 }
 
 export const categories = {
@@ -59,6 +69,7 @@ export const categories = {
         label: 'Developer Tools',
         pluralLabel: 'Developer Tools',
         slug: 'developer-tools',
+        snakeSlug: 'developer_tools',
     },
 
     'productivity-tools': {
@@ -67,6 +78,7 @@ export const categories = {
         label: 'Productivity Tools',
         pluralLabel: 'Productivity Tools',
         slug: 'productivity-tools',
+        snakeSlug: 'productivity_tools',
     },
 
     'video-and-motion-tools': {
@@ -75,6 +87,7 @@ export const categories = {
         label: 'Video and Motion Tools',
         pluralLabel: 'Video and Motion Tools',
         slug: 'video-and-motion-tools',
+        snakeSlug: 'video_and_motion_tools',
     },
 
     'social-and-communication': {
@@ -83,6 +96,7 @@ export const categories = {
         label: 'Social and Communication',
         pluralLabel: 'Social and Communication Apps',
         slug: 'social-and-communication',
+        snakeSlug: 'social_and_communication',
     },
 
     'entertainment-and-media-apps': {
@@ -91,6 +105,7 @@ export const categories = {
         label: 'Entertainment and Media Apps',
         pluralLabel: 'Entertainment and Media Apps',
         slug: 'entertainment-and-media-apps',
+        snakeSlug: 'entertainment_and_media_apps',
     },
 
     'music-and-audio-tools': {
@@ -99,6 +114,7 @@ export const categories = {
         label: 'Music and Audio Tools',
         pluralLabel: 'Music and Audio Tools',
         slug: 'music-and-audio-tools',
+        snakeSlug: 'music_and_audio_tools',
     },
 
     'photo-and-graphic-tools': {
@@ -107,6 +123,7 @@ export const categories = {
         label: 'Photo and Graphic Tools',
         pluralLabel: 'Photo and Graphic Tools',
         slug: 'photo-and-graphic-tools',
+        snakeSlug: 'photo_and_graphic_tools',
     },
 
     'science-and-research-software': {
@@ -115,6 +132,7 @@ export const categories = {
         label: 'Science and Research Software',
         pluralLabel: 'Science and Research Software',
         slug: 'science-and-research-software',
+        snakeSlug: 'science_and_research_software',
     },
 
     '3d-and-architecture': {
@@ -123,6 +141,7 @@ export const categories = {
         label: '3D and Architecture',
         pluralLabel: '3D and Architecture Applications',
         slug: '3d-and-architecture',
+        snakeSlug: '3d_and_architecture',
     },
 
     'vpns-security-and-privacy': {
@@ -131,6 +150,7 @@ export const categories = {
         label: 'VPNs, Security, and Privacy',
         pluralLabel: 'VPN, Security, and Privacy Applications',
         slug: 'vpns-security-and-privacy',
+        snakeSlug: 'vpns_security_and_privacy',
     },
 
     'live-production-and-performance': {
@@ -139,6 +159,7 @@ export const categories = {
         label: 'Live Production and Performance',
         pluralLabel: 'Live Production and Performance Software',
         slug: 'live-production-and-performance',
+        snakeSlug: 'live_production_and_performance',
     },
 
     'system-tools': {
@@ -147,6 +168,7 @@ export const categories = {
         label: 'System Tools',
         pluralLabel: 'System Tools',
         slug: 'system-tools',
+        snakeSlug: 'system_tools',
     },
 
     // Special Lists
@@ -156,6 +178,7 @@ export const categories = {
         label: 'Games',
         pluralLabel: 'Games',
         slug: 'games',
+        snakeSlug: 'games',
         icon: '🎮',
         requestLinks: [
             {
@@ -171,6 +194,7 @@ export const categories = {
         pluralLabel: 'Homebrew Formulae',
         itemSuffixLabel: 'via Homebrew',
         slug: 'homebrew',
+        snakeSlug: 'homebrew',
         icon: '🍺'
     },
 
@@ -182,9 +206,25 @@ export const categories = {
         label: 'Uncategorized',
         pluralLabel: 'Uncategorized Software',
         slug: 'uncategorized',
+        snakeSlug: 'uncategorized',
     },
 }
 
+// Maps categories to kinds and vice versa
+const categoryToKind = {
+    ...Object.fromEntries( Object.keys( categories ).map( key => [ key, key ] ) ),
+    'homebrew': 'formula',
+    'games': 'game',
+}
+
+// Respective directory for each category
+export function getCategoryKindName ( categorySlug ) {
+    return categoryToKind[ categorySlug ]
+}
+
+export function getKindToCategorySlug ( kindSlug ) {
+    return Object.keys( categories ).find( key => categoryToKind[ key ] === kindSlug )
+}
 
 export const categoriesById = Object.fromEntries( Object.entries( categories ).map( ([ key, category ]) => [category.id, { ...category, key } ] ) )
 
@@ -211,6 +251,16 @@ export function getAppCategory (app) {
     return categories[app.category.slug]
 }
 
+const categoryFilterPrefix = 'category_'
+
+export function makeCategoryFilterFromListing ( listing ) {
+    return `${ categoryFilterPrefix }${ getAppCategory( listing ).snakeSlug }`
+}
+
+export function makeCategoryFilterFromCategorySlug ( categorySlug ) {
+    const category = categories[ categorySlug ]
+    return `${ categoryFilterPrefix }${ category.snakeSlug }`
+}
 
 export function findCategoryForTagsSet ( tags ) {
 
@@ -229,4 +279,21 @@ export function findCategoryForTagsSet ( tags ) {
     }
 
     return null
+}
+
+const sampleListFormatter = new Intl.ListFormat( 'en', { style: 'long', type: 'unit' })
+
+export function makeSummaryOfListings ({
+    list,
+    length = 25,
+    random = false,
+    suffix = ', etc...',
+} = {}) {
+    const listToSample = random ? shuffle( list ) : list
+
+    const samples = listToSample
+        .slice(0, length)
+        .map( listing => listing.name )
+
+    return sampleListFormatter.format( samples ) + suffix
 }

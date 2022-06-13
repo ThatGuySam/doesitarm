@@ -1,6 +1,6 @@
 
 
-function scrollHorizontalCarousel ( event ) {
+export function scrollHorizontalCarousel ( event ) {
     event.stopPropagation()
 
     // console.log('event.target', event.currentTarget)

@@ -1,0 +1,35 @@
+---
+// Simple list for listing thinngs like categories, tags, etc.
+
+const {
+  items
+} = Astro.props
+---
+<ul class="simple-list space-y-3">
+    { items.map( item => (
+        <li
+            class="relative"
+        >
+            <a
+                href={ item.href }
+                class={ [
+                    'flex justify-start items-center inset-x-0 text-3xl md:text-4xl hover:bg-darkest focus:bg-gray-50 rounded-lg',
+                    'border-2 border-white border-opacity-0 hover:border-opacity-50 focus:outline-none',
+                    'duration-300 ease-in-out',
+                    // Spacing
+                    'space-x-3 -mx-5 px-5 md:pr-64 py-3'
+                ].join(' ') }
+                style="transition-property: border;"
+            >
+                <div
+                    class="font-hairline flex flex-col gap-3"
+                >
+                    <h2>{ item.heading }</h2>
+                    <div class="text-xs opacity-75 mb-3">{ item.description }</div>
+                </div>
+                <div>➔</div>
+            </a>
+
+        </li>
+    )) }
+</ul>

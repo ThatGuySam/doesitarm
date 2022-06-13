@@ -60,6 +60,9 @@
 <script>
 
 import axios from 'axios'
+import { v4 as uuid } from 'uuid'
+
+import { isNuxt } from '~/helpers/environment.js'
 
 export default {
     props: {
@@ -78,6 +81,10 @@ export default {
         inputClassGroups: {
             type: Object,
             default: () => {}
+        },
+        uuid: {
+            type: String,
+            default: uuid()
         }
     },
     data: function () {
@@ -90,7 +97,7 @@ export default {
     },
     computed: {
         inputId () {
-            return `all-updates-subscribe-${this._uid}`
+            return `all-updates-subscribe-${ this.uuid }`
         },
         inputClasslist () {
             const defaultClassGroups = {
@@ -115,6 +122,7 @@ export default {
             return Object.values(mergedClassGroups)
         }
     },
+
     methods: {
         async trySubmit () {
             console.log('Trying submit')
@@ -124,10 +132,15 @@ export default {
 
             // const pagePath = $nuxt.$route.path
 
-            // console.log('this.$config.allUpdateSubscribe', this.$config.allUpdateSubscribe)
+            const allUpdateSubscribe = isNuxt( this ) ? this.$config.allUpdateSubscribe : global.$config.allUpdateSubscribe
+
+            console.log('allUpdateSubscribe', allUpdateSubscribe)
+
 
             // https://stackoverflow.com/questions/51995070/post-data-to-a-google-form-with-ajax/55496118#55496118
-            const actionUrl = this.$config.allUpdateSubscribe
+            const actionUrl = allUpdateSubscribe
+
+            console.log('actionUrl', actionUrl)
 
             axios({
                 method: 'post',

@@ -1,25 +1,38 @@
 module.exports = {
-    purge: {
-        enabled: true,//process.env.NODE_ENV === 'production',
-        content: [
-            'components/**/*.vue',
-            'layouts-eleventy/**/*.js',
-            'layouts/**/*.vue',
-            'pages/**/*.vue',
-            'pages-eleventy/**/*.js',
-            'plugins/**/*.js',
-            'nuxt.config.js'
-        ]
-    },
+    content: [
+        // General
+        'helpers/**/*.js',
+
+        // Nuxt
+        'nuxt.config.js',
+        'components/**/*.vue',
+        'layouts/**/*.vue',
+        'pages/**/*.vue',
+        'plugins/**/*.js',
+
+        // Eleventy
+        'layouts-eleventy/**/*.js',
+        'pages-eleventy/**/*.js',
+
+        // Astro
+        'src/**/*.astro',
+        'src/**/*.vue',
+        'src/**/*.js',
+    ],
     future: {
         purgeLayersByDefault: true,
     },
     theme: {
-        container: {
-            center: true,
-            padding: '1.5rem',
-        },
         extend: {
+            container: {
+                center: true,
+                padding: '1.5rem',
+                screens: {
+                    lg: '1040px',
+                    xl: '1040px',
+                    '2xl': '1040px',
+                }
+            },
             colors: {
 
                 // Color Generator

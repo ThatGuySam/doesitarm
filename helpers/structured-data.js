@@ -1,12 +1,20 @@
+import { getSiteUrl } from './url'
+
 function makeFeaturedAppsString ( featuredApps ) {
     return featuredApps.slice(0, 5).map(app => app.name).join(', ')
 }
 
-export function buildVideoStructuredData ( video, featuredApps, options ) {
+export function buildVideoStructuredData ( video, featuredApps, options = {} ) {
     // console.log('video', video)
 
+    // Throw for missing featured apps
+    if ( Array.isArray(featuredApps) === false ) {
+        console.warn( 'featuredApps not array', featuredApps )
+        throw new Error('featuredApps must be an array of objects')
+    }
+
     const {
-        siteUrl
+        siteUrl = getSiteUrl(),
     } = options
 
     const thumbnailUrls = video.thumbnail.srcset.split(',').map( srcSetImage => {

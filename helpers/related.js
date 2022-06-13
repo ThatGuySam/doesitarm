@@ -1,8 +1,19 @@
 // import { allVideoAppsListSet } from '~/helpers/get-list.js'
 // import videoList from '~/static/video-list.json'
 
+import { getAppEndpoint, getAppType } from '~/helpers/app-derived.js'
+
+function videoHasAppEndpoint ( video, appEndpoint ) {
+    for (const appLink of video.appLinks) {
+        if ( appLink.endpoint === appEndpoint ) {
+            return true
+        }
+    }
+
+    return false
+}
+
 export function appsRelatedToVideo ( video, allVideoAppsListSet ) {
-    // console.log('allVideoAppsListSet', allVideoAppsListSet.length)
 
     const relatedApps = []
 
@@ -10,7 +21,7 @@ export function appsRelatedToVideo ( video, allVideoAppsListSet ) {
     for (const app of allVideoAppsListSet) {
         // console.log('video', video)
         // Skip this app if it's not listed in the videos apps
-        if (!video.apps.includes(app.slug)) continue
+        if (!videoHasAppEndpoint( video, app.endpoint )) continue
 
         // Add this app to our featured app list
         relatedApps.push(app)
@@ -22,9 +33,6 @@ export function appsRelatedToVideo ( video, allVideoAppsListSet ) {
 export function videosRelatedToVideo ( video, allVideoAppsListSet, videoListSet ) {
     const relatedVideos = {}
 
-    // console.log('videoList', videoList[0])
-    // console.log('allVideoAppsListSet', allVideoAppsListSet[0])
-
     const featuredApps = appsRelatedToVideo( video, allVideoAppsListSet )
 
     // Find other videos that also feature this video's app
@@ -32,7 +40,7 @@ export function videosRelatedToVideo ( video, allVideoAppsListSet, videoListSet 
         for (const app of featuredApps) {
             // console.log('otherVideo', otherVideo)
             // Skip if this app is not in the other video's apps
-            if (!otherVideo.apps.includes(app.slug)) continue
+            if (!videoHasAppEndpoint( otherVideo, app.endpoint )) continue
 
             // Skip if the other video is, in fact, this video
             if (otherVideo.slug === video.slug) continue
@@ -50,14 +58,38 @@ export function videosRelatedToApp ( app, videoListSet ) {
 
     // console.log('videoListSet', videoListSet)
 
-    const relatedVideos = {}
+    const relatedVideos = []
 
     // Find other videos that also feature this video's app
     for (const video of videoListSet) {
-        if (!video.apps.includes(app.slug)) continue
 
-        relatedVideos[video.id] = video
+        if (!videoHasAppEndpoint( video, app.endpoint )) continue
+
+        relatedVideos.push( video )
+
+        if ( relatedVideos.length > 20 ) break
     }
 
-    return Object.values(relatedVideos)
+    return relatedVideos
 }
+
+export function videoBenchmarksRelatedToApp ( app, videoListSet ) {
+    return videosRelatedToApp( app, videoListSet ).map(video => {
+        return {
+            ...video,
+            endpoint: `${getAppEndpoint( app )}/benchmarks#${video.id}`
+        }
+    })
+}
+
+
+export function getRelatedVideos ( { listing, videoListSet, appListSet } = {} ) {
+    const listingType = getAppType( listing )
+
+    if ( listingType === 'video' ) {
+        return videosRelatedToVideo( listing, appListSet, videoListSet )
+    }
+
+    return videoBenchmarksRelatedToApp( listing, videoListSet )
+}
+

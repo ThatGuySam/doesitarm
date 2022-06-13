@@ -173,6 +173,7 @@
 
 // import AppFilesScanner from '~/helpers/app-files-scanner.js'
 
+import { isNuxt } from '~/helpers/environment.js'
 
 import LinkButton from '~/components/link-button.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
@@ -191,6 +192,12 @@ export default {
         LinkButton,
         AllUpdatesSubscribe
     },
+    props: {
+        config: {
+            type: Object,
+            default: null
+        }
+    },
     data: function () {
         return {
             query: '',
@@ -200,7 +207,7 @@ export default {
     },
     computed: {
         npm_package_config_verbiage_macs () {
-            return process.env.npm_package_config_verbiage_macs
+            return this.config.macsVerbiage //process.env.npm_package_config_verbiage_macs
         },
         foundFiles () {
             return this.appsBeingScanned.filter( appScan => {
@@ -264,7 +271,7 @@ export default {
             return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
-            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ process.env.npm_package_config_verbiage_macs }. `
+            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ this.$config.macsVerbiage }. `
         }
     },
     mounted () {
@@ -295,13 +302,18 @@ export default {
                 console.log('Initializing scanner instance')
 
                 // Bring in code
-                const { default: AppFilesScanner} = await import('~/helpers/app-files-scanner.js')
+                const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
+
+                const testResultStore = this.config ? this.$config.testResultStore : this.$config.testResultStore
 
                 // Initialize instance
                 this.scanner = new AppFilesScanner({
                     observableFilesArray: this.appsBeingScanned,
-                    testResultStore: this.$config.testResultStore
+                    testResultStore
                 })
+
+                // Setup scanner
+                await this.scanner.setup()
             }
 
             // console.log('fileInputChanged files', fileList)

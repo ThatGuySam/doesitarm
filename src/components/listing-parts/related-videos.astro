@@ -1,0 +1,24 @@
+---
+import { ensureListingDetails } from '~/helpers/listing-page.js'
+import Heading from './heading.astro'
+import VideoRow from '~/src/components/video/row.astro'
+
+const {
+  listing
+} = Astro.props
+
+const details = ensureListingDetails(listing)
+
+---
+{ details.hasRelatedVideos && (
+    <div
+        class="related-videos w-full"
+    >
+        <Heading text="Related Videos" />
+
+        <VideoRow
+            videos={details.relatedVideos}
+        />
+    </div>
+)}
+

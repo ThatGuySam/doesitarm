@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./*"],
+            "~helpers": ["./helpers/*"],
+            "~astro": ["./src/*"]
+        }
+    }
+}

@@ -1,0 +1,104 @@
+---
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+
+import { DoesItAPI } from '~/helpers/api/client.js'
+import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+import { catchRedirectResponse } from '~/helpers/astro/request.js'
+import {
+    categories,
+    makeCategoryFilterFromCategorySlug
+} from '~/helpers/categories.js'
+
+import Layout from '~/src/layouts/default.astro'
+import Search from '~/components/search-stork.vue'
+import ThomasCredit from '~/components/thomas-credit.vue'
+
+
+// Get type and slug from the request path
+// so that we don't have extra parts for
+// urls like /:type/:slug/benchmarks
+const {
+    pathname,
+    // pathSlug,
+    // subSlug = 1
+ } = getPathPartsFromAstroRequest( Astro.request )
+
+
+const redirectResponse = await catchRedirectResponse( Astro )
+
+if ( redirectResponse !== null ) {
+  return redirectResponse
+}
+
+const rawKindPage = await DoesItAPI.kind( 'game' )( 1 ).get()
+
+// Clean up unused kind data
+const kindPage = {
+    ...rawKindPage,
+    items: rawKindPage.items.map( item => ({
+        ...item,
+        bundles: undefined,
+    }) )
+}
+
+const baseFilters = []
+
+const categorySlug = 'games'
+
+const category = categories[ categorySlug ]
+
+baseFilters.push( makeCategoryFilterFromCategorySlug( categorySlug ) )
+
+const pageLabel = category?.pluralLabel || category.label
+
+---
+<Layout
+    headOptions={{
+        title: `List of ${ pageLabel } that work on Apple Silicon?`,
+        description: `Check the latest reported support status of ${ pageLabel } on Apple Silicon and ${ global.$config.processorsVerbiage } Processors. `,
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        pathname
+    }}
+>
+
+     <section class="container py-24">
+        <div class="flex flex-col items-center space-y-4">
+
+            <div class="hero">
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
+                    { pageLabel } that are reported to support Apple Silicon
+                </h1>
+
+                <h2
+                    v-if="supportedAppList.length !== 0"
+                    class="subtitle md:text-xl text-center"
+                >
+                    Supported apps include { kindPage.summary.sampleNamesShort }.
+                </h2>
+
+                <ThomasCredit />
+            </div>
+
+            <Search
+                kind-page={ kindPage }
+                base-filters={ baseFilters }
+
+                client:load
+            />
+
+            <!-- <ListEndButtons query="query" /> -->
+
+            <!-- <AllUpdatesSubscribe
+                class="my-12"
+            /> -->
+
+        </div>
+    </section>
+
+</Layout>

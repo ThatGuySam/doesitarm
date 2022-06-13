@@ -1,0 +1,61 @@
+---
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+import { DoesItAPI } from '~/helpers/api/client.js'
+import { catchRedirectResponse } from '~/helpers/astro/request.js'
+import {
+    getVideoImages,
+    ListingDetails
+} from '~/helpers/listing-page.js'
+import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+
+import Layout from '~/src/layouts/default.astro'
+import VideoListing from '~/src/components/video-listing.astro'
+
+
+const redirectResponse = await catchRedirectResponse( Astro )
+
+if ( redirectResponse !== null ) {
+  return redirectResponse
+}
+
+
+// Get type and slug from the request path
+// so that we don't have extra parts for
+// urls like /:type/:slug/benchmarks
+const {
+    pathSlug,
+    subSlug = null
+} = getPathPartsFromAstroRequest( Astro.request )
+
+
+// Astro Request reference
+// https://docs.astro.build/en/reference/api-reference/#astrorequests
+
+// Request App data from API
+const tvListing = await DoesItAPI.tv( pathSlug ).get()
+
+const listingDetails = new ListingDetails( tvListing )
+
+const headOptions = listingDetails.headOptions
+
+// Set the page title
+headOptions.title = `${ listingDetails.initialVideo.name } - Does It ARM`
+
+const { preloads } = getVideoImages( listingDetails.initialVideo )
+
+// Add image preloads for video thumbnail
+headOptions.link = [
+    ...headOptions.link,
+    ...preloads
+]
+
+---
+<Layout
+    headOptions={ headOptions }
+>
+    <VideoListing
+        listing={ listingDetails }
+    />
+</Layout>

@@ -1,0 +1,24 @@
+---
+import { getVideoImages } from '~/helpers/listing-page.js'
+const {
+    video
+} = Astro.props
+
+const images = getVideoImages( video )
+---
+<picture>
+
+    { Object.entries( images.sources ).map( ([ key, source ]) => (
+        <source
+            sizes={ source.sizes }
+            data-srcset={ source.srcset }
+            type={ `image/${ key }` }
+        >
+    ) ) }
+
+    <img
+        data-src={ images.imgSrc }
+        alt={ video.name }
+        class="absolute inset-0 h-full w-full object-cover lazyload"
+    >
+</picture>

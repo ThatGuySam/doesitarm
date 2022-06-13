@@ -1,0 +1,62 @@
+---
+import Poster from './poster.astro'
+import Timestamps from './timestamps.astro'
+
+const {
+    video,
+    width = '325px',
+    classes = 'w-full flex-shrink-0 flex-grow-0 border-2 border-transparent rounded-2xl overflow-hidden'
+} = Astro.props
+
+---
+<lite-youtube
+    class="video-canvas w-screen flex flex-col justify-center items-center bg-black pt-16"
+    style="left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;"
+>
+    <script
+        class="video-data"
+        type="application/json"
+        set:html={ JSON.stringify( video ) }
+    />
+
+    <div class="ratio-wrapper w-full max-w-4xl">
+        <div class="player-container relative overflow-hidden w-full pb-16/9">
+            <div class="player-poster cursor-pointer">
+
+                <Poster
+                    video={ video }
+                />
+
+                <div
+                    class="video-card-overlay absolute inset-0 flex flex-col justify-center items-center bg-gradient-to-tr p-4"
+                    style="
+                        --tw-gradient-stops:
+                            rgba(0, 0, 0, 1),
+                            rgba(0, 0, 0, 0.6)
+                        ;
+                    "
+                >
+                    <div class="cover-top h-full"></div>
+                    <div class="play-circle bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease p-4">
+                        <svg viewBox="0 0 18 18" style="width:18px;height:18px;margin-left:3px">
+                            <path fill="currentColor" d="M15.562 8.1L3.87.225c-.818-.562-1.87 0-1.87.9v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8z"></path>
+                        </svg>
+                    </div>
+                    <div class="cover-bottom h-full">
+                        <slot name="cover-bottom"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <Timestamps
+        video={ video }
+    />
+
+</lite-youtube>
+
+<script>
+    import 'lazysizes'
+    import '~/helpers/lite-youtube.js'
+</script>

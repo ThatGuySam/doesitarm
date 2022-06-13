@@ -1,0 +1,36 @@
+---
+import '~/assets/css/tailwind.css'
+
+import { PageHead } from '~/helpers/config-node.js'
+
+import GoogleAnalytics from '~/src/components/google-analytics.astro'
+
+const {
+    // headTitle,
+    // headDescription,
+    headOptions = {}
+} = Astro.props
+
+// console.log('Astro.site', Astro.site )
+
+const pageHead = new PageHead({
+    domain: Astro.site.origin,
+
+    ...headOptions
+})
+
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>{ pageHead.title }</title>
+        <Fragment set:html={ pageHead.metaAndLinkMarkup } />
+
+        <GoogleAnalytics />
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>
+
+

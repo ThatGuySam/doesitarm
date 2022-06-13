@@ -1,0 +1,89 @@
+---
+// import { getStatusOfScan } from '~/helpers/statuses.js'
+// import { supportedArchitectures } from '~/helpers/bundles.js'
+import { ensureListingDetails } from '~/helpers/listing-page'
+import Heading from './heading.astro'
+
+const {
+  listing
+} = Astro.props
+
+const details = ensureListingDetails(listing)
+
+const hasReports = Array.isArray( details.api.reports ) && details.api.reports.length > 0
+
+const defaultSourceUrl = 'https://applesilicongames.com/'
+
+function getSourceUrl ( report ) {
+    // Try to get the source url from the report first
+    if ( report['Source'].includes('https://') ) {
+        return report['Source']
+    }
+
+    // Otherwise, fall back to the default source url
+    return defaultSourceUrl
+}
+
+---
+{ hasReports && (
+
+    <Heading
+        text='Reports'
+    />
+
+    <ul class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4 mb-4">
+
+        { listing.reports.map( report => (
+            <li
+                class="col-span-1 rounded-lg border w-full md:w-64"
+            >
+                <div class="w-full flex items-center justify-between p-6">
+                    <div class="flex-1">
+                        <div class="space-x-3">
+                            <h3 class="text-sm leading-5 font-bold">{ report['Specs'] }</h3>
+                            <span class="flex-shrink-0 inline-block px-2 py-0.5 text-teal-800 text-xs leading-4 font-bold bg-teal-100 rounded-full">{ report['FPS'] }</span>
+                        </div>
+                        <p class="mt-1 text-sm leading-5">{ report['Notes'] }</p>
+                        <p
+                            v-if="report['Resolution'].length !== 0"
+                            class="mt-1 text-sm leading-5"
+                        >
+                            🖥 { report['Resolution'] }
+                        </p>
+                        { report['Settings'].length !== 0 && (
+                            <p class="mt-1 text-sm leading-5">
+                                ⚙️ { report['Settings'] }
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+
+                <div class="border-t border-gray-200">
+                    <div class="-mt-px flex">
+                        <div class="w-0 flex-1 flex border-r border-gray-200">
+                            <a
+                                href={ getSourceUrl( report ) }
+                                class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 font-bold border border-transparent rounded-bl-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150"
+                            >
+                                <!-- Heroicon name: mail -->
+                                <svg
+                                    class="w-5 h-5"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                </svg>
+                                <span class="ml-3 opacity-75">Source</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        ))}
+
+    </ul>
+
+)}

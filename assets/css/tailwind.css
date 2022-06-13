@@ -90,9 +90,9 @@ html {
  * @import "utilities/skew-transforms";
  */
 
- .container {
+ /* .container {
     max-width: 1040px;
- }
+ } */
 
 .ease {
     transition-property: all;
@@ -153,19 +153,79 @@ html {
 .shimmer {
     animation: placeHolderShimmer 1s infinite;
     animation-timing-function: linear;
-    background: #f6f7f8;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.07) 8%, rgba(0, 0, 0, 0.45) 18%, rgba(0, 0, 0, 0.07) 33%);
+    background-color: rgba( 0, 0, 0, 0.1 );
+    background-image: linear-gradient( 90deg, rgba(0, 0, 0, 0.07) 8%, rgba(0, 0, 0, 0.45) 18%, rgba(0, 0, 0, 0.07) 33%);
     background-size: 200% 100px;
+    background-position: 0 0, 100% 0;
     background-attachment: fixed;
 }
 
+/* Original - https://codepen.io/ThatGuySam/pen/zYPPYwg */
+/* Animation delay so our shimmer looks staggered */
+
+.shimmer *:nth-child(3n-2),
+*:nth-child(3n-2) > .shimmer {
+  animation-delay: 0.2s;
+}
+
+.shimmer *:nth-child(3n-1),
+*:nth-child(3n-1) > .shimmer {
+  animation-delay: 0.1s;
+}
+
+
+
+.shimmer,
+.shimmer * {
+  /*  Hide all text  */
+  color: transparent;
+}
+
+.shimmer p,
+.shimmer img,
+.shimmer span,
+.shimmer time,
+.shimmer h1, .shimmer h2, .shimmer h3, .shimmer h4, .shimmer h5, .shimmer h6 {
+  animation: placeHolderShimmer 1s infinite;
+  animation-timing-function: linear;
+
+  /*  Shimmer gets inserted as an animated background so it can shape to most elements  */
+
+	/* Base shimmer color */
+  background-color: rgba( 0, 0, 0, 0.1 );
+	/* First and last color should be the same so that animation restart is seamless */
+  background-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.07) 8%,
+    rgba(0, 0, 0, 0.13) 18%,
+    rgba(0, 0, 0, 0.07) 33%
+  );
+  background-size: 200% 100px;
+  background-attachment: fixed;
+
+  border: none;
+
+  /*  Hide all text  */
+  color: transparent;
+
+  /*  Hide img src  */
+  object-position: -99999px 99999px;
+}
+
+/* Inline Shimmers so we get separated shimmer lines on text */
+.shimmer p,
+.shimmer span,
+.shimmer time {
+  display: inline;
+}
+
 @keyframes placeHolderShimmer {
-    0% {
-        background-position: 100% 0;
-    }
-    100% {
-        background-position: -100% 0;
-    }
+  0% {
+    background-position: 100% 0
+  }
+  100% {
+    background-position: -100% 0
+  }
 }
 
 

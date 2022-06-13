@@ -2,13 +2,16 @@ import fs from 'fs-extra'
 import test from 'ava'
 // import MarkdownIt from 'markdown-it'
 
-import { isValidHttpUrl } from '../helpers/check-types.js'
-import { buildReadmeAppList } from '../helpers/build-app-list.js'
+import { isValidHttpUrl } from '~/helpers/check-types.js'
+import { buildReadmeAppList } from '~/helpers/build-app-list.js'
 import {
     matchesWholeWord,
     fuzzyMatchesWholeWord,
     eitherMatches
-} from '../helpers/matching.js'
+} from '~/helpers/matching.js'
+import {
+    PaginatedList
+} from '~/helpers/api/pagination.js'
 
 
 require('dotenv').config()
@@ -178,3 +181,58 @@ test('Can match names with pluses', (t) => {
 })
 
 
+test('Can paginate', async (t) => {
+    const cases = [
+        {
+            from: {
+                list: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+                perPage: 2
+            },
+            expect: {
+                pageCount: 5,
+                pages: [
+                    {
+                        number: 1,
+                        hasNextPage: true,
+                        hasPreviousPage: false,
+                        items: [1, 2],
+                        json: '[1,2]'
+                    },
+                    {
+                        number: 2,
+                        hasNextPage: true,
+                        hasPreviousPage: true,
+                        items: [3, 4],
+                        json: '[3,4]'
+                    },
+
+                    // Last page should have less than perPage items
+                    {
+                        number: 5,
+                        hasNextPage: false,
+                        hasPreviousPage: true,
+                        items: [9],
+                        json: '[9]'
+                    }
+                ]
+            }
+        }
+    ]
+
+    for ( const { from, expect } of cases ) {
+
+        const paginatedList = new PaginatedList( from )
+
+        // Assert that page count is correct
+        t.is( paginatedList.pageCount, expect.pageCount, 'pageCount is incorrect' )
+
+        // Assert that the pages we're expecting are there
+        for ( const expectedPage of expect.pages ) {
+            // Get respective output page
+            const outputPage = paginatedList.pages[ expectedPage.number - 1 ]
+
+            t.deepEqual( outputPage, expectedPage, `Page ${ expectedPage.number } is an unexpected structure` )
+        }
+    }
+
+} )

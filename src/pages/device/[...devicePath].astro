@@ -1,0 +1,119 @@
+---
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+
+import { DoesItAPI } from '~/helpers/api/client.js'
+import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+import { catchRedirectResponse } from '~/helpers/astro/request.js'
+import { deviceSupportsApp } from '~/helpers/devices.js'
+
+
+import Layout from '../../layouts/default.astro'
+import Search from '~/components/search-stork.vue'
+import LinkButton from '~/components/link-button.vue'
+
+
+// Get type and slug from the request path
+// so that we don't have extra parts for
+// urls like /:type/:slug/benchmarks
+const {
+    pathname,
+    pathSlug,
+    subSlug = 1
+ } = getPathPartsFromAstroRequest( Astro.request )
+
+
+const redirectResponse = await catchRedirectResponse( Astro )
+
+if ( redirectResponse !== null ) {
+  return redirectResponse
+}
+
+const device = await DoesItAPI.device( pathSlug ).get()
+const rawAppPage = await DoesItAPI.kind( 'app' )( subSlug ).get()
+
+
+const appPage = {
+    ...rawAppPage,
+
+    // Map out paginnation links
+    // so we stay in the context of this device
+    previousPage: rawAppPage.previousPage.replace( '/kind/app', '/device/' + pathSlug ),
+    nextPage: rawAppPage.nextPage.replace( '/kind/app', '/device/' + pathSlug ),
+
+    // Map device support over text/status
+    items: rawAppPage.items.map( listing => {
+        const listingIsSupported = deviceSupportsApp( device, listing )
+
+        return {
+            ...listing,
+            text: listingIsSupported ? `✅ Supported on ${ device.name }` : `🚫 Not yet reported working on ${ device.name }`,
+        }
+    })
+}
+
+---
+<Layout
+    headOptions={{
+        title: `Apple Silicon Support for ${ device.name }`,
+        description: `Check reported Apple Silicon Support status of apps on ${ device.name }. `,
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        pathname
+    }}
+>
+
+     <section class="container py-24">
+        <div class="flex flex-col items-center space-y-4">
+
+            <div class="hero">
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-center pb-4">
+                    Apple Silicon Support for { device.name }
+                </h1>
+
+                <div
+                    class="subtitle md:text-xl text-center"
+                >
+                    { device.description }
+                </div>
+
+                <br>
+
+                <div
+                    class="subtitle md:text-xl text-center"
+                >
+                    Supported apps include { appPage.summary.sampleNamesShort }.
+                </div>
+            </div>
+
+            { !!device.amazonUrl &&
+                <div class="flex justify-center py-8">
+                    <LinkButton
+                        href={ device.amazonUrl }
+                        target="_blank"
+                    >
+                        Check Pricing
+                    </LinkButton>
+                </div>
+            }
+
+            <Search
+                kind-page={ appPage }
+
+                client:load
+            />
+
+            <!-- <ListEndButtons query="query" /> -->
+
+            <!-- <AllUpdatesSubscribe
+                class="my-12"
+            /> -->
+
+        </div>
+    </section>
+
+</Layout>

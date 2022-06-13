@@ -1,7 +1,26 @@
 [build]
   publish = "dist/"
-  command = "npm run generate --quiet"
-  # functions = "functions/"
+  command = "npm run netlify-build"
+
+
+# https://docs.netlify.com/configure-builds/file-based-configuration/#functions
+[functions]
+    # Sets a custom directory for Netlify Functions
+    directory = "dist/functions"
+
+    # Specifies `esbuild` for functions bundling
+    # node_bundler = "esbuild"
+
+    # Flags "astro" as an external node module for all functions
+    # external_node_modules = ["astro"]
+
+    # Includes all Markdown files inside the "files/" directory.
+    # included_files = ["files/*.md"]
+
+# Astro Entry function
+[functions."entry"]
+    # https://www.netlify.com/blog/2021/08/12/how-to-include-files-in-netlify-serverless-functions/
+    included_files = ["netlify.toml"]
 
 
 
@@ -9,9 +28,14 @@
   NPM_FLAGS = "--no-optional"
   CI = "1"
 
+[[headers]]
+    for = "/search-index.st"
+    [headers.values]
+        Content-Type = "application/wasm"
+        Cache-Control = "max-age=43200, must-revalidate"
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
-
+# These redirect are lower priority than _redirects in the root or dist
 # old node redirect
 [[redirects]]
   from = "/app/node"

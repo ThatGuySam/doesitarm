@@ -1,0 +1,92 @@
+---
+import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+
+
+import Layout from '~/src/layouts/embed.astro'
+import VideoPlayer from '~/components/video/player.vue'
+
+
+import '@fontsource/inter/variable.css'
+
+// Component Script:
+// You can write any JavaScript/TypeScript that you'd like here.
+// It will run during the build, but never in the browser.
+// All variables are available to use in the HTML template below.
+
+
+// Full Astro Component Syntax:
+// https://docs.astro.build/core-concepts/astro-components/
+
+// Get type and slug from the request path
+// so that we don't have extra parts for
+// urls like /:type/:slug/benchmarks
+const {
+    pathSlug,
+    subSlug = null,
+    params
+} = getPathPartsFromAstroRequest( Astro.request )
+
+const {
+    name,
+    'youtube-id' : youtubeId
+} = params
+
+const video = {
+    name,
+    id: youtubeId,
+    timestamps: [],
+    thumbnail: {
+        sizes: '(max-width: 640px) 100vw, 640px',
+        srcset: `https://i.ytimg.com/vi/${ youtubeId }/default.jpg 120w, https://i.ytimg.com/vi/${ youtubeId }/mqdefault.jpg 320w, https://i.ytimg.com/vi/${ youtubeId }/hqdefault.jpg 480w, https://i.ytimg.com/vi/${ youtubeId }/sddefault.jpg 640w`,
+        src: `https://i.ytimg.com/vi/${ youtubeId }/default.jpg`
+    },
+}
+
+---
+<Layout
+	headOptions={ {
+        title: 'Video - Does It ARM',
+        // description: ``,
+        // meta,
+        // link,
+        // structuredData: this.structuredData,
+
+        // domain,
+        pathname: '/',
+    } }
+>
+
+    <style>
+        /* Clear out background color */
+        html {
+            background: transparent;
+        }
+    </style>
+
+    <div class="embed-main text-gray-300">
+        <VideoPlayer
+            client:load
+
+            video={ video }
+            class="w-100 h-100 absolute inset-0 flex justify-center items-center"
+        >
+            <div class="page-heading h-full flex items-end md:p-4">
+                <h1 class="title text-xs text-left md:text-2xl font-bold">
+                    { video.name }
+                </h1>
+            </div>
+        </VideoPlayer>
+    </div>
+
+	<!--
+
+	You can also use imported framework components directly in your markup!
+
+	Note: by default, these components are NOT interactive on the client.
+	The `:visible` directive tells Astro to make it interactive.
+
+	See https://docs.astro.build/core-concepts/component-hydration/
+
+	-->
+
+</Layout>

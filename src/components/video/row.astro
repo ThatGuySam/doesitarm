@@ -1,0 +1,70 @@
+---
+import Card from './card.astro'
+
+const {
+  videos,
+  cardWidth = '325',
+  classes = ''
+} = Astro.props
+
+// Math.random should be unique because of its seeding algorithm.
+// Convert it to base 36 (numbers + letters), and grab the first 9 characters
+// after the decimal.
+const uid = Math.random().toString(36).substr(2, 9)
+const rowId = `row-${ uid }`
+const rowSelector = `#${ rowId }`
+
+---
+<div class="video-row relative w-full ${ classes }">
+
+    <div
+        id={ rowId }
+        class="video-row-contents flex overflow-x-auto whitespace-no-wrap py-2 space-x-6"
+        style="scroll-snap-type:x mandatory;"
+    >
+        { videos.map(video => (
+            <Card
+                key={ video.id }
+                video={ video }
+                cardWidth={ cardWidth }
+            />
+        )) }
+    </div>
+
+    <button
+        class="scroll-button absolute left-0 h-10 w-10 flex justify-center items-center transform -translate-y-1/2 -translate-x-1/2 bg-darker rounded-full"
+        style="top:50%;"
+        distance={ cardWidth * -1 }
+        scroll-target={ rowSelector }
+        aria-label="Scroll to previous videos"
+    >
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-gray-400" style="transform: scaleX(-1);">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+    </button>
+    <button
+        class="scroll-button absolute right-0 h-10 w-10 flex justify-center items-center transform -translate-y-1/2 translate-x-1/2 bg-darker rounded-full"
+        style="top:50%;"
+        distance={ cardWidth }
+        scroll-target={ rowSelector }
+        aria-label="Scroll to next videos"
+    >
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-gray-400">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+    </button>
+
+</div>
+
+<script>
+    import { scrollHorizontalCarousel } from '~/helpers/scroll.js'
+
+
+    // Add Click listeners to all buttons
+    Array.from( document.querySelectorAll(`.video-row button.scroll-button`) ).forEach( button => {
+        // console.log('button', button)
+        button.addEventListener('click', scrollHorizontalCarousel)
+    })
+</script>
+
+
