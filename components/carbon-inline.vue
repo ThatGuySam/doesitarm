@@ -1,4 +1,5 @@
 <template>
+    <!-- This may be able to be brought in via Partytown -->
     <div class="doesitarm-carbon-wrapper">
         <component
             :is="'script'"
