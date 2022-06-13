@@ -14,6 +14,7 @@ import Search from '~/components/search-stork.vue'
 // import ListSummary from '~/components/list-summary.vue'
 import ListEndButtons from '~/components/list-end-buttons.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
+import CarbonInline from '~/components/carbon-inline.vue'
 
 const homePageKindPage = await DoesItAPI.kind.app(1).get()
 const allAppsSummary = await DoesItAPI('all-apps-summary').get()
@@ -49,7 +50,11 @@ const allAppsSummary = await DoesItAPI('all-apps-summary').get()
                 list-summary={ allAppsSummary }
 
                 client:load
-            />
+            >
+                <CarbonInline
+                    class="carbon-inline-wide"
+                />
+            </Search>
 
             <AllUpdatesSubscribe
                 class="my-12"

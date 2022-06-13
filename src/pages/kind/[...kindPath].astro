@@ -15,6 +15,7 @@ import {
 
 import Layout from '../../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
+import CarbonInline from '~/components/carbon-inline.vue'
 
 
 // Get type and slug from the request path
@@ -98,7 +99,11 @@ if ( !!categorySlug ) {
                 base-filters={ baseFilters }
 
                 client:load
-            />
+            >
+                <CarbonInline
+                    class="carbon-inline-wide"
+                />
+            </Search>
 
             <!-- <ListEndButtons query="query" /> -->
 

@@ -44,7 +44,9 @@
             </div>
         </div>
 
-        <Carbon class="carbon-inline-wide" />
+        <div class="slot-wrapper">
+            <slot />
+        </div>
 
         <div
             ref="search-container"

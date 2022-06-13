@@ -14,6 +14,7 @@ import {
 import Layout from '~/src/layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
+import CarbonInline from '~/components/carbon-inline.vue'
 
 
 // Get type and slug from the request path
@@ -90,7 +91,11 @@ const pageLabel = category?.pluralLabel || category.label
                 base-filters={ baseFilters }
 
                 client:load
-            />
+            >
+                <CarbonInline
+                    class="carbon-inline-wide"
+                />
+            </Search>
 
             <!-- <ListEndButtons query="query" /> -->
 
