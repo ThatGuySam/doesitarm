@@ -8,13 +8,18 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
+import {
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
 
 import Layout from '../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 // import ListSummary from '~/components/list-summary.vue'
-import ListEndButtons from '~/components/list-end-buttons.vue'
+// import ListEndButtons from '~/components/list-end-buttons.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import CarbonInline from '~/components/carbon-inline.vue'
+
+applyResponseDefaults( Astro )
 
 const homePageKindPage = await DoesItAPI.kind.app(1).get()
 const allAppsSummary = await DoesItAPI('all-apps-summary').get()

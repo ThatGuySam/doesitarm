@@ -8,9 +8,14 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
+import {
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
 
 import Layout from '../layouts/default.astro'
 import SimpleList from '../components/simple-list.astro'
+
+applyResponseDefaults( Astro )
 
 const kindIndex = await DoesItAPI.kind.index.get()
 

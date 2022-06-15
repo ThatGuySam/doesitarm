@@ -1,4 +1,8 @@
 ---
+import {
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
+
 import Layout from '../layouts/default.astro'
 
 import AppTestPage from '~/pages/apple-silicon-app-test.vue'
@@ -11,6 +15,8 @@ import AppTestPage from '~/pages/apple-silicon-app-test.vue'
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
+
+applyResponseDefaults( Astro )
 
 ---
 <Layout

@@ -8,12 +8,16 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
+import {
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
 
 import Layout from '../layouts/default.astro'
 import BgPlayer from '~/src/components/video/bg-player.astro'
 import VideoRow from '~/src/components/video/row.astro'
 // import LinkButton from '~/components/link-button.vue'
 
+applyResponseDefaults( Astro )
 
 const pagesToGet = 10
 
