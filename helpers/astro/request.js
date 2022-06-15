@@ -1,5 +1,48 @@
 import { getNetlifyRedirect } from '~/helpers/config-node.js'
 
+
+const ONE_HOUR = 60 * 60
+const ONE_SECOND = 1
+
+function trimTrailingSlash ( url ) {
+    return url.replace( /\/$/, '' )
+}
+
+// We use a set of top level list pages
+// so that our list searching time is as fast as possible
+const topLevelListPages = new Set([
+    '', // Homepage
+    '/games',
+    '/devices',
+    '/benchmarks',
+    '/categories'
+])
+
+function getMaxAgeForUrl ( Astro ) {
+    const requestUrl = new URL( Astro.request.url )
+    const urlPath = trimTrailingSlash( requestUrl.pathname )
+
+    // Top level list pages
+    if ( topLevelListPages.has( urlPath ) ) {
+        return ONE_HOUR
+    }
+
+    // Kind page
+    if ( requestUrl.pathname.startsWith( '/kind/' ) ) {
+        return ONE_HOUR
+    }
+
+    return ONE_SECOND
+}
+
+export async function applyResponseDefaults ( Astro ) {
+    const maxAgeSeconds = getMaxAgeForUrl( Astro )
+
+    // Cache-Control: s-maxage=1, stale-while-revalidate
+    Astro.response.headers.set( 'Cache-Control', `s-maxage=${ maxAgeSeconds }, stale-while-revalidate` )
+}
+
+
 export async function catchRedirectResponse ( Astro ) {
     const requestUrl = new URL( Astro.request.url )
 
