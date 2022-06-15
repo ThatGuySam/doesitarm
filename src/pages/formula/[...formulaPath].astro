@@ -3,7 +3,10 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
-import { catchRedirectResponse } from '~/helpers/astro/request.js'
+import {
+    catchRedirectResponse,
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
 import {
     ListingDetails
 } from '~/helpers/listing-page.js'
@@ -18,6 +21,8 @@ const redirectResponse = await catchRedirectResponse( Astro )
 if ( redirectResponse !== null ) {
   return redirectResponse
 }
+
+applyResponseDefaults( Astro )
 
 
 // Get type and slug from the request path

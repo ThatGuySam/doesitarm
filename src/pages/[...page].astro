@@ -1,6 +1,9 @@
 ---
 // import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
-import { catchRedirectResponse } from '~/helpers/astro/request.js'
+import {
+    catchRedirectResponse,
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
 
 import Layout from '../layouts/default.astro'
 import LinkButton from '~/components/link-button.vue'
@@ -18,6 +21,8 @@ const redirectResponse = await catchRedirectResponse( Astro )
 if ( redirectResponse !== null ) {
   return redirectResponse
 }
+
+applyResponseDefaults( Astro )
 
 // https://docs.astro.build/en/reference/api-reference/#astroresponse
 Astro.response.status = 404

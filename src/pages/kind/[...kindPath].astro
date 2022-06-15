@@ -5,7 +5,10 @@
 
 import { DoesItAPI } from '~/helpers/api/client.js'
 import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
-import { catchRedirectResponse } from '~/helpers/astro/request.js'
+import {
+    catchRedirectResponse,
+    applyResponseDefaults
+} from '~/helpers/astro/request.js'
 import {
     categories,
     getKindToCategorySlug,
@@ -33,6 +36,8 @@ const redirectResponse = await catchRedirectResponse( Astro )
 if ( redirectResponse !== null ) {
   return redirectResponse
 }
+
+applyResponseDefaults( Astro )
 
 
 // Try the pathSlug against categories
