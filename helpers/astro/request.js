@@ -38,6 +38,14 @@ function getMaxAgeForUrl ( Astro ) {
 export async function applyResponseDefaults ( Astro ) {
     const maxAgeSeconds = getMaxAgeForUrl( Astro )
 
+    // 'stale-while-revalidate' tells Cloudflare to cache the response for X seconds
+    // but update the cache in the background
+    // so the user always gets a fast and cached response.
+    //
+    // This also means our Astro SSR entry function on Netlify
+    // only gets called from Cloudflare instead of the user's browser
+    // so that our actual number of requests to Netlify are minimized.
+    //
     // Cache-Control: s-maxage=1, stale-while-revalidate
     Astro.response.headers.set( 'Cache-Control', `s-maxage=${ maxAgeSeconds }, stale-while-revalidate` )
 }
