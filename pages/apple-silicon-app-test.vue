@@ -304,7 +304,7 @@ export default {
                 // Bring in code
                 const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
 
-                const testResultStore = this.config ? this.$config.testResultStore : this.$config.testResultStore
+                const testResultStore = this.config ? this.config.testResultStore : global.$config.testResultStore
 
                 // Initialize instance
                 this.scanner = new AppFilesScanner({
