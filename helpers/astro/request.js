@@ -1,8 +1,9 @@
 import { getNetlifyRedirect } from '~/helpers/config-node.js'
 
 
-const ONE_HOUR = 60 * 60
 const ONE_SECOND = 1
+const ONE_HOUR = 60 * 60
+const TWELVE_HOURS = 12 * ONE_HOUR
 
 function trimTrailingSlash ( url ) {
     return url.replace( /\/$/, '' )
@@ -24,12 +25,12 @@ function getMaxAgeForUrl ( Astro ) {
 
     // Top level list pages
     if ( topLevelListPages.has( urlPath ) ) {
-        return ONE_HOUR
+        return TWELVE_HOURS
     }
 
     // Kind page
     if ( requestUrl.pathname.startsWith( '/kind/' ) ) {
-        return ONE_HOUR
+        return TWELVE_HOURS
     }
 
     return ONE_SECOND
