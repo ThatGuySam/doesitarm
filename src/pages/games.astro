@@ -17,7 +17,7 @@ import {
 import Layout from '~/src/layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
-import CarbonInline from '~/components/carbon-inline.vue'
+import AdInline from '~/components/ad-inline.vue'
 
 
 // Get type and slug from the request path
@@ -97,8 +97,8 @@ const pageLabel = category?.pluralLabel || category.label
 
                 client:load
             >
-                <CarbonInline
-                    class="carbon-inline-wide"
+                <AdInline
+                    name="new-world-1"
                 />
             </Search>
 
