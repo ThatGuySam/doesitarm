@@ -18,7 +18,7 @@
                     class="absolute bottom-0 right-0 border-t border-l rounded-tl uppercase opacity-25 px-1"
                     style="font-size: 0.45rem;"
                 >
-                    ads via Amazon
+                    Ads via Amazon
                 </div>
             </div>
         </a>
