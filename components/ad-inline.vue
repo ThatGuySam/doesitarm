@@ -25,7 +25,7 @@
     </div>
     <CarbonInline
         v-else
-        class="carbon-inline-wide"
+        class="carbon-inline-wide w-full"
     />
 </template>
 
