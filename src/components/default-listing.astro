@@ -9,7 +9,7 @@ import Aliases from '~/src/components/listing-parts/aliases.astro'
 import ThomasCredit from '~/components/thomas-credit.vue'
 import RelatedLinks from '~/src/components/listing-parts/related-links.astro'
 import Virtualization from './listing-parts/virtualization.astro'
-import CarbonInline from '~/components/carbon-inline.vue'
+import AdInline from '~/components/ad-inline.vue'
 import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
 import Bundles from '~/src/components/listing-parts/bundles.astro'
@@ -64,7 +64,9 @@ const details = new ListingDetails( listing )
 
         <Virtualization listing={ listing } />
 
-        <CarbonInline class="carbon-inline-wide w-full" />
+        <AdInline
+            name={ listing.isGame ? 'new-world-1' : 'default' }
+        />
 
         <Devices
             listing={ listing }
