@@ -18,7 +18,7 @@ import {
 
 import Layout from '../../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
-import CarbonInline from '~/components/carbon-inline.vue'
+import AdInline from '~/components/ad-inline.vue'
 
 
 // Get type and slug from the request path
@@ -105,8 +105,8 @@ if ( !!categorySlug ) {
 
                 client:load
             >
-                <CarbonInline
-                    class="carbon-inline-wide"
+                <AdInline
+                    name={ kindName === 'game' ? 'new-world-1' : 'default' }
                 />
             </Search>
 
