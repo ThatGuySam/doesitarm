@@ -11,7 +11,7 @@
                         alt="Skull figure with menacing red eyes"
                     >
                 </div>
-                <div class="flex flex-col justify-center p-4 text-center">
+                <div class="flex flex-col justify-center text-center opacity-50 p-4">
                     New World: Carve Your Destiny
                 </div>
                 <div
