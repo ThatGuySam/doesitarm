@@ -31,6 +31,17 @@ const {
 
 const details = new ListingDetails( listing )
 
+
+const adName = (() => {
+    // Games
+    if ( details.isGame ) return 'new-world-1'
+
+    // Developer Tools
+    if ( listing?.category?.slug === 'developer-tools' ) return 'codeable-1'
+
+    return 'default'
+})()
+
 ---
 <section class="container space-y-8 py-32">
 
@@ -65,7 +76,7 @@ const details = new ListingDetails( listing )
         <Virtualization listing={ listing } />
 
         <AdInline
-            name={ listing.isGame ? 'new-world-1' : 'default' }
+            name={ adName }
         />
 
         <Devices
