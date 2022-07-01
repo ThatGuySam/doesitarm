@@ -69,6 +69,14 @@ if ( !!categorySlug ) {
     pageLabel = category?.pluralLabel || category.label
 }
 
+const adName = (() => {
+    if ( kindName === 'game' ) return 'new-world-1'
+
+    if ( kindName === 'developer-tools' ) return 'codeable-1'
+
+    return 'default'
+})()
+
 ---
 <Layout
     headOptions={{
@@ -106,7 +114,7 @@ if ( !!categorySlug ) {
                 client:load
             >
                 <AdInline
-                    name={ kindName === 'game' ? 'new-world-1' : 'default' }
+                    name={ adName }
                 />
             </Search>
 
