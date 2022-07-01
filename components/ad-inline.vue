@@ -13,7 +13,7 @@
                     <img
                         :src="ad.imageSrc"
                         :alt="ad.imageAlt"
-                        class="w-32 aspect-video object-cover"
+                        class="w-32 h-full aspect-video object-cover"
                     >
                 </div>
                 <div class="flex flex-col justify-center text-center opacity-50 p-4">
