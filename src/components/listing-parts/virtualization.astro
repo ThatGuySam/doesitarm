@@ -42,9 +42,21 @@ const totalLinks = links.length
     <div
         class="related-videos w-full"
     >
-        <Heading text="Virtualization Support" />
+        <div class="flex justify-center gap-3">
+            <div class="relative">
+                <Heading text="Virtualization Support" />
+                <div
+                    class="group absolute top-0 -right-8"
+                >
+                    <button class="h-5 text-xs bg-white-2 flex justify-center items-center outline-0 neumorphic-shadow rounded-full px-2">?</button>
+                    <div
+                        class="text-sm bg-black/60 backdrop-blur-lg w-screen max-w-xs opacity-0 group-hover:opacity-100 absolute left-1/2 -translate-x-1/2 bottom-10 z-10 p-6"
+                    >With Virtualization you can run apps on Apple Silicon Macs even if they are normally completely unsupported, such as Windows-only Apps, at the cost of some performance drop vs Native support. </div>
+                </div>
+            </div>
+        </div>
 
-        <div class="text-xs opacity-75 mb-4">With Virtualization you can run apps on Apple Silicon Macs even if they are normally completely unsupported, such as Windows-only Apps, at the cost of some performance drop vs Native support. </div>
+
 
         <span class="relative z-0 inline-flex text-center md:flex-row flex-col shadow-sm md:divide-x md:divide-y-0 divide-y divide-gray-700 border border-gray-300 rounded-md bg-darker md:py-3 md:px-0 px-4">
             { links.map( (link, i) => {
