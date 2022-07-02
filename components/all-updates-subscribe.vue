@@ -72,7 +72,7 @@ export default {
         // },
         placeholder: {
             type: String,
-            default: 'Send me regular app updates'
+            default: '✉️ Get App Updates'
         },
         notes: {
             type: String,
