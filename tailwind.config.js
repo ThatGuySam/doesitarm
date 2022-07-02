@@ -118,20 +118,20 @@ module.exports = {
     variants: {
         backgroundImage: ['responsive', 'hover']
     },
-    plugins: [
-        require( 'daisyui' )
-    ],
+    // plugins: [
+    //     require( 'daisyui' )
+    // ],
 
-    // daisyUI config
-    // https://daisyui.com/docs/config/
-    daisyui: {
-        // styled: false,
-        // themes: false,
-        // base: false,
-        // utils: false,
-        // logs: true,
-        // rtl: false,
-        prefix: 'daisy',
-        darkTheme: 'dark',
-    },
+    // // daisyUI config
+    // // https://daisyui.com/docs/config/
+    // daisyui: {
+    //     // styled: false,
+    //     // themes: false,
+    //     // base: false,
+    //     // utils: false,
+    //     // logs: true,
+    //     // rtl: false,
+    //     prefix: 'daisy',
+    //     darkTheme: 'dark',
+    // },
 }
