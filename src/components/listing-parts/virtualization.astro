@@ -12,11 +12,13 @@ const {
 const details = ensureListingDetails( listing )
 
 const isNonNativeGame = listing.status !== 'native' && details.isGame
+// Example: Adobe+Photoshop
+const listingUrlFirendlyName = encodeURIComponent( listing.name )
 
 const links = [
     {
         label: '🔄 CrossOver Compatibility',
-        href: 'https://www.codeweavers.com/compatibility?ad=912'
+        href: `https://www.codeweavers.com/compatibility?browse=&ad=912&app_desc=&company=&rating=&platform=&date_start=&date_end=&search=app&name=${ listingUrlFirendlyName }#results`
     },
     {
         label: '🔄 CrossOver Performance',
