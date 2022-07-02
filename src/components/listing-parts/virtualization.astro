@@ -11,7 +11,8 @@ const {
 
 const details = ensureListingDetails( listing )
 
-const isNonNativeGame = listing.status !== 'native' && details.isGame
+const isNonNative = listing.status !== 'native'// && details.isGame
+
 // Example: Adobe+Photoshop
 const listingUrlFirendlyName = encodeURIComponent( listing.name )
 
@@ -38,7 +39,7 @@ const links = [
 
 const totalLinks = links.length
 ---
-{ isNonNativeGame && (
+{ isNonNative && (
     <div
         class="related-videos w-full"
     >
