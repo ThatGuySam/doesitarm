@@ -4,7 +4,6 @@ module.exports = {
         'helpers/**/*.js',
 
         // Nuxt
-        'nuxt.config.js',
         'components/**/*.vue',
         'layouts/**/*.vue',
         'pages/**/*.vue',
