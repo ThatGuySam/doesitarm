@@ -24,7 +24,7 @@ const pageHead = new PageHead({
 <html lang="en">
     <head>
         <title>{ pageHead.title }</title>
-        <Fragment set:html={ pageHead.metaAndLinkMarkup } />
+        <Fragment set:html={ pageHead.allHeadMarkup } />
 
         <GoogleAnalytics />
     </head>
