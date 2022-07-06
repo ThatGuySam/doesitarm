@@ -206,7 +206,7 @@ test( 'Listings with videos have structured data', async t => {
         t.assert( listingPageHead.structuredDataMarkup.trim() !== '', `${ caseEndpoint } has structured data` )
 
         // https://github.com/glitchdigital/structured-data-testing-tool#api
-        const testResult = await structuredDataTestHtml( listingPageHead.structuredDataMarkup , {
+        const testResult = await structuredDataTestHtml( listingPageHead.allHeadMarkup , {
             presets: [ Google ],
             schemas: [ 'VideoObject' ]
         }).then(res => {
