@@ -3,6 +3,8 @@ import has from 'just-has'
 import test from 'ava'
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
+import { structuredDataTestHtml } from 'structured-data-testing-tool'
+import { Google } from 'structured-data-testing-tool/presets'
 
 
 import {
@@ -22,6 +24,7 @@ const listingsCases = {
         endpoint: '/app/spotify',
         apiEndpointPath: '/api/app/spotify.json',
         expectInitialVideo: true,
+        shouldHaveVideoStucturedData: false,
     },
 
     // Electron
@@ -29,6 +32,7 @@ const listingsCases = {
         endpoint: '/app/electron-framework',
         apiEndpointPath: '/api/app/electron-framework.json',
         expectInitialVideo: false,
+        shouldHaveVideoStucturedData: false,
     },
 
     // Express VPN Benchmarks
@@ -36,6 +40,15 @@ const listingsCases = {
         endpoint: '/app/expressvpn/benchmarks/',
         apiEndpointPath: '/api/app/expressvpn.json',
         expectInitialVideo: true,
+        shouldHaveVideoStucturedData: false
+    },
+
+    // Express VPN Benchmarks
+    '/tv/install-instagram-app-on-m1-macbook-air-apple-silicon-tutorial-i-vfbmworal6i/': {
+        endpoint: '/tv/install-instagram-app-on-m1-macbook-air-apple-silicon-tutorial-i-vfbmworal6i/',
+        apiEndpointPath: '/api/tv/install-instagram-app-on-m1-macbook-air-apple-silicon-tutorial-i-vfbmworal6i.json',
+        expectInitialVideo: true,
+        shouldHaveVideoStucturedData: true
     }
 }
 
@@ -170,5 +183,56 @@ test('Listings have valid headings', async t => {
 
         }
 
+    }
+})
+
+
+test( 'Listings with videos have structured data', async t => {
+    const { listingsDetails } = t.context
+
+    for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
+
+        const listingDetails = listingsDetails[ caseEndpoint ]
+
+        // Stop here if we're not expecting Video Structured Data
+        if ( !listingCase.shouldHaveVideoStucturedData ) continue
+
+        const listingPageHead = new PageHead( listingDetails.headOptions )
+
+        // t.log('listingDetails.initialVideo', listingDetails.initialVideo)
+        // t.log( 'caseEndpoint', caseEndpoint )
+
+        // Assert that the structured data is not empty
+        t.assert( listingPageHead.structuredDataMarkup.trim() !== '', `${ caseEndpoint } has structured data` )
+
+        // https://github.com/glitchdigital/structured-data-testing-tool#api
+        const testResult = await structuredDataTestHtml( listingPageHead.structuredDataMarkup , {
+            presets: [ Google ],
+            schemas: [ 'VideoObject' ]
+        }).then(res => {
+            return res
+        }).catch(err => {
+            // console.warn( 'Structured Data error', err.error )
+
+            if (err.type === 'VALIDATION_FAILED') {
+
+                // t.fail( 'Some structured data tests failed.' )
+                const validationError = new Error( 'Some structured data tests failed.' )
+
+                validationError.failed = err.res.failed
+                validationError.errors = Array.from( err.res.failed ).map( fail => fail.error )
+
+                throw validationError
+
+                // return
+            }
+
+            throw new Error( 'Structured data testing error.', err.error )
+        })
+
+        // t.log( 'testResult', testResult )
+
+        // Assert that no Structured Data tests failed
+        t.assert( testResult.failed.length === 0, `${ caseEndpoint } has valid structured data` )
     }
 })

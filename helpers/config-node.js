@@ -311,12 +311,21 @@ export class PageHead {
     }
 
     get structuredDataMarkup () {
+        // console.log( 'this.structuredData', this.structuredData )
 
-        if ( structuredData === null ) return ''
+        if ( this.structuredData === null ) return ''
 
-        const structuredDataJson = JSON.stringify( structuredData )
+        const structuredDataJson = JSON.stringify( this.structuredData )
 
         return `<script type="application/ld+json">${ structuredDataJson }</script>`
+    }
+
+    get allHeadMarkup () {
+        return [
+            this.metaMarkup,
+            this.linkMarkup,
+            this.structuredDataMarkup
+        ].join('')
     }
 
 
