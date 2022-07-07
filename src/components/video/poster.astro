@@ -53,6 +53,9 @@ function makeImgAttributes ( src ) {
     <img
         { ...makeImgAttributes( images.imgSrc ) }
         alt={ video.name }
-        class="absolute inset-0 h-full w-full object-cover lazyload"
+        class={ [
+            'absolute inset-0 h-full w-full object-cover',
+            loading === 'lazy' ? 'lazyload' : ''
+        ].join(' ') }
     >
 </picture>
