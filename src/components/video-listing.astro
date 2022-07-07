@@ -5,7 +5,7 @@ import {
     ensureListingDetails
 } from '~/helpers/listing-page.js'
 
-// import Devices from '~/src/components/listing-parts/devices.astro'
+import Heading from '~/src/components/listing-parts/heading.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
 import HtmlPlayer from '~/src/components/video/player.astro'
 
@@ -56,9 +56,9 @@ const details = ensureListingDetails( listing )
             <div
                 class="related-apps w-full"
             >
-                <h2 class="subtitle text-xl md:text-2xl font-bold mb-3">
-                    Related Apps
-                </h2>
+                <Heading
+                    text="📱 Related Apps"
+                />
                 <div class="featured-apps overflow-x-auto overflow-y-visible whitespace-no-wrap py-2 space-x-2">
                     { details.initialVideo.appLinks.map( appLink => (
                         <a
