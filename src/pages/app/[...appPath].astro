@@ -32,7 +32,8 @@ applyResponseDefaults( Astro )
 // urls like /:type/:slug/benchmarks
 const {
     pathSlug,
-    subSlug = null
+    subSlug = null,
+    pathname
  } = getPathPartsFromAstroRequest( Astro.request )
 
 const isBenchmarkPage = subSlug === 'benchmarks'
@@ -62,6 +63,7 @@ if ( isBenchmarkPage ) {
         ...preloads
     ]
 
+    headOptions.pathname = pathname
 }
 
 ---
