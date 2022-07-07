@@ -218,7 +218,7 @@ export default {
                 return window.location.pathname
             }
 
-            return '/'
+            return ''
         }
     }
     // data: function () {
