@@ -3,6 +3,7 @@ import fs from 'fs-extra'
 
 import pkg from '~/package.json'
 import { getSiteUrl } from '~/helpers/url.js'
+import { getRouteType } from '~/helpers/app-derived.js'
 
 
 export const siteUrl = getSiteUrl()
@@ -232,6 +233,10 @@ export class PageHead {
         return this.pageUrl.toString()
     }
 
+    get routeType () {
+        return getRouteType( this.pathname )
+    }
+
     get defaultMeta () {
         return nuxtHead.meta
     }
@@ -310,14 +315,22 @@ export class PageHead {
         ].join('')
     }
 
+
     get structuredDataMarkup () {
-        // console.log( 'this.structuredData', this.structuredData )
+        // console.log( 'this.routeType', this.routeType, this.pathname )
 
-        if ( this.structuredData === null ) return ''
+        const hasStructuredData = this.structuredData !== null
+        // Route is primarily for video
+        const videoRouteType = [ 'tv', 'benchmarks' ].includes( this.routeType )
 
-        const structuredDataJson = JSON.stringify( this.structuredData )
+        if ( hasStructuredData && videoRouteType ) {
+            const structuredDataJson = JSON.stringify( this.structuredData )
 
-        return `<script type="application/ld+json">${ structuredDataJson }</script>`
+            return `<script type="application/ld+json">${ structuredDataJson }</script>`
+        }
+
+
+        return ''
     }
 
     get allHeadMarkup () {

@@ -183,8 +183,20 @@ export class ListingDetails {
     }
 
     get structuredData () {
+        // Normal video page with app links
         if ( this.type === 'video' ) {
             return buildVideoStructuredData( this.api, this.api.appLinks )
+        }
+
+        // Benchmark page
+        if ( this.hasInitialVideo ) {
+            // Build app links with just the current app
+            const appLinks =  [ {
+                name: this.api.name,
+                endpoint: this.api.endpoint
+            } ]
+
+            return buildVideoStructuredData( this.initialVideo, appLinks )
         }
 
         return null

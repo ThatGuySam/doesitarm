@@ -40,7 +40,7 @@ const listingsCases = {
         endpoint: '/app/expressvpn/benchmarks/',
         apiEndpointPath: '/api/app/expressvpn.json',
         expectInitialVideo: true,
-        shouldHaveVideoStucturedData: false
+        shouldHaveVideoStucturedData: true
     },
 
     // Express VPN Benchmarks
@@ -193,11 +193,21 @@ test( 'Listings with videos have structured data', async t => {
     for ( const [ caseEndpoint, listingCase ] of listingCaseEntries ) {
 
         const listingDetails = listingsDetails[ caseEndpoint ]
+        const listingPageHead = new PageHead( {
+            ...listingDetails.headOptions,
+            pathname: caseEndpoint
+        })
 
         // Stop here if we're not expecting Video Structured Data
-        if ( !listingCase.shouldHaveVideoStucturedData ) continue
+        if ( !listingCase.shouldHaveVideoStucturedData ) {
 
-        const listingPageHead = new PageHead( listingDetails.headOptions )
+            // Check that the non-video listing doesn't have video structured data
+            t.assert( !listingPageHead.structuredDataMarkup.includes('VideoObject'), `${ caseEndpoint } has video structured data` )
+
+            continue
+        }
+
+
 
         // t.log('listingDetails.initialVideo', listingDetails.initialVideo)
         // t.log( 'caseEndpoint', caseEndpoint )
