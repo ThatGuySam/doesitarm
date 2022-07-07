@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://doesitarm.com/sitemap-index.xml
