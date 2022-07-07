@@ -1,23 +1,57 @@
 ---
 import { getVideoImages } from '~/helpers/listing-page.js'
 const {
-    video
+    video,
+    loading = 'lazy'
 } = Astro.props
 
 const images = getVideoImages( video )
+
+function makeSourceAttributes ( [ key, source ] ) {
+    const sizes = source.sizes
+    const type = `image/${ key }`
+
+    if ( loading === 'eager' ) {
+        return {
+            sizes,
+            type,
+            srcset: source.srcset,
+        }
+    }
+
+    // Lazysizes attributes
+    return {
+        sizes,
+        type,
+        'data-srcset': source.srcset
+    }
+}
+
+function makeImgAttributes ( src ) {
+
+    if ( loading === 'eager' ) {
+        return {
+            src: src,
+        }
+    }
+
+    // Lazysizes attributes
+    return {
+        'data-src': src,
+    }
+}
+
 ---
 <picture>
 
     { Object.entries( images.sources ).map( ([ key, source ]) => (
         <source
-            sizes={ source.sizes }
-            data-srcset={ source.srcset }
-            type={ `image/${ key }` }
+            { ...makeSourceAttributes( [ key, source ] ) }
         >
-    ) ) }
+    )) }
 
     <img
-        data-src={ images.imgSrc }
+        { ...makeImgAttributes( images.imgSrc ) }
         alt={ video.name }
         class="absolute inset-0 h-full w-full object-cover lazyload"
     >
