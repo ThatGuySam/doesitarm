@@ -14,15 +14,25 @@ jobs:
     name: Deploy
     steps:
     - uses: actions/checkout@master
-    - name: Write Wrangler config
+    - name: Write Wrangler configs
       run: |
           echo ${{ secrets.WRANGLER_ENV }} | base64 -d > doesitarm-default/.env
           cat doesitarm-default/.env
           echo ${{ secrets.WRANGLER_TOML }} | base64 -d > doesitarm-default/wrangler.toml
           cat doesitarm-default/wrangler.toml
           npm install
-    - name: Deploy Worker
+
+          # Analytics Worker
+          echo ${{ secrets.ANALYTICS_WRANGER_TOML }} | base64 -d > workers/analytics/wrangler.toml
+          cat workers/analytics/wrangler.toml
+          npm install
+    - name: Deploy Default Worker
       uses: cloudflare/wrangler-action@1.3.0
       with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: 'doesitarm-default'
+    - name: Deploy Analytics Worker
+      uses: cloudflare/wrangler-action@1.3.0
+      with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: 'workers/analytics'
