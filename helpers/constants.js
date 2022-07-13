@@ -5,5 +5,5 @@ export const sitemapLocation = './static/'
 
 export const sitemapIndexFileName = 'sitemap-index.xml'
 
-// https://analytics.google.com/analytics/web/#/a28434239p302384837/admin/streams/table/3228170828
-export const gaMeasurementId = 'G-0WLH5YTTB0'
+// https://analytics.google.com/analytics/web/#/a28434239p322931477/admin/streams/table/3835236140
+export const gaMeasurementId = 'G-Q94Z70Y4C6'
