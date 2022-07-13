@@ -11,6 +11,25 @@ import { gaMeasurementId } from '~/helpers/constants.js'
 ></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script
+    type="text/script"
+    async
+    src={ `https://www.googletagmanager.com/gtag/js?id=${ gaMeasurementId }` }
+></script>
+<script type="text/script">
+    window.dataLayer = window.dataLayer || [];
+    function gtag () {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', gaMeasurementId);
+
+    // console.log('I wanna to shake your hand', gaMeasurementId )
+</script>
+
+
+<!-- Partytown Google Analytics -->
+<!-- <script
     type="text/partytown"
     async
     src={ `https://www.googletagmanager.com/gtag/js?id=${ gaMeasurementId }` }
@@ -25,4 +44,4 @@ import { gaMeasurementId } from '~/helpers/constants.js'
     gtag('config', gaMeasurementId);
 
     // console.log('I wanna to shake your hand', gaMeasurementId )
-</script>
+</script> -->
