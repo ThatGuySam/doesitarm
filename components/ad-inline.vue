@@ -47,7 +47,7 @@ const ads = {
         corner: 'Ads via Amazon'
     },
     'codeable-1': {
-        url: 'https://codeable.io/?ref=ZlTAB',
+        url: 'https://www.codeable.io/why-codeable/?ref=ZlTAB',
         imageSrc: 'https://vumbnail.com/712179177.jpg',
         imageAlt: 'Codeable logo',
         copy: 'Keep Productivity High & Clients Happy',
