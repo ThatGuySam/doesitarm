@@ -23,6 +23,7 @@
     "test-prebuild-functions": "run-s test-prebuild test-api-client test-listings",
     "test-postbuild-api": "run-s test-listings",
     "test-postbuild-functions": "ava ./test/main.js --verbose",
+    "test-vitest": "vitest",
     "test": "ava --timeout=1m --verbose",
     "dev": "npm run dev-astro",
     "build": "npm run generate-astro",
