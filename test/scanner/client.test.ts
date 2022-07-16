@@ -8,8 +8,6 @@ import {
 import { createApp } from 'vue'
 
 
-import AppFilesScanner from '~/helpers/app-files-scanner.js'
-
 // import {
 //     isString
 // } from '~/helpers/check-types.js'
@@ -31,6 +29,8 @@ function buildVueInstance () {
 }
 
 test('Can initialize AppFilesScanner within Vite context', async () => {
+    const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
+
     const vueInstance:any = buildVueInstance()
 
     const scanner = new AppFilesScanner({
