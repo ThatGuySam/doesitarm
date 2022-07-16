@@ -71,6 +71,7 @@
     "fast-glob": "^3.2.11",
     "fast-memoize": "^2.5.2",
     "fs-extra": "^8.1.0",
+    "get-file-object-from-local-path": "^1.0.2",
     "googleapis": "^100.0.0",
     "gray-matter": "^4.0.3",
     "jsdom": "^16.4.0",
@@ -93,7 +94,8 @@
     "stork-search": "^1.0.4",
     "terser": "^4.8.0",
     "uuid": "^8.3.2",
-    "vue": "^3.2.30"
+    "vue": "^3.2.30",
+    "zip-lib": "^0.7.3"
   },
   "devDependencies": {
     "@astrojs/netlify": "0.3.2",
