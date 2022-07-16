@@ -573,7 +573,7 @@ export default class AppFilesScanner {
             this.files.unshift( {
                 status: 'loaded',
                 displayName: null,
-                statusMessage: '⏳ File Loaded and Queud',
+                statusMessage: '⏳ File Loaded and Qeued',
                 details: [],
                 appVersion: null,
                 displayAppSize: prettyBytes( fileInstance.size ),
