@@ -7,7 +7,7 @@ import netlify from '@astrojs/netlify/functions'
 // import sitemap from '@astrojs/sitemap'
 import partytown from '@astrojs/partytown'
 
-
+import tsconfigPaths from 'vite-tsconfig-paths'
 // import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 
 import { makeViteDefinitions } from './helpers/public-runtime-config.mjs'
@@ -49,9 +49,10 @@ export default defineConfig({
         define: {
             ...makeViteDefinitions()
         },
-        // plugins: [
-        //     viteCommonjs()
-        // ],
+        plugins: [
+            tsconfigPaths(),
+            // viteCommonjs()
+        ],
         build: {
             commonjsOptions: {
                 transformMixedEsModules: true
