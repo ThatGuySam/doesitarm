@@ -11,6 +11,7 @@ const vitestConfig = {
     ...astroConfig.vite,
 
     test: {
+        testTimeout: 60 * 1000,
         setupFiles: 'tsconfig-paths/register'
     }
 }
