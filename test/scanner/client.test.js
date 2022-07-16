@@ -1,10 +1,11 @@
 
 import {
-    assert,
-    expect,
-    test
+    describe,
+    it,
+    expect
 } from 'vitest'
 
+import path from 'node:path'
 // https://github.com/mrmlnc/fast-glob
 import glob from 'fast-glob'
 import { LocalFileData } from 'get-file-object-from-local-path'
@@ -47,25 +48,36 @@ async function makeZipFromBundlePath ( bundlePath ) {
     return archiveFile
 }
 
-test('Can read info.plist for .app file', async () => {
+
+describe.concurrent('Apps', () => {
 
     // Compress plain app bundles to zipped File Objects
     for ( const bundlePath of plainAppBundles ) {
 
-        // Create a new AppScan instance
-        const scan = new AppScan({
-            fileLoader: () => makeZipFromBundlePath( bundlePath ),
-            messageReceiver: ( details ) => {
-                console.log( 'Scan message:', details )
+        it( `Can read info.plist for ${ path.basename( bundlePath ) } bundle` , async () => {
+
+            // Compress plain app bundles to zipped File Objects
+            for ( const bundlePath of plainAppBundles ) {
+
+                // Create a new AppScan instance
+                const scan = new AppScan({
+                    fileLoader: () => makeZipFromBundlePath( bundlePath ),
+                    messageReceiver: ( details ) => {
+                        console.log( 'Scan message:', details )
+                    }
+                })
+
+                // Scan the archive
+                await scan.start()
+
+                // console.log( 'infoPlist', scan.infoPlist )
+
+                expect( scan.hasInfoPlist ).toBe( true )
             }
+
         })
-
-        // Scan the archive
-        await scan.start()
-
-        // console.log( 'infoPlist', scan.infoPlist )
-
-        expect( scan.hasInfoPlist ).toBe( true )
     }
 
 })
+
+
