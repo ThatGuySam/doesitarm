@@ -1,10 +1,10 @@
 import { Blob } from 'buffer'
 import plist from 'plist'
+import prettyBytes from 'pretty-bytes'
 // import zip from '@zip.js/zip.js'
+import FileApi, { File } from 'file-api'
 
-import {
-    isValidHttpUrl
-} from '~/helpers/check-types.js'
+import parseMacho from '~/helpers/macho/index.js'
 
 
 // For some reason inline 'import()' works better than 'import from'
@@ -32,8 +32,12 @@ export class AppScan {
         this.file = null
         this.bundleFileEntries = []
         this.infoPlist = {}
+        this.machoExcutables = []
         this.machoMeta = {}
 
+        this.bundleExecutable = null
+        this.displayBinarySize = ''
+        this.binarySize = 0
     }
 
     sendMessage ( details ) {
@@ -50,31 +54,35 @@ export class AppScan {
         return Object.keys( this.infoPlist ).length > 0
     }
 
-    // get bundleExecutablePath () {
-    //     if ( !this.hasInfoPlist ) return ''
+    get hasMachoMeta () {
+        return Object.keys( this.machoMeta ).length > 0
+    }
 
-    //     // There our CFBundleExecutable is a path to the executable
-    //     // then use it
-    //     if ( this.infoPlist.CFBundleExecutable.includes('/') ) return `/Contents/${ this.infoPlist.CFBundleExecutable }`
+    get bundleExecutablePath () {
+        if ( !this.hasInfoPlist ) return ''
 
-    //     // Use default executable path
-    //     return `/Contents/MacOS/${ this.infoPlist.CFBundleExecutable }`
-    // }
+        // There our CFBundleExecutable is a path to the executable
+        // then use it
+        if ( this.infoPlist.CFBundleExecutable.includes('/') ) return `/Contents/${ this.infoPlist.CFBundleExecutable }`
 
-    async readFileEntryData ( fileEntry ) {
+        // Use default executable path
+        return `/Contents/MacOS/${ this.infoPlist.CFBundleExecutable }`
+    }
+
+    async readFileEntryData ( fileEntry, Writer = zip.TextWriter ) {
         // Get blob data from zip
         // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
         return await fileEntry.getData(
             // writer
             // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-writing
-            new zip.TextWriter(),
+            new Writer()//zip.TextWriter(),
         )
     }
 
 
-    async readFileBlob ( File ) {
+    async readFileBlob ( FileInstance ) {
         return new Promise( ( resolve, reject ) => {
-            const fileReader = new zip.BlobReader( new Blob( File.arrayBuffer ) )
+            const fileReader = new zip.BlobReader( new Blob( FileInstance.arrayBuffer ) )
 
             // this.sendMessage({
             //     message: '📖 Setting up BlobReader',
@@ -135,18 +143,19 @@ export class AppScan {
         })
     }
 
-    matchesMacho ( entry ) {
+    matchesMachoExecutable ( entry ) {
         // Skip files that are deeper than 3 folders
         if ( entry.filename.split('/').length > 4 ) return false
 
         // Skip folders
-        if ( entry.filename.endsWith('/') ) return false
+        // if ( !!entry.directory ) return false
 
         // `${ appName }.app/Contents/MacOS/${ appName }`
         // Does this entry path match any of our wanted paths
         return [
             // `${ appName }.app/Contents/MacOS/${ appName }`
-            `.app/Contents/MacOS/`
+            // `.app/Contents/MacOS/`,
+            `Contents/MacOS/`
         ].some( pathToMatch => {
             return entry.filename.includes( pathToMatch )
         })
@@ -176,7 +185,7 @@ export class AppScan {
     fileEntryType ( fileEntry ) {
         if ( !!fileEntry.directory ) return 'directory'
 
-        if ( this.matchesMacho( fileEntry ) ) return 'macho'
+        if ( this.matchesMachoExecutable( fileEntry ) ) return 'machoExecutable'
 
         if ( this.matchesRootInfoPlist( fileEntry ) ) return 'rootInfoPlist'
 
@@ -202,18 +211,64 @@ export class AppScan {
         })
     }
 
-    // async storeMachoMeta ( fileEntry ) {
-    //     const machoData = await this.readFileEntryData( fileEntry )
-    // }
+    storeMachoExecutable = ( fileEntry ) => {
+        this.machoExcutables.push( fileEntry )
+
+        this.sendMessage({
+            message: '🥊 Found a Macho executable',
+            // data: machoExecutable,
+        })
+    }
+
+    storeMachoMeta = async ( fileEntry ) => {
+        // Throw if we have more than one target file
+        if ( this.hasMachoMeta ) {
+            throw new Error( 'More than one primary Macho executable found' )
+        }
+
+        // Get blob data from zip
+        // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
+        const bundleExecutableBlob = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
+
+        // console.log( 'bundleExecutableBlob', bundleExecutableBlob.buffer )
+
+        const machoFileInstance = new File({
+            name: this.bundleExecutable.filename,
+            type: 'application/x-mach-binary',
+            buffer: bundleExecutableBlob,
+        })
+
+        this.machoMeta = await parseMacho( machoFileInstance, FileApi ) //await this.parseMachOBlob( bundleExecutableBlob, file.name )
+        // console.log( 'this.machoMeta', this.machoMeta )
+    }
+
+
+
 
 
     targetFiles = {
         rootInfoPlist: {
             method: this.storeInfoPlist
         },
-        // macho: {
-        //     method: this.storeMacho,
-        // }
+        machoExecutable: {
+            method: this.storeMachoExecutable,
+        }
+    }
+
+    findMainExecutable () {
+        // Now that we have the info.plist Determine our entry Macho Executable from the list of Macho Executables
+        const bundleExecutables = this.machoExcutables.filter( machoEntry => {
+            return this.bundleExecutablePath.includes( machoEntry.filename )
+        })
+
+        // Warn if Bundle Executable doesn't look right
+        if ( bundleExecutables.length > 1) {
+            throw new Error('More than one root bundleExecutable found', bundleExecutables)
+        } else if ( bundleExecutables.length === 0 ) {
+            throw new Error('No root bundleExecutable found', bundleExecutables)
+        }
+
+        return bundleExecutables[ 0 ]
     }
 
     async findTargetFiles () {
@@ -225,6 +280,7 @@ export class AppScan {
 
             // Check if we have a target file
             if ( this.targetFiles[ type ] ) {
+                // console.log( 'fileEntry', type, fileEntry.filename )
 
                 // Call the target file method
                 await this.targetFiles[ type ].method( fileEntry )
@@ -233,6 +289,18 @@ export class AppScan {
             // console.log( 'File Entry Type:', type )
         }
 
+        // Now that we have the info.plist Determine our entry Macho Executable from the list of Macho Executables
+
+        // Set the bundleExecutable
+        this.bundleExecutable = this.findMainExecutable()
+
+        console.log('Parsing ', this.bundleExecutable.filename, this.bundleExecutable.uncompressedSize / 1000 )
+
+        this.displayBinarySize = prettyBytes( this.bundleExecutable.uncompressedSize )
+        this.binarySize = this.bundleExecutable.uncompressedSize
+
+
+        await this.storeMachoMeta( this.bundleExecutable )
     }
 
     async start () {
@@ -254,7 +322,6 @@ export class AppScan {
         })
 
         await this.findTargetFiles()
-
 
         this.sendMessage({
             message: '🏁 Scan complete',

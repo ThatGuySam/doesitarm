@@ -49,32 +49,35 @@ async function makeZipFromBundlePath ( bundlePath ) {
 }
 
 
-describe.concurrent('Apps', () => {
+describe.concurrent('Apps', async () => {
 
     // Compress plain app bundles to zipped File Objects
     for ( const bundlePath of plainAppBundles ) {
 
-        it( `Can read info.plist for ${ path.basename( bundlePath ) } bundle` , async () => {
+        const appName = path.basename( bundlePath )
 
-            // Compress plain app bundles to zipped File Objects
-            for ( const bundlePath of plainAppBundles ) {
-
-                // Create a new AppScan instance
-                const scan = new AppScan({
-                    fileLoader: () => makeZipFromBundlePath( bundlePath ),
-                    messageReceiver: ( details ) => {
-                        console.log( 'Scan message:', details )
-                    }
-                })
-
-                // Scan the archive
-                await scan.start()
-
-                // console.log( 'infoPlist', scan.infoPlist )
-
-                expect( scan.hasInfoPlist ).toBe( true )
+        // Create a new AppScan instance
+        const scan = new AppScan({
+            fileLoader: () => makeZipFromBundlePath( bundlePath ),
+            messageReceiver: ( details ) => {
+                console.log( 'Scan message:', details )
             }
+        })
 
+        // Scan the archive
+        await scan.start()
+
+
+        it( `Can read info.plist for ${ appName } bundle` , () => {
+            // console.log( 'infoPlist', scan.infoPlist )
+
+            expect( scan.hasInfoPlist ).toBe( true )
+        })
+
+        it( `Can read macho meta for entry ${ appName } bundle`, () => {
+            // console.log( 'machoMeta', scan.machoMeta )
+
+            expect( scan.hasMachoMeta ).toBe( true )
         })
     }
 
