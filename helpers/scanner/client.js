@@ -5,7 +5,7 @@ import prettyBytes from 'pretty-bytes'
 import FileApi, { File } from 'file-api'
 
 import parseMacho from '~/helpers/macho/index.js'
-
+import { isString } from '~/helpers/check-types.js'
 
 // For some reason inline 'import()' works better than 'import from'
 // https://gildas-lormeau.github.io/zip.js/
@@ -33,11 +33,18 @@ export class AppScan {
         this.bundleFileEntries = []
         this.infoPlist = {}
         this.machoExcutables = []
-        this.machoMeta = {}
 
+        // Data that is derived after we've read the files and pulled out the infoPlist
+        this.appVersion = ''
+        this.displayName = ''
+        this.details = []
         this.bundleExecutable = null
         this.displayBinarySize = ''
         this.binarySize = 0
+        this.machoMeta = {}
+        this.binarySupportsNative = undefined
+
+        this.info = {}
     }
 
     sendMessage ( details ) {
@@ -56,6 +63,10 @@ export class AppScan {
 
     get hasMachoMeta () {
         return Object.keys( this.machoMeta ).length > 0
+    }
+
+    get hasInfo () {
+        return Object.keys( this.info ).length > 0
     }
 
     get bundleExecutablePath () {
@@ -143,6 +154,22 @@ export class AppScan {
         })
     }
 
+    classifyBinaryEntryArchitecture ( binaryEntry ) {
+        // Find an ARM Architecture
+        const armArchitecture = binaryEntry.architectures.find( architecture => {
+            // if ( architecture.processorType === 0 ) return false
+
+            // If processorType not a string
+            // then return false
+            if ( !isString(architecture.processorType) ) return false
+
+            return architecture.processorType.toLowerCase().includes('arm')
+        })
+
+        // Was an ARM Architecture found
+        return (armArchitecture !== undefined)
+    }
+
     matchesMachoExecutable ( entry ) {
         // Skip files that are deeper than 3 folders
         if ( entry.filename.split('/').length > 4 ) return false
@@ -220,6 +247,31 @@ export class AppScan {
         })
     }
 
+    storeResultInfo () {
+        this.info = {
+            filename: this.file.name,
+            appVersion: this.appVersion,
+            result: this.binarySupportsNative ? '✅' : '🔶',
+            machoMeta: {
+                ...this.machoMeta,
+                file: undefined,
+                architectures: this.machoMeta.architectures.map( architecture => {
+                    return {
+                        bits: architecture.bits,
+                        fileType: architecture.fileType,
+                        header: architecture.header,
+                        loadCommandsInfo: architecture.loadCommandsInfo,
+                        magic: architecture.magic,
+                        offset: architecture.offset,
+                        processorSubType: architecture.processorSubType,
+                        processorType: architecture.processorType,
+                    }
+                })
+            },
+            infoPlist: this.infoPlist,
+        }
+    }
+
     storeMachoMeta = async ( fileEntry ) => {
         // Throw if we have more than one target file
         if ( this.hasMachoMeta ) {
@@ -241,9 +293,6 @@ export class AppScan {
         this.machoMeta = await parseMacho( machoFileInstance, FileApi ) //await this.parseMachOBlob( bundleExecutableBlob, file.name )
         // console.log( 'this.machoMeta', this.machoMeta )
     }
-
-
-
 
 
     targetFiles = {
@@ -291,6 +340,26 @@ export class AppScan {
 
         // Now that we have the info.plist Determine our entry Macho Executable from the list of Macho Executables
 
+        this.appVersion = this.infoPlist.CFBundleShortVersionString
+        this.displayName = this.infoPlist.CFBundleDisplayName
+
+        // We loop through possible details and add them to the details array
+        // if they are not empty
+        ;([
+            [ 'Version', this.infoPlist.CFBundleShortVersionString ],
+            [ 'Bundle Identifier', this.infoPlist.CFBundleIdentifier ],
+            [ 'File Mime Type', this.file.type ],
+            [ 'Copyright', this.infoPlist.NSHumanReadableCopyright ],
+            // [ 'Version', info.CFBundleShortVersionString ],
+        ]).forEach( ([ label, value ]) => {
+            if ( !value || value.length === 0 ) return
+
+            this.details.push({
+                label,
+                value,
+            })
+        } )
+
         // Set the bundleExecutable
         this.bundleExecutable = this.findMainExecutable()
 
@@ -301,6 +370,8 @@ export class AppScan {
 
 
         await this.storeMachoMeta( this.bundleExecutable )
+
+        this.binarySupportsNative = this.classifyBinaryEntryArchitecture( this.machoMeta )
     }
 
     async start () {
@@ -322,6 +393,8 @@ export class AppScan {
         })
 
         await this.findTargetFiles()
+
+        this.storeResultInfo()
 
         this.sendMessage({
             message: '🏁 Scan complete',

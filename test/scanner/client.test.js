@@ -79,6 +79,32 @@ describe.concurrent('Apps', async () => {
 
             expect( scan.hasMachoMeta ).toBe( true )
         })
+
+        it( `Can provide scan info for ${ appName } bundle`, () => {
+            // console.log( 'machoMeta', scan.machoMeta )
+
+            expect( scan.hasInfo ).toBe( true )
+
+            // Expect the scan info to have a bundle name that matches the app name
+            expect( scan.info.filename ).toContain( appName )
+
+            // Expect app version is string
+            expect( typeof scan.info.appVersion ).toBe( 'string' )
+
+            // Expect that machoMeta is an object
+            expect( typeof scan.info.machoMeta ).toBe( 'object' )
+
+            // Expect that machoMeta.architectures is an array
+            expect( Array.isArray( scan.info.machoMeta.architectures ) ).toBe( true )
+
+            // Expect that first of machoMeta.architectures has processorSubType as string
+            expect( typeof scan.info.machoMeta.architectures[0].processorSubType ).toBe( 'string' )
+
+            // Export info.infoPlist to be none empty object
+            expect( typeof scan.info.infoPlist ).toBe( 'object' )
+            expect( Object.keys( scan.info.infoPlist ).length ).toBeGreaterThan( 0 )
+
+        })
     }
 
 })
