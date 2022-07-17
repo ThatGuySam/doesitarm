@@ -1,6 +1,6 @@
-//macho.js
-//Written by Sem Voigtländer
-//Licensed under the MIT License
+// macho.js
+// Written by Sem Voigtländer, modified by Sam Carlton
+// Licensed under the MIT License
 
 import { mime_binary } from './mimetypes.js'
 import { ReadUint32, ReadUint16LE, ReadUint32LE, ReadUint16 } from './memory.js'
@@ -13,6 +13,8 @@ import { CPU_TYPE, CPU_SUB_TYPE } from './macho.cpu.js'
 import { FILE_FLAGS, FILE_TYPE } from './macho.file.js'
 import Cstr from './macho.cstr.js'
 import { SegmentCommand } from './macho.segment.js'
+
+let FileApi = undefined
 
 function default_callback(buffer) {
     console.log('Received ' + buffer.byteLength / (1024 * 1024) + ' MB');
@@ -69,8 +71,10 @@ export function MachoParser(file, callback) {
 
     const machoOutputData = {}
 
+    const hasFileReader = typeof FileReader !== 'undefined'
+
     //properties
-    this.reader = new FileReader();
+    this.reader = hasFileReader ? new FileReader() : new FileApi.FileReader()
 
     function writeToCallback(val) {
         return
@@ -151,7 +155,9 @@ export function MachoParser(file, callback) {
         }
     }
 
-    this.reader.onloadend = function(e) {
+    const onloadend = function (e) {
+
+        // console.log( 'Load complete', e )
 
         let fileType = mime_binary;
 
@@ -298,7 +304,11 @@ export function MachoParser(file, callback) {
         }).catch(console.log.bind(console));
     };
 
-    this.reader.readAsArrayBuffer(file);
+    // console.log( 'this.reader', this.reader )
+
+    this.reader.addEventListener( 'load', onloadend )
+
+    this.reader.readAsArrayBuffer( file )
 
     // console.log('Parsing, please wait...');
 
@@ -306,7 +316,10 @@ export function MachoParser(file, callback) {
 
 
 
-export default async function ( file ) {
+export default async function ( file, fileApi ) {
+
+    FileApi = fileApi
+
     return new Promise( ( resolve, reject ) => {
         try {
             (new MachoParser( file, resolve ))
