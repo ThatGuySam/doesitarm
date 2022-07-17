@@ -208,7 +208,7 @@ export class PageHead {
             structuredData = null,
 
             domain = getSiteUrl(),
-            pathname,
+            pathname = '',
         } = options
 
         this.title = title
@@ -234,6 +234,8 @@ export class PageHead {
     }
 
     get routeType () {
+        if ( this.pathname.length < 2 ) return 'none'
+
         return getRouteType( this.pathname )
     }
 
