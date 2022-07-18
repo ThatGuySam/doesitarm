@@ -5,7 +5,7 @@ import prettyBytes from 'pretty-bytes'
 import FileApi, { File } from 'file-api'
 
 import { isString } from '~/helpers/check-types.js'
-import { extraMachoMeta } from '~/helpers/scanner/parsers/macho.js'
+import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 
 // For some reason inline 'import()' works better than 'import from'
 // https://gildas-lormeau.github.io/zip.js/
@@ -250,8 +250,9 @@ export class AppScan {
             buffer: bundleExecutableBlob,
         })
 
-        this.machoMeta = await extraMachoMeta({ machoFileInstance, FileApi }) //await this.parseMachOBlob( bundleExecutableBlob, file.name )
-        // console.log( 'this.machoMeta', this.machoMeta )
+        this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi }) //await this.parseMachOBlob( bundleExecutableBlob, file.name )
+        console.log( 'this.machoMeta', this.machoMeta )
+
     }
 
 
