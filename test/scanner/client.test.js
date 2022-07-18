@@ -98,13 +98,14 @@ describe.concurrent('Apps', async () => {
             expect( Array.isArray( scan.info.machoMeta.architectures ) ).toBe( true )
 
             // Expect that first of machoMeta.architectures has processorSubType as string
-            expect( typeof scan.info.machoMeta.architectures[0].processorSubType ).toBe( 'string' )
+            expect( typeof scan.info.machoMeta.architectures[0].processorSubType ).toBeTruthy()
 
             // Export info.infoPlist to be none empty object
             expect( typeof scan.info.infoPlist ).toBe( 'object' )
             expect( Object.keys( scan.info.infoPlist ).length ).toBeGreaterThan( 0 )
 
         })
+
     }
 
 })
