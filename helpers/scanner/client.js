@@ -4,7 +4,7 @@ import prettyBytes from 'pretty-bytes'
 // import zip from '@zip.js/zip.js'
 import FileApi, { File } from 'file-api'
 
-import { isString } from '~/helpers/check-types.js'
+import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 
 // For some reason inline 'import()' works better than 'import from'
@@ -78,6 +78,12 @@ export class AppScan {
 
         // Use default executable path
         return `/Contents/MacOS/${ this.infoPlist.CFBundleExecutable }`
+    }
+
+    get supportedArchitectures () {
+        if ( !this.hasMachoMeta ) return []
+
+        return this.machoMeta.architectures.filter( architecture => architecture.processorType !== 0 )
     }
 
     async readFileEntryData ( fileEntry, Writer = zip.TextWriter ) {
@@ -194,7 +200,7 @@ export class AppScan {
 
         this.sendMessage({
             message: 'ℹ️ Found Info.plist',
-            // data: this.infoPlist,
+            data: this.infoPlist,
         })
     }
 
@@ -250,7 +256,8 @@ export class AppScan {
             buffer: bundleExecutableBlob,
         })
 
-        this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi }) //await this.parseMachOBlob( bundleExecutableBlob, file.name )
+        this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi })
+
         console.log( 'this.machoMeta', this.machoMeta )
 
     }
@@ -301,8 +308,18 @@ export class AppScan {
 
         // Now that we have the info.plist Determine our entry Macho Executable from the list of Macho Executables
 
-        this.appVersion = this.infoPlist.CFBundleShortVersionString
-        this.displayName = this.infoPlist.CFBundleDisplayName
+        // Find valid app version that is a string but not empty
+        this.appVersion = ([
+            this.infoPlist.CFBundleShortVersionString,
+            this.infoPlist.CFBundleVersion
+        ]).find( isNonEmptyString )[0]
+
+        // Find Display Name that is a string but not empty
+        this.displayName = ([
+            this.infoPlist.CFBundleDisplayName,
+            this.infoPlist.CFBundleName,
+            this.infoPlist.CFBundleExecutable,
+        ]).find( isNonEmptyString )[0]
 
         // We loop through possible details and add them to the details array
         // if they are not empty
