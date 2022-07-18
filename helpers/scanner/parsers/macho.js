@@ -15,7 +15,9 @@ export class MachoManiac {
 }
 
 
-export async function extraMachoMeta ({ machoFileInstance, FileApi = null }) {
+
+
+export async function extractMachoMeta ({ machoFileInstance, FileApi = null }) {
     const parsers = [
         MachoManiac
     ]
