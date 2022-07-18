@@ -94,18 +94,18 @@ describe.concurrent('Apps', async () => {
             // Expect that machoMeta is an object
             expect( typeof scan.info.machoMeta ).toBe( 'object' )
 
-            // Expect that machoMeta.architectures is an array
-            expect( Array.isArray( scan.info.machoMeta.architectures ) ).toBe( true )
+            // Expect that supportedArchitectures is not empty
+            expect( scan.supportedArchitectures.length ).toBeGreaterThan( 0 )
 
             // Expect that processorType is a string
-            expect( typeof scan.info.machoMeta.architectures[0].processorType ).toBe( 'string' )
+            expect( typeof scan.supportedArchitectures[0].processorType ).toBe( 'string' )
 
             const validCPUTypes = [
                 'ANY', 'VAX', 'MC680', 'X86', 'MIPS', 'MC98000', 'HPPA', 'ARM', 'ARM64', 'MC88000', 'SPARC', 'I860', 'POWERPC', 'POWERPC64'
             ]
 
             // Expect that processorType is a valid CPU type
-            expect( validCPUTypes.includes( scan.info.machoMeta.architectures[0].processorType ) ).toBe( true )
+            expect( validCPUTypes.includes( scan.supportedArchitectures[0].processorType ) ).toBe( true )
 
             // Expect that first of machoMeta.architectures has processorSubType as string
             expect( typeof scan.info.machoMeta.architectures[0].processorSubType ).toBeTruthy()
