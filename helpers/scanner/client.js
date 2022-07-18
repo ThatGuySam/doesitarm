@@ -95,48 +95,8 @@ export class AppScan {
         return new Promise( ( resolve, reject ) => {
             const fileReader = new zip.BlobReader( new Blob( FileInstance.arrayBuffer ) )
 
-            // this.sendMessage({
-            //     message: '📖 Setting up BlobReader',
-            //     status: 'reading',
-            //     data: fileReader
-            // })
-
-            fileReader.onload = function () {
-                // do something on FileReader onload
-                this.sendMessage({
-                    message: '📖 Reading file',
-                    status: 'reading'
-                })
-            }
-
-            fileReader.onerror = error => {
-                // do something on FileReader onload
-                console.error('File Read Error', error)
-
-                reject( new Error('File Read Error', error) )
-            }
-
-            fileReader.onprogress = (data) => {
-                if (data.lengthComputable) {
-                    const progress = parseInt( ((data.loaded / data.total) * 100), 10 );
-                    console.log('Read progress', progress)
-
-                    // do something on FileReader onload
-                    this.sendMessage({
-                        message: `📖 Reading file. ${ progress }% read`,
-                        status: 'reading'
-                    })
-                }
-            }
-
             // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-reading
             const zipReader = new zip.ZipReader( fileReader )
-
-            // zipReader.onload = console.log
-
-            // zipReader.onprogress = console.log
-
-            // zipReader.onerror = console.error
 
             zipReader
                 .getEntries()
