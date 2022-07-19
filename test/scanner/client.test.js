@@ -13,6 +13,7 @@ import { LocalFileData } from 'get-file-object-from-local-path'
 import { Zip } from 'zip-lib'
 
 import { AppScan } from '~/helpers/scanner/client'
+// import { compress } from '~/helpers/scanner/parsers/seven-zip'
 
 
 const appGlobOptions = {
@@ -49,6 +50,8 @@ async function makeZipFromBundlePath ( bundlePath ) {
     }
 
     // console.log( 'archivePath', archivePath )
+
+    // await compress( bundlePath, archivePath )
 
     const zipLib = new Zip()
 
