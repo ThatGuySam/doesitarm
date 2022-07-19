@@ -12,10 +12,6 @@ export async function compress ( input, archivePath ) {
 
     // const isBuffer = Buffer.isBuffer( input )
 
-    console.log( 'process.cwd()', input )
-    console.log( 'archivePath', archivePath )
-
-
 
     const mountRoot = 'virtual'//input.split( '\\' ).slice( 0, -1 ).join( '\\' )
     sevenZip.FS.mkdir( mountRoot )
