@@ -1,4 +1,5 @@
 // Adpapted for browser+node from https://github.com/joeferner/node-bplist-parser/blob/master/bplistParser.js
+import plainTextPlist from 'plist'
 import bigInt from 'big-integer'
 import bufferApi from 'buffer'
 
@@ -62,6 +63,15 @@ export function parseFileSync (fileNameOrBuffer) {
 function parseBuffer ( buffer ) {
     // check header
     const header = buffer.slice(0, 'bplist'.length).toString('utf8');
+
+    const isPlainTextPlist = header.includes('<?xml')
+
+    if ( isPlainTextPlist ) {
+        // console.log( 'isPlainTextPlist', isPlainTextPlist )
+
+        return plainTextPlist.parse( buffer.toString('utf8') )
+    }
+
     if (header !== 'bplist') {
         throw new Error("Invalid binary plist. Expected 'bplist' at offset 0.");
     }
