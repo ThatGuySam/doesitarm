@@ -32,6 +32,7 @@ const tempPath = 'test/_artifacts/temp'
 // Batteries 2.2.4 - Hangs
 // BetterZip 5.1.1 - Hangs
 // BlueJeans - May work but doesn't work with zip compression
+// Coreform-Cubit - No info.plist, may not need to be supported
 const plainAppBundles = glob
     .sync( `${ appsPath }/**/*.app`, appGlobOptions )
     .filter( bundlePath => {
