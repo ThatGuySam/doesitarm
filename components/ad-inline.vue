@@ -57,7 +57,7 @@ const ads = {
         url: 'https://link.jotform.com/doesitarm-er2mEdHP4F',
         imageSrc: 'https://vumbnail.com/wUFOq6jLGOU.jpg',
         imageAlt: 'Jotform logo',
-        copy: 'Secure and Easy forms for Developers',
+        copy: '<form>Easy Forms for Developers.</form>',
         corner: 'Ad'
     },
 }
