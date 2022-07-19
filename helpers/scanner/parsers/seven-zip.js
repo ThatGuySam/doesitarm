@@ -1,3 +1,4 @@
+// Original 7z commands - https://sevenzip.osdn.jp/chm/cmdline/commands/index.htm
 import SevenZip from '7z-wasm'
 // import { Buffer } from 'buffer'
 
