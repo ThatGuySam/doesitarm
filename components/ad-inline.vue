@@ -60,6 +60,13 @@ const ads = {
         copy: '<form>Easy Forms for Developers.</form>',
         corner: 'Ad'
     },
+    'wondershare-arm-1': {
+        url: 'https://shrsl.com/3mbnp',
+        imageSrc: 'https://vumbnail.com/QYmz3KdNRhs.jpg',
+        imageAlt: 'Wondershare Filmora on a macOS Desktop',
+        copy: 'Filmora X now supports ARM',
+        corner: 'Ad'
+    }
 }
 
 export default {
