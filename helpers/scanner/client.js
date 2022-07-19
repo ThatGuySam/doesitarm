@@ -1,18 +1,21 @@
-import { Buffer, Blob } from 'buffer'
-// import plist from 'plist'
-// import * as plist from 'simple-plist'
-import prettyBytes from 'pretty-bytes'
+// import { Buffer, Blob } from 'buffer'
+// import prettyBytes from 'pretty-bytes'
 // import zip from '@zip.js/zip.js'
-import FileApi, { File } from 'file-api'
+// import FileApi from 'file-api'
 
 
 import { isString, isNonEmptyString } from '~/helpers/check-types.js'
-import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
+import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
+// import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 
 
 // For some reason inline 'import()' works better than 'import from'
 // https://gildas-lormeau.github.io/zip.js/
 const zip = await import('@zip.js/zip.js')
+
+const bufferApi = await import('buffer')
+// const FileApi = await import('file-api')
+// const { parse: plistParse } = await import('simple-plist/dist/index.js')
 
 // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
 zip.configure({
@@ -21,6 +24,17 @@ zip.configure({
     useWebWorkers: !import.meta.env.SSR
 })
 
+
+function makeNodeFileBuffer ( buffer ) {
+    const fileBuffer = new bufferApi.Buffer.alloc( buffer.byteLength )
+
+    for (var i = 0; i < buffer.length; i++)
+        fileBuffer[i] = buffer[i];
+
+    // console.log( 'this.machoFileInstance', this.machoFileInstance.buffer.byteLength )
+
+    return fileBuffer
+}
 
 export class AppScan {
     constructor ({
@@ -101,8 +115,14 @@ export class AppScan {
 
 
     async readFileBlob ( FileInstance ) {
-        return new Promise( ( resolve, reject ) => {
-            const fileReader = new zip.BlobReader( new Blob( FileInstance.arrayBuffer ) )
+        return new Promise( async ( resolve, reject ) => {
+            // Check if file is a Blob, typically in the Browser
+            // otherwise convert it to a Blob, like in Node
+            const FileBlob = FileInstance instanceof Blob ? FileInstance : new bufferApi.Blob( await FileInstance.arrayBuffer() )
+
+            console.log( 'FileBlob', await FileInstance.arrayBuffer() )
+
+            const fileReader = new zip.BlobReader( FileBlob )
 
             // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-reading
             const zipReader = new zip.ZipReader( fileReader )
@@ -196,19 +216,17 @@ export class AppScan {
             throw new Error( 'More than one root info.plist found' )
         }
 
-        const infoBlob = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
-        const infoBuffer = Buffer.from( infoBlob )
+        const infoUint8Array = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
+        // console.log( 'infoUint8Array', infoUint8Array )
 
-        // const infoBuffer = await fileEntry.getData()
-
-        // console.log( 'infoBuffer', Buffer.from( infoBuffer ) )
+        const infoNodeBuffer = makeNodeFileBuffer( infoUint8Array )
 
         // Parse the Info.plist data
-        // this.infoPlist = plist.parse( infoBuffer )
+        this.infoPlist = await parsePlistBuffer( infoNodeBuffer )
 
         this.sendMessage({
             message: 'ℹ️ Found Info.plist',
-            // data: this.infoPlist,
+            data: this.infoPlist,
         })
     }
 
