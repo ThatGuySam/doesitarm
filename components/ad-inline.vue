@@ -53,6 +53,13 @@ const ads = {
         copy: 'Keep Productivity High & Clients Happy',
         corner: 'Ad'
     },
+    'jotform-for-developers-1': {
+        url: 'https://link.jotform.com/doesitarm-er2mEdHP4F',
+        imageSrc: 'https://vumbnail.com/wUFOq6jLGOU.jpg',
+        imageAlt: 'Jotform logo',
+        copy: 'Secure and Easy forms for Developers',
+        corner: 'Ad'
+    },
 }
 
 export default {
