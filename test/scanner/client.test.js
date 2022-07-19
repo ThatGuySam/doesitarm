@@ -23,7 +23,19 @@ const appsPath = 'test/_artifacts/apps'
 
 const tempPath = 'test/_artifacts/temp'
 
-const plainAppBundles = glob.sync( `${ appsPath }/**/*.app`, appGlobOptions )
+// TODO: Unsupported Apps:
+// Alt Tab 6.29.0 - Hangs
+// Silicon - Fail with both MachoNode and MachoManiac
+// arm_idafree76_mac 7.6 - Hangs
+// Batteries 2.2.4 - Hangs
+// BetterZip 5.1.1 - Hangs
+// BlueJeans - May work but doesn't work with zip compression
+const plainAppBundles = glob
+    .sync( `${ appsPath }/**/*.app`, appGlobOptions )
+    .filter( bundlePath => {
+        return true
+        // return bundlePath.includes( 'BlueJeans' )
+    })
 
 
 async function makeZipFromBundlePath ( bundlePath ) {
