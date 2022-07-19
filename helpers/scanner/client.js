@@ -1,11 +1,14 @@
-import { Blob } from 'buffer'
-import plist from 'plist'
+import { Buffer, Blob } from 'buffer'
+// import plist from 'plist'
+import * as plist from 'simple-plist'
 import prettyBytes from 'pretty-bytes'
 // import zip from '@zip.js/zip.js'
 import FileApi, { File } from 'file-api'
 
+
 import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
+
 
 // For some reason inline 'import()' works better than 'import from'
 // https://gildas-lormeau.github.io/zip.js/
@@ -193,14 +196,19 @@ export class AppScan {
             throw new Error( 'More than one root info.plist found' )
         }
 
-        const infoXml = await this.readFileEntryData( fileEntry )
+        const infoBlob = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
+        const infoBuffer = Buffer.from( infoBlob )
+
+        // const infoBuffer = await fileEntry.getData()
+
+        // console.log( 'infoBuffer', Buffer.from( infoBuffer ) )
 
         // Parse the Info.plist data
-        this.infoPlist = plist.parse( infoXml )
+        this.infoPlist = plist.parse( infoBuffer )
 
         this.sendMessage({
             message: 'ℹ️ Found Info.plist',
-            data: this.infoPlist,
+            // data: this.infoPlist,
         })
     }
 
@@ -258,7 +266,7 @@ export class AppScan {
 
         this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi })
 
-        console.log( 'this.machoMeta', this.machoMeta )
+        // console.log( 'this.machoMeta', this.machoMeta )
 
     }
 
