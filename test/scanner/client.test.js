@@ -5,6 +5,7 @@ import {
     expect
 } from 'vitest'
 
+import fs from 'fs-extra'
 import path from 'node:path'
 // https://github.com/mrmlnc/fast-glob
 import glob from 'fast-glob'
@@ -40,6 +41,12 @@ const plainAppBundles = glob
 
 async function makeZipFromBundlePath ( bundlePath ) {
     const archivePath = `${ tempPath }/${ bundlePath.split('/').pop() }.zip`
+
+    // Delete any existing archive
+    if ( await fs.exists( archivePath ) ) {
+        console.log( 'Deleting existing archive', archivePath )
+        await fs.unlink( archivePath )
+    }
 
     // console.log( 'archivePath', archivePath )
 
