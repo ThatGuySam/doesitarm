@@ -118,9 +118,9 @@ export class AppScan {
         return new Promise( async ( resolve, reject ) => {
             // Check if file is a Blob, typically in the Browser
             // otherwise convert it to a Blob, like in Node
-            const FileBlob = FileInstance instanceof Blob ? FileInstance : new bufferApi.Blob( await FileInstance.arrayBuffer() )
+            const FileBlob = FileInstance instanceof Blob ? FileInstance : new bufferApi.Blob( FileInstance.arrayBuffer )
 
-            console.log( 'FileBlob', await FileInstance.arrayBuffer() )
+            // console.log( 'FileBlob', FileBlob )
 
             const fileReader = new zip.BlobReader( FileBlob )
 
