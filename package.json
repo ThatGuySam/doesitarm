@@ -69,6 +69,7 @@
     "cross-env": "^5.2.0",
     "daisyui": "^2.17.0",
     "esbuild": "^0.11.20",
+    "events": "^3.3.0",
     "execa": "^5.1.1",
     "fast-glob": "^3.2.11",
     "fast-memoize": "^2.5.2",
