@@ -1,5 +1,13 @@
-import { Buffer } from 'buffer';
+import bufferApi from 'buffer'
 
+function makeFileBuffer ( buffer ) {
+    const fileBuffer = new bufferApi.Buffer.alloc( buffer.byteLength )
+
+    for (var i = 0; i < buffer.length; i++)
+        fileBuffer[i] = buffer[i];
+
+    return fileBuffer
+}
 
 // Tends to not support universal architecture
 // but support some MachoManiac doesn't and fails faster
@@ -35,17 +43,6 @@ export class MachoNode {
         ['powerpc64', 'POWERPC64']
     ])
 
-    fileBuffer () {
-        const machoBuffer = new Buffer.alloc( this.machoFileInstance.buffer.byteLength )
-
-        for (var i = 0; i < this.machoFileInstance.buffer.length; i++)
-            machoBuffer[i] = this.machoFileInstance.buffer[i];
-
-        // console.log( 'this.machoFileInstance', this.machoFileInstance.buffer.byteLength )
-
-        return machoBuffer
-    }
-
     mapNodeMetaTOManiacMeta ( machoNodeMeta ) {
 
         return {
@@ -66,7 +63,7 @@ export class MachoNode {
     async run () {
         const { parse } = await import( 'macho' )
 
-        const machoNodeMeta = parse( this.fileBuffer() )
+        const machoNodeMeta = machoNodeParser.execute( makeFileBuffer( this.machoFileInstance.buffer ) )
 
         // console.log( 'machoNodeMeta', machoNodeMeta.cpu )
 
