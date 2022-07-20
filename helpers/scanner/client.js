@@ -3,7 +3,7 @@
 // import zip from '@zip.js/zip.js'
 // import FileApi from 'file-api'
 
-
+import * as FileApi from '~/helpers/scanner/file-api.js'
 import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
 // import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
@@ -272,14 +272,14 @@ export class AppScan {
 
         // Get blob data from zip
         // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
-        const bundleExecutableBlob = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
+        const bundleExecutableUint8Array = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
 
         // console.log( 'bundleExecutableBlob', bundleExecutableBlob.buffer )
 
-        const machoFileInstance = new File({
+        const machoFileInstance = new FileApi.File({
             name: this.bundleExecutable.filename,
             type: 'application/x-mach-binary',
-            buffer: bundleExecutableBlob,
+            buffer: bundleExecutableUint8Array,
         })
 
         this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi })
