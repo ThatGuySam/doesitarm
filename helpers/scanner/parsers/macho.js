@@ -1,5 +1,7 @@
 import bufferApi from 'buffer'
 
+import { Parser as MachoNodeParser } from './macho-node/parser.js'
+
 function makeFileBuffer ( buffer ) {
     const fileBuffer = new bufferApi.Buffer.alloc( buffer.byteLength )
 
@@ -8,6 +10,8 @@ function makeFileBuffer ( buffer ) {
 
     return fileBuffer
 }
+
+const machoNodeParser = new MachoNodeParser()
 
 // Tends to not support universal architecture
 // but support some MachoManiac doesn't and fails faster
@@ -61,7 +65,8 @@ export class MachoNode {
     }
 
     async run () {
-        const { parse } = await import( 'macho' )
+
+        // console.log( 'machoNodeParser', machoNodeParser )
 
         const machoNodeMeta = machoNodeParser.execute( makeFileBuffer( this.machoFileInstance.buffer ) )
 
