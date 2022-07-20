@@ -299,8 +299,14 @@ export class AppScan {
     }
 
     findMainExecutable () {
+
         // Now that we have the info.plist Determine our entry Macho Executable from the list of Macho Executables
         const bundleExecutables = this.machoExcutables.filter( machoEntry => {
+
+            if ( machoEntry.filename.includes( this.bundleExecutablePath ) ) {
+                return true
+            }
+
             return this.bundleExecutablePath.includes( machoEntry.filename )
         })
 
