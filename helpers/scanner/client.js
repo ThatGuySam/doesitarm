@@ -118,7 +118,10 @@ export class AppScan {
         return new Promise( async ( resolve, reject ) => {
             // Check if file is a Blob, typically in the Browser
             // otherwise convert it to a Blob, like in Node
-            const FileBlob = FileInstance instanceof Blob ? FileInstance : new bufferApi.Blob( FileInstance.arrayBuffer )
+            // Both Browser and Node have Blob
+            // Node/Our File Polyfill references .arrayBuffer as a property
+            // Browser currently references .arrayBuffer as an async method
+            const FileBlob = FileInstance instanceof Blob ? FileInstance : new Blob( FileInstance.arrayBuffer )
 
             // console.log( 'FileBlob', FileBlob )
 
