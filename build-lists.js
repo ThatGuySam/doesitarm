@@ -3,7 +3,6 @@ import { dirname, basename } from 'path'
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import semver from 'semver'
-import { PromisePool } from '@supercharge/promise-pool'
 import memoize from 'fast-memoize'
 import has from 'just-has'
 
@@ -241,6 +240,7 @@ class BuildLists {
 
             // Sort versions by semver
             const versions = Object.entries( versionsObject ).sort( ( [ aVersionRaw ], [ bVersionRaw ] ) => {
+                // console.log( 'a, b', aVersionRaw, bVersionRaw )
                 const aVersion = normalizeVersion( aVersionRaw )
                 const bVersion = normalizeVersion( bVersionRaw )
 
@@ -450,76 +450,71 @@ class BuildLists {
 
         const apiListDirectory = `${ apiDirectory }/${ listOptions.endpointPrefix }`
 
-        const poolSize = 1000
+        // const poolSize = 1000
 
         // Store app bundles to memory
         await this.getSavedAppBundles({
             keepBundlesInMemory: true
         })
 
-        const { errors } = await PromisePool
-            .withConcurrency( poolSize )
-            .for( this.getListArrayMemoized( listOptions.name ) )
-            .process(async ( listEntry, index, pool ) => {
-                // console.log('listEntry', listEntry)
+        // await Promise.all( this.getListArrayMemoized( listOptions.name ).map( async ( listEntry ) => {
+        for ( const listEntry of this.getListArrayMemoized( listOptions.name ) ) {
 
-                const {
-                    // name,
-                    // aliases,
-                    // status,
-                    // bundleIds,
-                    endpoint,
+            // console.log('listEntry', listEntry)
 
-                } = listEntry
+            const {
+                // name,
+                // aliases,
+                // status,
+                // bundleIds,
+                endpoint,
 
-                const endpointPath = `${ apiDirectory }${ endpoint }.json`
-                const endpointDirectory = dirname(endpointPath)
+            } = listEntry
 
-                // Add related videos
-                if ( this.shouldHaveRelatedVideos( listEntry ) ) {
-                    listEntry.relatedVideos = getRelatedVideos({
-                        listing: listEntry,
-                        videoListSet: this.lists.video,
-                        appListSet: this.allVideoAppsList
-                    })
-                }
+            const endpointPath = `${ apiDirectory }${ endpoint }.json`
+            const endpointDirectory = dirname(endpointPath)
 
-                // Add App Bundles
-                if ( Array.isArray( listEntry.bundleIds ) ) {
-                    listEntry.bundles = await this.getAppBundles( listEntry )
+            // Add related videos
+            if ( this.shouldHaveRelatedVideos( listEntry ) ) {
+                listEntry.relatedVideos = getRelatedVideos({
+                    listing: listEntry,
+                    videoListSet: this.lists.video,
+                    appListSet: this.allVideoAppsList
+                })
+            }
 
-                    listEntry.bundles = this.sortBundleVersions( listEntry.bundles )
-                }
+            // Add App Bundles
+            if ( Array.isArray( listEntry.bundleIds ) ) {
+                listEntry.bundles = await this.getAppBundles( listEntry )
+
+                listEntry.bundles = this.sortBundleVersions( listEntry.bundles )
+            }
 
 
-                // Add device support
-                if ( this.shouldHaveDeviceSupport( listEntry ) ) {
-                    const deviceList = this.getListArrayMemoized( 'device' )
+            // Add device support
+            if ( this.shouldHaveDeviceSupport( listEntry ) ) {
+                const deviceList = this.getListArrayMemoized( 'device' )
 
-                    listEntry.deviceSupport = deviceList.map( device => {
-                        const supportsApp = deviceSupportsApp( device, listEntry )
-                        return {
-                            ...device,
-                            emoji: supportsApp ? '✅' : '🚫',
-                            ariaLabel: `${ listEntry.name } has ${ supportsApp ? '' : 'not' } been reported to work on ${ device.name }`
-                        }
-                    })
-                }
+                listEntry.deviceSupport = deviceList.map( device => {
+                    const supportsApp = deviceSupportsApp( device, listEntry )
+                    return {
+                        ...device,
+                        emoji: supportsApp ? '✅' : '🚫',
+                        ariaLabel: `${ listEntry.name } has ${ supportsApp ? '' : 'not' } been reported to work on ${ device.name }`
+                    }
+                })
+            }
 
-                const hasSaveMethod = has( listOptions, 'beforeSave' )
-                const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
+            const hasSaveMethod = has( listOptions, 'beforeSave' )
+            const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
 
-                const [ saveableEntry ] = saveMethod( new Set( [ listEntry ] ) )
+            const [ saveableEntry ] = saveMethod( new Set( [ listEntry ] ) )
 
-                // Ensure the directory exists
-                await fs.ensureDir( endpointDirectory )
+            // Ensure the directory exists
+            await fs.ensureDir( endpointDirectory )
 
-                // Write the endpoint to JSON
-                await this.saveToJson( saveableEntry, endpointPath )
-            })
-
-        if ( errors.length !== 0 ) {
-            throw new Error( errors )
+            // Write the endpoint to JSON
+            await this.saveToJson( saveableEntry, endpointPath )
         }
 
         // Count saved files
