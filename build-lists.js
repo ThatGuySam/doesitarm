@@ -1,5 +1,6 @@
 import { dirname, basename } from 'path'
 
+import os from 'os'
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import semver from 'semver'
@@ -595,6 +596,9 @@ class BuildLists {
     }
 
     async build () {
+
+        console.log( 'Thread Pool Size', process.env.UV_THREADPOOL_SIZE )
+        console.log( 'CPU Count', os.cpus().length )
 
         await saveYouTubeVideos()
 
