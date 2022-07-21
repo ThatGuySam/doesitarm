@@ -74,6 +74,10 @@ function normalizeVersion ( rawVersion ) {
     version = version
         .split('.')
         .map( part => {
+            // It it's just a single digit
+            // pass it as-is
+            if ( part.length === 1 ) return part
+
             // Trim leading zeros
             return part.replace(/^0+/, '')
         } )
