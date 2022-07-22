@@ -1,4 +1,3 @@
-import bufferApi from 'buffer'
 // import prettyBytes from 'pretty-bytes'
 import * as zip from '@zip.js/zip.js'
 // import FileApi from 'file-api'
@@ -8,12 +7,12 @@ import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
 // import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 
+import { Buffer } from 'buffer/'
 
 // For some reason inline 'import()' works better than 'import from'
 // https://gildas-lormeau.github.io/zip.js/
 // const zip = await import('@zip.js/zip.js')
 
-// const bufferApi = await import('buffer')
 // const FileApi = await import('file-api')
 // const { parse: plistParse } = await import('simple-plist/dist/index.js')
 
@@ -26,7 +25,7 @@ zip.configure({
 
 
 function makeNodeFileBuffer ( buffer ) {
-    const fileBuffer = new bufferApi.Buffer.alloc( buffer.byteLength )
+    const fileBuffer = new Buffer.alloc( buffer.byteLength )
 
     for (var i = 0; i < buffer.length; i++)
         fileBuffer[i] = buffer[i];
@@ -282,7 +281,7 @@ export class AppScan {
         const machoFileInstance = new FileApi.File({
             name: this.bundleExecutable.filename,
             type: 'application/x-mach-binary',
-            buffer: bundleExecutableUint8Array,
+            buffer: Buffer.from( bundleExecutableUint8Array ),
         })
 
         this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi })
