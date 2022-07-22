@@ -36,8 +36,8 @@ const tempPath = 'test/_artifacts/temp'
 const plainAppBundles = glob
     .sync( `${ appsPath }/**/*.app`, appGlobOptions )
     .filter( bundlePath => {
-        return true
-        // return bundlePath.includes( 'BlueJeans' )
+        // return true
+        return bundlePath.includes( 'App' )
     })
 
 
