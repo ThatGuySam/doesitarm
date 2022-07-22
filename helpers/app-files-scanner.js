@@ -1,6 +1,7 @@
 import plist from 'plist'
 import axios from 'axios'
 import prettyBytes from 'pretty-bytes'
+import * as zip from '@zip.js/zip.js'
 
 import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
@@ -72,8 +73,6 @@ export function makeObservableArray () {
         proxyToArray
     }
 }
-
-let zip = null
 
 export default class AppFilesScanner {
 
@@ -661,7 +660,7 @@ export default class AppFilesScanner {
 
     async setupZipReader () {
         // https://gildas-lormeau.github.io/zip.js/
-        zip = await import('@zip.js/zip.js')
+        // zip = await import('@zip.js/zip.js')
 
         // console.log( 'zip', zip )
 
