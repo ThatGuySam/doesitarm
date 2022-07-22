@@ -2,6 +2,18 @@ import Reader from 'endian-reader'
 
 import { constants } from './constants'
 
+import { MAGIC } from '~/helpers/macho/macho.magic.js'
+
+function determineMagicBits ( magic ) {
+    for ( const [ key, value ] of Object.entries( MAGIC ) ) {
+        if ( value === magic ) {
+            return key.includes( '64' ) ? 64 : 32
+        }
+    }
+
+    return null
+}
+
 export class Parser extends Reader {
     constructor () {
         super()
@@ -9,6 +21,9 @@ export class Parser extends Reader {
 
     execute (buf) {
         var hdr = this.parseHead(buf);
+
+        // console.log( 'hdr', hdr )
+
         if (!hdr)
             throw new Error('File not in a mach-o format');
 
@@ -33,22 +48,27 @@ export class Parser extends Reader {
         if (buf.length < 7 * 4)
             return false;
 
-        var magic = buf.readUInt32LE(0);
-        var bits;
-        if (magic === 0xfeedface || magic === 0xcefaedfe)
-            bits = 32;
-        else if (magic === 0xfeedfacf || magic == 0xcffaedfe)
-            bits = 64;
-        else
-            return false;
+        // console.log( 'Has proper length' )
 
-        if (magic & 0xff == 0xfe)
+        var magic = buf.readUInt32LE(0);
+        var bits = determineMagicBits( magic )
+
+        if ( !bits )
+            return false
+
+        // console.log( 'Has proper bits' )
+
+        if ( magic & 0xff == 0xfe )
+            // Big Endian
             this.setEndian('be');
         else
+            // Little Endian
             this.setEndian('le');
 
         if (bits === 64 && buf.length < 8 * 4)
             return false;
+
+        // console.log( 'Has proper length' )
 
         var cputype = constants.cpuType[this.readInt32(buf, 4)];
         var cpusubtype = this.readInt32(buf, 8);
