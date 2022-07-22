@@ -1,10 +1,9 @@
 import plist from 'plist'
 import axios from 'axios'
+import prettyBytes from 'pretty-bytes'
 
 import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
-import prettyBytes from 'pretty-bytes'
-
 import { AppScan } from '~/helpers/scanner/client.mjs'
 
 const scannerVersion = (() => {
