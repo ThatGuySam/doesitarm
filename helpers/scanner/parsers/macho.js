@@ -1,9 +1,9 @@
-import bufferApi from 'buffer'
+import { Buffer } from 'buffer/'
 
 import { Parser as MachoNodeParser } from './macho-node/parser.js'
 
 function makeFileBuffer ( buffer ) {
-    const fileBuffer = new bufferApi.Buffer.alloc( buffer.byteLength )
+    const fileBuffer = new Buffer.alloc( buffer.byteLength )
 
     for (var i = 0; i < buffer.length; i++)
         fileBuffer[i] = buffer[i];
