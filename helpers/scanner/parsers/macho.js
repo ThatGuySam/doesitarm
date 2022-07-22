@@ -1,5 +1,7 @@
 import { Buffer } from 'buffer/'
 
+import parseMacho from '~/helpers/macho/index.js'
+
 // import { Parser as MachoNodeParser } from './macho-node/parser.js'
 
 function makeFileBuffer ( buffer ) {
@@ -83,8 +85,7 @@ export class MachoManiac {
     }
 
     async run () {
-        // import parseMacho from '~/helpers/macho/index.js'
-        const { default: parseMacho } = await import( '~/helpers/macho/index.js' )
+        // const { default: parseMacho } = await import( '~/helpers/macho/index.js' )
 
         const contextHasFileGlobal = typeof File === 'function'
 
