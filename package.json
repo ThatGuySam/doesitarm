@@ -24,6 +24,7 @@
     "test-postbuild-api": "run-s test-listings",
     "test-postbuild-functions": "ava ./test/main.js --verbose",
     "test-vitest": "vitest",
+    "test-circular-deps": "madge --circular --extensions js,mjs,ts,vue,astro ./*",
     "test": "ava --timeout=1m --verbose",
     "dev": "npm run dev-astro",
     "build": "npm run generate-astro",
@@ -49,7 +50,7 @@
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
     "vercel-build": "run-s build-lists-and-api test-postbuild-api",
-    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro test-postbuild-functions"
+    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro test-postbuild-functions test-circular-deps"
   },
   "dependencies": {
     "@astrojs/partytown": "^0.1.4",
