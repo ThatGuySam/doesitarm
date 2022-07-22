@@ -1,6 +1,6 @@
 // Adpapted for browser+node from https://github.com/joeferner/node-bplist-parser/blob/master/bplistParser.js
 import plainTextPlist from 'plist'
-import bufferApi from 'buffer'
+import { Buffer } from 'buffer/'
 
 
 // const fs = require('fs');
@@ -38,7 +38,7 @@ export function parsePlistBuffer ( fileBuffer , callback) {
 
         return tryParseBuffer( fileBuffer )
 
-        // if (bufferApi.Buffer.isBuffer(fileNameOrBuffer)) {
+        // if (Buffer.isBuffer(fileNameOrBuffer)) {
 
         // }
         // fs.readFile(fileNameOrBuffer, function(err, data) {
@@ -52,7 +52,7 @@ export function parsePlistBuffer ( fileBuffer , callback) {
 };
 
 export function parseFileSync (fileNameOrBuffer) {
-    // if (!bufferApi.Buffer.isBuffer(fileNameOrBuffer)) {
+    // if (!Buffer.isBuffer(fileNameOrBuffer)) {
     //     fileNameOrBuffer = fs.readFileSync(fileNameOrBuffer);
     // }
     return parseBuffer(fileNameOrBuffer);
@@ -61,6 +61,8 @@ export function parseFileSync (fileNameOrBuffer) {
 function parseBuffer ( buffer ) {
     // check header
     const header = buffer.slice(0, 'bplist'.length).toString('utf8');
+
+
 
     const isPlainTextPlist = header.includes('<?xml')
 
@@ -274,7 +276,7 @@ function parseBuffer ( buffer ) {
             // length is String length -> to get byte length multiply by 2, as 1 character takes 2 bytes in UTF-16
             length *= (isUtf16 + 1);
             if (length < maxObjectSize) {
-                let plistString = bufferApi.Buffer.from(buffer.slice(offset + stroffset, offset + stroffset + length));
+                let plistString = Buffer.from(buffer.slice(offset + stroffset, offset + stroffset + length));
                 if (isUtf16) {
                     plistString = swapBytes(plistString);
                     enc = "ucs2";
