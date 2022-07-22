@@ -4,7 +4,7 @@ import prettyBytes from 'pretty-bytes'
 
 import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
-import { AppScan } from '~/helpers/scanner/client.mjs'
+// import { AppScan } from '~/helpers/scanner/client.mjs'
 
 const scannerVersion = (() => {
     // If there's no window
@@ -616,26 +616,28 @@ export default class AppFilesScanner {
 
                 console.log( 'scannerVersion', scannerVersion )
 
-                if ( scannerVersion === '2' ) {
-                    // Create a new AppScan instance
-                    const scan = new AppScan({
-                        fileLoader: async () => file.instance,
-                        messageReceiver: ( details ) => {
-                            console.log( 'Scan message:', details )
+                // if ( scannerVersion === '2' ) {
+                //     // const { AppScan } = await import('~/helpers/scanner/client.mjs')
 
-                            file.statusMessage = details.message
-                            file.status = details.status
-                        }
-                    })
+                //     // Create a new AppScan instance
+                //     const scan = new AppScan({
+                //         fileLoader: async () => file.instance,
+                //         messageReceiver: ( details ) => {
+                //             console.log( 'Scan message:', details )
 
-                    // Scan the archive
-                    await scan.start()
+                //             file.statusMessage = details.message
+                //             file.status = details.status
+                //         }
+                //     })
 
-                    clearTimeout(timer)
+                //     // Scan the archive
+                //     await scan.start()
 
-                    resolve()
-                    return
-                }
+                //     clearTimeout(timer)
+
+                //     resolve()
+                //     return
+                // }
 
                 this.scanFile( file, scanIndex ).then(
                     response => resolve(response),
