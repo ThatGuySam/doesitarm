@@ -171,7 +171,7 @@
 <script>
 // import axios from 'axios'
 
-// import AppFilesScanner from '~/helpers/app-files-scanner.js'
+import AppFilesScanner from '~/helpers/app-files-scanner.js'
 
 import { isNuxt } from '~/helpers/environment.js'
 
@@ -302,7 +302,7 @@ export default {
                 console.log('Initializing scanner instance')
 
                 // Bring in code
-                const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
+                // const { default: AppFilesScanner } = await import('~/helpers/app-files-scanner.js')
 
                 const testResultStore = this.config ? this.config.testResultStore : global.$config.testResultStore
 
