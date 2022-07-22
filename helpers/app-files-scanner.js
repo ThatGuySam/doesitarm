@@ -5,6 +5,17 @@ import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
 import prettyBytes from 'pretty-bytes'
 
+import { AppScan } from '~/helpers/scanner/client'
+
+const scannerVersion = (() => {
+    // If there's no window
+    // then use scanner V1
+    if ( typeof window === 'undefined' ) return '1'
+
+    const urlSearchParams = new URLSearchParams(window.location.search)
+
+    return String( urlSearchParams.get('version') || '1' )
+})()
 
 const knownArchiveExtensions = new Set([
     'app',
@@ -593,7 +604,7 @@ export default class AppFilesScanner {
 
         // Scan for archives
         await Promise.all( this.files.map( ( file, scanIndex ) => {
-            return new Promise( (resolve, reject) => {
+            return new Promise( async (resolve, reject) => {
 
                 const timer = setTimeout(() => {
                     file.statusMessage = '❔ Scan timed out'
@@ -602,10 +613,37 @@ export default class AppFilesScanner {
                     reject(new Error('Scan timed out'))
                 }, scanTimeoutSeconds * 1000)
 
+                console.log( 'Scanning', file.name )
+
+                console.log( 'scannerVersion', scannerVersion )
+
+                if ( scannerVersion === '2' ) {
+                    // Create a new AppScan instance
+                    const scan = new AppScan({
+                        fileLoader: async () => file.instance,
+                        messageReceiver: ( details ) => {
+                            console.log( 'Scan message:', details )
+
+                            file.statusMessage = details.message
+                            file.status = details.status
+                        }
+                    })
+
+                    // Scan the archive
+                    await scan.start()
+
+                    clearTimeout(timer)
+
+                    resolve()
+                    return
+                }
+
                 this.scanFile( file, scanIndex ).then(
                     response => resolve(response),
                     err => reject(new Error(err))
                 ).finally(() => clearTimeout(timer))
+
+                resolve()
             })
         }))
 
