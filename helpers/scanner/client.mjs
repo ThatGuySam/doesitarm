@@ -384,30 +384,47 @@ export class AppScan {
     }
 
     async start () {
-        // Load in the file
-        this.sendMessage({
-            message: '🚛 Loading file...',
-            status: 'loading'
-        })
+        try {
+            // Load in the file
+            this.sendMessage({
+                message: '🚛 Loading file...',
+                status: 'loading'
+            })
 
-        this.file = await this.fileLoader()
+            this.file = await this.fileLoader()
 
-        // console.log( 'File:', this.file )
+            // console.log( 'File:', this.file )
 
-        this.bundleFileEntries = await this.readFileBlob( this.file )
+            this.bundleFileEntries = await this.readFileBlob( this.file )
 
-        this.sendMessage({
-            message: '🎬 Starting scan',
-            status: 'scanning'
-        })
+            this.sendMessage({
+                message: '🎬 Starting scan',
+                status: 'scanning'
+            })
 
-        await this.findTargetFiles()
+            await this.findTargetFiles()
 
-        this.storeResultInfo()
+            this.storeResultInfo()
 
-        this.sendMessage({
-            message: '🏁 Scan complete',
-            status: 'complete'
-        })
+            this.sendMessage({
+                message: '🔎 Checking online for native versions...',
+                status: 'checking'
+            })
+
+            // Sleep for 3 seconds
+            // await new Promise( resolve => setTimeout( resolve, 3000 ) )
+
+            this.sendMessage({
+                message: '🏁 Scan complete! ',
+                status: 'complete'
+            })
+
+        } catch ( error ) {
+            this.sendMessage({
+                message: '🚫 Error: ' + error.message,
+                status: 'error',
+                error
+            })
+        }
     }
 }
