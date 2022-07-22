@@ -175,8 +175,7 @@ html {
 
 
 
-.shimmer,
-.shimmer * {
+.shimmer {
   /*  Hide all text  */
   color: transparent;
 }
