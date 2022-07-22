@@ -13,13 +13,29 @@ let MAGIC =
 {
 
     //Macho Magics
+
+    // cafebabe: Universal Binary Big Endian. These fat binaries are archives that can include binaries for multiple architectures, but typically contain PowerPC, Intel x86, or ARM.
     FAT_MAGIC: 0xcafebabe,
+
+    // bebafeca: NXSwapLong(FAT_MAGIC)
     FAT_CIGAM: 0xbebafeca,
+
+    // cafebabf: ???
     FAT_MAGIC64: 0xcafebabf,
+
+    // bfbafeca: ???
     FAT_CIGAM64: 0xbfbafeca,
+
+    // feedface: Mach-O Big Endian (32-bit)
     MH_MAGIC: 0xfeedface,
+
+    // cefaedfe: Mach-O Little Endian (32-bit)
     MH_CIGAM: 0xcefaedfe,
+
+    // feedfacf: Mach-O Big Endian (64-bit)
     MH_MAGIC64: 0xfeedfacf,
+
+    // cffaedfe: Mach-O Little Endian (64-bit)
     MH_CIGAM64: 0xcffaedfe,
 
     //Retrieve the magic name of a specified magic
