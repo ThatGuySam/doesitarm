@@ -129,6 +129,8 @@ export async function extractMachoMeta ({ machoFileInstance, FileApi = null }) {
         } catch ( err ) {
             console.log( 'Macho parser failed', Parser, err.message.substring(0,100) )
 
+            continue
+
             // throw new Error( 'Macho parser failed' )
         }
     }
