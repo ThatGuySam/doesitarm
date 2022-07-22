@@ -66,11 +66,9 @@ export class MachoNode {
 
     async run () {
 
-        // console.log( 'machoNodeParser', machoNodeParser )
+        // console.log( 'this.machoFileInstance.buffer.readUInt32LE(0)', this.machoFileInstance.buffer.readUInt32LE(0).toString(16), 4277009103 )
 
-        const machoNodeMeta = machoNodeParser.execute( makeFileBuffer( this.machoFileInstance.buffer ) )
-
-        // console.log( 'machoNodeMeta', machoNodeMeta.cpu )
+        const machoNodeMeta = machoNodeParser.execute( this.machoFileInstance.buffer )
 
         return this.mapNodeMetaTOManiacMeta( machoNodeMeta )
     }
@@ -88,7 +86,16 @@ export class MachoManiac {
         // import parseMacho from '~/helpers/macho/index.js'
         const { default: parseMacho } = await import( '~/helpers/macho/index.js' )
 
-        return await parseMacho( this.machoFileInstance, this.FileApi )
+        const contextHasFileGlobal = typeof File === 'function'
+
+        // In the Browser, MachManiac uses the File API to read the file
+        // so we check if the global File API is available and convert our machoFileInstance to File API
+        //
+        // In the NodeJS environment, MachManiac uses the FileApi module to read the file
+        // so we pass through the machoFileInstance as is
+        const fileInstance = contextHasFileGlobal ? (new File( [this.machoFileInstance.blob], 'App' )) : this.machoFileInstance
+
+        return await parseMacho( fileInstance, this.FileApi )
     }
 }
 

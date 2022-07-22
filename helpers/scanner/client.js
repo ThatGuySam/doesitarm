@@ -6,8 +6,7 @@
 import * as FileApi from '~/helpers/scanner/file-api.js'
 import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
-// import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
-
+import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 import { Buffer } from 'buffer/'
 
 // For some reason inline 'import()' works better than 'import from'
@@ -229,7 +228,7 @@ export class AppScan {
 
         this.sendMessage({
             message: 'ℹ️ Found Info.plist',
-            data: this.infoPlist,
+            // data: this.infoPlist
         })
     }
 
@@ -273,19 +272,24 @@ export class AppScan {
             throw new Error( 'More than one primary Macho executable found' )
         }
 
-        // Get blob data from zip
-        // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
+        // Get zip as Uint8Array
         const bundleExecutableUint8Array = await this.readFileEntryData( fileEntry, zip.Uint8ArrayWriter )
-
-        // console.log( 'bundleExecutableBlob', bundleExecutableBlob.buffer )
 
         const machoFileInstance = new FileApi.File({
             name: this.bundleExecutable.filename,
             type: 'application/x-mach-binary',
-            buffer: Buffer.from( bundleExecutableUint8Array ),
+            buffer: Buffer.from( bundleExecutableUint8Array )
         })
 
-        this.machoMeta = await extractMachoMeta({ machoFileInstance, FileApi })
+        // Get zip as blob
+        // so we can use it in for the File API when we're in the browser context
+        // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-entry
+        machoFileInstance.blob = await this.readFileEntryData( fileEntry, zip.BlobWriter )
+
+        this.machoMeta = await extractMachoMeta({
+            machoFileInstance,
+            FileApi
+        })
 
         // console.log( 'this.machoMeta', this.machoMeta )
 
