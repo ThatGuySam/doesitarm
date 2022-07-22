@@ -1,20 +1,12 @@
-// import { Buffer, Blob } from 'buffer'
+import { Buffer } from 'buffer/'
 import prettyBytes from 'pretty-bytes'
-// import zip from '@zip.js/zip.js'
-// import FileApi from 'file-api'
+import * as zip from '@zip.js/zip.js'
 
 import * as FileApi from '~/helpers/scanner/file-api.js'
 import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
 import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
-import { Buffer } from 'buffer/'
 
-// For some reason inline 'import()' works better than 'import from'
-// https://gildas-lormeau.github.io/zip.js/
-const zip = await import('@zip.js/zip.js')
-
-// const FileApi = await import('file-api')
-// const { parse: plistParse } = await import('simple-plist/dist/index.js')
 
 // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
 zip.configure({
