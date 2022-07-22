@@ -1,4 +1,4 @@
-import Reader from 'endian-reader'
+import { Reader } from './endian-reader'
 
 import { constants } from './constants'
 
