@@ -1,5 +1,5 @@
 // import { Buffer, Blob } from 'buffer'
-// import prettyBytes from 'pretty-bytes'
+import prettyBytes from 'pretty-bytes'
 // import zip from '@zip.js/zip.js'
 // import FileApi from 'file-api'
 
