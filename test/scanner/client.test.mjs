@@ -12,7 +12,7 @@ import glob from 'fast-glob'
 import { LocalFileData } from 'get-file-object-from-local-path'
 import { Zip } from 'zip-lib'
 
-import { AppScan } from '~/helpers/scanner/client'
+import { AppScan } from '~/helpers/scanner/client.mjs'
 // import { compress } from '~/helpers/scanner/parsers/seven-zip'
 
 
