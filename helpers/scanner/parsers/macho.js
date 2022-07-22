@@ -110,6 +110,8 @@ export async function extractMachoMeta ({ machoFileInstance, FileApi = null }) {
 
     // Run through each parser
     for ( const Parser of parsers ) {
+        console.log( 'Trying parser', Parser.name )
+
         try {
             const parserTimeout = setTimeout(() => {
                 throw new Error( 'Timed out' )
