@@ -18,7 +18,6 @@
                 </div>
                 <div class="flex flex-col justify-center text-center opacity-50 p-4">
                     {{ ad.copy }}
-                    {{ ad.imageSrc }}
                 </div>
                 <div
                     class="absolute bottom-0 right-0 border-t border-l rounded-tl uppercase opacity-25 px-1"
