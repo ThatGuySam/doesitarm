@@ -28,10 +28,10 @@ export default defineConfig({
     output: 'server',
     publicDir: './static',
     site: 'https://doesitarm.com',
+    adapter: netlify({
+        dist: new URL('./dist/', import.meta.url)
+    }),
     integrations: [
-        netlify({
-            dist: new URL('./dist/', import.meta.url)
-        }),
         // Astro Vue Reference
         // https://github.com/withastro/astro/tree/main/packages/integrations/vue
         vue(),
