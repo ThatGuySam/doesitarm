@@ -25,6 +25,7 @@ console.log( 'Running Astro Config File' )
 
 // https://astro.build/config
 export default defineConfig({
+    output: 'server',
     publicDir: './static',
     site: 'https://doesitarm.com',
     integrations: [
