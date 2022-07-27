@@ -1,6 +1,6 @@
 // Adpapted for browser+node from https://github.com/joeferner/node-bplist-parser/blob/master/bplistParser.js
 import plainTextPlist from 'plist'
-import { Buffer } from 'buffer/'
+import { Buffer } from 'buffer/index.js'
 
 
 // const fs = require('fs');

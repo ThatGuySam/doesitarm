@@ -7,7 +7,7 @@ import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
 // import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 
-import { Buffer } from 'buffer/'
+import { Buffer } from 'buffer/index.js'
 
 // For some reason inline 'import()' works better than 'import from'
 // https://gildas-lormeau.github.io/zip.js/
