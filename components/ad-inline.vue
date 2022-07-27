@@ -39,6 +39,19 @@
 import CarbonInline from './carbon-inline.vue'
 
 const ads = {
+    // Since Vue renders the ad on the server
+    // but destroys the ad when hydrating on
+    // the browser, we render an empty placeholder ad
+    // so that it get's properly rendered at the browser
+    // and so that our ad css still get's imported.
+    'placeholder': {
+        url: '/',
+        imageSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        imageAlt: '',
+        copy: '',
+        corner: '',
+    },
+
     'new-world-1': {
         url: 'https://amzn.to/3bllXrC',
         imageSrc: 'https://vumbnail.com/OKnUBs-Ko44.jpg',
@@ -77,7 +90,7 @@ export default {
         name: {
             type: String,
             default: 'default'
-        }
+        },
     },
     computed: {
         ad () {

@@ -47,7 +47,7 @@
         <div class="slot-wrapper">
             <slot name="ad-inline">
                 <AdInline
-                    v-if="isSSR === false"
+                    :name="isSSR ? 'placeholder' : 'default'"
                     v-once
                 />
             </slot>
