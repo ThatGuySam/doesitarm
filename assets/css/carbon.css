@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 /* Hidden on mobile for now */
 .float-corner #carbonads {
     @apply hidden;
@@ -131,3 +133,5 @@
         @apply py-3;
     }
 }
+
+/*! purgecss end ignore */
