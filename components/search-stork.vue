@@ -47,8 +47,9 @@
         <div class="slot-wrapper">
             <slot name="ad-inline">
                 <AdInline
-                    :name="isSSR ? 'placeholder' : 'default'"
                     v-once
+                    :name="isSSR ? 'placeholder' : 'default'"
+                    :page="kindPage"
                 />
             </slot>
         </div>

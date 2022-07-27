@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="name !== 'default'"
+        v-if="adName !== 'default'"
         class="w-full"
     >
         <a
@@ -11,13 +11,14 @@
             >
                 <div class="flex flex-col text-center">
                     <img
-                        :src="ad.imageSrc"
+                        :src="imageSrc"
                         :alt="ad.imageAlt"
                         class="w-32 h-full aspect-video object-cover"
                     >
                 </div>
                 <div class="flex flex-col justify-center text-center opacity-50 p-4">
                     {{ ad.copy }}
+                    {{ ad.imageSrc }}
                 </div>
                 <div
                     class="absolute bottom-0 right-0 border-t border-l rounded-tl uppercase opacity-25 px-1"
@@ -38,6 +39,8 @@
 /* Carbon ads */
 import CarbonInline from './carbon-inline.vue'
 
+const transparentImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
 const ads = {
     // Since Vue renders the ad on the server
     // but destroys the ad when hydrating on
@@ -46,7 +49,7 @@ const ads = {
     // and so that our ad css still get's imported.
     'placeholder': {
         url: '/',
-        imageSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        imageSrc: transparentImage,
         imageAlt: '',
         copy: '',
         corner: '',
@@ -91,11 +94,39 @@ export default {
             type: String,
             default: 'default'
         },
-    },
-    computed: {
-        ad () {
-            return ads[ this.name ]
+        page: {
+            type: Object,
+            default: () => ({})
         }
     },
+    data () {
+        return {
+            // We store imageSrc in data
+            // so that vue knows to update attribute after hydration.
+            imageSrc: transparentImage,
+        }
+    },
+    computed: {
+        adName () {
+            // console.log( 'kindName', this.page?.kindName )
+
+            if ( this.name === 'placeholder' ) {
+                return 'placeholder'
+            }
+
+            if ( this.page?.kindName === 'developer-tools' ) return 'jotform-for-developers-1'
+
+            // Video and Motion Tools
+            if ( this.page?.kindName === 'video-and-motion-tools' ) return 'wondershare-arm-1'
+
+            return this.name
+        },
+        ad () {
+            return ads[ this.adName ]
+        }
+    },
+    mounted () {
+        this.imageSrc = this.ad.imageSrc
+    }
 }
 </script>
