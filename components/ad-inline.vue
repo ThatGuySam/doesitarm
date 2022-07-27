@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="adName !== 'default'"
+        v-if="name !== 'default'"
         class="w-full"
     >
         <a
@@ -11,7 +11,7 @@
             >
                 <div class="flex flex-col text-center">
                     <img
-                        :src="imageSrc"
+                        :src="ad.imageSrc"
                         :alt="ad.imageAlt"
                         class="w-32 h-full aspect-video object-cover"
                     >
@@ -91,35 +91,11 @@ export default {
             type: String,
             default: 'default'
         },
-        page: {
-            type: Object,
-            default: () => ({})
-        }
     },
     computed: {
-        adName () {
-            console.log( 'kindName', this.page?.kindName )
-
-            if ( this.name === 'placeholder' ) {
-                return 'placeholder'
-            }
-
-            if ( this.page?.kindName === 'developer-tools' ) return 'jotform-for-developers-1'
-
-            // Video and Motion Tools
-            if ( this.page?.kindName === 'video-and-motion-tools' ) return 'wondershare-arm-1'
-
-            return this.name
-        },
         ad () {
-            return ads[ this.adName ]
-        },
-        imageSrc () {
-            return this.ad.imageSrc
+            return ads[ this.name ]
         }
     },
-    mounted () {
-        console.log( 'mounted', this.adName )
-    }
 }
 </script>
