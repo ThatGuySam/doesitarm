@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer/'
+import { Buffer } from 'buffer/index.js'
 import prettyBytes from 'pretty-bytes'
 import * as zip from '@zip.js/zip.js'
 
