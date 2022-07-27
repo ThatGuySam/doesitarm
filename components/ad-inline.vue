@@ -35,6 +35,8 @@
 </template>
 
 <script>
+/* Carbon CSS */
+import '~/assets/css/carbon.css'
 /* Carbon ads */
 import CarbonInline from './carbon-inline.vue'
 
