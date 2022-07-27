@@ -45,7 +45,12 @@
         </div>
 
         <div class="slot-wrapper">
-            <slot />
+            <slot name="ad-inline">
+                <AdInline
+                    v-if="isSSR === false"
+                    v-once
+                />
+            </slot>
         </div>
 
         <div
@@ -329,7 +334,7 @@ import {
     makeHighlightedResultTitle
 } from '~/helpers/stork/browser.js'
 
-import Carbon from '~/components/carbon-inline.vue'
+import AdInline from '~/components/ad-inline.vue'
 import LinkButton from '~/components/link-button.vue'
 import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
@@ -339,7 +344,7 @@ let storkClient = null
 
 export default {
     components: {
-        Carbon,
+        AdInline,
         ListSummary,
         RelativeTime,
         LinkButton,
@@ -377,7 +382,8 @@ export default {
             filterQueryList: [],
             hasStartedAnyQuery: false,
             listingsResults: [],
-            waitingForQuery: false
+            waitingForQuery: false,
+            isSSR: import.meta.env.SSR
         }
     },
     computed: {
