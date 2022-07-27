@@ -1,11 +1,9 @@
 // Adpapted for browser+node from https://github.com/joeferner/node-bplist-parser/blob/master/bplistParser.js
 import plainTextPlist from 'plist'
-import bigInt from 'big-integer'
 import bufferApi from 'buffer'
 
 
 // const fs = require('fs');
-// const bigInt = require('big-integer')
 // const bufferApi = require('buffer')
 const debug = false
 
@@ -186,7 +184,7 @@ function parseBuffer ( buffer ) {
                 const data = buffer.slice(offset + 1, offset + 1 + length);
                 if (length === 16) {
                     const str = bufferToHexString(data);
-                    return bigInt(str, 16);
+                    return BigInt(str, 16);
                 }
                 return data.reduce((acc, curr) => {
                     acc <<= 8;
