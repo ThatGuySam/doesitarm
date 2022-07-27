@@ -121,7 +121,7 @@
                     <div class="flex-shrink-0">
                         <!-- <span class="rounded-md shadow-sm">
                             <LinkButton
-                                href="https://prf.hn/l/7JG0bEj"
+                                href="https://prf.hn/l/daWX1vk"
                                 class="relative inline-flex items-center border-indigo-500"
                             >
                                 <svg
@@ -143,7 +143,7 @@
                                 'underline px-3 py-2 rounded-md text-xs font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out',
                                 //(currentPath === item.url) ? 'text-white bg-darker hover:text-white neumorphic-shadow' : 'text-gray-300 hover:bg-darker hover:neumorphic-shadow'
                             ]"
-                            href="https://prf.hn/l/7JG0bEj"
+                            href="https://prf.hn/l/daWX1vk"
                         >
                             🅿️ Windows on ARM now works on Parallels
                         </a>
