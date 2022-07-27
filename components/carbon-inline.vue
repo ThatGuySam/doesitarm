@@ -1,6 +1,6 @@
 <template>
     <!-- This may be able to be brought in via Partytown -->
-    <div class="doesitarm-carbon-wrapper">
+    <div class="doesitarm-carbon-wrapper carbon-inline-wide">
         <component
             :is="'script'"
             v-once
