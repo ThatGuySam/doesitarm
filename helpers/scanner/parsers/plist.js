@@ -1,6 +1,5 @@
 // Adpapted for browser+node from https://github.com/joeferner/node-bplist-parser/blob/master/bplistParser.js
 import plainTextPlist from 'plist'
-import bigInt from 'big-integer'
 import { Buffer } from 'buffer/'
 
 
