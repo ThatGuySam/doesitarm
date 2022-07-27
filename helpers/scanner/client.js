@@ -1,6 +1,6 @@
 import { Buffer, Blob } from 'buffer'
 // import plist from 'plist'
-import * as plist from 'simple-plist'
+// import * as plist from 'simple-plist'
 import prettyBytes from 'pretty-bytes'
 // import zip from '@zip.js/zip.js'
 import FileApi, { File } from 'file-api'
@@ -204,7 +204,7 @@ export class AppScan {
         // console.log( 'infoBuffer', Buffer.from( infoBuffer ) )
 
         // Parse the Info.plist data
-        this.infoPlist = plist.parse( infoBuffer )
+        // this.infoPlist = plist.parse( infoBuffer )
 
         this.sendMessage({
             message: 'ℹ️ Found Info.plist',
