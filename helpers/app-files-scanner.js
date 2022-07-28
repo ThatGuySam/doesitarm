@@ -5,7 +5,7 @@ import * as zip from '@zip.js/zip.js'
 
 import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
-// import { AppScan } from '~/helpers/scanner/client.mjs'
+import { AppScan } from '~/helpers/scanner/client.mjs'
 
 const scannerVersion = (() => {
     // If there's no window
@@ -615,28 +615,28 @@ export default class AppFilesScanner {
 
                 console.log( 'scannerVersion', scannerVersion )
 
-                // if ( scannerVersion === '2' ) {
-                //     // const { AppScan } = await import('~/helpers/scanner/client.mjs')
+                if ( scannerVersion === '2' ) {
+                    // const { AppScan } = await import('~/helpers/scanner/client.mjs')
 
-                //     // Create a new AppScan instance
-                //     const scan = new AppScan({
-                //         fileLoader: async () => file.instance,
-                //         messageReceiver: ( details ) => {
-                //             console.log( 'Scan message:', details )
+                    // Create a new AppScan instance
+                    const scan = new AppScan({
+                        fileLoader: async () => file.instance,
+                        messageReceiver: ( details ) => {
+                            console.log( 'Scan message:', details )
 
-                //             file.statusMessage = details.message
-                //             file.status = details.status
-                //         }
-                //     })
+                            file.statusMessage = details.message
+                            file.status = details.status
+                        }
+                    })
 
-                //     // Scan the archive
-                //     await scan.start()
+                    // Scan the archive
+                    await scan.start()
 
-                //     clearTimeout(timer)
+                    clearTimeout(timer)
 
-                //     resolve()
-                //     return
-                // }
+                    resolve()
+                    return
+                }
 
                 this.scanFile( file, scanIndex ).then(
                     response => resolve(response),
