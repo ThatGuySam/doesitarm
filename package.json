@@ -42,7 +42,7 @@
     "download-sitemaps": "node -r esm -r tsconfig-paths/register scripts/download-sitemaps.js",
     "stork-netlify": "chmod +x scripts/stork-netlify.sh && ./scripts/stork-netlify.sh",
     "dev-astro": "astro dev",
-    "generate-astro": "astro build --experimental-ssr",
+    "generate-astro": "astro build",
     "generate-postcss": "ENV=production postcss assets/css/tailwind.css --o static/tailwind.css",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
