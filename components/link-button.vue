@@ -1,5 +1,4 @@
 <template>
-
     <a
         :href="href"
         :target="target"
@@ -7,9 +6,11 @@
         :class="classlist"
         role="button"
     >
-        <slot />
+        <span v-if="label.trim().length > 0">
+            {{ label }}
+        </span>
+        <slot name="label" />
     </a>
-
 </template>
 
 <script>
@@ -19,6 +20,10 @@ export default {
         href: {
             type: String,
             required: true
+        },
+        label: {
+            type: String,
+            default: ''
         },
         target: {
             type: String,
