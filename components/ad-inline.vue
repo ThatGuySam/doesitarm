@@ -79,6 +79,13 @@ const ads = {
         imageAlt: 'Wondershare Filmora on a macOS Desktop',
         copy: 'Filmora X now supports ARM',
         corner: 'Ad'
+    },
+    'expressvpn-bounty': {
+        url: 'http://www.xvuslink.com/blog/bug-bounty-bonus-vpn-server-vulnerabilities/?a_aid=doesitarm',
+        imageSrc: 'https://vumbnail.com/7uE7kFcJ_Pk.jpg',
+        imageAlt: 'Protect Your Online Privacy Now With ExpressVPN',
+        copy: 'ExpressVPN\'s $100,000 bug bounty bonus for VPN server vulnerabilities',
+        corner: 'Ad'
     }
 }
 
