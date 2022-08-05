@@ -28,10 +28,9 @@
     "test": "ava --timeout=1m --verbose",
     "dev": "npm run dev-astro",
     "build": "npm run generate-astro",
-    "build-api": "npm run clone-readme && npm run build-lists -- --with-api --no-lists",
-    "build-lists-and-api": "npm run clone-readme && npm run build-lists -- --with-api",
+    "build-api": "npm run clone-readme && npx vite-node build-lists.js -- --with-api --no-lists",
+    "build-lists-and-api": "npm run clone-readme && npx vite-node build-lists.js -- --with-api",
     "generate-dev": "npm run generate && npm test",
-    "build-lists": "npm run test-prebuild && npx vite-node build-lists.js",
     "setup-stork": "run-s download-stork-toml download-stork-executable",
     "build-stork-index": "./$npm_package_config_stork_executable build --input $npm_package_config_stork_toml --output $npm_package_config_stork_index",
     "build-stork-index-js": "npx vite-node scripts/build-stork-index.js",
@@ -49,7 +48,7 @@
     "precommit": "npm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
     "cloudflare-deploy": "npm run build-api",
-    "vercel-build": "run-s build-lists-and-api test-postbuild-api",
+    "vercel-build": "run-s test-prebuild build-lists-and-api test-postbuild-api",
     "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro test-postbuild-functions test-circular-deps"
   },
   "dependencies": {
