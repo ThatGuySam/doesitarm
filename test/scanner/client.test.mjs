@@ -4,6 +4,9 @@ import {
     it,
     expect
 } from 'vitest'
+// Vitest Web Worker Compatibility - https://github.com/vitest-dev/vitest/tree/main/packages/web-worker
+import '@vitest/web-worker'
+
 
 import fs from 'fs-extra'
 import path from 'node:path'
