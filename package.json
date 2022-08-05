@@ -112,6 +112,7 @@
   "devDependencies": {
     "@astrojs/sitemap": "^0.1.0",
     "@astrojs/tailwind": "^0.2.0",
+    "@vitest/web-worker": "^0.20.3",
     "autoprefixer": "^10.0.2",
     "ava": "^3.15.0",
     "babel-eslint": "^8.2.1",
