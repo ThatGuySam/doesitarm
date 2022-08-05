@@ -39,7 +39,7 @@
     "stork-index": "run-s setup-stork build-stork-index",
     "download-stork-toml": "npx vite-node scripts/download-stork-toml.js",
     "download-stork-executable": "npx vite-node scripts/download-stork-executable.js",
-    "download-sitemaps": "node -r esm -r tsconfig-paths/register scripts/download-sitemaps.js",
+    "download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
     "stork-netlify": "chmod +x scripts/stork-netlify.sh && ./scripts/stork-netlify.sh",
     "dev-astro": "astro dev",
     "generate-astro": "astro build",
