@@ -15,8 +15,7 @@ import glob from 'fast-glob'
 import { LocalFileData } from 'get-file-object-from-local-path'
 import { Zip } from 'zip-lib'
 
-import { AppScan } from '~/helpers/scanner/client.mjs'
-// import { compress } from '~/helpers/scanner/parsers/seven-zip'
+import AppScanWorker from '~/helpers/scanner/worker.js?worker'
 
 
 const appGlobOptions = {
@@ -30,6 +29,7 @@ const tempPath = 'test/_artifacts/temp'
 
 // TODO: Unsupported Apps:
 // Alt Tab 6.29.0 - Hangs
+// AVTouchBar 3.0.6 - Times out
 // Silicon - Fail with both MachoNode and MachoManiac
 // arm_idafree76_mac 7.6 - Hangs
 // Batteries 2.2.4 - Hangs
@@ -75,23 +75,66 @@ async function makeZipFromBundlePath ( bundlePath ) {
 }
 
 
+async function runScanWorker ( file ) {
+    // console.log( 'file', file )
+
+    const appScanWorker = new AppScanWorker()
+
+    const scan = await new Promise( ( resolve, reject ) => {
+        // Set up the worker message handler
+        appScanWorker.onmessage = async (event) => {
+            // console.log( 'Main received message', event )
+
+            const { status } = event.data
+
+            // Resolves promise on finished status
+            if ( status === 'finished' ) {
+                const { scan } = event.data
+                resolve( scan )
+            }
+        }
+
+        // Set up the worker error handler
+        appScanWorker.onerror = async ( errorEvent ) => {
+            // console.log( 'appScanWorker.onerror', errorEvent )
+            reject()
+        }
+
+        // Start the worker
+        // https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage
+        appScanWorker.postMessage( { 
+            status: 'start', 
+            options: {
+                fileLoader: () => ({
+                    ...file, 
+                    arrayBuffer: file.arrayBuffer
+                }),
+                messageReceiver: ( details ) => {
+                    console.log( 'Scan message:', details )
+                }
+            }
+        }, [ file.arrayBuffer ] )
+    })
+
+    return {
+        scan,
+        appScanWorker
+    }
+}
+
+
 describe.concurrent('Apps', async () => {
 
     // Compress plain app bundles to zipped File Objects
     for ( const bundlePath of plainAppBundles ) {
 
+        // Get the App's file name from bundlePath
         const appName = path.basename( bundlePath )
 
-        // Create a new AppScan instance
-        const scan = new AppScan({
-            fileLoader: () => makeZipFromBundlePath( bundlePath ),
-            messageReceiver: ( details ) => {
-                console.log( 'Scan message:', details )
-            }
-        })
+        // Generate a faux JavaScript File instance 
+        const file = await makeZipFromBundlePath( bundlePath )
 
-        // Scan the archive
-        await scan.start()
+        const { scan } = await runScanWorker( file )
 
 
         it( `Can read info.plist for ${ appName } bundle` , () => {
@@ -139,7 +182,6 @@ describe.concurrent('Apps', async () => {
             // Export info.infoPlist to be none empty object
             expect( typeof scan.info.infoPlist ).toBe( 'object' )
             expect( Object.keys( scan.info.infoPlist ).length ).toBeGreaterThan( 0 )
-
         })
 
     }
