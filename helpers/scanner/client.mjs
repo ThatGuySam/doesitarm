@@ -7,7 +7,6 @@ import { isString, isNonEmptyString } from '~/helpers/check-types.js'
 import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
 import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
 
-
 // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
 zip.configure({
     // Disable Web Workers for SSR since Node doesn't support them yet
@@ -383,41 +382,47 @@ export class AppScan {
         this.binarySupportsNative = this.classifyBinaryEntryArchitecture( this.machoMeta )
     }
 
+    async runScan () {
+        // Load in the file
+        this.sendMessage({
+            message: '🚛 Loading file...',
+            status: 'loading'
+        })
+
+        this.file = await this.fileLoader()
+
+        // console.log( 'File:', this.file )
+
+        this.bundleFileEntries = await this.readFileBlob( this.file )
+
+        this.sendMessage({
+            message: '🎬 Starting scan',
+            status: 'scanning'
+        })
+
+        await this.findTargetFiles()
+
+        this.storeResultInfo()
+
+        this.sendMessage({
+            message: '🔎 Checking online for native versions...',
+            status: 'checking'
+        })
+
+        // Sleep for 3 seconds
+        // await new Promise( resolve => setTimeout( resolve, 3000 ) )
+
+        this.sendMessage({
+            message: '🏁 Scan complete! ',
+            status: 'complete'
+        })
+    }
+
     async start () {
+
         try {
-            // Load in the file
-            this.sendMessage({
-                message: '🚛 Loading file...',
-                status: 'loading'
-            })
 
-            this.file = await this.fileLoader()
-
-            // console.log( 'File:', this.file )
-
-            this.bundleFileEntries = await this.readFileBlob( this.file )
-
-            this.sendMessage({
-                message: '🎬 Starting scan',
-                status: 'scanning'
-            })
-
-            await this.findTargetFiles()
-
-            this.storeResultInfo()
-
-            this.sendMessage({
-                message: '🔎 Checking online for native versions...',
-                status: 'checking'
-            })
-
-            // Sleep for 3 seconds
-            // await new Promise( resolve => setTimeout( resolve, 3000 ) )
-
-            this.sendMessage({
-                message: '🏁 Scan complete! ',
-                status: 'complete'
-            })
+            await this.runScan()
 
         } catch ( error ) {
             this.sendMessage({
@@ -426,5 +431,6 @@ export class AppScan {
                 error
             })
         }
+
     }
 }
