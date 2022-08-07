@@ -414,7 +414,7 @@ export class AppScan {
 
         this.sendMessage({
             message: '🏁 Scan complete! ',
-            status: 'complete'
+            status: 'finished'
         })
     }
 
@@ -427,7 +427,7 @@ export class AppScan {
         } catch ( error ) {
             this.sendMessage({
                 message: '🚫 Error: ' + error.message,
-                status: 'error',
+                status: 'finished',
                 error
             })
         }
