@@ -5,7 +5,9 @@ import * as zip from '@zip.js/zip.js'
 
 import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
-import { AppScan } from '~/helpers/scanner/client.mjs'
+
+// Vite Web Workers - https://vitejs.dev/guide/features.html#web-workers
+import { runScanWorker } from '~/helpers/scanner/client.mjs'
 
 const scannerVersion = (() => {
     // If there's no window
@@ -616,23 +618,11 @@ export default class AppFilesScanner {
                 console.log( 'scannerVersion', scannerVersion )
 
                 if ( scannerVersion === '2' ) {
-                    // const { AppScan } = await import('~/helpers/scanner/client.mjs')
 
-                    // Create a new AppScan instance
-                    const scan = new AppScan({
-                        fileLoader: async () => file.instance,
-                        messageReceiver: ( details ) => {
-                            console.log( 'Scan message:', details )
 
-                            file.statusMessage = details.message
-                            file.status = details.status
-                        }
-                    })
+                    const { scan } = await runScanWorker( file.instance )
 
-                    // Scan the archive
-                    await scan.start()
-
-                    clearTimeout(timer)
+                    console.log('scan', scan)
 
                     resolve()
                     return
