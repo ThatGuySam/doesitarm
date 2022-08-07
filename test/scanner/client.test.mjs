@@ -15,7 +15,7 @@ import glob from 'fast-glob'
 import { LocalFileData } from 'get-file-object-from-local-path'
 import { Zip } from 'zip-lib'
 
-import AppScanWorker from '~/helpers/scanner/worker.js?worker'
+import { runScanWorker } from '~/helpers/scanner/client.mjs'
 
 
 const appGlobOptions = {
@@ -74,55 +74,6 @@ async function makeZipFromBundlePath ( bundlePath ) {
     return archiveFile
 }
 
-
-async function runScanWorker ( file ) {
-    // console.log( 'file', file )
-
-    const appScanWorker = new AppScanWorker()
-
-    const scan = await new Promise( ( resolve, reject ) => {
-        // Set up the worker message handler
-        appScanWorker.onmessage = async (event) => {
-            // console.log( 'Main received message', event )
-
-            const { status } = event.data
-
-            // Resolves promise on finished status
-            if ( status === 'finished' ) {
-                const { scan } = event.data
-                resolve( scan )
-            }
-        }
-
-        // Set up the worker error handler
-        appScanWorker.onerror = async ( errorEvent ) => {
-            // console.log( 'appScanWorker.onerror', errorEvent )
-            reject()
-        }
-
-        // Start the worker
-        // https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage
-        appScanWorker.postMessage( { 
-            status: 'start', 
-            options: {
-                fileLoader: () => ({
-                    ...file, 
-                    arrayBuffer: file.arrayBuffer
-                }),
-                messageReceiver: ( details ) => {
-                    console.log( 'Scan message:', details )
-                }
-            }
-        }, [ file.arrayBuffer ] )
-    })
-
-    return {
-        scan,
-        appScanWorker
-    }
-}
-
-
 describe.concurrent('Apps', async () => {
 
     // Compress plain app bundles to zipped File Objects
@@ -131,9 +82,10 @@ describe.concurrent('Apps', async () => {
         // Get the App's file name from bundlePath
         const appName = path.basename( bundlePath )
 
-        // Generate a faux JavaScript File instance 
+        // Generate a faux JavaScript File instance
         const file = await makeZipFromBundlePath( bundlePath )
 
+        // Scan the app
         const { scan } = await runScanWorker( file )
 
 

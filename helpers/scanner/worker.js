@@ -1,4 +1,4 @@
-import { AppScan } from '~/helpers/scanner/client.mjs'
+import { AppScan } from '~/helpers/scanner/scan.mjs'
 
 self.onmessage = async ( event ) => {
 
@@ -26,7 +26,7 @@ self.onmessage = async ( event ) => {
 
 
         self.postMessage( {
-            status: 'finished', 
+            status: 'finished',
             scan
         })
 
