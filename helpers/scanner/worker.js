@@ -1,8 +1,8 @@
 import { AppScan } from '~/helpers/scanner/client.mjs'
 
-self.onmessage = async ( event, transferrable ) => {
+self.onmessage = async ( event ) => {
 
-    console.log( 'Worker received message', event, transferrable )
+    console.log( 'Worker received message', event )
 
     const { status } = event.data
 
