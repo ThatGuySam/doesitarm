@@ -620,7 +620,12 @@ export default class AppFilesScanner {
                 if ( scannerVersion === '2' ) {
 
 
-                    const { scan } = await runScanWorker( file.instance )
+                    const { scan } = await runScanWorker( file.instance, messageDetails => {
+                        console.log( 'messageDetails', messageDetails )
+
+                        file.statusMessage = messageDetails.message
+                        file.status = messageDetails.status
+                    } )
 
                     console.log('scan', scan)
 

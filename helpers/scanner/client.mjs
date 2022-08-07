@@ -1,6 +1,8 @@
 import AppScanWorker from './worker.mjs?worker'
 
-export async function runScanWorker ( file ) {
+const noop = () => {}
+
+export async function runScanWorker ( file, messageReceiver = noop ) {
     // console.log( 'file', file )
 
     const appScanWorker = new AppScanWorker()
@@ -12,7 +14,9 @@ export async function runScanWorker ( file ) {
         appScanWorker.onmessage = async (event) => {
             // console.log( 'Main received message', event )
 
-            const { status } = event.data
+            const { status, message } = event.data
+
+            messageReceiver({ status, message })
 
             // Resolves promise on finished status
             if ( status === 'finished' ) {
@@ -23,9 +27,10 @@ export async function runScanWorker ( file ) {
 
         // Set up the worker error handler
         appScanWorker.onerror = async ( errorEvent ) => {
-            // console.log( 'appScanWorker.onerror', errorEvent )
+            console.error( 'Error received from App Scan Worker', errorEvent )
             reject()
         }
+
 
         // Start the worker
         // https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage
