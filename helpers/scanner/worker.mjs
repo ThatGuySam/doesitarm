@@ -1,4 +1,4 @@
-import { AppScan } from '~/helpers/scanner/scan.mjs'
+import { AppScan } from './scan.mjs'
 
 self.onmessage = async ( event ) => {
 

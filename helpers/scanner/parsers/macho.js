@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer/index.js'
 
-import parseMacho from '~/helpers/macho/index.js'
+import parseMacho from '../../macho/index.js'
 
 import { Parser as MachoNodeParser } from './macho-node/parser.js'
 

@@ -2,7 +2,7 @@ import { Reader } from './endian-reader'
 
 import { constants } from './constants'
 
-import { MAGIC } from '~/helpers/macho/macho.magic.js'
+import { MAGIC } from '../../../macho/macho.magic.js'
 
 function determineMagicBits ( magic ) {
     for ( const [ key, value ] of Object.entries( MAGIC ) ) {

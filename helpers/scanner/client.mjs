@@ -1,4 +1,4 @@
-import AppScanWorker from '~/helpers/scanner/worker.js?worker'
+import AppScanWorker from './worker.mjs?worker'
 
 export async function runScanWorker ( file ) {
     // console.log( 'file', file )

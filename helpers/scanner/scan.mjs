@@ -2,10 +2,10 @@ import { Buffer } from 'buffer/index.js'
 import prettyBytes from 'pretty-bytes'
 import * as zip from '@zip.js/zip.js'
 
-import * as FileApi from '~/helpers/scanner/file-api.js'
-import { isString, isNonEmptyString } from '~/helpers/check-types.js'
-import { parsePlistBuffer } from '~/helpers/scanner/parsers/plist.js'
-import { extractMachoMeta } from '~/helpers/scanner/parsers/macho.js'
+import * as FileApi from './file-api.js'
+import { isString, isNonEmptyString } from '../check-types.js'
+import { parsePlistBuffer } from './parsers/plist.js'
+import { extractMachoMeta } from './parsers/macho.js'
 
 // https://gildas-lormeau.github.io/zip.js/core-api.html#configuration
 zip.configure({
