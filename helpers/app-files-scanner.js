@@ -629,6 +629,8 @@ export default class AppFilesScanner {
 
                     console.log('scan', scan)
 
+                    clearTimeout(timer)
+
                     resolve()
                     return
                 }
