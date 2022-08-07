@@ -29,7 +29,9 @@ self.onmessage = async ( event ) => {
 
         self.postMessage( {
             status: 'finished',
-            scan
+            // Convert App Scan instance to a more primitive Object
+            // so that it's clonneable for our worker
+            scan: JSON.parse(JSON.stringify( scan ))
         })
 
         return
