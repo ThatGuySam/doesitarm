@@ -13,9 +13,11 @@ self.onmessage = async ( event ) => {
     if ( status === 'start' ) {
         // Get Scan Options
         const { options } = event.data
+
         // console.log( 'options', options )
+
         const scan = new AppScan({
-            ...options,
+            fileLoader: () => options.file,
             // Use self.postMessage as the message callback
             messageReceiver: ( message ) => {
                 self.postMessage( message )

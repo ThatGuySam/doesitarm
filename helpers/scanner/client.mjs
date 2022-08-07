@@ -5,6 +5,8 @@ export async function runScanWorker ( file ) {
 
     const appScanWorker = new AppScanWorker()
 
+    const fileArrayBuffer = ( typeof file.arrayBuffer === 'function' ) ? (await file.arrayBuffer()) : file.arrayBuffer
+
     const scan = await new Promise( ( resolve, reject ) => {
         // Set up the worker message handler
         appScanWorker.onmessage = async (event) => {
@@ -30,15 +32,20 @@ export async function runScanWorker ( file ) {
         appScanWorker.postMessage( {
             status: 'start',
             options: {
-                fileLoader: () => ({
+                file: {
                     ...file,
-                    arrayBuffer: file.arrayBuffer
-                }),
-                messageReceiver: ( details ) => {
-                    console.log( 'Scan message:', details )
+                    // We put it into an array
+                    // so that it's iterable for Blob
+                    arrayBuffer: [ fileArrayBuffer ]
                 }
             }
-        }, [ file.arrayBuffer ] )
+        }, [
+            // This array is our transferrable objects
+            // so that the App Scan Worker is allowed
+            // to use existing data from the main thread
+            // and we don't have to clone the data from scratch
+            fileArrayBuffer
+        ] )
     })
 
     return {
