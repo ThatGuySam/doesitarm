@@ -103,7 +103,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [Flutter](https://flutter.dev/docs/get-started/install/macos) - ✳️ Yes, works via Rosetta 2 with native support in development - [Github Issue](https://github.com/flutter/flutter/issues/60118#issuecomment-695341296)
 * [Flycut](https://apps.apple.com/us/app/flycut-clipboard-manager/id442160987?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://github.com/TermiT/Flycut/releases/tag/1.9.6)
 * [Fork](https://git-fork.com/) - ✅ Yes, full native support as of v2.1.0 - [Release notes](https://git-fork.com/releasenotes)
-* [ForkLift](https://binarynights.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/455#issuecomment-755042429)
+* [ForkLift](https://binarynights.com/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/455#issuecomment-1027795207)
 * [GCC ARM Embedded](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/105#issuecomment-841834514)
 * [Genymotion](https://www.genymotion.com/download/) - 🚫 No, not yet supported only works on Intel-based Macs - [Official Article](https://support.genymotion.com/hc/en-us/articles/360017897157?input_string=genymotion+may+cannot+run+on+mac+m1+chips) 
 * [Git Version Control](https://git-scm.com/download/mac) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/54#issuecomment-730568063)
