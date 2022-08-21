@@ -132,6 +132,9 @@ export class AppScan {
 
                     resolve( entries )
                 })
+                .catch( error => {
+                    reject( error )
+                })
 
         })
     }
