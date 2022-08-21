@@ -1,6 +1,6 @@
 import { AppScan } from './scan.mjs'
 
-self.onmessage = async ( event ) => {
+self.onmessage = ( event ) => {
 
     console.log( 'Worker received message', event )
 
@@ -24,15 +24,15 @@ self.onmessage = async ( event ) => {
             }
         })
 
-        await scan.start()
-
-
-        self.postMessage( {
-            status: 'finished',
-            // Convert App Scan instance to a more primitive Object
-            // so that it's clonneable for our worker
-            scan: JSON.parse(JSON.stringify( scan ))
-        })
+        scan.start()
+            .then( () => {
+                self.postMessage( {
+                    status: 'finished',
+                    // Convert App Scan instance to a more primitive Object
+                    // so that it's clonneable for our worker
+                    scan: JSON.parse(JSON.stringify( scan ))
+                })
+            })
 
         return
     }
