@@ -143,19 +143,13 @@ export class AppScan {
 
     async readFileBlob ( FileInstance ) {
         return new Promise( async ( resolve, reject ) => {
-            // Check if file is a Blob, typically in the Browser
-            // otherwise convert it to a Blob, like in Node
-            // Both Browser and Node have Blob
-            // Node/Our File Polyfill references .arrayBuffer as a property
-            // Browser currently references .arrayBuffer as an async method
-            const FileBlob = FileInstance instanceof Blob ? FileInstance : new Blob( FileInstance.arrayBuffer )
 
-            // console.log( 'FileBlob', FileBlob )
+            console.log( 'FileInstance', FileInstance )
 
-            const fileReader = new zip.BlobReader( FileBlob )
+            const binaryReader = this.getZipFileReader( FileInstance ) //new zip.BlobReader( FileBlob )
 
             // https://gildas-lormeau.github.io/zip.js/core-api.html#zip-reading
-            const zipReader = new zip.ZipReader( fileReader )
+            const zipReader = new zip.ZipReader( binaryReader )
 
             zipReader
                 .getEntries()
