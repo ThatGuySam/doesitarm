@@ -1,13 +1,10 @@
+import axios from 'axios'
 
+;(async () => {
 
-const rootThis = this
+    const { data } = await axios.get(`https://master--doesitarm.netlify.app/apple-silicon-app-test`)
 
-;(async function () {
-    console.log( 'process.env', process.env )
-    console.log( 'global', global )
-    console.log( 'globalThis', globalThis )
-
-    console.log( 'rootThis', rootThis )
+    console.log( data.slice(0, 100) )
 
     process.exit()
 })()
