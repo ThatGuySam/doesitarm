@@ -103,6 +103,24 @@ export class AppScan {
         )
     }
 
+    async loadFile () {
+        // If fileLoader is no a function
+        // then try to load the file
+        if ( typeof( this.fileLoader ) !== 'function' ) {
+            return this.fileLoader
+        }
+
+        const file = this.fileLoader()
+
+        // Check if our file is a Promise
+        // if it is then await it
+        if ( file instanceof Promise || typeof file?.then === 'function' ) {
+            return await file
+        }
+
+        return file
+    }
+
 
     async readFileBlob ( FileInstance ) {
         return new Promise( async ( resolve, reject ) => {
