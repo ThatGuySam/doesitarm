@@ -17,7 +17,7 @@ self.onmessage = ( event ) => {
         // console.log( 'options', options )
 
         const scan = new AppScan({
-            fileLoader: () => options.file,
+            fileLoader: options.file,
             // Use self.postMessage as the message callback
             messageReceiver: ( details ) => {
                 self.postMessage( details )
