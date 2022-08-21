@@ -121,6 +121,25 @@ export class AppScan {
         return file
     }
 
+    getZipFileReader ( FileInstance ) {
+        // Check if file is a Blob, typically in the Browser
+        // otherwise convert it to a Blob, like in Node
+        // Both Browser and Node have Blob
+        // Node/Our File Polyfill references .arrayBuffer as a property
+        // Browser currently references .arrayBuffer as an async method
+        if ( FileInstance instanceof Blob ) {
+            return new zip.BlobReader( FileInstance )
+        }
+
+        if ( FileInstance instanceof ArrayBuffer ) {
+            return new zip.Uint8ArrayReader( FileInstance )
+        }
+
+        // return new zip.Uint8ArrayReader( new Uint8Array( FileInstance.arrayBuffer ) )
+        // const FileBlob = FileInstance instanceof Blob ? FileInstance : new Blob( FileInstance.arrayBuffer )
+
+        throw new Error( 'FileInstance is not a known format' )
+    }
 
     async readFileBlob ( FileInstance ) {
         return new Promise( async ( resolve, reject ) => {
