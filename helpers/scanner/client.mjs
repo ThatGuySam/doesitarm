@@ -2,6 +2,46 @@ import AppScanWorker from './worker.mjs?worker'
 
 const noop = () => {}
 
+function getArrayBufferFromFileData ( file ) {
+    return new Promise( ( resolve, reject ) => {
+
+        // If it has a .arrayBuffer function
+        // then return that
+        // (Likely a browser File blob)
+        if ( typeof file.arrayBuffer === 'function' ) {
+            file.arrayBuffer().then( resolve )
+
+            return
+        }
+
+        // If it has a truthy .arrayBuffer property
+        // then return that
+        // (Likely a node File object)
+        if ( !!file?.arrayBuffer ) {
+            resolve( file.arrayBuffer )
+            return
+        }
+
+        // Assume it's a Node Buffer from fs.readFile
+
+
+        resolve( file.buffer )
+
+        // const hasFileReader = typeof FileReader !== 'undefined'
+        // const reader = hasFileReader ? new FileReader() : new FileApi.FileReader()
+
+        // reader.onerror = function onerror ( readerEvent ) {
+        //     reject( readerEvent.target.error )
+        // }
+
+        // reader.onload = function onload ( readerEvent ) {
+        //     resolve( readerEvent.target.result )
+        // }
+
+        // reader.readAsArrayBuffer( file )
+    })
+}
+
 export async function runScanWorker ( file, messageReceiver = noop ) {
     // console.log( 'file', file )
 
