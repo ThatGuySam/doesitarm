@@ -392,9 +392,14 @@ export class AppScan {
             status: 'loading'
         })
 
-        this.file = await this.fileLoader()
 
-        // console.log( 'File:', this.file )
+        this.file = await this.loadFile()
+
+        this.sendMessage({
+            message: '📚 Extracting from archive...',
+            status: 'scanning',
+            data: this.file
+        })
 
         this.bundleFileEntries = await this.readFileBlob( this.file )
 
