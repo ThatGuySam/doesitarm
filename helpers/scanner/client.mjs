@@ -14,9 +14,9 @@ export async function runScanWorker ( file, messageReceiver = noop ) {
         appScanWorker.onmessage = async (event) => {
             // console.log( 'Main received message', event )
 
-            const { status, message } = event.data
+            const { status } = event.data
 
-            messageReceiver({ status, message })
+            messageReceiver( event.data )
 
             // Resolves promise on finished status
             if ( status === 'finished' ) {

@@ -19,8 +19,8 @@ self.onmessage = async ( event ) => {
         const scan = new AppScan({
             fileLoader: () => options.file,
             // Use self.postMessage as the message callback
-            messageReceiver: ( message ) => {
-                self.postMessage( message )
+            messageReceiver: ( details ) => {
+                self.postMessage( details )
             }
         })
 

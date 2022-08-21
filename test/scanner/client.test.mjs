@@ -86,7 +86,9 @@ describe.concurrent('Apps', async () => {
         const file = await makeZipFromBundlePath( bundlePath )
 
         // Scan the app
-        const { scan } = await runScanWorker( file )
+        const { scan } = await runScanWorker( file, ( details ) => {
+            console.log( 'New message from runScanWorker:', details )
+        } )
 
 
         it( `Can read info.plist for ${ appName } bundle` , () => {
