@@ -299,7 +299,7 @@ export function FileReader () {
     function readFile(_file, format, encoding) {
         file = _file;
         if (!file || !file.name || !(file.path || file.stream || file.buffer)) {
-            throw new Error("cannot read as File: " + JSON.stringify(file));
+            throw new Error("cannot read as File: " + JSON.stringify(file).slice(0, 1000));
         }
         if (0 !== self.readyState) {
             console.log("already loading, request to change format ignored");
