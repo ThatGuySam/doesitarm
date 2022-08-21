@@ -9,6 +9,10 @@ export async function runScanWorker ( file, messageReceiver = noop ) {
 
     const fileArrayBuffer = ( typeof file.arrayBuffer === 'function' ) ? (await file.arrayBuffer()) : file.arrayBuffer
 
+    if ( !fileArrayBuffer ) {
+        throw new Error( 'No fileArrayBuffer' )
+    }
+
     const scan = await new Promise( ( resolve, reject ) => {
         // Set up the worker message handler
         appScanWorker.onmessage = async (event) => {
