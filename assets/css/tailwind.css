@@ -145,6 +145,19 @@ html {
         inset 0.75rem 0.75rem 1.75rem rgba(0, 0, 0, 0.12);
 }
 
+@media screen and (min-width: 1040px) {
+  .hover\:neumorphic-shadow-logo:hover
+    {
+      box-shadow:
+        -0.25rem -0.25rem 0.5rem rgba(255, 255, 255, 0.07),
+        0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.12),
+        -.75rem -.75rem 1.75rem rgba(255, 255, 255, 0.07),
+        0.75rem 0.75rem 1.75rem rgba(0, 0, 0, 0.12),
+        inset 8rem 8rem 8rem rgba(0, 0, 0, 0.05),
+        inset -8rem -8rem 8rem rgba(255, 255, 255, 0.05);
+    }
+}
+
 .bg-blur,
 .hover\:bg-blur:hover {
     backdrop-filter: blur(15px);
