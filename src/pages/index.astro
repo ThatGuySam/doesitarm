@@ -16,7 +16,6 @@ import Layout from '../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 // import ListSummary from '~/components/list-summary.vue'
 // import ListEndButtons from '~/components/list-end-buttons.vue'
-import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
 import CarbonInline from '~/components/carbon-inline.vue'
 
 applyResponseDefaults( Astro )
@@ -60,11 +59,6 @@ const allAppsSummary = await DoesItAPI('all-apps-summary').get()
                     class="carbon-inline-wide"
                 />
             </Search>
-
-            <AllUpdatesSubscribe
-                client:visible
-                class="my-12"
-            />
 
         </div>
     </section>
