@@ -2,10 +2,15 @@ import { createServer } from 'vite'
 import axios from 'axios'
 
 import viteConfig from '~/vite.config.mjs'
+import { isLinux } from '~/helpers/environment.js'
 
 const port = 1337
 
 ;(async () => {
+
+    // Disable on linu(server environments)
+    if ( isLinux() ) return
+
     // await scanNewAppsAsBrowser()
     // http://localhost:3000/
     const server = await createServer({
