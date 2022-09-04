@@ -1,4 +1,4 @@
-const { execSync } = require('child_process')
+import { execSync } from 'child_process' // The exec import
 
 ;(async () => {
     // scan-new-apps test-prebuild build-lists-and-api test-postbuild-api
