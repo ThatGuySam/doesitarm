@@ -250,17 +250,8 @@
                                 shadow: 'hover:neumorphic-shadow',
                                 bg: 'hover:bg-darker',
                             }"
-                        >
-                            <svg
-                                class="-scale-x-100 h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <use href="#chevron-right" />
-                            </svg>
-
-                            <span>Previous</span>
-                        </LinkButton>
+                            label="← Previous"
+                        />
 
                         <LinkButton
                             v-if="nextPageUrl"
@@ -275,17 +266,8 @@
                                 shadow: 'hover:neumorphic-shadow',
                                 bg: 'hover:bg-darker',
                             }"
-                        >
-                            <span>Next</span>
-
-                            <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <use href="#chevron-right" />
-                            </svg>
-                        </LinkButton>
+                            label="Next →"
+                        />
                     </nav>
                 </li>
             </ul>
