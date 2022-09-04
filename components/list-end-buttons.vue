@@ -5,9 +5,8 @@
             :key="i"
             :href="link.href"
             class="text-xs"
-        >
-            {{ link.label }}
-        </LinkButton>
+            :label="link.label"
+        />
     </div>
 </template>
 
