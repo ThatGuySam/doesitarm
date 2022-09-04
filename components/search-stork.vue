@@ -107,17 +107,8 @@
                             shadow: 'hover:neumorphic-shadow',
                             bg: 'hover:bg-darker',
                         }"
-                    >
-                        <span>Search everything</span>
-
-                        <svg
-                            class="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <use href="#chevron-right" />
-                        </svg>
-                    </LinkButton>
+                        label="🌎 Search Everything"
+                    />
                 </div>
             </template>
 
