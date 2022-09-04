@@ -7,7 +7,8 @@
             :href="`https://www.youtube.com/channel/${video.channel.id}`"
 
             target="_blank"
-        >Subscribe to {{ video.channel.name }}</LinkButton>
+            :label="`🔔 Subscribe to ${ video.channel.name }`"
+        />
     </div>
 </template>
 
