@@ -65,7 +65,7 @@
     "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.5.25",
     "7z-wasm": "^1.0.0-beta.5",
-    "astro": "^1.0.0-rc.3",
+    "astro": "^1.1.5",
     "axios": "^0.21.0",
     "buffer": "^6.0.3",
     "can-autoplay": "^3.0.0",
