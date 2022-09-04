@@ -28,11 +28,11 @@ export default {
         links () {
             return [
                 {
-                    label: 'Scan Apps',
+                    label: '🧪 Scan Apps',
                     href: '/apple-silicon-app-test/'
                 },
                 {
-                    label: 'Request an App with Github',
+                    label: '🙋 Request an App with Github',
                     href: `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${ this.query }`
                 }
             ]
