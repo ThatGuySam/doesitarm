@@ -156,9 +156,8 @@
                                     bg: 'hover:bg-darker',
                                     // transition: 'transition duration-150 ease-in-out'
                                 }"
-                            >
-                                {{ link.label }}
-                            </LinkButton>
+                                :label="link.label"
+                            />
 
                             <LinkButton
                                 :href="getAppEndpoint(app)"
@@ -175,18 +174,8 @@
                                     bg: 'hover:bg-darker',
                                     // transition: 'transition duration-150 ease-in-out'
                                 }"
-                            >
-                                <span>Details</span>
-                                <client-only>
-                                    <svg
-                                        class="h-5 w-5 -mr-2"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <use href="#chevron-right" />
-                                    </svg>
-                                </client-only>
-                            </LinkButton>
+                                label="Details  ͐"
+                            />
 
                         </div>
 
