@@ -205,9 +205,8 @@
                                     bg: 'hover:bg-darker',
                                     // transition: 'transition duration-150 ease-in-out'
                                 }"
-                            >
-                                {{ link.label }}
-                            </LinkButton>
+                                :label="link.label"
+                            />
 
                             <LinkButton
                                 v-if="listing.endpoint.length"
