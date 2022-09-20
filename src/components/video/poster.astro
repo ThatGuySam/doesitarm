@@ -54,7 +54,7 @@ function makeImgAttributes ( src ) {
         { ...makeImgAttributes( images.imgSrc ) }
         alt={ video.name }
         class={ [
-            'absolute inset-0 h-full w-full object-cover',
+            'absolute inset-0 h-full w-full aspect-video object-cover',
             loading === 'lazy' ? 'lazyload' : ''
         ].join(' ') }
         width="1600"
