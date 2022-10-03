@@ -16,7 +16,7 @@ import {
 
 require('dotenv').config()
 
-const allowedTitleCharacters = new Set( 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -_.®/\()音乐体验版'.split('') )
+const allowedTitleCharacters = new Set( 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -+_.®/\()音乐体验版'.split('') )
 
 // Detect Emojis(Extended Pictograph) in string
 // https://stackoverflow.com/a/64007175/1397641
