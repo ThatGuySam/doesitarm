@@ -50,7 +50,8 @@
     "scan-new-apps": "npx vite-node scripts/scan-new-apps.js",
     "cloudflare-deploy": "npm run build-api",
     "vercel-build": "npx vite-node scripts/vercel-build.js",
-    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro test-postbuild-functions test-circular-deps"
+    "netlify-build": "run-s test-prebuild-functions download-sitemaps stork-index generate-astro test-postbuild-functions test-circular-deps",
+    "netlify-and-vercel-build": "run-s netlify-build vercel-build"
   },
   "dependencies": {
     "@astrojs/netlify": "^0.5.0",
