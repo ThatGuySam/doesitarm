@@ -724,7 +724,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Canary Mail](https://canarymail.io/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/482429/5114)
 * [Cisco Webex Meetings](https://www.webex.com/downloads.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/530#issue-790322821)
 * [Discord](https://discord.com/download) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/907#issue-1172957710)
-* [Facebook Messenger Desktop](https://www.messenger.com/desktop) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/520)
+* [Facebook Messenger Desktop](https://www.messenger.com/desktop) - ✅ Yes, Full Native Apple Silicon Support as of 158.0.0.25.216 (391336574) - [Verification](https://github.com/ThatGuySam/doesitarm/issues/520)
 * [Guilded](https://www.guilded.gg/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/781#issue-1014658498)
 * [Keybase](https://keybase.io/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/143#issuecomment-1015904302)
 * [Krisp](https://krisp.ai/) - ✅ Yes, Native Apple Silicon Support as of v1.28.7 - [Release Notes](https://whatsnew.krisp.ai/announcements/mac-1-28-7-native-support-on-m1-chip)
