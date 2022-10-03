@@ -731,7 +731,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [LINE for macOS](https://apps.apple.com/app/line/id539883307) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/690#issue-913425598)
 * [Mattermost](https://mattermost.com/download/) - ✅ Yes, Native Apple Silicon Support as of v4.7.0 - [Release Notes](https://docs.mattermost.com/install/desktop-app-changelog.html)
 * [MeetInOne](https://meetinone.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/meet-in-one)
-* [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/191#issuecomment-730561942)
+* [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software) - ✅ Yes, Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/932#issuecomment-1263220103)
 * [NetEase POPO](https://archive.fo/3hwrq) - ✅ Yes, Native Apple Silicon Support as of v3.25.8 - [Release Notes](https://archive.fo/0jMF4)
 * [Postbox](https://www.postbox-inc.com) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/35)
 * [QQ](https://im.qq.com/macqq/) - ✅ Yes, Full Native Apple Silicon Support as of v6.7.0.20110 - [Release Notes](https://im.qq.com/macqq/support.html)
