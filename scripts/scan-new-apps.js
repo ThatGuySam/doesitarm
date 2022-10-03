@@ -8,7 +8,7 @@ const port = 1337
 
 ;(async () => {
 
-    // Disable on linu(server environments)
+    // Disable on linux (server environments)
     if ( isLinux() ) return
 
     // await scanNewAppsAsBrowser()
