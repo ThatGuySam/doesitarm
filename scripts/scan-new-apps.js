@@ -8,6 +8,8 @@ const port = 1337
 
 ;(async () => {
 
+    console.log( 'Scan Process Port:', process.env.PORT )
+
     // Disable on linux (server environments)
     if ( isLinux() ) return
 
