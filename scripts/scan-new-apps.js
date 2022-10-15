@@ -6,12 +6,13 @@ import { isLinux } from '~/helpers/environment.js'
 
 const port = 1337
 
+// Example: doesitarm-cif09horl-samcarltoncreative.vercel.app
+const vercelUrl = process.env.VERCEL_URL
+
 ;(async () => {
 
-    console.log( 'process.env.VERCEL_URL:', process.env.VERCEL_URL )
-
     // Disable on linux (server environments)
-    if ( isLinux() ) return
+    // if ( isLinux() ) return
 
     // await scanNewAppsAsBrowser()
     // http://localhost:3000/
@@ -24,9 +25,9 @@ const port = 1337
 
     await server.listen();
 
-    console.log(`Server listening on http://localhost:${ port }/`)
+    console.log(`Server listening on https://${ vercelUrl }:${ port }/`)
 
-    const { data } = await axios.get(`http://localhost:${ port }/`)
+    const { data } = await axios.get(`http://${ vercelUrl }:${ port }/`)
 
     console.log( data.slice(0, 100) )
 
