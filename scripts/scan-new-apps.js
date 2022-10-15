@@ -8,7 +8,7 @@ const port = 1337
 
 ;(async () => {
 
-    console.log( 'Scan Process Port:', process.env.PORT )
+    console.log( 'process.env.VERCEL_URL:', process.env.VERCEL_URL )
 
     // Disable on linux (server environments)
     if ( isLinux() ) return
