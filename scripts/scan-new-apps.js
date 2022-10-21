@@ -12,7 +12,7 @@ const vercelUrl = process.env.VERCEL_URL
 ;(async () => {
 
     // Disable on linux (server environments)
-    // if ( isLinux() ) return
+    if ( isLinux() ) return
 
     // await scanNewAppsAsBrowser()
     // http://localhost:3000/
