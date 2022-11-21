@@ -182,6 +182,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Robo 3T (formerly Robomongo)](https://robomongo.org/download) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/175#issuecomment-782071460)
 * [Royal TSX](https://www.royalapps.com/ts/mac/features) - ✅ Yes, Native Apple Silicon Support as of v5.0.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/523#issuecomment-869325607)
 * [RubyMine](https://www.jetbrains.com/ruby/download/#section=mac) - ✅ Yes, full native support as of v2020.3.1
+* [RunJS](https://runjs.app) - ✅ Yes, Native Apple Silicon Support as of v1.14.0
 * [Rust](https://www.rust-lang.org/) - ✅ Yes, full native support (Tier 2) as of v1.49 - [Issue](https://github.com/rust-lang/rust/issues/73908#issue-648613557) [Official Blog Post](https://blog.rust-lang.org/2020/12/31/Rust-1.49.0.html)
 * [Sequel Ace](https://github.com/Sequel-Ace/Sequel-Ace/releases) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.1 - [Release Notes](https://github.com/Sequel-Ace/Sequel-Ace/releases/tag/production%2F3.0.1-3008)
 * [ShellCheck](https://github.com/koalaman/shellcheck/releases) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/693#issue-916004182)
