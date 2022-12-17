@@ -72,7 +72,7 @@ body:
   attributes:
     label: Full Screenshot with the App and Activity Monitor(if self reporting) or [Silicon Info](https://github.com/billycastelli/Silicon-Info)
     description: |
-      A screenshot with Activity Monitor open showing the App's architecture type. Example: #358
+      A screenshot with Activity Monitor open showing the App's architecture type. Example: [Issue #358](https://github.com/ThatGuySam/doesitarm/issues/358)
 
       Tip: You can attach images clicking this area to highlight it and then dragging files in.
 - type: textarea
