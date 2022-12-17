@@ -562,6 +562,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Keep It](https://reinventedsoftware.com/keepit/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9 - [Official News](https://reinventedsoftware.com/news/)
 * [Key Codes](https://manytricks.com/keycodes/) - ✅ Yes, Full Native Apple Silicon Support as of v2.2 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Lacona](https://lacona.app/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344402/5114)
+* [Later](https://getlater.app/) - ✅ Yes, Native Apple Silicon Support - [Verfication](https://github.com/ThatGuySam/doesitarm/issues/971)
 * [LaunchBar](https://www.obdev.at/products/launchbar/download.html) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/320)
 * [Ledger Live](https://www.ledger.com/ledger-live/download) - ✳️ Yes, works via Rosetta 2 with native support in development - [Source](https://github.com/ThatGuySam/doesitarm/pull/396)
 * [LibreOffice](https://www.libreoffice.org/download/download/) - ✅ Yes, Native Apple Silicon Support as of v7.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/730#issue-952018353) [Release Notes](https://www.libreoffice.org/download/release-notes/) [Official Post](https://www.collaboraoffice.com/desktop/update-on-libreoffice-support-for-arm-based-macs/)
