@@ -70,11 +70,12 @@ body:
 - type: textarea
   id: verification-screenshots
   attributes:
-    label: Full Screenshot with the App and Activity Monitor(if self reporting) or [Silicon Info](https://github.com/billycastelli/Silicon-Info)
+    label: Full Screenshot with the App and Activity Monitor(if self reporting) or Silicon Info
     description: |
       A screenshot with Activity Monitor open showing the App's architecture type. Example: [Issue #358](https://github.com/ThatGuySam/doesitarm/issues/358)
 
       Tip: You can attach images clicking this area to highlight it and then dragging files in.
+      [Get Silicon Info](https://github.com/billycastelli/Silicon-Info)
 - type: textarea
   id: additional-context
   attributes:
