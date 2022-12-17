@@ -9,10 +9,12 @@ const port = 1337
 // Example: doesitarm-cif09horl-samcarltoncreative.vercel.app
 const vercelUrl = process.env.VERCEL_URL
 
+const runScans = false
+
 ;(async () => {
 
     // Disable on linux (server environments)
-    if ( isLinux() ) return
+    if ( runScans && isLinux() ) return
 
     // await scanNewAppsAsBrowser()
     // http://localhost:3000/
