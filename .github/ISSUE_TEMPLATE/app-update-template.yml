@@ -1,38 +1,75 @@
----
-name: App Update Template
-about: Report an update to an existing app
-title: ''
-labels: App Update
-assignees: ''
+# Check for errors at https://github.com/ThatGuySam/doesitarm/blob/master/.github/ISSUE_TEMPLATE/app-update-template.yml
+name: "App Update Template"
+description: Report an update to an existing app on the site
+labels: ["App Update"]
+body:
+- type: markdown
+  attributes:
+    value: |
+      ### Before you start
 
----
+      Check out [Issue #358](https://github.com/ThatGuySam/doesitarm/issues/358) for a great issue example
 
+      ### Issue etiquette
 
-Replace each second line your own text. 
+      When opening an issue, please:
+      - Check for an [existing issue](https://github.com/ThatGuySam/doesitarm/issues) first. If someone else has opened an issue describing the same problem, please upvote their issue rather than creating another one.
+      - Provide as much detail as possible. The more detail you are able to provide, the better!
+      - Write issues primarily in English.
+      ---
+- type: textarea
+  id: app-name
+  attributes:
+    label: The official name of the app
+    description: What is the name of the app as seen on the App website or official page?
+  validations:
+    required: true
+- type: dropdown
+  id: stable-support
+  attributes:
+    label: Is there a supported version available on a stable release channel?
+    options:
+      - "Yes"
+      - "No"
+  validations:
+    required: true
+- type: textarea
+  id: proposed-status
+  attributes:
+    label: Proposed App Status
+    description: |
+      What's the current app status based off of current discussion or testing?
+      You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
+  validations:
+    required: true
+- type: textarea
+  id: links
+  attributes:
+    label: Related Issue Tracker Links or discussion
+    description: |
+      This can be an Issue from a public repo related to the app (Github, Bitbucket, Gitlab, etc...) or a public discussion forum of some kind.
+      Basically, some kind of resources that can be checked for status changes to verify our status or report that it's out of date.
+  validations:
+    required: true
+- type: textarea
+  id: download-link
+  attributes:
+    label: An Official App Download Page
+    description: |
+      This is so that when the App is ready for Apple Silicon users can quickly download the app
+      and be confident that they are downloading from an official source.
+- type: textarea
+  id: verification-screenshots
+  attributes:
+    label: Full Screenshot with the App and Activity Monitor(if self reporting) or Silicon Info
+    description: |
+      A screenshot with Activity Monitor open showing the App's architecture type. Example: [Issue #358](https://github.com/ThatGuySam/doesitarm/issues/358)
 
-
-**The official name of the app**
-What's the full official name of the app? 
-
-**Is there a supported version available on a stable release channel?**
-Yes or No
-
-**Proposed New App Status**
-What's the current app status based off of current discussion or testing
-You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
-
-**Related Issue Tracker Links or discussion**
-This can be an Issue from a public repo related to the app (Github, Bitbucket, Gitlab, etc...) or a public discussion forum of some kind. Basically, some kind of resources that can be checked for status changes. 
-
-**An Official App Download Page**
-This is so that when the App is ready for Apple SIlicon users can quickly download the app from an official site. 
-
-**Additional context**
-Add any other context or screenshots about the app request here. 
-
-
-**Full Screenshot with the App and Activity Monitor(if self reporting) or [Silicon Info](https://github.com/billycastelli/Silicon-Info)**
-As screenshot with Activity Monitor open showing the App's architecture type. 
-
-
-
+      Tip: You can attach images clicking this area to highlight it and then dragging files in.
+      [Get Silicon Info](https://github.com/billycastelli/Silicon-Info)
+- type: textarea
+  id: additional-context
+  attributes:
+    label: Additional Context
+    description: |
+      Links? References? More Screenshots? Anything that will give us more context about the App!
