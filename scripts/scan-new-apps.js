@@ -14,7 +14,7 @@ const runScans = false
 ;(async () => {
 
     // Disable on linux (server environments)
-    if ( runScans && isLinux() ) return
+    if ( !runScans && isLinux() ) return
 
     // await scanNewAppsAsBrowser()
     // http://localhost:3000/
