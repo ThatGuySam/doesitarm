@@ -20,7 +20,8 @@ body:
 - type: textarea
   id: app-name
   attributes:
-    label: What is The name of the app as seen on the App website or official page?
+    label: The official name of the app
+    description: What is the name of the app as seen on the App website or official page?
   validations:
     required: true
 - type: dropdown
