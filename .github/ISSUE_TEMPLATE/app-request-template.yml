@@ -22,16 +22,16 @@ body:
   attributes:
     label: What is The name of the app as seen on the App website or official page?
   validations:
-    required: true
+    required: "true"
 - type: dropdown
   id: stable-support
   attributes:
     label: Is there a supported version available on a stable release channel?
     options:
-      - Yes
-      - No
+      - "Yes"
+      - "No"
   validations:
-    required: true
+    required: "true"
 - type: textarea
   id: proposed-status
   attributes:
@@ -40,7 +40,7 @@ body:
       What's the current app status based off of current discussion or testing?
       You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
   validations:
-    required: true
+    required: "true"
 - type: textarea
   id: proposed-category
   attributes:
@@ -49,7 +49,7 @@ body:
       What category should the app go under?
       Try to avoid the generic categories of Productivity unless no other category fits.
   validations:
-      required: true
+      required: "true"
 - type: textarea
   id: links
   attributes:
@@ -58,7 +58,7 @@ body:
       This can be an Issue from a public repo related to the app (Github, Bitbucket, Gitlab, etc...) or a public discussion forum of some kind.
       Basically, some kind of resources that can be checked for status changes to verify our status or report that it's out of date.
   validations:
-    required: true
+    required: "true"
 - type: textarea
   id: download-link
   attributes:
