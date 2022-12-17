@@ -1,4 +1,5 @@
 # Check for errors at https://github.com/ThatGuySam/doesitarm/blob/master/.github/ISSUE_TEMPLATE/app-update-template.yml
+# Issue Forms Reference - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
 name: "App Update Template"
 description: Report an update to an existing app on the site
 labels: ["App Update"]
