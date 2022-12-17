@@ -5,18 +5,7 @@ labels: ["New App Request"]
 body:
     - type: markdown
         attributes:
-            value: |
-                ### Before you start
-
-                Check out #358 for a great issue example
-
-                ### Issue etiquette
-
-                When opening an issue, please:
-                - Check for an [existing issue](https://github.com/ThatGuySam/doesitarm/issues) first. If someone else has opened an issue describing the same problem, please upvote their issue rather than creating another one.
-                - Provide as much detail as possible. The more detail you are able to provide, the better!
-                - Write issues primarily in English.
-                ---
+            value: Test
     - type: textarea
         id: app-name
         attributes:
