@@ -37,7 +37,7 @@ body:
   id: proposed-status
   attributes:
     label: Proposed App Status
-    desciption: |
+    description: |
       What's the current app status based off of current discussion or testing?
       You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
   validations:
@@ -46,7 +46,7 @@ body:
   id: proposed-category
   attributes:
     label: Proposed App Category
-    desciption: |
+    description: |
       What category should the app go under?
       Try to avoid the generic categories of Productivity unless no other category fits.
   validations:
@@ -55,7 +55,7 @@ body:
   id: links
   attributes:
     label: Related Issue Tracker Links or discussion
-    desciption: |
+    description: |
       This can be an Issue from a public repo related to the app (Github, Bitbucket, Gitlab, etc...) or a public discussion forum of some kind.
       Basically, some kind of resources that can be checked for status changes to verify our status or report that it's out of date.
   validations:
@@ -64,14 +64,14 @@ body:
   id: download-link
   attributes:
     label: An Official App Download Page
-    desciption: |
+    description: |
       This is so that when the App is ready for Apple Silicon users can quickly download the app
       and be confident that they are downloading from an official source.
 - type: textarea
   id: verification-screenshots
   attributes:
     label: Full Screenshot with the App and Activity Monitor(if self reporting) or [Silicon Info](https://github.com/billycastelli/Silicon-Info)
-    desciption: |
+    description: |
       A screenshot with Activity Monitor open showing the App's architecture type. Example: #358
 
       Tip: You can attach images clicking this area to highlight it and then dragging files in.
@@ -79,5 +79,5 @@ body:
   id: additional-context
   attributes:
     label: Additional Context
-    desciption: |
+    description: |
       Links? References? More Screenshots? Anything that will give us more context about the App!
