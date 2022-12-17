@@ -620,6 +620,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Remotix](https://remotix.com/downloads-mac/) - ✅ Yes, fully supported as of v6.3 - [Release Notes](https://downloads.remotix.com/remotix-mac/release-notes.html?v=6.3)
 * [RingCentral](https://apps.apple.com/us/app/id715886894) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/251#issuecomment-736105390)
 * [Safari Web Browser](https://www.apple.com/safari/) - ✅ Yes, fully supported
+* [Schedulist](https://www.schedulist.app/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/993)
 * [ScreenFloat](https://eternalstorms.at/ScreenFloat/) - ✅ Yes, Full Native Apple Silicon Support as of v1.5.18 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Screens for macOS](https://edovia.com/en/screens-mac/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344456/5114)
 * [SeaDrive](https://www.seafile.com/en/download/) - ✳️ Yes, works via Rosetta 2 as of v2.0.10 - [Source](https://forum.seafile.com/t/seadrive-2-0-8-is-released-support-for-macos-11/13199/25)
