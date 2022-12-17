@@ -67,6 +67,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [App Preview Video Converter](https://apps.apple.com/us/app/app-preview-video-converter/id1137451860) - ✅ Yes, full native support as of v1.7.4 - [Release Notes](https://www.bridgetech.io)
 * [AppCode](https://www.jetbrains.com/objc/download/) - ✅ Yes, Native Apple Silicon Support as of v2020.3.1 - [Release Notes](https://blog.jetbrains.com/objc/2021/01/appcode-2020-3-1/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/687#issue-913066017)
 * [Apple Transporter](https://apps.apple.com/app/transporter/id1450874784?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.1
+* [Aptakube](https://aptakube.com/) - ✅ Yes, Native Apple Silicon Support
 * [Aptana Studio](https://github.com/aptana/studio3/releases) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/16#issuecomment-869452511)
 * [Arduino IDE](https://www.arduino.cc/en/software) - ✳️ Reported working via Rosetta with native support currently in development - [Issue](https://github.com/arduino/Arduino/issues/10836)
 * [Asset Catalog Creator](https://apps.apple.com/us/app/asset-catalog-creator-pro/id809625456) - ✅ Yes, full native support as of v3.7.4 - [Release Notes](https://www.bridgetech.io) [View on Setapp](https://setapp.sjv.io/c/2708043/905851/5114)
