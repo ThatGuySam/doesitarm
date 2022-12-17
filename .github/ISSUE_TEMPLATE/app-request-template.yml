@@ -5,80 +5,81 @@ labels: ["New App Request"]
 body:
     - type: markdown
         attributes:
-        value: |
-            ### Before you start
+            value: |
+                ### Before you start
 
-            Check out #358 for a great issue example
+                Check out #358 for a great issue example
 
-            ### Issue etiquette
+                ### Issue etiquette
 
-            When opening an issue, please:
-            - Check for an [existing issue](https://github.com/ThatGuySam/doesitarm/issues) first. If someone else has opened an issue describing the same problem, please upvote their issue rather than creating another one.
-            - Provide as much detail as possible. The more detail you are able to provide, the better!
-            - Write issues primarily in English.
-  - type: textarea
-    id: app-name
-    attributes:
-      label: What is The name of the app as seen on the App website or official page?
-    validations:
-      required: true
-  - type: dropdown
-    id: stable-support
-    attributes:
-      label: Is there a supported version available on a stable release channel?
-      options:
-        - Yes
-        - No
-    validations:
-      required: true
-  - type: textarea
-    id: proposed-status
-    attributes:
-      label: Proposed App Status
-      desciption: |
-        What's the current app status based off of current discussion or testing?
-        You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
-    validations:
-      required: true
-  - type: textarea
-    id: proposed-category
-    attributes:
-      label: Proposed App Category
-      desciption: |
-        What category should the app go under?
-        Try to avoid the generic categories of Productivity unless no other category fits.
-    validations:
-      required: true
-  - type: textarea
-    id: links
-    attributes:
-      label: Related Issue Tracker Links or discussion
-      desciption: |
-        This can be an Issue from a public repo related to the app (Github, Bitbucket, Gitlab, etc...) or a public discussion forum of some kind.
-        Basically, some kind of resources that can be checked for status changes to verify our status or report that it's out of date.
-    validations:
-      required: true
-  - type: textarea
-    id: download-link
-    attributes:
-      label: An Official App Download Page
-      desciption: |
-        This is so that when the App is ready for Apple Silicon users can quickly download the app
-        and be confident that they are downloading from an official source.
-  - type: textarea
-    id: verification-screenshots
-    attributes:
-      label: Full Screenshot with the App and Activity Monitor(if self reporting) or [Silicon Info](https://github.com/billycastelli/Silicon-Info)
-      desciption: |
-        A screenshot with Activity Monitor open showing the App's architecture type. Example: #358
+                When opening an issue, please:
+                - Check for an [existing issue](https://github.com/ThatGuySam/doesitarm/issues) first. If someone else has opened an issue describing the same problem, please upvote their issue rather than creating another one.
+                - Provide as much detail as possible. The more detail you are able to provide, the better!
+                - Write issues primarily in English.
+                ---
+    - type: textarea
+        id: app-name
+        attributes:
+            label: What is The name of the app as seen on the App website or official page?
+        validations:
+            required: true
+    - type: dropdown
+        id: stable-support
+        attributes:
+            label: Is there a supported version available on a stable release channel?
+            options:
+                - Yes
+                - No
+        validations:
+            required: true
+    - type: textarea
+        id: proposed-status
+        attributes:
+            label: Proposed App Status
+            desciption: |
+                What's the current app status based off of current discussion or testing?
+                You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
+        validations:
+            required: true
+    - type: textarea
+        id: proposed-category
+        attributes:
+            label: Proposed App Category
+            desciption: |
+                What category should the app go under?
+                Try to avoid the generic categories of Productivity unless no other category fits.
+        validations:
+            required: true
+    - type: textarea
+        id: links
+        attributes:
+            label: Related Issue Tracker Links or discussion
+            desciption: |
+            This can be an Issue from a public repo related to the app (Github, Bitbucket, Gitlab, etc...) or a public discussion forum of some kind.
+            Basically, some kind of resources that can be checked for status changes to verify our status or report that it's out of date.
+        validations:
+            required: true
+    - type: textarea
+        id: download-link
+        attributes:
+            label: An Official App Download Page
+            desciption: |
+                This is so that when the App is ready for Apple Silicon users can quickly download the app
+                and be confident that they are downloading from an official source.
+    - type: textarea
+        id: verification-screenshots
+        attributes:
+            label: Full Screenshot with the App and Activity Monitor(if self reporting) or [Silicon Info](https://github.com/billycastelli/Silicon-Info)
+            desciption: |
+                A screenshot with Activity Monitor open showing the App's architecture type. Example: #358
 
-        Tip: You can attach images clicking this area to highlight it and then dragging files in.
-  - type: textarea
-    id: additional-context
-    attributes:
-      label: Additional Context
-      desciption: |
-        Links? References? More Screenshots? Anything that will give us more context about the App!
+                Tip: You can attach images clicking this area to highlight it and then dragging files in.
+    - type: textarea
+        id: additional-context
+        attributes:
+            label: Additional Context
+            desciption: |
+                Links? References? More Screenshots? Anything that will give us more context about the App!
 
 
 
