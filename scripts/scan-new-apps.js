@@ -28,6 +28,9 @@ const vercelUrl = process.env.VERCEL_URL
     console.log(`Server listening on https://${ vercelUrl }:${ port }/`)
 
     const { data } = await axios.get(`http://${ vercelUrl }:${ port }/`)
+        .catch( err => {
+            console.log( 'err', err )
+        })
 
     console.log( data.slice(0, 100) )
 
