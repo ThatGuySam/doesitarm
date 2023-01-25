@@ -616,7 +616,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [qBittorrent](https://www.qbittorrent.org/) - ✳️ Yes, runs via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/595#issue-830367382) [Native Issue](https://github.com/qbittorrent/qBittorrent/issues/14379)
 * [qpdf](https://github.com/qpdf/qpdf/releases) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://qpdf.readthedocs.io/en/stable/release-notes.html) [Project on sourceforge](https://sourceforge.net/projects/qpdf/files/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/813)
 * [QuickPresent App](https://www.quickpresent.app) - ✅ Yes, Full Native Apple Silicon Support 
-* [Quiet](https://lighthouse16.com/quiet/) - ✅ Yes, fully supported as of v2.6.7 - [Source](https://lighthouse16.com/journal/apple-silicon-support/)
+* [Quiet](https://5am.is/quiet/) - ✅ Yes, fully supported as of v2.6.7 - [Source](https://5am.is/writings/2020/apple-silicon-support/)
 * [Receipts for Mac](https://www.receipts-app.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/635278/5114)
 * [Reeder](https://reederapp.com/) - ✅ Yes, Native Apple Silicon Support - [Report #1](https://github.com/ThatGuySam/doesitarm/issues/674#issue-899215422)
 * [Remotix](https://remotix.com/downloads-mac/) - ✅ Yes, fully supported as of v6.3 - [Release Notes](https://downloads.remotix.com/remotix-mac/release-notes.html?v=6.3)
