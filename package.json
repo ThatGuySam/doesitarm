@@ -96,6 +96,7 @@
     "memoize-getters": "^1.1.0",
     "node-html-parser": "^2.0.0",
     "observe-element-in-viewport": "0.0.15",
+    "ofetch": "^1.0.0",
     "plist": "^3.0.1",
     "pretty-bytes": "^5.5.0",
     "rollup-plugin-node-polyfills": "^0.2.1",
