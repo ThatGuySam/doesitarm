@@ -2,7 +2,7 @@ import { config } from '~/package.json'
 
 
 export const storkOptions = config.stork
-export const storkVersion = '2.0.0-beta.1'
+export const storkVersion = '1.6.0'
 
 // Stork 2.0
 // export const storkVersion = '2.0.0-beta.1'
