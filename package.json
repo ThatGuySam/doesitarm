@@ -54,9 +54,9 @@
     "netlify-and-vercel-build": "run-s netlify-build vercel-build"
   },
   "dependencies": {
-    "@astrojs/netlify": "^0.5.0",
-    "@astrojs/partytown": "^0.1.4",
-    "@astrojs/vue": "^1.0.0",
+    "@astrojs/netlify": "^2.1.2",
+    "@astrojs/partytown": "^1.0.3",
+    "@astrojs/vue": "^2.0.1",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@fontsource/inter": "^4.0.1",
@@ -66,7 +66,7 @@
     "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.5.25",
     "7z-wasm": "^1.0.0-beta.5",
-    "astro": "^1.1.5",
+    "astro": "^2.0.10",
     "axios": "^0.21.0",
     "buffer": "^6.0.3",
     "can-autoplay": "^3.0.0",
@@ -112,8 +112,8 @@
     "zip-lib": "^0.7.3"
   },
   "devDependencies": {
-    "@astrojs/sitemap": "^0.1.0",
-    "@astrojs/tailwind": "^0.2.0",
+    "@astrojs/sitemap": "^1.0.1",
+    "@astrojs/tailwind": "^3.0.1",
     "@vitest/web-worker": "^0.20.3",
     "autoprefixer": "^10.0.2",
     "ava": "^3.15.0",
@@ -132,7 +132,7 @@
     "postcss-cli": "^8.3.1",
     "replace-css-url": "^1.2.6",
     "structured-data-testing-tool": "^4.5.0",
-    "tailwindcss": "^1.9.6",
+    "tailwindcss": "^3.2.6",
     "tsconfig-paths": "^3.14.1",
     "vite-tsconfig-paths": "^3.5.0",
     "vitest": "^0.18.1"
