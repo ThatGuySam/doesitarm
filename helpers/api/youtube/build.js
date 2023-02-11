@@ -162,6 +162,8 @@ async function getYouTubeVideos ( options = {} ) {
 
 
 export async function saveYouTubeVideos () {
+    // We'll need to lean up this function to work with 10k API Requests
+    // before we can use it again
     // const youtubeVideos = await getYouTubeVideos()
 
     // Locked previously sucessful YouTube API data for now
