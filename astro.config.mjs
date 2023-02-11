@@ -20,7 +20,7 @@ console.log( 'Running Astro Config File' )
 export default defineConfig({
     output: 'server',
     publicDir: './static',
-    site: 'https://doesitarm.com',
+    site: 'https://doesitarm.com/',
     adapter: netlify({
         dist: new URL('./dist/', import.meta.url)
     }),
