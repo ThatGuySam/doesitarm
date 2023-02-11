@@ -18,6 +18,8 @@ import Search from '~/components/search-stork.vue'
 // import ListEndButtons from '~/components/list-end-buttons.vue'
 import CarbonInline from '~/components/carbon-inline.vue'
 
+export const prerender = true
+
 applyResponseDefaults( Astro )
 
 const homePageKindPage = await DoesItAPI.kind.app(1).get()
