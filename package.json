@@ -103,7 +103,6 @@
     "semver": "^7.3.7",
     "sitemap": "^7.1.1",
     "slugify": "^1.4.6",
-    "stork-search": "^1.0.4",
     "terser": "^4.8.0",
     "uuid": "^8.3.2",
     "vite-node": "^0.23.0",
