@@ -19,7 +19,6 @@ import Search from '~/components/search-stork.vue'
 import ThomasCredit from '~/components/thomas-credit.vue'
 import AdInline from '~/components/ad-inline.vue'
 
-
 // Get type and slug from the request path
 // so that we don't have extra parts for
 // urls like /:type/:slug/benchmarks
@@ -37,6 +36,9 @@ if ( redirectResponse !== null ) {
 }
 
 applyResponseDefaults( Astro )
+
+// Prerender page so it serves statically
+export const prerender = true
 
 const rawKindPage = await DoesItAPI.kind( 'game' )( 1 ).get()
 
