@@ -17,6 +17,10 @@ import SimpleList from '../components/simple-list.astro'
 
 applyResponseDefaults( Astro )
 
+// Prerender page so it serves statically
+export const prerender = true
+
+
 const kindIndex = await DoesItAPI.kind.index.get()
 
 const kinds = Object.values( kindIndex ).map( category => {
