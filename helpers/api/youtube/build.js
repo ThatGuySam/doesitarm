@@ -1,5 +1,6 @@
 import fs from 'fs-extra'
 import { google } from 'googleapis'
+import axios from 'axios'
 
 import { playlists, benchmarksPlaylistId } from './playlists.js'
 
@@ -161,10 +162,14 @@ async function getYouTubeVideos ( options = {} ) {
 
 
 export async function saveYouTubeVideos () {
-    //
-    const youtubeVideos = await getYouTubeVideos()
+    // We'll need to lean up this function to work with 10k API Requests
+    // before we can use it again
+    // const youtubeVideos = await getYouTubeVideos()
 
-    //
+    // Locked previously sucessful YouTube API data for now
+    const youtubeVideos = await axios( process.env.VIDEO_SOURCE )
+        .then( response => response.data )
+
 
     // Save to JSON
     await fs.outputJson( youtubeVideoPath, youtubeVideos )
