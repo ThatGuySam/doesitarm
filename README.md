@@ -132,7 +132,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [Jetpack Compose for Desktop](https://www.jetbrains.com/lp/compose/) - ✅ Yes, Full Native Apple Silicon Support - [Changelog](https://github.com/JetBrains/compose-jb/blob/a4d59048f50c96970368e884925fd59b1a31ed12/CHANGELOG.md#m2-dec-2020)
 * [Julia Language](https://julialang.org/downloads/) - ✅ Yes, Native Apple Silicon Support as of v1.7.0 Beta 3 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/734#issuecomment-891139715) [Github Issue](https://github.com/JuliaLang/julia/issues/36617)
 * [Kaleidoscope](https://kaleidoscope.app/download) - ✅ Yes, Native Apple Silicon Support as of v3.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/785) [Release Notes](https://kaleidoscope.app/release-notes)
-* [KiCad EDA](https://kicad.org/download/macos/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/199#issuecomment-736253625)
+* [KiCad EDA](https://kicad.org/download/macos/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.kicad.org/blog/2023/02/Version-7.0.0-Released/)
 * [kitty](https://github.com/kovidgoyal/kitty/releases) - ✅ Yes, Full Native Apple Silicon Support - [Github Issue](https://github.com/kovidgoyal/kitty/issues/3238)
 * [Lens Studio](https://lensstudio.snapchat.com/download/) - ✳️ Yes, works via Rosetta 2 translation - [Supported Hardware](https://lensstudio.snapchat.com/download/)
 * [LLVM Clang](https://releases.llvm.org/download.html) - ✳️ Yes, it works via Rosetta 2 - [Apple Forums](https://developer.apple.com/forums/thread/649992)
