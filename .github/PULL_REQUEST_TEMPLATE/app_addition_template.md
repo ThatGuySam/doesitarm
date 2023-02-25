@@ -13,6 +13,7 @@ _The Name of the App being added_
 - [ ] Matches Standard App Line Format. 
 - [ ] App status is clearly stated. 
 - [ ] App status is consistent with already used verbiage. 
+- [ ] Mentions supported App version in App Status (Example: `✅ Yes, Native Apple Silicon Support as of v1.2.3`)
 
 #### Standard App Line Format
 `* [App Name](https://app-download.link/) - ✅ App Status - [Relevant Link 1](https://github.com/) [Relevant Link 2](https://someforum.com/) [Verification](https://link-to-github-issue-with-screenshot)`
