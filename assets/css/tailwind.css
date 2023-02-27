@@ -63,6 +63,7 @@ html {
     box-sizing: border-box;
 
     background: #191a1d;
+    color-scheme: dark;
 
     /* height of sticky header = 80px */
     scroll-padding-top: 100px;
