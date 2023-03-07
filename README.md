@@ -681,7 +681,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Celeste](https://mattmakesgames.itch.io/celeste?ac=QWRPsg4sVvG) - ⏹ No, not yet but can be made to run with a work around - [Apple Silicon Work Around](https://github.com/AbeJellinek/celeste-on-m1) [View on Itch.io](https://mattmakesgames.itch.io/celeste?ac=QWRPsg4sVvG)
 * [Citra Emulator](https://citra-emu.org/download/) - ✳️ Yes, works via Rosetta 2 translation - [Discussion](https://community.citra-emu.org/t/citra-on-apple-m1/327198/2) [Github Issue](https://github.com/citra-emu/citra/issues/5005)
 * [Cog Player](https://cog.losno.co/download) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
-* [DeSmuME](https://desmume.org/download/) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/611#issue-840038939)
+* [DeSmuME](https://desmume.org/download/) - ✅ Yes, Native Apple Silicon Support as of v0.9.13 - [Verification](https://github.com/TASEmulators/desmume/issues/418#issuecomment-1086974738)
 * [Dolphin](https://dolphin-emu.org/download/) - ✅ Yes, Native Apple Silicon Support as of v5.0-14295 - [Pull Request](https://github.com/dolphin-emu/dolphin/pull/9441)
 * [DOSBox](https://sourceforge.net/projects/dosbox/) - ✳️ Yes, it works via Rosetta 2 - [Project Ticket 149](https://sourceforge.net/p/dosbox/feature-requests/149/)
 * [DOSBox-X](https://dosbox-x.com) - ✅ Yes, Full Native Apple Silicon Support as of 0.83.8 - [Github Release](https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8)
