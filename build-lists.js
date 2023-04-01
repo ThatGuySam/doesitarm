@@ -51,6 +51,9 @@ import {
 import {
     cliOptions
 } from '~/helpers/cli-options.js'
+import {
+    streamToJson
+} from '~/helpers/json.js'
 
 // Setup dotenv
 dotenv.config()
@@ -279,13 +282,7 @@ class BuildLists {
 
         const saveableList = saveMethod( this.lists[listOptions.name] )
 
-        // console.log('saveableList', typeof saveableList)
-
-        // Stringify one at a time to allow for large lists
-        const saveableListJSON = '[' + saveableList.map(el => JSON.stringify(el)).join(',') + ']'
-
-        // Write the list to JSON
-        await fs.writeFile(listFullPath, saveableListJSON)
+        await streamToJson( saveableList, listFullPath )
 
         return
     }
