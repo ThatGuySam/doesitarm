@@ -93,7 +93,14 @@ const ads = {
         imageAlt: 'Notion Productivity App',
         copy: 'All-in-one workspace for your notes, tasks, wikis, and databases.',
         corner: 'Ad'
-    }
+    },
+    'restream-1': {
+        url: 'https://try.restream.io/6w2w3gaz1app',
+        imageSrc: 'https://vumbnail.com/OQ9ZLWifpOg.jpg',
+        imageAlt: 'Restream Logo',
+        copy: 'Restream is the #1 live streaming platform for professionals.',
+        corner: 'Ad'
+    },
 }
 
 export default {
