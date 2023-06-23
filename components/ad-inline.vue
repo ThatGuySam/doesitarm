@@ -88,7 +88,7 @@ const ads = {
         corner: 'Ad'
     },
     'notion-1': {
-        url: ' https://affiliate.notion.so/ljj2keff2qry',
+        url: 'https://affiliate.notion.so/ljj2keff2qry',
         imageSrc: 'https://vumbnail.com/-I4JOBldajs.jpg',
         imageAlt: 'Notion Productivity App',
         copy: 'All-in-one workspace for your notes, tasks, wikis, and databases.',
