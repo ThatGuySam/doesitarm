@@ -79,6 +79,7 @@ module.exports = {
             fontFamily: {
                 primary: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
                 secondary: 'Inter, Georgia, Cambria, "Times New Roman", Times, serif',
+                emoji: 'sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
             },
             letterSpacing: {
                 wide: '0.3em',
