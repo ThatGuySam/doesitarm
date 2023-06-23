@@ -171,7 +171,7 @@
                         ]"
                         href="https://affiliate.notion.so/ljj2keff2qry"
                     >
-                        ❤️ Partner app we love: Notion
+                        <span :style="'font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'">❤️</span> Partner app we love: Notion
                     </a>
                 </div>
             </div>
