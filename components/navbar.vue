@@ -169,9 +169,9 @@
                         :class="[
                             'underline px-3 py-2 rounded-md text-xs font-medium focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out bg-black ml-4 m-1',
                         ]"
-                        href="https://prf.hn/l/daWX1vk"
+                        href="https://affiliate.notion.so/ljj2keff2qry"
                     >
-                        🅿️ Windows on ARM now works on Parallels
+                        ❤️ Partner app we love: Notion
                     </a>
                 </div>
             </div>
