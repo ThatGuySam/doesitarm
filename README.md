@@ -15,7 +15,9 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 ## Sponsors
 
 Does It ARM is an open-source project with its ongoing development made possible by the support of Affiliate Partners such as Notion. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
-[Word Faster. Automate Tedious Tasks with Notion AI](https://affiliate.notion.so/ze5500b4ciby-4y5a7)
+<br>
+<br>
+[Work Faster. Automate Tedious Tasks with Notion AI](https://affiliate.notion.so/ze5500b4ciby-4y5a7)
 
 
 
