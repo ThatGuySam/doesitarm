@@ -15,8 +15,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 ## Sponsors
 
 Does It ARM is an open-source project with its ongoing development made possible by the support of Affiliate Partners such as Notion. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
-[![Notion AI](https://github.com/ThatGuySam/doesitarm/assets/2830379/c574ec8b-1000-41b3-9c5a-2ffa646333c4)](https://affiliate.notion.so/ze5500b4ciby-4y5a7)
 
+[<img src="https://github.com/ThatGuySam/doesitarm/assets/2830379/c574ec8b-1000-41b3-9c5a-2ffa646333c4">](https://affiliate.notion.so/ze5500b4ciby-4y5a7)
 
 
 
