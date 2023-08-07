@@ -14,8 +14,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 ## Sponsors
 
-Does It ARM is an open source project with its ongoing development made possible by the support by Affiliate Partners such as WP Engine. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
-[![WP Engine Banner](https://user-images.githubusercontent.com/2830379/170784040-be37bafd-382d-4ca5-8aa5-ee82fd389e64.png)](https://shareasale.com/r.cfm?b=394686&u=1686096&m=41388&urllink=https://wpengine.com/resources/github-wordpress-integration/&afftrack=)
+Does It ARM is an open-source project with its ongoing development made possible by the support of Affiliate Partners such as Notion. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
+[<img width="1139" alt="Screenshot 2023-08-07 at 1 34 36 PM" src="https://github.com/ThatGuySam/doesitarm/assets/2830379/c574ec8b-1000-41b3-9c5a-2ffa646333c4">](https://affiliate.notion.so/ze5500b4ciby-4y5a7)
 
 
 
