@@ -54,6 +54,12 @@
   to = "/app/electron-framework"
   status = 301
 
+# Vectornater rebrand to Linearity Curve
+[[redirects]]
+  from = "/app/vectornator"
+  to = "/app/linearity-curve"
+  status = 301
+
 
 # imac redirect
 [[redirects]]
