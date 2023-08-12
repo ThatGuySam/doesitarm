@@ -45,7 +45,7 @@
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "pnpm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
-    "scan-new-apps": "npx vite-node scripts/scan-new-apps.js",
+    "scan-new-apps": "pnpm exec vite-node scripts/scan-new-apps.js",
     "cloudflare-deploy": "pnpm run build-api",
     "vercel-build": "npx vite-node scripts/vercel-build.js",
     "netlify-build:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
