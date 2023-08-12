@@ -1,6 +1,6 @@
 [build]
   publish = "dist/"
-  command = "npm run netlify-build"
+  command = "pnpm run netlify-build"
 
 
 # https://docs.netlify.com/configure-builds/file-based-configuration/#functions
