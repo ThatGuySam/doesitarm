@@ -12,7 +12,7 @@ import { execSync } from 'child_process' // The exec import
     for ( const stepScriptName of steps ) {
         console.log( `Running step: ${ stepScriptName }` )
 
-        execSync( `npm run ${ stepScriptName }`, { stdio: 'inherit' } )
+        execSync( `pnpm run ${ stepScriptName }`, { stdio: 'inherit' } )
     }
 
 
