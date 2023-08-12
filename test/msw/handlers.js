@@ -1,11 +1,10 @@
-import path from 'node:path'
 import fs from 'fs/promises'
 
 import { rest } from 'msw'
 
 export const handlers = [
     rest.get('https://mock.msw/*', async (req, res, ctx) => {
-        const { endpoint } = req.params;
+        // const { endpoint } = req.params;
         const urlPath = req.url.pathname
 
         const fileContent = await fs.readFile( `./static/${urlPath}`, 'utf8')
