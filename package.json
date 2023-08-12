@@ -20,7 +20,6 @@
     "test-prebuild": "ava ./test/prebuild/**/*.js --verbose",
     "test-api-client": "ava ./test/api/client.js --verbose",
     "test-listings": "ava ./test/listings/**/*.js --verbose",
-    "test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
     "test-postbuild-api": "pnpm test-listings",
     "test-postbuild-functions": "ava ./test/main.js --verbose",
     "test-vitest": "vitest",
@@ -38,7 +37,6 @@
     "stork-index": "pnpm setup-stork && pnpm build-stork-index",
     "download-stork-toml": "npx vite-node scripts/download-stork-toml.js",
     "download-stork-executable": "npx vite-node scripts/download-stork-executable.js",
-    "download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
     "stork-netlify": "chmod +x scripts/stork-netlify.sh && ./scripts/stork-netlify.sh",
     "dev-astro": "astro dev",
     "generate-astro": "astro build",
@@ -50,8 +48,9 @@
     "scan-new-apps": "npx vite-node scripts/scan-new-apps.js",
     "cloudflare-deploy": "pnpm run build-api",
     "vercel-build": "npx vite-node scripts/vercel-build.js",
-    "netlify-build:test-prebuild-functions": "pnpm test-prebuild-functions", 
-    "netlify-build": "pnpm run \"/^netlify-build:.*/\" && pnpm download-sitemaps && pnpm stork-index && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
+    "netlify-build:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
+    "netlify-build:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
+    "netlify-build": "pnpm run \"/^netlify-build:.*/\" && pnpm stork-index && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
   },
   "dependencies": {
