@@ -4,6 +4,7 @@
   "description": "Find out the latest app support for Apple Silicon and the Apple M2 and M1 Ultra Processors",
   "author": "Sam Carlton",
   "private": true,
+  "packageManager": "pnpm@8.6.12",
   "engines": {
     "pnpm": "^8.6.*",
     "node": ">=18",
