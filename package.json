@@ -57,7 +57,8 @@
     "vercel-build": "npx vite-node scripts/vercel-build.js",
     "netlify-prebuild:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
     "netlify-prebuild:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
-    "netlify-build": "pnpm run \"/^netlify-prebuild:.*/\" --parallel && pnpm stork-index && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
+    "netlify-prebuild": "pnpm run \"/^netlify-prebuild:.*/\" --parallel && pnpm stork-index",
+    "netlify-build": "pnpm run netlify-prebuild && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
   },
   "dependencies": {
