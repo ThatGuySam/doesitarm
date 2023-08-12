@@ -1,4 +1,4 @@
-// We keep a seperate vite config file that vite-node, vitest, and Astro can reference
+// We keep a separate vite config file that vite-node, vitest, and Astro can reference
 // so that our environment is as close as possible for all of them.
 
 // yarn add --dev @esbuild-plugins/node-globals-polyfill

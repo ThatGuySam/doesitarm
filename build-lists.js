@@ -287,7 +287,7 @@ class BuildLists {
         return
     }
 
-    // Run all listsOprions methods
+    // Run all listsOptions methods
     // and store them to this.lists
     async buildLists () {
         console.log( 'Build Lists started', cliOptions )
@@ -321,7 +321,7 @@ class BuildLists {
     getListArrayMemoized = memoize( this.getListArray.bind( this ) )
 
     makeAppsByCategory () {
-        // Intialize empty category lists
+        // Initialize empty category lists
         // so empty categories still get defined
         const emptyCategories = Object.fromEntries(
             Object.keys( categories ).map( categorySlug => [ categorySlug, [] ])

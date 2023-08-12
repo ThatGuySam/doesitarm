@@ -118,7 +118,7 @@ test('Sitemap contains no double slashes in paths', (t) => {
 test('Sitemap mostly matches production', async (t) => {
     // console.log('t.context.sitemapUrls', t.context.sitemapUrls)
 
-    const theshold = 20
+    const threshold = 20
 
     const urlsNotOnLive = new Set()
     // const newLocalUrls = new Set()
@@ -154,7 +154,7 @@ test('Sitemap mostly matches production', async (t) => {
         t.log( 'Not found locally', liveSitemapUrlStrings )
     }
 
-    if ( totalDifferences >= theshold ) {
+    if ( totalDifferences >= threshold ) {
         t.fail( message )
     }
 
