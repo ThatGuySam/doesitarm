@@ -55,9 +55,9 @@
     "scan-new-apps": "pnpm exec vite-node scripts/scan-new-apps.js",
     "cloudflare-deploy": "pnpm run build-api",
     "vercel-build": "npx vite-node scripts/vercel-build.js",
-    "netlify-build:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
-    "netlify-build:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
-    "netlify-build": "pnpm run \"/^netlify-build:.*/\" && pnpm stork-index && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
+    "netlify-prebuild:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
+    "netlify-prebuild:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
+    "netlify-build": "pnpm run \"/^netlify-prebuild:.*/\" --parallel && pnpm stork-index && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
   },
   "dependencies": {
