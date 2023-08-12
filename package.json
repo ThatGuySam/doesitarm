@@ -28,9 +28,7 @@
     "test-api-client": "ava ./test/api/client.js --verbose",
     "test-listings": "ava ./test/listings/**/*.js --verbose",
     "test-postbuild-api": "pnpm test-listings",
-    "test-postbuild-functions": "ava ./test/main.js --verbose",
     "test-vitest": "vitest",
-    "test-circular-deps": "madge --circular --extensions js,mjs,ts,vue,astro ./*",
     "test": "ava --timeout=1m --verbose",
     "dev": "pnpm run dev-astro",
     "build": "pnpm run generate-astro",
@@ -58,7 +56,9 @@
     "netlify-prebuild:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
     "netlify-prebuild:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
     "netlify-prebuild": "pnpm run \"/^netlify-prebuild:.*/\" --parallel && pnpm stork-index",
-    "netlify-build": "pnpm run netlify-prebuild && pnpm generate-astro && pnpm test-postbuild-functions && pnpm test-circular-deps",
+    "netlify-postbuild:test-postbuild-functions": "ava ./test/main.js --verbose",
+    "netlify-postbuild:test-circular-deps": "madge --circular --extensions js,mjs,ts,vue,astro ./*",
+    "netlify-build": "pnpm run netlify-prebuild && pnpm generate-astro && pnpm run \"/^netlify-postbuild:.*/\"",
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
   },
   "dependencies": {
