@@ -55,9 +55,9 @@
   },
   "dependencies": {
     "7z-wasm": "^1.0.0-beta.5",
-    "@astrojs/netlify": "^2.1.2",
-    "@astrojs/partytown": "^1.0.3",
-    "@astrojs/vue": "^2.0.1",
+    "@astrojs/netlify": "^2.6.0",
+    "@astrojs/partytown": "^1.2.3",
+    "@astrojs/vue": "^2.2.1",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@fontsource/inter": "^4.0.1",
@@ -66,7 +66,7 @@
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.5.25",
-    "astro": "^2.0.10",
+    "astro": "^2.10.7",
     "axios": "^0.21.0",
     "buffer": "^6.0.3",
     "can-autoplay": "^3.0.0",
@@ -113,8 +113,8 @@
     "zip-lib": "^0.7.3"
   },
   "devDependencies": {
-    "@astrojs/sitemap": "^1.0.1",
-    "@astrojs/tailwind": "^3.0.1",
+    "@astrojs/sitemap": "^2.0.1",
+    "@astrojs/tailwind": "^4.0.0",
     "@vitest/web-worker": "^0.20.3",
     "autoprefixer": "^10.0.2",
     "ava": "^3.15.0",
