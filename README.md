@@ -14,9 +14,10 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 ## Sponsors
 
-Does It ARM is an open source project with its ongoing development made possible by the support by Affiliate Partners such as WP Engine. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
-[![WP Engine Banner](https://user-images.githubusercontent.com/2830379/170784040-be37bafd-382d-4ca5-8aa5-ee82fd389e64.png)](https://shareasale.com/r.cfm?b=394686&u=1686096&m=41388&urllink=https://wpengine.com/resources/github-wordpress-integration/&afftrack=)
-
+Does It ARM is an open-source project with its ongoing development made possible by the support of Affiliate Partners such as Notion. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
+<br>
+<br>
+[Work Faster. Automate Tedious Tasks with Notion AI](https://affiliate.notion.so/ze5500b4ciby-4y5a7)
 
 
 
@@ -788,6 +789,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - ✅ Yes, Full Native Apple Silicon Support from 5.0 - [Release notes](https://www.obdev.at/products/littlesnitch/releasenotes.html)
 * [Mullvad VPN](https://mullvad.net/en/download/macos/) - ✅ Yes, Native Apple Silicon Support as of v2021.4 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/727#issue-951319577) [Release Notes](https://github.com/mullvad/mullvadvpn-app/releases/tag/2021.4-beta1) 
 * [NordVPN](https://nordvpn.com/download/nordvpn-site/) - ✅ Yes, Native Apple Silicon Support as of v6.6.1 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/736) [Release Notes](https://apps.apple.com/us/app/nordvpn-ike-unlimited-vpn/id1116599239)
+* [OpenVPN Connect](https://openvpn.net/client/) - ✅ Yes, Native Apple Silicon Support as of v3.4.0 - [Release Note](https://openvpn.net/vpn-server-resources/openvpn-connect-for-macos-change-log/#release-notes-for-3-4-0-4506) [Verification](https://github.com/ThatGuySam/doesitarm/issues/984#issuecomment-1620749986)
 * [Pareto Security](https://paretosecurity.com/) - ✅ Yes, Full Native Apple Silicon Support. - [Verification](https://github.com/ThatGuySam/doesitarm/issues/884#issue-1139052501)
 * [ProtonVPN](https://protonvpn.com/download-macos) -  ✅ Yes, Native Apple Silicon Support as of v2.0.3 - [Report #1](https://forums.macrumors.com/threads/vpn-software.2270086/post-29435392) [Report #2](https://forums.macrumors.com/threads/vpn-software.2270086/post-29294735)
 * [Secrets for Mac](https://apps.apple.com/app/secrets/id973049011?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v3.4.0 - [Official Post](https://outercorner.com/blog/2020/11/password-autofill-now-on-macos-big-sur/) [View on Setapp](https://setapp.sjv.io/c/2708043/442278/5114)
