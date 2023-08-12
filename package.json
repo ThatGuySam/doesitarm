@@ -54,6 +54,7 @@
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
   },
   "dependencies": {
+    "7z-wasm": "^1.0.0-beta.5",
     "@astrojs/netlify": "^2.1.2",
     "@astrojs/partytown": "^1.0.3",
     "@astrojs/vue": "^2.0.1",
@@ -65,7 +66,6 @@
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@supercharge/promise-pool": "^2.1.0",
     "@zip.js/zip.js": "^2.5.25",
-    "7z-wasm": "^1.0.0-beta.5",
     "astro": "^2.0.10",
     "axios": "^0.21.0",
     "buffer": "^6.0.3",
@@ -107,7 +107,7 @@
     "std-env": "^3.3.2",
     "terser": "^4.8.0",
     "uuid": "^8.3.2",
-    "vite-node": "^0.28.4",
+    "vite-node": "^0.34.1",
     "vue": "^3.2.30",
     "workerpool": "^6.2.1",
     "zip-lib": "^0.7.3"
