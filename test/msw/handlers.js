@@ -1,5 +1,5 @@
 import path from 'node:path'
-import fs from 'node:fs/promises'
+import fs from 'fs/promises'
 
 import { rest } from 'msw'
 
