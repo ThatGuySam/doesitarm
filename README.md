@@ -141,7 +141,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [MacDown](https://macdown.uranusjr.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/382)
 * [MacPorts](https://www.macports.org/install.php) - ✳️ Yes, some ports are native while others work via Rosetta 2. - [Discussion](https://github.com/ThatGuySam/doesitarm/issues/302). 
 * [MAMP](https://www.mamp.info/en/mamp/mac/) - ✅ Yes, Native Apple Silicon Support as of v6.4 - [Release Notes](https://www.mamp.info/en/release-notes/mac/)
-* [MongoDB](https://www.mongodb.com/try/download/community) - ✳️ Yes, works via Rosetta 2 - [Issue](https://jira.mongodb.org/browse/SERVER-50115) [Test Video](https://youtu.be/b_S3CjGRQis?t=227)
+* [MongoDB](https://www.mongodb.com/try/download/community) - ✅ Yes, Native Apple Silicon Support as of v6.0.0 - [Issue](https://jira.mongodb.org/browse/SERVER-50115)
 * [MongoKitten](https://apps.apple.com/us/app/id1484086700) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/502#issue-778010353)
 * [Mono MDK](https://www.mono-project.com/download/stable/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/722#issue-947000557)
 * [Mutagen](https://mutagen.io/documentation/introduction/installation) - ✅ Yes, Native Apple Silicon Support as of v0.12.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/762#issuecomment-962439413)
