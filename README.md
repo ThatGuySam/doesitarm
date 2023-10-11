@@ -708,7 +708,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [QQ音乐(QQ Music)](https://apps.apple.com/cn/app/qq音乐-让生活充满音乐/id595615424?l=en&mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/368)
 * [Remote Buddy](https://www.iospirit.com/products/remotebuddy/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/556#issue-802733637)
 * [RetroArch](https://www.retroarch.com/?page=platforms) - ✅ Yes, Native Apple Silicon Support - [Official Article](https://www.libretro.com/index.php/retroarch-for-apple-mac-m1-softlaunches-today/)
-* [Roblox Player](https://www.roblox.com/games/54865335/view?rbxp=70385145) - ✅ Yes, Native Apple Silicon Support as of v582 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/1019#issue-1803556097)
+* [Roblox Player](https://www.roblox.com/download) - ✅ Yes, Native Apple Silicon Support as of v582 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/1019#issue-1803556097)
 * [Rottenwood](https://software.charliemonroe.net/rottenwood/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](https://blog.charliemonroe.net/big-sur-and-apple-silicon/)
 * [Shazam](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
 * [Snap Camera](https://snapcamera.snapchat.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/627#issue-860435755) [Supported Hardware](https://snapcamera.snapchat.com/download/)
