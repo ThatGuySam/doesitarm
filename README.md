@@ -102,7 +102,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [FFmpeg](https://ffmpeg.org/download.html) - ✅ Yes, Full Native Apple Silicon Support via Homebrew - [Homebrew ARM Binary Available](https://formulae.brew.sh/formula/ffmpeg#default)
 * [FileMaker](https://www.claris.com/filemaker/) - ✅ Yes, Native Apple Silicon Support as of v19.3.1 - [Release Notes](https://support.claris.com/s/answerview?anum=000035590&language=en_US)
 * [Filezilla](https://filezilla-project.org/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/17#issuecomment-729976000)
-* [Flutter](https://flutter.dev/docs/get-started/install/macos) - ✳️ Yes, works via Rosetta 2 with native support in development - [Github Issue](https://github.com/flutter/flutter/issues/60118#issuecomment-695341296)
+* [Flutter](https://flutter.dev/docs/get-started/install/macos) - ✅ Yes, Native Apple Silicon Support as of v3.0.0 - [Release Notes](https://docs.flutter.dev/release/whats-new#11-may-2022-google-io-2022-flutter-3-release)
 * [Flycut](https://apps.apple.com/us/app/flycut-clipboard-manager/id442160987?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://github.com/TermiT/Flycut/releases/tag/1.9.6)
 * [Fork](https://git-fork.com/) - ✅ Yes, full native support as of v2.1.0 - [Release notes](https://git-fork.com/releasenotes)
 * [ForkLift](https://binarynights.com/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/455#issuecomment-1027795207)
