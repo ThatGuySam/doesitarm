@@ -966,3 +966,10 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 ## License
 Unless otherwise noted, this list available under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/), and the code is available under the [Apache-2.0](https://opensource.org/licenses/Apache-2.0). 
+
+
+## Join our amazing community as a contributor, and help us accelerate
+<br>
+<a href="https://github.com/ThatGuySam/doesitarm/graphs/contributors">
+  <img class="dark-light" src="https://contrib.rocks/image?repo=ThatGuySam/doesitarm&anon=0&columns=21&max=100&r=true" />
+</a>
