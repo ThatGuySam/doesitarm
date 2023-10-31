@@ -9,7 +9,7 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 
 
-[Do you want to help with M1 testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
+[Do you want to help with Apple Silicon testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
 
 
 ## Sponsors
