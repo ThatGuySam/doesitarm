@@ -1,7 +1,7 @@
 {
   "name": "doesitarm",
   "version": "1.0.0",
-  "description": "Find out the latest app support for Apple Silicon and the Apple M2 and M1 Ultra Processors",
+  "description": "Find out the latest app support for Apple Silicon and the Apple M3 Max and M2 Ultra Processors",
   "author": "Sam Carlton",
   "private": true,
   "packageManager": "pnpm@8.6.12",
@@ -13,9 +13,9 @@
   },
   "config": {
     "verbiage": {
-      "processors": "Apple M2 and M1 Ultra",
-      "macs": "Apple M2 or M1 Ultra Mac",
-      "description": "Find out the latest app support for Apple Silicon and the Apple M2 and M1 Ultra Processors"
+      "processors": "Apple M3 Max and M2 Ultra",
+      "macs": "Apple M3 Max or M2 Ultra Mac",
+      "description": "Find out the latest app support for Apple Silicon and the Apple M3 Max and M2 Ultra Processors"
     },
     "stork": {
       "executable": "stork-executable",
