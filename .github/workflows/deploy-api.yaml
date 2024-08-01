@@ -1,0 +1,17 @@
+name: Deploy 02 API
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'  # Runs every day at 3 AM
+
+jobs:
+  make-get-request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Functions Deploy Hook
+      run: |
+        curl -X POST "$API_DEPLOY_HOOK_URL"
+      env:
+        API_DEPLOY_HOOK_URL: ${{ secrets.API_DEPLOY_HOOK_URL }}
