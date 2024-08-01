@@ -1,6 +1,7 @@
 name: Deploy Functions
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 3 * * *'  # Runs every day at 3 AM
 
