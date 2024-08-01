@@ -1,0 +1,16 @@
+name: Deploy Functions
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Runs every day at 3 AM
+
+jobs:
+  make-get-request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Functions Deploy Hook
+      run: |
+        curl -X GET "$FUNCTIONS_DEPLOY_HOOK_URL"
+      env:
+        FUNCTIONS_DEPLOY_HOOK_URL: ${{ secrets.FUNCTIONS_DEPLOY_HOOK_URL }}
