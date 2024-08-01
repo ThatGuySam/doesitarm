@@ -1,9 +1,9 @@
-name: Deploy Functions
+name: Deploy 01 Functions
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'  # Runs every day at 3 AM
+    - cron: '0 2 * * *'  # Runs every day at 3 AM
 
 jobs:
   make-get-request:
