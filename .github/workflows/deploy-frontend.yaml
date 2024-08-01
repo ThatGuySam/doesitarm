@@ -1,0 +1,17 @@
+name: Deploy 03 Front-End
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'  # Runs every day at 4 AM
+
+jobs:
+  make-get-request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Functions Deploy Hook
+      run: |
+        curl -X POST "$FRONTEND_DEPLOY_HOOK_URL"
+      env:
+        FRONTEND_DEPLOY_HOOK_URL: ${{ secrets.FRONTEND_DEPLOY_HOOK_URL }}
