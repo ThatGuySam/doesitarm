@@ -253,6 +253,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Tableau Reader](https://www.tableau.com/products/reader) - ✳️ Yes, works via Rosetta 2 Translation - [Discussion](https://community.tableau.com/s/topic/0TO4T000000pcgPWAQ/apple-silicon-m1)
 * [TI Connect CE](https://education.ti.com/en/software/details/en/CA9C74CAD02440A69FDC7189D7E1B6C2/swticonnectcesoftware) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/733#issue-954040240)
 * [Wolfram Mathematica](https://www.wolfram.com/mathematica/) - ✅ Yes, Native Apple Silicon Support as of v12.3.1 - [Release Notes](https://www.wolfram.com/mathematica/quick-revision-history.html) [Discussion](https://community.wolfram.com/groups/-/m/t/2118125#_19_message_2121051)
+* [Zotero](https://www.zotero.org/) - ✅ Yes, Native Apple Silicon Support as of v7.0 - [Version History](https://www.zotero.org/support/changelog#changes_in_70_august_9_2024)
 
 
 
