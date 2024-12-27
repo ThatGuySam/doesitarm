@@ -4,7 +4,7 @@
   "description": "Find out the latest app support for Apple Silicon and the Apple M3 Max and M2 Ultra Processors",
   "author": "Sam Carlton",
   "private": true,
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "pnpm@9.15.1",
   "engines": {
     "pnpm": "^9.*",
     "node": ">=18",
