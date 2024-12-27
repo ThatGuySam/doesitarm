@@ -24,7 +24,7 @@
     }
   },
   "scripts": {
-    "test-prebuild": "ava ./test/prebuild/**/*.js --verbose",
+    "test-prebuild": "pnpm run with-env vitest ./test/prebuild/**/*.js",
     "test-api-client": "ava ./test/api/client.js --verbose",
     "test-listings": "ava ./test/listings/**/*.js --verbose",
     "test-postbuild-api": "pnpm test-listings",
