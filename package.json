@@ -13,9 +13,9 @@
   },
   "config": {
     "verbiage": {
-      "processors": "Apple M3 Max and M2 Ultra",
-      "macs": "Apple M3 Max or M2 Ultra Mac",
-      "description": "Find out the latest app support for Apple Silicon and the Apple M3 Max and M2 Ultra Processors"
+      "processors": "Apple M4 Max and M3 Ultra",
+      "macs": "Apple M4 Max or M3 Ultra Mac",
+      "description": "Find out the latest app support for Apple Silicon and the Apple M4 Max and M3 Ultra Processors"
     },
     "stork": {
       "executable": "stork-executable",
