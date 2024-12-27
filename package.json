@@ -51,6 +51,7 @@
     "precommit": "pnpm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
     "scan-new-apps": "pnpm exec vite-node scripts/scan-new-apps.js",
+    "with-env": "dotenv -e .env -- ",
     "cloudflare-deploy": "pnpm run build-api",
     "vercel-build": "npx vite-node scripts/vercel-build.js",
     "netlify-prebuild:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
