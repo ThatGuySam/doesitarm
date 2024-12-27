@@ -1,0 +1,109 @@
+/**
+ * Does It ARM Project Rules
+ * Customized AI behavior for maintaining app compatibility database
+ */
+module.exports = {
+    // Core project settings
+    project: {
+        name: 'doesitarm',
+        type: 'astro',
+        packageManager: 'pnpm',
+        nodeVersion: '>=22'
+    },
+
+    // Code style preferences
+    style: {
+        indentSize: 4,
+        maxLineLength: 72,
+        quotes: 'single',
+        semicolons: false
+    },
+
+    // Testing configuration 
+    testing: {
+        framework: 'vitest',
+        pattern: 'test/**/*.test.js',
+        coverage: true
+    },
+
+    // Documentation rules
+    docs: {
+        // Write comments as user stories instead of implementation details
+        commentStyle: 'userStory',
+        jsdoc: {
+            required: true,
+            params: true,
+            returns: true
+        }
+    },
+
+    // Function patterns
+    functions: {
+        // Prefer options object for 2+ params
+        preferOptionsObject: true,
+        
+        // Always use named exports except for pages
+        exports: 'named',
+        
+        // Functional components only
+        reactComponents: 'functional'
+    },
+
+    // Package management
+    packages: {
+        // Use antfu/ni commands
+        installCmd: 'ni',
+        uninstallCmd: 'nun', 
+        runCmd: 'nr',
+        ciCmd: 'nci'
+    },
+
+    // Variable naming
+    naming: {
+        // Avoid generic names
+        forbidden: [
+            'base64',
+            'text',
+            'data',
+            'item',
+            'content'
+        ],
+        
+        // Prefer descriptive names
+        preferred: {
+            'base64': '*Base64',
+            'text': '*Text',
+            'data': '*Data',
+            'content': '*Content'
+        }
+    },
+
+    // Search functionality rules
+    search: {
+        // Stork search configuration
+        stork: {
+            version: '1.6.0',
+            indexPath: 'static/search-index.st',
+            tomlPath: 'static/stork.toml'
+        }
+    },
+
+    // Build process
+    build: {
+        // Files to ignore
+        ignore: [
+            'node_modules',
+            'dist',
+            '.cache',
+            '.DS_Store'
+        ],
+        
+        // Required environment variables
+        requiredEnv: [
+            'PUBLIC_URL',
+            'PUBLIC_API_DOMAIN',
+            'COMMITS_SOURCE',
+            'GAMES_SOURCE'
+        ]
+    }
+} 
