@@ -96,5 +96,34 @@ module.exports = {
             'COMMITS_SOURCE',
             'GAMES_SOURCE'
         ]
+    },
+
+    // Deployment configurations
+    deployment: {
+        platforms: ['netlify', 'vercel'],
+        netlify: {
+            buildCommand: 'pnpm run netlify-build',
+            publishDir: 'dist/',
+            functions: {
+                directory: 'dist/functions',
+                bundler: 'esbuild'
+            },
+            environment: {
+                NPM_FLAGS: '--no-optional',
+                CI: '1'
+            }
+        },
+        vercel: {
+            buildCommand: 'pnpm run vercel-build',
+            distDir: 'static',
+            buildSteps: [
+                'test-prebuild',
+                'build-lists-and-api', 
+                'test-postbuild-api'
+            ],
+            github: {
+                silent: true
+            }
+        }
     }
 } 
