@@ -7,7 +7,7 @@
   "packageManager": "pnpm@9.15.1",
   "engines": {
     "pnpm": "^9.*",
-    "node": ">=18",
+    "node": ">=22",
     "yarn": "forbidden, this project uses pnpm",
     "npm": "forbidden, this project uses pnpm"
   },
