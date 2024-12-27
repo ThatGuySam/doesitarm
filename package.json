@@ -6,7 +6,7 @@
   "private": true,
   "packageManager": "pnpm@8.6.12",
   "engines": {
-    "pnpm": "^8.6.*",
+    "pnpm": "^9.*",
     "node": ">=18",
     "yarn": "forbidden, this project uses pnpm",
     "npm": "forbidden, this project uses pnpm"
