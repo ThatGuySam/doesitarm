@@ -5,9 +5,6 @@ import test from 'ava'
 import { StorkFilters } from '~/helpers/stork/browser.js'
 
 
-require('dotenv').config()
-
-
 test('Can Toggle off existing filter' , async t => {
     const filters = new StorkFilters({
         initialFilters: {
