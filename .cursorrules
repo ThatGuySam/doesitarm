@@ -49,15 +49,6 @@ module.exports = {
         reactComponents: 'functional'
     },
 
-    // Package management
-    packages: {
-        // Use antfu/ni commands
-        installCmd: 'ni',
-        uninstallCmd: 'nun', 
-        runCmd: 'nr',
-        ciCmd: 'nci'
-    },
-
     // Variable naming
     naming: {
         // Avoid generic names
