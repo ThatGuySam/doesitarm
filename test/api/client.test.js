@@ -1,4 +1,4 @@
-import test from 'ava'
+import { describe, expect, test } from 'vitest'
 
 import {
     generateAPI
@@ -76,19 +76,34 @@ test( 'API has valid responses', async t => {
         const apiMethod = listingCase.method( DoesItAPI )
 
         // Assert that the apiMethod url is correct
-        t.is( (new URL(apiMethod.url)).pathname, caseEndpoint, `API endpoint '${ caseEndpoint }'` )
+        // t.is( (new URL(apiMethod.url)).pathname, caseEndpoint, `API endpoint '${ caseEndpoint }'` )
+        expect(
+            (new URL(apiMethod.url)).pathname,
+            `API endpoint '${ caseEndpoint }'`
+        ).toBe(caseEndpoint)
 
         // Run get request to fetch our data
         const result = await apiMethod.get()
 
         // If expected is a function then call it
-        // Otherwise, compare the result to the expected
         if ( typeof listingCase.expected === 'function' ) {
-            t.assert( listingCase.expected( result ), `API case method check for '${ caseEndpoint }'` )
+            // t.assert( listingCase.expected( result ), `API case method check for '${ caseEndpoint }'` )
+            expect(
+                listingCase.expected(result),
+                `API case method check for '${ caseEndpoint }'`
+            ).toBeTruthy()
 
             continue
         }
 
-        t.like( result, listingCase.expected, `${ caseEndpoint } has a valid api endpoint` )
+        
+
+        // t.like( result, listingCase.expected, `${ caseEndpoint } has a valid api endpoint` )
+        expect(
+            result,
+            `${ caseEndpoint } has a valid api endpoint`
+        ).toEqual(
+            expect.objectContaining(listingCase.expected)
+        )
     }
 })
