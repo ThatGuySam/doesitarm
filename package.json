@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test-prebuild": "pnpm run with-env vitest ./test/prebuild",
-    "test-api-client": "ava ./test/api/client.js --verbose",
+    "test-api-client": "pnpm run with-env vitest ./test/api",
     "test-listings": "pnpm run with-env vitest ./test/listings",
     "test-postbuild-api": "pnpm test-listings",
     "test-vitest": "vitest",
