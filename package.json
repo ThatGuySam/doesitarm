@@ -48,6 +48,7 @@
     "generate-postcss": "ENV=production postcss assets/css/tailwind.css --o static/tailwind.css",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
+    "typecheck": "tsc --noEmit",
     "precommit": "pnpm run lint",
     "clone-readme": "cp ./README.md README-temp.md",
     "scan-new-apps": "pnpm exec vite-node scripts/scan-new-apps.js",
