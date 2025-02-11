@@ -1,6 +1,10 @@
 /**
  * Does It ARM Project Rules
  * Customized AI behavior for maintaining app compatibility database
+ * 
+ * Refactor in as small steps as possible so that tests are always passing. 
+ * Be sure to thoroughly comment added code
+ * Verify that it's working with a test command
  */
 module.exports = {
     // Core project settings
