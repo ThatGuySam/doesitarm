@@ -1,21 +1,22 @@
 import { defineConfig } from 'vitest/config'
-
+import { fileURLToPath } from 'url'
 import astroConfig from './astro.config.mjs'
 
-
 const vitestConfig = {
-
     ...astroConfig,
-
-    // Requires merging in astroConfig.vite
     ...astroConfig.vite,
-
+    resolve: {
+        alias: {
+            '~': fileURLToPath(new URL('./', import.meta.url)),
+        },
+    },
     test: {
-        // testTimeout: 60 * 1000,
-        setupFiles: 'tsconfig-paths/register'
+        setupFiles: 'tsconfig-paths/register',
+        // Add environment setup for tests
+        environment: 'node',
     }
 }
 
 // console.log( 'vitestConfig', vitestConfig )
 
-export default defineConfig( vitestConfig )
+export default defineConfig(vitestConfig)
