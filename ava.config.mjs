@@ -1,3 +1,6 @@
+/**
+ * @type {import('ava').AVAConfig}
+ */
 export default () => {
     return {
         require: [
@@ -6,12 +9,14 @@ export default () => {
             'tsconfig-paths/register'
         ],
         // https://github.com/avajs/ava/blob/main/docs/recipes/watch-mode.md
-        ignoredByWatcher: [
-            '!**/*.{js,vue}',
-            './build',
-            './dist',
-            './.output',
-        ],
+        watchMode: {
+            ignoreChanges: [
+                '!**/*.{js,vue}',
+                './build',
+                './dist',
+                './.output',
+            ],
+        },
         // tap: true,
         // verbose: true,
         color: true
