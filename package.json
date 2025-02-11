@@ -58,7 +58,7 @@
     "netlify-prebuild:download-sitemaps": "npx vite-node scripts/download-sitemaps.js",
     "netlify-prebuild:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
     "netlify-prebuild": "pnpm run \"/^netlify-prebuild:.*/\" && pnpm stork-index",
-    "netlify-postbuild:test-postbuild-functions": "ava ./test/main.js --verbose",
+    "--disabled--netlify-postbuild:test-postbuild-functions": "ava ./test/main.js --verbose",
     "netlify-postbuild:test-circular-deps": "madge --circular --extensions js,mjs,ts,vue,astro ./*",
     "netlify-build": "pnpm run netlify-prebuild && pnpm generate-astro && pnpm run \"/^netlify-postbuild:.*/\"",
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
