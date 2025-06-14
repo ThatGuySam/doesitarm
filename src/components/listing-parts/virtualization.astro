@@ -51,7 +51,13 @@ const totalLinks = links.length
                 <div class="md:relative">
                     <button class="h-5 text-xs bg-white-2 flex justify-center items-center outline-0 neumorphic-shadow rounded-full px-2">?</button>
                     <div
-                        class="text-sm bg-black/60 backdrop-blur-lg w-screen md:max-w-xs opacity-0 group-hover:opacity-100 transition-opacity absolute left-1/2 right-1/2 md:-translate-x-1/2 bottom-0 md:bottom-10 z-10 p-6 -mx-1/2-screen md:mx-0"
+                        class={[
+                            'text-sm bg-black/60 backdrop-blur-lg',
+                            'opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none',
+                            'absolute left-1/2 right-1/2 md:-translate-x-1/2 bottom-0 md:bottom-10 z-10',
+                            'w-screen',
+                            'md:max-w-xs p-6 -mx-1/2-screen md:mx-0'
+                        ].join(' ')}
                     >With Virtualization you can run apps on Apple Silicon Macs even if they are normally completely unsupported, such as Windows-only Apps, at the cost of some performance drop vs Native support. </div>
                 </div>
             </div>
