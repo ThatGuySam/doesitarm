@@ -1,0 +1,53 @@
+name: thank-new-issue
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  # allow createComment
+  issues: write 
+
+jobs:
+  greet:
+    # Run only when:
+    # 1. Issue has zero comments (to avoid duplicate replies)
+    # 2. Action matches opened/labeled with desired labels
+    if: >
+      github.event.issue.comments == 0 &&
+      (
+        (github.event.action == 'opened' &&
+         (contains(
+           github.event.issue.labels.*.name,
+           'App Update'
+         ) ||
+          contains(
+           github.event.issue.labels.*.name,
+           'New App Request'
+         ))) ||
+        (github.event.action == 'labeled' &&
+         (github.event.label.name == 'App Update' ||
+          github.event.label.name == 'New App Request'))
+      )
+    runs-on: ubuntu-latest
+    # Needs Read+Write permissions to createComment
+    # https://github.com/ThatGuySam/doesitarm/settings/actions
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.issue.number,
+              body: |
+                **Thanks for the App Request!!**
+
+                The next step is to collect any missing info.
+
+                I'm currently working on getting to all the requests,
+                however, if you'd like help push things along feel free
+                to add what's missing as you find it.
+
+                You can reference what all it needs here:
+                [App Request Template](https://github.com/ThatGuySam/doesitarm/blob/master/.github/ISSUE_TEMPLATE/app-request-template.md)
+            })
