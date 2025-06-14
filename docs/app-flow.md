@@ -17,7 +17,7 @@ Mermaid Diagram Notes:
 flowchart TD
     A["1A. 👤 User: Submits App Request or Issue<br/>(via '🙋 Request an App with Github' from doesitarm.com OR directly to GitHub repo)"] --> B["2A. 👤 User: Check for Existing Issue<br/>(Search query page from doesitarm.com)"]
     B -- Not Found --> C["3A. 👤 User: Fill Out Issue Form<br/>(App Name, Status, Category, Links, Screenshot)"]
-    C --> D["4A. ⚙️ System: Label as 'New App Request'"]
+    C --> D["4A. ⚙️ System: Label as 'New App Request'<br/>(Auto-applied via App Update Template)"]
     D --> E["5A. 🔧 Maintainer: Type of Issue?"]
     E -- New App Request --> F["6A. 🔧 Maintainer: Reviews Submission"]
     F -- Info Complete --> F2["7A. 🔧 Maintainer: Comment Thank You"]
@@ -40,7 +40,7 @@ flowchart TD
     J5 --> J1
     J3 -- Approved --> L1["17A. 🔧 Maintainer: Comment that App is Live"]
     I3 --> L1
-    L1 --> K["18A. ⚙️ System: Close Issue"]
+    L1 --> K["18A. 🔧 Maintainer: Close Issue"]
 
     E -- App Update --> L["1C. 👤 User: Reports Update<br/>(e.g. Native Support Now Available)"]
     L --> M["2C. 👤 User: Provide Evidence<br/>(Links, Screenshots)"]
