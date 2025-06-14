@@ -34,13 +34,19 @@ body:
       - "No"
   validations:
     required: true
-- type: textarea
+- type: dropdown
   id: proposed-status
   attributes:
     label: Proposed App Status
     description: |
       What's the current app status based off of current discussion or testing?
       You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
+  options:
+      - ✅ Yes, Native Apple Silicon Support
+      - ✳️ Yes, works via Translation or Virtualization
+      - ⏹ No, not working at all but support is in development
+      - 🚫 No, not yet supported only works on Intel-based Macs
+      - 🔶 Unknown, more info needed
   validations:
     required: true
 - type: textarea
