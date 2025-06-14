@@ -34,24 +34,43 @@ body:
       - "No"
   validations:
     required: true
-- type: textarea
+- type: dropdown
   id: proposed-status
   attributes:
     label: Proposed App Status
     description: |
       What's the current app status based off of current discussion or testing?
       You can check the different statused here: https://github.com/ThatGuySam/doesitarm/blob/master/README.md#legend
+    options:
+      - ✅ Yes, Native Apple Silicon Support
+      - ✳️ Yes, works via Translation or Virtualization
+      - ⏹ No, not working at all but support is in development
+      - 🚫 No, not yet supported only works on Intel-based Macs
+      - 🔶 Unknown, more info needed
   validations:
     required: true
-- type: textarea
+- type: dropdown
   id: proposed-category
   attributes:
     label: Proposed App Category
     description: |
       What category should the app go under?
       Try to avoid the generic categories of Productivity unless no other category fits.
+    options:
+      - Developer Tools
+      - Science and Research Software
+      - Music and Audio Tools
+      - Photo and Graphic Tools
+      - Video and Motion Tools
+      - Live Production and Performance
+      - 3D and Architecture
+      - Productivity Tools
+      - Entertainment and Media Apps
+      - Social and Communication
+      - VPNs, Security, and Privacy
+      - System Tools
   validations:
-      required: true
+    required: true
 - type: textarea
   id: links
   attributes:

@@ -253,6 +253,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Tableau Reader](https://www.tableau.com/products/reader) - ✳️ Yes, works via Rosetta 2 Translation - [Discussion](https://community.tableau.com/s/topic/0TO4T000000pcgPWAQ/apple-silicon-m1)
 * [TI Connect CE](https://education.ti.com/en/software/details/en/CA9C74CAD02440A69FDC7189D7E1B6C2/swticonnectcesoftware) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/733#issue-954040240)
 * [Wolfram Mathematica](https://www.wolfram.com/mathematica/) - ✅ Yes, Native Apple Silicon Support as of v12.3.1 - [Release Notes](https://www.wolfram.com/mathematica/quick-revision-history.html) [Discussion](https://community.wolfram.com/groups/-/m/t/2118125#_19_message_2121051)
+* [Zotero](https://www.zotero.org/) - ✅ Yes, Native Apple Silicon Support as of v7.0 - [Version History](https://www.zotero.org/support/changelog#changes_in_70_august_9_2024)
 
 
 
@@ -353,7 +354,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Adobe Media Encoder](https://www.adobe.com/products/media-encoder.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [After Effects](https://www.adobe.com/products/aftereffects.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) - ✳️ Yes, it was shown at the November 10th event running via Rosetta 2 - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1114)
-* [Autodesk Maya](https://www.autodesk.com/products/maya/overview) - ✳️ Yes, it was shown at WWDC running via Rosetta 2 - [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=6036)
+* [Autodesk Maya](https://www.autodesk.com/products/maya/overview) - ✅ Yes, Native Apple Silicon Support as of v2024 - [Source](https://help.autodesk.com/view/MAYAUL/2024/ENU/?guid=GUID-A7291217-7424-49C9-8CB3-3089E7F4909E)
 * [Autokroma AfterCodecs](https://www.autokroma.com/AfterCodecs/Download) - ✅ Yes, Native Apple Silicon Support as of v1.10.6 - [Official Article](https://www.autokroma.com/blog/Apple-Silicon-ARM-M1-Compatibility-with-Adobe-Creative-Cloud-Autokroma)
 * [Autokroma BRAW (BRAW_Studio)](https://www.autokroma.com/BRAW_Studio/Download/) - ✅ Yes, Native Apple Silicon Support as of v2.5.1 - [Official Article](https://www.autokroma.com/blog/Apple-Silicon-ARM-M1-Compatibility-with-Adobe-Creative-Cloud-Autokroma)
 * [Autokroma Influx](https://www.autokroma.com/Influx/) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://www.autokroma.com/blog/Apple-Silicon-ARM-M1-Compatibility-with-Adobe-Creative-Cloud-Autokroma)
@@ -374,7 +375,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [GoPro Fusion Studio](https://gopro.com/en/us/news/fusion-end-of-life) - 🚫 No, not supported and no plans for support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/349#issuecomment-869347313) [Official Article](https://gopro.com/en/us/news/fusion-end-of-life)
 * [GoPro VR Player](https://community.gopro.com/t5/en/GoPro-VR-Player-for-desktop-FAQ/ta-p/394345) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/349#issuecomment-869347313)
 * [Handbrake](https://handbrake.fr/) - ✅ Yes, natively supported as of v1.4.0 - [Github Issue](https://github.com/HandBrake/HandBrake/issues/2951)
-* [Houdini](https://www.sidefx.com/products/houdini/) - ✳️ Yes, works via Rosetta 2 - [Source](https://www.reddit.com/r/Houdini/comments/jzg1wj/houdini_running_on_apple_silicon_m1_macs_demo/)
+* [Houdini](https://www.sidefx.com/products/houdini/) - ✅ Yes, natively supported as of v19.5.534 - [Source](https://www.sidefx.com/community/houdini-for-apple-silicon-now-gold/)
 * [Maxon Chromatic Displacement](https://www.maxon.net/en/red-giant-complete/vfx-suite/chromatic-displacement) - 🔶 App has not yet been reported to be native to Apple Silicon - [Requirements](https://www.maxon.net/en/requirements/chromatic-displacement-requirements)
 * [Maxon Cosmo](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/cosmo) - 🔶 App has not yet been reported to be native to Apple Silicon - [Requirements](https://www.maxon.net/en/requirements/cosmo-requirements)
 * [Maxon Denoiser](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/denoiser) - 🔶 App has not yet been reported to be native to Apple Silicon - [Requirements](https://www.maxon.net/en/requirements/denoiser-requirements)
@@ -497,7 +498,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Agenda](https://agenda.com/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Airmail](https://airmailapp.com/) - ✅ Yes, Full Native Apple Silicon Support as of v4.5.1 - [Release History](https://apps.apple.com/app/apple-store/id918858936)
 * [Alfred](https://www.alfredapp.com/universal/) - ✅ Yes, fully supported - [Official Announcement](https://www.alfredapp.com/blog/announcements/alfred-ready-for-apple-m1-chip/)
-* [Anki](https://apps.ankiweb.net/) - ✳️ Yes, fully supported as of 2.1.52 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/495)
+* [Anki](https://apps.ankiweb.net/) - ✅ Yes, Full Native Apple Silicon Support as of 2.1.50 - [Release Notes](https://github.com/ankitects/anki/releases/tag/2.1.50) [Verification](https://github.com/ThatGuySam/doesitarm/issues/495)
 * [AnyDesk](https://anydesk.com/en/downloads/mac-os) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Avid Link](https://www.avid.com/products/avid-link#Downloads) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
 * [Avid MediaCentral](https://www.avid.com/products/mediacentral) - 🚫 Not yet supported only works on Intel-based Macs - [Official Article](https://avid.secure.force.com/pkb/articles/en_US/Compatibility/macOS-Big-Sur-Support)
