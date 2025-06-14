@@ -1,0 +1,31 @@
+name: comment-on-ready-to-add
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write          # allow posting comments
+
+jobs:
+  add-comment:
+    if: github.event.label.name == 'Ready to Add'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `
+              Looks like this is ready to go! 
+
+              Feel free to make a pull request using the [App Addition Template](https://github.com/ThatGuySam/doesitarm/blob/master/.github/PULL_REQUEST_TEMPLATE/app_addition_template.md) otherwise, We'll add it when time permits. 
+
+              You can also use the [Scan Tool](https://doesitarm.com/apple-silicon-app-test) and I'll try to add it automatically. 
+
+              -- Sincerely, 🦾 Does It ARM Bot
+            `;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            })
