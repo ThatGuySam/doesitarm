@@ -50,5 +50,7 @@ jobs:
               You can reference what all it needs here:
               [App Request Template](https://github.com/ThatGuySam/doesitarm/blob/master/.github/ISSUE_TEMPLATE/app-request-template.md)
 
+              You can also scan it with the [App Test Tool](https://doesitarm.com/apple-silicon-app-test) to help speed up the process. 
+
               -- Sincerely, 🦾 Does It ARM Bot`
             })
