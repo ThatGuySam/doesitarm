@@ -39,15 +39,14 @@ jobs:
               owner: context.repo.owner,
               repo:  context.repo.repo,
               issue_number: context.issue.number,
-              body: |
-                **Thanks for the App Request!!**
+              body: `**Thanks for the App Request!!**
 
-                The next step is to collect any missing info.
+              The next step is to collect any missing info.
 
-                I'm currently working on getting to all the requests,
-                however, if you'd like help push things along feel free
-                to add what's missing as you find it.
+              I'm currently working on getting to all the requests,
+              however, if you'd like help push things along feel free
+              to add what's missing as you find it.
 
-                You can reference what all it needs here:
-                [App Request Template](https://github.com/ThatGuySam/doesitarm/blob/master/.github/ISSUE_TEMPLATE/app-request-template.md)
+              You can reference what all it needs here:
+              [App Request Template](https://github.com/ThatGuySam/doesitarm/blob/master/.github/ISSUE_TEMPLATE/app-request-template.md)`
             })
