@@ -1,7 +1,7 @@
 name: thank-new-issue
 on:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
 
 permissions:
   # allow createComment
