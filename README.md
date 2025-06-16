@@ -74,6 +74,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [Asset Catalog Creator](https://apps.apple.com/us/app/asset-catalog-creator-pro/id809625456) - ✅ Yes, full native support as of v3.7.4 - [Release Notes](https://www.bridgetech.io) [View on Setapp](https://setapp.sjv.io/c/2708043/905851/5114)
 * [Atom](https://atom.io/) - ✳️ Yes, works via Rosetta 2 - [Source](https://github.com/ThatGuySam/doesitarm/issues/307#issue-748524692) [Github Issue](https://github.com/atom/atom/issues/21078). 
 * [Attributed String Creator](https://apps.apple.com/us/app/attributed-string-creator-pro/id730928349) - ✅ Yes, full native support as of v1.9.6 - [Release Notes](https://www.bridgetech.io)
+* [Bash](https://www.gnu.org/software/bash/) - ✅ Yes, full native support as of v5.1.0, via Homebrew - [Release Notes](https://cgit.git.savannah.gnu.org/cgit/bash.git/tree/CHANGES) [Verification](https://github.com/ThatGuySam/doesitarm/issues/1048#issuecomment-2972954670)
 * [Bazel](https://bazel.build/) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Release Notes](https://blog.bazel.build/2021/05/21/bazel-4-1.html)
 * [BBEdit](https://www.barebones.com/products/bbedit/download.html) - ✅ Yes, full native support as of v13.5 - [Release Notes](https://www.barebones.com/support/bbedit/notes-13.5.html)
 * [Beyond Compare](https://www.scootersoftware.com/) - ✳️ Yes, works via Rosetta 2 - [Facebook Post](https://www.facebook.com/ScooterSoftware/posts/5178865142127412)
