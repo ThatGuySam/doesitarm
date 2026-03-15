@@ -82,6 +82,8 @@ typings/
 
 # Local Netlify folder
 .netlify
+.astro/
+vitest.config.mjs.timestamp-*
 
 # Build Output
 dist
