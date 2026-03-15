@@ -12,6 +12,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_URL: https://doesitarm.com
+      PUBLIC_API_DOMAIN: https://api.doesitarm.com
 
     strategy:
       matrix:
@@ -30,9 +33,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: pnpm
-    - run: |
-        touch .env
-        echo ${{ secrets.GH_ENV }} >> .env
     - run: pnpm install --frozen-lockfile
     - run: pnpm build
     - run: pnpm test
