@@ -1,4 +1,4 @@
-import { dirname, basename } from 'path'
+import { dirname, basename, extname, join } from 'path'
 
 import os from 'os'
 import fs from 'fs-extra'
@@ -448,6 +448,14 @@ class BuildLists {
 
         const apiListDirectory = `${ apiDirectory }/${ listOptions.endpointPrefix }`
 
+        await fs.ensureDir( apiListDirectory )
+
+        for ( const existingFile of await fs.readdir( apiListDirectory ) ) {
+            if ( extname( existingFile ) !== '.json' ) continue
+
+            await fs.remove( join( apiListDirectory, existingFile ) )
+        }
+
         // const poolSize = 1000
 
         // Store app bundles to memory
@@ -516,14 +524,18 @@ class BuildLists {
         }
 
         // Count saved files
-        const fileCount = fs.readdirSync( apiListDirectory ).length
+        const fileCount = fs.readdirSync( apiListDirectory )
+            .filter( fileName => extname( fileName ) === '.json' )
+            .length
 
         console.log( fileCount, 'Files saved in', apiListDirectory )
         console.log( this.lists[listOptions.name].size, 'Entries' )
 
         if ( fileCount !== this.lists[listOptions.name].size ) {
             const listSlugs = Array.from( this.lists[listOptions.name] ).map( listEntry => listEntry.slug )
-            const fileNames = fs.readdirSync( apiListDirectory ).map( fileName => basename(fileName).split('.')[0] )
+            const fileNames = fs.readdirSync( apiListDirectory )
+                .filter( fileName => extname( fileName ) === '.json' )
+                .map( fileName => basename(fileName).split('.')[0] )
 
             logArraysDifference( listSlugs, fileNames )
 
