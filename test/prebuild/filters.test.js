@@ -84,5 +84,19 @@ describe('StorkFilters', () => {
             filters.setFromString('test_works_yes')
             expect(filters.asQuery).toBe('test_works_yes')
         })
+
+        it('should map filters for Pagefind', () => {
+            const filters = new StorkFilters()
+
+            filters.setFromStringArray([
+                'status_native',
+                'category_system_tools'
+            ])
+
+            expect(filters.asPagefindFilters).toEqual({
+                status: [ 'native' ],
+                category: [ 'system_tools' ]
+            })
+        })
     })
 })
