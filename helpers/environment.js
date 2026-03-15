@@ -6,13 +6,18 @@ export function isNuxt( VueThis ) {
 }
 
 export function isBrowserContext () {
-    if ( typeof navigator === 'undefined' ) return false
+    // Node 22 exposes a global navigator, so use window/document instead.
+    if ( typeof window === 'undefined' ) return false
+
+    if ( typeof document === 'undefined' ) return false
 
     return true
 }
 
 export function hasProcesGlobal () {
     if ( typeof process === 'undefined' ) return false
+
+    if ( !process.versions?.node ) return false
 
     return true
 }

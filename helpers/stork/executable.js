@@ -2,7 +2,6 @@
 import fs from 'fs-extra'
 import execa from 'execa'
 
-import { isDarwin } from '~/helpers/environment.js'
 import {
     storkVersion,
     storkExecutableName,
@@ -11,15 +10,25 @@ import {
     storkIndexPath
 } from '~/helpers/stork/config.js'
 
+// Netlify's Ubuntu 24 (Noble) image needs the OpenSSL 3 compatible binary.
+export function getStorkExecutableTarget ( {
+    platform = process.platform,
+    arch = process.arch
+} = {} ) {
+    if ( platform === 'darwin' ) {
+        if ( arch === 'arm64' ) return 'stork-macos-13-arm'
+
+        return 'stork-macos-10-15'
+    }
+
+    return 'stork-ubuntu-22-04'
+}
+
 // https://stork-search.net/docs/install
-const execDownloadUrls = {
-    darwin: `https://files.stork-search.net/releases/v${ storkVersion }/stork-macos-10-15`,
-    default: `https://files.stork-search.net/releases/v${ storkVersion }/stork-ubuntu-20-04`
+export function getStorkExecutableDownloadUrl ( options = {} ) {
+    const target = getStorkExecutableTarget( options )
 
-    // Stork 2.0
-    // darwin: `https://files.stork-search.net/releases/v${ storkVersion }/stork-macos-12`,
-
-    // default: `https://files.stork-search.net/releases/v${ storkVersion }/stork-amazon-linux`
+    return `https://files.stork-search.net/releases/v${ storkVersion }/${ target }`
 }
 
 // Check if a file is executable
@@ -33,9 +42,7 @@ async function isExecutable ( path ) {
 
 // 👩‍💻 Bash Download example - https://github.com/jmooring/hugo-stork/blob/main/build.sh
 export async function downloadStorkExecutable () {
-    const envKey = isDarwin() ? 'darwin' : 'default'
-
-    const execDownloadUrl = execDownloadUrls[ envKey ]
+    const execDownloadUrl = getStorkExecutableDownloadUrl()
 
     // console.log( { execDownloadUrl } )
 
@@ -46,6 +53,7 @@ export async function downloadStorkExecutable () {
 
     // Download the binary
     await execa( `curl`, [
+        '-fsSL',
         execDownloadUrl,
 
         // Set filename
@@ -60,7 +68,7 @@ export async function downloadStorkExecutable () {
 
 
     // console.log( 'isExecutable', isExecutable )
-    if ( !isExecutable( storkExecutablePath ) ) throw new Error( `Downloaded binary at ${ storkExecutablePath } is not executable.` )
+    if ( !(await isExecutable( storkExecutablePath )) ) throw new Error( `Downloaded binary at ${ storkExecutablePath } is not executable.` )
 
 
     // Check Stork version
@@ -78,7 +86,7 @@ export async function downloadStorkExecutable () {
 
 export async function buildIndex () {
 
-    if ( !isExecutable( storkExecutablePath ) ) throw new Error( `Binary at ${ storkExecutablePath } is not executable.` )
+    if ( !(await isExecutable( storkExecutablePath )) ) throw new Error( `Binary at ${ storkExecutablePath } is not executable.` )
 
     // Check Stork version
     // so we know our binary is working
