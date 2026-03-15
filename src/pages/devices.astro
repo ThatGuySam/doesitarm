@@ -8,6 +8,7 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
@@ -31,7 +32,7 @@ const kinds = deviceIndex.items.map( device => {
 <Layout
 	headOptions={ {
         title: 'List of Apple Devices for Apple Silicon App Support',
-        description: `List of devices for Apple Silicon and the ${ global.$config.processorsVerbiage } Processors`,
+        description: `List of devices for Apple Silicon and the ${ publicRuntimeConfig.processorsVerbiage } Processors`,
         // meta,
         // link,
         // structuredData: this.structuredData,

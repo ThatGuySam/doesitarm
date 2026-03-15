@@ -1,5 +1,6 @@
 ---
 // import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 import {
     catchRedirectResponse,
     applyResponseDefaults
@@ -31,7 +32,7 @@ Astro.response.statusText = 'Not found'
 <Layout
 	headOptions={ {
         title: `Page is not compatible with Apple Silicon - Does It ARM`,
-        description: `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ global.$config.processorsVerbiage } Mac. `,
+        description: `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ publicRuntimeConfig.processorsVerbiage } Mac. `,
         // meta,
         // link,
         // structuredData: this.structuredData,
@@ -75,4 +76,3 @@ Astro.response.statusText = 'Not found'
 	-->
 
 </Layout>
-

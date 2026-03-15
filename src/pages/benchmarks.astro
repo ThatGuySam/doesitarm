@@ -8,6 +8,7 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
@@ -117,8 +118,8 @@ for (const video of allVideos) {
 ---
 <Layout
 	headOptions={ {
-        title: `Benchmarks for ${ global.$config.processorsVerbiage } Processors and Apple Silicon - Does It ARM`,
-        description: `Apple Silicon benchmark, performance, and compatibility videos for Macs using the ${ global.$config.processorsVerbiage } processors.`,
+        title: `Benchmarks for ${ publicRuntimeConfig.processorsVerbiage } Processors and Apple Silicon - Does It ARM`,
+        description: `Apple Silicon benchmark, performance, and compatibility videos for Macs using the ${ publicRuntimeConfig.processorsVerbiage } processors.`,
         // meta,
         // link,
         // structuredData: this.structuredData,

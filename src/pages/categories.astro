@@ -8,6 +8,7 @@
 // https://docs.astro.build/core-concepts/astro-components/
 
 import { DoesItAPI } from '~/helpers/api/client.js'
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
@@ -34,7 +35,7 @@ const kinds = Object.values( kindIndex ).map( category => {
 <Layout
 	headOptions={ {
         title: 'Categories of App Support lists for Apple Silicon',
-        description: `List of compatibility apps and games for Apple Silicon and the ${ global.$config.processorsVerbiage } Processors including performance reports and benchmarks`,
+        description: `List of compatibility apps and games for Apple Silicon and the ${ publicRuntimeConfig.processorsVerbiage } Processors including performance reports and benchmarks`,
         // meta,
         // link,
         // structuredData: this.structuredData,

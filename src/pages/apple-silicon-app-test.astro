@@ -1,4 +1,5 @@
 ---
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
@@ -22,7 +23,7 @@ applyResponseDefaults( Astro )
 <Layout
 	headOptions={ {
         title: `Apple Silicon Compatibility Test Online - Does It ARM`,
-        description: `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ global.$config.processorsVerbiage } Mac. `,
+        description: `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ publicRuntimeConfig.processorsVerbiage } Mac. `,
         // meta,
         // link,
         // structuredData: this.structuredData,
@@ -33,7 +34,7 @@ applyResponseDefaults( Astro )
 >
 
 	<AppTestPage
-        config={ global.$config }
+        config={ publicRuntimeConfig }
         client:load
     />
 

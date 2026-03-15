@@ -2,6 +2,7 @@ import TOML from '@iarna/toml'
 import fs from 'fs-extra'
 
 import pkg from '~/package.json'
+import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
 import { getSiteUrl } from '~/helpers/url.js'
 import { getRouteType } from '~/helpers/app-derived.js'
 
@@ -155,7 +156,7 @@ export function makeTitle ( listing ) {
 }
 
 export function makeDescription ( listing ) {
-    return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ this.$config.processorsVerbiage } Processors.`
+    return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ publicRuntimeConfig.processorsVerbiage } Processors.`
 }
 
 function makeTag ( tag, tagName = 'meta' ) {
