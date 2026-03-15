@@ -42,6 +42,12 @@ import {
     writeStorkToml
 } from '~/helpers/stork/toml.js'
 import {
+    writePagefindIndex
+} from '~/helpers/pagefind/index.js'
+import {
+    getSearchProvider
+} from '~/helpers/search/config.js'
+import {
     KindListMemoized as KindList
 } from '~/helpers/api/kind.js'
 import {
@@ -735,9 +741,15 @@ class BuildLists {
         console.log('Building XML Sitemap')
         await saveSitemap( sitemapEndpoints.map( ({ route }) => route ) )
 
-        // Save stork toml index
-        console.log('Building Stork toml index')
-        await writeStorkToml( sitemapEndpoints )
+        const searchProvider = getSearchProvider( process.env.PUBLIC_SEARCH_PROVIDER )
+
+        if ( searchProvider === 'stork' ) {
+            console.log('Building Stork toml index')
+            await writeStorkToml( sitemapEndpoints )
+        } else {
+            console.log('Building Pagefind index')
+            await writePagefindIndex( sitemapEndpoints )
+        }
 
         console.log('Total Nuxt Endpoints', this.endpointMaps.nuxt.size )
         console.log('Total Eleventy Endpoints', this.endpointMaps.eleventy.size )

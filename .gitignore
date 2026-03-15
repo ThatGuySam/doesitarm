@@ -92,6 +92,7 @@ dist
 /static/**/*.json
 /static/**/*.toml
 /static/**/*.st
+/static/pagefind/
 /commits-data.json
 /static/tailwind.css
 

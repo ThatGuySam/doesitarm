@@ -39,7 +39,7 @@
                         hasActiveFilter( button.query ) ? 'border-opacity-50 bg-darkest' : 'border-opacity-0 neumorphic-shadow-inner'
                     ]"
                     :aria-label="`Filter list by ${button.label}`"
-                    @click="toggleFilter(button.query); queryResults(query)"
+                    @click="toggleFilter(button.query); queryResults()"
                 >{{ button.label }}</button>
             </div>
         </div>
@@ -151,21 +151,15 @@
                         </div>
 
                         <div
-                            v-if="listing.storkResult"
+                            v-if="listing.resultExcerptsMarkup?.length"
                             class="text-xs leading-5 font-light"
                         >
                             <div
-                                v-for="(excerpt, excerptIndex) in listing.storkResult.excerpts"
+                                v-for="(excerptMarkup, excerptIndex) in listing.resultExcerptsMarkup"
                                 :key="`excerpt-${ excerptIndex }`"
                                 class="result-excerpt space-y-3"
-                            >
-                                <div
-                                    v-for="(range, rangeIndex) in makeHighlightedMarkup( excerpt )"
-                                    :key="`range-${ rangeIndex }`"
-
-                                    v-html="range"
-                                />
-                            </div>
+                                v-html="excerptMarkup"
+                            />
                         </div>
                         <!-- listing.lastUpdated: {{ listing.lastUpdated }} -->
                         <template v-if="listing.lastUpdated">
@@ -292,8 +286,17 @@ import {
     getIconForListing
 } from '~/helpers/app-derived.js'
 import {
+    PagefindClient,
+    mapPagefindDataToListing
+} from '~/helpers/pagefind/browser.js'
+import {
+    getSearchProvider
+} from '~/helpers/search/config.js'
+import {
+    SearchFilters
+} from '~/helpers/search/filters.js'
+import {
     StorkClient,
-    StorkFilters,
     makeHighlightedMarkup,
     makeHighlightedResultTitle
 } from '~/helpers/stork/browser.js'
@@ -304,7 +307,7 @@ import RelativeTime from '~/components/relative-time.vue'
 import ListSummary from '~/components/list-summary.vue'
 import ListEndButtons from '~/components/list-end-buttons.vue'
 
-let storkClient = null
+const searchProvider = getSearchProvider( import.meta.env.PUBLIC_SEARCH_PROVIDER )
 
 export default {
     components: {
@@ -347,15 +350,27 @@ export default {
             hasStartedAnyQuery: false,
             listingsResults: [],
             waitingForQuery: false,
-            isSSR: import.meta.env.SSR
+            isSSR: import.meta.env.SSR,
+            searchClient: null,
+            searchFilters: null,
+            lastQueryId: 0
         }
     },
     computed: {
-        storkQuery () {
+        activeSearchProvider () {
+            return searchProvider
+        },
+        activeQuery () {
             return [
                 this.userTextQuery.trim(),
                 ...this.filterQueryList
-            ].join(' ')
+            ].filter( Boolean ).join(' ')
+        },
+        pagefindFilters () {
+            const filters = new SearchFilters()
+            filters.setFromStringArray( this.filterQueryList )
+
+            return filters.asPagefindFilters
         },
         appList () {
             return this.kindPage.items
@@ -390,7 +405,7 @@ export default {
             return this.baseFilters.length > 0
         },
         hasSearchInputText () {
-            return this.userTextQuery.length > 0
+            return this.userTextQuery.trim().length > 0
         },
         hasAnyUserFilters () {
             return this.userFilters.length > 0
@@ -402,7 +417,7 @@ export default {
             return !this.hasAnyUserTerms
         },
         inputTerms () {
-            return this.userTextQuery.trim().split(' ')
+            return this.userTextQuery.trim().split(' ').filter( Boolean )
         },
         userFilters () {
             // console.log('filterQueryList', )
@@ -442,22 +457,23 @@ export default {
         }
     },
     mounted () {
-        // Setup stork client
-        storkClient = new StorkClient()
+        this.searchClient = this.makeSearchClient()
 
-        // Store filter instance
-        this.storkFilters = new StorkFilters()
+        this.searchFilters = new SearchFilters()
 
-        // Add initial filters
-        this.storkFilters.setFromStringArray( this.baseFilters )
-
+        this.searchFilters.setFromStringArray( this.baseFilters )
+        this.filterQueryList = this.searchFilters.list
     },
     methods: {
-        makeHighlightedMarkup,
-        makeHighlightedResultTitle,
-
         getIconForListing,
 
+        makeSearchClient () {
+            if ( this.activeSearchProvider === 'stork' ) {
+                return new StorkClient()
+            }
+
+            return new PagefindClient()
+        },
         getSearchLinks (app) {
             return app?.searchLinks || []
         },
@@ -466,10 +482,8 @@ export default {
             return this.filterQueryList.includes( filter )
         },
         toggleFilter ( newFilterQuery ) {
-
-            this.storkFilters.toggleFilter( newFilterQuery )
-
-            this.filterQueryList = this.storkFilters.list
+            this.searchFilters.toggleFilter( newFilterQuery )
+            this.filterQueryList = this.searchFilters.list
         },
         scrollInputToTop () {
             scrollIntoView(this.$refs['search-container'], {
@@ -477,15 +491,63 @@ export default {
                 behavior: 'smooth'
             })
         },
+        mapStorkResultToListing ( result ) {
+            return {
+                name: makeHighlightedResultTitle( result ),
+                text: '',
+                endpoint: result.entry.url,
+                slug: result.entry.url,
+                category: {
+                    slug: 'uncategorized'
+                },
+                lastUpdated: null,
+                resultExcerptsMarkup: ( result.excerpts || [] ).flatMap( excerpt => {
+                    return makeHighlightedMarkup( excerpt )
+                } )
+            }
+        },
+        async runPagefindQuery () {
+            const pagefindQuery = await this.searchClient.lazyQuery( this.userTextQuery, {
+                filters: this.pagefindFilters,
+                sort: this.hasSearchInputText ? {} : {
+                    updated: 'desc'
+                }
+            } )
+
+            if ( pagefindQuery === null ) {
+                return null
+            }
+
+            const resultData = await Promise.all( ( pagefindQuery.results || [] ).map( async result => {
+                return await result.data()
+            } ) )
+
+            return resultData.map( data => {
+                return mapPagefindDataToListing( data, {
+                    highlightTerms: this.inputTerms
+                } )
+            } )
+        },
+        async runStorkQuery () {
+            const storkQuery = await this.searchClient.lazyQuery( this.activeQuery, this.activeQuery.split(' ') )
+
+            if ( storkQuery === null ) {
+                return null
+            }
+
+            return ( storkQuery.results || [] ).map( result => {
+                return this.mapStorkResultToListing( result )
+            } )
+        },
 
         // Called on input and when a filter is toggled
-        async queryResults ( rawQuery ) {
+        async queryResults ( rawQuery = this.userTextQuery ) {
+            const queryId = ++this.lastQueryId
 
-            console.log( 'query', this.storkQuery )
-
-            // If our query is empty
-            // then bail
-            if ( this.storkQuery.trim().length === 0 ) return
+            if ( this.activeQuery.trim().length === 0 ) {
+                this.waitingForQuery = false
+                return
+            }
 
             this.waitingForQuery = true
 
@@ -494,36 +556,22 @@ export default {
             // Declare that at least one query has been made
             this.hasStartedAnyQuery = true
 
-            // console.log('rawQuery', rawQuery)
+            const results = this.activeSearchProvider === 'stork'
+                ? await this.runStorkQuery()
+                : await this.runPagefindQuery()
 
-            const requiredTerms = this.storkQuery.split(' ')
-
-            const storkQuery = await storkClient.lazyQuery( this.storkQuery, requiredTerms )
-
-            // If the query response is empty
-            // then return
-            if ( storkQuery === null ) {
+            if ( queryId !== this.lastQueryId ) {
                 return
             }
 
-            // console.log( 'storkQuery', storkQuery )
+            if ( results === null ) {
+                this.waitingForQuery = false
+                return
+            }
 
-            this.listingsResults = storkQuery.results.map( result => {
-                return {
-                    name: makeHighlightedResultTitle( result ),
-                    endpoint: result.entry.url,
-                    slug: '',
-                    category: {
-                        slug: 'uncategorized'
-                    },
-                    storkResult: result
-                }
-            })
+            this.listingsResults = results
 
-            // Switch from loading state and reveal the results
             this.waitingForQuery = false
-
-            // console.log('this.listingsResults', this.listingsResults)
         },
 
         handleSearchInput ( event ) {
