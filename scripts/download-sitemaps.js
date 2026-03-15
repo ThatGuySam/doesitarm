@@ -1,5 +1,5 @@
 import fs from 'fs-extra'
-import 'dotenv/config'
+import 'dotenv/config.js'
 import axios from 'axios'
 
 import {

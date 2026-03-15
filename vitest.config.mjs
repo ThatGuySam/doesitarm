@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 import astroConfig from './astro.config.mjs'
 
@@ -12,7 +12,11 @@ const vitestConfig = {
 
     test: {
         // testTimeout: 60 * 1000,
-        setupFiles: 'tsconfig-paths/register'
+        setupFiles: 'tsconfig-paths/register',
+        exclude: [
+            ...configDefaults.exclude,
+            'test/_disabled/**'
+        ]
     }
 }
 
