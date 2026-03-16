@@ -22,7 +22,6 @@ async function loadSitemapEndpoints () {
     apiUrl.pathname = sitemapEndpointsPath.replace(/^\.?\/?static\//, '/')
 
     const response = await axios.get( apiUrl.toString() )
-    await fs.outputJson( sitemapEndpointsPath, response.data, { spaces: 2 } )
 
     return response.data
 }
