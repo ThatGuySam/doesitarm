@@ -6,6 +6,10 @@ import {
     pagefindScriptURL
 } from '~/helpers/pagefind/config.js'
 
+const pagefindGlobalKey = '__doesItArmPagefind'
+const pagefindLoaderPromiseKey = '__doesItArmPagefindLoaderPromise'
+const pagefindLoaderTimeoutMs = 10 * 1000
+
 function escapeHtml ( text = '' ) {
     return text
         .replaceAll('&', '&amp;')
@@ -70,6 +74,72 @@ export function mapPagefindDataToListing ( resultData, {
     }
 }
 
+function getPagefindModuleSource () {
+    return [
+        `import * as pagefindModule from ${ JSON.stringify( pagefindScriptURL ) }`,
+        `globalThis.${ pagefindGlobalKey } = pagefindModule.default || pagefindModule`
+    ].join('\n')
+}
+
+function waitForPagefindGlobal () {
+    return new Promise( ( resolve, reject ) => {
+        if ( globalThis[ pagefindGlobalKey ] ) {
+            resolve( globalThis[ pagefindGlobalKey ] )
+            return
+        }
+
+        const startedAt = Date.now()
+        const timer = setInterval( () => {
+            if ( globalThis[ pagefindGlobalKey ] ) {
+                clearInterval( timer )
+                resolve( globalThis[ pagefindGlobalKey ] )
+                return
+            }
+
+            if ( Date.now() - startedAt >= pagefindLoaderTimeoutMs ) {
+                clearInterval( timer )
+                reject( new Error(`Timed out waiting for Pagefind browser module at ${ pagefindScriptURL }`) )
+            }
+        }, 20 )
+    } )
+}
+
+async function loadPagefindBrowserModule () {
+    if ( typeof document === 'undefined' ) {
+        throw new Error('PagefindClient can only load in a browser document')
+    }
+
+    if ( globalThis[ pagefindGlobalKey ] ) {
+        return globalThis[ pagefindGlobalKey ]
+    }
+
+    if ( !globalThis[ pagefindLoaderPromiseKey ] ) {
+        globalThis[ pagefindLoaderPromiseKey ] = new Promise( async ( resolve, reject ) => {
+            const script = document.createElement('script')
+
+            script.async = true
+            script.type = 'module'
+            script.textContent = getPagefindModuleSource()
+
+            script.onerror = () => {
+                delete globalThis[ pagefindLoaderPromiseKey ]
+                reject( new Error(`Failed to load Pagefind browser module from ${ pagefindScriptURL }`) )
+            }
+
+            document.head.append( script )
+
+            try {
+                resolve( await waitForPagefindGlobal() )
+            } catch ( err ) {
+                delete globalThis[ pagefindLoaderPromiseKey ]
+                reject( err )
+            }
+        } )
+    }
+
+    return await globalThis[ pagefindLoaderPromiseKey ]
+}
+
 export class PagefindClient {
     constructor ( options = {} ) {
         this.bundlePath = options.bundlePath || pagefindBundleRelativeURL
@@ -100,7 +170,7 @@ export class PagefindClient {
     async loadPagefindScript () {
         if ( this.pagefind ) return
 
-        const pagefindModule = await import(/* @vite-ignore */ pagefindScriptURL)
+        const pagefindModule = await loadPagefindBrowserModule()
         this.pagefind = pagefindModule.default || pagefindModule
 
         this.pagefind.options({

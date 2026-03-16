@@ -366,6 +366,9 @@ export default {
                 ...this.filterQueryList
             ].filter( Boolean ).join(' ')
         },
+        pagefindResultLimit () {
+            return Math.max( this.initialList.length, 25 )
+        },
         pagefindFilters () {
             const filters = new SearchFilters()
             filters.setFromStringArray( this.filterQueryList )
@@ -518,9 +521,19 @@ export default {
                 return null
             }
 
-            const resultData = await Promise.all( ( pagefindQuery.results || [] ).map( async result => {
+            const limitedResults = ( pagefindQuery.results || [] ).slice( 0, this.pagefindResultLimit )
+            const settledResultData = await Promise.allSettled( limitedResults.map( async result => {
                 return await result.data()
             } ) )
+
+            const resultData = settledResultData.flatMap( settledResult => {
+                if ( settledResult.status === 'fulfilled' ) {
+                    return [ settledResult.value ]
+                }
+
+                console.warn('Failed to load Pagefind result data', settledResult.reason)
+                return []
+            } )
 
             return resultData.map( data => {
                 return mapPagefindDataToListing( data, {
