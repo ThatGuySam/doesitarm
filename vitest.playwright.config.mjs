@@ -1,0 +1,23 @@
+import { defineConfig } from 'vitest/config'
+
+import astroConfig from './astro.config.mjs'
+
+
+const vitestConfig = {
+    ...astroConfig,
+    ...astroConfig.vite,
+    test: {
+        setupFiles: 'tsconfig-paths/register',
+        include: [
+            'test/playwright/**/*.playwright.js'
+        ],
+        exclude: [
+            'test/_disabled/**'
+        ],
+        fileParallelism: false,
+        hookTimeout: 120 * 1000,
+        testTimeout: 120 * 1000
+    }
+}
+
+export default defineConfig( vitestConfig )
