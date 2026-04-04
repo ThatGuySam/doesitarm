@@ -100,3 +100,5 @@ dist
 /README-temp.md
 .DS_Store
 /.vscode/snipsnap.code-snippets
+.vercel
+.env*.local
