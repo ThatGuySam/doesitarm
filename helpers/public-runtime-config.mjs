@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
-import { createRequire } from 'node:module'
 
 dotenv.config()
 
-const require = createRequire( import.meta.url )
-const packageJson = require( '../package.json' )
-const packageVerbiage = packageJson.config?.verbiage || {}
+const fallbackVerbiage = {
+    macs: 'Apple M4 Max or M3 Ultra Mac',
+    processors: 'Apple M4 Max and M3 Ultra'
+}
 
 function getRuntimeValue ( envValue, fallbackValue = null ) {
     if ( typeof envValue === 'string' && envValue.length > 0 ) {
@@ -19,8 +19,8 @@ export const publicRuntimeConfig = {
     allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
     testResultStore: process.env.TEST_RESULT_STORE,
     siteUrl: process.env.URL,
-    macsVerbiage: getRuntimeValue( process.env.npm_package_config_verbiage_macs, packageVerbiage.macs || null ),
-    processorsVerbiage: getRuntimeValue( process.env.npm_package_config_verbiage_processors, packageVerbiage.processors || null ),
+    macsVerbiage: getRuntimeValue( process.env.npm_package_config_verbiage_macs, fallbackVerbiage.macs ),
+    processorsVerbiage: getRuntimeValue( process.env.npm_package_config_verbiage_processors, fallbackVerbiage.processors ),
 }
 
 export function makeViteDefinitions () {
