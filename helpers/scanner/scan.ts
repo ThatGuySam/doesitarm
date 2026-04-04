@@ -2,10 +2,11 @@ import { Buffer } from 'buffer/index.js'
 import prettyBytes from 'pretty-bytes'
 import * as zip from '@zip.js/zip.js'
 
-import * as FileApi from './file-api.js'
+import * as FileApi from './file-api'
+import type { NodeFile } from './file-api'
 import { isNonEmptyString, isString } from '../check-types.js'
 import { extractMachoMeta } from './parsers/macho.js'
-import { parsePlistBuffer } from './parsers/plist.js'
+import { parsePlistBuffer } from './parsers/plist'
 
 zip.configure({
     useWebWorkers: !import.meta.env.SSR
@@ -89,7 +90,7 @@ interface ScanFileEntry {
 
 interface ScanMachoFileInstance {
     blob?: Blob
-    buffer: Buffer
+    buffer: NodeFile['buffer']
     name: string
     type: string
 }
@@ -390,10 +391,10 @@ export class AppScan {
         const bundleExecutableUint8Array = await this.readFileEntryData<InstanceType<typeof zip.Uint8ArrayWriter>>( fileEntry, zip.Uint8ArrayWriter as new () => InstanceType<typeof zip.Uint8ArrayWriter> ) as Uint8Array
 
         const machoFileInstance = new FileApi.File({
-            buffer: Buffer.from( bundleExecutableUint8Array ),
+            buffer: Buffer.from( bundleExecutableUint8Array ) as unknown as NodeFile['buffer'],
             name: this.bundleExecutable.filename,
             type: 'application/x-mach-binary'
-        }) as ScanMachoFileInstance
+        }) as unknown as ScanMachoFileInstance
 
         machoFileInstance.blob = await this.readFileEntryData<InstanceType<typeof zip.BlobWriter>>( fileEntry, zip.BlobWriter as new () => InstanceType<typeof zip.BlobWriter> ) as Blob
 
