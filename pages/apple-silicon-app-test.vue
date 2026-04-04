@@ -206,8 +206,11 @@ export default {
         }
     },
     computed: {
+        fallbackMacsVerbiage () {
+            return 'Apple M4 Max or M3 Ultra Mac'
+        },
         npm_package_config_verbiage_macs () {
-            return this.config.macsVerbiage //process.env.npm_package_config_verbiage_macs
+            return this.config?.macsVerbiage || this.$config?.macsVerbiage || this.fallbackMacsVerbiage
         },
         foundFiles () {
             return this.appsBeingScanned.filter( appScan => {
@@ -271,7 +274,7 @@ export default {
             return `Apple Silicon Compatibility Test Online`
         },
         description ()  {
-            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ this.$config.macsVerbiage }. `
+            return `Check for Apple Silicon compatibility for any of your apps instantly before you buy an ${ this.npm_package_config_verbiage_macs }. `
         }
     },
     mounted () {
