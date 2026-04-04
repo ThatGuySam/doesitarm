@@ -15,7 +15,7 @@ import glob from 'fast-glob'
 import { LocalFileData } from 'get-file-object-from-local-path'
 import { Zip } from 'zip-lib'
 
-import { runScanWorker } from '~/helpers/scanner/client.mjs'
+import { runScanWorker } from '~/helpers/scanner/client'
 
 
 const appGlobOptions = {
@@ -141,5 +141,4 @@ describe.concurrent('Apps', async () => {
     }
 
 })
-
 

@@ -7,7 +7,7 @@ import { isString } from './check-types.js'
 import parseMacho from './macho/index.js'
 
 // Vite Web Workers - https://vitejs.dev/guide/features.html#web-workers
-import { runScanWorker } from '~/helpers/scanner/client.mjs'
+import { runScanWorker } from '~/helpers/scanner/client'
 
 const scannerVersion = (() => {
     // If there's no window
@@ -341,11 +341,56 @@ export default class AppFilesScanner {
             .then( response => response.data )
             .catch(function (error) {
                 console.error(error)
+
+                return {
+                    supportedVersionNumber: null
+                }
             })
 
         return {
             supportedVersionNumber
         }
+    }
+
+    getFinishedStatusMessage ({
+        binarySupportsNative,
+        supportedVersionNumber
+    }) {
+        if ( binarySupportsNative ) {
+            return '✅ This app is natively compatible with Apple Silicon!'
+        }
+
+        if ( supportedVersionNumber != null ) {
+            return [
+                '✅ A native version of this has been reported',
+                ( isString( supportedVersionNumber ) && supportedVersionNumber.length > 0 ) ? `as of v${ supportedVersionNumber }` : null
+            ].filter( Boolean ).join(' ')
+        }
+
+        return `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
+    }
+
+    finishFileScan ( file, scanIndex, {
+        binarySupportsNative,
+        supportedVersionNumber
+    } ) {
+        file.statusMessage = this.getFinishedStatusMessage({
+            binarySupportsNative,
+            supportedVersionNumber
+        })
+        file.status = 'finished'
+
+        if ( binarySupportsNative ) {
+            this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
+        }
+    }
+
+    applyWorkerScanData ( file, scan ) {
+        file.appVersion = scan.appVersion || null
+        file.displayName = scan.displayName || file.displayName
+        file.details = Array.isArray( scan.details ) ? scan.details : []
+        file.displayBinarySize = scan.displayBinarySize || null
+        file.binarySize = typeof scan.binarySize === 'number' ? scan.binarySize : null
     }
 
     async scanFile ( file, scanIndex ) {
@@ -553,26 +598,10 @@ export default class AppFilesScanner {
 
         console.log('supportedVersionNumber', supportedVersionNumber)
 
-        let finishedStatusMessage = ''
-
-        if ( binarySupportsNative ) {
-            finishedStatusMessage = '✅ This app is natively compatible with Apple Silicon!'
-
-            // Shift this scan to the top
-            this.files.unshift( this.files.splice( scanIndex, 1 )[0] )
-        } else if ( supportedVersionNumber !== null ) {
-
-            finishedStatusMessage = [
-                '✅ A native version of this has been reported',
-                (supportedVersionNumber.length > 0) ? `as of v${supportedVersionNumber}` : null
-            ].join(' ')
-
-        } else {
-            finishedStatusMessage = `🔶 This app file is not natively compatible with Apple Silicon and may only run via Rosetta 2 translation, however, software vendors will sometimes will ship separate install files for Intel and ARM instead of a single one. `
-        }
-
-        file.statusMessage = finishedStatusMessage
-        file.status = 'finished'
+        this.finishFileScan( file, scanIndex, {
+            binarySupportsNative,
+            supportedVersionNumber
+        } )
 
         return
     }
@@ -618,20 +647,45 @@ export default class AppFilesScanner {
                 console.log( 'scannerVersion', scannerVersion )
 
                 if ( scannerVersion === '2' ) {
+                    try {
+                        const { scan } = await runScanWorker( file.instance, messageDetails => {
+                            console.log( 'messageDetails', messageDetails )
 
+                            if ( isString( messageDetails.message ) ) {
+                                file.statusMessage = messageDetails.message
+                            }
 
-                    const { scan } = await runScanWorker( file.instance, messageDetails => {
-                        console.log( 'messageDetails', messageDetails )
+                            if ( isString( messageDetails.status ) ) {
+                                file.status = messageDetails.status
+                            }
+                        } )
 
-                        file.statusMessage = messageDetails.message
-                        file.status = messageDetails.status
-                    } )
+                        this.applyWorkerScanData( file, scan )
 
-                    console.log('scan', scan)
+                        const { supportedVersionNumber } = await this.submitScanInfo({
+                            filename: scan.info?.filename || file.name,
+                            appVersion: scan.info?.appVersion || file.appVersion,
+                            result: scan.info?.result || ( scan.binarySupportsNative ? '✅' : '🔶' ),
+                            machoMeta: scan.info?.machoMeta || null,
+                            infoPlist: scan.info?.infoPlist || null
+                        })
 
-                    clearTimeout(timer)
+                        this.finishFileScan( file, scanIndex, {
+                            binarySupportsNative: Boolean( scan.binarySupportsNative ),
+                            supportedVersionNumber
+                        } )
 
-                    resolve()
+                        clearTimeout(timer)
+
+                        resolve()
+                    } catch ( error ) {
+                        file.statusMessage = `❔ ${ error.message }`
+                        file.status = 'finished'
+
+                        clearTimeout(timer)
+
+                        resolve()
+                    }
                     return
                 }
 

@@ -58,11 +58,10 @@ export async function createNativeAppArchive ( appName = 'Playwright Native App'
 
         const archiveBuffer = await readFile( archivePath )
 
+        const archiveArrayBuffer = new Uint8Array( archiveBuffer ).slice().buffer
+
         return {
-            arrayBuffer: archiveBuffer.buffer.slice(
-                archiveBuffer.byteOffset,
-                archiveBuffer.byteOffset + archiveBuffer.byteLength
-            ),
+            arrayBuffer: archiveArrayBuffer,
             buffer: archiveBuffer,
             mimeType: 'application/zip',
             name: `${ appName }.app.zip`,
