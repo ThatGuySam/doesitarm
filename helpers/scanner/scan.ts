@@ -6,7 +6,7 @@ import * as FileApi from './file-api'
 import type { NodeFile } from './file-api'
 import { isNonEmptyString, isString } from '../check-types.js'
 import { extractMachoMeta } from './parsers/macho.js'
-import { parsePlistBuffer } from './parsers/plist'
+import { parsePlistBuffer } from './parsers/plist-parser'
 
 zip.configure({
     useWebWorkers: !import.meta.env.SSR

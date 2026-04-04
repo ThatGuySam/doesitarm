@@ -10,7 +10,7 @@ import {
 import {
     parseFileSync,
     parsePlistBuffer
-} from '~/helpers/scanner/parsers/plist'
+} from '~/helpers/scanner/parsers/plist-parser'
 
 type ParsedPlist = Record<string, string>
 
