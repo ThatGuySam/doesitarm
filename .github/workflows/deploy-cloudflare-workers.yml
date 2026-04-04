@@ -7,6 +7,12 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-workers-master
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -16,30 +22,32 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v6
 
-    - name: Setup PNPM
-      uses: pnpm/action-setup@v4
-      with:
-        version: 10.12.1
-        run_install: false
-
     - name: Use Node.js 24
       uses: actions/setup-node@v6
       with:
         node-version-file: .nvmrc
-        cache: pnpm
+        cache: npm
+        cache-dependency-path: |
+          doesitarm-default/package-lock.json
+          workers/analytics/package-lock.json
   
     - name: Write Wrangler configs
+      shell: bash
       run: |
-          echo ${{ secrets.WRANGLER_ENV }} | base64 -d > doesitarm-default/.env
-          cat doesitarm-default/.env
-          echo ${{ secrets.WRANGLER_TOML }} | base64 -d > doesitarm-default/wrangler.toml
-          cat doesitarm-default/wrangler.toml
-          pnpm install
+          set -euo pipefail
+          umask 077
 
-          # Analytics Worker
-          echo ${{ secrets.ANALYTICS_WRANGER_TOML }} | base64 -d > workers/analytics/wrangler.toml
-          cat workers/analytics/wrangler.toml
-          pnpm install
+          printf '%s' '${{ secrets.WRANGLER_ENV }}' | base64 --decode > doesitarm-default/.env
+          printf '%s' '${{ secrets.WRANGLER_TOML }}' | base64 --decode > doesitarm-default/wrangler.toml
+          printf '%s' '${{ secrets.ANALYTICS_WRANGER_TOML }}' | base64 --decode > workers/analytics/wrangler.toml
+
+    - name: Install default worker dependencies
+      working-directory: doesitarm-default
+      run: npm ci
+
+    - name: Install analytics worker dependencies
+      working-directory: workers/analytics
+      run: npm ci
 
     - name: Deploy Default Worker
       uses: cloudflare/wrangler-action@1.3.0
