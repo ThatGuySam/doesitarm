@@ -9,7 +9,8 @@ const vitestConfig = {
     test: {
         setupFiles: 'tsconfig-paths/register',
         include: [
-            'test/playwright/**/*.playwright.js'
+            'test/playwright/**/*.playwright.js',
+            'test/playwright/**/*.playwright.ts'
         ],
         exclude: [
             'test/_disabled/**'
