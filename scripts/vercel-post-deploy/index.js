@@ -1,6 +1,6 @@
 import { isMacOS } from 'std-env'
 
-import axios from 'axios'
+import { getText } from '~/helpers/http.js'
 
 ;(async () => {
 
@@ -10,7 +10,7 @@ import axios from 'axios'
         process.exit()
     }
 
-    const { data } = await axios.get(`https://master--doesitarm.netlify.app/apple-silicon-app-test`)
+    const data = await getText( 'https://master--doesitarm.netlify.app/apple-silicon-app-test' )
 
     console.log( data.slice(0, 100) )
 

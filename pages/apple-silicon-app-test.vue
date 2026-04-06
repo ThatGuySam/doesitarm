@@ -169,7 +169,6 @@
 </template>
 
 <script>
-// import axios from 'axios'
 
 import AppFilesScanner from '~/helpers/app-files-scanner.js'
 

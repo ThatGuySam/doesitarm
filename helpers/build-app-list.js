@@ -1,6 +1,5 @@
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
-import axios from 'axios'
 
 import statuses, { getStatusName } from './statuses.js'
 import appStoreGenres from './app-store/genres.js'
@@ -14,6 +13,7 @@ import { byTimeThenNull }  from './sort-list.js'
 import {
     cliOptions
 } from '~/helpers/cli-options.js'
+import { getJson } from './http.js'
 
 const md = new MarkdownIt()
 
@@ -277,9 +277,9 @@ const lookForLastUpdated = function (app, commits) {
 async function fetchBundleGenres () {
     const genresJsonUrl = `${process.env.VFUNCTIONS_URL}/app-store/listings-sheet?fields=bundleId,genreIds`
 
-    return await axios.get( genresJsonUrl )
-        .then( response => {
-            return new Map( response.data.apps )
+    return await getJson( genresJsonUrl )
+        .then( data => {
+            return new Map( data.apps )
         })
         .catch(function (error) {
             // handle error
@@ -315,9 +315,9 @@ export default async function () {
     // console.log('readmeContent', readmeContent)
 
     // Fetch Commits
-    const response = await axios.get(process.env.COMMITS_SOURCE)
+    const response = await getJson( process.env.COMMITS_SOURCE )
     // Extract commit from response data
-    const commits = response.data.data.viewer.repository.defaultBranchRef.target.history.edges
+    const commits = response.data.viewer.repository.defaultBranchRef.target.history.edges
     // console.log('commits', commits)
 
     // Save commits to file just in case
@@ -328,13 +328,11 @@ export default async function () {
     const scanListMap = new Map()
 
     // Store app scans
-    await axios
-        .get(process.env.SCANS_SOURCE)
-
+    await getJson( process.env.SCANS_SOURCE )
         .then( async response => {
             const appBundles = []
 
-            for (const appScan of response.data.appList) {
+            for (const appScan of response.appList) {
 
                 // Add app to bundle list
                 appBundles.push([
@@ -349,11 +347,7 @@ export default async function () {
 
             await fs.writeJson('./static/app-bundles.json', appBundles)
 
-            return response
-        })
-        .then(function (response) {
-
-            response.data.appList.forEach( appScan => {
+            response.appList.forEach( appScan => {
 
                 const appName = appScan.aliases[0]
 
@@ -424,8 +418,6 @@ export default async function () {
                     relatedLinks
                 })
             })
-
-            return
         })
         .catch(function (error) {
             // handle error

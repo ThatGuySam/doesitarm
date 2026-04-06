@@ -59,8 +59,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     props: {
         appName: {
@@ -121,31 +119,16 @@ export default {
             const formActionUrl = `https://docs.google.com/forms/d/e/1FAIpQLSdWUAVabT3i1ExfnPgRKnk-s-aWLlOuy0d5JjMKDwKtrwXj1Q/formResponse?entry.710297191=${this.appName}&emailAddress=${this.email}&submit=Submit`
 
 
-            axios({
-                method: 'get',
-                url: formActionUrl,
-                // data: {
-                //     // Email
-                //     'emailAddress': this.email,
-
-                //     // App Name
-                //     'entry.710297191': this.appName,
-                //     // Notes
-                //     // 'entry.2040856090': '',
-
-                //     'submit': 'Submit'
-                // },
-            }).finally( response => {
-
+            try {
+                await fetch( formActionUrl, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                } )
+            } catch ( error ) {
+                console.warn( 'Error Subscribing -', error )
+            } finally {
                 this.feedbackMessage = 'We\'ll keep an eye on it for you!'
-
-                // console.log('response', response)
-                // if (response.status === 200) {
-                //     this.feedbackMessage = '- We\'ll keep an eye on it for you!'
-                // } else {
-                //     this.feedbackMessage = 'Oops! Something went wrong'
-                // }
-            })
+            }
 
             // .catch(error => {
             //     // handle error

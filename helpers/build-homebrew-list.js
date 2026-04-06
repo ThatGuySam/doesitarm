@@ -2,7 +2,6 @@
 // import { promises as fs } from 'fs'
 // import MarkdownIt from 'markdown-it'
 // import slugify from 'slugify'
-import axios from 'axios'
 
 // import statuses from './statuses'
 // import parseDate from './parse-github-date'
@@ -11,6 +10,7 @@ const marked = require('marked')
 const HTMLParser = require(`node-html-parser`)
 
 import { getAppEndpoint } from './app-derived'
+import { getJson } from './http.js'
 
 
 const statusesTranslations = {
@@ -117,13 +117,13 @@ class MakeHomebrewList {
             allFormulaeResponse
         ] = await Promise.all([
             // Fetch Gihub Issue List
-            axios.get(process.env.HOMEBREW_SOURCE),
+            getJson( process.env.HOMEBREW_SOURCE ),
             // Fetch Official Homebrew Formulae List
-            axios.get('https://formulae.brew.sh/api/formula.json')
+            getJson( 'https://formulae.brew.sh/api/formula.json' )
         ])
 
         // Extract commit from response data
-        const issueMarkdown = issueResponse.data.data.repository.issue.body
+        const issueMarkdown = issueResponse.data.repository.issue.body
 
         // Parse markdown
         const issueHTML = marked(issueMarkdown)
@@ -132,10 +132,10 @@ class MakeHomebrewList {
         const dom = HTMLParser.parse(issueHTML)
 
         // Store the original array
-        this.allFormulaeArray = allFormulaeResponse.data
+        this.allFormulaeArray = allFormulaeResponse
 
         // Extract list from allFormulaeResponse and map into an object for easy access
-        this.allFormulae = Object.fromEntries(allFormulaeResponse.data.map(formula => {
+        this.allFormulae = Object.fromEntries(allFormulaeResponse.map(formula => {
             return [
                 formula.full_name,
                 formula

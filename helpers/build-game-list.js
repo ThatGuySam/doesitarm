@@ -1,8 +1,7 @@
-import axios from 'axios'
-
 // import { statuses } from './build-app-list'
 import { getAppEndpoint } from './app-derived'
 import { makeSlug } from './slug.js'
+import { getJson } from './http.js'
 
 
 // console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
@@ -68,11 +67,10 @@ function parseStatus(game) {
 export default async function () {
 
     // Fetch Sheet data
-    const gamesSheet = await axios
-        .get(process.env.GAMES_SOURCE)
+    const gamesSheet = await getJson( process.env.GAMES_SOURCE )
         .then(function (response) {
             // handle success
-            return response.data.records
+            return response.records
         })
         .catch(function (error) {
             // handle error

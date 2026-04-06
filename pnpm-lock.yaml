@@ -47,9 +47,6 @@ importers:
       astro:
         specifier: ^6.0.4
         version: 6.0.4(@netlify/blobs@10.7.2)(@types/node@24.12.0)(jiti@2.6.1)(rollup@4.59.0)(terser@5.46.0)(typescript@5.7.3)(yaml@2.8.2)
-      axios:
-        specifier: ^0.21.0
-        version: 0.21.0
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
@@ -2152,10 +2149,6 @@ packages:
   aws4@1.12.0:
     resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
 
-  axios@0.21.0:
-    resolution: {integrity: sha512-fmkJBknJKoZwem3/IKSSLpkdNXZeBu5Q7GA/aRsr2btgrptmSCxi2oFjZHqGdK9DoTil9PIHlPIZw2EcRJXRvw==}
-    deprecated: Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410
-
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
@@ -3798,15 +3791,6 @@ packages:
 
   fn.name@1.1.0:
     resolution: {integrity: sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==}
-
-  follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
 
   fontace@0.4.1:
     resolution: {integrity: sha512-lDMvbAzSnHmbYMTEld5qdtvNH2/pWpICOqpean9IgC7vUbUJc3k+k5Dokp85CegamqQpFbXf0rAVkbzpyTA8aw==}
@@ -10254,12 +10238,6 @@ snapshots:
 
   aws4@1.12.0: {}
 
-  axios@0.21.0:
-    dependencies:
-      follow-redirects: 1.15.2
-    transitivePeerDependencies:
-      - debug
-
   axobject-query@4.1.0: {}
 
   b4a@1.8.0: {}
@@ -12146,8 +12124,6 @@ snapshots:
   flattie@1.1.1: {}
 
   fn.name@1.1.0: {}
-
-  follow-redirects@1.15.2: {}
 
   fontace@0.4.1:
     dependencies:

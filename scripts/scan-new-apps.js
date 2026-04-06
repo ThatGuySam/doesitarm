@@ -1,8 +1,8 @@
 import { createServer } from 'vite'
-import axios from 'axios'
 
 import viteConfig from '~/vite.config.mjs'
 import { isLinux } from '~/helpers/environment.js'
+import { getText } from '~/helpers/http.js'
 
 const port = 1337
 
@@ -29,12 +29,12 @@ const runScans = false
 
     console.log(`Server listening on https://${ vercelUrl }:${ port }/`)
 
-    const { data } = await axios.get(`http://${ vercelUrl }:${ port }/`)
+    const data = await getText( `http://${ vercelUrl }:${ port }/` )
         .catch( err => {
             console.log( 'err', err )
         })
 
-    console.log( data.slice(0, 100) )
+    console.log( data?.slice(0, 100) )
 
     await server.close();
 
