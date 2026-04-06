@@ -10,6 +10,7 @@ import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
+import { getDeviceListingBySlug } from '~/helpers/site-listings.js'
 
 
 import Layout from '../../layouts/default.astro'
@@ -36,7 +37,22 @@ if ( redirectResponse !== null ) {
 
 applyResponseDefaults( Astro )
 
-const device = await DoesItAPI.device( pathSlug ).get()
+let device
+
+try {
+    device = await DoesItAPI.device( pathSlug ).get()
+} catch ( error ) {
+    if ( error?.response?.status !== 404 ) {
+        throw error
+    }
+
+    device = getDeviceListingBySlug( pathSlug )
+}
+
+if ( device === null || typeof device === 'undefined' ) {
+    return Astro.redirect( '/devices' )
+}
+
 const rawAppPage = await DoesItAPI.kind( 'app' )( subSlug ).get()
 
 

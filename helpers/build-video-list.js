@@ -33,6 +33,10 @@ const videoFeaturesApp = function (app, video) {
     return false
 }
 
+export function makeVideoSlug ( title, videoId ) {
+    return makeSlug( `${ title }-i-${ videoId }` )
+}
+
 const generateVideoTags = function ( video ) {
     const tags = {
         'benchmark': {
@@ -129,7 +133,7 @@ const makeThumbnailData = function ( thumbnails, widthLimit = null ) {
     }
 }
 
-async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
+export async function buildVideoListingFromFetchedVideo ( fetchedVideo, videoId, applist ) {
 
     // Skip private videos
     if (fetchedVideo.title === 'Private video') return
@@ -138,7 +142,7 @@ async function handleFetchedVideo ( fetchedVideo, videoId, applist ) {
     if (fetchedVideo.title === 'Deleted video') return
 
     // Build video slug
-    const slug = makeSlug( `${fetchedVideo.title}-i-${videoId}` )
+    const slug = makeVideoSlug( fetchedVideo.title, videoId )
 
     const appLinks = []
     // Generate new tag set based on api data
@@ -200,8 +204,7 @@ export default async function ( applist ) {
         .withConcurrency(1000)
         .for( Object.entries( fetchedVideos ) )
         .process(async ( [ videoId, fetchedVideo ], index, pool ) => {
-            const mappedVideo = await handleFetchedVideo ( fetchedVideo, videoId, applist )
-
+            const mappedVideo = await buildVideoListingFromFetchedVideo( fetchedVideo, videoId, applist )
             // Skip if this video is not an object
             if ( Object( mappedVideo ) !== mappedVideo ) return
 

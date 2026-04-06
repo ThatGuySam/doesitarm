@@ -1,0 +1,104 @@
+#!/usr/bin/env bun
+
+const routeGroups = {
+  topLevel: [
+    '/',
+    '/categories',
+    '/devices',
+    '/benchmarks',
+    '/games',
+    '/apple-silicon-app-test'
+  ],
+  dynamic: [
+    '/app/kicad-eda',
+    '/app/spotify',
+    '/formula/bash',
+    '/kind/developer-tools',
+    '/device/m1-imac',
+    '/app/expressvpn/benchmarks'
+  ],
+  video: [
+    '/tv/apple-silicon-gaming-is-here',
+    '/tv/install-instagram-app-on-m1-macbook-air-apple-silicon-tutorial-i-vfbmworal6i',
+    '/tv/xamarin-and-visual-studio-on-apple-macbook-pro-13-m1-in-4k-i-rwpspmmlos',
+    '/tv/watch-this-before-buying-apple-m1-macbook-for-xampp-or-apple-silicon-tests-in-4k-i-ebwwewsis8s'
+  ]
+}
+
+function parseHosts(rawHosts) {
+  const source = rawHosts && rawHosts.trim().length > 0
+    ? rawHosts
+    : 'doesitarm.com'
+
+  return source
+    .split(',')
+    .map(host => host.trim())
+    .filter(Boolean)
+    .map(host => host.startsWith('http://') || host.startsWith('https://') ? host : `https://${host}`)
+}
+
+function getPaths() {
+  return Object.values(routeGroups).flat()
+}
+
+function extractTitle(html) {
+  const match = html.match(/<title>([^<]+)<\/title>/i)
+
+  return match ? match[1].trim() : ''
+}
+
+async function runCheck(host, path) {
+  const url = new URL(path, host)
+  const response = await fetch(url, {
+    redirect: 'follow',
+    headers: {
+      'user-agent': 'doesitarm-health-check'
+    }
+  })
+
+  const html = await response.text()
+  const finalUrl = response.url
+
+  return {
+    host: new URL(host).host,
+    path,
+    status: response.status,
+    ok: response.ok,
+    finalPath: new URL(finalUrl).pathname,
+    title: extractTitle(html)
+  }
+}
+
+const hosts = parseHosts(process.argv[2] || '')
+const paths = getPaths()
+
+console.log(`Checking ${paths.length} routes across ${hosts.length} host(s)`)
+
+let hasFailures = false
+
+for (const host of hosts) {
+  console.log(`\nHost: ${new URL(host).host}`)
+
+  const results = await Promise.all(paths.map(path => runCheck(host, path)))
+
+  for (const result of results) {
+    const statusLabel = result.ok ? 'PASS' : 'FAIL'
+    const redirectSuffix = result.finalPath !== result.path ? ` -> ${result.finalPath}` : ''
+    const titleSuffix = result.title.length > 0 ? ` | ${result.title}` : ''
+
+    console.log(`${statusLabel} ${result.status} ${result.path}${redirectSuffix}${titleSuffix}`)
+  }
+
+  const failures = results.filter(result => !result.ok)
+
+  if (failures.length > 0) {
+    hasFailures = true
+    console.log(`Failures: ${failures.length}`)
+  } else {
+    console.log('Failures: 0')
+  }
+}
+
+if (hasFailures) {
+  process.exit(1)
+}

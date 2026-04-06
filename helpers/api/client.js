@@ -25,7 +25,10 @@ const defaultFetchMethod = async function (...args) {
     return axios(...args)
         .then( response => response.data )
         .catch( error => {
-            console.error( error )
+            if ( error?.response?.status !== 404 ) {
+                console.error( error )
+            }
+
             throw error
         })
 }

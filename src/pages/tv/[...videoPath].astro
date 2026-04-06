@@ -11,6 +11,7 @@ import {
     getVideoImages,
     ListingDetails
 } from '~/helpers/listing-page.js'
+import { getVideoListingBySlug } from '~/helpers/site-listings.js'
 import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
 
 import Layout from '~/src/layouts/default.astro'
@@ -39,7 +40,21 @@ const {
 // https://docs.astro.build/en/reference/api-reference/#astrorequests
 
 // Request App data from API
-const tvListing = await DoesItAPI.tv( pathSlug ).get()
+let tvListing
+
+try {
+    tvListing = await DoesItAPI.tv( pathSlug ).get()
+} catch ( error ) {
+    if ( error?.response?.status !== 404 ) {
+        throw error
+    }
+
+    tvListing = await getVideoListingBySlug( pathSlug )
+}
+
+if ( tvListing === null || typeof tvListing === 'undefined' ) {
+    return Astro.redirect( '/benchmarks' )
+}
 
 const listingDetails = new ListingDetails( tvListing )
 
