@@ -56,7 +56,13 @@ export async function applyResponseDefaults ( Astro ) {
 export async function catchRedirectResponse ( Astro ) {
     const requestUrl = new URL( Astro.request.url )
 
-    const netlifyRedirectUrl = await getNetlifyRedirect( requestUrl.pathname )
+    let netlifyRedirectUrl = null
+
+    try {
+        netlifyRedirectUrl = await getNetlifyRedirect( requestUrl.pathname )
+    } catch ( error ) {
+        console.warn( `Skipping redirect lookup for ${ requestUrl.pathname }`, error )
+    }
 
     // console.log('netlifyRedirectUrl', netlifyRedirectUrl)
 
@@ -66,5 +72,4 @@ export async function catchRedirectResponse ( Astro ) {
 
     return null
 }
-
 

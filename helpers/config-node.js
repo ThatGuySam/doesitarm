@@ -1,5 +1,7 @@
 import TOML from '@iarna/toml'
 import fs from 'fs-extra'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 import pkg from '~/package.json'
 import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
@@ -8,6 +10,7 @@ import { getRouteType } from '~/helpers/app-derived.js'
 
 
 export const siteUrl = getSiteUrl()
+const currentModuleDirectory = path.dirname( fileURLToPath( import.meta.url ) )
 
 export const nuxtHead = {
     // this htmlAttrs you need
@@ -113,8 +116,41 @@ export const nuxtHead = {
 
 
 
+export async function getNetlifyConfigPath () {
+    const searchDirectories = new Set()
+
+    // Local dev usually runs from repo root, but deployed serverless
+    // functions may execute from a nested working directory.
+    for ( const baseDirectory of [
+        process.cwd(),
+        currentModuleDirectory,
+    ] ) {
+        let directory = baseDirectory
+
+        while ( true ) {
+            searchDirectories.add( directory )
+
+            const parentDirectory = path.dirname( directory )
+
+            if ( parentDirectory === directory ) break
+
+            directory = parentDirectory
+        }
+    }
+
+    for ( const directory of searchDirectories ) {
+        const configPath = path.join( directory, 'netlify.toml' )
+
+        if ( await fs.pathExists( configPath ) ) {
+            return configPath
+        }
+    }
+
+    throw new Error( 'Could not find netlify.toml' )
+}
+
 export async function getNetlifyConfig () {
-    const configPath = './netlify.toml'
+    const configPath = await getNetlifyConfigPath()
     const tomlContent = await fs.readFile(configPath, 'utf-8')
     const netlifyConfig = TOML.parse(tomlContent)
 
