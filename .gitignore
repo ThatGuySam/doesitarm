@@ -102,3 +102,6 @@ dist
 /.vscode/snipsnap.code-snippets
 .vercel
 .env*.local
+
+# Keep plan/search artifacts for OMX workflows
+docs/data/
