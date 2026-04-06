@@ -30,6 +30,8 @@ testable HTTP layer instead of many ad hoc call-site rewrites.
   - execute `pnpm run netlify-build` ✅
   - run live deploy verification (`apple-silicon-app-test` URLs) ✅
   - confirm whether `pnpm-lock.yaml` changes are sufficient for your lockfile policy
+    - ✅ `package.json` no longer lists axios
+    - ✅ `pnpm-lock.yaml` still contains only transitive `gaxios` (Google API client dependency), no direct `axios` entry
 
 # Non-Goals
 
