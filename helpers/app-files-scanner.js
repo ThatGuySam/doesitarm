@@ -1,9 +1,9 @@
 import plist from 'plist'
-import axios from 'axios'
 import prettyBytes from 'pretty-bytes'
 import * as zip from '@zip.js/zip.js'
 
 import { isString } from './check-types.js'
+import { postJson } from './http.js'
 import parseMacho from './macho/index.js'
 
 // Vite Web Workers - https://vitejs.dev/guide/features.html#web-workers
@@ -331,14 +331,13 @@ export default class AppFilesScanner {
 
         // console.log( 'this.testResultStore', this.testResultStore )
 
-        const { supportedVersionNumber } = await axios.post( this.testResultStore , {
+        const responseData = await postJson( this.testResultStore, {
             filename,
             appVersion,
             result,
             machoMeta: JSON.stringify( machoMeta ),
             infoPlist: JSON.stringify( infoPlist )
-        })
-            .then( response => response.data )
+        } )
             .catch(function (error) {
                 console.error(error)
 
@@ -348,7 +347,7 @@ export default class AppFilesScanner {
             })
 
         return {
-            supportedVersionNumber
+            supportedVersionNumber: responseData?.supportedVersionNumber ?? null
         }
     }
 

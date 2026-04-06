@@ -1,6 +1,5 @@
-import axios from 'axios'
-
 import { makeSlug } from './slug.js'
+import { getJson } from './http.js'
 
 export function getDeviceEndpoint ( slug ) {
     return `/device/${ slug }`
@@ -12,10 +11,7 @@ export default async function () {
 
     const devicesJsonUrl = `${process.env.VFUNCTIONS_URL}/api/devices`
 
-    const rawDeviceList = await axios.get(devicesJsonUrl)
-        .then( response => {
-            return response.data
-        })
+    const rawDeviceList = await getJson( devicesJsonUrl )
         .catch(function (error) {
             // handle error
             console.warn('Error fetching device list', error)

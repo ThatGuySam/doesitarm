@@ -194,7 +194,7 @@ export default async function ( applist ) {
     // const videosJsonUrl = process.env.VIDEO_SOURCE || `${process.env.VFUNCTIONS_URL}/videos.json`
 
     // Fetch Commits
-    // const response = await axios.get( videosJsonUrl )
+    // const response = await fetch( videosJsonUrl )
     // Extract commit from response data
     const fetchedVideos = await fs.readJson( youtubeVideoPath )//response.data
 

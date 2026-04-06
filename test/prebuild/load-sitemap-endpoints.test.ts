@@ -6,89 +6,63 @@ import {
     vi
 } from 'vitest'
 
-import axios from 'axios'
+import fs from 'fs-extra'
 
 import {
-    fetchJsonWithRetries,
-    shouldRetryError
+    loadSitemapEndpoints
 } from '~/helpers/pagefind/load-sitemap-endpoints'
+import { getJson } from '~/helpers/http.js'
 
-vi.mock( 'axios', () => {
+vi.mock( 'fs-extra', () => {
     return {
         default: {
-            get: vi.fn()
+            pathExists: vi.fn(),
+            readJson: vi.fn()
         }
     }
 } )
 
-describe( 'load sitemap endpoints helper', () => {
+vi.mock( '~/helpers/http.js', () => {
+    return {
+        getJson: vi.fn(),
+        shouldRetryError: vi.fn()
+    }
+} )
+
+describe( 'load sitemap endpoints', () => {
     beforeEach( () => {
-        vi.mocked( axios.get ).mockReset()
+        vi.mocked( fs.pathExists ).mockReset()
+        vi.mocked( fs.readJson ).mockReset()
+        vi.mocked( getJson ).mockReset()
     } )
 
-    it( 'retries transient 5xx errors and eventually resolves', async () => {
-        const axiosGet = vi.mocked( axios.get )
-
-        axiosGet
-            .mockRejectedValueOnce({
-                response: {
-                    status: 502
-                }
-            })
-            .mockResolvedValueOnce({
-                data: {
-                    ok: true
-                }
-            } )
-
-        const data = await fetchJsonWithRetries( 'https://api.doesitarm.com/sitemap-endpoints.json', {
-            attempts: 2,
-            delayMs: 0
+    it( 'reads the local sitemap-endpoints file when it exists', async () => {
+        vi.mocked( fs.pathExists ).mockResolvedValueOnce( true )
+        vi.mocked( fs.readJson ).mockResolvedValueOnce({
+            endpoints: [ '/api/app/spotify.json' ]
         } )
 
-        expect( data ).toEqual({
-            ok: true
-        } )
-        expect( axiosGet ).toHaveBeenCalledTimes( 2 )
-    } )
-
-    it( 'does not retry non-5xx errors', async () => {
-        const axiosGet = vi.mocked( axios.get )
-
-        axiosGet.mockRejectedValueOnce({
-            response: {
-                status: 404
-            }
+        await expect( loadSitemapEndpoints() ).resolves.toEqual({
+            endpoints: [ '/api/app/spotify.json' ]
         })
 
-        await expect( fetchJsonWithRetries( 'https://api.doesitarm.com/sitemap-endpoints.json', {
+        expect( getJson ).not.toHaveBeenCalled()
+    } )
+
+    it( 'falls back to the remote sitemap-endpoints JSON when the local file is missing', async () => {
+        vi.mocked( fs.pathExists ).mockResolvedValueOnce( false )
+        vi.mocked( getJson ).mockResolvedValueOnce({
+            endpoints: [ '/api/app/electron-framework.json' ]
+        } )
+        process.env.PUBLIC_API_DOMAIN = 'https://api.doesitarm.com'
+
+        await expect( loadSitemapEndpoints() ).resolves.toEqual({
+            endpoints: [ '/api/app/electron-framework.json' ]
+        } )
+
+        expect( getJson ).toHaveBeenCalledWith( 'https://api.doesitarm.com/sitemap-endpoints.json', {
             attempts: 3,
-            delayMs: 0
-        } ) ).rejects.toEqual({
-            response: {
-                status: 404
-            }
+            delayMs: 1000
         })
-
-        expect( axiosGet ).toHaveBeenCalledTimes( 1 )
-    } )
-
-    it( 'classifies retryable server errors', () => {
-        expect( shouldRetryError( {
-            response: {
-                status: 502
-            }
-        } ) ).toBe( true )
-        expect( shouldRetryError( {
-            response: {
-                status: 503
-            }
-        } ) ).toBe( true )
-        expect( shouldRetryError( {
-            response: {
-                status: 404
-            }
-        } ) ).toBe( false )
-        expect( shouldRetryError( new Error( 'network' ) ) ).toBe( false )
     } )
 } )

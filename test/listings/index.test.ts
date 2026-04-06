@@ -1,7 +1,6 @@
 import fs from 'fs-extra'
 import has from 'just-has'
 import { test, expect, beforeAll } from 'vitest'
-import axios from 'axios'
 import { JSDOM } from 'jsdom'
 import { structuredDataTestHtml } from 'structured-data-testing-tool'
 import { Google } from 'structured-data-testing-tool/presets'
@@ -11,6 +10,7 @@ import {
     getVideoImages,
     ListingDetails
 } from '~/helpers/listing-page.js'
+import { getJson } from '~/helpers/http.js'
 import { headPropertyTypes } from '~/test/helpers/head.js'
 import { PageHead } from '~/helpers/config-node.js'
 
@@ -73,8 +73,7 @@ beforeAll(async () => {
             continue
         }
 
-        const { data } = await axios.get(`${process.env.PUBLIC_API_DOMAIN}${apiPath}`)
-        context.listings[caseEndpoint] = data
+        context.listings[caseEndpoint] = await getJson( `${process.env.PUBLIC_API_DOMAIN}${apiPath}` )
     }
 
     // Initialize listing details

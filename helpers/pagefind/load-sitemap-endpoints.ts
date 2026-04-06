@@ -1,15 +1,12 @@
 import fs from 'fs-extra'
-import axios from 'axios'
+import {
+    getJson,
+    shouldRetryError
+} from '~/helpers/http.js'
 
 import {
     sitemapEndpointsPath
 } from '~/helpers/pagefind/config.js'
-
-function shouldRetryError ( error: unknown ) {
-    const status = ( error as { response?: { status?: number } } )?.response?.status
-
-    return typeof status === 'number' && status >= 500
-}
 
 async function fetchJsonWithRetries (
     url: string,
@@ -21,25 +18,10 @@ async function fetchJsonWithRetries (
         delayMs?: number
     } = {}
 ) {
-    let lastError: unknown
-
-    for ( let attempt = 1; attempt <= attempts; attempt += 1 ) {
-        try {
-            const response = await axios.get( url )
-
-            return response.data
-        } catch ( error ) {
-            lastError = error
-
-            if ( attempt >= attempts || !shouldRetryError( error ) ) {
-                throw error
-            }
-
-            await new Promise( resolve => setTimeout( resolve, delayMs ) )
-        }
-    }
-
-    throw lastError
+    return await getJson( url, {
+        attempts,
+        delayMs
+    } )
 }
 
 export async function loadSitemapEndpoints () {

@@ -1,6 +1,5 @@
 import path from 'path'
 import fs from 'fs-extra'
-import axios from 'axios'
 import { parse } from 'fast-xml-parser'
 
 import {
@@ -8,6 +7,10 @@ import {
     sitemapIndexFileName,
 } from '~/helpers/constants.js'
 import { isValidHttpUrl } from '~/helpers/check-types.js'
+import {
+    getText,
+    headOk
+} from '~/helpers/http.js'
 
 const sitemapFilesToTry = [
     sitemapIndexFileName,
@@ -106,12 +109,7 @@ export async function fetchAllUrlsFromSitemaps ( urlString ) {
         // console.log( 'sitemapUrl', sitemapUrl.href )
 
         // Just do a quich HEAD request to see if the file exists with getting the whole body
-        const exists = await axios.head( sitemapUrl.href )
-            .catch( () => false )
-            .then( response => {
-                // console.log( 'response', response.status )
-                return response.status < 300
-            } )
+        const exists = await headOk( sitemapUrl.href )
 
         // console.log( 'exists', exists )
 
@@ -123,8 +121,7 @@ export async function fetchAllUrlsFromSitemaps ( urlString ) {
             getMethod: async sitemapPath => {
                 const sitemapUrl = new URL( sitemapPath, urlString )
 
-                const sitemapXml = await axios.get( sitemapUrl.href )
-                    .then( response => response.data )
+                const sitemapXml = await getText( sitemapUrl.href )
 
                 return sitemapXml
             }

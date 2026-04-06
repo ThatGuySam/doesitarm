@@ -12,9 +12,8 @@
 // GET /api/tiles/public/static/3/4/2.json?turn=37038&games=wot
 // DoesItAPI.tiles.public.static(3)(4)(`${2}.json`).get({ turn: 37, games: 'wot' })
 
-import axios from 'axios'
-
 import { getApiUrl } from '~/helpers/url.js'
+import { requestJson } from '~/helpers/http.js'
 
 // Use msw
 import '~/test/msw/use.js'
@@ -22,8 +21,7 @@ import '~/test/msw/use.js'
 // const defaultFetchMethod = (...args) => console.log(...args) // mock
 
 const defaultFetchMethod = async function (...args) {
-    return axios(...args)
-        .then( response => response.data )
+    return requestJson(...args)
         .catch( error => {
             if ( error?.response?.status !== 404 ) {
                 console.error( error )

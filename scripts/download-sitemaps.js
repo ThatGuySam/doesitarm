@@ -1,6 +1,5 @@
 import fs from 'fs-extra'
 import 'dotenv/config.js'
-import axios from 'axios'
 
 import {
     sitemapLocation,
@@ -8,6 +7,7 @@ import {
 } from '~/helpers/constants.js'
 
 import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
+import { getText } from '~/helpers/http.js'
 
 
 ;(async () => {
@@ -16,7 +16,7 @@ import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
     const sitemapIndexUrl = new URL( `${ sitemapLocation.split('static')[1] }${ sitemapIndexFileName }`, process.env.PUBLIC_API_DOMAIN )
 
     // Fetch Sitemap Index
-    const sitemapIndexXML = await axios.get( sitemapIndexUrl.href ).then( response => response.data )
+    const sitemapIndexXML = await getText( sitemapIndexUrl.href )
 
     // Save Sitemap Index
     const sitemapIndexFilePath = `${ sitemapLocation }${ sitemapIndexFileName }`
@@ -35,7 +35,7 @@ import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
         // sitemapUrl.origin = process.env.PUBLIC_API_DOMAIN
 
         // Fetch Sitemap Index
-        const sitemapXML = await axios.get( apiSitemapUrl.href ).then( response => response.data )
+        const sitemapXML = await getText( apiSitemapUrl.href )
 
         // const sitemap = parse( sitemapXML )
 

@@ -1,5 +1,4 @@
 import fs from 'fs-extra'
-import axios from 'axios'
 import 'dotenv/config.js'
 
 import {
@@ -8,6 +7,7 @@ import {
     // storkExecutablePath,
     storkTomlPath,
 } from '~/helpers/stork/config.js'
+import { getText } from '~/helpers/http.js'
 
 export async function downloadStorkToml () {
     // Check if the toml file exists
@@ -20,12 +20,9 @@ export async function downloadStorkToml () {
 
     apiUrl.pathname = storkTomlPath.replace('static/', '')
 
-    const response = await axios({
-        method: "get",
-        url:  apiUrl.toString(),
-    })
+    const storkToml = await getText( apiUrl.toString() )
 
-    await fs.writeFile( storkTomlPath, response.data, { encoding: null })
+    await fs.writeFile( storkTomlPath, storkToml, { encoding: null })
 
     // Get toml file stats
     const stats = await fs.stat( storkTomlPath )

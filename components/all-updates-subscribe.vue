@@ -59,10 +59,10 @@
 
 <script>
 
-import axios from 'axios'
 import { v4 as uuid } from 'uuid'
 
 import { isNuxt } from '~/helpers/environment.js'
+import { postJson } from '~/helpers/http.js'
 
 export default {
     props: {
@@ -142,31 +142,16 @@ export default {
 
             console.log('actionUrl', actionUrl)
 
-            axios({
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                url: actionUrl,
-                data: {
+            try {
+                await postJson( actionUrl, {
                     // Email
                     'email': this.email
-                },
-            }).then( response => {
-
+                } )
                 this.feedbackMessage = 'We\'ll keep you informed!'
-
-                // console.log('response', response)
-                // if (response.status === 200) {
-                //     this.feedbackMessage = '- We\'ll keep an eye on it for you!'
-                // } else {
-                //     this.feedbackMessage = 'Oops! Something went wrong'
-                // }
-            }).catch( error => {
+            } catch ( error ) {
                 console.warn('error', error)
                 this.feedbackMessage = 'Something went wrong. Try refreshing. '
-            })
+            }
 
             // .catch(error => {
             //     // handle error
