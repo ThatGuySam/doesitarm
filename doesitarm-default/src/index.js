@@ -16,10 +16,33 @@ addEventListener('fetch', event => {
     event.respondWith(handleRequest(event.request))
 })
 
+const canonicalHost = 'doesitarm.com'
+const workersDevHost = 'doesitarm-default.samcarlton.workers.dev'
+const workerHeaderName = 'x-workers-hello'
+const workerHeaderValue = 'Hello from Cloudflare Workers'
+
+function redirectToCanonicalHost(url) {
+    url.protocol = 'https:'
+    url.hostname = canonicalHost
+
+    return new Response(null, {
+        headers: {
+            Location: url.toString(),
+            [workerHeaderName]: workerHeaderValue
+        },
+        status: 302
+    })
+}
+
 
 // Alter Headers - https://developers.cloudflare.com/workers/examples/alter-headers
 async function handleRequest(request) {
     // const visitor = ua( process.env.GA_TRACKING_ID )
+    const url = new URL(request.url)
+
+    if (url.hostname === workersDevHost) {
+        return redirectToCanonicalHost(url)
+    }
 
     const response = await fetch(request)
 
@@ -28,7 +51,7 @@ async function handleRequest(request) {
     const newResponse = new Response(response.body, response)
 
     // Add a custom header with a value
-    newResponse.headers.append("x-workers-hello", "Hello from Cloudflare Workers")
+    newResponse.headers.append(workerHeaderName, workerHeaderValue)
 
     // // Delete headers
     // newResponse.headers.delete("x-header-to-delete")
