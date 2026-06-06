@@ -1,10 +1,14 @@
 // import { statuses } from './build-app-list'
+import { fileURLToPath } from 'node:url'
+
+import fs from 'fs-extra'
+
 import { getAppEndpoint } from './app-derived'
 import { makeSlug } from './slug.js'
-import { getJson } from './http.js'
 
 
 // console.log('process.env.GAMES_SOURCE', process.env.GAMES_SOURCE)
+export const gamesSnapshotCsvPath = fileURLToPath( new URL( '../docs/tosh-games-6-6-26.csv', import.meta.url ) )
 
 // export const statuses = {
 //     '✅': 'native',
@@ -64,18 +68,97 @@ function parseStatus(game) {
     return statusesTranslations[environmentName(game)]
 }
 
+function parseCsvRows ( csv ) {
+    const rows = []
+    let row = []
+    let cell = ''
+    let isQuoted = false
+
+    for ( let index = 0; index < csv.length; index += 1 ) {
+        const character = csv[ index ]
+        const nextCharacter = csv[ index + 1 ]
+
+        if ( character === '"' ) {
+            if ( isQuoted && nextCharacter === '"' ) {
+                cell += '"'
+                index += 1
+                continue
+            }
+
+            isQuoted = !isQuoted
+            continue
+        }
+
+        if ( character === ',' && !isQuoted ) {
+            row.push( cell )
+            cell = ''
+            continue
+        }
+
+        if ( ( character === '\n' || character === '\r' ) && !isQuoted ) {
+            if ( character === '\r' && nextCharacter === '\n' ) {
+                index += 1
+            }
+
+            row.push( cell )
+            rows.push( row )
+            row = []
+            cell = ''
+            continue
+        }
+
+        cell += character
+    }
+
+    if ( cell.length > 0 || row.length > 0 ) {
+        row.push( cell )
+        rows.push( row )
+    }
+
+    return rows
+}
+
+function isBlankRow ( row ) {
+    return row.every( cell => cell.trim().length === 0 )
+}
+
+function findGamesHeaderRowIndex ( rows ) {
+    return rows.findIndex( row => row[ 0 ] === 'Games' && row[ 1 ] === 'Playable' )
+}
+
+function mapCsvRowToRecord ( headers, row ) {
+    return headers.reduce( ( record, header, index ) => {
+        const normalizedHeader = header.trim()
+
+        if ( normalizedHeader.length === 0 ) return record
+
+        record[ normalizedHeader ] = row[ index ] || ''
+
+        return record
+    }, {} )
+}
+
+export async function loadGamesSnapshot () {
+    const csv = await fs.readFile( gamesSnapshotCsvPath, 'utf8' )
+    const rows = parseCsvRows( csv )
+    const headerRowIndex = findGamesHeaderRowIndex( rows )
+
+    if ( headerRowIndex === -1 ) {
+        throw new Error( `Could not find Games header row in ${ gamesSnapshotCsvPath }` )
+    }
+
+    const headers = rows[ headerRowIndex ]
+
+    return rows
+        .slice( headerRowIndex + 1 )
+        .filter( row => !isBlankRow( row ) )
+        .filter( row => row[ 0 ]?.trim().length > 0 )
+        .map( row => mapCsvRowToRecord( headers, row ) )
+}
+
 export default async function () {
 
-    // Fetch Sheet data
-    const gamesSheet = await getJson( process.env.GAMES_SOURCE )
-        .then(function (response) {
-            // handle success
-            return response.records
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        })
+    const gamesSheet = await loadGamesSnapshot()
 
     const gameList = []
 
