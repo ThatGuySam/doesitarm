@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "es.gob.fnmt.cert.certrerquest",
+    "name": "Configurador FNMT",
+    "url": "https://www.sede.fnmt.gob.es/descargas/descarga-software",
+    "source": "Official FNMT-RCM (Spanish mint) e-office download page; offers macOS Configurador FNMT; bundleId es.gob.fnmt matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "es.gob.afirma.simpleafirma.osx",
+    "name": "AutoFirma",
+    "url": "https://firmaelectronica.gob.es/ciudadanos/descargas",
+    "source": "Official Spanish government e-signature portal download page for AutoFirma (macOS); bundleId es.gob.afirma matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.6016-4451-6854-0741.2",
+    "name": "Steuer St.Gallen 2023 nP",
+    "url": "https://www.sg.ch/steuern-finanzen/steuern/elektronische-steuererklaerung/etaxnp.html",
+    "source": "Canton St. Gallen official tax software (eTax/E-Tax SG) for natural persons (nP); generic install4j bundleId but app name identifies cantonal tax program",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.chat2db-local",
+    "name": "Chat2DB Local",
+    "url": "https://chat2db.ai/",
+    "source": "Official Chat2DB site (AI SQL client) with macOS download; also github.com/CodePhiliaX/Chat2DB",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logitech.unifying.assistant",
+    "name": "Logitech Unifying Software",
+    "url": "https://support.logi.com/hc/en-us/articles/360025297913-Unifying-Software",
+    "source": "Official Logitech support page for Unifying Software (macOS); bundleId com.logitech matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.mqttx",
+    "name": "MQTTX",
+    "url": "https://mqttx.app/",
+    "source": "Official MQTTX site by EMQX (cross-platform MQTT client, macOS); also github.com/emqx/MQTTX",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.alchemyviewer.viewer",
+    "name": "Alchemy",
+    "url": "https://www.alchemyviewer.org/",
+    "source": "Official Alchemy Viewer site (Second Life viewer) with macOS download; bundleId org.alchemyviewer matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "texstudio",
+    "name": "TeXstudio",
+    "url": "https://www.texstudio.org/",
+    "source": "Official TeXstudio site (LaTeX editor) with macOS installer",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.Illustrate.dBpoweramp-Music-Converter",
+    "name": "dBpoweramp Music Converter",
+    "url": "https://www.dbpoweramp.com/",
+    "source": "Official Illustrate/dBpoweramp site with macOS Music Converter; bundleId com.Illustrate matches vendor",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "assaultcube",
+    "name": "launcher",
+    "url": "https://assault.cubers.net/",
+    "source": "Official AssaultCube site (bundleId 'assaultcube'); free FPS with macOS build; 'launcher' is the app's launcher binary",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.raptor.MacSploit",
+    "name": "MacSploit",
+    "url": "https://macsploit.net/",
+    "source": "Official MacSploit site (macOS Roblox executor by Raptor Development); raptor.fun is the same vendor's payment site; bundleId com.raptor matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.bskyb.skyxplayer",
+    "name": "Sky X",
+    "url": "https://skyx.sky.at/",
+    "source": "Official Sky X (Austria) streaming site; confirmed macOS app on skyx.sky.at/app; bundleId com.bskyb (British Sky Broadcasting parent) matches Sky X product",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "pclauncher",
+    "name": "PlayClan Launcher",
+    "url": "https://playclan.net/download",
+    "source": "Official PlayClan (Hungarian Minecraft server) download page; release notes reference 'PlayClan Launcher'; bundleId 'pclauncher' matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.retroactive.Retroactive",
+    "name": "Retroactive (right click to open)",
+    "url": "https://github.com/cormiertyshawn895/Retroactive",
+    "source": "Official open-source Retroactive repo (run Aperture/iPhoto/iTunes/Final Cut 7 on newer macOS); bundleId com.retroactive matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.silex-desktop",
+    "name": "silex-desktop",
+    "url": "https://github.com/silexlabs/silex-desktop",
+    "source": "Official Silex Labs silex-desktop repo (free/libre no-code website builder) with macOS .dmg releases; bundleId matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "io.github.lime3ds.Lime3DS",
+    "name": "Lime3DS",
+    "url": "https://github.com/Lime3DS/Lime3DS",
+    "source": "Official Lime3DS GitHub org (Nintendo 3DS emulator, Citra fork) with macOS releases; bundleId io.github.lime3ds matches (now discontinued in favor of Azahar)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "rugarciap.com.Turbo-Boost-Switcher-Pro-Pro",
+    "name": "Turbo Boost Switcher",
+    "url": "https://tbswitcher.rugarciap.com/",
+    "source": "Official Turbo Boost Switcher site by rugarciap (macOS); bundleId rugarciap.com matches developer",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.drobo.Install",
+    "name": "Install",
+    "url": "https://www.drobo.com/start/start-drobo-install-dashboard-mac/",
+    "source": "Official Drobo macOS Dashboard installer page; bundleId com.drobo.Install matches (note: Drobo defunct, site may be offline)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.divertisma.StagePlotPro",
+    "name": "StagePlotPro 2.9.9.2",
+    "url": "http://www.stageplot.com/",
+    "source": "StagePlotPro by Chip Wallace; app support URL is stageplot.com per app metadata; original Mac app (no longer actively maintained). Not fully confirmed live",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "JView",
+    "name": "JView",
+    "url": "https://github.com/liuyujung/JView",
+    "source": "Exact match: GitHub repo liuyujung/JView described as 'Mac OS image viewer' (JPEG/GIF/TIF/BMP/PICT/ICNS); bundleId 'JView' matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "threema-consumer-web",
+    "name": "threema-consumer-web",
+    "url": "https://threema.com/en/download",
+    "source": "Official Threema download page (consumer/private desktop app for macOS); also github.com/threema-ch/threema-desktop",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "Plot",
+    "name": "Plot",
+    "url": null,
+    "source": "Bundle id 'Plot' and name 'Plot' too generic to disambiguate (could be Plot2/DataGraph/etc.); no reliable vendor signal",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.steinberg.cubase13",
+    "name": "Cubase",
+    "url": "https://www.steinberg.net/cubase/",
+    "source": "Official Steinberg Cubase product page (macOS DAW); bundleId com.steinberg matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.er.ur.typesy",
+    "name": "Typesy",
+    "url": "https://www.typesy.com/",
+    "source": "Official Typesy site (touch-typing software, macOS); app name matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "JK3Y.NPS-Browser",
+    "name": "NPS Browser",
+    "url": null,
+    "source": "NPS Browser is a PSVita/PSN download GUI but original repo was taken down and only forks remain; could not confidently map bundleId 'JK3Y' to a specific official/source repo",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.tidycustoms.publii",
+    "name": "Publii",
+    "url": "https://getpublii.com/",
+    "source": "Official Publii site (static-site CMS by TidyCustoms, macOS); bundleId com.tidycustoms matches; also github.com/GetPublii/Publii",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.okex.app",
+    "name": "OKX",
+    "url": "https://www.okx.com/download",
+    "source": "Official OKX download page (macOS desktop app); bundleId com.okex (OKX/OKEx) matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.115pc.115Desktop",
+    "name": "115",
+    "url": "https://pc.115.com/",
+    "source": "Official 115 (115.com) desktop/browser download page; macOS supported (Intel + Apple Silicon); bundleId org.115pc matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.8357-7994-5030-9105.837",
+    "name": "Studio 3T",
+    "url": "https://studio3t.com/",
+    "source": "Official Studio 3T site (MongoDB GUI/IDE, macOS .dmg); generic install4j bundleId but app name identifies Studio 3T",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.oracle.workbench.MySQLWorkbench",
+    "name": "MySQLWorkbench",
+    "url": "https://www.mysql.com/products/workbench/",
+    "source": "Official Oracle/MySQL Workbench product page (macOS download via dev.mysql.com/downloads/workbench); bundleId com.oracle.workbench matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.qiuyuzhou.ShadowsocksX-NG",
+    "name": "ShadowsocksX-NG",
+    "url": "https://github.com/shadowsocks/ShadowsocksX-NG",
+    "source": "Official ShadowsocksX-NG repo (macOS client, maintainer qiuyuzhou); bundleId com.qiuyuzhou matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "oss.krtirtho.spotube",
+    "name": "spotube",
+    "url": "https://spotube.krtirtho.dev/",
+    "source": "Official Spotube site (open-source music client by Kingkor Roy Tirtho, macOS); bundleId oss.krtirtho matches; also github.com/KRTirtho/spotube",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.music-group.X32-Edit",
+    "name": "X32-Edit",
+    "url": "https://www.behringer.com/en/products/0603-ACE",
+    "source": "Official Behringer X32 product page (Music Group = Behringer parent); X32-Edit macOS remote editor downloaded from X32 product Downloads tab; bundleId com.music-group matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "APG Live Manager",
+    "name": "APG Live Manager",
+    "url": "https://apg.audio/en/",
+    "source": "Official APG audio site; APG Live Manager is their loudspeaker/amplifier control software with a macOS version; app name matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "ClickRepair",
+    "name": "ClickRepair",
+    "url": "https://archive.clickrepair.org/software_info/clickrepair.html",
+    "source": "Official ClickRepair site by Brian Davies (audio declicking, macOS); now an archived official site as the software is discontinued",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.5889-6375-8446-2021.22",
+    "name": "Trader Workstation",
+    "url": "https://www.interactivebrokers.com/en/trading/tws.php",
+    "source": "Official Interactive Brokers Trader Workstation (TWS) page; macOS standalone download available; generic install4j bundleId but app name identifies TWS",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "todesktop.com.ToDesktop-Installer",
+    "name": "Install ClickUp",
+    "url": "https://clickup.com/download",
+    "source": "Official ClickUp download page (macOS desktop app, built/distributed via ToDesktop installer matching the bundleId); 'Install ClickUp' is the ToDesktop installer",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.enscape.EnscapeApplication",
+    "name": "EnscapeApplication",
+    "url": "https://enscape3d.com/",
+    "source": "Official Enscape (Chaos) site; Enscape for Mac is native/Apple Silicon; bundleId com.enscape matches",
+    "confidence": "high"
+  }
+]

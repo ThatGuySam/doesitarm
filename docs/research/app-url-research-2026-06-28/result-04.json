@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.install4j.7318-9294-3757-1226.70",
+    "name": "Burp Suite Professional",
+    "url": "https://portswigger.net/burp/pro",
+    "source": "portswigger.net",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.laminar-research.X-Plane",
+    "name": "X-Plane 12.00b9",
+    "url": "https://www.x-plane.com/",
+    "source": "x-plane.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.ifedapoolarewaju.desktop.igdm",
+    "name": "IGdm",
+    "url": "https://github.com/igdmapps/igdm",
+    "source": "github.com/igdmapps/igdm",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logi.bolt.app",
+    "name": "Logi Bolt",
+    "url": "https://support.logi.com/hc/en-us/articles/4416607889431-Download-Logi-Bolt",
+    "source": "logi.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "fkhl.LiveIPC",
+    "name": "LiveIPC",
+    "url": null,
+    "source": "no official macOS source found; product appears Windows-only",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.realvnc.vncserver_service",
+    "name": "VNC Server",
+    "url": "https://www.realvnc.com/en/connect/download/vnc/macos/",
+    "source": "realvnc.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.JadenGeller.Helium",
+    "name": "Helium",
+    "url": "https://github.com/JadenGeller/Helium",
+    "source": "github.com/JadenGeller/Helium",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.audinate.dante.DanteFirmwareUpdateManager",
+    "name": "DanteFirmwareUpdateManager",
+    "url": "https://my.audinate.com/latest-firmware-update-manager",
+    "source": "audinate.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "",
+    "name": "darkplaces-sdl",
+    "url": "https://github.com/DarkPlacesEngine/DarkPlaces",
+    "source": "github.com/DarkPlacesEngine/DarkPlaces",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.neon",
+    "name": "Neon",
+    "url": null,
+    "source": "generic Electron bundleId; vendor not identifiable",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.logitech.manager.installer",
+    "name": "LogiMgr Installer",
+    "url": "https://www.logitech.com/en-us/software/logi-options-plus.html",
+    "source": "logitech.com",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.logi.ghub",
+    "name": "lghub",
+    "url": "https://www.logitechg.com/en-us/software/ghub.html",
+    "source": "logitechg.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.deadbeef.DeaDBeeF",
+    "name": "DeaDBeeF",
+    "url": "https://deadbeef.sourceforge.io/",
+    "source": "deadbeef.sourceforge.io",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.elasticthreads.nv",
+    "name": "nvALT",
+    "url": "https://brettterpstra.com/projects/nvalt/",
+    "source": "brettterpstra.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.gapminder-offline",
+    "name": "Gapminder Offline",
+    "url": "https://www.gapminder.org/tools-offline/",
+    "source": "gapminder.org",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.github.stenzek.duckstation",
+    "name": "DuckStation",
+    "url": "https://www.duckstation.org/",
+    "source": "duckstation.org",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.xkoji.altair",
+    "name": "Altair GraphQL Client",
+    "url": "https://altairgraphql.dev/",
+    "source": "altairgraphql.dev",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.x-rite.i1Studio",
+    "name": "i1Studio",
+    "url": "https://www.xrite.com/categories/calibration-profiling/i1studio",
+    "source": "xrite.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logitech.logitune",
+    "name": "LogiTune",
+    "url": "https://www.logitech.com/en-us/video-collaboration/software/logi-tune-software.html",
+    "source": "logitech.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.geogebra6.mac",
+    "name": "GeoGebra Classic 6",
+    "url": "https://www.geogebra.org/download",
+    "source": "geogebra.org",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.oss-browser",
+    "name": "oss-browser",
+    "url": "https://github.com/aliyun/oss-browser",
+    "source": "github.com/aliyun/oss-browser",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "info.exult",
+    "name": "exult",
+    "url": "https://exult.info/",
+    "source": "exult.info",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "SwitchHosts",
+    "name": "SwitchHosts",
+    "url": "https://github.com/oldj/SwitchHosts",
+    "source": "github.com/oldj/SwitchHosts",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.hunlongyu.zy",
+    "name": "ZY Player",
+    "url": "https://github.com/Hunlongyu/ZY-Player",
+    "source": "github.com/Hunlongyu/ZY-Player",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.github.marktext.marktext",
+    "name": "MarkText",
+    "url": "https://github.com/marktext/marktext",
+    "source": "github.com/marktext/marktext",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.PDFEditoMac.PDFEditorMac",
+    "name": "PDF Editor Mac",
+    "url": "https://www.pdfeditormac.com/",
+    "source": "pdfeditormac.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.3cx-desktop-app",
+    "name": "3CX Desktop App",
+    "url": "https://www.3cx.com/",
+    "source": "3cx.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.1726-2696-9539-5278.69",
+    "name": "FTBApp",
+    "url": "https://feed-the-beast.com/ftb-app",
+    "source": "feed-the-beast.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.gslbiotech.snapgene",
+    "name": "SnapGene",
+    "url": "https://www.snapgene.com/",
+    "source": "snapgene.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.HardwareManager",
+    "name": "HardwareManager",
+    "url": null,
+    "source": "placeholder bundleId (com.yourcompany); vendor not identifiable",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.electron.bits",
+    "name": "Bits",
+    "url": null,
+    "source": "generic Electron bundleId; app not identifiable",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "org.manymc.ManyMC",
+    "name": "ManyMC",
+    "url": "https://github.com/MinecraftMachina/ManyMC",
+    "source": "github.com/MinecraftMachina/ManyMC",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.onecast.macos",
+    "name": "OneCast",
+    "url": "https://www.onecast.me/",
+    "source": "onecast.me",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.ankama.zaap",
+    "name": "Ankama Launcher",
+    "url": "https://www.ankama.com/en/launcher",
+    "source": "ankama.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.tyirvine.Informant",
+    "name": "Informant",
+    "url": "https://github.com/tyirvine/Informant",
+    "source": "github.com/tyirvine/Informant",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.shortery-app.Shortery",
+    "name": "Shortery",
+    "url": "https://apps.apple.com/us/app/shortery/id1594183810",
+    "source": "Mac App Store (numberfive.co)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.company.G_ioCenter",
+    "name": "ioCentre",
+    "url": null,
+    "source": "Genius/KYE Systems OEM mouse driver; no official product download page found",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "juicebox.MainWindow",
+    "name": "Juicebox",
+    "url": "https://juicebox.net/",
+    "source": "juicebox.net (JuiceboxBuilder desktop app by SimpleViewer Inc.)",
+    "confidence": "high"
+  }
+]

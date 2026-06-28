@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.ecarriou.systemdesigner",
+    "name": "System Designer",
+    "url": "https://designfirst.io/systemdesigner/",
+    "source": "designfirst.io",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.lasersoft-imaging.SilverFast8",
+    "name": "SilverFast 8",
+    "url": "https://www.silverfast.com/show/silverfast8/en.html",
+    "source": "silverfast.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.maxbor.CopyLess",
+    "name": "CopyLess 2",
+    "url": "https://copyless.net/",
+    "source": "copyless.net",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.gitify",
+    "name": "Gitify",
+    "url": "https://gitify.io/",
+    "source": "gitify.io",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.github.mu-editor.mu",
+    "name": "Mu Editor",
+    "url": "https://codewith.mu/",
+    "source": "codewith.mu",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.dialpad",
+    "name": "Dialpad",
+    "url": "https://www.dialpad.com/download/",
+    "source": "dialpad.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "coing.ClockifyDesktop",
+    "name": "Clockify Desktop",
+    "url": "https://clockify.me/apps",
+    "source": "clockify.me",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.CodySchrank.gSwitch",
+    "name": "gSwitch",
+    "url": "https://github.com/CodySchrank/gSwitch",
+    "source": "github.com/CodySchrank",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.wootility-lekker-beta",
+    "name": "wootility-lekker-beta",
+    "url": "https://wooting.io/wootility",
+    "source": "wooting.io",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.gslbiotech.snapgeneviewer",
+    "name": "SnapGene Viewer",
+    "url": "https://www.snapgene.com/snapgene-viewer",
+    "source": "snapgene.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.yesplaymusic",
+    "name": "YesPlayMusic",
+    "url": "https://github.com/qier222/YesPlayMusic",
+    "source": "github.com/qier222",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.DougEverly.Epochulator",
+    "name": "Epochulator",
+    "url": "https://www.dougeverly.com/",
+    "source": "dougeverly.com (hint); confirmed app by Doug Everly",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "MacOS-Murder-Mystery-Machine",
+    "name": "Murder Mystery Machine",
+    "url": "https://www.murdermysterymachine.com/",
+    "source": "murdermysterymachine.com (Blazing Griffin)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "27KU2G7D8T.com.build80.teamloggertimer",
+    "name": "teamlogger",
+    "url": "https://www.teamlogger.com/",
+    "source": "teamlogger.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.pokerstars.PokerStarsUK",
+    "name": "PokerStarsUK",
+    "url": "https://www.pokerstars.uk/poker/download/mac/",
+    "source": "pokerstars.uk",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.spherico.createDiskImage",
+    "name": "CreateDiskImage",
+    "url": "http://www.spherico.com/filmtools/createDiskImage/index.html",
+    "source": "spherico.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.MapMap",
+    "name": "MapMap",
+    "url": "https://mapmapteam.github.io/en/",
+    "source": "mapmapteam.github.io",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.bdrive.NetDrive",
+    "name": "NetDrive",
+    "url": "https://www.netdrive.net/",
+    "source": "netdrive.net / bdrive.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "Mail.Ru.DiskO.as",
+    "name": "DiskO",
+    "url": "https://disk-o.cloud/en/",
+    "source": "disk-o.cloud (Mail.ru)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.tuo.wacdonalds",
+    "name": "WacDonald's",
+    "url": null,
+    "source": "no official source confirmed",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "rankun.QtScrcpy",
+    "name": "QtScrcpy",
+    "url": "https://github.com/barry-ran/QtScrcpy",
+    "source": "github.com/barry-ran",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "iainstall.4bf1d6f6-1f04-11b4-8e26-a2a1f730a201",
+    "name": "CPLEX Optimization Studio Community Edition 20.1",
+    "url": "https://www.ibm.com/products/ilog-cplex-optimization-studio",
+    "source": "ibm.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "maccatalyst.com.linearity.vn",
+    "name": "Vectornator Pro",
+    "url": "https://www.linearity.io/curve/",
+    "source": "linearity.io (Vectornator rebranded to Linearity Curve)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.apogeedigital.Control",
+    "name": "Apogee Control 2",
+    "url": "https://apogeedigital.com/download-files/",
+    "source": "apogeedigital.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.pdman.robergroup",
+    "name": "PDMan",
+    "url": "https://github.com/EnhWeb/pdman",
+    "source": "github.com/EnhWeb (official repo)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.realtimeboard",
+    "name": "Miro",
+    "url": "https://miro.com/apps/",
+    "source": "miro.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "Raven-Desktop-Beta",
+    "name": "Raven Desktop Beta",
+    "url": null,
+    "source": "ambiguous; no official source confirmed",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "edu.jdNetdisk",
+    "name": "jdNetdisk",
+    "url": null,
+    "source": "no official source confirmed",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.electron.fellow",
+    "name": "Fellow",
+    "url": "https://fellow.ai/",
+    "source": "fellow.ai",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "LGElectronics.Verizon-Utility-Application---LG",
+    "name": "Verizon Utility Application - LG",
+    "url": "https://www.verizon.com/support/knowledge-base-105457/",
+    "source": "verizon.com (LG Software Upgrade Assistant)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.snoworange.Doitim-Mac",
+    "name": "Doit.im",
+    "url": "https://doit.im/",
+    "source": "doit.im (Snoworange)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.jdownloader2.9702",
+    "name": "JDownloader Installer",
+    "url": "https://www.jdownloader.com/",
+    "source": "jdownloader.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "AubreeCloud.mini-swatch",
+    "name": "DevSwatch",
+    "url": "https://www.producthunt.com/products/devswatch",
+    "source": "producthunt.com (by Aubree Kendall); no dedicated homepage found",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "etesync-dav",
+    "name": "etesync-dav",
+    "url": "https://github.com/etesync/etesync-dav",
+    "source": "github.com/etesync",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logitech.Solar-App",
+    "name": "Solar App",
+    "url": "https://support.logi.com/hc/en-us/articles/360024699034--Downloads-Wireless-Solar-Keyboard-K750-for-Mac",
+    "source": "logitech.com / support.logi.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "jp.ogihara.typist",
+    "name": "Typist",
+    "url": "https://apps.apple.com/us/app/typist/id415166115",
+    "source": "Mac App Store (by T. Ogihara)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.macappsters.musicboxforpandora",
+    "name": "MiniPlay",
+    "url": null,
+    "source": "macappsters.com defunct; no official source confirmed",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.install4j.7008-5171-7013-3819.22",
+    "name": "OpenAudible",
+    "url": "https://openaudible.org/",
+    "source": "openaudible.org",
+    "confidence": "high"
+  }
+]

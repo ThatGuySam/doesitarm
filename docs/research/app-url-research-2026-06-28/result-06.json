@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.thecargocult.envyeditor",
+    "name": "Envy",
+    "url": "https://www.thecargocult.nz/products/envy/",
+    "source": "Official vendor product page (The Cargo Cult); bundleId com.thecargocult matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "audioquest.AQ-Device-Manager",
+    "name": "AQ Device Manager",
+    "url": "https://www.audioquest.com/pages/dragonfly-firmware-updates",
+    "source": "Official AudioQuest firmware/Device Manager page; bundleId audioquest.* matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.jft.pdanet",
+    "name": "PdaNetMac",
+    "url": "http://www.junefabrics.com/iphone/mac.php",
+    "source": "Official June Fabrics (JFT) PdaNet Desktop for Mac page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.defensezone3.mac",
+    "name": "Defense Zone 3 Ultra HD",
+    "url": "https://apps.apple.com/us/app/defense-zone-3-ultra-hd/id1020277690",
+    "source": "Mac App Store (primary distribution for this game)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.torguard.TorGuardDesktopQt",
+    "name": "TorGuardDesktopQt",
+    "url": "https://torguard.net/downloads.php",
+    "source": "Official TorGuard downloads page; bundleId net.torguard matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.macromedia.Flash Player.app",
+    "name": "Flash Player",
+    "url": "https://www.adobe.com/products/flashplayer/end-of-life.html",
+    "source": "Adobe official Flash Player end-of-life page (product discontinued Dec 2020, no download available)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.yme.slateaudio-center",
+    "name": "Steven Slate Audio Center",
+    "url": "https://stevenslateaudio.com/en/installers",
+    "source": "Official Steven Slate Audio installers page (Slate Audio Center)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "kim.cracksby.checkra1n",
+    "name": "checkra1n",
+    "url": "https://checkra.in/",
+    "source": "Official checkra1n project site (the only official download domain)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.115browser.115Browser",
+    "name": "115Browser",
+    "url": "https://115.com/",
+    "source": "Official 115 (115.com) site; PC browser product",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.Adobe_Lens_Profile_Creator",
+    "name": "Adobe Lens Profile Creator",
+    "url": "https://helpx.adobe.com/x-productkb/multi/lens-profile-support.html",
+    "source": "Adobe official lens profile support page (Lens Profile Creator is an Adobe Labs utility; no dedicated current download page)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "net.sourceforge.supercollider",
+    "name": "SuperCollider",
+    "url": "https://supercollider.github.io/",
+    "source": "Official SuperCollider project site; open-source",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.deepnest.io",
+    "name": "Deepnest.io",
+    "url": "https://deepnest.io/",
+    "source": "Official Deepnest site; bundleId com.deepnest.io matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.markmcguill.strongbox.mac.pro",
+    "name": "Strongbox",
+    "url": "https://strongboxsafe.com/",
+    "source": "Official Strongbox site (Mark McGuill / Phoebe Code); bundleId com.markmcguill matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.TCANLINPro",
+    "name": "TCANLINPro",
+    "url": null,
+    "source": "Generic CAN/LIN analyzer software bundled with USB hardware; placeholder bundleId (com.yourcompany), no single official vendor site confirmable",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.sao.SAOImageDS9",
+    "name": "SAOImageDS9",
+    "url": "https://sites.google.com/cfa.harvard.edu/saoimageds9",
+    "source": "Official SAOImageDS9 site (Harvard/CfA, Chandra X-ray Center)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.prometheanworld.ActivSoftware.ActivInspire.1",
+    "name": "ActivInspire",
+    "url": "https://www.prometheanworld.com/en/products/software/activinspire/",
+    "source": "Official Promethean ActivInspire product page; bundleId com.prometheanworld matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.alexandrudenk.tabs-saver-for-safari",
+    "name": "Tabs Saver for Safari",
+    "url": "https://alexdenk.eu/mywork/tabssaver.html",
+    "source": "Official developer page (Alex Denk); bundleId com.alexandrudenk matches. Also on Mac App Store id1440006971",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.mahasoftware.pandabar",
+    "name": "PandaBar",
+    "url": null,
+    "source": "Pandora menu-bar client by maha::software; removed from Mac App Store, no active official site found",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.fxhome.HitFilmExpress",
+    "name": "HitFilm Express",
+    "url": "https://fxhome.com/product/hitfilm-express",
+    "source": "Official FXhome HitFilm Express product page; bundleId com.fxhome matches (product discontinued Jan 2025)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.digiarty.videoprocvlog",
+    "name": "VideoProc Vlogger",
+    "url": "https://www.videoproc.com/video-editing-software/",
+    "source": "Official VideoProc Vlogger page (Digiarty); bundleId com.digiarty matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "WakaMenu",
+    "name": "WakaMenu",
+    "url": "https://github.com/HiroshiHorie/WakaMenu",
+    "source": "Official GitHub repo (unofficial WakaTime macOS menubar app by Hiroshi Horie)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.kytwb.ferdi",
+    "name": "Ferdi",
+    "url": "https://getferdi.com/",
+    "source": "Official Ferdi site; bundleId com.kytwb (project maintainer) matches. Project discontinued; successor is Ferdium",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.nextgen-calculator",
+    "name": "NextGen Calculator",
+    "url": null,
+    "source": "Generic Electron bundleId (com.electron.*); no specific desktop app vendor confirmable among many unrelated 'NextGen Calculator' results",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.xpand-it.xeta",
+    "name": "Xray Exploratory App",
+    "url": "https://www.getxray.app/exploratory-testing",
+    "source": "Official Xray (Xpand IT) Exploratory Testing app page; bundleId com.xpand-it matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.steinberg.nuendo11",
+    "name": "Nuendo",
+    "url": "https://www.steinberg.net/nuendo/",
+    "source": "Official Steinberg Nuendo page; bundleId com.steinberg matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.fxcoudert.pdftools",
+    "name": "PDF Toolkit",
+    "url": "https://apps.apple.com/us/app/pdf-toolkit/id545164971",
+    "source": "Mac App Store (primary distribution; by FX Coudert). Developer site fxcoudert.fr unreachable",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.ag-logic.swackett.mac",
+    "name": "Swackett",
+    "url": "https://apps.apple.com/us/app/swackett/id413037383",
+    "source": "Mac App Store (AGLogic, LLC); primary distribution. Developer site offline",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.agileroute.diskled",
+    "name": "DiskLed",
+    "url": "https://diskled.com/",
+    "source": "Official DiskLED site (AgileRoute); bundleId com.agileroute matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "nl.qidi",
+    "name": "QIDI-Print",
+    "url": "https://qidi3d.com/pages/software-firmware",
+    "source": "Official QIDI Tech software & firmware page (manufacturer slicer)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "iainstall.4bf1d6f6-1f04-11b4-8e26-a2a1e730b201",
+    "name": "CPLEX Optimization Studio 20.1",
+    "url": "https://www.ibm.com/products/ilog-cplex-optimization-studio",
+    "source": "Official IBM ILOG CPLEX Optimization Studio product page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.lujjjh.LinearMouse",
+    "name": "LinearMouse",
+    "url": "https://linearmouse.app/",
+    "source": "Official LinearMouse site; bundleId com.lujjjh matches. Open-source",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "PGPTSession",
+    "name": "PGPTSession",
+    "url": "https://petegates.com/pgptsession.html",
+    "source": "Official Pete Gates page (free Pro Tools utility)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.avid.MC-Client",
+    "name": "MC_Client",
+    "url": "https://www.avid.com/media-composer",
+    "source": "Official Avid Media Composer page; bundleId com.avid.MC-Client (Media Composer client) matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.4549-9647-2313-4375.26",
+    "name": "Room EQ Wizard",
+    "url": "https://www.roomeqwizard.com/",
+    "source": "Official Room EQ Wizard (REW) site (generic install4j bundleId, but app name unambiguous)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.vadisoundlibrary.vsl",
+    "name": "Vadi Sound Library",
+    "url": "https://vadisound.com/",
+    "source": "Official Vadi Sound site; bundleId com.vadisoundlibrary matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "freemind.main.FreeMind",
+    "name": "FreeMind",
+    "url": "https://freemind.sourceforge.io/",
+    "source": "Official FreeMind site; bundleId freemind.* matches. Open-source",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "admin_gui",
+    "name": "Data Virtuality Studio",
+    "url": "https://www.cdata.com/virtuality/",
+    "source": "Official Data Virtuality (now CData Virtuality) platform page; Data Virtuality Studio is its client",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.phoenixviewer.firestorm.viewer-hvk",
+    "name": "Firestorm",
+    "url": "https://www.firestormviewer.org/",
+    "source": "Official Phoenix Firestorm Project site; bundleId com.phoenixviewer.firestorm matches. Open-source Second Life viewer",
+    "confidence": "high"
+  }
+]

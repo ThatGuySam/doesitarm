@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.maintain.cocktail.monterey15",
+    "name": "Cocktail",
+    "url": "https://www.maintain.se/cocktail/",
+    "source": "Official Maintain (maintain.se) Cocktail product page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.stack.io",
+    "name": "Stack",
+    "url": "https://stackbrowser.com/",
+    "source": "Official Stack Browser website (bundleId com.stack.io matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.drpdev.StopWatch",
+    "name": "TinyStopwatch",
+    "url": "https://tinymacapps.com/",
+    "source": "Official TinyMacApps site (developer Dion Purushotham / drpdev)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.devhd.feedly.osx",
+    "name": "feedly",
+    "url": "https://feedly.com/",
+    "source": "Official Feedly website (devhd was Feedly's former company name)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.AriaMaestosa",
+    "name": "Aria Maestosa",
+    "url": "https://github.com/ariamaestosa/ariamaestosa",
+    "source": "Official open-source GitHub repo (project site ariamaestosa.github.io)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.spdpd.dpdassistant",
+    "name": "Spdpd Dpdassistant",
+    "url": "http://www.spdpd.net/",
+    "source": "Official SPDPD site (大拍档剪辑助手 / DPD editing assistant, Mac+Windows); bundleId com.spdpd matches",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.trusourcelabs.NoMAD",
+    "name": "NoMAD",
+    "url": "https://github.com/jamf/NoMAD",
+    "source": "Official NoMAD repo (now Jamf-owned; original trusourcelabs project); homepage nomad.menu",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.hegenberg.KeyboardCleanTool",
+    "name": "KeyboardCleanTool",
+    "url": "https://folivora.ai/keyboardcleantool",
+    "source": "Official folivora.ai page (Andreas Hegenberg / BetterTouchTool maker)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.oracle.jnlp--652945860",
+    "name": "E-Devlet E-Imza Uygulaması",
+    "url": "https://giris.turkiye.gov.tr/Giris/Elektronik-Imza",
+    "source": "Official Turkish e-Government (turkiye.gov.tr) e-signature Java Web Start app",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "media.ulti.Supphyx",
+    "name": "Supphyx",
+    "url": "https://ulti.media/product/supphyx/",
+    "source": "Official Ulti.Media product page (bundleId media.ulti matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.oecoway.friendlynetflix",
+    "name": "Friendly Streaming",
+    "url": "https://apps.apple.com/us/app/friendly-streaming-browser/id553245401",
+    "source": "Mac App Store (primary distribution; bundleId com.oecoway.friendlynetflix matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "edu.mit.scratch.scratch-desktop",
+    "name": "Scratch 3",
+    "url": "https://scratch.mit.edu/download",
+    "source": "Official MIT Scratch download page (scratch-desktop by Scratch Foundation)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.tapzapp.tapforms-mac",
+    "name": "Tap Forms 5",
+    "url": "https://www.tapforms.com/",
+    "source": "Official Tap Zapp Software website",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.sourceforge.trans",
+    "name": "Transcriber",
+    "url": "https://trans.sourceforge.net/",
+    "source": "Official Transcriber project site (bundleId net.sourceforge.trans matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.CHITUBOX",
+    "name": "CHITUBOX",
+    "url": "https://www.chitubox.com/",
+    "source": "Official CHITUBOX resin 3D slicer website",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.Candle",
+    "name": "Candle",
+    "url": "https://github.com/Denvi/Candle",
+    "source": "Official Denvi/Candle GRBL controller GitHub repo (generic default Qt bundleId)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "haxby.map",
+    "name": "GeoMapApp",
+    "url": "https://www.geomapapp.org/",
+    "source": "Official GeoMapApp site (Lamont-Doherty / W. Haxby; bundleId haxby.map matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.btrust.cardmanager.MainClass",
+    "name": "PINManager",
+    "url": "https://www.b-trust.bg/en/services/software",
+    "source": "Official B-Trust (BORICA) smart card software page; bundleId org.btrust matches",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.logitech.gaming",
+    "name": "Logitech Gaming Software",
+    "url": "https://support.logi.com/hc/en-us/articles/360025298053-Logitech-Gaming-Software",
+    "source": "Official Logitech support/download page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "AMC_CTRL_5_15C_OSX",
+    "name": "AMC CTRL 5.15C OSX",
+    "url": "https://abluesky.com/download-amc/",
+    "source": "Official Blue Sky Audio Management Controller (AMC) download page (Windows & OS X)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.milan-digital-audio.Hauptwerk.Hauptwerk",
+    "name": "Hauptwerk",
+    "url": "https://www.hauptwerk.com/",
+    "source": "Official Hauptwerk site (Milan Digital Audio; bundleId milan-digital-audio matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.wordmarkapp.macos",
+    "name": "WordMark",
+    "url": "https://wordmarkapp.com/",
+    "source": "Official WordMark markdown editor website (bundleId com.wordmarkapp matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "wam.04351C371E530C3762CBA45FA283ED972DCDEFB6.1",
+    "name": "Winamax Poker",
+    "url": "https://www.winamax.fr/jouer-au-poker",
+    "source": "Official Winamax poker download page (Mac & Windows desktop client)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.FlrSoft.TftpServer",
+    "name": "TftpServer",
+    "url": null,
+    "source": "No official FlrSoft vendor site found; only third-party download mirrors",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.postmanlabs.mac.canary",
+    "name": "PostmanCanary",
+    "url": "https://www.postman.com/downloads/",
+    "source": "Official Postman downloads page (Canary is Postman's prerelease channel)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "org.grunenberg.CalcService",
+    "name": "CalcService",
+    "url": "https://www.devontechnologies.com/apps/freeware",
+    "source": "Official DEVONtechnologies freeware page (org.grunenberg = DEVONtechnologies founder)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.mockuuups.studio-setapp",
+    "name": "Mockuuups Studio",
+    "url": "https://mockuuups.studio/",
+    "source": "Official Mockuuups Studio website (also on Setapp per -setapp bundleId)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.emage-angular",
+    "name": "E-Mage Reloaded",
+    "url": null,
+    "source": "Could not confidently identify; generic Electron bundleId, does not match the emage.js.org image-compression tool",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "GPlates 2.2.0-Darwin-10.8.0",
+    "name": "GPlates",
+    "url": "https://www.gplates.org/",
+    "source": "Official GPlates site (EarthByte / Univ. of Sydney plate-tectonics software)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.ifoodplus.TracedLines",
+    "name": "TracedLines",
+    "url": "https://www.ifoodplus.com/tracedlines/",
+    "source": "Official iFoodPlus product page (bundleId com.ifoodplus matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.roam-research.desktop-app",
+    "name": "Roam Research",
+    "url": "https://roamresearch.com/",
+    "source": "Official Roam Research website (bundleId com.roam-research matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logi.ghub.installer",
+    "name": "lghub_installer",
+    "url": "https://www.logitechg.com/en-us/software/ghub",
+    "source": "Official Logitech G HUB software page (bundleId com.logi.ghub matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "bg.peternikolow.qrencoder",
+    "name": "QREncoder",
+    "url": "https://apps.apple.com/de/app/qrencoder/id452695239",
+    "source": "Mac App Store (primary distribution; developer Peter Nikolow / mobiliodevelopment.com)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.roon.Roon",
+    "name": "Roon",
+    "url": "https://roon.app/",
+    "source": "Official Roon (Roon Labs) website",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.RootRiseTechnologies.PhotoJob-2-Demo",
+    "name": "PhotoJob 2-Demo",
+    "url": "https://rootrisetech.com/",
+    "source": "Official RootRise Technologies website (bundleId com.RootRiseTechnologies matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.perfect-privacy.perfect-privacy-vpn",
+    "name": "Perfect Privacy VPN",
+    "url": "https://www.perfect-privacy.com/en/vpn-apps",
+    "source": "Official Perfect Privacy VPN apps download page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "io.github.iglance.iGlance",
+    "name": "iGlance",
+    "url": "https://github.com/iglance/iGlance",
+    "source": "Official open-source GitHub repo (bundleId io.github.iglance matches)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "ilg.exam-360-loader",
+    "name": "ILGExam360",
+    "url": "https://www.ilgexam360.com/",
+    "source": "Official ILG Technologies Exam360 site (bundleId ilg.exam-360 matches)",
+    "confidence": "high"
+  }
+]

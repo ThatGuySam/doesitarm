@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.aunbox.ScreenRec",
+    "name": "Aunbox ScreenRec",
+    "url": "https://www.recmaster.net/",
+    "source": "Suzhou Aunbox Software's screen recorder (RecMaster); bundleId com.aunbox.ScreenRec maps to the same vendor/product category",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.RootRiseTechnologies.XPS-to-PDF-Lite",
+    "name": "XPS-to-PDF Lite",
+    "url": "https://apps.apple.com/us/app/xps-to-pdf-lite/id849734925?mt=12",
+    "source": "Mac App Store (RootRise Technologies); vendor site rootrisetech.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.kongfuapps.1player",
+    "name": "1player",
+    "url": null,
+    "source": "Kongfu Apps media player, discontinued; kongfuapps.com offline, only third-party aggregators found",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.synthesiallc.synthesia",
+    "name": "Synthesia",
+    "url": "https://synthesiagame.com/",
+    "source": "Official site (Synthesia LLC piano trainer)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.basevelocity.mac.RadarScope",
+    "name": "RadarScope",
+    "url": "https://apps.apple.com/us/app/radarscope/id288419283",
+    "source": "Mac App Store (Base Velocity, LLC primary distribution)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "3cxphone14",
+    "name": "3CX client",
+    "url": "https://www.3cx.com/",
+    "source": "Official 3CX site (vendor of 3CXPhone/3CX client)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.chaoshidai.macDHF",
+    "name": "DHF3.0",
+    "url": "https://www.360dhf.cn/",
+    "source": "Official site of 大黄蜂云课堂 / Shenzhen Chaoshidai (DHFPlayer)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.github.qv2ray",
+    "name": "Qv2ray",
+    "url": "https://github.com/Qv2ray/Qv2ray",
+    "source": "Official GitHub repository",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.stonesoft.VPNClient",
+    "name": "Stonesoft VPN Client",
+    "url": "https://www.forcepoint.com/",
+    "source": "Forcepoint (owns Stonesoft NGFW VPN Client); official support docs at support.forcepoint.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.kryolokovlin.Noizio",
+    "name": "Noizio",
+    "url": "https://noizioapp.com/",
+    "source": "Official site (ambient sound app)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.DAZ.DazCentral",
+    "name": "DazCentral",
+    "url": "https://www.daz3d.com/install-manager-info",
+    "source": "Official Daz 3D site (DazCentral content manager)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.DAZ.DAZStudio",
+    "name": "DAZStudio",
+    "url": "https://www.daz3d.com/get_studio",
+    "source": "Official Daz 3D download page for Daz Studio",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.googlecode.mactlmgr.tlu",
+    "name": "TeX Live Utility",
+    "url": "https://github.com/amaxwell/tlutility",
+    "source": "Official GitHub repo (amaxwell/tlutility); bundleId com.googlecode.mactlmgr matches former Google Code home",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.WifiMouseServer",
+    "name": "WifiMouseServer",
+    "url": "http://wifimouse.necta.us/",
+    "source": "Official WiFi Mouse site (necta) hosting Mouse Server download",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.amixcapital.AirconsoleOSX",
+    "name": "AirconsoleOSX",
+    "url": "https://www.get-console.com/airconsole/",
+    "source": "Official Get Console / Airconsole site (AirconsoleOSX virtual serial port app)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.clipmenu.ClipMenu",
+    "name": "ClipMenu",
+    "url": "https://www.clipmenu.com/",
+    "source": "Official site (naotaka's clipboard manager); matches bundleId",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "TrojanX",
+    "name": "TrojanX",
+    "url": "https://github.com/JimLee1996/TrojanX",
+    "source": "Primary official GitHub repo (Trojan client for macOS, ported from ShadowsocksX-NG)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "tracesOf.Uebersicht",
+    "name": "TracesOf Uebersicht",
+    "url": "https://tracesof.net/uebersicht/",
+    "source": "Official site; matches bundleId tracesOf.Uebersicht (source at github.com/felixhageloh/uebersicht)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.sourceforge",
+    "name": "Avogadro",
+    "url": "https://avogadro.cc/",
+    "source": "Official project site (molecular editor); also SourceForge/GitHub",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "myssh",
+    "name": "FinalShell",
+    "url": "https://www.hostbuf.com/",
+    "source": "Official site (hostbuf, FinalShell SSH client)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.choma-q.vista3",
+    "name": "Vista",
+    "url": "https://www.vistabychromaq.com/",
+    "source": "Official site; bundleId choma-q.vista3 = Vista 3 by Chroma-Q lighting control (confirmed macOS download)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.foundryvtt",
+    "name": "FoundryVTT",
+    "url": "https://foundryvtt.com/",
+    "source": "Official Foundry Virtual Tabletop site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.GrizzlyGamer.RMAWhellcum",
+    "name": "Robin Morningwood Adventure",
+    "url": "https://store.steampowered.com/app/1457220/",
+    "source": "Steam store page (Grizzly Gamer; bundleId RMAWhellcum references the game's Whellcum village)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.Instagram_unite",
+    "name": "Instagram unite",
+    "url": null,
+    "source": "Generic/placeholder bundleId; appears to be a website-wrapper for Instagram, no official app (Instagram has no Mac app)",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.Creator_Studio",
+    "name": "Creator Studio",
+    "url": null,
+    "source": "Generic/placeholder bundleId and hint; cannot identify a specific official Creator Studio Mac app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "org.fritzing.Fritzing",
+    "name": "Fritzing",
+    "url": "https://fritzing.org/",
+    "source": "Official site; matches bundleId org.fritzing.Fritzing",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.9968-4488-2169-7623.18",
+    "name": "thinkorswim",
+    "url": "https://www.schwab.com/trading/thinkorswim/desktop",
+    "source": "Official Charles Schwab thinkorswim desktop page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.zhangguangjian.flowchart3",
+    "name": "Flowchart Designer 3",
+    "url": "https://apps.apple.com/us/app/flowchart-designer-3/id1512570906",
+    "source": "Mac App Store (Zhang Guangjian; primary distribution, no vendor site)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.thewanderingcoel.trojan-qt5",
+    "name": "Trojan-Qt5",
+    "url": "https://github.com/Trojan-Qt5/Trojan-Qt5",
+    "source": "Official GitHub org (original TheWanderingCoel repo archived; project continues under Trojan-Qt5 org)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.contec.SPO2",
+    "name": "SPO2",
+    "url": "https://contechealth.com/",
+    "source": "Official manufacturer site (CONTEC Medical, SpO2 pulse oximeter software)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.xiyou.desktop",
+    "name": "XiYou",
+    "url": null,
+    "source": "Chinese VPN/accelerator with multiple throwaway mirror domains; reports indicate the service shut down, no stable official site",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "QReader.MarginNoteMac",
+    "name": "MarginNote 2 Pro",
+    "url": "https://www.marginnote.com/",
+    "source": "Official site (MarginNote, by QReader); bundleId QReader.MarginNoteMac matches",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.martinjrpowlette.macos.PlayOff",
+    "name": "PlayOff",
+    "url": "https://apps.apple.com/us/app/playoff/id1324608384",
+    "source": "Mac App Store (Martin Jr Powlette; Apple Music handoff app)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.2808-3192-8317-6670.39",
+    "name": "Review Manager 5.4",
+    "url": "https://training.cochrane.org/online-learning/core-software/revman",
+    "source": "Official Cochrane RevMan (Review Manager) page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.shadow-alpha",
+    "name": "Shadow Alpha",
+    "url": "https://shadow.tech/",
+    "source": "Shadow cloud gaming (shadow.tech); 'alpha' = beta channel build of the Shadow app",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.install4j.9770-2859-7603-5794.23",
+    "name": "CareConnect",
+    "url": null,
+    "source": "install4j Java packaging gives no vendor; multiple unrelated CareConnect apps, cannot confirm which one",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.zbudniewek.1440",
+    "name": "1440",
+    "url": "https://1440app.com/",
+    "source": "Official site; bundleId com.zbudniewek.1440 matches the menu-bar day-countdown app",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.zhangguangjian.graph",
+    "name": "Diagram Weaver",
+    "url": "https://apps.apple.com/us/app/diagram-weaver/id1474092248",
+    "source": "Mac App Store (Zhang Guangjian; primary distribution, no vendor site)",
+    "confidence": "high"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "bundleId": "com.yourcompany.Uninstall",
+    "name": "Uninstall",
+    "url": null,
+    "source": "Generic placeholder bundle id (com.yourcompany.*) for a developer template uninstaller; no identifiable vendor or product",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "mac.io.kodika.kodika-dev",
+    "name": "Kodika",
+    "url": "https://kodika.io/",
+    "source": "Official website kodika.io (Kodika no-code iOS/Android app builder for Mac/iPad); Mac App Store id1479182473",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "$(PRODUCT_BUNDLE_IDENTIFIER)",
+    "name": "SWClient",
+    "url": null,
+    "source": "Unresolved Xcode build variable as bundle id and generic name; no identifiable vendor or product",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "Gvix.PDPopDownClient",
+    "name": "pdpop download client",
+    "url": "http://www.pdpop.com/maclient/index_re.php",
+    "source": "Official PDPop (피디팝) Mac download client page (pdpop.com); distributes PDPopDownClient.pkg",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.vatsaev.touchbar-nyancat",
+    "name": "touchbar_nyancat",
+    "url": "https://github.com/avatsaev/touchbar_nyancat",
+    "source": "Official GitHub repo avatsaev/touchbar_nyancat (developer Aslan Vatsaev); Nyan Cat animation for MacBook Pro Touch Bar",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.HenryFranks.Pac-Bar",
+    "name": "Pac-Bar",
+    "url": "https://github.com/henryefranks/pac-bar",
+    "source": "Official GitHub repo henryefranks/pac-bar (developer Henry Franks); Pac-Man for the MacBook Pro Touch Bar",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "jp.piyomarusoft.uni-versal2",
+    "name": "Uni Detector",
+    "url": "https://apps.apple.com/us/app/uni-detector/id1531249804",
+    "source": "Mac App Store (primary distribution) by piyomarusoft; universal-binary checker, matches bundle id jp.piyomarusoft.uni-versal2",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "logitech.Unifying-Installer",
+    "name": "Unifying Installer",
+    "url": "https://support.logi.com/hc/en-us/articles/360025297913-Unifying-Software",
+    "source": "Official Logitech support page for Unifying Software (Logitech vendor); note: software now discontinued/unmaintained",
+    "confidence": "high"
+  }
+]

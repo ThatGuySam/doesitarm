@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.suavetech.0xED",
+    "name": "0xED",
+    "url": "http://www.suavetech.com/0xed/0xed.html",
+    "source": "Official Suavetech site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logitech.LogitechGamingInstaller",
+    "name": "LogitechGamingInstaller",
+    "url": "https://support.logi.com/hc/en-us/articles/360025298053-Logitech-Gaming-Software",
+    "source": "Official Logitech support/download page for Logitech Gaming Software",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "us.sitesucker.mac.sitesucker-pro",
+    "name": "SiteSucker Pro",
+    "url": "https://ricks-apps.com/osx/sitesucker/index.html",
+    "source": "Official developer site (Rick Cranisky)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.Aria2GUI",
+    "name": "Aria2GUI",
+    "url": "https://github.com/XMFEr/aria2gui",
+    "source": "Official GitHub repo (Aria2GUI for MAC OS X)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "maccatalyst.com.ultimateguitar.tabs100",
+    "name": "Ultimate Guitar - Chords & Tabs",
+    "url": "https://apps.apple.com/us/app/ultimate-guitar-chords-tabs/id1479045460",
+    "source": "Mac App Store (Mac Catalyst build, primary distribution); vendor ultimate-guitar.com",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.inderdhir.DatWeatherDoe",
+    "name": "DatWeatherDoe",
+    "url": "https://github.com/inderdhir/DatWeatherDoe",
+    "source": "Official GitHub repo",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.JaLu.Backgrounds",
+    "name": "Backgrounds",
+    "url": "https://apps.apple.com/us/app/backgrounds/id808501572?mt=12",
+    "source": "Mac App Store (primary distribution)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.LaCie.DesktopManager.launcher",
+    "name": "LaCie Desktop Manager",
+    "url": "https://www.seagate.com/support/software/lacie-desktop-manager/",
+    "source": "Official Seagate/LaCie support download page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.lacie.toolkit.installer",
+    "name": "LaCie Toolkit Installer",
+    "url": "https://www.seagate.com/support/software/lacie-toolkit/",
+    "source": "Official Seagate/LaCie Toolkit support download page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.twine",
+    "name": "Twine",
+    "url": "https://twinery.org/",
+    "source": "Official Twine (interactive fiction tool) site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.producthunt.producthuntosx",
+    "name": "Product Hunt",
+    "url": "https://github.com/producthunt/producthunt-osx",
+    "source": "Official Product Hunt open-source macOS app repo",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.DigiDNA.ColorSet",
+    "name": "ColorSet",
+    "url": "https://github.com/DigiDNA/ColorSet",
+    "source": "Official DigiDNA GitHub repo",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.lamquangminh.evkey",
+    "name": "EVKey",
+    "url": "https://github.com/lamquangminh/EVKey",
+    "source": "Official GitHub repo (Vietnamese keyboard)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.TryBest.Paint",
+    "name": "Paint S",
+    "url": "https://apps.apple.com/us/app/paint-s/id736473980",
+    "source": "Mac App Store (primary distribution, TryBest)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.fuekiin.NightOwl",
+    "name": "NightOwl",
+    "url": "https://nightowlapp.co/",
+    "source": "Official NightOwl site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.qihoo.360browser",
+    "name": "360Chrome",
+    "url": "https://browser.360.cn/ee/mac/",
+    "source": "Official Qihoo 360 Extreme/Chrome browser Mac page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.alexandrudenk.Dark-Mode-for-Safari",
+    "name": "Dark Mode for Safari",
+    "url": "https://apps.apple.com/us/app/dark-mode-for-safari/id1397180934?mt=12",
+    "source": "Mac App Store (primary distribution, Safari extension by Alexandru Denk)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.sourceforge.sqlitebrowser",
+    "name": "DB Browser for SQLite",
+    "url": "https://sqlitebrowser.org/",
+    "source": "Official project site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.oltica.ACVM",
+    "name": "ACVM",
+    "url": "https://github.com/KhaosT/ACVM",
+    "source": "Original author GitHub repo (KhaosT, Oltica)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "melgu.TidalSwift",
+    "name": "TidalSwift",
+    "url": "https://github.com/melgu/TidalSwift",
+    "source": "Official GitHub repo",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.github.htrb.ngraph-gtk",
+    "name": "ngraph-gtk",
+    "url": "https://github.com/htrb/ngraph-gtk",
+    "source": "Official GitHub repo",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "clipto",
+    "name": "Clipto",
+    "url": "https://github.com/clipto-pro/Desktop",
+    "source": "Official clipto-pro GitHub repo (clipboard/notes desktop app)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.webcatalog.jordan",
+    "name": "WebCatalog",
+    "url": "https://webcatalog.io/",
+    "source": "Official WebCatalog site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.Ollane.TomieWGM",
+    "name": "TomieWGM",
+    "url": null,
+    "source": "Unity game 'Tomie Wanna Get Married' by Ollane; no official Mac download page found",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.logitech.logicapture",
+    "name": "Logi Capture",
+    "url": "https://www.logitech.com/en-us/software/capture.html",
+    "source": "Official Logitech Capture download page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.picascade",
+    "name": "Picascade",
+    "url": null,
+    "source": "Could not confirm an official site for this app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.electron.dgtl.translator",
+    "name": "DGTL.Translator",
+    "url": null,
+    "source": "Could not confirm an official site for this app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.alaskco.Recipe",
+    "name": "Recipedo",
+    "url": null,
+    "source": "Could not confirm an official site/store listing for this app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "app.cyan.tinycalx",
+    "name": "TinyCal",
+    "url": "https://plumamazing.com/product/tinycal/",
+    "source": "Official Plum Amazing product page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.dockstationio.dockstation",
+    "name": "DockStation",
+    "url": "https://github.com/DockStation/dockstation",
+    "source": "Official GitHub repo",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.sourceforge.cornerfix.accurawTrial",
+    "name": "AccuRaw EXR Trial",
+    "url": "https://www.mcguffogco.com/accurawmac",
+    "source": "Official McGuffog & Company AccuRaw EXR page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "net.sourceforge.cornerfix.accurawMonoTrial",
+    "name": "AccuRaw Monochrome Trial",
+    "url": "https://www.mcguffogco.com/accurawmonochromemac",
+    "source": "Official McGuffog & Company AccuRaw Monochrome page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.naarak.ViperFTP",
+    "name": "Viper FTP",
+    "url": "https://viperftp.com/",
+    "source": "Official Naarak Studio site",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.114consulting.CLAS-Student-Mac",
+    "name": "CLAS Student GDCP",
+    "url": null,
+    "source": "Could not confirm an official site for this app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.catalinux.bg3d",
+    "name": "Backgammon Reloaded 3D",
+    "url": "https://apps.apple.com/us/app/backgammon-reloaded-3d/id1218036582",
+    "source": "Mac App Store (primary distribution, Catalin Stan)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "HiTRUST.FBWS",
+    "name": "FBWS",
+    "url": null,
+    "source": "Could not confirm an official site for this app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.macromedia.Flash Player Debugger.app",
+    "name": "Flash Player Debugger",
+    "url": "https://www.adobe.com/support/flashplayer/debug_downloads.html",
+    "source": "Adobe official Flash Player debug downloads page (vendor page; product now end-of-life)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.tdx.tdxiMac",
+    "name": "Tdx TdxiMac",
+    "url": "https://www.tdx.com.cn/soft.html",
+    "source": "Official 通达信 (Shenzhen Fortune Trend) download center",
+    "confidence": "high"
+  }
+]

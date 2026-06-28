@@ -1,0 +1,268 @@
+[
+  {
+    "bundleId": "com.yourcompany.MieSimulatorGUI-v1-3",
+    "name": "MieSimulatorGUI_v1_3",
+    "url": "https://github.com/VirtualPhotonics/MieSimulatorGUI",
+    "source": "Official open-source GitHub repository (Virtual Photonics Technology Initiative)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.AnthonyDaMota.KnightTouchBar2000",
+    "name": "KnightTouchBar2000",
+    "url": "https://github.com/AkdM/KnightTouchBar2000",
+    "source": "Official GitHub repo by Anthony Da Mota (AkdM)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "ca.embeddedsoft.ipcalculatorver4",
+    "name": "ipcalculatorver4",
+    "url": "https://mac.softpedia.com/get/Network-Admin/Ip-Calculator-v4.shtml",
+    "source": "EmbeddedSoft Canada IP Calculator v4; no live official homepage found, third-party listing used",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "io.github.openconnect.openconnect-gui",
+    "name": "OpenConnect-GUI",
+    "url": "https://gitlab.com/openconnect/openconnect-gui",
+    "source": "Official OpenConnect GUI project (moved to GitLab)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.install4j.8894-1892-1685-3469.10675",
+    "name": "Alice 3 Installer",
+    "url": "https://www.alice.org/get-alice/",
+    "source": "Official Alice website (Carnegie Mellon University)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.nuebling.mac-mouse-fix",
+    "name": "Mac Mouse Fix",
+    "url": "https://macmousefix.com/",
+    "source": "Official website by Noah Nuebling",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.codetectonics.BitPerfect",
+    "name": "BitPerfect",
+    "url": "https://apps.apple.com/us/app/bitperfect/id455545700",
+    "source": "Mac App Store (primary distribution; official blog bitperfectsound.blogspot.com)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.air-music-technology.Authorizer",
+    "name": "Authorizer",
+    "url": "https://www.airmusictech.com/",
+    "source": "Official AIR Music Technology website (Authorizer is AIR's license activation utility)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "manager.clipboard.kuaitie",
+    "name": "kuaitie",
+    "url": "https://kuaitie.cloud/",
+    "source": "Official website (快贴 cross-platform cloud clipboard)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logitech.Logi-Options",
+    "name": "Logi Options",
+    "url": "https://www.logitech.com/en-us/software/options.html",
+    "source": "Official Logitech download page for Logi Options (legacy, pre-Options+)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.lihaoyun6.PD-Runner",
+    "name": "PD Runner",
+    "url": "https://github.com/lihaoyun6/PD-Runner",
+    "source": "Official GitHub repo by lihaoyun6",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.yourcompany.Olive",
+    "name": "Olive",
+    "url": "https://www.olivevideoeditor.org/",
+    "source": "Official Olive video editor website; bundle ID is a generic placeholder so identity not definitive",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.blacktree.Quicksilver",
+    "name": "Quicksilver",
+    "url": "https://qsapp.com/",
+    "source": "Official Quicksilver website (originally Blacktree, now QSApp)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.logitech.vc.CameraSettings",
+    "name": "Camera Settings",
+    "url": "https://support.logi.com/hc/en-us/articles/360025290213-Logitech-Camera-Settings",
+    "source": "Official Logitech support/download page (Logitech Camera Settings for ConferenceCams/webcams)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "com.install4j.5889-6375-8446-2021.6775",
+    "name": "Trader Workstation Installer",
+    "url": "https://www.interactivebrokers.com/en/trading/download-tws.php",
+    "source": "Official Interactive Brokers Trader Workstation (TWS) download page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "jp.nonamehacha.AliceInCradle",
+    "name": "AliceInCradle",
+    "url": "https://aliceincradle.com/",
+    "source": "Official website by NanameHacha",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.glouel.AerialUpdater",
+    "name": "Aerial Companion",
+    "url": "https://github.com/glouel/Aerial",
+    "source": "Official GitHub repo (Aerial / AerialCompanion by glouel)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.keyan",
+    "name": "Electron Keyan",
+    "url": null,
+    "source": "Could not disambiguate; com.electron.* is a generic Electron default bundle ID and no specific vendor found",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.electron.firefoo",
+    "name": "Firefoo",
+    "url": "https://www.firefoo.com/",
+    "source": "Official website (Firefoo Firebase Firestore GUI client)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.piriform.ccleaner",
+    "name": "CCleaner",
+    "url": "https://www.ccleaner.com/ccleaner-mac",
+    "source": "Official CCleaner (Piriform) website",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.Taqs-im.SOLO",
+    "name": "SOLO",
+    "url": "https://taqs.im/shop/solo/",
+    "source": "Official TAQS.IM website (SOLO: World Synth plugin)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.eht3.slicer",
+    "name": "Dremel DigiLab 3D Slicer",
+    "url": "https://www.dremel.com/gn/en/digilab/software",
+    "source": "Official Dremel DigiLab software page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.EmperoarV.CloudRush",
+    "name": "CloudRush",
+    "url": null,
+    "source": "Could not disambiguate vendor 'EmperoarV'; multiple unrelated CloudRush products exist",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.electron.atrust",
+    "name": "aTrust",
+    "url": "https://www.sangfor.com/cybersecurity/solutions/zero-trust-guard-ztna",
+    "source": "Official Sangfor aTrust (Zero Trust Guard ZTNA) product page",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "lrtimelapse.LRTimelapseApp",
+    "name": "LRTimelapse 5",
+    "url": "https://lrtimelapse.com/",
+    "source": "Official LRTimelapse website",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.github.xournalpp",
+    "name": "Xournal++",
+    "url": "https://xournalpp.github.io/",
+    "source": "Official project website / GitHub",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.flowjollc.flowjo",
+    "name": "FlowJo",
+    "url": "https://www.flowjo.com/",
+    "source": "Official FlowJo website (BD Biosciences)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.electron.sol-client",
+    "name": "Sol Client",
+    "url": null,
+    "source": "Ambiguous; com.electron.* generic bundle ID does not match the Java-based Minecraft 'Sol Client' (sol-client.github.io), so could not confirm this specific Electron app",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "justinhamilton.Menu-Bar-Splitter",
+    "name": "Menu Bar Splitter",
+    "url": "https://github.com/jwhamilton99/menu-bar-splitter",
+    "source": "Official GitHub repo by Justin Hamilton",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "MF.iMyFone Fixppo",
+    "name": "iMyFone Fixppo",
+    "url": "https://www.imyfone.com/ios-system-recovery/",
+    "source": "Official iMyFone Fixppo product page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "iainstall.4bf1d6f6-1f04-11b4-8e26-a2a1e730b221",
+    "name": "CPLEX Optimization Studio 22.1",
+    "url": "https://www.ibm.com/products/ilog-cplex-optimization-studio",
+    "source": "Official IBM ILOG CPLEX Optimization Studio product page",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.inmethod.AirVideoServerHD",
+    "name": "Air Video Server HD",
+    "url": "https://airvideo.app/",
+    "source": "Official Air Video HD website (InMethod)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "com.jedictx",
+    "name": "JEDict",
+    "url": "http://jedict.com/",
+    "source": "Official JEDict website (Sergey Kurkin)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "pureref.app-id",
+    "name": "PureRef",
+    "url": "https://www.pureref.com/",
+    "source": "Official PureRef website (Idyllic Pixel)",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "self.kmitko.Skasuj-forki",
+    "name": "Skasuj forki",
+    "url": null,
+    "source": "Could not confirm; 'Skasuj forki' (Polish: delete forks) has no findable official distribution",
+    "confidence": "none"
+  },
+  {
+    "bundleId": "com.virae.Keyboard-Lock",
+    "name": "KeyboardLock",
+    "url": "https://keyboardlock.app/",
+    "source": "Official website (BabyKeyboard Lock)",
+    "confidence": "medium"
+  },
+  {
+    "bundleId": "net.badlion.client",
+    "name": "Badlion Client",
+    "url": "https://www.badlion.net/",
+    "source": "Official Badlion website",
+    "confidence": "high"
+  },
+  {
+    "bundleId": "Crisp",
+    "name": "Crisp",
+    "url": "https://crisp.chat/en/apps/",
+    "source": "Official Crisp website (customer messaging desktop apps)",
+    "confidence": "medium"
+  }
+]
