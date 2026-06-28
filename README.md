@@ -12,6 +12,13 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 [Do you want to help with Apple Silicon testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)
 
 
+## Contributing & Branch Policy
+
+This repo uses **trunk-based development** — work is committed directly to `master`.
+
+**Do not create, switch to, or push git branches** (this applies to human contributors' automation and to AI coding agents alike — Claude Code, Codex/OMX, Cursor, etc.) **unless a human explicitly approves it or asks for a branch by name.** When in doubt, stay on `master` and ask first. See [AGENTS.md](AGENTS.md) for the agent-facing version of this rule.
+
+
 ## Sponsors
 
 Does It ARM is an open-source project with its ongoing development made possible by the support of Affiliate Partners such as Notion. If you'd like to join them, feel free to reach out on [Twitter](https://twitter.com/ThatGuySam). 
