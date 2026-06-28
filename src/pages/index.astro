@@ -19,7 +19,10 @@ import Search from '~/components/search-stork.vue'
 // import ListEndButtons from '~/components/list-end-buttons.vue'
 import CarbonInline from '~/components/carbon-inline.vue'
 
-export const prerender = true
+// SSR (not prerendered) for the cf.doesitarm.com Cloudflare preview: this page
+// does top-level data fetching, which workerd forbids in global scope during
+// build-time prerender but allows at request time.
+export const prerender = false
 
 applyResponseDefaults( Astro )
 

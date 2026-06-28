@@ -1,0 +1,45 @@
+{
+  // cf.doesitarm.com — SSR preview for the doesitarm.com Netlify→Cloudflare
+  // migration. The apex doesitarm.com stays on Netlify, untouched.
+  //
+  // @astrojs/cloudflare (v13, on @cloudflare/vite-plugin) reads THIS file at
+  // build time, so it must NOT declare `main`/`assets` (the adapter generates
+  // those into dist/server/wrangler.json). It carries what the build, prerender,
+  // and runtime need:
+  //   - nodejs_compat: the adapter's default flags are empty, which broke the
+  //     build-time prerender on `node:timers`. With it, Workers also maps the
+  //     `vars` below into `process.env` (the codebase reads process.env.*).
+  //   - SESSION KV: Astro 6 sessions default to a KV driver on Cloudflare.
+  //   - vars: the public API/source URLs the SSR pages read via process.env
+  //     (which is empty on workerd otherwise). GOOGLE_API_KEY is intentionally
+  //     omitted — it is a build-time-only secret for list generation.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "doesitarm-cf-preview",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-04-15",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "kv_namespaces": [
+    { "binding": "SESSION", "id": "1d2d917cf9b44c70957c30171ae915f2" }
+  ],
+
+  "vars": {
+    "PUBLIC_API_DOMAIN": "https://api.doesitarm.com",
+    "PUBLIC_URL": "https://doesitarm.com",
+    "URL": "https://doesitarm.com",
+    "VFUNCTIONS_URL": "https://doesitarm-functions-scc.vercel.app",
+    "VIDEO_SOURCE": "https://api.doesitarm.com/api/youtube-videos.json",
+    "GAMES_SOURCE": "https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs&sheet=Games&header=2&startRow=3",
+    "HOMEBREW_SOURCE": "https://doesitarm-functions-scc.vercel.app/api/homebrew-issue",
+    "COMMITS_SOURCE": "https://doesitarm-functions-scc.vercel.app/api/commits",
+    "SCANS_SOURCE": "https://doesitarm-functions-scc.vercel.app/app-test-reports.json",
+    "TEST_RESULT_STORE": "https://doesitarm-functions-scc.vercel.app/api/test-results-store",
+    "ALL_UPDATE_SUBSCRIBE": "https://doesitarm-functions-scc.vercel.app/api/all-app-updates-subscribe"
+  },
+
+  // custom_domain auto-provisions DNS via the Workers subsystem (the deploy
+  // token's Workers permission is enough even though the general DNS API is 403).
+  "routes": [{ "pattern": "cf.doesitarm.com", "custom_domain": true }],
+
+  "observability": { "enabled": true }
+}

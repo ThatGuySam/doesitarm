@@ -10,7 +10,17 @@ import { getRouteType } from '~/helpers/app-derived.js'
 
 
 export const siteUrl = getSiteUrl()
-const currentModuleDirectory = path.dirname( fileURLToPath( import.meta.url ) )
+// `import.meta.url` is undefined on the Workers runtime (workerd), so
+// fileURLToPath() throws here at MODULE LOAD. This module is imported by the
+// default layout (via PageHead), so an unguarded throw breaks every SSR page on
+// Cloudflare. currentModuleDirectory is only used by the Netlify-config helpers
+// below (Node/build-time only), so resolve it lazily and fall back on Workers.
+let currentModuleDirectory
+try {
+    currentModuleDirectory = path.dirname( fileURLToPath( import.meta.url ) )
+} catch {
+    currentModuleDirectory = ( typeof process !== 'undefined' && process.cwd ) ? process.cwd() : '/'
+}
 
 export const nuxtHead = {
     // this htmlAttrs you need

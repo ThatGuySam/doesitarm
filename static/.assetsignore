@@ -1,0 +1,13 @@
+# Assets excluded from the Cloudflare Workers upload for the cf.doesitarm.com
+# preview. They stay in static/ for the build; they are just not served here.
+#
+# The SSR pages and the client fetch the LIVE external API at api.doesitarm.com
+# (PUBLIC_API_DOMAIN), so the bundled same-origin /api/ snapshot (~730 MB,
+# ~6,300 files) is redundant for the preview. The endpoint manifests and big
+# data JSONs are build inputs / exceed the 25 MiB Workers asset cap.
+api/
+app-bundles.json
+video-list.json
+eleventy-endpoints.json
+sitemap-endpoints.json
+nuxt-endpoints.json

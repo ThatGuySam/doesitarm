@@ -84,7 +84,12 @@ export default {
         },
         uuid: {
             type: String,
-            default: uuid()
+            // Lazy factory, not `uuid()`: a bare call evaluates at module load,
+            // which (a) makes every instance share one id and (b) generates a
+            // random value in global scope — forbidden on the Workers runtime
+            // (workerd), 500-ing every SSR page. A factory runs per-instance at
+            // render time, inside the request handler.
+            default: () => uuid()
         }
     },
     data: function () {

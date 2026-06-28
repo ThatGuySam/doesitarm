@@ -79,6 +79,13 @@ export default {
             ]
         }
     },
+    worker: {
+        // Vite defaults worker.format to 'iife', which Rollup rejects under
+        // code-splitting (Astro's build): "UMD and IIFE output formats are not
+        // supported for code-splitting builds." The scanner Web Worker
+        // (helpers/scanner/worker.ts) must emit ES modules.
+        format: 'es'
+    },
     build: {
         commonjsOptions: {
             transformMixedEsModules: true
