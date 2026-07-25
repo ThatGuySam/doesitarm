@@ -14,14 +14,19 @@ const routeGroups = {
     '/app/spotify',
     '/formula/bash',
     '/kind/developer-tools',
-    '/device/m1-imac',
+    '/device/2023-m3-imac',
     '/app/expressvpn/benchmarks'
   ],
   video: [
-    '/tv/apple-silicon-gaming-is-here',
+    '/tv/m2-macbook-air-vs-m1-vs-m1-pro-i-nxcumau5khs',
     '/tv/install-instagram-app-on-m1-macbook-air-apple-silicon-tutorial-i-vfbmworal6i',
     '/tv/xamarin-and-visual-studio-on-apple-macbook-pro-13-m1-in-4k-i-rwpspmmlos',
     '/tv/watch-this-before-buying-apple-m1-macbook-for-xampp-or-apple-silicon-tests-in-4k-i-ebwwewsis8s'
+  ],
+  staticAssets: [
+    '/robots.txt',
+    '/sitemap-index.xml',
+    '/pagefind/pagefind.js'
   ]
 }
 

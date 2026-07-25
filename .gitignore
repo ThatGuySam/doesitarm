@@ -73,6 +73,7 @@ typings/
 
 # Serverless directories
 .serverless
+.wrangler/
 
 # IDE
 .idea

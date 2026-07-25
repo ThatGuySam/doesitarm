@@ -30,13 +30,17 @@ const sitemapFilesToTry = [
 ]
 
 /**
- * Finds the first existing sitemap file in the dist directory
+ * Finds the first existing sitemap file in a platform build directory.
+ * Netlify emits assets at dist/, while the Cloudflare adapter emits them at
+ * dist/client/.
  */
 async function getSitemapThatExists(): Promise<string | undefined> {
-    for (const sitemapFile of sitemapFilesToTry) {
-        const sitemapPath = `./dist/${sitemapFile}`
-        if (await fs.pathExists(sitemapPath)) {
-            return sitemapPath
+    for (const buildDirectory of [ './dist', './dist/client' ]) {
+        for (const sitemapFile of sitemapFilesToTry) {
+            const sitemapPath = `${buildDirectory}/${sitemapFile}`
+            if (await fs.pathExists(sitemapPath)) {
+                return sitemapPath
+            }
         }
     }
 }
@@ -92,4 +96,4 @@ describe('Sitemap Tests', () => {
 
         expect(totalDifferences).toBeLessThan(threshold)
     })
-}) 
+})

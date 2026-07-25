@@ -34,7 +34,8 @@
     "test:browser:pagefind": "vitest run --config vitest.playwright.config.mjs test/playwright/pagefind-native-filter.playwright.ts",
     "test:browser:pagefind:live": "PLAYWRIGHT_BASE_URL=https://doesitarm.com vitest run --config vitest.playwright.config.mjs test/playwright/pagefind-native-filter.playwright.ts",
     "dev": "pnpm run dev-astro",
-    "build": "pnpm run generate-astro",
+    "build": "pnpm run cloudflare-build",
+    "build:netlify": "pnpm run netlify-build",
     "build-api": "pnpm run clone-readme && pnpm exec vite-node build-lists.js -- --with-api --no-lists",
     "build-lists-and-api": "pnpm run clone-readme && pnpm exec vite-node build-lists.js -- --with-api",
     "generate-dev": "pnpm build && pnpm test",
@@ -50,6 +51,7 @@
     "stork-netlify": "chmod +x scripts/stork-netlify.sh && ./scripts/stork-netlify.sh",
     "dev-astro": "astro dev",
     "generate-astro": "astro build",
+    "generate-astro:cloudflare": "astro build --config astro.config.cloudflare.mjs",
     "generate-postcss": "ENV=production postcss assets/css/tailwind.css --o static/tailwind.css",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
@@ -58,13 +60,15 @@
     "clone-readme": "cp ./README.md README-temp.md",
     "scan-new-apps": "pnpm exec vite-node scripts/scan-new-apps.js",
     "with-env": "dotenv -e .env -- ",
-    "cloudflare-deploy": "pnpm run build-api",
+    "cloudflare-build": "pnpm run netlify-prebuild && pnpm run generate-astro:cloudflare && pnpm run \"/^netlify-postbuild:.*/\"",
+    "cloudflare-deploy": "pnpm run cloudflare-build && pnpm exec wrangler deploy --config dist/server/wrangler.json",
+    "verify:cloudflare:live": "node scripts/verify-cloudflare-frontend.mjs",
     "vercel-build": "pnpm exec vite-node scripts/vercel-build.js",
     "netlify-prebuild:download-sitemaps": "pnpm exec vite-node scripts/download-sitemaps.js",
     "netlify-prebuild:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",
     "netlify-prebuild": "pnpm run \"/^netlify-prebuild:.*/\" && pnpm build-search-index",
     "netlify-postbuild:test-postbuild-functions": "vitest test/main.test.ts",
-    "netlify-postbuild:test-circular-deps": "madge --circular --extensions js,mjs,ts,vue,astro ./*",
+    "netlify-postbuild:test-circular-deps": "madge --circular --extensions js,mjs,ts,vue,astro ./src ./helpers ./scripts ./test ./workers ./doesitarm-default ./*.js ./*.mjs",
     "netlify-build": "pnpm run netlify-prebuild && pnpm generate-astro && pnpm run \"/^netlify-postbuild:.*/\"",
     "netlify-and-vercel-build": "pnpm netlify-build && pnpm vercel-build"
   },
@@ -154,6 +158,7 @@
     "tsconfig-paths": "^3.14.1",
     "typescript": "^5.7.3",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.0",
+    "wrangler": "4.105.0"
   }
 }

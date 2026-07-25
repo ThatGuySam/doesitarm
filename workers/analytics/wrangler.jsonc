@@ -1,0 +1,16 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "analytics",
+  "main": "src/index.js",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-07-25",
+  "routes": [
+    {
+      "pattern": "*doesitarm.com/analytics.js",
+      "zone_name": "doesitarm.com"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

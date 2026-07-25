@@ -1,0 +1,67 @@
+name: Deploy Cloudflare Frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '30 4 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-frontend-production
+  cancel-in-progress: true
+
+env:
+  ALL_UPDATE_SUBSCRIBE: https://doesitarm-functions-scc.vercel.app/api/all-app-updates-subscribe
+  COMMITS_SOURCE: https://doesitarm-functions-scc.vercel.app/api/commits
+  GAMES_SOURCE: https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs&sheet=Games&header=2&startRow=3
+  HOMEBREW_SOURCE: https://doesitarm-functions-scc.vercel.app/api/homebrew-issue
+  PUBLIC_API_DOMAIN: https://api.doesitarm.com
+  PUBLIC_URL: https://doesitarm.com
+  SCANS_SOURCE: https://doesitarm-functions-scc.vercel.app/app-test-reports.json
+  TEST_RESULT_STORE: https://doesitarm-functions-scc.vercel.app/api/test-results-store
+  URL: https://doesitarm.com
+  VFUNCTIONS_URL: https://doesitarm-functions-scc.vercel.app
+  VIDEO_SOURCE: https://api.doesitarm.com/api/youtube-videos.json
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build and test Cloudflare frontend
+        run: pnpm cloudflare-build
+
+      - name: Deploy exact commit
+        run: >-
+          pnpm exec wrangler deploy
+          --config dist/server/wrangler.json
+          --message "GitHub ${GITHUB_SHA}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+      - name: Verify live preview routes
+        run: bun scripts/health https://cf.doesitarm.com
+
+      - name: Verify live preview freshness and indexing
+        run: pnpm verify:cloudflare:live -- --host=https://cf.doesitarm.com

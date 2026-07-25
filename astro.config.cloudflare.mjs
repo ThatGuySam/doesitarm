@@ -1,11 +1,11 @@
 import { defineConfig } from 'astro/config'
-import netlify from '@astrojs/netlify'
+import cloudflare from '@astrojs/cloudflare'
 
 import { makeSharedAstroConfig } from './astro.config.shared.mjs'
 
 export default defineConfig({
     ...makeSharedAstroConfig(),
-    adapter: netlify({
-        dist: new URL('./dist/', import.meta.url)
+    adapter: cloudflare({
+        imageService: 'passthrough'
     })
 })
