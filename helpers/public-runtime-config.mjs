@@ -16,7 +16,6 @@ function getRuntimeValue ( envValue, fallbackValue = null ) {
 }
 
 export const publicRuntimeConfig = {
-    allUpdateSubscribe: process.env.ALL_UPDATE_SUBSCRIBE,
     testResultStore: process.env.TEST_RESULT_STORE,
     siteUrl: process.env.URL,
     macsVerbiage: getRuntimeValue( process.env.npm_package_config_verbiage_macs, fallbackVerbiage.macs ),

@@ -34,8 +34,7 @@
     "HOMEBREW_SOURCE": "https://doesitarm-functions-scc.vercel.app/api/homebrew-issue",
     "COMMITS_SOURCE": "https://doesitarm-functions-scc.vercel.app/api/commits",
     "SCANS_SOURCE": "https://doesitarm-functions-scc.vercel.app/app-test-reports.json",
-    "TEST_RESULT_STORE": "https://doesitarm-functions-scc.vercel.app/api/test-results-store",
-    "ALL_UPDATE_SUBSCRIBE": "https://doesitarm-functions-scc.vercel.app/api/all-app-updates-subscribe"
+    "TEST_RESULT_STORE": "https://doesitarm-functions-scc.vercel.app/api/test-results-store"
   },
 
   // custom_domain auto-provisions DNS via the Workers subsystem (the deploy

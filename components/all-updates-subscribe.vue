@@ -1,5 +1,4 @@
 <template>
-
     <div>
         <div
             v-if="feedbackMessage === null"
@@ -36,12 +35,22 @@
                         :class="inputClasslist"
                         :placeholder="isFocused ? 'me@email.com' : placeholder"
                         :aria-label="placeholder"
+                        autocomplete="email"
                         name="all-updates-subscribe"
                         style="width: 240px;"
                         type="email"
                         required
                         @focus="isFocused = true"
                         @blur="isFocused = false"
+                    >
+                    <input
+                        v-model="website"
+                        aria-hidden="true"
+                        autocomplete="off"
+                        class="hidden"
+                        name="website"
+                        tabindex="-1"
+                        type="text"
                     >
                 </div>
             </form>
@@ -54,15 +63,15 @@
             {{ feedbackMessage }}
         </div>
     </div>
-
 </template>
 
 <script>
 
 import { v4 as uuid } from 'uuid'
 
-import { isNuxt } from '~/helpers/environment.js'
 import { postJson } from '~/helpers/http.js'
+
+const subscriptionEndpoint = 'https://doesitarm.com/api/subscriptions'
 
 export default {
     props: {
@@ -95,6 +104,7 @@ export default {
     data: function () {
         return {
             email: '',
+            website: '',
 
             isFocused: false,
             feedbackMessage: null,
@@ -130,27 +140,13 @@ export default {
 
     methods: {
         async trySubmit () {
-            console.log('Trying submit')
-
             // Set intermediate message
             this.feedbackMessage = 'Sending...'
 
-            // const pagePath = $nuxt.$route.path
-
-            const allUpdateSubscribe = isNuxt( this ) ? this.$config.allUpdateSubscribe : global.$config.allUpdateSubscribe
-
-            console.log('allUpdateSubscribe', allUpdateSubscribe)
-
-
-            // https://stackoverflow.com/questions/51995070/post-data-to-a-google-form-with-ajax/55496118#55496118
-            const actionUrl = allUpdateSubscribe
-
-            console.log('actionUrl', actionUrl)
-
             try {
-                await postJson( actionUrl, {
-                    // Email
-                    'email': this.email
+                await postJson( subscriptionEndpoint, {
+                    email: this.email,
+                    website: this.website
                 } )
                 this.feedbackMessage = 'We\'ll keep you informed!'
             } catch ( error ) {

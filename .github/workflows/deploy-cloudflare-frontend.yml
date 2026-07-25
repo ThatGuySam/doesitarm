@@ -16,7 +16,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ALL_UPDATE_SUBSCRIBE: https://doesitarm-functions-scc.vercel.app/api/all-app-updates-subscribe
   COMMITS_SOURCE: https://doesitarm-functions-scc.vercel.app/api/commits
   GAMES_SOURCE: https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs&sheet=Games&header=2&startRow=3
   HOMEBREW_SOURCE: https://doesitarm-functions-scc.vercel.app/api/homebrew-issue
