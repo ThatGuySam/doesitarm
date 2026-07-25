@@ -10,6 +10,7 @@ import { getListedDeviceListings } from '~/helpers/device-catalog.js'
 import { replaceDeviceUrlsInSitemap } from '~/helpers/api/sitemap/devices.js'
 import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
 import { getText } from '~/helpers/http.js'
+import { getSiteUrl } from '~/helpers/url.js'
 
 
 ;(async () => {
@@ -55,8 +56,9 @@ import { getText } from '~/helpers/http.js'
         downloadedSitemapPaths.push( sitemapIndexFilePath )
     }
 
+    const siteUrl = getSiteUrl()
     const deviceUrls = getListedDeviceListings().map( device => {
-        return new URL( device.endpoint, process.env.PUBLIC_URL ).href
+        return new URL( device.endpoint, siteUrl ).href
     } )
 
     for ( const [ index, sitemapPath ] of downloadedSitemapPaths.entries() ) {
