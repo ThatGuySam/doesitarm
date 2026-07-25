@@ -1,0 +1,63 @@
+name: Deploy Cloudflare Subscriptions
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - workers/subscriptions/**
+      - test/subscriptions-worker.test.js
+      - scripts/verify-subscriptions-worker.mjs
+      - .github/workflows/deploy-cloudflare-subscriptions.yml
+      - package.json
+      - pnpm-lock.yaml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-subscriptions-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Test subscription Worker
+        run: pnpm test:subscriptions
+
+      - name: Apply D1 migrations
+        run: >-
+          pnpm exec wrangler d1 migrations apply
+          doesitarm-subscriptions
+          --remote
+          --config workers/subscriptions/wrangler.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+      - name: Deploy exact commit
+        run: >-
+          pnpm exec wrangler deploy
+          --config workers/subscriptions/wrangler.jsonc
+          --message "GitHub ${GITHUB_SHA}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+      - name: Verify D1 binding and CORS
+        run: node scripts/verify-subscriptions-worker.mjs

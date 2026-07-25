@@ -1,0 +1,24 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "doesitarm-subscriptions",
+  "main": "src/index.js",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-07-25",
+  "d1_databases": [
+    {
+      "binding": "SUBSCRIPTIONS_DB",
+      "database_name": "doesitarm-subscriptions",
+      "database_id": "7d545f65-4cbd-405c-aafb-75b18a57fcc9",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "doesitarm.com/api/subscriptions*",
+      "zone_name": "doesitarm.com"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
