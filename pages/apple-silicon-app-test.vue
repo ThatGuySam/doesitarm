@@ -206,7 +206,7 @@ export default {
     },
     computed: {
         fallbackMacsVerbiage () {
-            return 'Apple M4 Max or M3 Ultra Mac'
+            return 'Apple M5 Max or M5 Pro Mac'
         },
         npm_package_config_verbiage_macs () {
             return this.config?.macsVerbiage || this.$config?.macsVerbiage || this.fallbackMacsVerbiage

@@ -3,8 +3,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const fallbackVerbiage = {
-    macs: 'Apple M4 Max or M3 Ultra Mac',
-    processors: 'Apple M4 Max and M3 Ultra'
+    macs: 'Apple M5 Max or M5 Pro Mac',
+    processors: 'Apple M5 Max and M5 Pro'
 }
 
 function getRuntimeValue ( envValue, fallbackValue = null ) {

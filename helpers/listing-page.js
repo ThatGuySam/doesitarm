@@ -22,7 +22,7 @@ function makeTitle ( listing ) {
 function makeDescription ( listing ) {
     // const processorsVerbiage = process.env.npm_package_config_verbiage_processors || this.$config.processorsVerbiage
 
-    const processorsVerbiage = 'Apple M3 Max and M2 Ultra'
+    const processorsVerbiage = 'Apple M5 Max and M5 Pro'
 
     return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ processorsVerbiage } Processors.`
 }
