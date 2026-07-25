@@ -1,6 +1,7 @@
 {
-  // cf.doesitarm.com — SSR preview for the doesitarm.com Netlify→Cloudflare
-  // migration. The apex doesitarm.com stays on Netlify, untouched.
+  // Cloudflare SSR frontend for doesitarm.com. Keep the cf.doesitarm.com
+  // custom domain as a noindex verification lane; the apex route is the
+  // production cutover. Netlify remains configured as the rollback origin.
   //
   // @astrojs/cloudflare (v13, on @cloudflare/vite-plugin) reads THIS file at
   // build time, so it must NOT declare `main`/`assets` (the adapter generates
@@ -39,7 +40,10 @@
 
   // custom_domain auto-provisions DNS via the Workers subsystem (the deploy
   // token's Workers permission is enough even though the general DNS API is 403).
-  "routes": [{ "pattern": "cf.doesitarm.com", "custom_domain": true }],
+  "routes": [
+    { "pattern": "cf.doesitarm.com", "custom_domain": true },
+    { "pattern": "doesitarm.com/*", "zone_name": "doesitarm.com" }
+  ],
 
   "observability": { "enabled": true }
 }
