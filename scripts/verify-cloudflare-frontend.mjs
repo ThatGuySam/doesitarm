@@ -1,7 +1,19 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs'
+
+import { replaceDeviceUrlsInSitemap } from '../helpers/api/sitemap/devices.js'
+
 const DEFAULT_HOST = 'https://cf.doesitarm.com'
 const API_HOST = 'https://api.doesitarm.com'
+const PRODUCTION_HOST = 'https://doesitarm.com'
+
+const deviceCatalog = JSON.parse(
+    fs.readFileSync(
+        new URL( '../data/apple-silicon-devices.json', import.meta.url ),
+        'utf8'
+    )
+)
 
 function getHost () {
     const hostArgument = process.argv.find( argument => {
@@ -102,7 +114,14 @@ async function verifySitemapParity ( host ) {
         fetchOk( `${ API_HOST }/sitemap-0.xml` )
     ])
     const deployed = sitemapUrls( await deployedResponse.text() )
-    const current = sitemapUrls( await apiResponse.text() )
+    const deviceUrls = deviceCatalog.devices
+        .filter( device => device.listed )
+        .map( device => new URL( device.endpoint, PRODUCTION_HOST ).href )
+    const expectedSitemap = replaceDeviceUrlsInSitemap(
+        await apiResponse.text(),
+        deviceUrls
+    )
+    const current = sitemapUrls( expectedSitemap )
     const missing = setDifference( current, deployed )
     const extra = setDifference( deployed, current )
 
