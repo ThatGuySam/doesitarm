@@ -266,6 +266,11 @@ class BuildLists {
 
     saveToJson = async function ( content, path ) {
 
+        if ( Array.isArray( content ) ) {
+            await streamToJson( content, path )
+            return
+        }
+
         // Write the list to JSON
         await fs.writeFile(path, JSON.stringify(content))
 

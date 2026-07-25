@@ -1,33 +1,37 @@
 import fs from 'fs'
+import { once } from 'node:events'
+import { finished } from 'node:stream/promises'
 
 // Write JSON to file via stream
 // so that we can handle large JSON files
 // that would not normal fit into memory
 // or V8 string size limits
-export function streamToJson ( dataArray, filePath ) {
-    return new Promise( resolve => {
-        const output = fs.createWriteStream( filePath, 'utf8' )
+export async function streamToJson ( dataArray, filePath ) {
+    const output = fs.createWriteStream( filePath, 'utf8' )
+    const completion = finished( output )
+    let isFirstItem = true
 
-        // When the stream is finished
-        output.on( 'finish', () => {
-            resolve( output )
-        })
-    
-        // Write opening array bracket
+    try {
         output.write( '[' )
 
-        // Write each item in the array
         for ( const item of dataArray ) {
-            output.write( JSON.stringify( item ) + ',' )
+            const separator = isFirstItem ? '' : ','
+            const chunk = `${ separator }${ JSON.stringify( item ) }`
+
+            if ( !output.write( chunk ) ) {
+                await once( output, 'drain' )
+            }
+
+            isFirstItem = false
         }
 
-        // Write closing array bracket
-        output.write( ']' )
+        output.end( ']' )
+        await completion
+    } catch ( error ) {
+        output.destroy()
+        await completion.catch( () => {} )
+        throw error
+    }
 
-        // Close the stream
-        output.end()
-
-        // Return the stream
-        return output
-    })
+    return output
 }
