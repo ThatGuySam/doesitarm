@@ -41,7 +41,7 @@ describe( 'Apple Silicon app test page', () => {
             env: {
                 TEST_RESULT_STORE: '/api/test-results'
             },
-            preferConfiguredBaseUrl: false
+            preferConfiguredBaseUrl: true
         })
 
         browser = await launchBrowser()
@@ -78,7 +78,9 @@ describe( 'Apple Silicon app test page', () => {
         } )
 
         await page.waitForFunction( () => {
-            const island = document.querySelector( 'astro-island[component-url="/pages/apple-silicon-app-test.vue"]' )
+            const island = [ ...document.querySelectorAll( 'astro-island' ) ].find( element => {
+                return element.getAttribute( 'component-url' )?.includes( 'apple-silicon-app-test' )
+            } )
 
             return Boolean( island && !island.hasAttribute( 'ssr' ) )
         }, {
@@ -121,7 +123,7 @@ describe( 'Apple Silicon app test page', () => {
 } )
 
 async function stubResultStore ( page: Page, submittedScans: Record<string, unknown>[] ) {
-    await page.route( '**/api/test-results', async route => {
+    await page.route( '**/api/test-results*', async route => {
         const postData = route.request().postDataJSON()
 
         if ( postData && typeof postData === 'object' ) {

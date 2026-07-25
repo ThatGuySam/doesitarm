@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
+import { catchRedirectResponse } from '../../helpers/astro/request.js'
 import {
     getRedirectRule,
     isProductionHostname
@@ -25,5 +26,19 @@ describe( 'site middleware', () => {
     it( 'does not recognize preview hosts as production', () => {
         expect( isProductionHostname( 'cf.doesitarm.com' ) ).toBe( false )
         expect( isProductionHostname( 'doesitarm-preview.workers.dev' ) ).toBe( false )
+    } )
+
+    it( 'resolves redirects without reading Netlify runtime config', async () => {
+        const redirect = vi.fn()
+
+        const response = await catchRedirectResponse({
+            request: {
+                url: 'https://doesitarm.com/app/electron'
+            },
+            redirect
+        })
+
+        expect( response ).toBeUndefined()
+        expect( redirect ).toHaveBeenCalledWith( '/app/electron-framework', 301 )
     } )
 } )

@@ -1,5 +1,4 @@
-import { getNetlifyRedirect } from '~/helpers/config-node.js'
-
+import { getRedirectRule } from '../../src/middleware-rules.js'
 
 const ONE_SECOND = 1
 const ONE_MINUTE = 60
@@ -55,21 +54,11 @@ export async function applyResponseDefaults ( Astro ) {
 
 export async function catchRedirectResponse ( Astro ) {
     const requestUrl = new URL( Astro.request.url )
+    const redirectRule = getRedirectRule( requestUrl.pathname )
 
-    let netlifyRedirectUrl = null
-
-    try {
-        netlifyRedirectUrl = await getNetlifyRedirect( requestUrl.pathname )
-    } catch ( error ) {
-        console.warn( `Skipping redirect lookup for ${ requestUrl.pathname }`, error )
-    }
-
-    // console.log('netlifyRedirectUrl', netlifyRedirectUrl)
-
-    if ( netlifyRedirectUrl !== null ) {
-        return Astro.redirect( netlifyRedirectUrl.to )
+    if ( redirectRule !== null ) {
+        return Astro.redirect( redirectRule.to, redirectRule.status )
     }
 
     return null
 }
-
