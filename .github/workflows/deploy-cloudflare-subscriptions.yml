@@ -49,7 +49,7 @@ jobs:
           --remote
           --config workers/subscriptions/wrangler.jsonc
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_D1_API_TOKEN }}
 
       - name: Deploy exact commit
         run: >-
@@ -57,7 +57,7 @@ jobs:
           --config workers/subscriptions/wrangler.jsonc
           --message "GitHub ${GITHUB_SHA}"
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_D1_API_TOKEN }}
 
       - name: Verify D1 binding and CORS
         run: node scripts/verify-subscriptions-worker.mjs
