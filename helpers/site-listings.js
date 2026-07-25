@@ -1,12 +1,10 @@
 import videoListingsText from '~/static/api/youtube-video-listings.json?raw'
 
-import { deviceListingFallbacks } from './device-list-fallbacks.js'
+import { getDeviceListingBySlug } from './device-catalog.js'
 
 const parsedVideoListings = JSON.parse( videoListingsText )
 
-export function getDeviceListingBySlug ( slug ) {
-    return deviceListingFallbacks.find( device => device.slug === slug ) || null
-}
+export { getDeviceListingBySlug }
 
 export async function getVideoListingBySlug ( slug ) {
     return parsedVideoListings[slug] || null

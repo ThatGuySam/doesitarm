@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "lastReviewed": "2026-07-25",
+  "scope": {
+    "title": "2026 Macs with Apple silicon",
+    "description": "This catalog covers Mac models introduced by Apple in 2026 that run the macOS apps tracked by Does It ARM.",
+    "exclusionNote": "The 2026 iPad Air with M4 is not included because it runs iPadOS; its app catalog and compatibility rules are different from macOS."
+  },
+  "devices": [
+    {
+      "name": "2026 MacBook Neo with A18 Pro",
+      "shortName": "MacBook Neo",
+      "slug": "2026-macbook-neo-a18-pro",
+      "endpoint": "/device/2026-macbook-neo-a18-pro",
+      "type": "mac-apple-silicon",
+      "releaseYear": 2026,
+      "announcedDate": "2026-03-04",
+      "availableDate": "2026-03-11",
+      "chips": [
+        "A18 Pro"
+      ],
+      "listed": true,
+      "productUrl": "https://support.apple.com/en-us/126322",
+      "description": "The 13-inch MacBook Neo is the entry 2026 Mac and the only model in this catalog built around A18 Pro instead of an M5-series chip.",
+      "seoTitle": "MacBook Neo A18 Pro app compatibility (2026) | Does It ARM",
+      "seoDescription": "Check native and Rosetta app reports for the 2026 MacBook Neo, plus its A18 Pro, fixed 8GB memory, USB, display, and storage limits.",
+      "intro": [
+        "MacBook Neo is a 13-inch macOS laptop built around Apple’s A18 Pro chip. Its fixed 8GB of unified memory and 256GB or 512GB SSD options make its hardware envelope materially different from the M5 MacBook Air.",
+        "For app compatibility, the important signal is that this is a Mac with Apple silicon. Native and Universal Mac apps run without Rosetta; Intel-only app reports use Apple’s Rosetta compatibility layer while that layer remains available."
+      ],
+      "facts": [
+        {
+          "label": "Chip",
+          "value": "A18 Pro with a 6-core CPU, 5-core GPU, and 16-core Neural Engine"
+        },
+        {
+          "label": "Unified memory",
+          "value": "8GB"
+        },
+        {
+          "label": "Storage",
+          "value": "256GB or 512GB SSD"
+        },
+        {
+          "label": "Built-in display",
+          "value": "13.0-inch Liquid Retina, 2408 by 1506, 500 nits, sRGB"
+        },
+        {
+          "label": "Ports",
+          "value": "One USB 3 USB-C port up to 10Gb/s, one USB 2 USB-C port up to 480Mb/s, and a headphone jack"
+        },
+        {
+          "label": "External display",
+          "value": "One display up to 4K at 60Hz"
+        },
+        {
+          "label": "Apple-rated battery",
+          "value": "Up to 16 hours of video streaming or 11 hours of wireless web"
+        },
+        {
+          "label": "Available",
+          "value": "March 11, 2026"
+        }
+      ],
+      "comparison": {
+        "heading": "MacBook Neo versus the 13-inch M5 MacBook Air",
+        "body": "Neo uses A18 Pro, has 8GB of fixed unified memory, tops out at a 512GB SSD, and supports one 4K external display. The 13-inch Air uses M5, starts with 16GB, can be configured with up to 32GB and 4TB, and supports up to two external displays.",
+        "href": "/device/2026-macbook-air-13-inch-m5"
+      },
+      "decisionGuide": {
+        "heading": "Check the fixed Neo limits before relying on an app badge",
+        "summary": "A Native or Rosetta result answers the processor-architecture question, but Neo has no memory upgrade and a narrow storage range. Compare an app’s published requirements with the exact hardware below before treating a green compatibility report as a complete buying answer.",
+        "points": [
+          "Memory stays at 8GB, so there is no higher-capacity configuration to select for software that publishes a larger requirement.",
+          "The two USB-C ports run at different speeds: one supports USB 3 up to 10Gb/s and the other USB 2 up to 480Mb/s.",
+          "External-display support stops at one 4K display at 60Hz, which is a separate limit from whether the app itself launches."
+        ]
+      },
+      "officialSources": [
+        {
+          "label": "Apple MacBook Neo technical specifications",
+          "url": "https://support.apple.com/en-us/126322"
+        },
+        {
+          "label": "Apple MacBook Neo announcement",
+          "url": "https://www.apple.com/newsroom/2026/03/say-hello-to-macbook-neo/"
+        },
+        {
+          "label": "Apple guide to Rosetta on Apple silicon Macs",
+          "url": "https://support.apple.com/en-us/102527"
+        }
+      ]
+    },
+    {
+      "name": "2026 13-inch MacBook Air with M5",
+      "shortName": "13-inch MacBook Air",
+      "slug": "2026-macbook-air-13-inch-m5",
+      "endpoint": "/device/2026-macbook-air-13-inch-m5",
+      "type": "mac-apple-silicon",
+      "releaseYear": 2026,
+      "announcedDate": "2026-03-03",
+      "availableDate": "2026-03-11",
+      "chips": [
+        "M5"
+      ],
+      "listed": true,
+      "productUrl": "https://support.apple.com/en-us/126320",
+      "description": "The smaller M5 MacBook Air pairs a 13.6-inch display with a fanless design, 16GB to 32GB of unified memory, and support for two external displays.",
+      "seoTitle": "13-inch MacBook Air M5 app compatibility (2026) | Does It ARM",
+      "seoDescription": "Check app support for the 2026 13-inch M5 MacBook Air and review its 8- or 10-core GPU, memory, Thunderbolt 4, and display options.",
+      "intro": [
+        "The 13-inch MacBook Air is the smaller fanless M5 notebook in Apple’s 2026 Mac range. It starts with a 10-core CPU, an 8-core GPU, 16GB of unified memory, and a 512GB SSD; a 10-core GPU and larger memory or storage configurations are optional.",
+        "Its app results reflect macOS architecture support, while this page’s hardware details help distinguish compatibility from capacity. An app can be Apple-silicon native and still need more memory, storage, or display bandwidth than a particular configuration provides."
+      ],
+      "facts": [
+        {
+          "label": "Chip",
+          "value": "M5 with a 10-core CPU and an 8- or 10-core GPU"
+        },
+        {
+          "label": "Unified memory",
+          "value": "16GB, configurable to 24GB or 32GB"
+        },
+        {
+          "label": "Storage",
+          "value": "512GB SSD, configurable to 1TB, 2TB, or 4TB"
+        },
+        {
+          "label": "Built-in display",
+          "value": "13.6-inch Liquid Retina, 2560 by 1664, 500 nits, P3 color"
+        },
+        {
+          "label": "Ports",
+          "value": "MagSafe 3, two Thunderbolt 4 ports up to 40Gb/s, and a headphone jack"
+        },
+        {
+          "label": "External displays",
+          "value": "Up to two displays, including two 6K displays at 60Hz"
+        },
+        {
+          "label": "Sound system",
+          "value": "Four speakers"
+        },
+        {
+          "label": "Apple-rated battery",
+          "value": "Up to 18 hours of video streaming or 15 hours of wireless web"
+        },
+        {
+          "label": "Model identifier",
+          "value": "Mac17,3"
+        }
+      ],
+      "comparison": {
+        "heading": "13-inch versus 15-inch M5 MacBook Air",
+        "body": "Both sizes use M5, offer the same 16GB to 32GB memory range, and support two external displays. The 13-inch model has a 13.6-inch panel, a 53.8Wh battery, and a four-speaker system; the 15-inch model has a 15.3-inch panel, a 66.5Wh battery, and six speakers.",
+        "href": "/device/2026-macbook-air-15-inch-m5"
+      },
+      "decisionGuide": {
+        "heading": "What changes when you choose the smaller M5 Air",
+        "summary": "The 13-inch model keeps the Air family’s 32GB memory ceiling, 4TB storage ceiling, and two-display support. The decisions unique to this size are the smaller built-in canvas, its base graphics option, and the four-speaker audio system.",
+        "points": [
+          "The entry configuration has an 8-core GPU; Apple also offers a 10-core GPU, so check the selected configuration rather than assuming every 13-inch Air is identical.",
+          "Its 13.6-inch panel is 2560 by 1664. The sibling Air’s larger panel changes workspace size without raising the family’s memory or storage maximums.",
+          "Two Thunderbolt 4 ports handle expansion. There is no built-in HDMI or SDXC slot in the listed port set."
+        ]
+      },
+      "officialSources": [
+        {
+          "label": "Apple 13-inch MacBook Air M5 technical specifications",
+          "url": "https://support.apple.com/en-us/126320"
+        },
+        {
+          "label": "Apple MacBook Air M5 announcement",
+          "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/"
+        },
+        {
+          "label": "Apple MacBook Air model identification",
+          "url": "https://support.apple.com/en-us/102869"
+        }
+      ]
+    },
+    {
+      "name": "2026 15-inch MacBook Air with M5",
+      "shortName": "15-inch MacBook Air",
+      "slug": "2026-macbook-air-15-inch-m5",
+      "endpoint": "/device/2026-macbook-air-15-inch-m5",
+      "type": "mac-apple-silicon",
+      "releaseYear": 2026,
+      "announcedDate": "2026-03-03",
+      "availableDate": "2026-03-11",
+      "chips": [
+        "M5"
+      ],
+      "listed": true,
+      "productUrl": "https://support.apple.com/en-us/126321",
+      "description": "The larger M5 MacBook Air has a 15.3-inch display, 10-core GPU, six-speaker system, and the same two-display support as the 13-inch Air.",
+      "seoTitle": "15-inch MacBook Air M5 app compatibility (2026) | Does It ARM",
+      "seoDescription": "Check app support for the 2026 15-inch M5 MacBook Air and review its 15.3-inch display, 10-core GPU, memory, storage, and ports.",
+      "intro": [
+        "The 15-inch MacBook Air is the larger fanless M5 notebook introduced for 2026. Unlike the smaller Air’s 8-core base GPU option, this model lists a 10-core GPU and combines it with a 15.3-inch panel and six-speaker sound system.",
+        "The native and Rosetta labels below describe an app’s Mac architecture support. They do not promise that every workflow fits a given configuration, so the 16GB to 32GB memory range and 512GB to 4TB storage range remain useful checks for large creative or development projects."
+      ],
+      "facts": [
+        {
+          "label": "Chip",
+          "value": "M5 with a 10-core CPU and 10-core GPU"
+        },
+        {
+          "label": "Unified memory",
+          "value": "16GB, configurable to 24GB or 32GB"
+        },
+        {
+          "label": "Storage",
+          "value": "512GB SSD, configurable to 1TB, 2TB, or 4TB"
+        },
+        {
+          "label": "Built-in display",
+          "value": "15.3-inch Liquid Retina, 2880 by 1864, 500 nits, P3 color"
+        },
+        {
+          "label": "Ports",
+          "value": "MagSafe 3, two Thunderbolt 4 ports up to 40Gb/s, and a headphone jack"
+        },
+        {
+          "label": "External displays",
+          "value": "Up to two displays, including two 6K displays at 60Hz"
+        },
+        {
+          "label": "Sound system",
+          "value": "Six speakers with force-cancelling woofers"
+        },
+        {
+          "label": "Apple-rated battery",
+          "value": "Up to 18 hours of video streaming or 15 hours of wireless web"
+        },
+        {
+          "label": "Model identifier",
+          "value": "Mac17,4"
+        }
+      ],
+      "comparison": {
+        "heading": "15-inch versus 13-inch M5 MacBook Air",
+        "body": "The 15-inch Air trades compactness for a 15.3-inch canvas, a larger 66.5Wh battery, and a six-speaker system. The 13-inch Air uses a 13.6-inch display, a 53.8Wh battery, and four speakers, while retaining the same memory ceiling and external-display count.",
+        "href": "/device/2026-macbook-air-13-inch-m5"
+      },
+      "decisionGuide": {
+        "heading": "What the larger M5 Air adds—and what it does not",
+        "summary": "This size combines a 15.3-inch panel with the 10-core GPU and a six-speaker system. Its larger enclosure does not turn it into a MacBook Pro: the documented memory, storage, external-display count, and Thunderbolt 4 port set remain Air-family specifications.",
+        "points": [
+          "The 2880 by 1864 panel provides the larger built-in workspace; both 2026 Air sizes retain 500-nit P3 Liquid Retina displays.",
+          "Six speakers with force-cancelling woofers distinguish its audio hardware from the four-speaker 13-inch model.",
+          "Memory still tops out at 32GB and external support at two displays, so screen size alone does not raise those capacity limits."
+        ]
+      },
+      "officialSources": [
+        {
+          "label": "Apple 15-inch MacBook Air M5 technical specifications",
+          "url": "https://support.apple.com/en-us/126321"
+        },
+        {
+          "label": "Apple MacBook Air M5 announcement",
+          "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/"
+        },
+        {
+          "label": "Apple MacBook Air model identification",
+          "url": "https://support.apple.com/en-us/102869"
+        }
+      ]
+    },
+    {
+      "name": "2026 14-inch MacBook Pro with M5 Pro or M5 Max",
+      "shortName": "14-inch MacBook Pro",
+      "slug": "2026-macbook-pro-14-inch-m5-pro-m5-max",
+      "endpoint": "/device/2026-macbook-pro-14-inch-m5-pro-m5-max",
+      "type": "mac-apple-silicon",
+      "releaseYear": 2026,
+      "announcedDate": "2026-03-03",
+      "availableDate": "2026-03-11",
+      "chips": [
+        "M5 Pro",
+        "M5 Max"
+      ],
+      "listed": true,
+      "productUrl": "https://support.apple.com/en-us/126318",
+      "description": "The compact 2026 MacBook Pro offers M5 Pro or M5 Max, a 14.2-inch Liquid Retina XDR display, Thunderbolt 5, and up to 128GB of memory.",
+      "seoTitle": "14-inch MacBook Pro M5 Pro and Max app support (2026)",
+      "seoDescription": "Check app compatibility for the 2026 14-inch MacBook Pro with M5 Pro or M5 Max, including memory, XDR display, Thunderbolt 5, and GPU options.",
+      "intro": [
+        "The 14-inch MacBook Pro is the smaller 2026 pro notebook with M5 Pro or M5 Max. It is also the only model in this pair with a 15-core CPU and 16-core GPU M5 Pro starting configuration; higher configurations reach an 18-core CPU, 40-core GPU, and 128GB of unified memory.",
+        "App architecture is only the first compatibility check on a pro workflow. This model’s M5 Pro and M5 Max options differ in memory bandwidth, media engines, external-display count, and battery rating, so the exact chip configuration matters after an app is confirmed native or Rosetta-compatible."
+      ],
+      "facts": [
+        {
+          "label": "Chip options",
+          "value": "M5 Pro with a 15- or 18-core CPU; M5 Max with an 18-core CPU"
+        },
+        {
+          "label": "GPU options",
+          "value": "16 or 20 cores on M5 Pro; 32 or 40 cores on M5 Max"
+        },
+        {
+          "label": "Unified memory",
+          "value": "Starts at 24GB on M5 Pro or 36GB on M5 Max; up to 128GB"
+        },
+        {
+          "label": "Storage",
+          "value": "1TB to 4TB with M5 Pro; 2TB to 8TB with M5 Max"
+        },
+        {
+          "label": "Built-in display",
+          "value": "14.2-inch Liquid Retina XDR, 3024 by 1964, ProMotion up to 120Hz"
+        },
+        {
+          "label": "Ports",
+          "value": "Three Thunderbolt 5 ports up to 120Gb/s, HDMI, SDXC, MagSafe 3, and a headphone jack"
+        },
+        {
+          "label": "External displays",
+          "value": "Up to two with M5 Pro or four with M5 Max"
+        },
+        {
+          "label": "Apple-rated battery",
+          "value": "Up to 22 hours of video on M5 Pro or 20 hours on M5 Max"
+        },
+        {
+          "label": "Model identifiers",
+          "value": "Mac17,7 and Mac17,9"
+        }
+      ],
+      "comparison": {
+        "heading": "14-inch versus 16-inch M5 Pro and M5 Max MacBook Pro",
+        "body": "The 14-inch model has a 14.2-inch XDR panel and a 72.4Wh battery, and it offers a lower 15-core M5 Pro starting configuration. The 16-inch model starts with the 18-core M5 Pro, uses a 16.2-inch panel and 100Wh battery, and carries Apple’s longer battery ratings.",
+        "href": "/device/2026-macbook-pro-16-inch-m5-pro-m5-max"
+      },
+      "decisionGuide": {
+        "heading": "Read the 14-inch chip choice before comparing app results",
+        "summary": "The compact Pro spans a wider starting-to-maximum configuration range than its 16-inch sibling. An app may be native on all of them, but CPU and GPU counts, M5 Pro versus M5 Max, and the selected memory capacity determine which 14-inch machine the compatibility result actually describes.",
+        "points": [
+          "This is the only Pro size here with the 15-core CPU and 16-core GPU M5 Pro starting option; upgraded M5 Pro and M5 Max choices use an 18-core CPU.",
+          "M5 Pro supports up to two external displays, while M5 Max supports up to four. That difference follows the chip selection, not the app’s architecture label.",
+          "Apple’s video battery rating is up to 22 hours with M5 Pro and 20 hours with M5 Max on this 72.4Wh model."
+        ]
+      },
+      "officialSources": [
+        {
+          "label": "Apple 14-inch MacBook Pro technical specifications",
+          "url": "https://support.apple.com/en-us/126318"
+        },
+        {
+          "label": "Apple M5 Pro and M5 Max MacBook Pro announcement",
+          "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/"
+        },
+        {
+          "label": "Apple MacBook Pro model identification",
+          "url": "https://support.apple.com/en-us/108052"
+        }
+      ]
+    },
+    {
+      "name": "2026 16-inch MacBook Pro with M5 Pro or M5 Max",
+      "shortName": "16-inch MacBook Pro",
+      "slug": "2026-macbook-pro-16-inch-m5-pro-m5-max",
+      "endpoint": "/device/2026-macbook-pro-16-inch-m5-pro-m5-max",
+      "type": "mac-apple-silicon",
+      "releaseYear": 2026,
+      "announcedDate": "2026-03-03",
+      "availableDate": "2026-03-11",
+      "chips": [
+        "M5 Pro",
+        "M5 Max"
+      ],
+      "listed": true,
+      "productUrl": "https://support.apple.com/en-us/126319",
+      "description": "The largest 2026 MacBook Pro combines M5 Pro or M5 Max with a 16.2-inch XDR display, 100Wh battery, Thunderbolt 5, and up to 128GB.",
+      "seoTitle": "16-inch MacBook Pro M5 Pro and Max app support (2026)",
+      "seoDescription": "Check app compatibility for the 2026 16-inch MacBook Pro with M5 Pro or M5 Max, including its 16.2-inch XDR display, memory, ports, and battery.",
+      "intro": [
+        "The 16-inch MacBook Pro is Apple’s largest 2026 notebook and starts with the 18-core CPU, 20-core GPU version of M5 Pro. M5 Max configurations raise GPU capacity to 32 or 40 cores and unified memory as high as 128GB.",
+        "This page separates software architecture support from workstation capacity. A native app can use the machine directly, while Intel-only reports rely on Rosetta; M5 Pro versus M5 Max then determines media-engine count, memory bandwidth, and support for two versus four external displays."
+      ],
+      "facts": [
+        {
+          "label": "Chip options",
+          "value": "M5 Pro or M5 Max, both with an 18-core CPU"
+        },
+        {
+          "label": "GPU options",
+          "value": "20 cores on M5 Pro; 32 or 40 cores on M5 Max"
+        },
+        {
+          "label": "Unified memory",
+          "value": "Starts at 24GB on M5 Pro or 36GB on M5 Max; up to 128GB"
+        },
+        {
+          "label": "Storage",
+          "value": "1TB to 4TB with M5 Pro; 2TB to 8TB with M5 Max"
+        },
+        {
+          "label": "Built-in display",
+          "value": "16.2-inch Liquid Retina XDR, 3456 by 2234, ProMotion up to 120Hz"
+        },
+        {
+          "label": "Ports",
+          "value": "Three Thunderbolt 5 ports up to 120Gb/s, HDMI, SDXC, MagSafe 3, and a headphone jack"
+        },
+        {
+          "label": "External displays",
+          "value": "Up to two with M5 Pro or four with M5 Max"
+        },
+        {
+          "label": "Apple-rated battery",
+          "value": "Up to 24 hours of video on M5 Pro or 22 hours on M5 Max"
+        },
+        {
+          "label": "Model identifiers",
+          "value": "Mac17,6 and Mac17,8"
+        }
+      ],
+      "comparison": {
+        "heading": "16-inch versus 14-inch M5 Pro and M5 Max MacBook Pro",
+        "body": "The 16-inch model uses a 16.2-inch XDR panel and 100Wh battery, with Apple rating M5 Pro video streaming at up to 24 hours. The 14-inch model is built around a 14.2-inch panel and 72.4Wh battery and adds a lower 15-core M5 Pro starting option.",
+        "href": "/device/2026-macbook-pro-14-inch-m5-pro-m5-max"
+      },
+      "decisionGuide": {
+        "heading": "Separate the 16-inch chassis from the M5 Pro or Max choice",
+        "summary": "Every listed 16-inch configuration begins with an 18-core CPU, but graphics, memory, media engines, and monitor support still diverge between M5 Pro and M5 Max. The larger chassis mainly changes the built-in display and battery rather than creating a higher memory ceiling than the 14-inch model.",
+        "points": [
+          "The base M5 Pro uses a 20-core GPU; M5 Max raises that to 32 or 40 cores. Record the chip before interpreting workload-specific requirements.",
+          "Its 16.2-inch XDR panel and 100Wh battery are size-specific, with Apple rating M5 Pro video playback at up to 24 hours.",
+          "Both Pro sizes can reach 128GB and expose the same three Thunderbolt 5, HDMI, SDXC, MagSafe 3, and headphone connections."
+        ]
+      },
+      "officialSources": [
+        {
+          "label": "Apple 16-inch MacBook Pro technical specifications",
+          "url": "https://support.apple.com/en-us/126319"
+        },
+        {
+          "label": "Apple M5 Pro and M5 Max MacBook Pro announcement",
+          "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/"
+        },
+        {
+          "label": "Apple MacBook Pro model identification",
+          "url": "https://support.apple.com/en-us/108052"
+        }
+      ]
+    }
+  ]
+}

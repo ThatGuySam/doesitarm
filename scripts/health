@@ -14,7 +14,7 @@ const routeGroups = {
     '/app/spotify',
     '/formula/bash',
     '/kind/developer-tools',
-    '/device/2023-m3-imac',
+    '/device/2026-macbook-air-13-inch-m5',
     '/app/expressvpn/benchmarks'
   ],
   video: [

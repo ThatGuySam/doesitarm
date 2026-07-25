@@ -7,52 +7,103 @@
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 
-import { DoesItAPI } from '~/helpers/api/client.js'
-import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
+import {
+    deviceCatalog,
+    getListedDeviceListings
+} from '~/helpers/device-catalog.js'
 import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
 
 import Layout from '../layouts/default.astro'
-import SimpleList from '../components/simple-list.astro'
 
 applyResponseDefaults( Astro )
 
-const deviceIndex = await DoesItAPI.kind.device(1).get()
-
-const kinds = deviceIndex.items.map( device => {
-    return {
-        href: device.endpoint,
-        heading: device.name,
-        description: device.description,
-    }
-})
+const devices = getListedDeviceListings()
 
 ---
 <Layout
 	headOptions={ {
-        title: 'List of Apple Devices for Apple Silicon App Support',
-        description: `List of devices for Apple Silicon and the ${ publicRuntimeConfig.processorsVerbiage } Processors`,
-        // meta,
-        // link,
-        // structuredData: this.structuredData,
-
-        // domain,
-        pathname: '/devices',
+        title: '2026 Apple silicon Macs: M5, M5 Pro, M5 Max, and A18 Pro',
+        description: 'Compare the 2026 MacBook Neo, M5 MacBook Air, and M5 Pro or M5 Max MacBook Pro models, then check reported app compatibility.',
+        pathname: '/devices/',
     } }
 >
 
     <main class="container py-24">
-        <div class="flex flex-col">
-            <h1 class="title text-2xl leading-tight mb-6">
-                Devices
-            </h1>
+        <div class="flex flex-col space-y-8">
+            <div class="max-w-4xl space-y-4">
+                <p class="text-sm font-bold uppercase tracking-wide text-green-300">
+                    Reviewed { deviceCatalog.lastReviewed }
+                </p>
+                <h1 class="title text-3xl md:text-5xl leading-tight">
+                    2026 Macs with Apple silicon
+                </h1>
+                <p class="text-lg leading-8">
+                    { deviceCatalog.scope.description }
+                </p>
+                <p class="text-sm leading-6 text-gray-400">
+                    { deviceCatalog.scope.exclusionNote }
+                </p>
+            </div>
 
-            <div class="line-separator border-white border-t-2 mb-12" />
+            <div class="line-separator border-white border-t-2" />
 
-            <SimpleList
-                items={ kinds }
-            />
+            <div class="grid gap-6 lg:grid-cols-2">
+                { devices.map( device => (
+                    <article class="rounded-lg border border-gray-700 bg-gradient-to-br from-darker to-dark p-6 space-y-5">
+                        <div class="space-y-2">
+                            <p class="text-sm font-bold text-green-300">
+                                { device.chips.join(' or ') }
+                            </p>
+                            <h2 class="text-2xl md:text-3xl font-hairline">
+                                <a class="hover:underline" href={ device.endpoint }>
+                                    { device.shortName }
+                                </a>
+                            </h2>
+                        </div>
+
+                        <p class="text-sm leading-6 text-gray-300">
+                            { device.description }
+                        </p>
+
+                        <dl class="grid grid-cols-2 gap-4 text-sm">
+                            { device.facts.slice(0, 4).map( fact => (
+                                <div class="space-y-1">
+                                    <dt class="font-bold text-gray-400">{ fact.label }</dt>
+                                    <dd>{ fact.value }</dd>
+                                </div>
+                            )) }
+                        </dl>
+
+                        <a
+                            class="inline-flex rounded-md border border-gray-500 px-4 py-2 font-bold hover:bg-darkest focus:outline-none focus:ring"
+                            href={ device.endpoint }
+                        >
+                            Check apps and full specifications →
+                        </a>
+                    </article>
+                )) }
+            </div>
+
+            <aside class="max-w-4xl rounded-lg border border-gray-700 p-6 space-y-3">
+                <h2 class="text-xl font-bold">
+                    Why the pages are separate
+                </h2>
+                <p class="text-sm leading-6">
+                    App architecture support is shared across Apple silicon Macs, but the hardware limits are not. Each page pairs the same reported native or Rosetta status with that model’s real chip, memory, storage, display, port, and external-display options so you can tell a software compatibility result from a configuration constraint.
+                </p>
+                <p class="text-sm leading-6 text-gray-400">
+                    Every model fact links back to Apple’s announcement, technical specifications, or model-identification documentation.
+                </p>
+                <p class="text-sm leading-6 text-gray-400">
+                    Native means the reported app includes Apple silicon code. Rosetta means the report relies on Apple’s translation layer for an Intel build. Apple says Rosetta remains available through macOS 27, so a current Native or Universal app is the safer long-term choice.
+                    {' '}
+                    <a class="underline" href="https://support.apple.com/en-us/102527" target="_blank" rel="noopener">
+                        Read Apple’s Rosetta guidance ↗
+                    </a>
+                </p>
+            </aside>
 
         </div>
     </main>

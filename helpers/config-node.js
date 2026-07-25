@@ -238,7 +238,7 @@ function mapMetaTag ( tag ) {
 
 function mapLinkTag ( tag ) {
     return [
-        `type-${tag.type}`,
+        `link-${ tag.rel || 'unknown' }-${ tag.type || 'none' }-${ tag.href || 'none' }`,
         makeTag(tag, 'link')
     ]
 }
@@ -347,6 +347,10 @@ export class PageHead {
 
         const linkTags = {
             ...this.defaultLinkTags,
+            ...Object.fromEntries( [{
+                rel: 'canonical',
+                href: this.pageUrlString
+            }].map( mapLinkTag ) ),
             ...Object.fromEntries( this.link.map( mapLinkTag ) )
         }
 

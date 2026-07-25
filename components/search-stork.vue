@@ -71,7 +71,7 @@
 
             <!-- hasStartedAnyQuery: {{ hasStartedAnyQuery }} -->
 
-            <template v-if="chunkedListings.length === 0">
+            <template v-if="chunkedListings.length === 0 && hasStartedAnyQuery">
                 <div
                     class="text-center py-4"
                 >
@@ -109,6 +109,11 @@
                         }"
                         label="🌎 Search Everything"
                     />
+                </div>
+            </template>
+            <template v-else-if="chunkedListings.length === 0">
+                <div class="text-center text-sm text-gray-400 py-8">
+                    Start typing an app name or choose a status filter to search the compatibility database.
                 </div>
             </template>
 

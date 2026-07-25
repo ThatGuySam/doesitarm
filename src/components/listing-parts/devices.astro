@@ -1,11 +1,23 @@
 ---
 import Heading from './heading.astro'
+import { getListedDeviceListings } from '~/helpers/device-catalog.js'
+import { deviceSupportsApp } from '~/helpers/devices.js'
 
 const {
   listing
 } = Astro.props
 
-const hasDeviceSupport = Array.isArray( listing.deviceSupport )
+const deviceSupport = getListedDeviceListings().map( device => {
+    const supportsApp = deviceSupportsApp( device, listing )
+
+    return {
+        ...device,
+        emoji: supportsApp ? '✅' : '🚫',
+        ariaLabel: `${ listing.name } has ${ supportsApp ? '' : 'not ' }been reported to work on ${ device.name }`
+    }
+} )
+
+const hasDeviceSupport = deviceSupport.length > 0
 ---
 { hasDeviceSupport && (
     <div class="device-support w-full">
@@ -14,7 +26,7 @@ const hasDeviceSupport = Array.isArray( listing.deviceSupport )
 
         <div class="device-support-apps md:inline-flex md:w-full max-w-4xl overflow-x-auto overflow-y-visible md:whitespace-no-wrap border rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
 
-            { listing.deviceSupport.map( device => (
+            { deviceSupport.map( device => (
                 <div class="device-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
                     <a
                         href={ device.endpoint }
@@ -23,7 +35,7 @@ const hasDeviceSupport = Array.isArray( listing.deviceSupport )
                         aria-label={ device.ariaLabel }
                     >{ device.emoji } { device.name }</a>
 
-                    <a href={ device.amazonUrl } target="_blank" class="underline text-xs pb-3" rel="noopener">Check Pricing</a>
+                    <a href={ device.productUrl } target="_blank" class="underline text-xs pb-3" rel="noopener">Apple specs</a>
                 </div>
             )) }
 

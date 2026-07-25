@@ -5,7 +5,8 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 import {
     getNetlifyConfigPath,
-    getNetlifyRedirect
+    getNetlifyRedirect,
+    PageHead
 } from '~/helpers/config-node.js'
 
 const originalCwd = process.cwd()
@@ -37,5 +38,19 @@ describe( 'netlify config helpers', () => {
             to: '/app/electron-framework',
             status: 301
         })
+    })
+})
+
+describe( 'page head links', () => {
+    it( 'adds a self-canonical without dropping preconnect links', () => {
+        const pageHead = new PageHead({
+            domain: 'https://doesitarm.com',
+            pathname: '/device/2026-macbook-neo-a18-pro'
+        })
+
+        expect( pageHead.linkMarkup ).toContain(
+            '<link rel="canonical" href="https://doesitarm.com/device/2026-macbook-neo-a18-pro">'
+        )
+        expect( pageHead.linkMarkup.match( /rel="preconnect"/gu ) ).toHaveLength( 4 )
     })
 })

@@ -7,9 +7,9 @@ import {
 
 describe( 'site listing fallbacks', () => {
     it( 'loads known devices from the bundled device list', () => {
-        expect( getDeviceListingBySlug( '2023-m3-imac' ) ).toMatchObject({
-            name: '2023 M3 iMac',
-            endpoint: '/device/2023-m3-imac'
+        expect( getDeviceListingBySlug( '2026-macbook-air-13-inch-m5' ) ).toMatchObject({
+            name: '2026 13-inch MacBook Air with M5',
+            endpoint: '/device/2026-macbook-air-13-inch-m5'
         })
     })
 

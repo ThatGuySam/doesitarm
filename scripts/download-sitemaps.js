@@ -6,6 +6,8 @@ import {
     sitemapIndexFileName,
 } from '~/helpers/constants.js'
 
+import { getListedDeviceListings } from '~/helpers/device-catalog.js'
+import { replaceDeviceUrlsInSitemap } from '~/helpers/api/sitemap/devices.js'
 import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
 import { getText } from '~/helpers/http.js'
 
@@ -24,6 +26,8 @@ import { getText } from '~/helpers/http.js'
 
     const urlEntries = parseSitemapXml( sitemapIndexXML )
 
+
+    const downloadedSitemapPaths = []
 
     // Fetch each sitemap
     for ( const entry of urlEntries ) {
@@ -48,6 +52,21 @@ import { getText } from '~/helpers/http.js'
 
         // Save file
         await fs.writeFile( sitemapIndexFilePath, sitemapXML )
+        downloadedSitemapPaths.push( sitemapIndexFilePath )
+    }
+
+    const deviceUrls = getListedDeviceListings().map( device => {
+        return new URL( device.endpoint, process.env.PUBLIC_URL ).href
+    } )
+
+    for ( const [ index, sitemapPath ] of downloadedSitemapPaths.entries() ) {
+        const sitemapXml = await fs.readFile( sitemapPath, 'utf8' )
+        const updatedSitemapXml = replaceDeviceUrlsInSitemap(
+            sitemapXml,
+            index === 0 ? deviceUrls : []
+        )
+
+        await fs.writeFile( sitemapPath, updatedSitemapXml )
     }
 
 
