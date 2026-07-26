@@ -1,10 +1,16 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "lastReviewed": "2026-07-25",
   "scope": {
     "title": "2026 Macs with Apple silicon",
     "description": "This catalog covers Mac models introduced by Apple in 2026 that run the macOS apps tracked by Does It ARM.",
     "exclusionNote": "The 2026 iPad Air with M4 is not included because it runs iPadOS; its app catalog and compatibility rules are different from macOS."
+  },
+  "buyerIntentMethodology": {
+    "label": "Evidence-backed buyer intent",
+    "summary": "The buyer profiles synthesize Apple’s product positioning with repeated recommendations in hands-on reviews. They are editorial intent profiles, not measured sales-share rankings.",
+    "appSelectionPolicy": "Each device page combines a stable set of recognizable apps associated with that profile and a recent supported report from each priority category. Per-profile offsets keep related models from showing identical fresh picks, while new reports move the rotating category window.",
+    "lastResearched": "2026-07-25"
   },
   "devices": [
     {
@@ -74,6 +80,74 @@
           "Memory stays at 8GB, so there is no higher-capacity configuration to select for software that publishes a larger requirement.",
           "The two USB-C ports run at different speeds: one supports USB 3 up to 10Gb/s and the other USB 2 up to 480Mb/s.",
           "External-display support stops at one 4K display at 60Hz, which is a separate limit from whether the app itself launches."
+        ]
+      },
+      "buyerProfile": {
+        "primaryReason": "The lowest-cost way to get a new, portable Mac for schoolwork and everyday computing.",
+        "evidenceSummary": "Apple positions Neo around accessible education and all-day schoolwork, while hands-on reviews consistently frame it as a general laptop for students, families, first-time Mac buyers, and people whose needs do not justify a MacBook Air.",
+        "useCases": [
+          {
+            "label": "School and coursework",
+            "description": "Writing papers, building presentations, researching in a browser, and joining classes or study calls."
+          },
+          {
+            "label": "Everyday web and office work",
+            "description": "Email, documents, lightweight spreadsheets, web apps, scheduling, and household administration."
+          },
+          {
+            "label": "Communication",
+            "description": "Video calls, messaging, shared documents, and routine collaboration without a sustained pro workload."
+          },
+          {
+            "label": "Media and a secondary Mac",
+            "description": "Music, streaming, casual media, or a lower-cost travel computer when a more expensive Mac can stay home."
+          }
+        ],
+        "appCategories": [
+          {
+            "slug": "productivity-tools",
+            "rotationOffset": 0,
+            "label": "School and office",
+            "description": "Writing, presentations, notes, browsers, PDFs, and everyday organization."
+          },
+          {
+            "slug": "social-and-communication",
+            "rotationOffset": 0,
+            "label": "Classes and communication",
+            "description": "Video meetings, group chat, and collaboration apps used by schools and families."
+          },
+          {
+            "slug": "entertainment-and-media-apps",
+            "rotationOffset": 0,
+            "label": "Media and streaming",
+            "description": "Music and video apps that fit Neo’s everyday and secondary-computer role."
+          },
+          {
+            "slug": "system-tools",
+            "rotationOffset": 0,
+            "label": "Everyday utilities",
+            "description": "File, device, display, and maintenance tools for a small fixed-memory Mac."
+          }
+        ],
+        "featuredAppSlugs": [
+          "chrome",
+          "microsoft-word",
+          "microsoft-powerpoint",
+          "zoom",
+          "discord",
+          "spotify",
+          "vlc",
+          "acrobat-reader"
+        ],
+        "researchSources": [
+          {
+            "label": "Apple Education: MacBook Neo in class",
+            "url": "https://education-static.apple.com/geo/uk/education/product/macbook-neo.pdf"
+          },
+          {
+            "label": "Macworld MacBook Neo review",
+            "url": "https://www.macworld.com/article/3081612/macbook-neo-a18-pro-review.html"
+          }
         ]
       },
       "officialSources": [
@@ -164,6 +238,74 @@
           "Two Thunderbolt 4 ports handle expansion. There is no built-in HDMI or SDXC slot in the listed port set."
         ]
       },
+      "buyerProfile": {
+        "primaryReason": "The best balance of real M5 performance and minimum carry weight for people who work in different places.",
+        "evidenceSummary": "Apple presents the Air as its popular thin-and-light general-purpose notebook. Current reviews distinguish the 13-inch model by its ultraportable size while showing it handling mixed work, play, photo, video, and multi-app days.",
+        "useCases": [
+          {
+            "label": "Mobile work and study",
+            "description": "Writing, research, presentations, meetings, and browser-heavy work carried between home, school, and offices."
+          },
+          {
+            "label": "Light software development",
+            "description": "Code editors, local development tools, terminals, and moderate project builds without a sustained workstation load."
+          },
+          {
+            "label": "Portable collaboration",
+            "description": "Team chat, video meetings, shared files, task management, and client work on the move."
+          },
+          {
+            "label": "Light creative work",
+            "description": "Photo editing, interface design, short video projects, and visual work that benefits from M5 but not Pro-class cooling."
+          }
+        ],
+        "appCategories": [
+          {
+            "slug": "productivity-tools",
+            "rotationOffset": 1,
+            "label": "Mobile productivity",
+            "description": "Browsers, notes, task management, documents, and portable office workflows."
+          },
+          {
+            "slug": "developer-tools",
+            "rotationOffset": 0,
+            "label": "Coding and web work",
+            "description": "Editors, IDEs, terminals, containers, and developer utilities for moderate projects."
+          },
+          {
+            "slug": "social-and-communication",
+            "rotationOffset": 1,
+            "label": "Remote collaboration",
+            "description": "Meeting, chat, and messaging apps for people working across locations."
+          },
+          {
+            "slug": "photo-and-graphic-tools",
+            "rotationOffset": 0,
+            "label": "Portable design",
+            "description": "Photo, vector, interface, and lightweight visual-production tools."
+          }
+        ],
+        "featuredAppSlugs": [
+          "firefox",
+          "notion-desktop",
+          "todoist",
+          "slack",
+          "zoom",
+          "vs-code",
+          "figma",
+          "affinity-photo"
+        ],
+        "researchSources": [
+          {
+            "label": "Apple MacBook Air M5 announcement",
+            "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/"
+          },
+          {
+            "label": "TechRadar 13-inch M5 MacBook Air review",
+            "url": "https://www.techradar.com/computing/macbooks/apple-macbook-air-13-inch-m5-review"
+          }
+        ]
+      },
       "officialSources": [
         {
           "label": "Apple 13-inch MacBook Air M5 technical specifications",
@@ -250,6 +392,74 @@
           "The 2880 by 1864 panel provides the larger built-in workspace; both 2026 Air sizes retain 500-nit P3 Liquid Retina displays.",
           "Six speakers with force-cancelling woofers distinguish its audio hardware from the four-speaker 13-inch model.",
           "Memory still tops out at 32GB and external support at two displays, so screen size alone does not raise those capacity limits."
+        ]
+      },
+      "buyerProfile": {
+        "primaryReason": "A roomy 15-inch workspace without the weight, fans, or price of a MacBook Pro.",
+        "evidenceSummary": "Reviews repeatedly identify the large, color-accurate display and silent fanless body as this model’s differentiator. Its strongest fit is office work, browsing, writing, content consumption, and lighter creative work rather than long sustained rendering.",
+        "useCases": [
+          {
+            "label": "Large-canvas office work",
+            "description": "Spreadsheets, side-by-side documents, research, presentations, and dashboards with more room than the 13-inch Air."
+          },
+          {
+            "label": "Photo and design work",
+            "description": "Photo libraries, layouts, graphics, and visual review that benefit from the larger P3 display."
+          },
+          {
+            "label": "Short-form creative projects",
+            "description": "Light video editing, social content, and bursty creative tasks that do not require sustained Pro cooling."
+          },
+          {
+            "label": "Entertainment and shared viewing",
+            "description": "Streaming, music, and presentations that benefit from the 15.3-inch display and six-speaker system."
+          }
+        ],
+        "appCategories": [
+          {
+            "slug": "productivity-tools",
+            "rotationOffset": 2,
+            "label": "Large-screen productivity",
+            "description": "Spreadsheets, documents, PDFs, research, and multi-window office work."
+          },
+          {
+            "slug": "photo-and-graphic-tools",
+            "rotationOffset": 1,
+            "label": "Photo and visual design",
+            "description": "Photo catalogs, image editing, page layout, and graphics on the larger P3 panel."
+          },
+          {
+            "slug": "video-and-motion-tools",
+            "rotationOffset": 0,
+            "label": "Light video creation",
+            "description": "Short edits and motion projects that fit the Air’s burst-performance profile."
+          },
+          {
+            "slug": "entertainment-and-media-apps",
+            "rotationOffset": 1,
+            "label": "Viewing and listening",
+            "description": "Media apps that make use of the larger display and six-speaker sound system."
+          }
+        ],
+        "featuredAppSlugs": [
+          "microsoft-excel",
+          "microsoft-teams",
+          "photoshop",
+          "lightroom",
+          "affinity-designer",
+          "premiere-pro",
+          "spotify",
+          "vlc"
+        ],
+        "researchSources": [
+          {
+            "label": "Apple MacBook Air M5 announcement",
+            "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/"
+          },
+          {
+            "label": "LaptopMedia 15-inch M5 MacBook Air review",
+            "url": "https://laptopmedia.com/review/apple-macbook-air-15-3-m5-the-best-15-inch-laptop-for-everyday-use/"
+          }
         ]
       },
       "officialSources": [
@@ -341,6 +551,74 @@
           "Apple’s video battery rating is up to 22 hours with M5 Pro and 20 hours with M5 Max on this 72.4Wh model."
         ]
       },
+      "buyerProfile": {
+        "primaryReason": "Sustained professional performance in the smallest MacBook that offers M5 Pro or M5 Max.",
+        "evidenceSummary": "The 14-inch model combines Pro/Max compute, XDR display, ports, and active cooling with a more portable footprint. Reviews frame it as job-grade power for rendering, development, creative work, and local AI when the 16-inch size is unnecessary.",
+        "useCases": [
+          {
+            "label": "Professional software development",
+            "description": "Large builds, IDEs, containers, virtual machines, and local services that benefit from sustained CPU performance."
+          },
+          {
+            "label": "Photo and design production",
+            "description": "High-resolution photo work, graphics, interface design, and color-managed review on the XDR display."
+          },
+          {
+            "label": "Portable video and motion work",
+            "description": "Editing, effects, rendering, and on-location production where performance must travel."
+          },
+          {
+            "label": "Music and on-device AI",
+            "description": "Multi-track production and local model or AI-assisted creative workflows that benefit from higher memory options."
+          }
+        ],
+        "appCategories": [
+          {
+            "slug": "developer-tools",
+            "rotationOffset": 1,
+            "label": "Professional development",
+            "description": "IDEs, containers, virtual machines, compilers, and local development services."
+          },
+          {
+            "slug": "photo-and-graphic-tools",
+            "rotationOffset": 2,
+            "label": "Photo and design",
+            "description": "Color-managed photography, illustration, layout, and interface design."
+          },
+          {
+            "slug": "video-and-motion-tools",
+            "rotationOffset": 1,
+            "label": "Video and motion",
+            "description": "Editing, grading, compositing, encoding, and portable rendering."
+          },
+          {
+            "slug": "music-and-audio-tools",
+            "rotationOffset": 0,
+            "label": "Music production",
+            "description": "Recording, mixing, instruments, plug-ins, and professional audio sessions."
+          }
+        ],
+        "featuredAppSlugs": [
+          "xcode",
+          "vs-code",
+          "docker",
+          "figma",
+          "photoshop",
+          "final-cut-pro",
+          "logic-pro",
+          "capture-one"
+        ],
+        "researchSources": [
+          {
+            "label": "Apple M5 Pro and M5 Max MacBook Pro announcement",
+            "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/"
+          },
+          {
+            "label": "Tom’s Hardware 14-inch M5 Max MacBook Pro review",
+            "url": "https://www.tomshardware.com/laptops/macbooks/apple-macbook-pro-14-inch-m5-max-2026-review"
+          }
+        ]
+      },
       "officialSources": [
         {
           "label": "Apple 14-inch MacBook Pro technical specifications",
@@ -428,6 +706,74 @@
           "The base M5 Pro uses a 20-core GPU; M5 Max raises that to 32 or 40 cores. Record the chip before interpreting workload-specific requirements.",
           "Its 16.2-inch XDR panel and 100Wh battery are size-specific, with Apple rating M5 Pro video playback at up to 24 hours.",
           "Both Pro sizes can reach 128GB and expose the same three Thunderbolt 5, HDMI, SDXC, MagSafe 3, and headphone connections."
+        ]
+      },
+      "buyerProfile": {
+        "primaryReason": "The largest mobile Mac workspace for all-day, sustained video, 3D, audio, development, and local-AI workloads.",
+        "evidenceSummary": "Apple and current reviews consistently position the 16-inch Pro as a portable workstation. The larger XDR display, battery, high-power operating envelope, and memory options are most valuable when creative or AI applications run throughout the workday.",
+        "useCases": [
+          {
+            "label": "Long-form video and postproduction",
+            "description": "Large timelines, multicamera edits, effects, color grading, encoding, and AI-assisted postproduction."
+          },
+          {
+            "label": "3D, CAD, and rendering",
+            "description": "Modeling, animation, visualization, GPU rendering, and architecture tools that need sustained performance."
+          },
+          {
+            "label": "Large development and AI workloads",
+            "description": "Complex builds, virtual machines, game development, local models, and data-heavy professional tools."
+          },
+          {
+            "label": "Studio audio and live production",
+            "description": "Large recording sessions, mixing, plug-in chains, streaming, and performance software."
+          }
+        ],
+        "appCategories": [
+          {
+            "slug": "video-and-motion-tools",
+            "rotationOffset": 2,
+            "label": "Postproduction",
+            "description": "Editing, color, effects, encoding, animation, and GPU-heavy media workflows."
+          },
+          {
+            "slug": "3d-and-architecture",
+            "rotationOffset": 0,
+            "label": "3D and architecture",
+            "description": "CAD, modeling, visualization, rendering, and design tools for workstation-class projects."
+          },
+          {
+            "slug": "developer-tools",
+            "rotationOffset": 2,
+            "label": "Development and local AI",
+            "description": "IDEs, containers, virtual machines, game development, and tools used around local models."
+          },
+          {
+            "slug": "live-production-and-performance",
+            "rotationOffset": 0,
+            "label": "Studio and live production",
+            "description": "Broadcasting, performance, audio, streaming, and real-time production software."
+          }
+        ],
+        "featuredAppSlugs": [
+          "davinci-resolve",
+          "premiere-pro",
+          "after-effects",
+          "blender",
+          "cinema-4d",
+          "autodesk-maya",
+          "parallels-desktop",
+          "obs"
+        ],
+        "researchSources": [
+          {
+            "label": "Apple M5 Pro and M5 Max MacBook Pro announcement",
+            "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/"
+          },
+          {
+            "label": "WIRED 16-inch M5 Max MacBook Pro review",
+            "url": "https://www.wired.com/review/macbook-pro-16-inch-m5-max/"
+          }
         ]
       },
       "officialSources": [

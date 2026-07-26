@@ -8,6 +8,8 @@ import {
     catchRedirectResponse,
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
+import { getCuratedDeviceAppPage } from '~/helpers/device-app-curation.js'
+import { deviceCatalog } from '~/helpers/device-catalog.js'
 import { getDeviceListingBySlug } from '~/helpers/site-listings.js'
 
 
@@ -44,12 +46,9 @@ if ( String( subSlug ) !== '1' ) {
     return Astro.redirect( device.endpoint, 301 )
 }
 
-const appPage = {
-    items: [],
-    summary: null,
-    previousPage: '',
-    nextPage: ''
-}
+const buyerProfile = device.buyerProfile
+const buyerIntentMethodology = deviceCatalog.buyerIntentMethodology
+const appPage = await getCuratedDeviceAppPage( device )
 
 ---
 <Layout
@@ -97,6 +96,38 @@ const appPage = {
                         Open the comparison model →
                     </a>
                 </div>
+            </section>
+
+            <section class="w-full max-w-5xl rounded-lg border border-green-800 bg-gradient-to-br from-darker to-dark p-6 space-y-6">
+                <div class="space-y-3">
+                    <p class="text-sm font-bold uppercase tracking-wide text-green-300">
+                        Typical buyer intent
+                    </p>
+                    <h2 class="text-2xl md:text-3xl font-bold">
+                        Why people usually choose { device.shortName }
+                    </h2>
+                    <p class="text-lg leading-8">
+                        { buyerProfile.primaryReason }
+                    </p>
+                    <p class="text-sm leading-7 text-gray-300">
+                        { buyerProfile.evidenceSummary }
+                    </p>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    { buyerProfile.useCases.map( useCase => (
+                        <article class="rounded-lg border border-gray-700 bg-darker p-5 space-y-2">
+                            <h3 class="font-bold">{ useCase.label }</h3>
+                            <p class="text-sm leading-6 text-gray-300">
+                                { useCase.description }
+                            </p>
+                        </article>
+                    )) }
+                </div>
+
+                <p class="text-xs leading-6 text-gray-400">
+                    { buyerIntentMethodology.summary }
+                </p>
             </section>
 
             <section class="w-full max-w-5xl space-y-5">
@@ -164,26 +195,72 @@ const appPage = {
                 </ul>
             </section>
 
+            <section class="w-full max-w-5xl space-y-5">
+                <div class="space-y-3">
+                    <p class="text-sm font-bold uppercase tracking-wide text-gray-400">
+                        Workload fit
+                    </p>
+                    <h2 class="text-2xl md:text-3xl font-bold">
+                        App categories that match this Mac
+                    </h2>
+                    <p class="text-sm leading-7 text-gray-300">
+                        These categories follow the model-specific use cases above. Open a category for its complete compatibility list.
+                    </p>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    { buyerProfile.appCategories.map( category => (
+                        <a
+                            class="block rounded-lg border border-gray-700 p-5 space-y-2 hover:border-green-500 hover:bg-darkest"
+                            href={ `/kind/${ category.slug }` }
+                        >
+                            <h3 class="font-bold underline">{ category.label } →</h3>
+                            <p class="text-sm leading-6 text-gray-300">
+                                { category.description }
+                            </p>
+                        </a>
+                    )) }
+                </div>
+            </section>
+
             <section class="w-full space-y-5" aria-labelledby="compatible-apps-heading">
                 <div class="max-w-5xl mx-auto text-center space-y-3">
                     <h2 id="compatible-apps-heading" class="text-2xl md:text-3xl font-bold">
-                        Search reported apps for { device.shortName }
+                        Apps that fit common { device.shortName } workflows
                     </h2>
                     <p class="text-sm text-gray-400">
-                        Search by app name or filter the database by Native, Rosetta, in-progress, unsupported, or unreported status. Results describe app architecture support; confirm plug-ins, drivers, memory needs, and the developer’s current macOS requirements separately.
+                        The starting list combines recognizable apps for this buyer profile with the newest report in each priority category. It is an editorial compatibility shortlist, not device-specific installation-share data. Search by app name or filter by Native, Rosetta, in-progress, unsupported, or unreported status.
+                    </p>
+                    <p class="text-xs text-gray-500">
+                        { buyerIntentMethodology.appSelectionPolicy }
                     </p>
                 </div>
 
                 <Search
                     kind-page={ appPage }
                     base-filters={ [ 'type_app' ] }
-                    initial-limit={ 0 }
+                    initial-limit={ 12 }
                     client:load
                 >
                     <CarbonInline
                         class="carbon-inline-wide"
                     />
                 </Search>
+            </section>
+
+            <section class="w-full max-w-5xl space-y-4">
+                <h2 class="text-xl md:text-2xl font-bold">
+                    Buyer-intent research
+                </h2>
+                <ul class="list-disc pl-6 space-y-2 text-sm">
+                    { buyerProfile.researchSources.map( source => (
+                        <li>
+                            <a class="underline" href={ source.url } target="_blank" rel="noopener">
+                                { source.label } ↗
+                            </a>
+                        </li>
+                    )) }
+                </ul>
             </section>
 
         </div>

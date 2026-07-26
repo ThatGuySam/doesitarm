@@ -65,6 +65,7 @@
     "cloudflare-deploy": "pnpm run cloudflare-build && pnpm exec wrangler deploy --config dist/server/wrangler.json",
     "verify:cloudflare:subscriptions": "node scripts/verify-subscriptions-worker.mjs",
     "verify:cloudflare:live": "node scripts/verify-cloudflare-frontend.mjs",
+    "verify:device-curation": "pnpm exec vite-node scripts/audit-device-app-curation.js",
     "vercel-build": "pnpm exec vite-node scripts/vercel-build.js",
     "netlify-prebuild:download-sitemaps": "pnpm exec vite-node scripts/download-sitemaps.js",
     "netlify-prebuild:test-prebuild-functions": "pnpm test-prebuild && pnpm test-api-client && pnpm test-listings",

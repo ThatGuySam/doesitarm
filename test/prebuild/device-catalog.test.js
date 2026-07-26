@@ -18,7 +18,17 @@ function makeEditorialWordSet ( device ) {
         device.comparison.body,
         device.decisionGuide.heading,
         device.decisionGuide.summary,
-        ...device.decisionGuide.points
+        ...device.decisionGuide.points,
+        device.buyerProfile.primaryReason,
+        device.buyerProfile.evidenceSummary,
+        ...device.buyerProfile.useCases.flatMap( useCase => [
+            useCase.label,
+            useCase.description
+        ] ),
+        ...device.buyerProfile.appCategories.flatMap( category => [
+            category.label,
+            category.description
+        ] )
     ].join( ' ' ).toLowerCase()
 
     return new Set( pageText.match( /[a-z0-9]+/gu ) )
@@ -40,7 +50,9 @@ describe( 'Apple silicon device catalog', () => {
     it( 'lists the five Mac models Apple introduced in 2026', () => {
         const listedDevices = getListedDeviceListings()
 
+        expect( deviceCatalog.schemaVersion ).toBe( 2 )
         expect( deviceCatalog.lastReviewed ).toBe( '2026-07-25' )
+        expect( deviceCatalog.buyerIntentMethodology.lastResearched ).toBe( '2026-07-25' )
         expect( listedDevices ).toHaveLength( 5 )
         expect( listedDevices.map( device => device.slug ) ).toEqual([
             '2026-macbook-neo-a18-pro',
@@ -79,6 +91,43 @@ describe( 'Apple silicon device catalog', () => {
         expect( new Set( listedDevices.map( device => device.seoTitle ) ).size ).toBe( listedDevices.length )
         expect( new Set( listedDevices.map( device => device.seoDescription ) ).size ).toBe( listedDevices.length )
         expect( new Set( listedDevices.map( device => device.description ) ).size ).toBe( listedDevices.length )
+    })
+
+    it( 'defines sourced, device-specific buyer profiles and app mixes', () => {
+        const listedDevices = getListedDeviceListings()
+        const featuredAppSets = listedDevices.map( device => {
+            const profile = device.buyerProfile
+
+            expect( profile.primaryReason.length ).toBeGreaterThan( 40 )
+            expect( profile.evidenceSummary.length ).toBeGreaterThan( 80 )
+            expect( profile.useCases ).toHaveLength( 4 )
+            expect( profile.appCategories ).toHaveLength( 4 )
+            expect( profile.featuredAppSlugs ).toHaveLength( 8 )
+            expect( profile.researchSources.length ).toBeGreaterThanOrEqual( 2 )
+            expect( new Set( profile.featuredAppSlugs ).size ).toBe( 8 )
+
+            for ( const category of profile.appCategories ) {
+                expect( Number.isInteger( category.rotationOffset ) ).toBe( true )
+                expect( category.rotationOffset ).toBeGreaterThanOrEqual( 0 )
+                expect( category.rotationOffset ).toBeLessThanOrEqual( 2 )
+            }
+
+            for ( const source of profile.researchSources ) {
+                expect( new URL( source.url ).protocol ).toBe( 'https:' )
+            }
+
+            return new Set( profile.featuredAppSlugs )
+        } )
+
+        for ( const [ leftIndex, leftSet ] of featuredAppSets.entries() ) {
+            for ( const rightSet of featuredAppSets.slice( leftIndex + 1 ) ) {
+                const sharedAppCount = [ ...leftSet ]
+                    .filter( slug => rightSet.has( slug ) )
+                    .length
+
+                expect( sharedAppCount ).toBeLessThanOrEqual( 2 )
+            }
+        }
     })
 
     it( 'keeps editorial page copy below the project similarity guard', () => {
