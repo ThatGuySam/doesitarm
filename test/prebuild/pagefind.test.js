@@ -4,6 +4,9 @@ import {
     mapSitemapEntryToPagefindRecord,
     shouldIndexSitemapEntry
 } from '~/helpers/pagefind/index.js'
+import {
+    makePagefindSitemapEntry
+} from '~/helpers/pagefind/manifest.js'
 
 describe('Pagefind records', () => {
     it('should skip sitemap entries without searchable payloads', () => {
@@ -60,5 +63,48 @@ describe('Pagefind records', () => {
         expect( record.content ).toContain('Example App Benchmarks')
         expect( record.content ).toContain('Runs fast on Apple Silicon')
         expect( record.content ).toContain('Apple Silicon App Tested')
+    })
+
+    it('should remove heavy endpoint fields from the Pagefind sitemap manifest', () => {
+        const entry = makePagefindSitemapEntry({
+            route: '/app/example',
+            payload: {
+                app: {
+                    name: 'Example App',
+                    slug: 'example',
+                    endpoint: '/app/example',
+                    category: {
+                        slug: 'developer-tools'
+                    },
+                    bundles: Array( 100 ).fill({
+                        version: 'large'
+                    }),
+                    deviceSupport: Array( 100 ).fill({
+                        name: 'large'
+                    }),
+                    relatedVideos: Array( 100 ).fill({
+                        name: 'large'
+                    })
+                },
+                relatedVideos: Array( 100 ).fill({
+                    name: 'large'
+                })
+            }
+        })
+
+        expect( entry ).toEqual({
+            route: '/app/example',
+            payload: {
+                app: {
+                    name: 'Example App',
+                    slug: 'example',
+                    endpoint: '/app/example',
+                    category: {
+                        slug: 'developer-tools'
+                    }
+                }
+            }
+        })
+        expect( JSON.stringify( entry ) ).not.toContain( 'large' )
     })
 })

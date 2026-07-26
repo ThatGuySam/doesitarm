@@ -45,6 +45,9 @@ import {
     writePagefindIndex
 } from '~/helpers/pagefind/index.js'
 import {
+    makePagefindSitemapEntry
+} from '~/helpers/pagefind/manifest.js'
+import {
     getSearchProvider
 } from '~/helpers/search/config.js'
 import {
@@ -717,7 +720,12 @@ class BuildLists {
         }
 
         const sitemapEndpoints = Object.values(this.endpointMaps).map( endpointSet => {
-            return Array.from( endpointSet , ([route, payload]) => ({ route, payload }) )
+            return Array.from( endpointSet , ([route, payload]) => {
+                return makePagefindSitemapEntry({
+                    route,
+                    payload
+                })
+            } )
         } ).flat(1)
 
         // Add kind routes to sitemap
