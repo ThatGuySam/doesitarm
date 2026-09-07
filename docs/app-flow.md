@@ -19,6 +19,16 @@ Example after verification:
 
 If deployment or public-page verification fails, report the actual blocker and arrange follow-up. Do not announce that the app is live until verified.
 
+## Review criteria
+
+Use the current [PR template](../.github/PULL_REQUEST_TEMPLATE/app_addition_template.md) for listing format, ordering, status wording, and supported-version requirements. Use the matching [request](../.github/ISSUE_TEMPLATE/app-request-template.yml) or [update](../.github/ISSUE_TEMPLATE/app-update-template.yml) form for issue completeness. Check the existing README category, duplicates, and related contributions.
+
+- Open the official app/download page and compatibility evidence. Confirm that the evidence supports the stated architecture, app version, and stable or prerelease channel. Distinguish native or universal binaries from translation support.
+- Prefer a versioned release or other durable evidence for a version-specific claim. A moving `latest` URL, mismatched version, or broken link needs reconciliation. Use a verifiable version or request the missing evidence; do not invent one or assume the newest release proves the first supported version.
+- Distinguish contributor-provided screenshots or binary inspection output from checks performed independently. Report whether the review inspected sources, inspected a binary, or actually ran the Mac app.
+- Inspect check and deployment details for the reviewed commit. Authorization requests and missing checks are not demonstrated build failures or successful checks. Respect required merge gates; report the actual cause and any uncertainty.
+- For README-only edits, validate the changed entries against the template, evidence, category ordering, duplicates, and parsing where applicable. Read `package.json` and the affected tests for current commands; run relevant checks and required gates without expanding into unrelated refactors.
+
 ## Request and review flow
 
 <!-- 

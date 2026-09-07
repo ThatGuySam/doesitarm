@@ -14,5 +14,5 @@
 
 ## App requests and pull requests
 
-- Before reviewing, merging, closing, or replying to an app-request issue or app-listing PR, read [docs/app-flow.md](docs/app-flow.md) and follow its contributor follow-up requirements.
-- Include the direct Does It ARM app-listing URL when thanking contributors or confirming a merge. Label pending deployment or verification honestly; announce the app as live only after checking its public listing.
+- For app-request issues, compatibility updates, and app-listing PRs, use [doesitarm-app-review](.agents/skills/doesitarm-app-review/SKILL.md). Agents without skill discovery should open that file directly.
+- [docs/app-flow.md](docs/app-flow.md) is the source of truth for review criteria and contributor follow-up, including direct listing URLs and live verification.
