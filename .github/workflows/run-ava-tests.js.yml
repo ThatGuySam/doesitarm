@@ -35,4 +35,9 @@ jobs:
         cache: pnpm
         cache-dependency-path: pnpm-lock.yaml
     - run: pnpm install --frozen-lockfile
+    - run: pnpm test:status-copy
+    - name: Check headline wrapping on mobile and desktop
+      run: pnpm test:status-headlines
+      env:
+        CHROME_BIN: /usr/bin/google-chrome
     - run: pnpm netlify-build

@@ -24,7 +24,9 @@
     }
   },
   "scripts": {
-    "test-prebuild": "pnpm run with-env vitest ./test/prebuild",
+    "test-prebuild": "pnpm test:status-copy && pnpm run with-env vitest ./test/prebuild",
+    "test:status-copy": "node --test test/status-copy.node.mjs",
+    "test:status-headlines": "vitest run --config vitest.playwright.config.mjs test/playwright/status-headline.playwright.ts",
     "test-api-client": "pnpm run with-env vitest ./test/api",
     "test-listings": "pnpm run with-env vitest ./test/listings",
     "test:subscriptions": "vitest run ./test/subscriptions-worker.test.js",

@@ -1,0 +1,10 @@
+/* Copy budget and responsive acceptance criteria: docs/app-flow.md. */
+.status-headline {
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(1rem, 4vw, 2.4rem);
+    line-height: 1.2;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+}

@@ -31,6 +31,16 @@ Use the current [PR template](../.github/PULL_REQUEST_TEMPLATE/app_addition_temp
 - Inspect check and deployment details for the reviewed commit. Authorization requests and missing checks are not demonstrated build failures or successful checks. Respect required merge gates; report the actual cause and any uncertainty.
 - For README-only edits, validate the changed entries against the template, evidence, category ordering, duplicates, and parsing where applicable. Read `package.json` and the affected tests for current commands; run relevant checks and required gates without expanding into unrelated refactors.
 
+## Status headline length
+
+- Keep the status to **80 Unicode code points maximum**, including the status symbol, spaces, punctuation, and version. Aim for 40–65 characters. State support, the relevant version, and at most one essential qualification.
+- Render the full status in **no more than three lines at 320 CSS pixels and wider**, with two lines as the desktop target. The site uses a 20px root font, so do not assume Tailwind's usual 16px rem size. Character count alone does not prove that a headline fits.
+- Keep qualifications that change the answer visible, such as beta, Rosetta, partial support, or unverified status. Preserve longer setup steps, platform requirements, limitations, and evidence in a GitHub issue comment or [app status details](app-status-details.md), then add a direct `Requirements & details` link to that section.
+- Never use line clamping, ellipses, or hidden overflow to meet the line limit. Text enlargement may add lines for accessibility; do not clip it or shrink text to defeat the user's font setting.
+- Run `pnpm test:status-copy` and `pnpm test:status-headlines` before publishing status or typography changes. The responsive test checks every README app status at 320, 375, 430, 768, 1024, and 1440px and checks enlarged text remains visible.
+
+This budget comes from the app list before the September 7, 2026 bulk update: 808 statuses, median 42 characters, 95th percentile 62, longest 97. That history includes contributions from multiple authors, not only Sam. The 80-character ceiling allows a short qualification while excluding paragraph-length statuses.
+
 ## Request and review flow
 
 <!-- 

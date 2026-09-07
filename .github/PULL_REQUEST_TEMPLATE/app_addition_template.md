@@ -11,7 +11,8 @@ _The Name of the App being added_
 #### Open Questions and Pre-Merge TODOs
 - [ ] Keeps list alphabetical. 
 - [ ] Matches Standard App Line Format. 
-- [ ] App status is clearly stated. 
+- [ ] App status is clearly stated.
+- [ ] Status is at most 80 characters and fits three lines on mobile. Preserve extra context in GitHub and add a direct link. See [status headline guidance](../../docs/app-flow.md#status-headline-length).
 - [ ] App status is consistent with already used verbiage. 
 - [ ] Mentions supported App version in App Status (Example: `✅ Yes, Native Apple Silicon Support as of v1.2.3`)
 

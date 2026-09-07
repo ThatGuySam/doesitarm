@@ -1,5 +1,6 @@
 ---
 // Default Listing template for Apps, Games, and formulas
+import '~/assets/css/status-headline.css'
 
 import {
     ListingDetails
@@ -64,7 +65,7 @@ const adName = (() => {
             set:html={ details.mainHeading }
         />
 
-        <h2 class="subtitle text-2xl md:text-5xl font-bold">
+        <h2 class="subtitle status-headline" data-testid="status-headline">
             { details.subtitle }
         </h2>
 
