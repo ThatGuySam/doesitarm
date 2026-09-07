@@ -132,6 +132,9 @@ export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
                 if (isBrowserPlaybackListing) return
+                // BrickLink's Studio shares a generic alias with Android Studio.
+                // Keep its scan and evidence attached to the separate product.
+                if (name === 'Android Studio' && scannedApp.aliases.some(alias => /bricklink/i.test(alias))) return
 
                 for ( const alias of scannedApp.aliases ) {
                     // console.log( key, alias, name, eitherMatches(alias, name) )
