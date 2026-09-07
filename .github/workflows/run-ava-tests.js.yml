@@ -33,5 +33,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: pnpm
+        cache-dependency-path: pnpm-lock.yaml
     - run: pnpm install --frozen-lockfile
     - run: pnpm netlify-build

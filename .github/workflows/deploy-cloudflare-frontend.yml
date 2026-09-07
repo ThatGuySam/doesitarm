@@ -43,8 +43,11 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.2"
 
       - run: pnpm install --frozen-lockfile
 
