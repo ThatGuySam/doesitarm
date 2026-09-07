@@ -925,6 +925,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Wifi Explorer](https://www.intuitibits.com/products/wifi-explorer/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344478/5114)
 * [Wineskin Winery](https://github.com/Gcenx/WineskinServer/releases) - ✳️ Yes, works via Rosetta 2 translation - [Support Notes](https://github.com/Gcenx/WineskinServer/#apple-silicon-support-rosetta2) [Release Notes](https://github.com/Gcenx/WineskinServer/releases/tag/V1.8.4.2)
 * [Witch for Mac](https://manytricks.com/witch/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/602#issue-834336906) [Release Notes](https://manytricks.com/witch/releasenotes/)
+* [Zisla](https://github.com/wzz6423/zisla) - ✅ Yes, Full Native Apple Silicon Support as of v0.1.3 - [Release](https://github.com/wzz6423/zisla/releases/tag/release/v0.1.3)
 
 
 
