@@ -1,6 +1,25 @@
 # App Request Flow
 
-Flow for new app requests and updates to existing apps
+Flow for new app requests and updates to existing apps.
+
+## Required contributor follow-up
+
+Read this guide before handling app-request issues or app-listing pull requests.
+
+1. Thank the contributor by their GitHub handle for the app or compatibility information they provided.
+2. Include a direct Markdown link to the app's listing on `https://doesitarm.com` in merge and completion replies, for example `[Dusty on Does It ARM](https://doesitarm.com/app/dusty)`. The homepage, a GitHub diff, or the developer's website is not a substitute. For multiple apps, include a link for each.
+3. Resolve the listing URL from the app's API `endpoint` or the repo's slug and endpoint helpers. Check redirects rather than guessing a URL from the PR title.
+4. If deployment or verification is pending, still provide the expected listing URL, clearly label it as pending, and say it has not yet been verified live.
+5. After the deployment finishes, open the public listing and verify the app name, compatibility status, version, and evidence links. The API and frontend deploy separately; a successful frontend build alone does not prove the new listing is live.
+6. Reply on the PR with the verified listing link and a short thank-you. Check existing comments first to avoid duplicate live announcements. Close related app-request issues only after verification, including the listing link there too.
+
+Example after verification:
+
+> Thanks @contributor for adding Dusty and its compatibility evidence! It's now live: [Dusty on Does It ARM](https://doesitarm.com/app/dusty). Thanks for helping keep the list up to date!
+
+If deployment or public-page verification fails, report the actual blocker and arrange follow-up. Do not announce that the app is live until verified.
+
+## Request and review flow
 
 <!-- 
 Mermaid Diagram Notes:
@@ -38,8 +57,9 @@ flowchart TD
     J3 -- Changes Requested --> J4["15A. 🔧 Maintainer: Request PR Changes"]
     J4 --> J5["16A. 👥 Contributor: Update PR"]
     J5 --> J1
-    J3 -- Approved --> L1["17A. 🔧 Maintainer: Comment that App is Live"]
-    I3 --> L1
+    J3 -- Approved --> J6["16A. 🔧 Maintainer: Merge PR and include listing URL"]
+    J6 --> I3
+    I3 --> L1["17A. 🔧 Maintainer: Thank Contributor and Link Verified Live App"]
     L1 --> K["18A. 🔧 Maintainer: Close Issue"]
 
     E -- App Update --> L["1C. 👤 User: Reports Update<br/>(e.g. Native Support Now Available)"]
