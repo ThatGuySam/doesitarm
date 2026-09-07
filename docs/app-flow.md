@@ -12,10 +12,12 @@ Read this guide before handling app-request issues or app-listing pull requests.
 4. If deployment or verification is pending, still provide the expected listing URL, clearly label it as pending, and say it has not yet been verified live.
 5. After the deployment finishes, open the public listing and verify the app name, compatibility status, version, and evidence links. The API and frontend deploy separately; a successful frontend build alone does not prove the new listing is live.
 6. Reply on the PR with the verified listing link and a short thank-you. Check existing comments first to avoid duplicate live announcements. Close related app-request issues only after verification, including the listing link there too.
+7. Before closing any issue, include a brief, friendly invitation to contribute again in the closing comment. Invite people to [browse the app list](https://doesitarm.com), [suggest another app](https://github.com/ThatGuySam/doesitarm/issues/new?template=app-request-template.yml), or [help with missing compatibility information](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aopen+is%3Aissue+label%3A%22Needs+M1+Testing%22). Pick the invitation that fits the contribution; one sentence is enough. Keep it optional and welcoming, with no obligation to do more work. This applies to completed, duplicate, and not-planned issue closures, including feature and bug issues. For non-listing issues, link the relevant result or explanation instead of inventing an app URL.
+8. Treat the invitation as part of the closure checklist, not optional polish: verify the closing comment contains the thank-you, the result or direct app link, and the invitation before changing the issue state. If the user requests review before closure, leave the issue open and prepare the closing reply for that later step.
 
 Example after verification:
 
-> Thanks @contributor for adding Dusty and its compatibility evidence! It's now live: [Dusty on Does It ARM](https://doesitarm.com/app/dusty). Thanks for helping keep the list up to date!
+> Thanks @contributor for adding Dusty and its compatibility evidence! It's now live: [Dusty on Does It ARM](https://doesitarm.com/app/dusty). Feel free to [browse the app list](https://doesitarm.com) and [suggest another app](https://github.com/ThatGuySam/doesitarm/issues/new?template=app-request-template.yml) you'd like us to review!
 
 If deployment or public-page verification fails, report the actual blocker and arrange follow-up. Do not announce that the app is live until verified.
 
@@ -70,7 +72,8 @@ flowchart TD
     J3 -- Approved --> J6["16A. 🔧 Maintainer: Merge PR and include listing URL"]
     J6 --> I3
     I3 --> L1["17A. 🔧 Maintainer: Thank Contributor and Link Verified Live App"]
-    L1 --> K["18A. 🔧 Maintainer: Close Issue"]
+    L1 --> L2["Invite future contributions"]
+    L2 --> K["18A. 🔧 Maintainer: Close Issue"]
 
     E -- App Update --> L["1C. 👤 User: Reports Update<br/>(e.g. Native Support Now Available)"]
     L --> M["2C. 👤 User: Provide Evidence<br/>(Links, Screenshots)"]

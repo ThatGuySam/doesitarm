@@ -43,7 +43,7 @@ const statusesMessages = {
 }
 
 
-class MakeHomebrewList {
+export class MakeHomebrewList {
 
     constructor() {
         // Data from the issue
@@ -76,10 +76,11 @@ class MakeHomebrewList {
     }
 
     hasArm64Formula( formulaData ) {
-        // Check the official list first since it's data is newer and more frequently updated
-        const hasStableFormula = (formulaData.bottle.stable !== undefined)
-
-        return hasStableFormula && (formulaData.bottle.stable.files['arm64_big_sur'] !== undefined)
+        // Stable ARM bottles use the macOS release name, not only Big Sur.
+        // Linux ARM bottles and architecture-independent bottles are not proof
+        // that a formula and its runtime dependencies work on Apple Silicon.
+        const files = formulaData?.bottle?.stable?.files || {}
+        return Object.keys(files).some(tag => tag.startsWith('arm64_') && !tag.includes('linux'))
     }
 
     formulaIsNative (formulae) {
@@ -96,10 +97,6 @@ class MakeHomebrewList {
 
         // console.log('formulaData', formulaData)
         // console.log('formulae', formulae)
-
-        // Check the official list first since it's data is newer and more frequently updated
-        const hasStableFormula = (formulaData.bottle.stable !== undefined)
-        const hasArm64Formula = hasStableFormula && (formulaData.bottle.stable.files['arm64_big_sur'] !== undefined)
 
         return this.hasArm64Formula( formulaData )
     }

@@ -15,4 +15,4 @@
 ## App requests and pull requests
 
 - For app-request issues, compatibility updates, and app-listing PRs, use [doesitarm-app-review](.agents/skills/doesitarm-app-review/SKILL.md). Agents without skill discovery should open that file directly.
-- [docs/app-flow.md](docs/app-flow.md) is the source of truth for review criteria and contributor follow-up, including direct listing URLs and live verification.
+- [docs/app-flow.md](docs/app-flow.md) is the source of truth for review criteria and contributor follow-up, including direct listing URLs, live verification, and a friendly invitation to contribute again in every issue-closing comment. Check that guide before closing any issue, including bugs, features, and duplicates.
