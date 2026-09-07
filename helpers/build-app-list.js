@@ -125,8 +125,13 @@ export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
             let aliases = []
             const relatedLinksMap = new Map( getTokenLinks(token.children).map( link => [ link.href, link ] ) )
 
+            // Netflix 4K on Safari describes browser playback, not a scanned app.
+            // A Netflix-named Fluid wrapper cannot verify Safari UHD support.
+            const isBrowserPlaybackListing = name === 'Netflix 4K on Safari'
+
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
+                if (isBrowserPlaybackListing) return
 
                 for ( const alias of scannedApp.aliases ) {
                     // console.log( key, alias, name, eitherMatches(alias, name) )
