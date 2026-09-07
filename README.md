@@ -333,7 +333,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [InCopy](https://www.adobe.com/products/incopy.html) - ✳️ Yes, works via Rosetta 2 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [InDesign](https://www.adobe.com/products/indesign.html) - ✅ Yes, Full Native Apple Silicon Support - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Inkscape](https://inkscape.org/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2 - [Release Notes](https://wiki.inkscape.org/wiki/Release_notes) [Project on GitLab](https://gitlab.com/inkscape/inkscape) [Verification](https://github.com/ThatGuySam/doesitarm/issues/11#issuecomment-731507162)
-* [ItsPaint](https://itspaintmac.com) - ✅ Yes, Full Native Apple Silicon Support - [Universal binary releases](https://github.com/joshlin2201/itspaint/releases)
+* [ItsPaint](https://itspaintmac.com) - ✅ Yes, Full Native Apple Silicon Support as of v0.21.0 - [Universal Release](https://github.com/joshlin2201/itspaint/releases/tag/v0.21.0) [Source](https://github.com/joshlin2201/itspaint/tree/v0.21.0)
 * [Krita](https://krita.org/en/download/krita-desktop/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/610#issuecomment-812640871)
 * [Lightroom](https://www.adobe.com/products/photoshop-lightroom.html) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://blog.adobe.com/en/2020/12/08/december-photography-updates.html) [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1092) [WWDC Preview](https://youtu.be/GEZhD3J89ZE?t=5783)
 * [Lightroom Classic](https://www.adobe.com/products/photoshop-lightroom-classic.html) - ✅ Yes, Native Apple Silicon Support as of v10.3 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
@@ -666,7 +666,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Trezor Suite](https://suite.trezor.io/) - ✅ Yes, Native Apple Silicon Support as of 21.9.2 - [Release Notes](https://github.com/trezor/trezor-suite/releases/tag/v21.9.2) [Article](https://blog.trezor.io/trezor-suite-and-firmware-updates-september-2021-a490f2ea16c1)
 * [Tuple](https://tuple.app/) - ✅ Yes, Full Native Apple Silicon Support - [Official Article](https://docs.tuple.app/article/60-supported-platforms)
 * [TurboTax](https://turbotax.intuit.com/personal-taxes/cd-download/) - ✳️ Runs via Rosetta with no immediate plans for native support - [Discussion](https://ttlc.intuit.com/community/taxes/discussion/re-turbotax-deluxe-under-macos-bigsur-on-macbook-air-apple-m1-chip-turbotax-app-doesn-t-open/01/2273549#M815580)
-* [Typer](https://typer.space) - ✅ Yes, Native Apple Silicon Support (required) - [App Store](https://apps.apple.com/app/typer-ai/id6751274483)
+* [Typer](https://typer.space) - ✅ Yes, Native Apple Silicon Support as of v2.7.0; requires Apple Silicon - [App Store](https://apps.apple.com/app/typer-ai/id6751274483)
 * [UctoX](https://software.charliemonroe.net/uctox/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](https://blog.charliemonroe.net/big-sur-and-apple-silicon/) [View on Setapp](https://setapp.sjv.io/uctox)
 * [Ulysses](https://ulysses.app/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/120#issuecomment-750041670) [MacRumors Article](https://www.macrumors.com/2020/11/13/apple-silicon-macs-universal-apps/) [View on Setapp](https://setapp.sjv.io/c/2708043/344477/5114)
 * [Unibox](https://www.uniboxapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/368242/5114)
@@ -870,7 +870,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Iriun Webcam](https://iriun.com/) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/607#issue-835423511)
 * [iStat Menus](https://bjango.com/mac/istatmenus/) - ✅ Yes, Full Native Apple Silicon Support as of v6.51 - [Official Twitter](https://twitter.com/bjango/status/1328863648270356482) [View on Setapp](https://setapp.sjv.io/c/2708043/344394/5114)
 * [Jamf Self Service](https://docs.jamf.com/10.26.0/jamf-pro/administrator-guide/About_Jamf_Self_Service_for_macOS.html) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
-* [Juicy](https://getjuicy.app) - ✅ Yes, Native Apple Silicon Support
+* [Juicy](https://getjuicy.app) - ✅ Yes, Native Apple Silicon Support as of v1.5.6 - [Official Compatibility](https://getjuicy.app/#faq) [Release Notes](https://getjuicy.app/changelog/)
 * [Jumpcut](https://snark.github.io/jumpcut) - ✅ Yes, Native Apple Silicon Support as of v0.74 - [GitHub Issue](https://github.com/snark/jumpcut/issues/59#issuecomment-854313788)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
@@ -925,11 +925,11 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [uBar](https://brawersoftware.com/products/ubar) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/489433/5114)
 * [unpkg](https://www.timdoug.com/unpkg/) - ✅ Yes, Native Apple Silicon Support as of v4.7
 * [VueScan](https://www.hamrick.com/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/717#issue-935351118) [Official Article](https://www.hamrick.com/blog/vuescan-on-apple-silicon.html)
-* [Waindow](https://www.waindow.app/) - ✅ Yes, Full Native Apple Silicon Support as of v1.7.5 - [Universal Release](https://github.com/indiveloper/waindow-releases/releases/latest)
+* [Waindow](https://www.waindow.app/) - ✅ Yes, Full Native Apple Silicon Support as of v1.10.0 - [Universal Release](https://github.com/indiveloper/waindow-releases/releases/tag/v1.10.0)
 * [Wifi Explorer](https://www.intuitibits.com/products/wifi-explorer/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344478/5114)
 * [Wineskin Winery](https://github.com/Gcenx/WineskinServer/releases) - ✳️ Yes, works via Rosetta 2 translation - [Support Notes](https://github.com/Gcenx/WineskinServer/#apple-silicon-support-rosetta2) [Release Notes](https://github.com/Gcenx/WineskinServer/releases/tag/V1.8.4.2)
 * [Witch for Mac](https://manytricks.com/witch/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/602#issue-834336906) [Release Notes](https://manytricks.com/witch/releasenotes/)
-* [Zisla](https://github.com/wzz6423/zisla) - ✅ Yes, Full Native Apple Silicon Support as of v0.1.3 - [Release](https://github.com/wzz6423/zisla/releases/tag/release/v0.1.3)
+* [Zisla](https://github.com/wzz6423/zisla) - ✅ Yes, Full Native Apple Silicon Support as of v0.1.3 - [Release](https://github.com/wzz6423/zisla/releases/tag/v0.1.3)
 
 
 
