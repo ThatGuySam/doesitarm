@@ -740,6 +740,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Spotify](https://www.spotify.com/download/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/768)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
 * [Tidal](https://tidal.com/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.30.0.465 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/915)
+* [True-Fi](https://forum.headphones.com/t/sonarworks-reference-true-fi/2278/50) - 🚫 Reported not working on Apple Silicon; discontinued - [Compatibility report](https://github.com/ThatGuySam/doesitarm/issues/374#issuecomment-787469133) [Discontinuation discussion](https://forum.headphones.com/t/sonarworks-reference-true-fi/2278/50)
 * [Twitch Studio](https://www.twitch.tv/downloads/) - ✅ Yes, works natively - [Verification](https://github.com/ThatGuySam/doesitarm/issues/387#issuecomment-1257204749)
 * [UU Booster](https://uu.163.com/down/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/464#issue-771607189)
 * [Vienna](https://github.com/ViennaRSS/vienna-rss/releases/latest) - ✅ Yes, Full Native Apple Silicon Support as of v3.6 - [Release Notes](https://github.com/ViennaRSS/vienna-rss/releases/tag/v/3.6.0)
