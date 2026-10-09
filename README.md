@@ -395,6 +395,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [GoPro VR Player](https://community.gopro.com/t5/en/GoPro-VR-Player-for-desktop-FAQ/ta-p/394345) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/349#issuecomment-869347313)
 * [Handbrake](https://handbrake.fr/) - ✅ Yes, natively supported as of v1.4.0 - [Github Issue](https://github.com/HandBrake/HandBrake/issues/2951)
 * [Houdini](https://www.sidefx.com/products/houdini/) - ✅ Yes, natively supported as of v19.5.534 - [Source](https://www.sidefx.com/community/houdini-for-apple-silicon-now-gold/)
+* [Lucid](https://github.com/braedonsaunders/lucid) - ✅ Yes, Full Native Apple Silicon Support - [Release](https://github.com/braedonsaunders/lucid/releases/tag/v1.0.2)
 * [Maxon Chromatic Displacement](https://www.maxon.net/en/red-giant-complete/vfx-suite/chromatic-displacement) - 🔶 App has not yet been reported to be native to Apple Silicon - [Requirements](https://www.maxon.net/en/requirements/chromatic-displacement-requirements)
 * [Maxon Cosmo](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/cosmo) - 🔶 App has not yet been reported to be native to Apple Silicon - [Requirements](https://www.maxon.net/en/requirements/cosmo-requirements)
 * [Maxon Denoiser](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/denoiser) - 🔶 App has not yet been reported to be native to Apple Silicon - [Requirements](https://www.maxon.net/en/requirements/denoiser-requirements)
