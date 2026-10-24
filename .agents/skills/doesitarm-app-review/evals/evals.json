@@ -1,0 +1,53 @@
+{
+  "skill_name": "doesitarm-app-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The request is for True-Fi, but the supplied native support evidence is for SoundID. Review only.",
+      "expected_output": "Identify the product mismatch, do not transfer native support, and request product-specific evidence without mutations.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "The issue reports a Visual Studio for Mac 2019 debugging defect. Official documentation confirms native support in 2022. Can we close it as fixed? Review only.",
+      "expected_output": "Separate listing accuracy from the historical debugging defect. Do not infer resolution or close the issue.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "A Barrier community build has an arm64 executable. Recommend official stable native support.",
+      "expected_output": "Reject the official-stable inference; identify the community distribution and scope the architecture claim to that build.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "OpenISS has an M1 branch and compatible dependencies. There is no successful build or runtime evidence. Propose its listing status.",
+      "expected_output": "Keep compatibility Unknown. Name the missing application evidence rather than inferring a working native app.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "The product identity is established but native compatibility is unproven. I authorize an Unknown listing to invite testing. What next? Do not actually publish in this trial.",
+      "expected_output": "Allow preparation of an honest Unknown listing and a specific invitation to anyone, without claiming native support or publishing during the trial.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "The app page was verified and an existing completion comment links it. The user said leave the issue open for maintainer review. Resume this work.",
+      "expected_output": "Report verified; awaiting maintainer review. Do not close it or post another completion announcement.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "A search result shows the old RC headline, but the direct public app page shows the intended version and status with correct evidence links. Is publication verified?",
+      "expected_output": "Use the directly retrieved page for publication state; distinguish that check from runtime verification of the app.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Give the five newest issues. Fixtures contain open #20 created Oct 24 with no labels; closed #19 created Oct 23 and withdrawn; open #18 created Oct 22; open #17 created Oct 21; open #16 created Oct 20; open #1 created January but updated Oct 24. Review only.",
+      "expected_output": "Return #20, #19, #18, #17, #16 by creation date, include unlabeled and closed results, recommend no action for withdrawn closed #19, and make no GitHub mutations.",
+      "files": []
+    }
+  ]
+}

@@ -20,7 +20,9 @@ Paths below are relative to this skill directory. This skill belongs in the Does
 
 For review-only requests, inspect and report without posting comments, editing listings, merging, or closing issues. For action requests, carry forward the session's authorization and complete the in-scope work; this skill itself grants no authority to mutate GitHub or send contributor messages.
 
-Read the current issue or PR body, diff, comments, and checks. Apply the linked review criteria to the current PR head. Report concrete corrections and evidence gaps. Recheck the head before merging if it has changed since review.
+Read the current issue or PR body, diff, comments, and checks. Recover the current listing, completed work, and closure instructions first. Apply the app-flow evidence record and review criteria to the exact product and version. Recheck the PR head before merging if it has changed since review.
+
+For newest or most recent issues, query live GitHub issues in descending creation order. Include closed and unlabeled issues unless the user narrows the scope; report that scope. Do not substitute recent activity or a label-filtered queue for newest issues. Read comments and related PRs before recommending one next action per issue.
 
 For authorized changes, make the smallest supported correction under the repo's branch policy, validate the affected listings, and follow the app-flow guide through publication and contributor replies. Check existing comments and linked issues when resuming so completed work is not repeated.
 
@@ -28,4 +30,6 @@ If evidence, deployment, or public verification remains blocked, finish independ
 
 ## Report the result
 
-Lead with the outcome. For multiple contributions, use a compact table linking each issue or PR with its decision, evidence or correction, and remaining action. For completed work, include the commit or merge, validation performed, public listing links, and contributor follow-up status. Distinguish reviewed, merged, deployed, and verified live.
+Lead with the outcome. Use the app-flow dispositions and name the next action and any blocker. For multiple contributions, use a compact table linking each issue or PR with its disposition, evidence or correction, and next action. For completed work, include the commit or merge, validation performed, public listing links, and contributor follow-up status. Distinguish reviewed, merged, deployed, and verified live; distinguish a listing correction from resolution of a reported defect.
+
+When changing this skill or its shared policy, exercise the [regression cases](evals/evals.json). These are decision examples, not current compatibility claims.
