@@ -631,6 +631,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [PDFelement](https://pdf.wondershare.com/pdf-editor-mac/) - ✅ Yes, fully supported ARM and Intel Chip - [Official Post](https://pdf.wondershare.com/macos/pdfelement-ready-for-apple-m1-chip.html)
 * [PDFpen](https://pdfpen.com/pdfpen/download/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/672#issue-899209847)
 * [PDFZone](https://apps.apple.com/app/pdfzone/id1215383084) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/471#issue-774767869)
+* [Plainsay](https://plainsay.app/) - ✅ Yes, Full Native Apple Silicon Support as of v0.2.38 - [Requirements](https://github.com/conrader/plainsay/blob/v0.2.38/README.md?plain=1#L41) [Release Notes](https://github.com/conrader/plainsay/releases/tag/v0.2.38)
 * [Planny 4](https://www.kevinreutter.de/planny-4/) - ✅ Yes, Full Native Apple Silicon Support - [App Store Story](https://apps.apple.com/us/story/id1540024103)
 * [Post-it®](https://apps.apple.com/app/post-it/id1475777828) - ✳️ Yes, runs via Rosetta 2, with native support coming soon - [Source](https://github.com/ThatGuySam/doesitarm/issues/197#issuecomment-732100064)
 * [Presentify](https://presentify.compzets.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/849350/5114)
