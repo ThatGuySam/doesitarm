@@ -884,6 +884,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Juicy](https://getjuicy.app) - ✅ Yes, Native Apple Silicon Support as of v1.5.6 - [Official Compatibility](https://getjuicy.app/#faq) [Release Notes](https://getjuicy.app/changelog/)
 * [Jumpcut](https://snark.github.io/jumpcut) - ✅ Yes, Native Apple Silicon Support as of v0.74 - [GitHub Issue](https://github.com/snark/jumpcut/issues/59#issuecomment-854313788)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
+* [Keep Mac Awake](https://keepmacawake.com/?utm_source=doesitarm&utm_medium=referral&utm_campaign=listing) - ✅ Yes, Native Apple Silicon Support as of v1.0.5 - [Release Notes](https://github.com/bartdudzic/keepmacawake/releases/tag/v1.0.5)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
 * [LaCie RAID Manager](https://www.lacie.com/support/software/lacie-raid-manager/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/715#issue-934314512)
 * [Logitech G HUB](https://www.logitechg.com/en-us/innovation/g-hub.html) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/683#issue-912290618)
