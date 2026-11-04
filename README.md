@@ -624,6 +624,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [OmniPlan](https://www.omnigroup.com/omniplan) - ✅ Yes, Full Native Apple Silicon Support as of v4.2 - [Release Notes](https://www.omnigroup.com/releasenotes/omniplan)
 * [ONLYOFFICE](https://www.onlyoffice.com/download-desktop.aspx?from=desktop) - ✅ Yes, Full Native Apple Silicon Support as of v6.4 - [Release Notes](https://www.onlyoffice.com/blog/2021/10/onlyoffice-desktop-editors-v6-4-with-improved-arm-support-and-conditional-formatting/)
 * [Opera Web Browser](https://www.opera.com/) - ✅ Yes, Full Native Apple Silicon Support as of v75.0.3969.149 - [Blog Post](https://blogs.opera.com/desktop/2021/04/opera-just-got-even-faster-with-m1-support-for-mac-fans-and-custom-shortcuts/)
+* [Outmake](https://outmake.app) - ✅ Yes, Native Apple Silicon Support as of v0.2; requires Apple Silicon - [Release Notes](https://outmake.app/releases)
 * [Panopto](https://support.panopto.com/s/article/Install-Panopto-for-Mac) - ✅ Yes, Native Apple Silicon Support as of v10.2.0
 * [Parcel](https://parcelapp.net/) - ✅ Yes, Full Native Apple Silicon Support as of 6.6 - [Tweet](https://twitter.com/parcel_app/status/1325751301322362880)
 * [PDF Expert](https://pdfexpert.com/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/103#issuecomment-846406822)
