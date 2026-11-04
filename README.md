@@ -86,6 +86,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [Bazel](https://bazel.build/) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Release Notes](https://blog.bazel.build/2021/05/21/bazel-4-1.html)
 * [BBEdit](https://www.barebones.com/products/bbedit/download.html) - ✅ Yes, full native support as of v13.5 - [Release Notes](https://www.barebones.com/support/bbedit/notes-13.5.html)
 * [Beyond Compare](https://www.scootersoftware.com/) - ✳️ Yes, works via Rosetta 2 - [Facebook Post](https://www.facebook.com/ScooterSoftware/posts/5178865142127412)
+* [Brow](https://efim0v.github.io/brow/) - ✅ Yes, Full Native Apple Silicon Support as of v0.2.1 - [Release Notes](https://github.com/efim0v/brow/releases/tag/0.2.1) [Requirements](https://github.com/efim0v/brow#requirements)
 * [Caddy](https://caddyserver.com/download) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/577#issuecomment-783684858)
 * [Charles Web Debugging Proxy](https://www.charlesproxy.com/download/) - ✅ Yes, Full Native Apple Silicon Support as of v5.0b7 - [Release Notes](https://www.charlesproxy.com/documentation/version-history/)
 * [Chromium](https://www.chromium.org/getting-involved/download-chromium) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/732#issue-952269447)
