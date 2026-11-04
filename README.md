@@ -644,6 +644,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Receipts for Mac](https://www.receipts-app.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/635278/5114)
 * [Reeder](https://reederapp.com/) - ✅ Yes, Native Apple Silicon Support - [Report #1](https://github.com/ThatGuySam/doesitarm/issues/674#issue-899215422)
 * [Remotix](https://remotix.com/downloads-mac/) - ✅ Yes, fully supported as of v6.3 - [Release Notes](https://downloads.remotix.com/remotix-mac/release-notes.html?v=6.3)
+* [Rime](https://yorben.me/#rime) - ✅ Yes, Full Native Apple Silicon Support as of v1.0.0 - [Release Notes](https://github.com/Yvsleyen00941/Rime/releases/tag/v1.0.0)
 * [RingCentral](https://apps.apple.com/us/app/id715886894) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/251#issuecomment-736105390)
 * [Safari Web Browser](https://www.apple.com/safari/) - ✅ Yes, fully supported
 * [Schedulist](https://www.schedulist.app/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/993)
