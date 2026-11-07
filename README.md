@@ -557,6 +557,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Evernote](https://evernote.com/download) - ✅ Yes, Full Native Apple Silicon Support - [Official message](https://discussion.evernote.com/forums/topic/141189-evernote-for-mac-is-now-optimized-for-m1-apple-silicon/) [Verification](https://github.com/ThatGuySam/doesitarm/issues/411#issuecomment-748291114)
 * [ExpanDrive](https://www.expandrive.com/desktop/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/675#issue-899219758)
 * [Fantastical](https://flexibits.com/fantastical) - ✅ Yes, Full Native Apple Silicon Support - [Media Post](https://www.macrumors.com/2020/11/12/fantastical-update-for-macos-big-sur-apple-silicon/)
+* [FeedsBar](https://feeds.bar/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.18 - [Official Site](https://feeds.bar/download/)
 * [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ✅ Yes, Full Native Apple Silicon Support as of v84 - [Release Notes](https://www.mozilla.org/en-US/firefox/84.0/releasenotes/)
 * [flickery](https://eternalstorms.at/flickery) - ✅ Yes, Full Native Apple Silicon Support as of v1.9.48 - [Blog Post](https://blog.eternalstorms.at/2020/11/09/app-update-galore/)
 * [Focus for Mac](https://heyfocus.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/focus)
