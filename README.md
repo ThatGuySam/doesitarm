@@ -275,6 +275,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 
 
 #### Music and Audio Tools
+- [Needle](https://github.com/Yvsleyen00941/Needle) - Native Apple Silicon Now Playing companion for the macOS Dock corner.
 
 * [Adobe Audition](https://www.adobe.com/products/audition.html) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://helpx.adobe.com/audition/user-guide.html/audition/using/whats-new/2021-1.ug.html) [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Airfoil](https://rogueamoeba.com/airfoil/mac/) - ✅ Yes, Initial Native Apple Silicon Support as of v5.10.0 - [Release Notes](https://rogueamoeba.com/airfoil/mac/releasenotes.php) [Official Post](https://weblog.rogueamoeba.com/2020/11/16/rogue-amoeba-software-updates-for-macos-11-big-sur-and-m1-chip-based-macs/) 
