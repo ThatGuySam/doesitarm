@@ -737,6 +737,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Rottenwood](https://software.charliemonroe.net/rottenwood/) - ✅ Yes, Full Native Apple Silicon Support - [Developer Article](https://blog.charliemonroe.net/big-sur-and-apple-silicon/)
 * [Shazam](https://apps.apple.com/app/shazam/id897118787?mt=12) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/582#issue-816739441)
 * [Snap Camera](https://snapcamera.snapchat.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/627#issue-860435755) [Supported Hardware](https://snapcamera.snapchat.com/download/)
+* [Soju](https://didimlabs.com) - ✅ Yes, Full Native Apple Silicon Support (arm64 app; installs the Windows Battle.net, Steam, Epic, GOG, EA app, Rockstar and Ubisoft Connect clients through Wine and Apple's GPTK) - [Release Notes](https://github.com/BCD1210/soju/releases) [Source](https://github.com/BCD1210/soju)
 * [Spotify](https://www.spotify.com/download/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/768)
 * [Steam](https://store.steampowered.com/about/) - ✳️ Yes, reported working via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/153)
 * [Tidal](https://tidal.com/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.30.0.465 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/915)
