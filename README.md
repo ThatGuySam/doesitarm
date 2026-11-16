@@ -687,7 +687,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [VMWare Horizon Client](https://my.vmware.com/en/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_horizon_clients/horizon_8) - ✅ Yes, Native Apple Silicon Support as of v8.7.0 - [Release Notes](https://docs.vmware.com/en/VMware-Horizon-Client-for-Mac/2209/rn/vmware-horizon-client-for-mac-2209-release-notes/index.html)
 * [VMWare Remote Console](https://apps.apple.com/app/vmware-remote-console/id1230249825) - ✅ Yes, Full Native Apple Silicon Support as of v12.0.0 - [Release Notes](https://docs.vmware.com/en/VMware-Remote-Console/12.0/rn/VMware-Remote-Console-120-Release-Notes.html)
 * [VNC Viewer](https://www.realvnc.com/en/connect/download/viewer/macos/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/643#issue-880713134)
-* [Wishbar](https://wishbar.app) - ✅ Yes, Full Native Apple Silicon Support - [Requirements](https://wishbar.app/pricing)
+* [Wishbar](https://wishbar.app) - ✅ Yes, Full Native Apple Silicon Support as of v1.0.0 - [Requirements](https://wishbar.app/pricing)
 * [WizNote](https://www.wiz.cn/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/451#issuecomment-869375149)
 * [Workspaces](https://www.apptorium.com/workspaces) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/389439/5114)
 * [WPS Office](https://apps.apple.com/cn/app/wps-office/id1443749478?l=en&mt=12) - ✅ Yes, full native support as of v3.0.1 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/149)
