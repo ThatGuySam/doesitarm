@@ -31,6 +31,10 @@ APP_ARTIFACTS = {"app", "pkg", "installer", "binary", "suite"}
 VERIFIED = {"verified", "verified_executable"}
 
 
+class DeadlineReached(Exception):
+    """An artifact interrupted by the campaign deadline remains pending."""
+
+
 def timestamp():
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
@@ -313,10 +317,12 @@ def category(entry_, scan, target=None):
             return "html_response"
     if "multi-app" in error:
         return "multi_app"
-    if "nested" in error or scan.get("nested_artifacts"):
-        return "nested_container"
+    if "encrypted or sealed" in error:
+        return "encrypted_or_sealed"
     if "encrypted" in error or "password" in error:
         return "encrypted"
+    if "nested" in error or scan.get("nested_artifacts"):
+        return "nested_container"
     if "declared executable is a script" in error:
         return "script_executable"
     if any(text in error for text in ("executable is not mach-o", "executable is elf", "dos/pe magic")):
@@ -353,13 +359,16 @@ def comparisons(entry_, scan, outcome):
     return result
 
 
-def attempt(cli, entry_, budget, timeout, cli_options, target=None):
+def attempt(cli, entry_, budget, timeout, cli_options, target=None, deadline=None):
     start = time.monotonic()
     command = [str(cli), "scan", entry_["url"], "--budget", str(budget), "--json", *cli_options]
     if target:
         command.extend(["--bundle-path" if target[0] == "bundle" else "--binary-path", target[1]])
+    remaining = timeout if deadline is None else deadline - time.time()
+    if remaining <= 0:
+        raise DeadlineReached
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
+        result = subprocess.run(command, capture_output=True, text=True, timeout=min(timeout, remaining), check=False)
         try:
             scan = json.loads(result.stdout)
             if scan.get("error"):
@@ -369,6 +378,8 @@ def attempt(cli, entry_, budget, timeout, cli_options, target=None):
             scan = {"status": "cli_error", "error": (result.stderr.strip() or "CLI returned no JSON")[:500]}
         exit_code = result.returncode
     except subprocess.TimeoutExpired:
+        if remaining < timeout:
+            raise DeadlineReached from None
         scan = {"status": "timeout", "error": f"{timeout}s per-attempt deadline"}
         exit_code = None
     record = {
@@ -384,7 +395,7 @@ def attempt(cli, entry_, budget, timeout, cli_options, target=None):
 
 
 def attempts_for(args, entry_, target):
-    attempts = [attempt(args.cli, entry_, args.budget, args.timeout, args.cli_option, target)]
+    attempts = [attempt(args.cli, entry_, args.budget, args.timeout, args.cli_option, target, args.stop_at)]
     for budget in args.escalate:
         previous = attempts[-1]
         scan = previous["scan"]
@@ -392,9 +403,13 @@ def attempts_for(args, entry_, target):
         sequential = {"pkg", "zip", "tar.gz", "tar.xz", "tar.bz2", "tar.zst", "tgz", "txz", "tbz", "tbz2"}
         if previous["category"] != "budget_hit":
             break
-        if format_ not in sequential and scan.get("source_transport") != "stream":
+        nested_package = any(
+            path.lower().endswith((".pkg", ".mpkg", "/archive.pax.gz"))
+            for path in scan.get("nested_artifacts", [])
+        )
+        if format_ not in sequential and scan.get("source_transport") != "stream" and not nested_package:
             break
-        attempts.append(attempt(args.cli, entry_, budget, args.timeout, args.cli_option, target))
+        attempts.append(attempt(args.cli, entry_, budget, args.timeout, args.cli_option, target, args.stop_at))
     return attempts
 
 
@@ -610,6 +625,7 @@ def annotate(args):
         if match:
             row["expected_status"] = match["category"]
             row["expected_evidence"] = observations(match)
+            row["expected_etag"] = match["attempts"][-1]["scan"].get("source_etag")
     save(args.output, manifest)
 
 
@@ -661,15 +677,15 @@ def run(args):
         try:
             with checkpoint.open("a") as stream:
                 for entry_ in pending:
-                    targets = scan_targets(entry_, args.use_cask_targets)
-                    worst_case = len(targets) * args.timeout * (1 + len(args.escalate))
-                    if args.stop_at is not None and time.time() + worst_case >= args.stop_at:
-                        print("Deadline approaching. Saved checkpoint; no further artifact started.", flush=True)
-                        break
                     host = urlsplit(entry_["url"]).hostname
                     if host in last_finished:
                         time.sleep(max(0, args.host_cooldown - (time.monotonic() - last_finished[host])))
-                    row = scan_entry(args, entry_, targets)
+                    targets = scan_targets(entry_, args.use_cask_targets)
+                    try:
+                        row = scan_entry(args, entry_, targets)
+                    except DeadlineReached:
+                        print("Deadline reached. Saved completed artifacts; the interrupted artifact remains pending.", flush=True)
+                        break
                     last_finished[host] = time.monotonic()
                     stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
                     stream.flush()
@@ -702,7 +718,7 @@ def main():
     measure.add_argument("--limit", type=int)
     measure.add_argument("--use-cask-targets", action="store_true")
     measure.add_argument("--target-catalog", type=Path, help="original catalog when a fixed manifest lacks binary paths")
-    measure.add_argument("--stop-at", type=int, help="UNIX deadline in seconds; pause between artifacts")
+    measure.add_argument("--stop-at", type=int, help="UNIX deadline in seconds; checkpoint completed artifacts")
     measure.set_defaults(action=run)
     publication = commands.add_parser("report", help="rebuild JSON and markdown from a durable checkpoint")
     publication.add_argument("output", type=Path)
@@ -716,7 +732,7 @@ def main():
     expected.add_argument("catalog", type=Path)
     expected.add_argument("manifest", type=Path)
     expected.add_argument("output", type=Path)
-    expected.add_argument("reports", type=Path, nargs="+")
+    expected.add_argument("reports", type=Path, nargs="*")
     expected.set_defaults(action=annotate)
     args = parser.parse_args()
     args.action(args)
