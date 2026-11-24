@@ -23,7 +23,25 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.anthropic.claudefordesktop",
+        "version": "6.28899.6",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"c7a23cd93021289e2fe46d3de3ca8c60\""
     },
     {
       "cask": "codex-app",
@@ -45,7 +63,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.openai.codex",
+        "version": "26.623.141536",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "telegram",
@@ -59,7 +91,25 @@
       "declared_apps": [
         "Telegram.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "ru.keepcoder.Telegram",
+        "version": "13.2.0",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.13"
+          ]
+        ]
+      },
+      "expected_etag": "\"6af62c81-a1b24d3\""
     },
     {
       "cask": "cursor",
@@ -82,7 +132,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.todesktop.230313mzl4w4u92",
+        "version": "3.31.15",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"1919bbe8cb988dc697ad8e83a2be35a2-38\""
     },
     {
       "cask": "macwhisper",
@@ -97,7 +161,25 @@
       "declared_apps": [
         "MacWhisper.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.goodsnooze.MacWhisper",
+        "version": "15.11",
+        "min_macos": "15.0",
+        "architectures": [
+          [
+            "arm64",
+            "15.0"
+          ],
+          [
+            "x86_64",
+            "15.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"41123be2d3180380b30a3fb563a75816-4\""
     },
     {
       "cask": "visual-studio-code",
@@ -120,7 +202,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.microsoft.VSCode",
+        "version": "1.147.0",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"0xF6022CD51C22CFF46C000AA91537F20E65C47B0E4DCFF29C5FFDE695991704D8\""
     },
     {
       "cask": "appcleaner",
@@ -134,7 +230,25 @@
       "declared_apps": [
         "AppCleaner.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "net.freemacsoft.AppCleaner",
+        "version": "3.7.0",
+        "min_macos": "15.6",
+        "architectures": [
+          [
+            "arm64",
+            "15.6"
+          ],
+          [
+            "x86_64",
+            "15.6"
+          ]
+        ]
+      },
+      "expected_etag": "\"6aac50ec-3f4e3e\""
     },
     {
       "cask": "iterm2",
@@ -148,7 +262,25 @@
       "declared_apps": [
         "iTerm.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.googlecode.iterm2",
+        "version": "3.7.9",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"4a7fda2-660c10f9b79b2\""
     },
     {
       "cask": "signal",
@@ -170,7 +302,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.whispersystems.signal-desktop",
+        "version": "8.36.0",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"30e11e92b42f7dc99b24bb646ad1fb00-18\""
     },
     {
       "cask": "zed",
@@ -193,7 +339,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "dev.zed.Zed",
+        "version": "1.29.3",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"0x8DF471EA28BD124\""
     },
     {
       "cask": "raycast",
@@ -215,7 +375,21 @@
           ],
           "match": "any"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.raycast.macos",
+        "version": "2.13.1.0",
+        "min_macos": "26.0",
+        "architectures": [
+          [
+            "arm64",
+            "26.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"ac471d36a71bb9534fd33923444e3bfd\""
     },
     {
       "cask": "warp",
@@ -229,7 +403,8 @@
       "declared_apps": [
         "Warp.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "timing",
@@ -243,7 +418,25 @@
       "declared_apps": [
         "Timing.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "info.eurocomp.Timing2",
+        "version": "2026.6.1",
+        "min_macos": "14.4",
+        "architectures": [
+          [
+            "arm64",
+            "14.4"
+          ],
+          [
+            "x86_64",
+            "14.4"
+          ]
+        ]
+      },
+      "expected_etag": "\"29e46c4-660280b1d2c49\""
     },
     {
       "cask": "little-snitch",
@@ -257,7 +450,25 @@
       "declared_apps": [
         "Little Snitch.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "at.obdev.littlesnitch",
+        "version": "6.5",
+        "min_macos": "14.0",
+        "architectures": [
+          [
+            "arm64",
+            "14.0"
+          ],
+          [
+            "x86_64",
+            "14.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"24999e9-65aa71f928c00\""
     },
     {
       "cask": "google-chrome",
@@ -280,7 +491,25 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.google.Chrome",
+        "version": "158.0.8127.89",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"7343922\""
     },
     {
       "cask": "firefox",
@@ -294,7 +523,25 @@
       "declared_apps": [
         "Firefox.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.mozilla.firefox",
+        "version": "160.0.1",
+        "min_macos": "10.15.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": "\"a3d2d4bc0b169de8cae8a7f3183d7ae9\""
     },
     {
       "cask": "rider",
@@ -316,7 +563,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.jetbrains.rider",
+        "version": "2026.3.0.1",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"80c7a0cbe7510e48da4440d3d01682d6\""
     },
     {
       "cask": "vlc",
@@ -338,7 +599,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.videolan.vlc",
+        "version": "3.0.24",
+        "min_macos": "10.7.5",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"365265d-65c0147c03d42\""
     },
     {
       "cask": "gimp",
@@ -360,7 +635,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.gimp.gimp",
+        "version": "3.2.8",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"6ae90a22-b137fb6\""
     },
     {
       "cask": "slack",
@@ -382,7 +671,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.tinyspeck.slackmacgap",
+        "version": "4.53.292",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"220b5fca728983bd12da5f2e41050feb\""
     },
     {
       "cask": "alfred@5",
@@ -396,7 +699,25 @@
       "declared_apps": [
         "Alfred 5.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.runningwithcrayons.Alfred",
+        "version": "5.8.2",
+        "min_macos": "10.14",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.14"
+          ]
+        ]
+      },
+      "expected_etag": "\"6aff0e2c-55c4d2\""
     },
     {
       "cask": "gitbutler",
@@ -419,7 +740,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.gitbutler.app",
+        "version": "0.23.5",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"54a494c2d1399a4de297973390dcc0d3-10\""
     },
     {
       "cask": "kunkun",
@@ -441,7 +776,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "sh.kunkun.desktop",
+        "version": "0.1.37",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "phoenix",
@@ -455,7 +804,25 @@
       "declared_apps": [
         "Phoenix.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.khirviko.Phoenix",
+        "version": "4.0.1",
+        "min_macos": "10.14.6",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.14.6"
+          ]
+        ]
+      },
+      "expected_etag": "\"0x8DC89982AAEA52F\""
     },
     {
       "cask": "openpencil",
@@ -477,7 +844,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "net.dannote.open-pencil",
+        "version": "0.17.0",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"0x8DF489449FDCFE3\""
     },
     {
       "cask": "zoom",
@@ -497,7 +878,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "us.zoom.xos",
+        "version": "7.2.5 (90525)",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"0cf3922a133638f4c86ab6b79ceb4ccc-26\""
     },
     {
       "cask": "microsoft-teams",
@@ -509,7 +904,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.microsoft.teams2",
+        "version": "26289.204.5281.6363",
+        "min_macos": "14.0",
+        "architectures": [
+          [
+            "arm64",
+            "14.0"
+          ],
+          [
+            "x86_64",
+            "14.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"0x8DF33AE359B95BF\""
     },
     {
       "cask": "teamviewer",
@@ -521,7 +934,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.teamviewer.TeamViewer",
+        "version": "15.82.6",
+        "min_macos": "13.5",
+        "architectures": [
+          [
+            "arm64",
+            "13.5"
+          ],
+          [
+            "x86_64",
+            "13.5"
+          ]
+        ]
+      },
+      "expected_etag": "\"0x8DF1E3AC14C5B57\""
     },
     {
       "cask": "mullvad-vpn",
@@ -533,7 +964,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "net.mullvad.vpn",
+        "version": "2026.5",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ],
+          [
+            "x86_64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"6aa3e988-f24405e\""
     },
     {
       "cask": "microsoft-auto-update",
@@ -545,7 +994,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.microsoft.autoupdate2",
+        "version": "4.86",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ],
+          [
+            "x86_64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "cursor-cli",
@@ -565,6 +1032,9 @@
           ],
           "match": "all"
         }
+      ],
+      "declared_binaries": [
+        "dist-package/cursor-agent"
       ]
     },
     {
@@ -579,7 +1049,25 @@
       "declared_apps": [
         "AltServer.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.rileytestut.AltServer",
+        "version": "1.8.4",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ],
+          [
+            "x86_64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "sketch@beta",
@@ -593,7 +1081,25 @@
       "declared_apps": [
         "Sketch Beta.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.bohemiancoding.sketch3.beta",
+        "version": "2026.4.1",
+        "min_macos": "15.0.0",
+        "architectures": [
+          [
+            "arm64",
+            "15.0"
+          ],
+          [
+            "x86_64",
+            "15.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"95f99f20bb77d1620e050ce047749189-21\""
     },
     {
       "cask": "unifi-identity-endpoint",
@@ -605,7 +1111,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.ui.uid.standard-desktop",
+        "version": "4.3.0",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"42b9581386cfbcab057b913edff1ffac-12\""
     },
     {
       "cask": "bloom",
@@ -619,7 +1143,25 @@
       "declared_apps": [
         "Bloom.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.asiafu.Bloom",
+        "version": "1.5.52",
+        "min_macos": "14.0",
+        "architectures": [
+          [
+            "arm64",
+            "14.0"
+          ],
+          [
+            "x86_64",
+            "14.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"e6a1343fd8aa32ebd12f743a7295fc23ee31a229\""
     },
     {
       "cask": "monocle-app",
@@ -633,7 +1175,25 @@
       "declared_apps": [
         "Monocle.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "dk.heyiam.monocle",
+        "version": "3.5.1",
+        "min_macos": "14.6",
+        "architectures": [
+          [
+            "arm64",
+            "14.6"
+          ],
+          [
+            "x86_64",
+            "14.6"
+          ]
+        ]
+      },
+      "expected_etag": "\"7da89b-6522fbf1db3fc\""
     },
     {
       "cask": "devin-cli",
@@ -653,7 +1213,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "bin/devin"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"7c710547c640992f5ced1112fd9ddbab\""
     },
     {
       "cask": "mailplane",
@@ -667,7 +1243,21 @@
       "declared_apps": [
         "Mailplane.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.mailplaneapp.Mailplane3",
+        "version": "4.3.16",
+        "min_macos": "10.12.0",
+        "architectures": [
+          [
+            "x86_64",
+            "10.9"
+          ]
+        ]
+      },
+      "expected_etag": "\"45305db-6af4d291-c618a7680a38a4bb;;;\""
     },
     {
       "cask": "dockfix",
@@ -681,7 +1271,25 @@
       "declared_apps": [
         "DockFix.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "dk.FIrstForm.DockFix",
+        "version": "5.4.1",
+        "min_macos": "14.0",
+        "architectures": [
+          [
+            "arm64",
+            "14.0"
+          ],
+          [
+            "x86_64",
+            "14.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"e35f0f1cd0feb100c355b699300691ed\""
     },
     {
       "cask": "metashapepro",
@@ -695,7 +1303,25 @@
       "declared_apps": [
         "MetashapePro.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.agisoft.metashape.professional",
+        "version": "2.3.2",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.13"
+          ]
+        ]
+      },
+      "expected_etag": "\"b719adc4c9023d33a3f2c61058c0c855-46\""
     },
     {
       "cask": "popchar",
@@ -709,7 +1335,25 @@
       "declared_apps": [
         "PopChar.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.macility.popchar3",
+        "version": "11.0",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"7a966e52acf007f301c763004c57d896\""
     },
     {
       "cask": "anka-build-cloud-registry",
@@ -729,7 +1373,8 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": []
     },
     {
       "cask": "segger-jlink",
@@ -750,7 +1395,8 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": []
     },
     {
       "cask": "warp-agent-cli",
@@ -770,7 +1416,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "warp-tui-stable"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "komet",
@@ -784,7 +1446,25 @@
       "declared_apps": [
         "Komet.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.zgcoder.Komet",
+        "version": "1.5.1",
+        "min_macos": "12.4",
+        "architectures": [
+          [
+            "arm64",
+            "12.4"
+          ],
+          [
+            "x86_64",
+            "12.4"
+          ]
+        ]
+      },
+      "expected_etag": "\"699a7b51-1eccc0\""
     },
     {
       "cask": "browserstacklocal",
@@ -798,7 +1478,8 @@
       "declared_apps": [
         "BrowserStackLocal.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "youku",
@@ -812,7 +1493,25 @@
       "declared_apps": [
         "优酷.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.youku.mac",
+        "version": "9.5.6",
+        "min_macos": "10.14.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.11"
+          ]
+        ]
+      },
+      "expected_etag": "\"8687EEC7737B8916020E3D34090BD557-24\""
     },
     {
       "cask": "tangleguard-cli",
@@ -832,7 +1531,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "tangleguard"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"c6ad1b9bea4b8a60a103b62ee910d273\""
     },
     {
       "cask": "gallery-remote",
@@ -846,7 +1561,25 @@
       "declared_apps": [
         "Gallery Remote.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.ntwind.remote.gallery",
+        "version": "1.0.3",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "enpass",
@@ -858,7 +1591,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "in.sinew.Enpass-Desktop.App",
+        "version": "6.12.8",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ],
+          [
+            "x86_64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"dda583192f861643becd2f558da88dea-8\""
     },
     {
       "cask": "rightfont",
@@ -872,7 +1623,25 @@
       "declared_apps": [
         "RightFont.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.rightfontapp.RightFont5",
+        "version": "10.2.1",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"881d59cea8a92fe0956676d375ffe6d7-ssl\""
     },
     {
       "cask": "clipgrab",
@@ -886,7 +1655,21 @@
       "declared_apps": [
         "ClipGrab.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "de.clipgrab.ClipGrab",
+        "version": "3.9.16",
+        "min_macos": "10.12",
+        "architectures": [
+          [
+            "x86_64",
+            "10.12"
+          ]
+        ]
+      },
+      "expected_etag": "\"9b13304-644a361c426e4\""
     },
     {
       "cask": "network-weather",
@@ -907,7 +1690,25 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.networkweather.nwx.macos",
+        "version": "1.3.3",
+        "min_macos": "14.0",
+        "architectures": [
+          [
+            "arm64",
+            "14.0"
+          ],
+          [
+            "x86_64",
+            "14.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"5f45ca6581418e6077b9ebffe0a6f471\""
     },
     {
       "cask": "mumuplayer",
@@ -929,7 +1730,21 @@
           ],
           "match": "any"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.netease.mumu.nemux",
+        "version": "1.10.1",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"ac1a900e68c06750b954ad35039b96ea\""
     },
     {
       "cask": "readyapi",
@@ -951,7 +1766,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.install4j.3080-8797-1984-6034.102895",
+        "version": "4.3.1",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"6b74f2ee904d2797869bb8c2bda237d1-59\""
     },
     {
       "cask": "tripmode",
@@ -965,7 +1794,25 @@
       "declared_apps": [
         "TripMode.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "ch.tripmode.TripMode",
+        "version": "3.2.4",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "confluent-cli",
@@ -985,7 +1832,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "confluent/confluent"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "15.0",
+        "architectures": [
+          [
+            "arm64",
+            "15.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"a2e16cf95c8c6fbe5946244860f81826-6\""
     },
     {
       "cask": "kindavim",
@@ -999,7 +1862,25 @@
       "declared_apps": [
         "kindaVim.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "mo.com.sleeplessmind.kindaVim",
+        "version": "99",
+        "min_macos": "15.6",
+        "architectures": [
+          [
+            "arm64",
+            "15.6"
+          ],
+          [
+            "x86_64",
+            "15.6"
+          ]
+        ]
+      },
+      "expected_etag": "\"6af84075-406644\""
     },
     {
       "cask": "unite",
@@ -1013,7 +1894,25 @@
       "declared_apps": [
         "Unite.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.BZG.unite",
+        "version": "6.6",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": "\"d1e895ef88ab620752bc84e69c6bad9c-2\""
     },
     {
       "cask": "monero-wallet",
@@ -1027,7 +1926,21 @@
       "declared_apps": [
         "monero-wallet-gui.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "org.monero-project.monero-wallet-gui",
+        "version": "0.18.5.4",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"6ad1b94d-2adeb7b\""
     },
     {
       "cask": "senadevicemanager",
@@ -1039,7 +1952,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.sena.SenaBluetoothDeviceManager",
+        "version": "4.4.20",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": "\"d527b01ecc095d4411184cec5e38c7c9\""
     },
     {
       "cask": "sourcetree",
@@ -1054,7 +1985,25 @@
       "declared_apps": [
         "Sourcetree.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.torusknot.SourceTreeNotMAS",
+        "version": "4.2.21",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": "\"58c66d60d87a4b483f0bedb19a5cec29-9\""
     },
     {
       "cask": "local@beta",
@@ -1076,7 +2025,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.getflywheel.lightning.local-beta",
+        "version": "10.2.0",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"d1eb252441e1bd266ccc5d77cfba5102\""
     },
     {
       "cask": "spotify-soloist",
@@ -1103,7 +2066,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "soloist"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"15d9d489327d70d4c55c3188b76c3e8c\""
     },
     {
       "cask": "framer",
@@ -1125,7 +2104,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.framer.electron",
+        "version": "2026.46.10",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"4bdd9ec493d7a69b6cb2bdc04ccec60f-16\""
     },
     {
       "cask": "soothe2",
@@ -1137,7 +2130,8 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "pictogram",
@@ -1151,7 +2145,25 @@
       "declared_apps": [
         "Pictogram.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.NeilSardesai.Pictogram",
+        "version": "0.1",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "aqua-data-studio",
@@ -1165,7 +2177,8 @@
       "declared_apps": [
         "Aqua Data Studio.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "atomcode",
@@ -1185,7 +2198,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "atomcode"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"24c9658d49d824ee812e8f3983e4caef\""
     },
     {
       "cask": "discord",
@@ -1208,7 +2237,25 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.hnc.Discord",
+        "version": "0.0.424",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"cb993dc4a0f5bc6b2c5e792fc4d8796e\""
     },
     {
       "cask": "keysmith",
@@ -1222,7 +2269,25 @@
       "declared_apps": [
         "Keysmith.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "app.keysmith.Keysmith",
+        "version": "1.18.7",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "konica-minolta-bizhub-c759-c658-c368-c287-c3851-driver",
@@ -1234,7 +2299,8 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "4k-video-to-mp3",
@@ -1248,7 +2314,21 @@
       "declared_apps": [
         "4K Video to MP3.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.openmedia.4kvideotomp3",
+        "version": "3.0",
+        "min_macos": "10.13.0",
+        "architectures": [
+          [
+            "x86_64",
+            "10.13"
+          ]
+        ]
+      },
+      "expected_etag": "\"9f5d604f4238832f869a0cbf3b78c24b\""
     },
     {
       "cask": "sublime-merge@dev",
@@ -1263,7 +2343,25 @@
       "declared_apps": [
         "Sublime Merge.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.sublimemerge",
+        "version": "Build 2135",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.13"
+          ]
+        ]
+      },
+      "expected_etag": "\"6aec0c36-27fd2d0\""
     },
     {
       "cask": "camerabag-photo",
@@ -1277,7 +2375,25 @@
       "declared_apps": [
         "CameraBag Photo.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.nevercenter.camerabagphoto",
+        "version": "2027.0",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": "\"404603b-6606bbb840426\""
     },
     {
       "cask": "eagle",
@@ -1289,7 +2405,21 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.Autodesk.eagle",
+        "version": "9.6.2",
+        "min_macos": "10.10",
+        "architectures": [
+          [
+            "x86_64",
+            "10.10"
+          ]
+        ]
+      },
+      "expected_etag": "\"8ef3379955d701f73514e18addc3d91a:1590616148\""
     },
     {
       "cask": "label-live",
@@ -1303,7 +2433,25 @@
       "declared_apps": [
         "Label LIVE.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.semireg.LabelLIVE",
+        "version": "4.14.3",
+        "min_macos": "12.0",
+        "architectures": [
+          [
+            "arm64",
+            "12.0"
+          ],
+          [
+            "x86_64",
+            "12.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"6a17708419829a203a863f3dab5523c5-39\""
     },
     {
       "cask": "suuntodm5",
@@ -1317,7 +2465,8 @@
       "declared_apps": [
         "SuuntoDM5.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "netviews",
@@ -1331,7 +2480,25 @@
       "declared_apps": [
         "NetViews.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.bmmup.PingStalker",
+        "version": "2.14",
+        "min_macos": "14.6",
+        "architectures": [
+          [
+            "arm64",
+            "14.6"
+          ],
+          [
+            "x86_64",
+            "14.6"
+          ]
+        ]
+      },
+      "expected_etag": "\"1573e25-65c0697fb559f\""
     },
     {
       "cask": "vivaldi@snapshot",
@@ -1354,7 +2521,25 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.vivaldi.Vivaldi.snapshot",
+        "version": "8.4.4241.3",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"6b03f556-e6b12ac\""
     },
     {
       "cask": "merlin-project",
@@ -1368,7 +2553,25 @@
       "declared_apps": [
         "Merlin Project.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "net.projectwizards.merlinproject",
+        "version": "9.2.1",
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"16a1856-2dfc0a0-65a6ca74be280\""
     },
     {
       "cask": "ricoh-theta",
@@ -1382,7 +2585,21 @@
       "declared_apps": [
         "RICOH THETA.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.ricoh.thetasphericalviewer",
+        "version": "3.21.0",
+        "min_macos": "10.11.0",
+        "architectures": [
+          [
+            "x86_64",
+            "10.11"
+          ]
+        ]
+      },
+      "expected_etag": "\"cdf6855168885bf64b9e65abdd4f0689\""
     },
     {
       "cask": "sidenotes",
@@ -1396,7 +2613,25 @@
       "declared_apps": [
         "SideNotes.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.apptorium.SideNotes-paddle",
+        "version": "1.6.6",
+        "min_macos": "13",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ],
+          [
+            "x86_64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"1378899-6ab0d2b0-d1a164697dc4179;;;\""
     },
     {
       "cask": "scrub-utility",
@@ -1410,7 +2645,25 @@
       "declared_apps": [
         "scrub13/Scrub.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "co.eclecticlight.Scrub",
+        "version": "1.3",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.13"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "qt-design-studio",
@@ -1432,7 +2685,8 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": []
     },
     {
       "cask": "fabfilter-pro-ds",
@@ -1444,7 +2698,8 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "sleep-aid",
@@ -1464,7 +2719,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.ohanaware.sleepAidRG2",
+        "version": "1.5",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"67f340a0-7e5665\""
     },
     {
       "cask": "flutter",
@@ -1485,6 +2754,10 @@
           ],
           "match": "all"
         }
+      ],
+      "declared_binaries": [
+        "flutter/bin/dart",
+        "flutter/bin/flutter"
       ]
     },
     {
@@ -1505,7 +2778,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "expose"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "13.0",
+        "architectures": [
+          [
+            "arm64",
+            "13.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"a78e37433e1e0c6d05b2851e69f9b956\""
     },
     {
       "cask": "vercel",
@@ -1525,7 +2814,23 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [
+        "package/bin/vercel"
+      ],
+      "expected_status": "verified_executable",
+      "expected_evidence": {
+        "bundle_id": null,
+        "version": null,
+        "min_macos": "13.5",
+        "architectures": [
+          [
+            "arm64",
+            "13.5"
+          ]
+        ]
+      },
+      "expected_etag": "\"9cc7767ee03fc417978d94a2a4a56962\""
     },
     {
       "cask": "backuploupe",
@@ -1539,7 +2844,8 @@
       "declared_apps": [
         "BackupLoupe.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "paragon-extfs@11",
@@ -1551,7 +2857,25 @@
         "installer"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.paragon-software.extfs.installer",
+        "version": "11.8.612",
+        "min_macos": "10.12",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.12"
+          ]
+        ]
+      },
+      "expected_etag": "\"59134c8f1af88f26d6d6278486f82dd2-12\""
     },
     {
       "cask": "mipony",
@@ -1563,7 +2887,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.downloader.Mipony",
+        "version": "2.0.1",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "hyper",
@@ -1586,7 +2928,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "co.zeit.hyper",
+        "version": "3.4.1",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"0x8DAF0F28612F5EB\""
     },
     {
       "cask": "insta360-link-controller",
@@ -1598,7 +2954,8 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": []
     },
     {
       "cask": "displaylink",
@@ -1610,7 +2967,25 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.displaylink.DisplayLinkUserAgent",
+        "version": "17.1.56",
+        "min_macos": "14.0",
+        "architectures": [
+          [
+            "arm64",
+            "14.0"
+          ],
+          [
+            "x86_64",
+            "14.0"
+          ]
+        ]
+      },
+      "expected_etag": null
     },
     {
       "cask": "jollysfastvnc",
@@ -1624,7 +2999,25 @@
       "declared_apps": [
         "JollysFastVNC.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "de.jinx.JollysFastVNC",
+        "version": "1.66",
+        "min_macos": "11.0",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"9c4f91-64936e0551d40\""
     },
     {
       "cask": "balsamiq-wireframes",
@@ -1638,7 +3031,25 @@
       "declared_apps": [
         "Balsamiq Wireframes.app"
       ],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.balsamiq.wireframes",
+        "version": "4.8.6",
+        "min_macos": "10.15",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ],
+          [
+            "x86_64",
+            "10.15"
+          ]
+        ]
+      },
+      "expected_etag": "\"9e0cac7fdd954b9d852a9cc67ec9a28e-7\""
     },
     {
       "cask": "steelseries-gg",
@@ -1650,7 +3061,21 @@
         "pkg"
       ],
       "declared_apps": [],
-      "architecture_hints": []
+      "architecture_hints": [],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.steelseries.SteelSeries-GG",
+        "version": "108.3.0",
+        "min_macos": "10.12",
+        "architectures": [
+          [
+            "x86_64",
+            "10.12"
+          ]
+        ]
+      },
+      "expected_etag": "\"71fd4c84394a62f57e98ef390272deeb-36\""
     },
     {
       "cask": "tnas-pc",
@@ -1670,7 +3095,21 @@
           ],
           "match": "all"
         }
-      ]
+      ],
+      "declared_binaries": [],
+      "expected_status": "verified",
+      "expected_evidence": {
+        "bundle_id": "com.terramaster.tnaspc5",
+        "version": "5.2.564",
+        "min_macos": "10.13",
+        "architectures": [
+          [
+            "arm64",
+            "11.0"
+          ]
+        ]
+      },
+      "expected_etag": "\"77882F4AB4186F977EA982D1AB6FBDB6\""
     }
   ]
 }

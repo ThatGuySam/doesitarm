@@ -1,0 +1,350 @@
+{
+  "matched_artifacts": 100,
+  "outcome_transitions": [
+    {
+      "before": "budget_hit",
+      "after": "budget_hit",
+      "count": 1
+    },
+    {
+      "before": "http_403",
+      "after": "http_403",
+      "count": 1
+    },
+    {
+      "before": "metadata_missing",
+      "after": "metadata_missing",
+      "count": 2
+    },
+    {
+      "before": "other",
+      "after": "other",
+      "count": 1
+    },
+    {
+      "before": "other",
+      "after": "verified_executable",
+      "count": 1
+    },
+    {
+      "before": "other_source_error",
+      "after": "other_source_error",
+      "count": 1
+    },
+    {
+      "before": "other_source_error",
+      "after": "script_executable",
+      "count": 1
+    },
+    {
+      "before": "plist_not_found",
+      "after": "nested_container",
+      "count": 2
+    },
+    {
+      "before": "plist_not_found",
+      "after": "plist_not_found",
+      "count": 8
+    },
+    {
+      "before": "plist_not_found",
+      "after": "script_executable",
+      "count": 1
+    },
+    {
+      "before": "plist_not_found",
+      "after": "verified",
+      "count": 3
+    },
+    {
+      "before": "plist_not_found",
+      "after": "verified_executable",
+      "count": 7
+    },
+    {
+      "before": "timeout",
+      "after": "timeout",
+      "count": 1
+    },
+    {
+      "before": "timeout",
+      "after": "verified",
+      "count": 2
+    },
+    {
+      "before": "unsupported_container",
+      "after": "other",
+      "count": 4
+    },
+    {
+      "before": "unsupported_container",
+      "after": "unsupported_container",
+      "count": 3
+    },
+    {
+      "before": "unsupported_container",
+      "after": "verified",
+      "count": 5
+    },
+    {
+      "before": "verified",
+      "after": "script_executable",
+      "count": 1
+    },
+    {
+      "before": "verified",
+      "after": "verified",
+      "count": 55
+    }
+  ],
+  "changed_representation": [],
+  "metadata_changes": [],
+  "same_validator_first_attempt_byte_deltas": [
+    {
+      "cask": "greensignal",
+      "before": 536006,
+      "after": 536006,
+      "difference": 0
+    },
+    {
+      "cask": "app-fair",
+      "before": 107452,
+      "after": 107452,
+      "difference": 0
+    },
+    {
+      "cask": "vernier-instrumental-analysis",
+      "before": 773514,
+      "after": 773514,
+      "difference": 0
+    },
+    {
+      "cask": "apache-couchdb",
+      "before": 395120,
+      "after": 395120,
+      "difference": 0
+    },
+    {
+      "cask": "trivial",
+      "before": 2170227,
+      "after": 2170227,
+      "difference": 0
+    },
+    {
+      "cask": "unclutter",
+      "before": 1248998,
+      "after": 1248998,
+      "difference": 0
+    },
+    {
+      "cask": "typeit4me",
+      "before": 658241,
+      "after": 658241,
+      "difference": 0
+    },
+    {
+      "cask": "sonic-pi",
+      "before": 665891,
+      "after": 665891,
+      "difference": 0
+    },
+    {
+      "cask": "granola",
+      "before": 1767099,
+      "after": 1767099,
+      "difference": 0
+    },
+    {
+      "cask": "nutstore",
+      "before": 735746,
+      "after": 735746,
+      "difference": 0
+    },
+    {
+      "cask": "etrecheckpro",
+      "before": 900384,
+      "after": 900384,
+      "difference": 0
+    },
+    {
+      "cask": "boinc",
+      "before": 61682,
+      "after": 61682,
+      "difference": 0
+    },
+    {
+      "cask": "binance",
+      "before": 1118178,
+      "after": 1118178,
+      "difference": 0
+    },
+    {
+      "cask": "wondershare-uniconverter",
+      "before": 956744,
+      "after": 956744,
+      "difference": 0
+    },
+    {
+      "cask": "crystaldiffract",
+      "before": 1407739,
+      "after": 1407739,
+      "difference": 0
+    },
+    {
+      "cask": "monal@beta",
+      "before": 2248699,
+      "after": 2248699,
+      "difference": 0
+    },
+    {
+      "cask": "qt-creator@dev",
+      "before": 3482637,
+      "after": 3482637,
+      "difference": 0
+    },
+    {
+      "cask": "manico",
+      "before": 2257393,
+      "after": 2257393,
+      "difference": 0
+    },
+    {
+      "cask": "plex-htpc",
+      "before": 1358748,
+      "after": 1358748,
+      "difference": 0
+    },
+    {
+      "cask": "workspaces",
+      "before": 2264885,
+      "after": 2264885,
+      "difference": 0
+    },
+    {
+      "cask": "zerotier-one",
+      "before": 7697754,
+      "after": 7697754,
+      "difference": 0
+    },
+    {
+      "cask": "keycue",
+      "before": 1448658,
+      "after": 1448658,
+      "difference": 0
+    },
+    {
+      "cask": "fujifilm-x-raw-studio",
+      "before": 36772,
+      "after": 36772,
+      "difference": 0
+    },
+    {
+      "cask": "local",
+      "before": 984633,
+      "after": 984633,
+      "difference": 0
+    },
+    {
+      "cask": "nosqlbooster-for-mongodb",
+      "before": 1672990,
+      "after": 1672990,
+      "difference": 0
+    },
+    {
+      "cask": "waveforms",
+      "before": 746275,
+      "after": 746275,
+      "difference": 0
+    },
+    {
+      "cask": "final-fantasy-xiv-online",
+      "before": 42397,
+      "after": 42397,
+      "difference": 0
+    },
+    {
+      "cask": "farrago",
+      "before": 2276451,
+      "after": 2276451,
+      "difference": 0
+    },
+    {
+      "cask": "bitmuse",
+      "before": 1120043,
+      "after": 1120043,
+      "difference": 0
+    },
+    {
+      "cask": "sqlitemanager",
+      "before": 8388608,
+      "after": 8388608,
+      "difference": 0
+    },
+    {
+      "cask": "kaleidoscope@2",
+      "before": 246929,
+      "after": 246929,
+      "difference": 0
+    },
+    {
+      "cask": "mellel",
+      "before": 816115,
+      "after": 816115,
+      "difference": 0
+    },
+    {
+      "cask": "caldera-amp",
+      "before": 1390091,
+      "after": 1390091,
+      "difference": 0
+    },
+    {
+      "cask": "coscreen",
+      "before": 636218,
+      "after": 636218,
+      "difference": 0
+    },
+    {
+      "cask": "balance-lock",
+      "before": 770115,
+      "after": 770115,
+      "difference": 0
+    },
+    {
+      "cask": "lm-studio-bionic",
+      "before": 856869,
+      "after": 856869,
+      "difference": 0
+    },
+    {
+      "cask": "smartsynchronize",
+      "before": 662296,
+      "after": 662296,
+      "difference": 0
+    },
+    {
+      "cask": "billy",
+      "before": 809443,
+      "after": 809443,
+      "difference": 0
+    },
+    {
+      "cask": "izip",
+      "before": 1776184,
+      "after": 1776184,
+      "difference": 0
+    },
+    {
+      "cask": "wpsoffice-cn",
+      "before": 1052211,
+      "after": 1052211,
+      "difference": 0
+    },
+    {
+      "cask": "purei-play",
+      "before": 792226,
+      "after": 792226,
+      "difference": 0
+    }
+  ]
+}
