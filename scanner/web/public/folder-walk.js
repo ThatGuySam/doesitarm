@@ -255,7 +255,8 @@ export async function walkFileList(files, options) {
       const wait = probes.add(() => file, path, parent);
       if (wait) await wait;
     }
-    if ((i & 63) === 0) await flow.pause();
+    // Native File.size can obtain filesystem metadata synchronously.
+    await flow.pause();
   }
 
   await probes.drain();
