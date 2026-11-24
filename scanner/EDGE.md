@@ -21,7 +21,7 @@ Started November 24, 2026 at 12:04 Central from scanner-wasm `5a7e79a`. Stop by 
 
 The regression replay recovered BrowserStack Local, Network Weather, Qt Design Studio, and BackupLoupe as apps. It verified the FabFilter Pro-DS AAX product. All 85 previously verified primary results remained verified. The 84 bundle inventories included two complete inventories and 82 partial ones, with ten inventories identifying at least one x86_64-only file. The transport used 3,531,500,436 read bytes and 6,237 requests across all attempts. [Raw scan facts](results/edge/regression/run.json)
 
-The held-out replay recovered LaunchControl, Prolific PL2303Serial, Ammonite, MailMate beta, tiptoi Manager, Cave Story, and ImageOptim as apps. The scanner verified the FabFilter Timeless AAX product and Amazon Corretto 17's JDK bundle. `btp` returned HTML and Jabra Direct's nested installer reached the scan deadline. The 75 inventories included seven complete and 68 partial, with six identifying an x86_64-only file. Both 100-artifact cohorts used `11a817b` with the 8/64/256 MiB ladder and a 55-second cooperative per-attempt deadline. [Raw scan facts](results/edge/held-out/run.json)
+The held-out replay recovered LaunchControl, Prolific PL2303Serial, Ammonite, MailMate beta, tiptoi Manager, Cave Story, and ImageOptim as apps. The scanner verified the FabFilter Timeless AAX product and Amazon Corretto 17's JDK bundle. `btp` returned HTML. Jabra Direct's nested installer reached the scan deadline. Its previous verified result was `Jabra Avaya Integration.app`, an embedded helper. The 75 inventories included seven complete and 68 partial, with six identifying an x86_64-only file. Both 100-artifact cohorts used `11a817b` with the 8/64/256 MiB ladder and a 55-second cooperative per-attempt deadline. [Raw scan facts](results/edge/held-out/run.json)
 
 ## Resume
 
@@ -42,6 +42,7 @@ Use one Cargo build at a time with `-j2`. Keep downloads under `~/.cache/doesita
 | Soothe2 1.3.3 | The package carries VST, VST3, AU, and AAX bundles in separate package components. The VST3 main is 68,612,416 bytes and precedes the 1,388-byte plug-in plist. |
 | Insta360 Link Controller 2.2.5 build 25 | The 772,108,405-byte CPIO payload includes a 417,541,840-byte `Webcam-desktop` Mach-O before the 3,319-byte outer app plist. The original scanner completed this file using a full local source. |
 | Warp | The pinned URL returned HTTP 404 on the original scan and on direct recheck. |
+| Network Weather 1.3.3.119 | The baseline failed on an HTTP 500 range response. The regression replay verified the app under the same strong ETag. This is a successful retry of the pinned representation. |
 | SEGGER J-Link 9.96a | A direct GET returned 27,647 bytes of HTML. The pinned Homebrew POST body explicitly submits `accept_license_agreement=accepted` and `non_emb_ctr=confirmed`. This run used the public GET and left those attestations unsent. |
 
 Apple describes the app bundle's main executable and private code directories. Qt documents `archivegen` as its SDK repository packaging tool. The Zstandard format specifies the decoder window and frame checksum.
@@ -64,7 +65,15 @@ Use `python3 fixtures/edge/check.py --cli target/release/scan-cli --baseline ../
 
 The campaign's manifests reuse the ordered entries and pinned target declarations from the two final CLIMB results. `target/edge/previously-failing.json` contains the 142 failed checkpoint artifacts whose exact token, version, and URL are absent from those cohorts. Use the original 8/64/256 MiB ladder and preserve the measured outcome for every retained target.
 
-Rebuild the pinned manifests with `python3 scripts/edge-cohorts.py target/edge`. To resume a campaign use the same release binary and the `metadata.json` policy in that campaign's directory. `target/edge/run-campaign.sh` completed the two fixed cohorts. `target/edge/run-final-replay.sh` starts the 142-artifact replay with `8e805c0`, the same tier limits, and a 28-second cooperative per-attempt deadline. Its cutoff is 13:44:45 Central to leave time for complete local downloads of selected cases. The run exports each report when it closes.
+Rebuild the pinned manifests with `python3 scripts/edge-cohorts.py target/edge`. To resume a campaign use the same release binary and the `metadata.json` policy in that campaign's directory. `target/edge/run-campaign.sh` completed the two fixed cohorts. The first 41 of the remaining 142 artifacts used `8e805c0` with the same 8/64/256 MiB ladder and a 28-second cooperative per-attempt deadline. The remaining manifest skips those 41 exact identities. It uses `b8572dc` with a single 256 MiB allowance and a 16-second cooperative deadline for broader coverage within the time limit. Preserve the two reports' separate provenance. [First 41](results/edge/previously-failing/run.json) · [Remaining manifest](results/edge/previously-failing-tail/manifest.json)
+
+The tail replay takes new work until 13:44:45 Central, followed by full local verification of selected packages. To resume the tail checkpoint, use the frozen binary and the options below. The original run also set an absolute `--stop-at` deadline.
+
+```sh
+python3 scripts/climb.py run results/edge/previously-failing-tail/manifest.json target/edge/previously-failing-tail \
+  --cli target/edge/scan-cli-final --budget 268435456 --cli-option=--allow-stream \
+  --cli-option=--allow-http --cli-option=--deadline-ms --cli-option=16000 --timeout 19 --use-cask-targets
+```
 
 The canonical export was initialized from the three recorded CLIMB reports. It contains 762 cask versions, 33 with multiple retained URLs. A new scan for the same URL, token, and version replaces that representation after publication.
 
@@ -108,6 +117,10 @@ The later package investigation found `application/x-bzip2` on Prezi's XAR `Pack
 
 The Homebrew UI sample comes from the first 30 pinned rows of the regression replay. The web build serves those recorded inventories in the expandable table. [Sample data](results/homebrew-edge-sample.json)
 
-The final parser build passed 41 Rust tests, Clippy with warnings denied on both native and Wasm targets, 222 native/Wasm comparisons, and 14 Node Worker tests. The web build's cask table asset matches the recorded inventory sample. Its native folder controls were checked in Node with a universal launcher and an Intel-only runtime. The 30 fixture directories cover 28 of the 141 distinct failure tokens, including 68 of the 184 pinned representations. Android Studio is a separate inventory case and the ZIP-link fixture exercises a shared parser case. Origin failures and unresolved layouts still lack a per-app red/green fixture.
+The `8e805c0` build passed 41 Rust tests, Clippy with warnings denied on both native and Wasm targets, 222 native/Wasm comparisons, and 14 Node Worker tests. The web build's cask table asset matches the recorded inventory sample. Its native folder controls were checked in Node with a universal launcher and an Intel-only runtime.
+
+The live Corretto result prompted a follow-up for `.jdk` bundles, whose `Contents/Home` directory holds the runtime. The old inventory reported itself complete after reading only the declared `libjli.dylib`. `b8572dc` adds that runtime path, and the generated Corretto fixture fails on `8e805c0` and passes on `b8572dc`. This latest CLI has SHA-256 `bc9aae18c3c66c745ea6eb417322ff926c8611a916372b9728c4001bda3c0501`. The 31 fixture directories cover 29 of the 141 distinct failure tokens, including 69 of the 184 pinned representations. Android Studio is a separate inventory case and the ZIP-link fixture exercises a shared parser case. Origin failures and unresolved layouts still lack a per-app red/green fixture.
+
+On `b8572dc`, all 31 generated checks passed with the release CLI and failed against the pre-edge CLI. The largest generated file was 151,552 bytes. All 41 Rust tests, native and Wasm Clippy checks, 222 native/Wasm parity comparisons, and 14 Worker tests passed. The Wasm role API also classified `Contents/Home/lib/server/libjvm.dylib` as runtime code. The web distribution's cask data asset matched the committed sample.
 
 Reddit, Stack Exchange, and the Wayback Machine were unavailable from this machine. Research used Apple documentation, upstream project sources, GitHub issues, the Hacker News Algolia API, and direct publisher responses.

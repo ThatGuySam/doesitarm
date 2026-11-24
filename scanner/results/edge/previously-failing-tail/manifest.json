@@ -1,0 +1,3694 @@
+{
+  "catalog_sha256": "7370436779861f2f546a1a78ccf1c16aa5d50017de39b0c212384a1db17786a8",
+  "entries": [
+    {
+      "cask": "wine-stable",
+      "url": "https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.0_1/wine-stable-11.0_1-osx64.tar.xz",
+      "version": "11.0_1",
+      "sha256": "b50dc50ec7f41d58b115a6b685d4d1315ba3c797bd3aa0f49213f2703cb82388",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Wine Stable.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_sd.dmg",
+      "version": "26.2.7",
+      "sha256": "39cd14dcda44ce44b65c535613d688c714379d9b61797246f451088aeb77dced",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "sd"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "ipaverse",
+      "url": "https://github.com/bahattinkoc/ipaverse/releases/download/v2.5.3/ipaverse.dmg",
+      "version": "2.5.3",
+      "sha256": "4dbea68099f225d2432757fb266fc636c07797123e1d8ce0589536541fa6c8fe",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ipaverse.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "golden_gate",
+        "sequoia",
+        "sonoma",
+        "tahoe"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "dropzone",
+      "url": "https://aptonic.com/releases/Dropzone-4.80.77.zip",
+      "version": "4.80.77",
+      "sha256": "6f090cc401b3ceb2d2cbb27e89b5f0d287c29f9f264ed3d87ff065c31c9d85aa",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Dropzone 4.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_gd.dmg",
+      "version": "26.8.3",
+      "sha256": "b35b4726a20a14d971625626b5c701c60c6acafdffd34cc60dcad8b5b944a677",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "gd"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "starnet2",
+      "url": "https://download.starnetastro.com/StarNet2_macos-arm64_2.6.2-0242_COREML_arm64.pkg",
+      "version": "2.6.2-0242",
+      "sha256": "53a2167269a0560a5255444f7248d6524c4de1f3c28b3aa6a3721184081ce12a",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "rolisteam",
+      "url": "https://downloads.sourceforge.net/rolisteam/rolisteam_v1.9.3_MacOs.dmg",
+      "version": "1.9.3",
+      "sha256": "473c2f26e6a7d3892088f0b9da1b563d86aba1eaa1dd223a79ef1d8c27f18160",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "rolisteam.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "open-eid",
+      "url": "https://installer.id.ee/media/osx/Open-EID_26.8.7.8430.dmg",
+      "version": "26.8.7.8430",
+      "sha256": "5a93377006b199ca0af0ce7d1aed62369774853037e3ed60991d7f109b56509b",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "orka3",
+      "url": "https://cli-builds-public.s3.amazonaws.com/official/3.6.4/orka3/macos/arm64/orka3.pkg",
+      "version": "3.6.4",
+      "sha256": "a178fdf70c0b93ff1389da214c0bb659ed4e391833230952f62bede8fc69c807",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "windterm",
+      "url": "https://github.com/kingToolbox/WindTerm/releases/download/2.7.0/WindTerm_2.7.0_Mac_Portable_x86_64.dmg",
+      "version": "2.7.0",
+      "sha256": "8c1bc1363e01df5b06f45019da934752f5f29e8603cc843bd38e59bdff121bf7",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "WindTerm.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "tageditor",
+      "url": "https://amvidia.com/downloads/tag-editor-mac.dmg",
+      "version": "2.0.5,1375",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Tag Editor.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "openzfs",
+      "url": "https://github.com/openzfsonosx/openzfs-fork/releases/download/zfs-macOS-2.4.1p2/OpenZFSonOsX-2.4.1p2-Ventura-13-arm64.pkg",
+      "version": "2.4.1p2",
+      "sha256": "cfbfb7f39e047c3c5232799fedf26bac6f674ef1dc7a34364231b36f7dd46561",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "opensesame",
+      "url": "https://github.com/open-cogsci/OpenSesame/releases/download/release%2F4.1.9/opensesame_4.1.9-py313-macos-x64-1.dmg",
+      "version": "4.1.9,py313",
+      "sha256": "b457bf208d827678e217d39b1317efc8f7048807f6c4606d527923dc2d2ffee1",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "OpenSesame.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "wavesurfer",
+      "url": "https://downloads.sourceforge.net/wavesurfer/wavesurfer-1.8.8p6.1-macos.dmg",
+      "version": "1.8.8p6.1",
+      "sha256": "ef1aacab25f37d595e87e5638cd9ef5b3b2af22a05c6aa06585795915a8ae6ea",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "WaveSurfer.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "lynkeos",
+      "url": "https://downloads.sourceforge.net/lynkeos/lynkeos/3.10/Lynkeos-App-3-10.zip",
+      "version": "3.10",
+      "sha256": "18b37ebcf2ebcb08875e2ce55680050b661122147d5ffa15d7090660b1714394",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Lynkeos-App-3-10/Lynkeos.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "ableton-live-standard",
+      "url": "https://cdn-downloads.ableton.com/channels/12.4.16/ableton_live_standard_12.4.16_universal.dmg",
+      "version": "12.4.16",
+      "sha256": "4bf204cd4c1989e7ac987cc58534caf7d70f1f237367d7089ee015adfd8335c0",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Ableton Live 12 Standard.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "cardinal",
+      "url": "https://github.com/DISTRHO/Cardinal/releases/download/26.02/Cardinal-macOS-universal-26.02.pkg",
+      "version": "26.02",
+      "sha256": "5f62f020aab3987aea4bf7bfde4caf09b4c41ab555f485c0e7ebf46944bdb415",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "temurin",
+      "url": "https://github.com/adoptium/temurin26-binaries/releases/download/jdk-26.0.2.1%2B1/OpenJDK26U-jdk_x64_mac_hotspot_26.0.2.1_1.pkg",
+      "version": "26.0.2.1,1",
+      "sha256": "21c078418969938ec73c0888ce6f6927a08eaa67d3e67170a05682f702ee8f8a",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "psi",
+      "url": "https://downloads.sourceforge.net/psi/psi-1.4-mac.dmg",
+      "version": "1.4",
+      "sha256": "e6955acc3d9c7b835b29e1b13918abde6a4bf4748524847885cf896bc0972c8a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Psi.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "go-agent",
+      "url": "https://download.gocd.org/binaries/25.4.0-21793/osx/go-agent-25.4.0-21793-osx-aarch64.zip",
+      "version": "25.4.0,21793",
+      "sha256": "9983a201f318c40bd3f2935b6d8f190ed526ce891eda65fe241aa8dbc73ceed0",
+      "expected_format": "zip",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [
+        "go-agent-25.4.0/bin/go-agent"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_el.dmg",
+      "version": "26.2.7",
+      "sha256": "b2a637ddd92c131162cc936e29cb6b0f584fbfdbae1585b96d2438488b96cf0f",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "el"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "dotnet-sdk@8",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.428/dotnet-sdk-8.0.428-osx-x64.pkg",
+      "version": "8.0.428",
+      "sha256": "21fee50f4cac4f5ec08fcdded3289d814790c143214e92fca3659da093d7b80a",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "ringcentral-phone",
+      "url": "https://downloads.ringcentral.com/sp/RingCentral-Phone-24.3.0.dmg",
+      "version": "24.3.0",
+      "sha256": "e3f04da58464e60f74e7852a85f7ed3294e007515e6398718254a755680dd858",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "RingCentral for Mac.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_bn-IN.dmg",
+      "version": "26.2.7",
+      "sha256": "2005fc92d9fed332a7d05ec2ba17f566261827c501e57eee6ee1114215ef32d2",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "bn-IN"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "db-browser-for-sqlcipher@nightly",
+      "url": "https://github.com/sqlitebrowser/sqlitebrowser/releases/download/nightly/DB.Browser.for.SQLCipher-universal_20261123.dmg",
+      "version": "20261123",
+      "sha256": "577d1997f1a30bcf7065ecf89d70f4d9947f45737f22a9458b5b82f3230e1d17",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "DB Browser for SQLCipher Nightly.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_mr.dmg",
+      "version": "26.8.3",
+      "sha256": "8e6dc290067e47316a31396e15db802816cb17f0ea955baf1151057295c8db50",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "mr"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "enclave",
+      "url": "https://release.enclave.io/enclave_osx-installer-x64-stable-2026.6.3.pkg",
+      "version": "2026.6.3",
+      "sha256": "2b306c42f574e60284ad03992960d8c4491f2619034de4a381bd9532029bd652",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "binary",
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "cap",
+      "url": "https://cdn.crabnebula.app/asset/01M625F2C69VMCTS7HHCSJBNSM",
+      "version": "0.6.2,01M625F2C69VMCTS7HHCSJBNSM",
+      "sha256": "27cd666957f31c588f82b898076c0dcc51277143c2df26dd366c14506164b2d1",
+      "expected_format": "unknown",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Cap.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_br.dmg",
+      "version": "26.8.3",
+      "sha256": "d885635cf33e8a54b51c7d5462b0875937875523379a2148d8916a1e466565fa",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "br"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "circuitjs1",
+      "url": "https://www.falstad.com/circuit/offline/CircuitJS1-mac.dmg",
+      "version": "4.1.4js",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "CircuitJS1.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "imagej",
+      "url": "https://wsr.imagej.net/distros/osx/ij154-osx-arm-java13.zip",
+      "version": "1.54",
+      "sha256": "8366d8c2d56602855fd375d7fb06a4d5b755258cb96ecd83e1310709d3959d90",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ImageJ.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "openzfs",
+      "url": "https://github.com/openzfsonosx/openzfs-fork/releases/download/zfs-macOS-2.4.1p2/OpenZFSonOsX-2.4.1p2-Monterey-12-arm64.pkg",
+      "version": "2.4.1p2",
+      "sha256": "05a357c155770df6f93cb2623cdd5737d2a41ad6cf3f2dc723d94d097037b5f0",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_monterey"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "anypointstudio",
+      "url": "https://www.mulesoft.com/downloads/studio/latest/AnypointStudio-7.29.0-macosArm.zip",
+      "version": "7.29.0",
+      "sha256": "06c2b4b8691ddaae6bdf66263491351d53e67919e14db570daf0a2143befe021",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "AnypointStudio.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "referer"
+      ]
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_da.dmg",
+      "version": "26.8.3",
+      "sha256": "93c63c27e51e28b3ee5fba804ddedee33fecc45c92da9f01da152d5264044bb6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "da"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "krisp",
+      "url": "https://cdn.krisp.ai/mp/mn/3.20/mac/Krisp_3.20.5_arm64.pkg",
+      "version": "3.20.5",
+      "sha256": "d96164a98d75da6c69349cbe840513d250e492fa2b61cae6114af0db993884d0",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "dcp-o-matic",
+      "url": "https://download.dcpomatic.com/dl.php?id=osx-10.10-main&version=2.19.2",
+      "version": "2.19.2",
+      "sha256": "ae54cfcd309b38c68c058a657949d463010a3f8e023f4922ae794badaf48d158",
+      "expected_format": "unknown",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "DCP-o-matic 2.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_ga.dmg",
+      "version": "26.8.3",
+      "sha256": "d273933a0d2ab7044fca0d239209a3723f9379005814a78c68b06e20d519e53c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "ga"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_oc.dmg",
+      "version": "26.2.7",
+      "sha256": "a3226e6007fd3b47c2f12e1ad3d8538980414310f7b2a25e6f40f58d1f34e3ab",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "oc"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "adguard-vpn",
+      "url": "https://static.adguard-vpn.com/mac/release/AdGuardVPN-2.10.2.1164.dmg",
+      "version": "2.10.2.1164",
+      "sha256": "16779891de48820f9a52a54ca21a341c7c31c9ffcf42de67bb54ce880d2046cd",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "baidunetdisk",
+      "url": "https://pkg-ant.baidu.com/issue/netdisk/MACguanjia/8.10.5/BaiduNetdisk_mac_8.10.5_x64.dmg",
+      "version": "8.10.5",
+      "sha256": "2fa9b5a3fd016aa4124c0cc6dedc2ca2b38bc97d0ed523ffa3fc253955fedb66",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "BaiduNetdisk_mac.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "rstudio",
+      "url": "https://download1.rstudio.org/electron/macos/RStudio-2026.11.0-203.dmg",
+      "version": "2026.11.0,203",
+      "sha256": "8af768450f9f38586bf48958d348b41ffc4f3d42c9d225cb6d4f2b8e8b986135",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "RStudio.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "golden_gate",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_pl.dmg",
+      "version": "26.8.3",
+      "sha256": "d0bdd244029f2081db72a7fba79d433ffc173b80ea1146fc6fe29763e3859312",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "pl"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "napari",
+      "url": "https://github.com/napari/napari/releases/download/v0.10.0/napari-0.10.0-macOS-x86_64.pkg",
+      "version": "0.10.0",
+      "sha256": "ca48a715618f7696ccf5ee6d4bef0010f9a14544c6c121444cad5b1bf893165a",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_bn.dmg",
+      "version": "26.2.7",
+      "sha256": "382d643d7a24b7807fc81228f5fb68b57c44d6623f863dc260fa0314ba44bc17",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "bn"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "chemdoodle",
+      "url": "https://www.ichemlabs.com/downloads/ChemDoodle-macos-x64-12.12.1.dmg",
+      "version": "12.12.1",
+      "sha256": "27f6cd378af4fda331786af4c00da9265395c30bf3d697bb65dc05b544854317",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "hydrus-network",
+      "url": "https://github.com/hydrusnetwork/hydrus/releases/download/v636/Hydrus.Network.636.-.macOS.-.App.zip",
+      "version": "636",
+      "sha256": "08d9ba060c090f513d66ff89da50767260726327fdfbc3d7a70ad8fc90c79b89",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Hydrus Network.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_ru.dmg",
+      "version": "26.8.3",
+      "sha256": "ed97e5bab7c98fa822dd9812d52f9db2c67a45e6fb685de1f35e7275086ee3f2",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "ru"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_ne.dmg",
+      "version": "26.2.7",
+      "sha256": "d6155e5f03159f5cd5862638476ed67392e8e307d690edb1304146aed7686cc6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "ne"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "orka-vm-tools",
+      "url": "https://orka-tools.s3.amazonaws.com/orka-vm-tools/official/4.0.0/orka-vm-tools.pkg",
+      "version": "4.0.0",
+      "sha256": "9d566be39bce555f9af5f86306bd7caa698cc447418ed7722793ab7fa9a39dcc",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "unity-ios-support-for-editor",
+      "url": "https://download.unity3d.com/download_unity/40e81493c67d/MacEditorTargetInstaller/UnitySetup-iOS-Support-for-Editor-6000.6.10f1.pkg",
+      "version": "6000.6.10f1,40e81493c67d",
+      "sha256": "feb707eb87c41911217a8b0a3d2ead1be9971a5c28d51d938a03648d677f942b",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "steam",
+      "url": "https://client-update.steamstatic.com/appdmg_osx.zip.984652b88a9737e3f4e77c656d9ffa67d5042c2c",
+      "version": "6.1,1791918634,984652b88a9737e3f4e77c656d9ffa67d5042c2c",
+      "sha256": "8bf4ce8b4bcbc50f642988c955559f605e7a877372116e7a2b3fd1355004bedb",
+      "expected_format": "unknown",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Steam.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": {
+        "nested": "SteamMacBootstrapper.tar.gz",
+        "type": "zip"
+      },
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_ca.dmg",
+      "version": "26.8.3",
+      "sha256": "56c65e465628d1e282a0e371c0588408ab6058e6c42bc02f4c344d55a0f80770",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "ca"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_gu.dmg",
+      "version": "26.8.3",
+      "sha256": "6ebca8d404533f54de7e6a997f8058a879d5677911be74453a3f34acdf058612",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "gu"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "osmc",
+      "url": "https://download.osmc.tv/installers/osmc-installer.dmg",
+      "version": "latest",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "qt_host_installer.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_am.dmg",
+      "version": "26.2.7",
+      "sha256": "4afdb780b166ac7aa349d4ca049f8c6b1b98887237b7ab52fedafb655d56931b",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "am"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_ro.dmg",
+      "version": "26.8.3",
+      "sha256": "00b561c41db131c003d489b7f00e740ec1ee34cddecb0133706b16ffcf7be55c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "ro"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "mysql-shell",
+      "url": "https://dev.mysql.com/get/Downloads/MySQL-Shell/mysql-shell-8.0.29-macos12-arm64.dmg",
+      "version": "8.0.29,12",
+      "sha256": "7095eaa8c67a8952101e0e6173645ac4377b1c06df5e8f87ceddea418d79b5a6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "user_agent"
+      ]
+    },
+    {
+      "cask": "scidvsmac",
+      "url": "https://downloads.sourceforge.net/scidvspc/ScidvsMac-4.27.x64.dmg",
+      "version": "4.27",
+      "sha256": "89e16278504a9734671670f4dd5d5daa78f949808475fe5a111cf8c4b77763bf",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ScidvsMac.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "wings3d",
+      "url": "https://downloads.sourceforge.net/wings/2.4.1/wings-2.4.1-macos-arm64.dmg",
+      "version": "2.4.1",
+      "sha256": "95b301f81166c2fe2f90b4299045f57264731ec6f2ee8e24e3d31fa143430fd8",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Wings3D.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "chronosync",
+      "url": "https://downloads.econtechnologies.com/CS4_Download.dmg",
+      "version": "12.0.4",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_pa-IN.dmg",
+      "version": "26.2.7",
+      "sha256": "c2c606869a7a78271b7139593b59206614163620fedd4257c85a4fcadacd2681",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "pa-IN"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_kn.dmg",
+      "version": "26.2.7",
+      "sha256": "e10aa42d6af647ce9dcf2bbb08168862121aa03569ddd16df036e7c8bdeb3e69",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "kn"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "canon-eos-utility",
+      "url": "https://gdlp01.c-wss.com/gds/4/0200007754/01/EU3Installer-M3.21.11.2.zip",
+      "version": "3.21.11.2,0200007754,4",
+      "sha256": "099f546215d3797cad5928300d061770393a49336ba7278d4e4154e1edf54f12",
+      "expected_format": "zip",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "segger-embedded-studio",
+      "url": "https://www.segger.com/fd/embedded-studio/Setup_EmbeddedStudio_v830c_macOS_x86_64.dmg",
+      "version": "8.30c",
+      "sha256": "54166fca52fe5344cb1c089861251bdea34066a12db17ec080b1aa53ce35ab18",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "netlogo",
+      "url": "https://downloads.netlogo.org/7.0.4/NetLogo-7.0.4-aarch64.dmg",
+      "version": "7.0.4",
+      "sha256": "39c215b3f79e9fd66c4aac6f269c660763d111514c0ae37992d3c9d37d4b6b3c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "codeql-bundle",
+      "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.5/codeql-bundle-osx64.tar.zst",
+      "version": "2.27.5",
+      "sha256": "c671dd6956a604a189aa43827c54d2cff974b7dfcb10290a7ced4d3e3f52fade",
+      "expected_format": "tar.zst",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [
+        "codeql/codeql"
+      ],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_vi.dmg",
+      "version": "26.8.3",
+      "sha256": "ac05398ef45750bb42dd87a675b71c29d75f3711a413f61a0e924402e1a2b6e9",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "vi"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "write",
+      "url": "https://www.styluslabs.com/write/write300.dmg",
+      "version": "3.0.0",
+      "sha256": "036e75f00f47c3dc33cdddfe7b2449d5bcff696992389138467de1f9757b6c57",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Write.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libndi",
+      "url": "https://downloads.ndi.tv/SDK/NDI_SDK_Mac/libNDI_for_Mac.pkg",
+      "version": "latest",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "volt-app",
+      "url": "https://github.com/voltapp/volt/releases/download/0.96/Volt.dmg",
+      "version": "0.96",
+      "sha256": "7a52cb3dd08b82f4ae48777fa6625bc79c798a91714cbc0a5c0c1ab069c746bc",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Volt.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_kk.dmg",
+      "version": "26.8.3",
+      "sha256": "6e681f538c8d11d9cd53a7e5b0fd46bbd26a5bfddb1397af862967e898ccf666",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "kk"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "openvpn-connect",
+      "url": "https://packages.openvpn.net/connect/v3/OpenVPN_Connect_3_9_1(6051)_arm64_Installer_signed.pkg",
+      "version": "3.9.1,6051",
+      "sha256": "b10a33cb868d0ad5ff62460928a1c77f740d23450289c92c86358133b20baee7",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_gu.dmg",
+      "version": "26.2.7",
+      "sha256": "51affeca759277f7956ff6169f9f4e190a9549ea90aef15e8eb85d13b791f3d3",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "gu"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_cy.dmg",
+      "version": "26.2.7",
+      "sha256": "841bd8617522586afa297b31b7886e179db8cc3d755eac6605b3836d03750222",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "cy"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "nvs",
+      "url": "https://github.com/jasongin/nvs/archive/refs/tags/v1.7.1.tar.gz",
+      "version": "1.7.1",
+      "sha256": "0df024c8c8489a63674cac148e766eab0cc2de3cd8e97c6caffd8e117a09863e",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_sk.dmg",
+      "version": "26.2.7",
+      "sha256": "cb3a7f32bd8b6980b3eb0479394eb4d7c913ed7856e6add2f4d63104a345e74b",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "sk"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "display-pilot",
+      "url": "https://esupportdownload.benq.com/esupport/VERTICAL%20&%20PROFESSIONAL%20DISPLAY/Software/Display%20Pilot%202/Display%20Pilot%202%20for%20Mac_v1.12.10.0_Mac_261013144420.zip",
+      "version": "1.12.10.0,261013144420",
+      "sha256": "03d52c97012a28f1a6ffb8d3545024849dd2bb3a31b0d2d244c758a5a6163164",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Display Pilot 2.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "dingtalk",
+      "url": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/mac_dmg/Release/DingTalk_v9.0.10-Installer_60047162_universal.dmg",
+      "version": "9.0.10,60047162",
+      "sha256": "2cf5982c04c5ab31cf06809e285444aab2e543dd0774d818db625df4e8ac8403",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_ga.dmg",
+      "version": "26.2.7",
+      "sha256": "a5a745b487d4e353e988889994ead686aea96e6a936f92eacac4c9d66bf483a4",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "ga"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "klayout",
+      "url": "https://www.klayout.org/downloads/MacOS/HW-klayout-0.29.6-macOS-Monterey-1-qt5MP-RsysPhb311.dmg",
+      "version": "0.29.6",
+      "sha256": "2c324dc95d77a0167d6c56608d2beca5f78b5190259480d97ef1500b19bc7389",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_monterey",
+        "monterey"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_si.dmg",
+      "version": "26.8.3",
+      "sha256": "ec0c40f8be51a66e5d71126ce0749d9b7882a347b913526deefcae502a68edbd",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "si"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "virtualbox@beta",
+      "url": "https://www.virtualbox.org/download/testcase/VirtualBox-7.2.15-174740-macOSArm64.dmg",
+      "version": "7.2.15-174740",
+      "sha256": "8c317d63b69d25242db1988da49b9d0b60c23dbf5ce346dc3849133a0a16233f",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "xampp",
+      "url": "https://downloads.sourceforge.net/xampp/xampp-osx-8.2.4-0-installer.dmg",
+      "version": "8.2.4-0",
+      "sha256": "eb9888f2e3b131ae9a5fbec063a6b642a7285e065a8e5f5e97c699b71e2d7ac5",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "ultimate",
+      "url": "https://download.epubor.com/epubor_ultimate.zip",
+      "version": "3.0.16.664",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "microsoft-openjdk@11",
+      "url": "https://aka.ms/download-jdk/microsoft-jdk-11.0.33.1-macos-x64.pkg",
+      "version": "11.0.33.1",
+      "sha256": "236d943c6b78ff7a78d3ffd1a840c2a8f1cd04d97ddeb40791e007c554b97686",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_be.dmg",
+      "version": "26.2.7",
+      "sha256": "d8282adcca0bdd0f62100babd786370a1350b2905630e73e4b8fab7a375179c5",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "be"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_ks.dmg",
+      "version": "26.8.3",
+      "sha256": "4a635ea2301fec4c9598fdcf4e4f105672c4a45fd931effbcd24b38e23c8f85a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "ks"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "microsoft-outlook",
+      "url": "https://res.public.onecdn.static.microsoft/mro1cdnstorage/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/Microsoft_Outlook_16.115.26110837_Installer.pkg",
+      "version": "16.115.26110837",
+      "sha256": "89a5f392de320615c0940716d19778d8c1ef3a012130147aef87d000a0c25675",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_tahoe",
+        "golden_gate",
+        "sequoia",
+        "tahoe"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "eusamanager",
+      "url": "https://iit.com.ua/download/productfiles/EUSignWebInstall.pkg",
+      "version": "1.3.1,17",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "sunlogincontrol",
+      "url": "https://down.oray.com/sl/mac/SunloginRemote_x86_64_6.7.1.30758.dmg",
+      "version": "6.7.1.30758",
+      "sha256": "421c3a0d2ed80cdbcd125edbc3a382f6ce23c1174d6e87503b7fb762b2f6ef67",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_gl.dmg",
+      "version": "26.8.3",
+      "sha256": "411d4a56e4669f9c38ca721c5bffa53f7d39b1131911da6a2f515383fb9f5fa4",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "gl"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_nl.dmg",
+      "version": "26.8.3",
+      "sha256": "e8b67f80bd4863663bdc506c1e697cc076b1358251679ebb7c8ce2e4e59b430c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "nl"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "vienna-assistant",
+      "url": "https://api.vsl.co.at/data/download/va?os=mac",
+      "version": "1.2.657",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "user_agent"
+      ]
+    },
+    {
+      "cask": "x2goclient",
+      "url": "https://code.x2go.org/releases/X2GoClient_latest_macosx_10_13.dmg",
+      "version": "4.1.2.2",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "x2goclient.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "sshfs-mac",
+      "url": "https://github.com/libfuse/sshfs/releases/download/sshfs-3.7.5/sshfs-3.7.5.pkg",
+      "version": "3.7.5",
+      "sha256": "611713612179cf7ccd2995051165da7d19e0ca199ae70d9680c3d3551f456d46",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "jamovi",
+      "url": "https://www.jamovi.org/downloads/jamovi-28.18.0.0-macos-arm64.dmg",
+      "version": "28.18.0.0",
+      "sha256": "c529eb4517c7e67537bcb3f7bbdcf8495ab1ec8adf1849d2eb4094072a2174d6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "jamovi.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "referer"
+      ]
+    },
+    {
+      "cask": "roaringapps",
+      "url": "https://roaringapps.com/downloads/RoaringApps-1.8.0.zip",
+      "version": "1.8.0",
+      "sha256": "ff6134fd5ba5d55ebacb48e8bc8d56ce8da299c0e55ad1a0611bbf9b390878d7",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "RoaringApps.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_nn.dmg",
+      "version": "26.2.7",
+      "sha256": "d4a56cb92bb3e91854dd473e41892b8c82e057aa68287cd4ba98f7cb8ad11514",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "nn"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "openframeworks",
+      "url": "https://github.com/openframeworks/openFrameworks/releases/download/0.12.1/of_v0.12.1_osx_release.tar.gz",
+      "version": "0.12.1",
+      "sha256": "e4a2dd6e75805320aac905f9f82f7b85e67a8b799137d47f35d40f7c4c195c9b",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_lo.dmg",
+      "version": "26.2.7",
+      "sha256": "f84ff9c17115d71a8511af14d3a91a40b0cb0db642c8a2f5bda23f9491eb6436",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "lo"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    },
+    {
+      "cask": "terminal-browser",
+      "url": "https://terminal-browser.sh/install/dl/stable/v0.16.1/terminal-browser-darwin-x64.tar.gz",
+      "version": "0.16.1",
+      "sha256": "0b7e82fa57dcc6eff2ef753d372f1a52cc47b9035cf1c4713a14bfc601e75625",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [
+        "terminal-browser/bin/terminal-browser"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": []
+    }
+  ]
+}

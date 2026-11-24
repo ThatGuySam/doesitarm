@@ -233,6 +233,7 @@ assert.equal(bounded.status, 'limit_reached');
 assert.match(bounded.error, /compressed nested ZIP member/);
 
 assert.equal(bundle_binary_role('Contents/jbr/Contents/Home/bin/java'), 'runtime');
+assert.equal(bundle_binary_role('Contents/Home/lib/server/libjvm.dylib'), 'runtime');
 assert.equal(bundle_binary_role('Contents/Info.plist'), undefined);
 assert.ok(bundle_binary_is_macho(new Uint8Array(await readFile(resolve(fixtures, 'thin.macho')))));
 assert.equal(bundle_binary_is_macho(Buffer.from('cafebabe0000004100020100', 'hex')), false);
