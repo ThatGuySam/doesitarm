@@ -17,8 +17,11 @@ Started November 24, 2026 at 12:04 Central from scanner-wasm `5a7e79a`. Stop by 
 | Pinned cohort | Checked | Apps before → after | Standalone executables before → after | Installed products before → after |
 | --- | ---: | ---: | ---: | ---: |
 | [Regression](results/edge/regression/scoreboard.md) | 100/100 | 77 → 81 | 8 → 8 | 0 → 1 |
+| [Held-out](results/edge/held-out/scoreboard.md) | 100/100 | 65 → 71 | 8 → 7 | 0 → 2 |
 
 The regression replay recovered BrowserStack Local, Network Weather, Qt Design Studio, and BackupLoupe as apps. It verified the FabFilter Pro-DS AAX product. All 85 previously verified primary results remained verified. The 84 bundle inventories included two complete inventories and 82 partial ones, with ten inventories identifying at least one x86_64-only file. The transport used 3,531,500,436 read bytes and 6,237 requests across all attempts. [Raw scan facts](results/edge/regression/run.json)
+
+The held-out replay recovered LaunchControl, Prolific PL2303Serial, Ammonite, MailMate beta, tiptoi Manager, Cave Story, and ImageOptim as apps. The scanner verified the FabFilter Timeless AAX product and Amazon Corretto 17's JDK bundle. `btp` returned HTML and Jabra Direct's nested installer reached the scan deadline. The 75 inventories included seven complete and 68 partial, with six identifying an x86_64-only file. Both 100-artifact cohorts used `11a817b` with the 8/64/256 MiB ladder and a 55-second cooperative per-attempt deadline. [Raw scan facts](results/edge/held-out/run.json)
 
 ## Resume
 
@@ -33,7 +36,7 @@ Use one Cargo build at a time with `-j2`. Keep downloads under `~/.cache/doesita
 | MailMate beta 6272 | The 16,841,015-byte `.tbz` contains 46 concatenated bzip2 streams. The first ends after 174,234 compressed bytes and produces 900,000 bytes. The fat main is in the tar. |
 | Qt Design Studio 4.8.3 | The 427,201,220-byte repository component uses one solid LZMA block with an 8 MiB dictionary. The app plist is 6,935 bytes and its named Mach-O is 425,152 bytes. |
 | tiptoi Manager 5.3 | `internal.pkg/PackageInfo` declares `/Applications/tiptoi® Manager.app`. The CPIO stores `./Contents/Info.plist` and `./Contents/MacOS/tiptoi® Manager`. |
-| Prolific PL2303 | The 566,766-byte `.7z` wraps a 574,186-byte driver PKG. Driver packages need to retain installer evidence even when there is no app. |
+| Prolific PL2303 | The 566,766-byte `.7z` wraps a 574,186-byte driver PKG. The held-out replay verified `Applications/PL2303Serial.app` and retained the driver installer metadata. |
 | CodeQL 2.27.5 | The 879,050,849-byte artifact is an ordinary Zstandard frame with a 128 MiB window and a frame checksum. `codeql/codeql` begins with a shell shebang. |
 | Anka Registry 1.52.1 | The XAR’s CPIO has 24 entries and includes scripts under `usr/local/bin`. No app plist was present in the payload listing. |
 | Soothe2 1.3.3 | The package carries VST, VST3, AU, and AAX bundles in separate package components. The VST3 main is 68,612,416 bytes and precedes the 1,388-byte plug-in plist. |
@@ -44,6 +47,10 @@ Use one Cargo build at a time with `-j2`. Keep downloads under `~/.cache/doesita
 Apple describes the app bundle's main executable and private code directories. Qt documents `archivegen` as its SDK repository packaging tool. The Zstandard format specifies the decoder window and frame checksum.
 
 [Apple bundle structure](https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFBundles/BundleTypes/BundleTypes.html) · [Apple nested code locations](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html) · [Qt Installer Framework tools](https://doc.qt.io/qtinstallerframework/ifw-tools.html#archivegen) · [Zstandard format](https://github.com/facebook/zstd/blob/dev/doc/zstd_compression_format.md)
+
+7-Zip documents solid compression as a format feature. That makes the Qt member's preceding decoded bytes part of its read cost even when the member itself is small. Prezi's separate updater bundle fits Sparkle's documented separation of updater, installer and downloader code. Electron documents packaging a renderer and runtime with the application, as seen in Terminal Browser's nested Electron app. OpenJDK's runtime image layout explains the executable and library paths found in the Android Studio distributions.
+
+[7z format](https://www.7-zip.org/7z.html) · [Sparkle sandboxing](https://sparkle-project.org/documentation/sandboxing/) · [Electron distribution](https://www.electronjs.org/docs/latest/tutorial/application-distribution) · [OpenJDK runtime images](https://openjdk.org/jeps/220)
 
 ## Android Studio verification
 
@@ -57,7 +64,7 @@ Use `python3 fixtures/edge/check.py --cli target/release/scan-cli --baseline ../
 
 The campaign's manifests reuse the ordered entries and pinned target declarations from the two final CLIMB results. `target/edge/previously-failing.json` contains the 142 failed checkpoint artifacts whose exact token, version, and URL are absent from those cohorts. Use the original 8/64/256 MiB ladder and preserve the measured outcome for every retained target.
 
-Rebuild the pinned manifests with `python3 scripts/edge-cohorts.py target/edge`. To resume a campaign use the same release binary and the `metadata.json` policy in that campaign's directory. `target/edge/run-campaign.sh` runs the three cohorts sequentially and exports each report when it closes. The run stops accepting new work by 13:47 Central so there is time for the final comparison and cleanup.
+Rebuild the pinned manifests with `python3 scripts/edge-cohorts.py target/edge`. To resume a campaign use the same release binary and the `metadata.json` policy in that campaign's directory. `target/edge/run-campaign.sh` completed the two fixed cohorts. `target/edge/run-final-replay.sh` starts the 142-artifact replay with `8e805c0`, the same tier limits, and a 28-second cooperative per-attempt deadline. Its cutoff is 13:44:45 Central to leave time for complete local downloads of selected cases. The run exports each report when it closes.
 
 The canonical export was initialized from the three recorded CLIMB reports. It contains 762 cask versions, 33 with multiple retained URLs. A new scan for the same URL, token, and version replaces that representation after publication.
 
@@ -101,6 +108,6 @@ The later package investigation found `application/x-bzip2` on Prezi's XAR `Pack
 
 The Homebrew UI sample comes from the first 30 pinned rows of the regression replay. The web build serves those recorded inventories in the expandable table. [Sample data](results/homebrew-edge-sample.json)
 
-The final parser build passed 41 Rust tests, Clippy with warnings denied on both native and Wasm targets, 222 native/Wasm comparisons, and 14 Node Worker tests. The Web build's cask table asset matches the recorded inventory sample. Its native folder controls were checked in Node with a universal launcher and an Intel-only runtime.
+The final parser build passed 41 Rust tests, Clippy with warnings denied on both native and Wasm targets, 222 native/Wasm comparisons, and 14 Node Worker tests. The web build's cask table asset matches the recorded inventory sample. Its native folder controls were checked in Node with a universal launcher and an Intel-only runtime. The 30 fixture directories cover 28 of the 141 distinct failure tokens, including 68 of the 184 pinned representations. Android Studio is a separate inventory case and the ZIP-link fixture exercises a shared parser case. Origin failures and unresolved layouts still lack a per-app red/green fixture.
 
 Reddit, Stack Exchange, and the Wayback Machine were unavailable from this machine. Research used Apple documentation, upstream project sources, GitHub issues, the Hacker News Algolia API, and direct publisher responses.
