@@ -146,6 +146,7 @@ fn publish(
     requested: &Record,
     payload: &[u8],
     out: &Path,
+    store: &Store,
 ) -> Result<()> {
     let cwd = out
         .parent()
@@ -176,6 +177,13 @@ fn publish(
     let size = super::store::used(dir)?;
     if size >= 2_000_000 {
         return Err(format!("Kit requires {size} bytes. Limit is 2 MB").into());
+    }
+    if dir
+        .canonicalize()?
+        .starts_with(store.root().canonicalize()?)
+    {
+        // Staging is part of the ledger directory and counts toward its cap.
+        store.reserve(0, 0)?;
     }
     fs::rename(dir, out)?;
     println!("{} {} {} bytes", requested.token, kit.expected_class, size);
@@ -254,10 +262,7 @@ pub(super) fn create(root: &Path, id: &str, out: &Path, input: Option<&Path>) ->
         )
         .into());
     }
-    if out.starts_with(root) {
-        store.reserve(2_000_000, 0)?;
-    }
-    publish(&kit, &record, requested, &capture.payload, out)?;
+    publish(&kit, &record, requested, &capture.payload, out, &store)?;
     store.update_latest(&store.records()?)?;
     Ok(())
 }

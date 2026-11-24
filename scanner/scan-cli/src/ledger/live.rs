@@ -368,11 +368,24 @@ pub(super) fn continue_catalog(
     }
     let stop = Instant::now() + Duration::from_secs(seconds.min(3600));
     let limit = limit.min(400);
+    let mut last_finished = std::collections::BTreeMap::<String, Instant>::new();
     for (i, entry) in manifest.iter().enumerate().skip(checked).take(limit) {
         if stop.saturating_duration_since(Instant::now()) < Duration::from_secs(45) {
             break;
         }
         let url = entry["url"].as_str().ok_or("Catalog entry lacks URL")?;
+        let uri = url.parse::<ureq::http::Uri>()?;
+        let host = uri
+            .host()
+            .ok_or("Catalog entry lacks host")?
+            .to_ascii_lowercase();
+        if let Some(previous) = last_finished.get(&host) {
+            thread::sleep(
+                Duration::from_secs(1)
+                    .saturating_sub(previous.elapsed())
+                    .min(stop.saturating_duration_since(Instant::now())),
+            );
+        }
         let target_choices = targets(entry);
         'target: for (j, target) in target_choices.iter().enumerate() {
             for (k, budget) in REMOTE_BUDGET_TIERS.into_iter().enumerate() {
@@ -434,7 +447,7 @@ pub(super) fn continue_catalog(
         if checked != i + 1 {
             break;
         }
-        thread::sleep(Duration::from_secs(1).min(stop.saturating_duration_since(Instant::now())));
+        last_finished.insert(host, Instant::now());
     }
     let store = Store::open(root.to_path_buf())?;
     store.update_latest(&store.records()?)?;
