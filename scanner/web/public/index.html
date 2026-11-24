@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Does It ARM · App Scanner</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a class="wordmark" href="./">Does It ARM<span>?</span></a>
+      <nav aria-label="Scanner sections">
+        <a href="#scan">Scan</a>
+        <a href="#homebrew">Homebrew run</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section id="scan" aria-labelledby="scan-title">
+      <h1 id="scan-title">App Scanner</h1>
+      <p class="intro">Find out which architectures a Mac app ships and which macOS version its main executable requires.</p>
+      <div class="input-grid">
+        <div id="drop-zone" class="drop-zone">
+          <h2>Scan local files</h2>
+          <p>Drop DMG, ZIP, PKG, tar.gz, Mach-O files or folders. Local files stay in your browser.</p>
+          <div class="actions">
+            <button type="button" id="choose-files">Choose files</button>
+            <button type="button" id="choose-folder" class="secondary">Choose folder</button>
+          </div>
+          <input id="files" type="file" multiple hidden>
+          <input id="folder" type="file" webkitdirectory multiple hidden>
+        </div>
+        <form id="url-form" class="url-box">
+          <h2><label for="scan-url">Scan a URL</label></h2>
+          <p id="url-hint">Use a public HTTPS download link. Cloudflare scans it if your browser cannot read byte ranges.</p>
+          <input id="scan-url" type="url" placeholder="https://example.com/App.dmg" required
+            aria-describedby="url-hint url-error" autocomplete="off" spellcheck="false">
+          <button type="submit" class="secondary">Scan URL</button>
+          <p id="url-error" class="error" role="alert"></p>
+        </form>
+      </div>
+      <div class="settings">
+        <label for="budget">Read limit per scan</label>
+        <select id="budget">
+          <option value="8">8 MiB</option>
+          <option value="32">32 MiB</option>
+          <option value="64">64 MiB</option>
+        </select>
+      </div>
+      <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
+      <p id="input-status" class="error" role="status"></p>
+    </section>
+
+    <section id="results" aria-labelledby="results-title">
+      <div class="section-bar">
+        <h2 id="results-title" tabindex="-1">Results</h2>
+        <p id="results-count" role="status"></p>
+      </div>
+      <p id="empty-results" class="muted">Choose files, a folder, or a download URL to start a scan.</p>
+      <ul id="scan-results" class="result-list"></ul>
+    </section>
+
+    <section id="homebrew" aria-labelledby="homebrew-title">
+      <div class="section-bar">
+        <h2 id="homebrew-title">Homebrew run</h2>
+        <p id="run-date"></p>
+      </div>
+      <p id="run-status" role="status">Loading the recorded scan results…</p>
+      <p id="run-description" class="muted" hidden>Choose a cask to scan its recorded download URL in the Cloudflare Worker. Publishers may update or remove those URLs.</p>
+      <div id="cask-region" class="table-scroll" role="region" aria-labelledby="cask-caption" tabindex="0" hidden>
+        <table>
+          <caption id="cask-caption" class="visually-hidden">Recorded Homebrew cask scan results</caption>
+          <thead>
+            <tr>
+              <th scope="col">Cask</th>
+              <th scope="col">Format</th>
+              <th scope="col">Status</th>
+              <th scope="col">Architectures</th>
+              <th scope="col">Bundle ID</th>
+              <th scope="col">App version</th>
+              <th scope="col">Min macOS</th>
+              <th scope="col">Bytes read</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody id="cask-results"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <template id="result-card">
+    <li class="result">
+      <div class="result-heading">
+        <h3></h3>
+        <span class="scan-status"></span>
+      </div>
+      <p class="result-source muted"></p>
+      <progress aria-label="Fraction of source bytes read"></progress>
+      <p class="result-metrics"></p>
+      <dl class="result-facts" hidden>
+        <div><dt>Architectures</dt><dd data-field="architectures"></dd></div>
+        <div><dt>Bundle ID</dt><dd data-field="bundle_id"></dd></div>
+        <div><dt>App version</dt><dd data-field="version"></dd></div>
+        <div><dt>Min macOS</dt><dd data-field="min_macos"></dd></div>
+      </dl>
+      <p class="result-error error" hidden></p>
+      <details hidden>
+        <summary>Scan details (JSON)</summary>
+        <pre></pre>
+      </details>
+    </li>
+  </template>
+</body>
+</html>

@@ -1,0 +1,59 @@
+import { createReadStream } from 'node:fs';
+import { readFile, stat } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Readable } from 'node:stream';
+
+const dist = fileURLToPath(new URL('../dist', import.meta.url));
+const contentTypes = {
+  html: 'text/html; charset=utf-8',
+  css: 'text/css; charset=utf-8',
+  js: 'text/javascript; charset=utf-8',
+  json: 'application/json',
+  wasm: 'application/wasm',
+};
+
+export async function startPreview({ port = 0, api = null } = {}) {
+  const lines = (await readFile(resolve(dist, '_headers'), 'utf8')).trimEnd().split('\n');
+  const headers = Object.fromEntries(lines.slice(1).map((line) => {
+    const colon = line.indexOf(':');
+    return [line.slice(0, colon).trim(), line.slice(colon + 1).trim()];
+  }));
+
+  const server = createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url, 'http://127.0.0.1');
+      if (url.pathname.startsWith('/api/')) {
+        if (!api) {
+          response.writeHead(503, { 'Content-Type': 'text/plain' });
+          return response.end('Use the deployed Worker for server-assisted URL scans.');
+        }
+        const result = await api(new Request(url, { method: request.method, headers: request.headers }));
+        response.writeHead(result.status, Object.fromEntries(result.headers));
+        if (result.body) Readable.fromWeb(result.body).pipe(response);
+        else response.end();
+        return;
+      }
+
+      const pathname = url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname);
+      const path = resolve(dist, `.${pathname}`);
+      const type = contentTypes[path.split('.').at(-1)];
+      if (!path.startsWith(`${dist}${sep}`) || !type || !(await stat(path)).isFile()) throw new Error();
+      response.writeHead(200, { ...headers, 'Content-Type': type });
+      createReadStream(path).pipe(response);
+    } catch {
+      response.writeHead(404).end('Not found');
+    }
+  });
+  await new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(port, '127.0.0.1', resolve);
+  });
+  return { server, url: `http://127.0.0.1:${server.address().port}` };
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const { url } = await startPreview({ port: Number(process.env.PORT ?? 8787) });
+  console.log(url);
+}
