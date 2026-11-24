@@ -1,4 +1,4 @@
-use crate::{ScanError, ScanResult, Status, bundle, plist_value};
+use crate::{ScanError, ScanResult, Status, bundle, diagnostic::plist_encoding, plist_value};
 use plist::Value;
 use serde::{
     Serialize, Serializer,
@@ -38,13 +38,7 @@ pub fn local_bundle_metadata(
         error_class: None,
         executable_relative_path: None,
         executable_resolution: None,
-        info_plist_encoding: if bytes.starts_with(b"bplist00") {
-            "binary"
-        } else if bytes.starts_with(b"\xef\xbb\xbf") {
-            "xml_bom"
-        } else {
-            "xml"
-        },
+        info_plist_encoding: plist_encoding(bytes),
         info_plist_keys: Vec::new(),
         info_plist: None,
     };
@@ -141,7 +135,10 @@ pub fn local_bundle_metadata(
     metadata
 }
 
-fn serialize_plist<S: Serializer>(value: &Option<Value>, serializer: S) -> Result<S::Ok, S::Error> {
+pub(crate) fn serialize_plist<S: Serializer>(
+    value: &Option<Value>,
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
     match value {
         Some(value) => PlistJson(value).serialize(serializer),
         None => serializer.serialize_none(),

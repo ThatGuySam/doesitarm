@@ -2,7 +2,7 @@ use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
-    le16, le32, le64, macho, nested,
+    le16, le32, le64, nested,
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
@@ -51,7 +51,7 @@ pub(crate) async fn scan(
         out.executable_path = Some(executable.1.to_owned());
         out.executable_size = Some(executable.0.expanded);
         let mut data = member(input, executable.0, directory.offset, work).await?;
-        return macho::scan(&mut data, &mut out.architectures).await;
+        return out.scan_macho(&mut data).await;
     }
 
     let app = entries
@@ -83,7 +83,7 @@ pub(crate) async fn scan(
         ))?;
     out.executable_size = Some(executable.expanded);
     let mut data = member(input, executable, directory.offset, work).await?;
-    macho::scan(&mut data, &mut out.architectures).await
+    out.scan_macho(&mut data).await
 }
 
 async fn scan_nested(
@@ -111,7 +111,7 @@ async fn scan_nested(
             .into_iter()
             .take(if work.strict() { 8 } else { usize::MAX })
     {
-        let mut result = ScanResult::new(out.total_size);
+        let mut result = out.subresult();
         result.format = out.format;
         let attempt = scan_nested_member(
             input,

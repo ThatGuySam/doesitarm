@@ -609,3 +609,56 @@ fn worker_stops_at_explicit_deadline_and_profiles_keep_container_bounds() {
         assert!(matches!(result.status, Status::Invalid), "{result:?}");
     }
 }
+
+#[test]
+fn local_diagnostics_preserve_embedded_plists_executable_prefixes_and_commands() {
+    for input in [
+        ZIP,
+        ZIP64,
+        DMG,
+        APFS,
+        PKG,
+        TAR,
+        TAR_REVERSED,
+        include_bytes!("../../fixtures/nested-pkg.dmg"),
+        include_bytes!("../../fixtures/late-bom.pkg"),
+    ] {
+        let result = ready(scan_core::scan_target_with_diagnostics(
+            &mut Memory(input),
+            ScanLimits::for_profile(Profile::Local),
+            Target::Auto,
+            None,
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        let diagnostic = result
+            .diagnostic
+            .expect("archive subresult dropped diagnostic collection");
+        assert!(
+            diagnostic
+                .info_plist_path
+                .unwrap()
+                .ends_with("/Contents/Info.plist")
+        );
+        assert!(diagnostic.info_plist_size.unwrap() > 0);
+        assert_eq!(
+            diagnostic.info_plist.unwrap().as_dictionary().unwrap()["CFBundleExecutable"]
+                .as_string(),
+            Some("FixtureBinary")
+        );
+        assert_eq!(
+            diagnostic.executable.executable_prefix_hex.unwrap().len(),
+            128
+        );
+        assert_eq!(
+            diagnostic.executable.load_commands.len(),
+            result.architectures.len()
+        );
+        assert!(
+            diagnostic
+                .executable
+                .load_commands
+                .iter()
+                .all(|list| !list.truncated && !list.commands.is_empty())
+        );
+    }
+}

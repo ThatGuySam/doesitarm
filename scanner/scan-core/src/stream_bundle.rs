@@ -1,6 +1,6 @@
 use crate::{
     Architecture, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, Target, Window,
-    bundle, macho,
+    bundle, diagnostic::ExecutableDiagnostic, macho,
 };
 
 struct Candidate {
@@ -8,12 +8,16 @@ struct Candidate {
     size: u64,
     architectures: Vec<Architecture>,
     outcome: Result<()>,
+    diagnostic: Option<ExecutableDiagnostic>,
 }
 
 impl Candidate {
     fn apply(self, out: &mut ScanResult) -> Result<bool> {
         out.executable_size = Some(self.size);
         out.architectures = self.architectures;
+        if let (Some(result), Some(diagnostic)) = (&mut out.diagnostic, self.diagnostic) {
+            result.executable = diagnostic;
+        }
         self.outcome.map(|()| true)
     }
 }
@@ -60,21 +64,18 @@ impl<'a> StreamBundle<'a> {
             }
             out.executable_path = Some(path.to_owned());
             out.executable_size = Some(size);
-            macho::scan(
-                &mut Window::new(source, offset, size)?,
-                &mut out.architectures,
-            )
-            .await?;
+            out.scan_macho(&mut Window::new(source, offset, size)?)
+                .await?;
             return Ok(true);
         }
         if let Some(target) = &self.target {
             if target == path {
+                if out.diagnostic.is_some() {
+                    out.executable_path = Some(path.to_owned());
+                }
                 out.executable_size = Some(size);
-                macho::scan(
-                    &mut Window::new(source, offset, size)?,
-                    &mut out.architectures,
-                )
-                .await?;
+                out.scan_macho(&mut Window::new(source, offset, size)?)
+                    .await?;
                 return Ok(true);
             }
         } else if let Some(root) = bundle::selected_plist(path, self.selection) {
@@ -113,8 +114,16 @@ impl<'a> StreamBundle<'a> {
                 return Ok(false);
             }
             let mut architectures = Vec::new();
-            let outcome =
-                macho::scan(&mut Window::new(source, offset, size)?, &mut architectures).await;
+            let mut diagnostic = out
+                .diagnostic
+                .as_ref()
+                .map(|_| ExecutableDiagnostic::default());
+            let outcome = macho::scan(
+                &mut Window::new(source, offset, size)?,
+                &mut architectures,
+                diagnostic.as_mut(),
+            )
+            .await;
             if !architectures.is_empty() {
                 out.candidate_executables.push(ExecutableCandidate {
                     path: path.to_owned(),
@@ -133,6 +142,7 @@ impl<'a> StreamBundle<'a> {
                 size,
                 architectures,
                 outcome,
+                diagnostic,
             });
         }
         Ok(false)

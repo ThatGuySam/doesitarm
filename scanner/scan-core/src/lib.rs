@@ -6,6 +6,7 @@ mod bom;
 mod bundle;
 mod cpio;
 mod decode;
+mod diagnostic;
 mod dmg;
 mod gzip_tail;
 mod hfs;
@@ -21,6 +22,7 @@ mod tar;
 mod udif_codec;
 mod zip;
 
+pub use diagnostic::ScanDiagnostic;
 pub use local_bundle::{LocalBundleMetadata, local_bundle_metadata};
 
 use serde::Serialize;
@@ -204,6 +206,8 @@ pub struct ScanResult {
     pub reads: u64,
     pub total_size: u64,
     pub error: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub diagnostic: Option<ScanDiagnostic>,
 }
 
 impl ScanResult {
@@ -230,6 +234,7 @@ impl ScanResult {
             reads: 0,
             total_size,
             error: None,
+            diagnostic: None,
         }
     }
 
@@ -294,6 +299,34 @@ pub async fn scan_target_with_deadline(
     target: Target<'_>,
     expired: Option<&dyn Fn() -> bool>,
 ) -> ScanResult {
+    scan_internal(source, limits, target, expired, false).await
+}
+
+/// A local scan that retains the property list and executable evidence the
+/// parsers encounter. Remote callers retain the ordinary compact result.
+pub async fn scan_target_with_diagnostics(
+    source: &mut impl ReadAt,
+    limits: ScanLimits,
+    target: Target<'_>,
+    expired: Option<&dyn Fn() -> bool>,
+) -> ScanResult {
+    scan_internal(
+        source,
+        limits,
+        target,
+        expired,
+        limits.profile == Profile::Local,
+    )
+    .await
+}
+
+async fn scan_internal(
+    source: &mut impl ReadAt,
+    limits: ScanLimits,
+    target: Target<'_>,
+    expired: Option<&dyn Fn() -> bool>,
+    diagnostic: bool,
+) -> ScanResult {
     let strict = limits.profile == Profile::Worker;
     #[cfg(not(target_arch = "wasm32"))]
     let start = std::time::Instant::now();
@@ -305,6 +338,9 @@ pub async fn scan_target_with_deadline(
 
     let size = source.size();
     let mut result = ScanResult::new(size);
+    if diagnostic {
+        result.diagnostic = Some(ScanDiagnostic::default());
+    }
     let mut input = Metered {
         source,
         size,
@@ -381,7 +417,7 @@ async fn inspect(
             out.executable_path = Some(path.to_owned());
         }
         out.executable_size = Some(input.size());
-        macho::scan(input, &mut out.architectures).await?;
+        out.scan_macho(input).await?;
         return Ok(());
     }
     if matches!(

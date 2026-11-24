@@ -1,7 +1,7 @@
 //! HFS+ and HFSX structures and block addressing follow Apple TN1150.
 use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle, check_range,
-    decode::DecodeBudget, macho, nested, pkg,
+    decode::DecodeBudget, nested, pkg,
 };
 use std::collections::VecDeque;
 use unicode_normalization::UnicodeNormalization;
@@ -540,14 +540,12 @@ pub(crate) async fn scan(
         out.executable_path = Some(path.to_owned());
         let fork = file_fork(item, geometry)?;
         out.executable_size = Some(fork.size);
-        return macho::scan(
-            &mut ForkReader {
+        return out
+            .scan_macho(&mut ForkReader {
                 volume: &mut volume,
                 fork,
-            },
-            &mut out.architectures,
-        )
-        .await;
+            })
+            .await;
     }
     let mut root = None;
     let app = if let Target::Bundle(path) = target {
@@ -598,7 +596,7 @@ pub(crate) async fn scan(
         volume: &mut volume,
         fork,
     };
-    macho::scan(&mut reader, &mut out.architectures).await
+    out.scan_macho(&mut reader).await
 }
 
 async fn read_package<S: ReadAt>(

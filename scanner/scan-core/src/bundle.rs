@@ -56,16 +56,29 @@ pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
 }
 
 pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
-    let parsed = plist_value::parse(bytes, ScanError::Invalid("bundle Info.plist"))?;
-    let dict = parsed
-        .as_dictionary()
-        .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;
-    apply_properties(dict, bundle, out);
-    let executable = string(dict, "CFBundleExecutable")
-        .ok_or(ScanError::NotFound("CFBundleExecutable in Info.plist"))?;
-    out.executable_name = Some(executable.to_owned());
-    let relative = resolve_executable(executable, false)?;
-    Ok(format!("{bundle}/{relative}"))
+    if let Some(diagnostic) = &mut out.diagnostic {
+        diagnostic.plist_source(bundle, bytes);
+    }
+    let raw = bytes.strip_prefix(b"\xef\xbb\xbf").unwrap_or(bytes);
+    let parsed = plist_value::parse(raw, ScanError::Invalid("bundle Info.plist"))?;
+    let resolution = (|| {
+        let dict = parsed
+            .as_dictionary()
+            .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;
+        apply_properties(dict, bundle, out);
+        let executable = string(dict, "CFBundleExecutable")
+            .ok_or(ScanError::NotFound("CFBundleExecutable in Info.plist"))?;
+        out.executable_name = Some(executable.to_owned());
+        let relative = resolve_executable(executable, false)?;
+        Ok(format!("{bundle}/{relative}"))
+    })();
+    if let Some(diagnostic) = &mut out.diagnostic {
+        diagnostic.plist_value(parsed);
+        if let Ok(path) = &resolution {
+            out.executable_path = Some(path.clone());
+        }
+    }
+    resolution
 }
 
 pub(crate) fn string<'a>(dict: &'a Dictionary, key: &str) -> Option<&'a str> {
