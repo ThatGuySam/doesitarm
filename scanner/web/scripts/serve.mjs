@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
 
 const dist = fileURLToPath(new URL('../dist', import.meta.url));
-const source = fileURLToPath(new URL('../public', import.meta.url));
+// SCANNER_PUBLIC lets scripts/count-elements.mjs measure an older copy of public/.
+const source = process.env.SCANNER_PUBLIC ?? fileURLToPath(new URL('../public', import.meta.url));
 const sourceAssets = new Map([
   ['/pkg/scan_wasm.js', new URL('../../pkg/scan_wasm.js', import.meta.url)],
   ['/pkg/scan_wasm_bg.wasm', new URL('../../pkg/scan_wasm_bg.wasm', import.meta.url)],

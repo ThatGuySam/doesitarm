@@ -126,6 +126,17 @@ export class ScanView {
     if (this.#pending.size && !this.#clock) this.#clock = setInterval(() => this.#tick(), 250);
   }
 
+  // Remove finished rows once nothing is pending; the next batch starts from an empty list.
+  clear() {
+    if (this.#pending.size || this.#discovering) return;
+    get('scan-results').replaceChildren();
+    this.#batch = undefined;
+    get('results').hidden = true;
+    get('clear-results').hidden = true;
+    this.#announce('Results cleared.');
+    get('choose-files').focus();
+  }
+
   setDiscovering(discovering) {
     this.#discovering = discovering;
     this.#renderBatch(performance.now(), true);
@@ -372,6 +383,7 @@ export class ScanView {
       if (document.activeElement === cancelAll) get('results-title').focus({ preventScroll: true });
       cancelAll.hidden = true;
     }
+    get('clear-results').hidden = !this.#batch || !cancelAll.hidden;
     if (!this.#batch) return;
 
     const { total, finished, canceled, started, ended, extended, rows } = this.#batch;

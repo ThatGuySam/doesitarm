@@ -4,6 +4,7 @@
 //   node scripts/count-elements.mjs                 # counts, JSON + table on stdout
 //   node scripts/count-elements.mjs --ledger        # include every counted element
 //   node scripts/count-elements.mjs --shots DIR     # also save desktop and phone screenshots
+//   SCANNER_PUBLIC=/path/to/old/public node scripts/count-elements.mjs --counts-only   # count another copy
 //
 // Runs headless Chromium on loopback only. The original page is a scripts-free snapshot in
 // test/fixtures/original-app-test; its scan rows are rebuilt from pages/apple-silicon-app-test.vue.
@@ -17,6 +18,8 @@ import { fixture } from '../test/helpers.mjs';
 const args = process.argv.slice(2);
 const shotDir = args.includes('--shots') ? resolve(args[args.indexOf('--shots') + 1]) : null;
 const withLedger = args.includes('--ledger');
+// --counts-only skips the details/dialog steps, e.g. for the prototype served via SCANNER_PUBLIC.
+const countsOnly = args.includes('--counts-only');
 const widths = { desktop: { width: 1440, height: 900 }, phone: { width: 390, height: 844 } };
 
 // Runs in the page. Counts headings/paragraphs/text runs, named controls, progress, images,
@@ -27,7 +30,7 @@ function countElements(rootSelector) {
   const atomic = new Set(['BUTTON', 'A', 'SUMMARY', 'INPUT', 'SELECT', 'TEXTAREA', 'PROGRESS', 'IMG', 'svg', 'VIDEO', 'CANVAS']);
   const ledger = [];
   const hosts = new Set();
-  const text = (el) => (el.innerText || el.getAttribute('aria-label') || el.value || '').trim().replace(/\s+/g, ' ').slice(0, 70);
+  const text = (el) => String(el.innerText || el.getAttribute('aria-label') || el.value || '').trim().replace(/\s+/g, ' ').slice(0, 70);
   const transparent = (color) => /rgba\(.*,\s*0\)$|transparent/.test(color);
   const shown = (el) => el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
   const clipped = (el) => {
@@ -175,6 +178,10 @@ try {
 
     await page.waitForFunction(() => document.getElementById('results-count').textContent === '6 of 6 finished', null, { timeout: 60_000 });
     results.push({ page: 'ours', device, state: 'done', ...(await page.evaluate(countElements, 'main')) });
+    if (countsOnly) {
+      await context.close();
+      continue;
+    }
     const first = page.locator('.result').filter({ has: page.getByRole('heading', { name: 'Charlie.macho', exact: true }) });
     await first.locator('summary').click();
     await page.locator('#results').scrollIntoViewIfNeeded();

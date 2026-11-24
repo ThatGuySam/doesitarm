@@ -75,6 +75,7 @@ get('cancel-all').addEventListener('click', () => {
   view.setDiscovering(false);
 });
 
+get('clear-results').addEventListener('click', () => view.clear());
 get('choose-files').addEventListener('click', () => files.click());
 get('choose-folder').addEventListener('click', () => folder.click());
 files.addEventListener('change', () => {

@@ -110,6 +110,12 @@ try {
   const motion = await row.evaluate((el) => getComputedStyle(el).animationName);
   check('reduced motion removes row shimmer', motion === 'none', motion);
 
+  await page.getByRole('button', { name: 'Clear results' }).click();
+  check('Clear results empties the list and returns focus to Select Apps',
+    await page.evaluate(() => document.getElementById('results').hidden && document.activeElement.id === 'choose-files'));
+  await page.locator('#files').setInputFiles(fixture('thin.macho'));
+  await page.waitForFunction(() => document.getElementById('results-count').textContent === '1 of 1 finished');
+
   // Phone width: no horizontal scrolling, including with Advanced and a result row open.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#advanced > summary').click();

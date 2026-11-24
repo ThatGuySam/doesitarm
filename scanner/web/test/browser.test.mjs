@@ -217,9 +217,9 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     assert.equal(await region.getAttribute('tabindex'), '0');
 
     await page.getByRole('button', { name: 'Rescan zed', exact: true }).click();
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'results-title');
     assert.deepEqual(await scanResult(page, 'zed'), expectedRemote(backendFile, DEFAULT_BUDGET));
     assert.match(apiCalls.at(-1), /^https:\/\/github\.com\/zed-industries\/zed\/releases\/download\//);
-    assert.equal(await page.evaluate(() => document.activeElement.id), 'results-title');
   });
 
   assert.deepEqual(pageErrors, []);
