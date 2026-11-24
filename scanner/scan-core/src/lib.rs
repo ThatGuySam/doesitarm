@@ -10,6 +10,7 @@ mod dmg;
 mod gzip_tail;
 mod hfs;
 mod inflate;
+mod local_bundle;
 mod macho;
 mod nested;
 mod pbzx;
@@ -19,6 +20,8 @@ mod stream_bundle;
 mod tar;
 mod udif_codec;
 mod zip;
+
+pub use local_bundle::{LocalBundleMetadata, local_bundle_metadata};
 
 use serde::Serialize;
 use std::{collections::BTreeMap, fmt, str::FromStr};
@@ -131,6 +134,8 @@ impl std::error::Error for ScanError {}
 #[serde(rename_all = "snake_case")]
 pub enum Status {
     Complete,
+    NoExecutable,
+    Script,
     BudgetExhausted,
     LimitReached,
     Invalid,

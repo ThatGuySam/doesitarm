@@ -184,3 +184,17 @@ pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> std::result::Result<S
     let result = scan_core::bundle_metadata(plist, bundle_path);
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
 }
+
+/// Inspect a local directory bundle and preserve its complete plist for export.
+#[wasm_bindgen]
+pub fn local_bundle_metadata(
+    plist: &[u8],
+    bundle_path: &str,
+    plist_path: &str,
+    nested: bool,
+    role_hint: &str,
+) -> std::result::Result<String, JsValue> {
+    let metadata =
+        scan_core::local_bundle_metadata(plist, bundle_path, plist_path, nested, role_hint);
+    serde_json::to_string(&metadata).map_err(|error| JsValue::from_str(&error.to_string()))
+}
