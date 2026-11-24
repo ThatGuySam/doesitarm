@@ -1,10 +1,11 @@
 import ipaddr from 'ipaddr.js';
+import { redactPaths } from '../public/path-privacy.js';
 import { deadlineError, RangeFailure, scanRemote } from '../public/range-scan.js';
 import { DEFAULT_BUDGET, emptyResult } from '../public/scan-result.js';
 import { createEgress, validateTarget } from './egress.js';
 
 function json(result, status, headers = {}) {
-  return Response.json(result, {
+  return Response.json(redactPaths(result), {
     status,
     headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers },
   });

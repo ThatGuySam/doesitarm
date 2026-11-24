@@ -19,7 +19,7 @@ function redactHex(value, limit) {
   return safe.slice(0, limit).replace(/[\s\S]/g, (character) => character.charCodeAt(0).toString(16).padStart(2, '0'));
 }
 
-function redactPaths(value) {
+export function redactPaths(value) {
   if (!value || typeof value !== 'object') return redactPath(value);
   if (Array.isArray(value)) return value.map(redactPaths);
   return Object.fromEntries(Object.entries(value).map(([key, child]) => [

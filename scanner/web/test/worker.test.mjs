@@ -92,6 +92,26 @@ test('follows HTTPS redirects, validates each DNS destination, and returns CLI-e
   assert.deepEqual(dns, ['downloads.example.net', 'downloads.example.net', 'cdn.example.net', 'cdn.example.net']);
 });
 
+test('Worker JSON masks home paths in metadata and binary inventory', async () => {
+  const handle = createHandler({
+    createScan: () => async () => JSON.stringify({
+      ...emptyResult('complete', null, bytes.length),
+      bundle_path: '/home/fixture-owner/Sample.app',
+      inventory: {
+        binaries: [{ path: String.raw`C:\Users\local-account\Helper`, role: 'helper', architectures: [] }],
+      },
+    }),
+    outbound: withDNS(async (_url, { headers }) => rangedResponse(headers.get('Range'), bytes)),
+  });
+
+  const response = await handle(request(), env);
+  assert.equal(response.status, 200);
+  const result = await response.json();
+  assert.equal(result.bundle_path, '/Users/<user>/Sample.app');
+  assert.equal(result.inventory.binaries[0].path, '/Users/<user>/Helper');
+  assert.equal(result.inventory.binaries[0].role, 'helper');
+});
+
 test('blocks a private DNS answer or redirect before requesting its body', async () => {
   const privateHost = createHandler({
     createScan,

@@ -86,10 +86,14 @@ test('whole-list filtering and paging keep the DOM bounded at 50,000 results', {
     await page.getByText('25–48 of 20,000', { exact: true }).waitFor();
     assert.equal(await heading.textContent(), 'Catalog/Product 00062.app');
     const pageMs = Math.round(performance.now() - pageStart);
+    // Restyled rows have an extra badge for each slice. The number of mounted
+    // rows is fixed, and changing their evidence can add at most one badge per fixture row.
+    const pageNodeCount = await page.evaluate(() => document.getElementsByTagName('*').length);
+    assert.ok(pageNodeCount <= firstNodeCount + 24);
     await page.mouse.wheel(0, -550);
     await page.mouse.wheel(0, 550);
     assert.equal(await rendered.count(), 24);
-    assert.equal(await page.evaluate(() => document.getElementsByTagName('*').length), firstNodeCount);
+    assert.equal(await page.evaluate(() => document.getElementsByTagName('*').length), pageNodeCount);
 
     const tasks = await page.evaluate(() => window.bigListLongTasks());
     t.diagnostic(`50,000 rows · 24 rendered · ${firstNodeCount} document elements · ${seedMs} ms insert · ${filterMs} ms filter/sort · ${pageMs} ms next page · ${Math.round(peakRss / MiB)} MiB Chromium RSS · ${tasks.length} long tasks`);
