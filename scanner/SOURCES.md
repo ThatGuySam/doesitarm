@@ -114,3 +114,29 @@ target/debug/sources run --connector sparkle-appcasts --input "$BASE/sparkle-inp
   --limit 74 --out "$OUT" --scan-ranges --max-tier 8 --timeout-secs 95
 target/debug/sources triage --dir "$OUT"
 ```
+
+### Follow-up results
+
+Scanner revision `410328a` ran both cohorts at the 8 MiB tier.
+
+| Connector | Input events | Discovered | Duplicates | Discovery failures | Reachable | Scanned | Verified | All failures |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| GitHub Releases | 60 | 60 | 6 | 0 | 22 | 22 | 20 | 34 |
+| Sparkle | 74 | 52 | 0 | 22 | 49 | 49 | 34 | 40 |
+
+GitHub consumed 25,452,562 artifact bytes with a median of 738,035 and p95 of 1,846,946 bytes per attempted scan. Sparkle consumed 168,739,677 artifact bytes with a median of 2,013,594 and p95 of 8,388,608. See each connector's summary for additional discovery requests and robots traffic. [GitHub summary](../../doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot/follow-up/github-releases/summary.json) · [Sparkle summary](../../doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot/follow-up/sparkle-appcasts/summary.json)
+
+| Failure class | Count | First investigation |
+| --- | ---: | --- |
+| `robots_disallowed` | 56 | Match pinned GitHub releases to their documented API asset IDs. Preserve exclusions at other publisher origins. |
+| `budget_hit` | 12 | Start with MPP Viewer and compare indexed PKG before and after the 8 MiB boundary. Use the repaired Sparkle feeds as additional cases. |
+| `invalid_container` | 3 | Reduce the XZ stream failures for ImageOptim and LaunchControl, and the ZIP central-directory entry for Jumper. |
+| `plist_not_found` | 1 | Inspect anypoach's archive layout and see whether the publisher declares a standalone executable. |
+| `metadata_missing` | 1 | Identify the missing field in LaTeXiT and check the bundle or Mach-O deployment metadata. |
+| `robots_unavailable` | 1 | Recheck the failed Sourcetree robots request with the established backoff. |
+
+The follow-up triage includes sample commands and evidence. [Triage](../../doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot/follow-up/triage.md)
+
+The workspace passed 58 Rust tests, formatting, and Clippy with warnings denied. The offline stub discarded a bad patch after its replay failed and kept a good patch after tests and replay passed. It also checked that an outside write, an outside permission change, and network socket creation were blocked. [Stub log](../../doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot/follow-up/self-heal-stub.txt)
+
+A two-feed recheck on `b1692ac` reached both artifacts and exercised the 8 and 64 MiB attempts. BetterTouchTool reached partial Intel evidence before a response-body transport error. BrowserStack Local reached a declared executable lookup in its tarball and reported `no_macho_found`. Both have separate tasks in the recheck directory. The retained pilot outputs total about 1.27 MB and include only text records and lock files. [64 MiB recheck](../../doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot/follow-up/feed-recheck-64/triage.md)
