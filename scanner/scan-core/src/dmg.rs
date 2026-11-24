@@ -1,5 +1,6 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, be16, be32, be64, check_range, hfs, le32, le64,
+    ReadAt, Result, ScanError, ScanResult, Window, apfs, be16, be32, be64, check_range, hfs, le32,
+    le64,
     udif_codec::{self, IGNORE, RAW, ZERO},
 };
 use plist::Value;
@@ -66,9 +67,12 @@ pub(crate) async fn scan(
         runs,
         cache: VecDeque::new(),
     };
-    let partition = find_hfs(&mut image, &partitions).await?;
+    let (partition, fs) = find_filesystem(&mut image, &partitions).await?;
     let mut volume = Window::new(&mut image, partition.start, partition.end - partition.start)?;
-    hfs::scan(&mut volume, out).await
+    match fs {
+        Filesystem::Hfs => hfs::scan(&mut volume, out).await,
+        Filesystem::Apfs => apfs::scan(&mut volume, out).await,
+    }
 }
 
 fn sectors(sectors: u64) -> Result<u64> {
@@ -220,16 +224,29 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
     }
 }
 
-async fn find_hfs(disk: &mut impl ReadAt, partitions: &[Partition]) -> Result<Range<u64>> {
-    let mut saw_apfs = partitions
-        .iter()
-        .any(|part| part.name.contains("Apple_APFS"));
+enum Filesystem {
+    Hfs,
+    Apfs,
+}
+
+async fn find_filesystem(
+    disk: &mut impl ReadAt,
+    partitions: &[Partition],
+) -> Result<(Range<u64>, Filesystem)> {
     for part in partitions
         .iter()
         .filter(|part| part.name.contains("Apple_HFS"))
     {
         if hfs_signature(disk, &part.disk).await? {
-            return Ok(part.disk.clone());
+            return Ok((part.disk.clone(), Filesystem::Hfs));
+        }
+    }
+    for part in partitions
+        .iter()
+        .filter(|part| part.name.contains("Apple_APFS"))
+    {
+        if disk.read_at(part.disk.start + 32, 4).await? == b"NXSB" {
+            return Ok((part.disk.clone(), Filesystem::Apfs));
         }
     }
     // When blkx names offer no usable hint, try partition-only images and
@@ -238,25 +255,19 @@ async fn find_hfs(disk: &mut impl ReadAt, partitions: &[Partition]) -> Result<Ra
         .iter()
         .filter(|part| !part.name.contains("Apple_HFS"))
     {
-        if part.name.contains("Apple_APFS") || part.disk.end - part.disk.start < 1536 {
+        if part.disk.end - part.disk.start < 1536 {
             continue;
         }
         if hfs_signature(disk, &part.disk).await? {
-            return Ok(part.disk.clone());
+            return Ok((part.disk.clone(), Filesystem::Hfs));
         }
-        let superblock = disk.read_at(part.disk.start + 32, 4).await?;
-        saw_apfs |= superblock == b"NXSB";
+        if disk.read_at(part.disk.start + 32, 4).await? == b"NXSB" {
+            return Ok((part.disk.clone(), Filesystem::Apfs));
+        }
     }
-    if let Some(part) = partition_map(disk).await? {
-        return Ok(part);
-    }
-    if saw_apfs {
-        Err(ScanError::Unsupported("APFS filesystem in UDIF image"))
-    } else {
-        Err(ScanError::Unsupported(
-            "no HFS+ or HFSX filesystem in UDIF image",
-        ))
-    }
+    partition_map(disk).await?.ok_or(ScanError::Unsupported(
+        "no HFS+ or APFS filesystem in UDIF image",
+    ))
 }
 
 async fn hfs_signature(disk: &mut impl ReadAt, part: &Range<u64>) -> Result<bool> {
@@ -267,7 +278,7 @@ async fn hfs_signature(disk: &mut impl ReadAt, part: &Range<u64>) -> Result<bool
     Ok(matches!(sig.as_slice(), b"H+" | b"HX"))
 }
 
-async fn partition_map(disk: &mut impl ReadAt) -> Result<Option<Range<u64>>> {
+async fn partition_map(disk: &mut impl ReadAt) -> Result<Option<(Range<u64>, Filesystem)>> {
     if disk.size() < 1024 {
         return Ok(None);
     }
@@ -300,7 +311,7 @@ async fn partition_map(disk: &mut impl ReadAt) -> Result<Option<Range<u64>>> {
                     let start = be32(&part, 8) as u64 * apm_block;
                     let len = be32(&part, 12) as u64 * apm_block;
                     check_range(disk.size(), start, len)?;
-                    return Ok(Some(start..start + len));
+                    return Ok(Some((start..start + len, Filesystem::Hfs)));
                 }
             }
         }
@@ -320,7 +331,18 @@ async fn partition_map(disk: &mut impl ReadAt) -> Result<Option<Range<u64>>> {
                 0x00, 0x53, 0x46, 0x48, 0, 0, 0xaa, 0x11, 0xaa, 0x11, 0, 0x30, 0x65, 0x43, 0xec,
                 0xac,
             ];
-            if part.starts_with(&HFS_GUID) {
+            const APFS_GUID: [u8; 16] = [
+                0xef, 0x57, 0x34, 0x7c, 0, 0, 0xaa, 0x11, 0xaa, 0x11, 0, 0x30, 0x65, 0x43, 0xec,
+                0xac,
+            ];
+            let fs = if part.starts_with(&HFS_GUID) {
+                Filesystem::Hfs
+            } else if part.starts_with(&APFS_GUID) {
+                Filesystem::Apfs
+            } else {
+                continue;
+            };
+            {
                 let start = sectors(le64(part, 32))?;
                 let end = sectors(
                     le64(part, 40)
@@ -328,9 +350,9 @@ async fn partition_map(disk: &mut impl ReadAt) -> Result<Option<Range<u64>>> {
                         .ok_or(ScanError::Invalid("GPT end sector overflow"))?,
                 )?;
                 if start >= end || end > disk.size() {
-                    return Err(ScanError::Invalid("GPT HFS partition extent"));
+                    return Err(ScanError::Invalid("GPT partition extent"));
                 }
-                return Ok(Some(start..end));
+                return Ok(Some((start..end, fs)));
             }
         }
     }

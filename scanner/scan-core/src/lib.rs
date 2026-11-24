@@ -1,6 +1,7 @@
 //! Range-based inspection of macOS downloads. The caller supplies all I/O.
 #![forbid(unsafe_code)]
 
+mod apfs;
 mod bundle;
 mod cpio;
 mod dmg;

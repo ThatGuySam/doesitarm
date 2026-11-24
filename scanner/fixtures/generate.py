@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 from struct import pack
 
+from apfs_fixture import apfs_fixture
 from dmg_fixture import dmg_fixture
 from pkg_fixture import pkg_fixture
 
@@ -105,3 +106,4 @@ if __name__ == "__main__":
     dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
     pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
+    apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))

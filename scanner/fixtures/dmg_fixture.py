@@ -112,10 +112,16 @@ def dmg_fixture(path, metadata, executable):
         (0x80000007, 1, lambda raw: b"bvx-" + pack("<I", len(raw)) + raw + b"bvx$"),
         (1, VOLUME_SECTORS - 21, bytes),
     ]
+    write_udif(path, volume, chunks, "Apple_HFSX")
+
+
+def write_udif(path, volume, chunks, name):
+    sectors = len(volume) // SECTOR
+    assert sum(count for _, count, _ in chunks) == sectors
     preamble = b"Test data fork at a nonzero file offset.\n"
     body = bytearray(b"\0" * 16)  # Nonzero table-relative data offset.
     mish = bytearray(204)
-    pack_into(">4sIQQQ", mish, 0, b"mish", 1, 0, VOLUME_SECTORS, len(body))
+    pack_into(">4sIQQQ", mish, 0, b"mish", 1, 0, sectors, len(body))
     pack_into(">I", mish, 200, len(chunks) + 1)
     sector = 0
     for kind, count, compress in chunks:
@@ -125,10 +131,10 @@ def dmg_fixture(path, metadata, executable):
         body.extend(packed)
         sector += count
     mish.extend(pack(">IIQQQQ", 0xFFFFFFFF, 0, sector, 0, 0, 0))
-    index = plistlib.dumps({"resource-fork": {"blkx": [{"Name": "Apple_HFSX", "Data": bytes(mish)}]}})
+    index = plistlib.dumps({"resource-fork": {"blkx": [{"Name": name, "Data": bytes(mish)}]}})
     trailer = bytearray(SECTOR)
     pack_into(">4sIIIQQQ", trailer, 0, b"koly", 4, SECTOR, 1, 0, len(preamble), len(body))
     pack_into(">II", trailer, 56, 1, 1)
     pack_into(">QQ", trailer, 216, len(preamble) + len(body), len(index))
-    pack_into(">Q", trailer, 492, VOLUME_SECTORS)
+    pack_into(">Q", trailer, 492, sectors)
     path.write_bytes(preamble + body + index + trailer)

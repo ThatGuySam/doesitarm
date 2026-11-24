@@ -223,3 +223,18 @@ fn pkg_returns_installer_metadata_when_payload_budget_runs_out() {
     assert_eq!(info.host_architectures, ["x86_64", "arm64"]);
     assert!(result.architectures.is_empty());
 }
+
+const APFS: &[u8] = include_bytes!("../../fixtures/apfs.dmg");
+
+#[test]
+fn apfs_dmg_uses_latest_checkpoint_and_seeks_through_file_extents() {
+    let result = run(APFS, u64::MAX);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.format, Some("dmg"));
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.executable_size, Some(4096 + 48));
+    assert_eq!(result.architectures[0].offset, 4096);
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    assert!(result.bytes_read < result.total_size / 10);
+}
