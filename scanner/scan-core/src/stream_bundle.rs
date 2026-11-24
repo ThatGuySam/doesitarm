@@ -246,10 +246,7 @@ impl<'a> StreamBundle<'a> {
             self.primary = Some(candidate.apply(out));
         }
         if out.bundle_path.is_some() {
-            let mut inventory = self
-                .inventory
-                .take()
-                .unwrap_or_else(BinaryInventory::default);
+            let mut inventory = self.inventory.take().unwrap_or_default();
             let root = out.bundle_path.as_deref().unwrap();
             inventory.binaries.retain_mut(|binary| {
                 let Some(relative) = inventory::relative(&binary.path, root) else {

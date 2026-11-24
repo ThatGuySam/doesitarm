@@ -84,7 +84,7 @@ fn inspect(
         )))
     };
 
-    match open_inside(&root, &main).and_then(&mut inspect_binary) {
+    match open_inside(&root, &main).and_then(inspect_binary) {
         Ok(binary) => {
             account(&mut out, &binary);
             out.status = binary.status;

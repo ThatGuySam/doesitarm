@@ -153,6 +153,37 @@ def generate(mode, name, output):
             else:
                 output.write_bytes(pkg.read_bytes())
         return
+    elif mode == "zip-trailer":
+        root = name + ".app"
+        with zipfile.ZipFile(output, "w", zipfile.ZIP_STORED) as archive:
+            for path, data in app(root, name).items():
+                archive.writestr(path, data)
+            archive.writestr(f"{root}/Contents/Frameworks/Helper.app/Contents/MacOS/Helper", thin())
+        with output.open("ab") as file:
+            file.write(bytes({"Empoche": 80296, "Gingko": 112332}[name]))
+        return
+    elif mode == "zip-contents-relative":
+        root = "Hydrus Network.app"
+        files = app(root, "MacOS/hydrus_client")
+        files[f"{root}/Contents/MacOS/hydrus_client"] = thin(INTEL, 3, legacy=True)
+        del files[f"{root}/Contents/MacOS/MacOS/hydrus_client"]
+        with zipfile.ZipFile(output, "w", zipfile.ZIP_STORED) as archive:
+            for path, data in files.items():
+                archive.writestr(path, data)
+        return
+    elif mode == "zip-symlink":
+        root = "Linked.app"
+        files = app(root, "launcher")
+        payload = files.pop(f"{root}/Contents/MacOS/launcher")
+        with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
+            for path, data in files.items():
+                archive.writestr(path, data)
+            archive.writestr(f"{root}/Contents/Frameworks/Runtime.framework/Versions/A/Runtime", payload)
+            entry = zipfile.ZipInfo(f"{root}/Contents/MacOS/launcher")
+            entry.create_system = 3
+            entry.external_attr = 0o120777 << 16
+            archive.writestr(entry, "../Frameworks/Runtime.framework/Versions/A/Runtime")
+        return
     elif mode == "transport-dmg":
         volume = hfs_tree(app("baretorrent.app", "baretorrent"))
         write_udif(output, volume, [(0x80000005, len(volume) // 512, zlib.compress)], "Apple_HFS")

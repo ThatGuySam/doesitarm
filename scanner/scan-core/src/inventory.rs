@@ -176,9 +176,9 @@ impl Allowance {
         let (bytes, decoded, entries) = if work.local() {
             (u64::MAX, u64::MAX, usize::MAX)
         } else if work.strict() {
-            (512 * 1024, 8 * 1024 * 1024, 128)
+            (512 * 1024, 8 * 1024 * 1024, 24)
         } else {
-            (2 * 1024 * 1024, 32 * 1024 * 1024, 512)
+            (2 * 1024 * 1024, 32 * 1024 * 1024, 48)
         };
         Self {
             remaining_floor: source.remaining_budget().saturating_sub(bytes),

@@ -245,7 +245,7 @@ fn block_files(archive: &Archive, block: usize) -> Result<(usize, usize)> {
 
 enum BlockSource<'a, S> {
     Stored(Window<'a, S>),
-    Compressed(Forward<'a, Window<'a, S>>),
+    Compressed(Box<Forward<'a, Window<'a, S>>>),
 }
 
 fn open_block<'a, S: ReadAt>(
@@ -308,9 +308,9 @@ fn open_block<'a, S: ReadAt>(
         }
         _ => return Err(ScanError::Unsupported("7z compression method")),
     };
-    Ok(BlockSource::Compressed(Forward::new(
+    Ok(BlockSource::Compressed(Box::new(Forward::new(
         source, expanded, codec, work,
-    )?))
+    )?)))
 }
 
 impl<S: ReadAt> ReadAt for BlockSource<'_, S> {

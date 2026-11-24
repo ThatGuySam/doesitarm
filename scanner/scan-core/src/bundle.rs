@@ -152,3 +152,15 @@ pub(crate) fn installed_bundle_kind(path: &str) -> Option<&'static str> {
         _ => None,
     }
 }
+
+pub(crate) fn resolve_symlink(path: &str, destination: &str) -> Option<String> {
+    if destination.is_empty() || destination.starts_with('/') {
+        return None;
+    }
+    let parent = path.rsplit_once('/').map_or("", |(parent, _)| parent);
+    if parent.is_empty() {
+        normalize_archive_path(destination)
+    } else {
+        normalize_archive_path(&format!("{parent}/{destination}"))
+    }
+}

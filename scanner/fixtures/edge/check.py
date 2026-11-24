@@ -99,6 +99,16 @@ def verify(token, artifact, cli):
             assert result["format"] == "tar.bz2" and result["bundle_path"] == "MailMate.app", result
         elif token == "qt-design-studio":
             assert result["format"] == "7z" and result["bundle_path"] == "Qt Design Studio.app", result
+        elif token in ("empoche", "gingko"):
+            assert result["format"] == "zip" and result["bundle_path"] == token.capitalize() + ".app", result
+        elif token == "hydrus-network":
+            assert result["executable_name"] == "MacOS/hydrus_client", result
+            assert result["executable_resolution"] == "contents_relative"
+            assert result["executable_path"] == "Hydrus Network.app/Contents/MacOS/hydrus_client"
+        elif token == "linked-zip":
+            assert result["executable_name"] == "launcher" and result["executable_resolution"] == "archive_symlink", result
+            assert result["executable_path"].endswith("/Runtime.framework/Versions/A/Runtime")
+            assert [item["role"] for item in result["inventory"]["binaries"]] == ["main"]
         elif token == "steam":
             assert result["format"] == "zip" and result["nested_artifacts"] == ["SteamMacBootstrapper.tar.gz"], result
         elif token in ("cave-story", "ipaverse"):

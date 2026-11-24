@@ -345,9 +345,8 @@ pub async fn scan_target_with_deadline(
         u64::MAX
     };
     let work = decode::DecodeBudget::with_limits(decoded, limits.profile, expired);
-    match inspect(&mut input, &work, target, &mut result).await {
-        Err(error) => result.set_error(error),
-        Ok(()) => {}
+    if let Err(error) = inspect(&mut input, &work, target, &mut result).await {
+        result.set_error(error);
     }
     if result.min_macos.is_none() {
         result.min_macos = result

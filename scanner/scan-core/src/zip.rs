@@ -57,17 +57,7 @@ pub(crate) async fn scan(
                 "declared standalone executable in ZIP central directory",
             ))?;
         out.executable_path = Some(executable.1.to_owned());
-        out.executable_size = Some(executable.0.expanded);
-        let primary = {
-            let mut data = member(input, executable.0, directory.offset, work).await?;
-            launcher::inspect(
-                &mut data,
-                executable.1,
-                &mut out.architectures,
-                &mut out.script_runtime,
-            )
-            .await
-        };
+        let primary = read_main(input, &entries, directory.offset, work, executable.1, out).await;
         read_runtime(input, &entries, directory.offset, work, out).await;
         return primary;
     }
@@ -94,7 +84,19 @@ pub(crate) async fn scan(
         .await?
         .read_at(0, entry.expanded as usize)
         .await?;
-    let path = bundle::apply_plist(&plist, name, out)?;
+    let mut path = bundle::apply_plist(&plist, name, out)?;
+    if !entries
+        .iter()
+        .any(|entry| bundle::archive_path(&entry.path) == Some(&path))
+        && let Some(alias) = bundle::contents_relative_alias(&path, name)
+        && entries
+            .iter()
+            .any(|entry| bundle::archive_path(&entry.path) == Some(&alias))
+    {
+        out.executable_path = Some(alias.clone());
+        out.executable_resolution = Some("contents_relative");
+        path = alias;
+    }
 
     let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
     read_runtime(input, &entries, directory.offset, work, out).await;
@@ -105,7 +107,7 @@ pub(crate) async fn scan(
     let mut allowance = Allowance::new(input, work);
     for entry in &entries {
         let Some(relative) = bundle::archive_path(&entry.path)
-            .filter(|candidate| *candidate != path)
+            .filter(|candidate| Some(*candidate) != out.executable_path.as_deref())
             .and_then(|candidate| inventory::relative(candidate, name))
         else {
             continue;
@@ -144,21 +146,49 @@ async fn read_main(
     path: &str,
     out: &mut ScanResult,
 ) -> Result<()> {
-    let executable = entries
-        .iter()
-        .find(|entry| bundle::archive_path(&entry.path) == Some(path))
-        .ok_or(ScanError::NotFound(
-            "declared executable in ZIP central directory",
-        ))?;
-    out.executable_size = Some(executable.expanded);
-    let mut data = member(input, executable, heap_end, work).await?;
-    launcher::inspect(
-        &mut data,
-        path,
-        &mut out.architectures,
-        &mut out.script_runtime,
-    )
-    .await
+    let mut resolved = path.to_owned();
+    for _ in 0..16 {
+        let executable = entries
+            .iter()
+            .find(|entry| bundle::archive_path(&entry.path) == Some(&resolved))
+            .ok_or(ScanError::NotFound(
+                "declared executable in ZIP central directory",
+            ))?;
+        let mut data = member(input, executable, heap_end, work).await?;
+        if !executable.is_symlink() {
+            if resolved != path {
+                out.executable_resolution = Some("archive_symlink");
+                out.executable_path = Some(resolved.clone());
+            }
+            out.executable_size = Some(executable.expanded);
+            return launcher::inspect(
+                &mut data,
+                &resolved,
+                &mut out.architectures,
+                &mut out.script_runtime,
+            )
+            .await;
+        }
+        if executable.expanded > 4096 {
+            return Err(ScanError::Limit("ZIP link target exceeds 4096 bytes"));
+        }
+        let bytes = data.read_at(0, executable.expanded as usize).await?;
+        let destination = std::str::from_utf8(&bytes)
+            .map_err(|_| ScanError::Invalid("ZIP link target encoding"))?;
+        let next = bundle::resolve_symlink(&resolved, destination)
+            .filter(|next| {
+                out.bundle_path
+                    .as_ref()
+                    .is_none_or(|root| inventory::relative(next, root).is_some())
+            })
+            .ok_or(ScanError::Unsupported(
+                "ZIP executable link escapes its bundle or archive",
+            ))?;
+        resolved = next;
+    }
+    Err(ScanError::Limit(
+        "ZIP executable link chain exceeds 16 links",
+    ))
 }
 
 async fn read_runtime(
@@ -324,7 +354,18 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
             );
         }
         if tail.len() == max_tail {
-            return Err(ScanError::Invalid("ZIP end record missing"));
+            let limit = size.min(256 * 1024) as usize;
+            if limit > tail.len() {
+                let mut prefix = input
+                    .read_at(size - limit as u64, limit - tail.len())
+                    .await?;
+                prefix.append(&mut tail);
+                tail = prefix;
+            }
+            let tail_at = size - tail.len() as u64;
+            let index = appended_end_record(&tail, tail_at)
+                .ok_or(ScanError::Invalid("ZIP end record missing"))?;
+            break (tail_at + index as u64, &tail[index..index + 22]);
         }
         let len = max_tail.min((tail.len() * 4).max(128));
         let mut prefix = input.read_at(size - len as u64, len - tail.len()).await?;
@@ -390,6 +431,28 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
 fn end_record(tail: &[u8]) -> Option<usize> {
     (0..=tail.len().checked_sub(22)?).rev().find(|&i| {
         &tail[i..i + 4] == b"PK\x05\x06" && le16(tail, i + 20) as usize == tail.len() - i - 22
+    })
+}
+
+fn appended_end_record(tail: &[u8], tail_at: u64) -> Option<usize> {
+    // Some distributions append bytes after the ZIP end record.
+    // Require a contiguous nonempty directory to rule out magic in the trailer.
+    (0..=tail.len().checked_sub(22)?).rev().find(|&index| {
+        let record = &tail[index..index + 22];
+        if &record[..4] != b"PK\x05\x06"
+            || record[4..8] != [0; 4]
+            || le16(record, 20) as usize >= tail.len() - index - 22
+            || le16(record, 8) != le16(record, 10)
+        {
+            return false;
+        }
+        let entries = u64::from(le16(record, 10));
+        let size = u64::from(le32(record, 12));
+        let offset = u64::from(le32(record, 16));
+        entries != 0
+            && entries < u16::MAX as u64
+            && size >= entries * 46
+            && offset + size == tail_at + index as u64
     })
 }
 

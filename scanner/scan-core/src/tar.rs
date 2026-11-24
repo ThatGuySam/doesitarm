@@ -177,5 +177,7 @@ pub(crate) async fn read_runtime(
 ) {
     let mut result = ScanResult::new(input.size());
     let _ = scan(input, work, Target::Executable(&runtime.path), &mut result).await;
-    runtime.architectures = result.architectures;
+    if result.executable_path.as_deref() == Some(&runtime.path) {
+        runtime.architectures = result.architectures;
+    }
 }
