@@ -8,6 +8,7 @@ use std::{
     fs::{self, File, ReadDir},
     io::{self, Read, Write},
     path::{Path, PathBuf},
+    rc::Rc,
     time::{Duration, Instant},
 };
 
@@ -257,6 +258,12 @@ fn bundle_row(
                 .into(),
         );
         row.error_class = Some("executable_is_script");
+    } else if primary.format != Some("macho") && matches!(primary.status, Status::Complete) {
+        primary.status = Status::Invalid;
+        primary.error =
+            Some("CFBundleExecutable names a file that is not a Mach-O executable.".into());
+        primary.architectures.clear();
+        row.error_class = Some("executable_not_macho");
     } else {
         row.error_class = None;
     }
@@ -275,8 +282,13 @@ fn set_outcome(row: &mut Row, status: Status, class: &'static str, error: String
 
 struct Frame {
     path: String,
-    app: Option<String>,
+    app: Option<Rc<Bundle>>,
     entries: ReadDir,
+}
+
+struct Bundle {
+    path: String,
+    executable: Option<String>,
 }
 
 pub(crate) fn report(path: &Path, json: bool, timeout: Option<Duration>) -> io::Result<bool> {
@@ -312,19 +324,26 @@ pub(crate) fn report(path: &Path, json: bool, timeout: Option<Duration>) -> io::
             continue;
         };
         let frame_path = frame.path.clone();
-        let parent = frame.app.clone();
+        let bundle = frame.app.clone();
         let row = (|| -> io::Result<Option<Row>> {
             let entry = entry?;
             let kind = entry.file_type()?;
             let path = entry.path();
             let display = format!("{frame_path}/{}", name(&path));
+            let parent = bundle.as_ref().map(|app| &app.path);
             if kind.is_dir() {
-                let app = is_app(&path);
                 let entries = fs::read_dir(&path)?;
-                let row = app.then(|| bundle_row(&path, display.clone(), parent.clone(), deadline));
+                let row = is_app(&path)
+                    .then(|| bundle_row(&path, display.clone(), parent.cloned(), deadline));
+                let next_bundle = row.as_ref().map(|row| {
+                    Rc::new(Bundle {
+                        path: display.clone(),
+                        executable: row.result.executable_path.clone(),
+                    })
+                });
                 stack.push(Frame {
-                    path: display.clone(),
-                    app: if app { Some(display) } else { parent },
+                    path: display,
+                    app: next_bundle.or(bundle),
                     entries,
                 });
                 return Ok(row);
@@ -332,18 +351,16 @@ pub(crate) fn report(path: &Path, json: bool, timeout: Option<Duration>) -> io::
             if !kind.is_file() {
                 return Ok(None);
             }
-            if !is_archive(&path) {
-                if let Some(root) = &parent {
-                    let relative = &display[root.len() + 1..];
-                    if !relative.contains('/') || relative.starts_with("Contents/MacOS/") {
-                        return Ok(None);
-                    }
-                }
-                if !is_macho(&path) {
-                    return Ok(None);
-                }
+            let same_executable =
+                bundle.as_ref().and_then(|app| app.executable.as_ref()) == Some(&display);
+            if !is_archive(&path) && (same_executable || !is_macho(&path)) {
+                return Ok(None);
             }
-            Ok(Some(Row::new(display, parent, scan_file(&path, deadline))))
+            Ok(Some(Row::new(
+                display,
+                parent.cloned(),
+                scan_file(&path, deadline),
+            )))
         })();
         match row {
             Ok(Some(row)) => {

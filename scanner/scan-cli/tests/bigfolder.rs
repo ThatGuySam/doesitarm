@@ -152,6 +152,40 @@ fn identifies_a_declared_script_without_any_macho_architecture() {
     assert_eq!(row["error_class"], "executable_is_script");
 }
 
+#[test]
+fn scans_other_macos_binaries_without_repeating_the_bundle_launcher() {
+    let dir = TempDir::new().unwrap();
+    let root = dir.path().join("Applications");
+    let target = app(&root, "Multiple Binaries.app", "secondary-macos-binary");
+    write(target.join("Contents/MacOS/Launch"), FAT);
+    write(target.join("Contents/MacOS/helper tool"), THIN);
+    let rows = scan(&root);
+    let rows = rows.as_array().unwrap();
+    assert_eq!(rows.len(), 2);
+    assert_eq!(rows[0]["status"], "complete");
+    assert_eq!(rows[1]["format"], "macho");
+    assert_eq!(rows[1]["status"], "complete");
+    assert_eq!(rows[1]["parent_bundle_path"], rows[0]["display_path"]);
+    assert_eq!(
+        rows[1]["display_path"],
+        "Applications/Multiple Binaries.app/Contents/MacOS/helper tool"
+    );
+}
+
+#[test]
+fn an_archive_named_as_the_launcher_cannot_supply_the_app_architecture() {
+    let dir = TempDir::new().unwrap();
+    let target = app(dir.path(), "Archive Launcher.app", "archive-as-executable");
+    write(
+        target.join("Contents/MacOS/Launch"),
+        include_bytes!("../../fixtures/stored.zip"),
+    );
+    let row = scan(&target);
+    assert_eq!(row["status"], "invalid");
+    assert_eq!(row["error_class"], "executable_not_macho");
+    assert_eq!(row["architectures"], serde_json::json!([]));
+}
+
 #[cfg(unix)]
 #[test]
 fn skips_directory_symlink_loops_and_duplicate_bundle_aliases() {
