@@ -1,5 +1,5 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, bundle, check_range,
+    ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
     inflate::{Codec, Forward},
     le16, le32, le64, macho,
 };
@@ -22,7 +22,11 @@ struct Entry {
     flags: u16,
 }
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let directory = read_directory(input).await?;
     check_range(directory.end_record, directory.offset, directory.size)?;
     if directory.size > MAX_DIRECTORY {
@@ -33,11 +37,26 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         .await?;
     let entries = read_entries(&records, directory.count)?;
 
+    if let Target::Executable(requested) = target {
+        let executable = entries
+            .iter()
+            .filter_map(|entry| Some((entry, bundle::archive_path(&entry.path)?)))
+            .filter(|(_, path)| bundle::matches_path(path, requested))
+            .min_by_key(|(_, path)| (path.matches('/').count(), *path))
+            .ok_or(ScanError::NotFound(
+                "declared standalone executable in ZIP central directory",
+            ))?;
+        out.executable_path = Some(executable.1.to_owned());
+        out.executable_size = Some(executable.0.expanded);
+        let mut data = member(input, executable.0, directory.offset).await?;
+        return macho::scan(&mut data, &mut out.architectures).await;
+    }
+
     let (entry, name) = entries
         .iter()
         .filter_map(|entry| {
             let path = bundle::archive_path(&entry.path)?;
-            Some((entry, bundle::plist_bundle(path)?))
+            Some((entry, bundle::selected_plist(path, target)?))
         })
         .min_by_key(|(_, name)| (name.matches('/').count(), *name))
         .ok_or(ScanError::NotFound(

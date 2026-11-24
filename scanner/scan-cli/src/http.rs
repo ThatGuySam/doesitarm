@@ -1,5 +1,5 @@
 use super::{Output, failure, ready, source_error};
-use scan_core::{ReadAt, Result, ScanError, ScanResult, scan as scan_core};
+use scan_core::{ReadAt, Result, ScanError, ScanResult, Target, scan_target};
 use std::{
     fs::File,
     io::{Read, Seek, SeekFrom, Write},
@@ -18,7 +18,7 @@ pub(crate) struct Options {
     pub(crate) delay: Duration,
 }
 
-pub(crate) fn scan(url: &str, budget: u64, options: &Options) -> Output {
+pub(crate) fn scan(url: &str, budget: u64, target: Target<'_>, options: &Options) -> Output {
     if budget == 0 {
         return Output::new(failure(ScanError::Budget, 0));
     }
@@ -39,7 +39,7 @@ pub(crate) fn scan(url: &str, budget: u64, options: &Options) -> Output {
         Err(error) => return Output::new(failure(error, 1)),
     };
     if response.status().as_u16() == 200 && options.allow_stream {
-        return scan_stream(response, budget);
+        return scan_stream(response, budget, target);
     }
     let (probe, _) = match accept_range(response, 0, 1, None) {
         Ok(response) => response,
@@ -52,7 +52,7 @@ pub(crate) fn scan(url: &str, budget: u64, options: &Options) -> Output {
         delay: options.delay,
         last_request: now,
     };
-    let mut result = ready(scan_core(&mut source, budget - 1));
+    let mut result = ready(scan_target(&mut source, budget - 1, target));
     result.reads += 1;
     result.bytes_read += 1;
     Output {
@@ -62,7 +62,7 @@ pub(crate) fn scan(url: &str, budget: u64, options: &Options) -> Output {
     }
 }
 
-fn scan_stream(response: Response<Body>, budget: u64) -> Output {
+fn scan_stream(response: Response<Body>, budget: u64, target: Target<'_>) -> Output {
     let source_etag = etag_text(
         response
             .headers()
@@ -77,7 +77,7 @@ fn scan_stream(response: Response<Body>, budget: u64) -> Output {
     let result = match StreamSource::open(response, budget) {
         Ok(mut source) => {
             let mut result = match source.discover_size() {
-                Ok(()) => ready(scan_core(&mut source, u64::MAX)),
+                Ok(()) => ready(scan_target(&mut source, u64::MAX, target)),
                 Err(error) => {
                     let mut result = ScanResult::new(source.size());
                     result.set_error(error);
@@ -452,6 +452,7 @@ mod tests {
         let result = scan_stream(
             whole_response(artifact, Some(artifact.len() as u64)),
             1_000_000,
+            Target::Auto,
         );
         assert!(matches!(result.scan.status, scan_core::Status::Complete));
         assert_eq!(result.source_transport, Some("stream"));

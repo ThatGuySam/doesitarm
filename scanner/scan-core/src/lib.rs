@@ -35,6 +35,14 @@ pub trait ReadAt {
 
 pub type Result<T> = std::result::Result<T, ScanError>;
 
+#[derive(Clone, Copy, Default)]
+pub enum Target<'a> {
+    #[default]
+    Auto,
+    Bundle(&'a str),
+    Executable(&'a str),
+}
+
 #[derive(Debug, Clone)]
 pub enum ScanError {
     Budget,
@@ -112,6 +120,8 @@ pub struct ScanResult {
     pub executable_name: Option<String>,
     pub executable_size: Option<u64>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub executable_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_metadata_source: Option<&'static str>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
@@ -135,6 +145,7 @@ impl ScanResult {
             min_macos: None,
             executable_name: None,
             executable_size: None,
+            executable_path: None,
             bundle_metadata_source: None,
             candidate_executables: Vec::new(),
             installer: None,
@@ -177,6 +188,11 @@ pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
 /// Byte budget covers successful host reads (including repeated ranges). A
 /// request exceeding the remaining budget is rejected before calling the host.
 pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {
+    scan_target(source, budget, Target::Auto).await
+}
+
+/// Select a bundle or standalone executable by its declared archive path.
+pub async fn scan_target(source: &mut impl ReadAt, budget: u64, target: Target<'_>) -> ScanResult {
     let size = source.size();
     let mut result = ScanResult::new(size);
     let mut input = Metered {
@@ -186,7 +202,7 @@ pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {
         bytes: 0,
         reads: 0,
     };
-    if let Err(error) = inspect(&mut input, &mut result).await {
+    if let Err(error) = inspect(&mut input, target, &mut result).await {
         result.set_error(error);
     }
     if result.min_macos.is_none() {
@@ -211,13 +227,24 @@ pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {
     result
 }
 
-async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+async fn inspect(input: &mut impl ReadAt, target: Target<'_>, out: &mut ScanResult) -> Result<()> {
+    if let Target::Bundle(path) | Target::Executable(path) = target
+        && bundle::archive_path(path).is_none()
+    {
+        return Err(ScanError::Invalid("declared archive target path"));
+    }
     if input.size() < 4 {
         return Err(ScanError::Invalid("missing file magic"));
     }
     let magic = input.read_at(0, 4).await?;
     if macho::kind(&magic).is_some() {
         out.format = Some("macho");
+        if matches!(target, Target::Bundle(_)) {
+            return Err(ScanError::NotFound("declared bundle in bare Mach-O"));
+        }
+        if let Target::Executable(path) = target {
+            out.executable_path = Some(path.to_owned());
+        }
         out.executable_size = Some(input.size());
         macho::scan(input, &mut out.architectures).await?;
         return Ok(());
@@ -227,43 +254,43 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
         b"PK\x03\x04" | b"PK\x05\x06" | b"PK\x07\x08"
     ) {
         out.format = Some("zip");
-        return zip::scan(input, out).await;
+        return zip::scan(input, target, out).await;
     }
     if magic.starts_with(b"\x1f\x8b") {
-        return compressed_tar(input, out, "tar.gz", inflate::Codec::Gzip).await;
+        return compressed_tar(input, target, out, "tar.gz", inflate::Codec::Gzip).await;
     }
     if magic == b"0707" && input.size() >= 6 {
         let mut cpio_magic = magic.clone();
         cpio_magic.extend(input.read_at(4, 2).await?);
         if cpio::recognized(&cpio_magic) {
             out.format = Some("cpio");
-            return cpio::scan(input, out).await;
+            return cpio::scan_with(input, stream_bundle::StreamBundle::new(target), out).await;
         }
     }
     if magic == b"xar!" {
         out.format = Some("pkg");
-        return pkg::scan(input, out).await;
+        return pkg::scan(input, target, out).await;
     }
     if input.size() >= 512 {
         let trailer = input.read_at(input.size() - 512, 512).await?;
         if trailer.starts_with(b"koly") {
             out.format = Some("dmg");
-            return dmg::scan(input, &trailer, out).await;
+            return dmg::scan(input, &trailer, target, out).await;
         }
     }
     // UDIF stores compressed runs from byte zero. Its koly footer takes
     // precedence over a bzip2 or XZ prefix from the first run.
     if magic.starts_with(b"BZh") {
-        return compressed_tar(input, out, "tar.bz2", inflate::Codec::Bzip2).await;
+        return compressed_tar(input, target, out, "tar.bz2", inflate::Codec::Bzip2).await;
     }
     if magic == b"\xfd7zX" && input.size() >= 6 && input.read_at(4, 2).await? == b"Z\0" {
-        return compressed_tar(input, out, "tar.xz", inflate::Codec::Xz).await;
+        return compressed_tar(input, target, out, "tar.xz", inflate::Codec::Xz).await;
     }
     if input.size() >= 512 {
         let header = input.read_at(0, 512).await?;
         if tar::is_header(&header) {
             out.format = Some("tar");
-            return tar::scan(input, out).await;
+            return tar::scan(input, target, out).await;
         }
     }
     Err(ScanError::Unsupported("unrecognized file format"))
@@ -271,6 +298,7 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
 
 async fn compressed_tar(
     input: &mut impl ReadAt,
+    target: Target<'_>,
     out: &mut ScanResult,
     format: &'static str,
     codec: inflate::Codec,
@@ -280,6 +308,7 @@ async fn compressed_tar(
     let source = Window::new(input, 0, size)?;
     tar::scan(
         &mut inflate::Forward::new(source, inflate::STREAM_OUTPUT_LIMIT, codec),
+        target,
         out,
     )
     .await

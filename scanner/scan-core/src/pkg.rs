@@ -1,7 +1,7 @@
 use crate::pbzx::Pbzx;
 use crate::{
-    InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Window, be16, be64, bom, bundle,
-    check_range, cpio, gzip_tail,
+    InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Target, Window, be16, be64, bom,
+    bundle, check_range, cpio, gzip_tail,
     inflate::{Codec, Forward, STREAM_OUTPUT_LIMIT},
     stream_bundle::StreamBundle,
 };
@@ -23,7 +23,11 @@ struct Member<'a> {
     expanded: u64,
 }
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    selection: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let head = input.read_at(0, 28).await?;
     let header_size = be16(&head, 4) as u64;
     if header_size < 28 || be16(&head, 6) != 1 {
@@ -123,9 +127,10 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         return Err(ScanError::Unsupported("PKG Payload compression"));
     };
 
-    let mut target = StreamBundle::default();
+    let mut target = StreamBundle::new(selection);
     let budget = input.remaining_budget();
-    if matches!(kind, Payload::Compressed(Codec::Gzip) | Payload::Pbzx)
+    if !matches!(selection, Target::Executable(_))
+        && matches!(kind, Payload::Compressed(Codec::Gzip) | Payload::Pbzx)
         && member.packed > budget
         && let Some((_, bom)) = boms.iter().find(|(container, _)| *container == parent)
         && bom.packed <= MAX_BOM
@@ -134,7 +139,8 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
     {
         let mut preview = ScanResult::new(out.total_size);
         let source = Preview::new(Window::new(input, member.offset, member.packed)?);
-        let result = inspect_payload(source, kind, StreamBundle::default(), &mut preview).await;
+        let result =
+            inspect_payload(source, kind, StreamBundle::new(selection), &mut preview).await;
         if !matches!(result, Err(ScanError::Budget)) {
             preview.installer = out.installer.take();
             preview.format = out.format;
@@ -144,7 +150,8 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         // There is no reason to fetch a detached plist if the prefix already
         // found it and is spending its remaining input on the executable.
         if preview.executable_name.is_none()
-            && let Some((path, provenance)) = recover_target(input, kind, &member, bom, out).await
+            && let Some((path, provenance)) =
+                recover_target(input, kind, &member, bom, selection, out).await
         {
             target = StreamBundle::with_target(path);
             out.bundle_metadata_source = Some(provenance);
@@ -165,11 +172,11 @@ enum Payload {
 async fn inspect_payload(
     mut source: impl ReadAt,
     kind: Payload,
-    target: StreamBundle,
+    target: StreamBundle<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     match kind {
-        Payload::Cpio => cpio::scan(&mut source, out).await,
+        Payload::Cpio => cpio::scan_with(&mut source, target, out).await,
         Payload::Compressed(codec) => {
             cpio::scan_with(
                 &mut Forward::new(source, STREAM_OUTPUT_LIMIT, codec),
@@ -187,6 +194,7 @@ async fn recover_target(
     kind: Payload,
     payload: &Member<'_>,
     bom: &Member<'_>,
+    selection: Target<'_>,
     out: &mut ScanResult,
 ) -> Option<(String, &'static str)> {
     let bom = read_small_member(input, bom, MAX_BOM).await.ok()??;
@@ -211,7 +219,7 @@ async fn recover_target(
         }
         Payload::Cpio | Payload::Compressed(_) => return None,
     };
-    let root = bundle::outer_plist(&expected.path)?;
+    let root = bundle::selected_plist(&expected.path, selection)?;
     let mut bundle = ScanResult::new(out.total_size);
     let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
     bundle.installer = out.installer.take();

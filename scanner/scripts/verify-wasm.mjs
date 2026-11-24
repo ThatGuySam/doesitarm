@@ -9,7 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const cli = resolve(root, process.argv[2] ?? 'target/debug/scan-cli');
 const pkg = resolve(root, process.argv[3] ?? 'pkg');
-const { default: init, scan } = await import(pathToFileURL(resolve(pkg, 'scan_wasm.js')));
+const { default: init, scan, scan_target: scanTarget } = await import(pathToFileURL(resolve(pkg, 'scan_wasm.js')));
 await init({ module_or_path: await readFile(resolve(pkg, 'scan_wasm_bg.wasm')) });
 
 const fixtures = resolve(root, 'fixtures');
@@ -60,6 +60,23 @@ for (const name of (await readdir(fixtures)).sort()) {
         assert.deepEqual(actual, expected, `${name}, ${mode}, budget ${budget}`);
         assert.equal(actual.reads, reads);
         assert.equal(actual.bytes_read, bytesRead);
+        comparisons++;
+      }
+    }
+    if (name === 'stored.zip' || name === 'apfs.dmg') {
+      for (const { kind, option, path } of [
+        { kind: 'bundle', option: '--bundle-path', path: 'Fixture.app' },
+        { kind: 'executable', option: '--binary-path', path: 'Fixture.app/Contents/MacOS/FixtureBinary' },
+      ]) {
+        const budget = 8 * 1024 * 1024;
+        const native = spawnSync(cli, ['scan', file, '--budget', String(budget), '--json', option, path], {
+          encoding: 'utf8',
+        });
+        assert.ifError(native.error);
+        assert.equal(native.status, 0, native.stderr);
+        const expected = JSON.parse(native.stdout);
+        const actual = JSON.parse(await scanTarget(size, BigInt(budget), readAsync, kind, path));
+        assert.deepEqual(actual, expected, `${name}, ${kind}, ${path}`);
         comparisons++;
       }
     }

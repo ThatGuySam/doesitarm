@@ -1,13 +1,19 @@
-use crate::{ReadAt, Result, ScanError, ScanResult, check_range, stream_bundle::StreamBundle};
+use crate::{
+    ReadAt, Result, ScanError, ScanResult, Target, check_range, stream_bundle::StreamBundle,
+};
 
 const BLOCK: usize = 512;
 const MAX_METADATA: u64 = 64 * 1024;
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let mut pos = 0;
     let mut next_path = None;
     let mut next_size = None;
-    let mut bundle = StreamBundle::default();
+    let mut bundle = StreamBundle::new(target);
 
     for _ in 0..250_000 {
         let header = input.read_at(pos, BLOCK).await?;
@@ -34,11 +40,18 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
             kind => {
                 size = next_size.take().unwrap_or(size);
                 let path = next_path.take().or_else(|| header_path(&header));
-                if matches!(kind, b'0' | 0)
-                    && let Some(path) = path
-                    && bundle.file(input, &path, start, size, out).await?
-                {
-                    return Ok(());
+                if let Some(path) = path {
+                    match kind {
+                        b'0' | 0 if bundle.file(input, &path, start, size, out).await? => {
+                            return Ok(());
+                        }
+                        b'1' | b'2' if bundle.is_executable_path(&path) => {
+                            return Err(ScanError::Unsupported(
+                                "declared tar executable is a link",
+                            ));
+                        }
+                        _ => (),
+                    }
                 }
             }
         }

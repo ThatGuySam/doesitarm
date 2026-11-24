@@ -1,5 +1,7 @@
 //! HFS+ and HFSX structures and block addressing follow Apple TN1150.
-use crate::{ReadAt, Result, ScanError, ScanResult, be16, be32, be64, bundle, check_range, macho};
+use crate::{
+    ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle, check_range, macho,
+};
 use std::collections::VecDeque;
 use unicode_normalization::UnicodeNormalization;
 
@@ -468,6 +470,23 @@ impl Catalog {
             .ok_or(ScanError::NotFound("bundle path in HFS catalog"))?;
         Ok(items.into_iter().nth(index).unwrap())
     }
+
+    async fn find_path(
+        &mut self,
+        volume: &mut Volume<'_, impl ReadAt>,
+        mut parent: u32,
+        path: &str,
+        file: bool,
+    ) -> Result<Item> {
+        let mut parts = path.trim_start_matches("./").split('/').peekable();
+        while let Some(part) = parts.next() {
+            if parts.peek().is_none() {
+                return self.find(volume, parent, part, file).await;
+            }
+            parent = self.find(volume, parent, part, false).await?.id;
+        }
+        Err(ScanError::Invalid("empty HFS path"))
+    }
 }
 
 fn file_fork(item: Item, geometry: Geometry) -> Result<Fork> {
@@ -483,7 +502,11 @@ fn file_fork(item: Item, geometry: Geometry) -> Result<Fork> {
     Fork::parse(item.id, &file.fork, geometry)
 }
 
-pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    disk: &mut impl ReadAt,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let header = disk.read_at(1024, 512).await?;
     if !matches!(&header[..4], b"H+\0\x04" | b"HX\0\x05") {
         return Err(ScanError::Invalid("HFS volume header signature or version"));
@@ -506,15 +529,38 @@ pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result
         overflow_tree: None,
     };
     let mut catalog = Catalog::load(&mut volume, catalog).await?;
-    let root = catalog.children(&mut volume, ROOT_ID).await?;
-    let app = root
-        .into_iter()
-        .filter(|item| {
-            item.file.is_none() && item.name.ends_with(".app") && !item.name.starts_with('.')
-        })
-        .min_by(|a, b| a.name.cmp(&b.name))
-        .ok_or(ScanError::NotFound("app at the HFS volume root"))?;
-    out.bundle_path = Some(app.name.clone());
+    if let Target::Executable(path) = target {
+        let item = catalog.find_path(&mut volume, ROOT_ID, path, true).await?;
+        out.executable_path = Some(path.to_owned());
+        let fork = file_fork(item, geometry)?;
+        out.executable_size = Some(fork.size);
+        return macho::scan(
+            &mut ForkReader {
+                volume: &mut volume,
+                fork,
+            },
+            &mut out.architectures,
+        )
+        .await;
+    }
+    let (app, app_path) = if let Target::Bundle(path) = target {
+        (
+            catalog.find_path(&mut volume, ROOT_ID, path, false).await?,
+            path.trim_start_matches("./").to_owned(),
+        )
+    } else {
+        let root = catalog.children(&mut volume, ROOT_ID).await?;
+        let app = root
+            .into_iter()
+            .filter(|item| {
+                item.file.is_none() && item.name.ends_with(".app") && !item.name.starts_with('.')
+            })
+            .min_by(|a, b| a.name.cmp(&b.name))
+            .ok_or(ScanError::NotFound("app at the HFS volume root"))?;
+        let path = app.name.clone();
+        (app, path)
+    };
+    out.bundle_path = Some(app_path.clone());
 
     let contents = catalog.find(&mut volume, app.id, "Contents", false).await?;
     let item = catalog
@@ -526,13 +572,11 @@ pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result
     }
     let info_size = info.size as usize;
     let plist = volume.read_fork(&mut info, 0, info_size).await?;
-    bundle::apply_plist(&plist, &app.name, out)?;
-
-    let macos = catalog
-        .find(&mut volume, contents.id, "MacOS", false)
+    let path = bundle::apply_plist(&plist, &app_path, out)?;
+    let relative = &path[app_path.len() + "/Contents/".len()..];
+    let item = catalog
+        .find_path(&mut volume, contents.id, relative, true)
         .await?;
-    let name = out.executable_name.as_ref().unwrap();
-    let item = catalog.find(&mut volume, macos.id, name, true).await?;
     let fork = file_fork(item, geometry)?;
     out.executable_size = Some(fork.size);
     let mut reader = ForkReader {

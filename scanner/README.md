@@ -19,6 +19,8 @@ URL scans start with `Range: bytes=0-0` to discover the total size. Every subseq
 
 `--allow-stream` accepts an HTTP 200 from the discovery probe and reads one response up to the budget. It reuses already delivered ranges from an anonymous temporary file. `--request-delay-ms` sets the minimum interval between range request starts. `--allow-http` enables plain HTTP sources and redirects for catalog URLs that require them.
 
+`--bundle-path "Example.app"` selects a registered bundle from a container with multiple candidates. `--binary-path "bin/example"` scans an exact standalone executable and reports its architecture and macOS deployment target. The Homebrew runner supplies these paths from artifact declarations. [Campaign and resume instructions](CLIMB.md)
+
 ## Build Wasm and check parity
 
 ```sh

@@ -1,4 +1,4 @@
-use scan_core::{ReadAt, Result, ScanError, ScanResult, Status, scan};
+use scan_core::{ReadAt, Result, ScanError, ScanResult, Status, Target, scan, scan_target};
 use std::{
     future::Future,
     pin::pin,
@@ -107,6 +107,41 @@ fn stored_zip_seeks_to_bundle_executable() {
     assert_eq!(result.format, Some("zip"));
     assert_bundle(&result);
     assert!(result.bytes_read < result.total_size * 3 / 4);
+}
+
+#[test]
+fn declared_targets_verify_named_bundles_and_binaries() {
+    for artifact in [
+        ZIP,
+        include_bytes!("../../fixtures/app.tar.gz"),
+        include_bytes!("../../fixtures/hfsx.dmg"),
+        include_bytes!("../../fixtures/apfs.dmg"),
+        include_bytes!("../../fixtures/gzip-newc.pkg"),
+    ] {
+        let result = ready(scan_target(
+            &mut Memory(artifact),
+            u64::MAX,
+            Target::Bundle("Fixture.app"),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+        let binary = ready(scan_target(
+            &mut Memory(artifact),
+            u64::MAX,
+            Target::Executable(path),
+        ));
+        assert!(matches!(binary.status, Status::Complete), "{binary:?}");
+        assert_eq!(binary.executable_path.as_deref(), Some(path));
+        assert!(binary.bundle_id.is_none());
+        assert_eq!(binary.architectures.len(), 2);
+    }
+    let missing = ready(scan_target(
+        &mut Memory(ZIP),
+        u64::MAX,
+        Target::Bundle("Different.app"),
+    ));
+    assert!(matches!(missing.status, Status::NotFound));
 }
 
 #[test]

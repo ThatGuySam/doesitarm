@@ -2,7 +2,7 @@
 
 mod http;
 
-use scan_core::{ReadAt, Result, ScanError, ScanResult, Status, scan};
+use scan_core::{ReadAt, Result, ScanError, ScanResult, Status, Target, scan_target};
 use serde::Serialize;
 use std::{
     ffi::OsString,
@@ -17,13 +17,26 @@ use std::{
 };
 
 const DEFAULT_BUDGET: u64 = 64 * 1024 * 1024;
-const USAGE: &str = "Usage: scan-cli scan <path-or-url> [--budget BYTES] [--json] [--allow-stream] [--allow-http] [--request-delay-ms MS]";
+const USAGE: &str = "Usage: scan-cli scan <path-or-url> [--budget BYTES] [--json] [--allow-stream] [--allow-http] [--request-delay-ms MS] [--bundle-path PATH | --binary-path PATH]";
 
 struct Args {
     input: OsString,
     budget: u64,
     json: bool,
     http: http::Options,
+    target: Option<Requested>,
+}
+
+enum Requested {
+    Bundle(String),
+    Executable(String),
+}
+
+fn path_argument(value: Option<OsString>) -> std::result::Result<String, &'static str> {
+    value
+        .and_then(|value| value.into_string().ok())
+        .filter(|value| !value.is_empty())
+        .ok_or("Expected a nonempty UTF-8 archive path.")
 }
 
 #[derive(Serialize)]
@@ -121,6 +134,7 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
     let mut json = false;
     let mut http = http::Options::default();
     let mut delay = None;
+    let mut target = None;
     while let Some(value) = values.next() {
         match value.to_str() {
             Some("--budget") if budget.is_none() => {
@@ -132,6 +146,12 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
                 );
             }
             Some("--json") if !json => json = true,
+            Some("--bundle-path") if target.is_none() => {
+                target = Some(Requested::Bundle(path_argument(values.next())?));
+            }
+            Some("--binary-path") if target.is_none() => {
+                target = Some(Requested::Executable(path_argument(values.next())?));
+            }
             Some("--allow-stream") if !http.allow_stream => http.allow_stream = true,
             Some("--allow-http") if !http.allow_http => http.allow_http = true,
             Some("--request-delay-ms") if delay.is_none() => {
@@ -152,18 +172,25 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
         budget: budget.unwrap_or(DEFAULT_BUDGET),
         json,
         http,
+        target,
     }))
 }
 
 fn run(args: &Args) -> Output {
+    let target = match &args.target {
+        Some(Requested::Bundle(path)) => Target::Bundle(path),
+        Some(Requested::Executable(path)) => Target::Executable(path),
+        None => Target::Auto,
+    };
     let source = args.input.to_str();
     let result = if let Some(url) = source.filter(|s| s.contains("://")) {
         if url.starts_with("https://") || (args.http.allow_http && url.starts_with("http://")) {
-            return http::scan(url, args.budget, &args.http);
+            return http::scan(url, args.budget, target, &args.http);
         }
         Err(ScanError::Source("URL must use HTTPS".into()))
     } else {
-        FileSource::open(Path::new(&args.input)).map(|mut file| ready(scan(&mut file, args.budget)))
+        FileSource::open(Path::new(&args.input))
+            .map(|mut file| ready(scan_target(&mut file, args.budget, target)))
     };
     Output::new(result.unwrap_or_else(|error| failure(error, 0)))
 }

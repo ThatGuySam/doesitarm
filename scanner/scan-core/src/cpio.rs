@@ -58,13 +58,9 @@ pub(crate) fn recognized(magic: &[u8]) -> bool {
     Encoding::from_magic(magic).is_some()
 }
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
-    scan_with(input, StreamBundle::default(), out).await
-}
-
 pub(crate) async fn scan_with(
     input: &mut impl ReadAt,
-    mut bundle: StreamBundle,
+    mut bundle: StreamBundle<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     let mut offset = 0;
@@ -88,11 +84,16 @@ pub(crate) async fn scan_with(
         }
         let start = encoding.align(name_at + name_size)?;
         check_range(input.size(), start, size)?;
-        if mode & 0o170000 == 0o100000
-            && let Ok(path) = std::str::from_utf8(name)
-            && bundle.file(input, path, start, size, out).await?
-        {
-            return Ok(());
+        if let Ok(path) = std::str::from_utf8(name) {
+            match mode & 0o170000 {
+                0o100000 if bundle.file(input, path, start, size, out).await? => return Ok(()),
+                0o120000 if bundle.is_executable_path(path) => {
+                    return Err(ScanError::Unsupported(
+                        "declared CPIO executable is a symlink",
+                    ));
+                }
+                _ => (),
+            }
         }
         offset = encoding.align(start + size)?;
     }

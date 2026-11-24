@@ -2,7 +2,7 @@
 #![cfg(target_arch = "wasm32")]
 
 use js_sys::{Function, Promise, Uint8Array};
-use scan_core::{ReadAt, Result, ScanError};
+use scan_core::{ReadAt, Result, ScanError, Target};
 use wasm_bindgen::{JsCast, prelude::*};
 use wasm_bindgen_futures::JsFuture;
 
@@ -45,11 +45,40 @@ pub async fn scan(
     budget: u64,
     read_at: Function,
 ) -> std::result::Result<String, JsValue> {
+    scan_with_target(total_size, budget, read_at, Target::Auto).await
+}
+
+#[wasm_bindgen]
+pub async fn scan_target(
+    total_size: u64,
+    budget: u64,
+    read_at: Function,
+    kind: &str,
+    path: &str,
+) -> std::result::Result<String, JsValue> {
+    let target = match kind {
+        "bundle" => Target::Bundle(path),
+        "executable" => Target::Executable(path),
+        _ => {
+            return Err(JsValue::from_str(
+                "Expected bundle or executable target kind",
+            ));
+        }
+    };
+    scan_with_target(total_size, budget, read_at, target).await
+}
+
+async fn scan_with_target(
+    total_size: u64,
+    budget: u64,
+    read_at: Function,
+    target: Target<'_>,
+) -> std::result::Result<String, JsValue> {
     let mut source = JsSource {
         total_size,
         read_at,
     };
-    let result = scan_core::scan(&mut source, budget).await;
+    let result = scan_core::scan_target(&mut source, budget, target).await;
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
 }
 

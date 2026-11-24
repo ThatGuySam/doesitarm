@@ -1,6 +1,6 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, apfs, be16, be32, be64, check_range, hfs, le32,
-    le64,
+    ReadAt, Result, ScanError, ScanResult, Target, Window, apfs, be16, be32, be64, check_range,
+    hfs, le32, le64,
     udif_codec::{self, IGNORE, RAW, ZERO},
 };
 use plist::Value;
@@ -32,6 +32,7 @@ struct Image<'a, S> {
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
     trailer: &[u8],
+    target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     if be32(trailer, 4) != 4 || be32(trailer, 8) != 512 {
@@ -70,8 +71,8 @@ pub(crate) async fn scan(
     let (partition, fs) = find_filesystem(&mut image, &partitions).await?;
     let mut volume = Window::new(&mut image, partition.start, partition.end - partition.start)?;
     match fs {
-        Filesystem::Hfs => hfs::scan(&mut volume, out).await,
-        Filesystem::Apfs => apfs::scan(&mut volume, out).await,
+        Filesystem::Hfs => hfs::scan(&mut volume, target, out).await,
+        Filesystem::Apfs => apfs::scan(&mut volume, target, out).await,
     }
 }
 
