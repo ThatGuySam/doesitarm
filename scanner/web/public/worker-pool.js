@@ -1,10 +1,12 @@
+import { timeSlice } from './folder-walk.js';
+import { ScanQueue } from './scan-queue.js';
 import { emptyResult } from './scan-result.js';
 
 export class ScanPool {
   #mode;
   #makeWorker;
   #slots = new Set();
-  #queue = [];
+  #queue = new ScanQueue();
   #dispatchPending = false;
 
   constructor(mode, makeWorker = () =>
@@ -36,20 +38,24 @@ export class ScanPool {
       this.#schedule();
       return;
     }
-    const index = this.#queue.findIndex((task) => task.id === id);
-    if (index !== -1) {
-      const [task] = this.#queue.splice(index, 1);
-      task.update({ type: 'canceled' });
-    }
+    this.#queue.remove(id)?.update({ type: 'canceled' });
   }
 
   cancelAll() {
-    const tasks = this.#queue.splice(0);
+    const queued = this.#queue.clear();
     for (const slot of this.#slots) {
-      if (slot.task) tasks.push(slot.task);
+      const task = slot.task;
       this.#retire(slot);
+      if (task) queued.push(task);
     }
-    for (const task of tasks) task.update({ type: 'canceled' });
+    const pause = timeSlice();
+    void (async () => {
+      for (const task of queued) {
+        task.update({ type: 'canceled' });
+        const wait = pause();
+        if (wait) await wait;
+      }
+    })();
   }
 
   #schedule() {
@@ -69,8 +75,6 @@ export class ScanPool {
     let active = this.#slots.size - idle.length;
     if (active >= limit || !this.#queue.length) return;
 
-    // Array sorting is stable, so equal-size and unknown-size jobs keep arrival order.
-    this.#queue.sort((a, b) => a.size === b.size ? 0 : a.size - b.size);
     while (active < limit && this.#queue.length) {
       const task = this.#queue.shift();
       let slot;
@@ -96,9 +100,12 @@ export class ScanPool {
       const task = slot.task;
       if (!task || data.id !== task.id) return;
       if (data.type === 'executable-needed') {
-        void this.#sendExecutable(slot, task, data.name);
+        void this.#sendExecutable(slot, task, data.path ?? data.name);
       } else if (['progress', 'remote', 'done'].includes(data.type)) {
-        if (data.type === 'done') this.#idle(slot);
+        if (data.type === 'done') {
+          data.directoryListings = task.listings ?? task.job.directoryListings;
+          this.#idle(slot);
+        }
         task.update(data);
       }
     });
@@ -115,30 +122,41 @@ export class ScanPool {
     const { id, job, update } = task;
     update({ type: 'start' });
     try {
-      const { kind, label, file, url, forceWorker } = job;
-      const plist = kind === 'bundle' ? await job.getPlist() : undefined;
+      const { kind, label, file, url, forceWorker, probe, parentBundlePath, plistPath, roleHint } = job;
+      const [plist, listings] = kind === 'bundle'
+        ? await Promise.all([job.getPlist(), job.getDirectoryListings?.()])
+        : [];
       if (slot.task !== task) return;
+      task.listings = listings;
       slot.worker.postMessage({
-        id, job: { kind, label, file, url, forceWorker, plist }, passive: this.#mode.passive,
+        id,
+        job: { kind, label, file, url, forceWorker, plist, probe, parentBundlePath, plistPath, roleHint },
+        passive: this.#mode.passive,
       });
-    } catch {
+    } catch (cause) {
       if (slot.task !== task) return;
+      job.recordError?.(cause);
       const error = job.kind === 'bundle'
-        ? 'The browser could not open Contents/Info.plist in this app folder.'
+        ? 'The browser could not open Info.plist in this app folder.'
         : 'The browser could not open this input.';
       this.#idle(slot);
       this.#finishError(task, error);
     }
   }
 
-  async #sendExecutable(slot, task, name) {
+  async #sendExecutable(slot, task, path) {
     let file;
+    let errorClass;
     try {
-      file = await task.job.getExecutable(name);
-    } catch {
-      // The worker returns the parsed metadata alongside its missing-file result.
+      file = await task.job.getExecutable(path);
+    } catch (cause) {
+      if (cause.name !== 'NotFoundError') {
+        task.job.recordError?.(cause);
+        errorClass = cause.name === 'NotAllowedError' || cause.name === 'SecurityError'
+          ? 'permission_denied' : 'unreadable_executable';
+      }
     }
-    if (slot.task === task) slot.worker.postMessage({ type: 'executable', id: task.id, file });
+    if (slot.task === task) slot.worker.postMessage({ type: 'executable', id: task.id, file, errorClass });
   }
 
   #finishError(task, error) {
