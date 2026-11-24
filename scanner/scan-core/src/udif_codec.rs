@@ -1,5 +1,8 @@
-use crate::{Result, ScanError};
-use std::io::{self, Read, Write};
+use crate::{
+    Result, ScanError,
+    decode::{self, DecodeBudget, check_chunk_ratio},
+};
+use std::io::{self, Write};
 
 pub(crate) const ZERO: u32 = 0;
 pub(crate) const RAW: u32 = 1;
@@ -11,15 +14,26 @@ pub(crate) const LZFSE: u32 = 0x8000_0007;
 pub(crate) const LZMA: u32 = 0x8000_0008;
 const INVALID: ScanError = ScanError::Invalid("UDIF compressed chunk");
 
-pub(crate) fn decode(kind: u32, input: &[u8], size: usize) -> Result<Vec<u8>> {
+pub(crate) fn decode(
+    kind: u32,
+    input: &[u8],
+    size: usize,
+    work: &mut DecodeBudget,
+) -> Result<Vec<u8>> {
+    if !matches!(kind, ADC | LZFSE | ZLIB | BZIP2 | LZMA) {
+        return Err(ScanError::Unsupported("UDIF chunk codec"));
+    }
+    work.check_chunk(input.len() as u64, size as u64)?;
+    work.start_chunk(size as u64)?;
     if kind == ADC {
         return adc(input, size);
     }
     if kind == LZFSE {
         let mut out = Bounded(Vec::with_capacity(size), size);
-        lzfse_rust::LzfseRingDecoder::default()
+        let (consumed, _) = lzfse_rust::LzfseRingDecoder::default()
             .decode(&mut { input }, &mut out)
             .map_err(|_| INVALID)?;
+        check_chunk_ratio(consumed, size as u64)?;
         return if out.0.len() == size {
             Ok(out.0)
         } else {
@@ -28,25 +42,23 @@ pub(crate) fn decode(kind: u32, input: &[u8], size: usize) -> Result<Vec<u8>> {
     }
 
     match kind {
-        ZLIB => read_exact(flate2::read::ZlibDecoder::new(input), size),
-        BZIP2 => read_exact(bzip2::read::BzDecoder::new(input), size),
+        ZLIB => decode::zlib(input, size, INVALID),
+        BZIP2 => {
+            let mut decoder = bzip2::read::BzDecoder::new(input);
+            let decoded = decode::exact(&mut decoder, size, INVALID)?;
+            check_chunk_ratio(decoder.total_in(), size as u64)?;
+            Ok(decoded)
+        }
         LZMA => {
             // ULMO uses XZ framing and needs a bounded LZMA2 dictionary.
-            let reader = lzma_rust2::XzReader::new_mem_limit(input, false, 32 * 1024);
-            read_exact(reader, size)
+            let mut reader = lzma_rust2::XzReader::new_mem_limit(input, false, 32 * 1024);
+            let decoded = decode::exact(&mut reader, size, INVALID)?;
+            let consumed = input.len() - reader.inner().len();
+            check_chunk_ratio(consumed as u64, size as u64)?;
+            Ok(decoded)
         }
         _ => Err(ScanError::Unsupported("UDIF chunk codec")),
     }
-}
-
-fn read_exact(reader: impl Read, size: usize) -> Result<Vec<u8>> {
-    let mut bytes = vec![0; size];
-    let mut reader = reader;
-    reader.read_exact(&mut bytes).map_err(|_| INVALID)?;
-    if reader.read(&mut [0]).map_err(|_| INVALID)? != 0 {
-        return Err(INVALID);
-    }
-    Ok(bytes)
 }
 
 struct Bounded(Vec<u8>, usize);
@@ -114,8 +126,18 @@ mod tests {
     #[test]
     fn adc_literals_and_overlapping_matches_obey_declared_size() {
         let encoded = b"\x81ab\x00\x01\x40\x00\x00";
-        assert_eq!(decode(ADC, encoded, 9).unwrap(), b"ababaaaaa");
-        assert!(decode(ADC, encoded, 8).is_err());
-        assert!(decode(ADC, b"\x00\x00", 3).is_err());
+        let mut work = DecodeBudget::new(20);
+        assert_eq!(decode(ADC, encoded, 9, &mut work).unwrap(), b"ababaaaaa");
+        assert!(decode(ADC, encoded, 8, &mut work).is_err());
+        assert!(decode(ADC, b"\x00\x00", 3, &mut work).is_err());
+    }
+
+    #[test]
+    fn expansion_ratio_rejects_chunks_before_reserving_output() {
+        let mut work = DecodeBudget::new(1025);
+        assert!(
+            matches!(decode(BZIP2, b"x", 1025, &mut work), Err(ScanError::WorkLimit(reason)) if reason.contains("ratio"))
+        );
+        assert_eq!(work.used(), 0);
     }
 }

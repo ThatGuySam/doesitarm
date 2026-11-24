@@ -4,19 +4,39 @@
 mod apfs;
 mod bundle;
 mod cpio;
+mod decode;
 mod dmg;
 mod hfs;
 mod inflate;
 mod macho;
 mod pbzx;
 mod pkg;
+mod plist_value;
 mod stream_bundle;
 mod tar;
 mod udif_codec;
 mod zip;
 
 use serde::Serialize;
-use std::fmt;
+use std::{collections::BTreeMap, fmt};
+
+pub const DEFAULT_DECODED_BYTE_BUDGET: u64 = 64 * 1024 * 1024;
+const MAX_HOST_READS: u64 = 8192;
+
+#[derive(Debug, Clone, Copy)]
+pub struct ScanLimits {
+    pub byte_budget: u64,
+    pub decoded_byte_budget: u64,
+}
+
+impl ScanLimits {
+    pub const fn new(byte_budget: u64) -> Self {
+        Self {
+            byte_budget,
+            decoded_byte_budget: DEFAULT_DECODED_BYTE_BUDGET,
+        }
+    }
+}
 
 /// Each call must return exactly the requested bytes or an error. Sizes and
 /// offsets refer to the original representation and must stay stable.
@@ -37,6 +57,7 @@ pub type Result<T> = std::result::Result<T, ScanError>;
 pub enum ScanError {
     Budget,
     Limit(&'static str),
+    WorkLimit(&'static str),
     Invalid(&'static str),
     Unsupported(&'static str),
     NotFound(&'static str),
@@ -47,7 +68,7 @@ impl fmt::Display for ScanError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Budget => f.write_str("byte budget reached"),
-            Self::Limit(s) => write!(f, "scan limit: {s}"),
+            Self::Limit(s) | Self::WorkLimit(s) => write!(f, "scan limit: {s}"),
             Self::Invalid(s) => write!(f, "invalid data: {s}"),
             Self::Unsupported(s) => write!(f, "unsupported: {s}"),
             Self::NotFound(s) => write!(f, "not found: {s}"),
@@ -112,7 +133,12 @@ pub struct ScanResult {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
     pub installer: Option<InstallerMetadata>,
+    /// Unique source bytes in successful range responses.
     pub bytes_read: u64,
+    /// Sum of lengths of attempted source requests, including overlaps and failures.
+    pub bytes_requested: u64,
+    /// Decoder output charged to the work budget, including reserved whole chunks.
+    pub decoded_bytes: u64,
     pub reads: u64,
     pub total_size: u64,
     pub error: Option<String>,
@@ -134,6 +160,8 @@ impl ScanResult {
             candidate_executables: Vec::new(),
             installer: None,
             bytes_read: 0,
+            bytes_requested: 0,
+            decoded_bytes: 0,
             reads: 0,
             total_size,
             error: None,
@@ -143,7 +171,7 @@ impl ScanResult {
     pub fn set_error(&mut self, error: ScanError) {
         self.status = match error {
             ScanError::Budget => Status::BudgetExhausted,
-            ScanError::Limit(_) => Status::LimitReached,
+            ScanError::Limit(_) | ScanError::WorkLimit(_) => Status::LimitReached,
             ScanError::Invalid(_) => Status::Invalid,
             ScanError::Unsupported(_) => Status::Unsupported,
             ScanError::NotFound(_) => Status::NotFound,
@@ -162,6 +190,7 @@ pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
         return result;
     }
     result.bytes_read = result.total_size;
+    result.bytes_requested = result.total_size;
     result.reads = 1;
     if let Err(error) = bundle::apply_plist(plist, bundle_path, &mut result) {
         result.set_error(error);
@@ -169,19 +198,25 @@ pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
     result
 }
 
-/// Byte budget covers successful host reads (including repeated ranges). A
-/// request exceeding the remaining budget is rejected before calling the host.
+/// Uses the default decoded-byte budget. The supplied byte budget covers every
+/// attempted host read, including repeated ranges.
 pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {
+    scan_with_limits(source, ScanLimits::new(budget)).await
+}
+
+pub async fn scan_with_limits(source: &mut impl ReadAt, limits: ScanLimits) -> ScanResult {
     let size = source.size();
     let mut result = ScanResult::new(size);
     let mut input = Metered {
         source,
         size,
-        budget,
-        bytes: 0,
+        budget: limits.byte_budget,
+        requested: 0,
         reads: 0,
+        coverage: Coverage::default(),
     };
-    if let Err(error) = inspect(&mut input, &mut result).await {
+    let mut work = decode::DecodeBudget::new(limits.decoded_byte_budget);
+    if let Err(error) = inspect(&mut input, &mut work, &mut result).await {
         result.set_error(error);
     }
     if result.min_macos.is_none() {
@@ -201,12 +236,18 @@ pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {
             })
             .cloned();
     }
-    result.bytes_read = input.bytes;
+    result.bytes_read = input.coverage.bytes;
+    result.bytes_requested = input.requested;
+    result.decoded_bytes = work.used();
     result.reads = input.reads;
     result
 }
 
-async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+async fn inspect(
+    input: &mut impl ReadAt,
+    work: &mut decode::DecodeBudget,
+    out: &mut ScanResult,
+) -> Result<()> {
     if input.size() < 4 {
         return Err(ScanError::Invalid("missing file magic"));
     }
@@ -222,21 +263,21 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
         b"PK\x03\x04" | b"PK\x05\x06" | b"PK\x07\x08"
     ) {
         out.format = Some("zip");
-        return zip::scan(input, out).await;
+        return zip::scan(input, work, out).await;
     }
     if magic.starts_with(b"\x1f\x8b") {
         out.format = Some("tar.gz");
-        return tar::scan(input, out).await;
+        return tar::scan(input, work, out).await;
     }
     if magic == b"xar!" {
         out.format = Some("pkg");
-        return pkg::scan(input, out).await;
+        return pkg::scan(input, work, out).await;
     }
     if input.size() >= 512 {
         let trailer = input.read_at(input.size() - 512, 512).await?;
         if trailer.starts_with(b"koly") {
             out.format = Some("dmg");
-            return dmg::scan(input, &trailer, out).await;
+            return dmg::scan(input, work, &trailer, out).await;
         }
     }
     Err(ScanError::Unsupported("unrecognized file format"))
@@ -246,8 +287,9 @@ struct Metered<'a, S> {
     source: &'a mut S,
     size: u64,
     budget: u64,
-    bytes: u64,
+    requested: u64,
     reads: u64,
+    coverage: Coverage,
 }
 
 impl<S: ReadAt> ReadAt for Metered<'_, S> {
@@ -256,7 +298,7 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
     }
 
     fn remaining_budget(&self) -> u64 {
-        self.budget.saturating_sub(self.bytes)
+        self.budget - self.requested
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
@@ -267,7 +309,11 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
         if len as u64 > self.remaining_budget() {
             return Err(ScanError::Budget);
         }
+        if self.reads == MAX_HOST_READS {
+            return Err(ScanError::WorkLimit("too many source range requests"));
+        }
         self.reads += 1;
+        self.requested += len as u64;
         let bytes = self.source.read_at(offset, len).await?;
         if bytes.len() != len {
             return Err(ScanError::Source(format!(
@@ -275,8 +321,37 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
                 bytes.len()
             )));
         }
-        self.bytes += len as u64;
+        self.coverage.insert(offset, offset + len as u64);
         Ok(bytes)
+    }
+}
+
+#[derive(Default)]
+struct Coverage {
+    // Disjoint, non-adjacent half-open intervals, keyed by start.
+    ranges: BTreeMap<u64, u64>,
+    bytes: u64,
+}
+
+impl Coverage {
+    fn insert(&mut self, mut start: u64, mut end: u64) {
+        if let Some((&first, &last)) = self.ranges.range(..=start).next_back()
+            && last >= start
+        {
+            if last >= end {
+                return;
+            }
+            self.ranges.remove(&first);
+            self.bytes -= last - first;
+            start = first;
+        }
+        while let Some((&first, &last)) = self.ranges.range(start..=end).next() {
+            self.ranges.remove(&first);
+            self.bytes -= last - first;
+            end = end.max(last);
+        }
+        self.ranges.insert(start, end);
+        self.bytes += end - start;
     }
 }
 

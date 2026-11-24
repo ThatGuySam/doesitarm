@@ -1,4 +1,6 @@
-use scan_core::{ReadAt, Result, ScanError, ScanResult, Status, scan};
+use scan_core::{
+    ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, scan, scan_with_limits,
+};
 use std::{
     future::Future,
     pin::pin,
@@ -66,7 +68,7 @@ fn fat32_and_fat64_seek_to_thin_headers_in_file_order() {
 fn budget_preserves_fat_table_architectures_and_accounts_for_reads() {
     let result = run(FAT, 52);
     assert!(matches!(result.status, Status::BudgetExhausted));
-    assert_eq!(result.bytes_read, 52);
+    assert_eq!(result.bytes_requested, 52);
     assert_eq!(result.reads, 3);
     assert_eq!(result.architectures.len(), 2);
     assert!(
@@ -75,6 +77,51 @@ fn budget_preserves_fat_table_architectures_and_accounts_for_reads() {
             .iter()
             .all(|arch| !arch.header_verified)
     );
+}
+
+#[test]
+fn repeated_magic_probe_counts_once_in_unique_bytes() {
+    let result = run(FAT, 52);
+    assert_eq!(result.bytes_read, 48);
+}
+
+#[test]
+fn bundle_rejects_deep_xml_and_binary_plist_collections() {
+    let mut dictionary = plist::Dictionary::new();
+    dictionary.insert("CFBundleExecutable".into(), "FixtureBinary".into());
+    let mut nested = plist::Value::Boolean(true);
+    for _ in 0..65 {
+        nested = plist::Value::Array(vec![nested]);
+    }
+    dictionary.insert("NestedMetadata".into(), nested);
+    let value = plist::Value::Dictionary(dictionary);
+    let mut xml = Vec::new();
+    let mut binary = Vec::new();
+    value.to_writer_xml(&mut xml).unwrap();
+    value.to_writer_binary(&mut binary).unwrap();
+
+    for bytes in [&xml, &binary] {
+        let result = scan_core::bundle_metadata(bytes, "Fixture.app");
+        assert!(matches!(result.status, Status::Invalid), "{result:?}");
+        assert!(result.error.unwrap().contains("nesting"));
+    }
+}
+
+#[test]
+fn dmg_rejects_deep_udif_plist_index() {
+    let mut index = String::from("<plist><dict><key>extra</key>");
+    index.push_str(&"<array>".repeat(65));
+    index.push_str(&"</array>".repeat(65));
+    index.push_str("</dict></plist>");
+    let mut trailer = [0; 512];
+    trailer[..12].copy_from_slice(b"koly\0\0\0\x04\0\0\x02\0");
+    trailer[224..232].copy_from_slice(&(index.len() as u64).to_be_bytes());
+    let mut image = index.into_bytes();
+    image.extend_from_slice(&trailer);
+    let result = run(&image, u64::MAX);
+    assert_eq!(result.format, Some("dmg"));
+    assert!(matches!(result.status, Status::Invalid), "{result:?}");
+    assert!(result.error.unwrap().contains("nesting"));
 }
 
 #[test]
@@ -120,11 +167,11 @@ fn zip64_with_comment_reads_binary_plist_and_deflated_executable() {
 #[test]
 fn zip_budget_preserves_bundle_fields_before_executable() {
     let full = run(ZIP, u64::MAX);
-    let result = run(ZIP, full.bytes_read - 48);
+    let result = run(ZIP, full.bytes_requested - 48);
     assert!(matches!(result.status, Status::BudgetExhausted));
     assert_eq!(result.bundle_id, full.bundle_id);
     assert_eq!(result.executable_name, full.executable_name);
-    assert!(result.bytes_read <= full.bytes_read - 48);
+    assert!(result.bytes_requested <= full.bytes_requested - 48);
 }
 
 const TAR: &[u8] = include_bytes!("../../fixtures/app.tar.gz");
@@ -160,7 +207,8 @@ fn tar_reuses_earlier_executable_evidence_after_pax_path_and_plist() {
 fn tar_reports_budget_exhaustion_if_compressed_prefix_is_too_short() {
     let result = run(TAR, 80);
     assert!(matches!(result.status, Status::BudgetExhausted));
-    assert_eq!(result.bytes_read, 80);
+    assert_eq!(result.bytes_read, 76);
+    assert_eq!(result.bytes_requested, 80);
     assert_eq!(result.format, Some("tar.gz"));
 }
 
@@ -247,6 +295,46 @@ fn pbzx_pkg_skips_unneeded_chunks_and_reads_a_mixed_raw_and_xz_payload() {
     let result = run(PBZX, 8192);
     assert_bundle(&result);
     assert!(result.bytes_read < result.total_size / 2);
+}
+
+#[test]
+fn decoded_budget_is_shared_across_members_and_leaves_partial_results() {
+    for (input, format) in [
+        (TAR, "tar.gz"),
+        (ZIP64, "zip"),
+        (DMG, "dmg"),
+        (PKG, "pkg"),
+        (PBZX, "pkg"),
+    ] {
+        let full = run(input, 8192);
+        assert!(matches!(full.status, Status::Complete), "{full:?}");
+        let limit = full.decoded_bytes - 1;
+        let partial = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits {
+                byte_budget: 8192,
+                decoded_byte_budget: limit,
+            },
+        ));
+        assert_eq!(partial.format, Some(format));
+        assert!(
+            matches!(partial.status, Status::LimitReached),
+            "{partial:?}"
+        );
+        assert_eq!(
+            partial.error.as_deref(),
+            Some("scan limit: decoded-byte budget reached")
+        );
+        assert!(partial.decoded_bytes <= limit);
+        assert_eq!(partial.bundle_id, full.bundle_id);
+        assert_eq!(partial.architectures.len(), full.architectures.len());
+        assert!(
+            partial
+                .architectures
+                .iter()
+                .any(|arch| arch.code_signature_present.is_none())
+        );
+    }
 }
 
 #[test]

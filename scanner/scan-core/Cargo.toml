@@ -6,7 +6,7 @@ edition.workspace = true
 [dependencies]
 serde.workspace = true
 flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
-plist = "1"
+plist = { version = "1", features = ["enable_unstable_features_that_may_break_with_minor_version_bumps"] }
 bzip2 = "0.6"
 lzfse_rust = "0.2"
 lzma-rust2 = { version = "0.25", default-features = false, features = ["std", "xz"] }

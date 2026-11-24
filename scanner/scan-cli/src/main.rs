@@ -2,7 +2,7 @@
 
 mod http;
 
-use scan_core::{ReadAt, Result, ScanError, ScanResult, Status, scan};
+use scan_core::{ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, scan_with_limits};
 use serde::Serialize;
 use std::{
     ffi::OsString,
@@ -16,11 +16,12 @@ use std::{
 };
 
 const DEFAULT_BUDGET: u64 = 64 * 1024 * 1024;
-const USAGE: &str = "Usage: scan-cli scan <path-or-https-url> [--budget BYTES] [--json]";
+const USAGE: &str =
+    "Usage: scan-cli scan <path-or-https-url> [--budget BYTES] [--decoded-budget BYTES] [--json]";
 
 struct Args {
     input: OsString,
-    budget: u64,
+    limits: ScanLimits,
     json: bool,
 }
 
@@ -37,6 +38,10 @@ fn main() -> ExitCode {
         Ok(Some(args)) => args,
         Ok(None) => {
             println!("{USAGE}");
+            println!(
+                "Default requested-byte budget: {DEFAULT_BUDGET} bytes\nDefault decoded-byte budget: {} bytes",
+                scan_core::DEFAULT_DECODED_BYTE_BUDGET
+            );
             return ExitCode::SUCCESS;
         }
         Err(error) => {
@@ -72,8 +77,12 @@ fn main() -> ExitCode {
             arch.join(", ")
         );
         println!(
-            "{} of {} bytes in {} reads",
-            result.bytes_read, result.total_size, result.reads
+            "{} of {} unique bytes read, {} bytes requested across {} reads, {} decoded bytes",
+            result.bytes_read,
+            result.total_size,
+            result.bytes_requested,
+            result.reads,
+            result.decoded_bytes
         );
         if let Some(error) = &result.error {
             eprintln!("{error}");
@@ -101,6 +110,7 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
     }
     let input = values.next().ok_or("Missing path or HTTPS URL.")?;
     let mut budget = None;
+    let mut decoded_budget = None;
     let mut json = false;
     while let Some(value) = values.next() {
         match value.to_str() {
@@ -112,13 +122,25 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
                         .ok_or("Expected a nonnegative integer byte budget.")?,
                 );
             }
+            Some("--decoded-budget") if decoded_budget.is_none() => {
+                decoded_budget = Some(
+                    values
+                        .next()
+                        .and_then(|value| value.to_str()?.parse().ok())
+                        .ok_or("Expected a nonnegative integer decoded-byte budget.")?,
+                );
+            }
             Some("--json") if !json => json = true,
             _ => return Err("Unknown or repeated flag."),
         }
     }
+    let mut limits = ScanLimits::new(budget.unwrap_or(DEFAULT_BUDGET));
+    if let Some(decoded_budget) = decoded_budget {
+        limits.decoded_byte_budget = decoded_budget;
+    }
     Ok(Some(Args {
         input,
-        budget: budget.unwrap_or(DEFAULT_BUDGET),
+        limits,
         json,
     }))
 }
@@ -127,11 +149,12 @@ fn run(args: &Args) -> Output {
     let source = args.input.to_str();
     let result = if let Some(url) = source.filter(|s| s.contains("://")) {
         if url.starts_with("https://") {
-            return http::scan(url, args.budget);
+            return http::scan(url, args.limits);
         }
         Err(ScanError::Source("URL must use HTTPS".into()))
     } else {
-        FileSource::open(Path::new(&args.input)).map(|mut file| ready(scan(&mut file, args.budget)))
+        FileSource::open(Path::new(&args.input))
+            .map(|mut file| ready(scan_with_limits(&mut file, args.limits)))
     };
     Output {
         scan: result.unwrap_or_else(|error| failure(error, 0)),

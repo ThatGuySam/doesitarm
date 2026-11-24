@@ -1,13 +1,18 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, inflate::Inflate, stream_bundle::StreamBundle,
+    ReadAt, Result, ScanError, ScanResult, Window, decode::DecodeBudget, inflate::Inflate,
+    stream_bundle::StreamBundle,
 };
 
 const BLOCK: usize = 512;
 const MAX_METADATA: u64 = 64 * 1024;
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    work: &mut DecodeBudget,
+    out: &mut ScanResult,
+) -> Result<()> {
     let size = input.size();
-    let mut stream = Inflate::gzip(Window::new(input, 0, size)?);
+    let mut stream = Inflate::gzip(Window::new(input, 0, size)?, work)?;
     let mut pos = 0;
     let mut next_path = None;
     let mut next_size = None;

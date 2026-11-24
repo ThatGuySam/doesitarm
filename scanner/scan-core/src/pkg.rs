@@ -1,11 +1,11 @@
 use crate::pbzx::Pbzx;
 use crate::{
     InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Window, be16, be64, check_range,
-    cpio, inflate::Inflate,
+    cpio,
+    decode::{self, DecodeBudget},
+    inflate::Inflate,
 };
-use flate2::read::ZlibDecoder;
 use roxmltree::{Document, Node, ParsingOptions};
-use std::io::Read;
 
 const MAX_TOC: u64 = 8 * 1024 * 1024;
 const MAX_METADATA: u64 = 2 * 1024 * 1024;
@@ -19,7 +19,11 @@ struct Member<'a> {
     expanded: u64,
 }
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    work: &mut DecodeBudget,
+    out: &mut ScanResult,
+) -> Result<()> {
     let head = input.read_at(0, 28).await?;
     let header_size = be16(&head, 4) as u64;
     if header_size < 28 || be16(&head, 6) != 1 {
@@ -31,9 +35,11 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         return Err(ScanError::Limit("XAR table of contents exceeds 8 MiB"));
     }
     check_range(input.size(), header_size, packed)?;
+    work.check_chunk(packed, expanded)?;
     let heap = header_size + packed;
     let toc = input.read_at(header_size, packed as usize).await?;
-    let toc = expand_zlib(&toc, expanded as usize).map_err(|_| TOC_ERROR)?;
+    work.start_chunk(expanded)?;
+    let toc = decode::zlib(&toc, expanded as usize, TOC_ERROR)?;
     let doc = parse_xml(&toc).map_err(|_| TOC_ERROR)?;
     let root = named_child(doc.root_element(), "toc").ok_or(TOC_ERROR)?;
 
@@ -93,10 +99,10 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         package_infos.first()
     };
     if let Some(member) = distribution.as_ref() {
-        read_metadata(input, member, out).await?;
+        read_metadata(input, member, work, out).await?;
     }
     if let Some((_, member)) = package {
-        read_metadata(input, member, out).await?;
+        read_metadata(input, member, work, out).await?;
     }
 
     let (_, member) = selected.ok_or(ScanError::NotFound("Payload in flat PKG"))?;
@@ -109,13 +115,13 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
     }
     let magic = source.read_at(0, 6).await?;
     if magic.starts_with(b"\x1f\x8b") {
-        return cpio::scan(&mut Inflate::gzip(source), out).await;
+        return cpio::scan(&mut Inflate::gzip(source, work)?, out).await;
     }
     if cpio::recognized(&magic) {
         return cpio::scan(&mut source, out).await;
     }
     if magic.starts_with(b"pbzx") {
-        return cpio::scan(&mut Pbzx::open(source).await?, out).await;
+        return cpio::scan(&mut Pbzx::open(source, work).await?, out).await;
     }
     Err(ScanError::Unsupported("PKG Payload compression"))
 }
@@ -123,18 +129,26 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
 async fn read_metadata(
     input: &mut impl ReadAt,
     member: &Member<'_>,
+    work: &mut DecodeBudget,
     out: &mut ScanResult,
 ) -> Result<()> {
     if member.packed > MAX_METADATA || member.expanded > MAX_METADATA {
         return Ok(());
     }
+    if member.encoding == "application/x-gzip" {
+        work.check_chunk(member.packed, member.expanded)?;
+    }
     let data = input.read_at(member.offset, member.packed as usize).await?;
     let data = match member.encoding {
         "application/octet-stream" if member.packed == member.expanded => data,
-        "application/x-gzip" => match expand_zlib(&data, member.expanded as usize) {
-            Ok(data) => data,
-            Err(_) => return Ok(()),
-        },
+        "application/x-gzip" => {
+            work.start_chunk(member.expanded)?;
+            match decode::zlib(&data, member.expanded as usize, TOC_ERROR) {
+                Ok(data) => data,
+                Err(ScanError::Invalid(_)) => return Ok(()),
+                Err(error) => return Err(error),
+            }
+        }
         _ => return Ok(()),
     };
     let Ok(doc) = parse_xml(&data) else {
@@ -176,18 +190,6 @@ async fn read_metadata(
         meta.package_version = root.attribute("version").map(str::to_owned);
     }
     Ok(())
-}
-
-fn expand_zlib(bytes: &[u8], expanded: usize) -> std::io::Result<Vec<u8>> {
-    let mut out = vec![0; expanded];
-    let mut reader = ZlibDecoder::new(bytes);
-    reader.read_exact(&mut out)?;
-    if reader.read(&mut [0])? != 0 {
-        return Err(std::io::Error::other(
-            "XAR member exceeds declared expanded size",
-        ));
-    }
-    Ok(out)
 }
 
 fn parse_xml(bytes: &[u8]) -> Result<Document<'_>> {

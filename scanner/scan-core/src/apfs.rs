@@ -22,15 +22,28 @@ const ROOT_DIRECTORY: u64 = 2;
 const FILE: u16 = 8;
 const DIRECTORY: u16 = 4;
 const PHYSICAL: u32 = 0x4000_0000;
+const MAX_TREE_NODES: usize = 4096;
+const MAX_TREE_RECORDS: usize = 256 * 1024;
 
 struct Device<'a, S> {
     disk: &'a mut S,
     block_size: usize,
     blocks: u64,
     cache: VecDeque<(u64, Rc<[u8]>)>,
+    nodes_left: usize,
+    records_left: usize,
 }
 
 impl<S: ReadAt> Device<'_, S> {
+    fn charge_tree_node(&mut self, records: usize) -> Result<()> {
+        if self.nodes_left == 0 || records > self.records_left {
+            return Err(ScanError::WorkLimit("APFS B-tree work limit reached"));
+        }
+        self.nodes_left -= 1;
+        self.records_left -= records;
+        Ok(())
+    }
+
     async fn block(&mut self, address: u64) -> Result<Rc<[u8]>> {
         if address >= self.blocks {
             return Err(BAD_OBJECT);
@@ -235,6 +248,7 @@ impl ObjectMap {
         for _ in 0..32 {
             let bytes = device.block(address).await?;
             let node = TreeNode::parse(&bytes, Some(SHAPE))?;
+            device.charge_tree_node(node.count)?;
             check_level(last_level, node.level)?;
             last_level = Some(node.level);
 
@@ -336,6 +350,7 @@ impl Volume {
             };
             let bytes = device.block(address).await?;
             let node = TreeNode::parse(&bytes, None)?;
+            device.charge_tree_node(node.count)?;
             check_level(parent, node.level)?;
 
             if node.level == 0 {
@@ -386,7 +401,7 @@ impl Volume {
             } else {
                 return Err(BAD_RECORD);
             };
-            if value.len() < 18 {
+            if name_len > 1024 || value.len() < 18 {
                 return Err(BAD_RECORD);
             }
             let name = key
@@ -591,6 +606,8 @@ pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result
         block_size,
         blocks,
         cache: VecDeque::new(),
+        nodes_left: MAX_TREE_NODES,
+        records_left: MAX_TREE_RECORDS,
     };
     let checkpoint = device.checkpoint().await?;
     if le64(&checkpoint, 64) & 0x100 != 0 {

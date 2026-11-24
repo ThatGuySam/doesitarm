@@ -1,0 +1,22 @@
+# Scanner hardening
+
+November 24, 2026. This pass addresses the six defects in the independent QA-A report against `b0752dd`.
+
+## Fixes and regression coverage
+
+| Defect | Fix | Regression coverage |
+| --- | --- | --- |
+| D1 | Read plist events with a collection-depth guard before building values. Apply it to Info.plist and the UDIF index. Validate binary object and collection counts ahead of the parser's allocations. | Rust tests exercise XML and binary Info.plist and an XML UDIF index. The Node verifier checks direct bundle metadata and requires the nested-index scan promise to settle with `invalid`. |
+| D2 | Reserve whole-chunk output before decoding UDIF. Validate stored ranges for overlap. Cache hits reuse an already charged chunk. An eviction releases memory before the next decode. | Each of ADC, zlib, bzip2, LZFSE, and XZ-framed LZMA is tested with both sufficient and insufficient credit. The original bzip2 and zlib amplification cases exercise the stored-range rejection. |
+| D3 | Use the same output budget for ZIP DEFLATE, tar and PKG gzip, XAR zlib, and PBZX XZ. Decoder skips and output share the budget. Work-limit errors preserve the observations already collected. | Fixture tests lower the shared budget one byte below the full scan and check the reason and partial evidence. The Node verifier also exercises a zero decoded budget. The original gzip and distant ZIP slice cases exercise the default cap. |
+| D4 | Check the exact BigInt size before Wasm reads. Reject source sizes and serialized embedded sizes and offsets above `2^53 − 1`. Callback offsets are BigInts. | Node checks the safe boundary, the first unsafe integer, negative sizes, and values that would wrap a Wasm `u64`. |
+| D5 | Document the CLI's actual defaults, the Wasm build and generated glue, format limits, and the historical benchmark's revision and accounting. | The verifier checks CLI help for the two defaults and runs parity against regenerated glue. |
+| D6 | Count each accepted source byte once and publish the sum of attempted range lengths separately. Charge the request budget for every attempted range. | The fat-fixture regression catches the repeated magic probe. Node independently merges callback ranges, sums requested bytes, and checks accounting on source errors. |
+
+## Defaults and remaining limits
+
+- The decoded budget defaults to 64 MiB per scan. Callers can tune it independently of the request budget through `ScanLimits`, `--decoded-budget`, or the fourth Wasm argument. It bounds the amount of output processed on a Worker request and allows normal metadata reads and nearby Mach-O slices. A known skip that would cross the remaining budget stops before decoding it. A far slice can still leave valid fat-table evidence.
+- The expansion limit is 1,024 decoded bytes per compressed byte. Whole chunks are screened against the declared packed and expanded lengths and then checked against actual consumption. Streams check consumed input at each output step of at most 16 KiB and allow 64 KiB of slack for codec buffering. Zero-filled UDIF reads spend output credit. Stored reads use the request budget. Whole-chunk accounting is conservative and includes reservations if decoding later fails.
+- Each scan allows 512 decoder starts, 8,192 source reads, and 8,192 UDIF run visits, including cached and zero-filled visits. The CLI performs one additional discovery request for HTTPS. APFS allows a total of 4,096 B-tree node visits and 262,144 advertised records across its object maps and filesystem trees. The limits cover work that may generate little output or use cached ranges.
+- Info.plist payloads have a 2 MiB input cap and the UDIF index has an 8 MiB cap. A plist can have 64 nested collections, 131,072 events or binary references, and 16 MiB of cumulative emitted scalar content. Shared binary objects spend credit when visited repeatedly. Binary collection lengths must fit in the supplied object region before the dependency allocates their reference vectors.
+- ZIP directories, Mach-O tables, tar and CPIO names and headers, XAR XML, and filesystem geometry retain their format-specific bounds. XZ has a 32 MiB decoder memory limit. PBZX can skip whole untouched chunks by their length headers. Decoded bytes and operation counts are proxies for CPU time. Worker scheduling, host I/O deadlines, and dependency runtime costs remain outside those counters. [Format limits](HANDOFF.md#limits-and-next-steps)
