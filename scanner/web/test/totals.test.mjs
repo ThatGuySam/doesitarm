@@ -5,7 +5,7 @@ import test from 'node:test';
 const plain = (value) => (typeof value === 'string' ? value.replaceAll('\u00a0', ' ') : value);
 const assert = { ...strict, equal: (actual, expected, message) => strict.equal(plain(actual), expected, message) };
 import {
-  batchTotals, formatPercent, formatRate, formatSeconds, formatSize, rowPhrase, steadyRate, totalsPhrase,
+  batchTotals, formatPercent, readingPhrase, formatRate, formatSeconds, formatSize, rowPhrase, steadyRate, totalsPhrase,
 } from '../public/scan-totals.js';
 
 test('sizes use decimal units with three significant figures', () => {
@@ -84,4 +84,12 @@ test('per-row phrase and steady live rate', () => {
   assert.equal(rowPhrase({ size: null, read: 640, elapsedMs: 50 }), 'Checked in <0.1 s, reading 640 B');
   assert.equal(steadyRate(2_345_678_901), 2_300_000_000);
   assert.equal(steadyRate(87_654), 88_000);
+});
+
+test('reading wording stays honest when reads approach or exceed the size', () => {
+  assert.equal(readingPhrase(803, 1_020), 'reading 803 B (79%)');
+  assert.equal(readingPhrase(1_117, 601), 'reading 1.12 kB, more than the file size because of rereads');
+  assert.equal(readingPhrase(12_000, 1.2e9), 'reading only 12 kB (0.001%)');
+  assert.equal(rowPhrase({ size: 601, read: 1_117, elapsedMs: 200 }),
+    'Scanned 601 B in 0.2 s (3.01 kB/s), reading 1.12 kB, more than the file size because of rereads');
 });

@@ -79,7 +79,7 @@ Definitions, in `public/scan-totals.js` (pure, tested in `test/totals.test.mjs`)
   - The rate shows GB/s at or above 1 GB/s, otherwise MB/s (kB/s below that).
   - If any checked job lacks a size, the line becomes "X GB scanned across 2 of 3 with known sizes" with no rate and no percentage, so a partial size set never understates the speed.
   - If no checked job has a size: "120 checked in 1.6 s, sizes unknown, reading 69.1 kB". This is the 120-app folder drop in the smoke test.
-- **Reading only N (P%):** bytes the row readout counted, i.e. completed source reads including rereads, plus the Worker-reported bytes for a Cloudflare fallback. P is that figure over the scanned size for the same jobs, to two significant figures, with a `<0.0001%` floor. The JSON keeps the core's unique `bytes_read` and `bytes_requested`.
+- **Reading only N (P%):** "only" appears while P is under 50%. From 50% the line says "reading N (P%)". When reads exceed the size (small archives reread during decompression), it says "reading N, more than the file size because of rereads" and gives no percentage. The figure is bytes the row readout counted, i.e. completed source reads including rereads, plus the Worker-reported bytes for a Cloudflare fallback. P is that figure over the scanned size for the same jobs, to two significant figures, with a `<0.0001%` floor. The JSON keeps the core's unique `bytes_read` and `bytes_requested`.
 - **Units:** decimal GB/MB/kB (10⁹/10⁶/10³), as the research recommends and as Finder shows sizes. Binary MiB stays only in the Worker's budget tiers. Values carry three significant figures below 100, then whole numbers: 620 MB, 1.4 GB, 19.7 GB, 312 GB. Times show `<0.1 s`, `6.1 s`, `42 s`, then `2:05`. Each number is joined to its unit by a no-break space, so lines never break between them.
 - **Live updates:** the count changes as soon as a job settles. The totals part updates at most once a second, and the live rate is rounded to two significant figures, so the text does not jitter. `#results-count` is no longer a live region. `#batch-notice` (`role=status`, visually hidden) announces three things:
   - "Scanning N items." at the start of a batch;
@@ -119,7 +119,7 @@ Run these from `scanner/web` with the same PATH as `UI.md`. The build also needs
 
 | Command | Result (2026-11-24) |
 |---|---|
-| `npm test` | 30/30. Includes 7 new totals and formatting tests. |
+| `npm test` | 31/31. Includes 8 new totals and formatting tests. |
 | `npm run test:ui` (source smoke, 9 cases) | All pass. Assertions updated for the new structure: JSON is read through the dialog, Gentle sits under Advanced, and finished rows hide their progress strip. |
 | `npm run build && npm run test:browser` (built page, 5 cases) | All pass. The URL form is reached through Advanced and the Homebrew table through its disclosure. |
 | `npm run test:a11y` | 18 checks pass: tab order, focus ring, Enter/Space on disclosures, names, ≥24 px targets, polite announcements, dialog name/focus/trap/Esc/return, reduced motion, Clear results focus, and no overflow at 390 and 320 px. |
@@ -129,6 +129,8 @@ Run these from `scanner/web` with the same PATH as `UI.md`. The build also needs
 The screenshots show the original idle state, then ours idle, mid-scan, done (one row's Details open) and with the dialog open, at desktop and phone widths.
 
 ## Not done or not verified
+
+- Full-page screenshots show a seam where the fixed body gradient ends. That is a capture artifact; in a scrolling viewport the gradient stays fixed. A mixed batch (fat64.macho, app.tar.bz2, lzma.zip, an unsupported .bin, thin.macho) was checked by eye: the unknown row, its error and "1 not checked" render as described. It is not saved as a screenshot.
 
 - No real screen reader, Firefox or Safari run. The a11y checks are scripted Chromium checks, and the announcements are verified as text only.
 - Rows have no "Retry" for failed checks. Re-selecting the file is the path.

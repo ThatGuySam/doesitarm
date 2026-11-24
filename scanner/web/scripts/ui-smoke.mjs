@@ -139,7 +139,7 @@ async function measure(page, cdp, browserCDP, label, count, limit, load) {
   assert.equal(new Set(probe.completions.map(({ id }) => id)).size, count);
   assert.equal(await page.locator('.result[data-status="complete"]').count(), count);
   assert.equal(await page.locator('#overall-progress').evaluate((progress) => progress.position), 1);
-  assert.match(await page.locator('#batch-metrics').innerText(), /scanned in \S+\s\S+ at \S+\s[kMG]B\/s, reading only \S+\s\S+ \(|checked in \S+\s\S+, sizes unknown, reading \S+\s\S+$/);
+  assert.match(await page.locator('#batch-metrics').innerText(), /scanned in \S+\s\S+ at \S+\s[kMG]B\/s, reading (only )?\S+\s\S+|checked in \S+\s\S+, sizes unknown, reading \S+\s\S+$/);
 
   const realOverlap = readOverlap(probe.completions);
   assert.equal(probe.peakActive, Math.min(limit, count));

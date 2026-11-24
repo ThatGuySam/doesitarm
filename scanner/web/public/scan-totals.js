@@ -53,6 +53,16 @@ export function formatPercent(part, whole) {
   return `${new Intl.NumberFormat(undefined, { maximumSignificantDigits: 2 }).format(percent)}%`;
 }
 
+// "reading only 38 kB (0.0005%)" while the share is small; plain "reading" from half the size;
+// above the size (rereads, decompression) the percentage would mislead, so say why instead.
+export function readingPhrase(read, size, known = true) {
+  const bytes = formatSize(read);
+  if (!known || !(size > 0)) return `reading ${bytes}`;
+  if (read > size) return `reading ${bytes}, more than the file size because of rereads`;
+  const share = formatPercent(read, size);
+  return read / size < 0.5 ? `reading only ${bytes} (${share})` : `reading ${bytes} (${share})`;
+}
+
 /**
  * Sum a batch.
  * @param {Array<{status: string, size?: number|null, read?: number}>} jobs settled jobs.
@@ -95,8 +105,7 @@ export function totalsPhrase({ checked, scanned, read, unsized, rate, elapsedMs 
     if (speed) phrase += ` at ${speed}`;
     parts.push(phrase);
     // The share needs the same job set on both sides of the fraction.
-    const share = unsized ? null : formatPercent(read, scanned);
-    parts.push(`reading only ${formatSize(read)}${share ? ` (${share})` : ''}`);
+    parts.push(unsized ? `reading only ${formatSize(read)}` : readingPhrase(read, scanned));
   } else {
     parts.push(`${checked} checked${withTime ? ` in ${formatSeconds(elapsedMs)}` : ''}, sizes unknown`);
     parts.push(`reading ${formatSize(read)}`);
@@ -109,8 +118,7 @@ export function rowPhrase({ size, read, elapsedMs }) {
   const time = formatSeconds(elapsedMs);
   if (!(size > 0)) return `Checked in ${time}, reading ${formatSize(read ?? 0)}`;
   const speed = formatRate(elapsedMs > 0 ? size / (elapsedMs / 1000) : null);
-  const share = formatPercent(read ?? 0, size);
-  return `Scanned ${formatSize(size)} in ${time}${speed ? ` (${speed})` : ''}, reading only ${formatSize(read ?? 0)}${share ? ` (${share})` : ''}`;
+  return `Scanned ${formatSize(size)} in ${time}${speed ? ` (${speed})` : ''}, ${readingPhrase(read ?? 0, size)}`;
 }
 
 // Round a live rate so the text does not flicker every tick: two significant figures.
