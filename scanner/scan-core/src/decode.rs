@@ -1,4 +1,4 @@
-use crate::{Result, ScanError};
+use crate::{Profile, Result, ScanError};
 use std::{cell::Cell, io::Read};
 
 const STREAM_EXPANSION_RATIO: u64 = 1024;
@@ -11,7 +11,7 @@ const DECODE_LIMIT: ScanError = ScanError::WorkLimit("decoded-byte budget reache
 const RATIO_LIMIT: ScanError = ScanError::WorkLimit("compression expansion ratio exceeded");
 
 pub(crate) struct DecodeBudget<'a> {
-    strict: bool,
+    profile: Profile,
     expired: Option<&'a dyn Fn() -> bool>,
     limit: u64,
     used: Cell<u64>,
@@ -21,16 +21,16 @@ pub(crate) struct DecodeBudget<'a> {
 impl<'a> DecodeBudget<'a> {
     #[cfg(test)]
     pub(crate) fn new(bytes: u64) -> Self {
-        Self::with_limits(bytes, true, None)
+        Self::with_limits(bytes, Profile::Worker, None)
     }
 
     pub(crate) fn with_limits(
         bytes: u64,
-        strict: bool,
+        profile: Profile,
         expired: Option<&'a dyn Fn() -> bool>,
     ) -> Self {
         Self {
-            strict,
+            profile,
             expired,
             limit: bytes,
             used: Cell::new(0),
@@ -43,11 +43,11 @@ impl<'a> DecodeBudget<'a> {
     }
 
     pub(crate) fn archive_entry_limit(&self) -> u64 {
-        if self.strict { 250_000 } else { u64::MAX }
+        if self.strict() { 250_000 } else { u64::MAX }
     }
 
     pub(crate) fn stream_limit(&self) -> u64 {
-        if self.strict {
+        if self.strict() {
             STREAM_OUTPUT_LIMIT
         } else {
             u64::MAX
@@ -55,7 +55,15 @@ impl<'a> DecodeBudget<'a> {
     }
 
     pub(crate) fn strict(&self) -> bool {
-        self.strict
+        self.profile == Profile::Worker
+    }
+
+    pub(crate) fn lzma_memory_kib(&self) -> u32 {
+        if self.strict() { 32 * 1024 } else { 128 * 1024 }
+    }
+
+    pub(crate) fn local(&self) -> bool {
+        self.profile == Profile::Local
     }
 
     pub(crate) fn check_deadline(&self) -> Result<()> {
@@ -88,21 +96,21 @@ impl<'a> DecodeBudget<'a> {
     }
 
     pub(crate) fn check_chunk_ratio(&self, packed: u64, expanded: u64) -> Result<()> {
-        if self.strict {
+        if self.strict() {
             check_chunk_ratio(packed, expanded)?;
         }
         Ok(())
     }
 
     pub(crate) fn check_stream_ratio(&self, packed: u64, expanded: u64) -> Result<()> {
-        if self.strict {
+        if self.strict() {
             check_stream_ratio(packed, expanded)?;
         }
         Ok(())
     }
 
     pub(crate) fn start(&self) -> Result<()> {
-        if self.strict {
+        if self.strict() {
             if self.starts.get() == MAX_DECODER_STARTS {
                 return Err(ScanError::WorkLimit("too many decoder starts"));
             }

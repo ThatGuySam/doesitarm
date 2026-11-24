@@ -12,15 +12,25 @@ pub(crate) async fn scan(
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
+    let mut bundle = StreamBundle::new(target);
+    let traversal = scan_entries(input, work, &mut bundle, out).await;
+    bundle.finish(traversal, out)
+}
+
+async fn scan_entries(
+    input: &mut impl ReadAt,
+    work: &DecodeBudget<'_>,
+    bundle: &mut StreamBundle<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let mut pos = 0;
     let mut next_path = None;
     let mut next_size = None;
-    let mut bundle = StreamBundle::new(target);
-
     for _ in 0..work.archive_entry_limit() {
+        bundle.check_traversal(input, work)?;
         let header = input.read_at(pos, BLOCK).await?;
         if header.iter().all(|byte| *byte == 0) {
-            return Err(bundle.missing());
+            return Ok(());
         }
         check_header(&header)?;
         let start = pos + BLOCK as u64;
@@ -44,7 +54,7 @@ pub(crate) async fn scan(
                 let path = next_path.take().or_else(|| header_path(&header));
                 if let Some(path) = path {
                     match kind {
-                        b'0' | 0 if bundle.file(input, &path, start, size, out).await? => {
+                        b'0' | 0 if bundle.file(input, work, &path, start, size, out).await? => {
                             return Ok(());
                         }
                         b'1' | b'2' if bundle.is_executable_path(&path) => {
@@ -158,4 +168,14 @@ fn parse_pax(mut bytes: &[u8]) -> Result<(Option<String>, Option<u64>)> {
         bytes = &bytes[length..];
     }
     Ok((path, size))
+}
+
+pub(crate) async fn read_runtime(
+    input: &mut impl ReadAt,
+    work: &DecodeBudget<'_>,
+    runtime: &mut crate::ScriptRuntime,
+) {
+    let mut result = ScanResult::new(input.size());
+    let _ = scan(input, work, Target::Executable(&runtime.path), &mut result).await;
+    runtime.architectures = result.architectures;
 }

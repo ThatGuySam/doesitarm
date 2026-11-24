@@ -99,7 +99,8 @@ impl<'a, S: ReadAt> Pbzx<'a, S> {
             } else {
                 self.work.check_chunk(packed, expanded)?;
                 self.work.start_chunk(expanded)?;
-                let mut decoder = XzReader::new_mem_limit(bytes.as_slice(), false, 32 * 1024);
+                let mut decoder =
+                    XzReader::new_mem_limit(bytes.as_slice(), false, self.work.lzma_memory_kib());
                 let decoded = decode::exact(&mut decoder, expanded as usize, BAD_XZ, self.work)?;
                 if !decoder.inner().is_empty() {
                     return Err(BAD_XZ);
@@ -148,10 +149,9 @@ impl<S: ReadAt> ReadAt for Pbzx<'_, S> {
             } else {
                 if chunk.decoder.is_none() {
                     self.work.start()?;
+                    chunk.decoder = Some(Stream::new(chunk.packed.clone(), Codec::Xz, self.work)?);
                 }
-                let decoder = chunk
-                    .decoder
-                    .get_or_insert_with(|| Stream::new(chunk.packed.clone(), Codec::Xz));
+                let decoder = chunk.decoder.as_mut().unwrap();
                 decoder
                     .read(&mut self.source, self.work, within, output)
                     .await?;

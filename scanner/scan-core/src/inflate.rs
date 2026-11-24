@@ -5,6 +5,8 @@ use crate::{
 use flate2::{Decompress, FlushDecompress};
 use lzma_rust2::{Action, XzStream};
 use std::ops::Range;
+mod zstd;
+pub(crate) use zstd::is_magic as zstd_magic;
 
 const INPUT_CHUNK: u64 = 64 * 1024;
 
@@ -15,6 +17,13 @@ pub(crate) enum Codec {
     Bzip2,
     Xz,
     Lzma,
+    Zstd,
+    RawLzma {
+        size: u64,
+        properties: u8,
+        dictionary: u32,
+    },
+    Lzma2(u32),
 }
 
 impl Codec {
@@ -25,30 +34,69 @@ impl Codec {
             Some(Self::Bzip2)
         } else if bytes.starts_with(b"\xfd7zXZ\0") {
             Some(Self::Xz)
+        } else if zstd::is_magic(bytes) {
+            Some(Self::Zstd)
         } else {
             None
         }
     }
 
-    fn stream(self) -> Decoder {
-        match self {
+    fn stream(self, work: &DecodeBudget<'_>) -> Result<Decoder> {
+        let memory = work.lzma_memory_kib();
+        Ok(match self {
             Self::Deflate => Decoder::Deflate(Decompress::new(false)),
             Self::Gzip => Decoder::Deflate(Decompress::new_gzip(15)),
-            Self::Bzip2 => Decoder::Bzip2(bzip2::Decompress::new(false)),
-            Self::Xz => Decoder::Xz(Box::new(XzStream::new_mem_limit(true, 32 * 1024))),
+            Self::Bzip2 => Decoder::Bzip2 {
+                decoder: bzip2::Decompress::new(false),
+                at_member_end: false,
+            },
+            Self::Xz => Decoder::Xz(Box::new(XzStream::new_mem_limit(true, memory))),
             Self::Lzma => Decoder::Lzma(Box::new(lzma_rust2::LzmaStream::new_mem_limit(
-                32 * 1024,
-                None,
+                memory, None,
             ))),
-        }
+            Self::Zstd => Decoder::Zstd(Box::new(zstd::Decoder::new(work))),
+            Self::RawLzma {
+                size,
+                properties,
+                dictionary,
+            } => {
+                let need = lzma_rust2::lzma_get_memory_usage_by_props(dictionary, properties)
+                    .map_err(|_| ScanError::Invalid("raw LZMA properties"))?;
+                if need > memory {
+                    return Err(LZMA_LIMIT);
+                }
+                Decoder::Lzma(Box::new(
+                    lzma_rust2::LzmaStream::new_with_props(size, properties, dictionary, None)
+                        .map_err(|_| ScanError::Invalid("raw LZMA properties"))?,
+                ))
+            }
+            Self::Lzma2(dictionary) => Decoder::Lzma2(Box::new(
+                lzma_rust2::Lzma2Stream::new_mem_limit(dictionary, memory),
+            )),
+        })
     }
 }
 
 enum Decoder {
     Deflate(Decompress),
-    Bzip2(bzip2::Decompress),
+    Bzip2 {
+        decoder: bzip2::Decompress,
+        at_member_end: bool,
+    },
     Xz(Box<XzStream>),
     Lzma(Box<lzma_rust2::LzmaStream>),
+    Lzma2(Box<lzma_rust2::Lzma2Stream>),
+    Zstd(Box<zstd::Decoder>),
+}
+
+const LZMA_LIMIT: ScanError = ScanError::WorkLimit("LZMA decoder memory limit reached");
+
+fn lzma_error(error: std::io::Error, codec: &'static str) -> ScanError {
+    if error.kind() == std::io::ErrorKind::OutOfMemory {
+        LZMA_LIMIT
+    } else {
+        ScanError::Invalid(codec)
+    }
 }
 
 struct Progress {
@@ -78,17 +126,31 @@ impl Decoder {
                     ended,
                 }
             }
-            Self::Bzip2(decoder) => {
+            Self::Bzip2 {
+                decoder,
+                at_member_end,
+            } => {
+                if *at_member_end {
+                    if input.is_empty() {
+                        return Progress {
+                            consumed: 0,
+                            produced: 0,
+                            ended: Ok(finished),
+                        };
+                    }
+                    *decoder = bzip2::Decompress::new(false);
+                    *at_member_end = false;
+                }
                 let before_in = decoder.total_in();
                 let before_out = decoder.total_out();
-                let ended = decoder
+                let result = decoder
                     .decompress(input, output)
-                    .map(|status| status == bzip2::Status::StreamEnd)
                     .map_err(|_| ScanError::Invalid("bzip2 stream"));
+                *at_member_end = matches!(result, Ok(bzip2::Status::StreamEnd));
                 Progress {
                     consumed: (decoder.total_in() - before_in) as usize,
                     produced: (decoder.total_out() - before_out) as usize,
-                    ended,
+                    ended: result.map(|_| false),
                 }
             }
             Self::Xz(decoder) => {
@@ -97,7 +159,7 @@ impl Decoder {
                 let ended = decoder
                     .process(input, output, action)
                     .map(|progress| progress.status == lzma_rust2::Status::StreamEnd)
-                    .map_err(|_| ScanError::Invalid("XZ stream"));
+                    .map_err(|error| lzma_error(error, "XZ stream"));
                 Progress {
                     consumed: (decoder.total_in() - before_in) as usize,
                     produced: (decoder.total_out() - before_out) as usize,
@@ -110,13 +172,27 @@ impl Decoder {
                 let ended = decoder
                     .process(input, output, action)
                     .map(|progress| progress.status == lzma_rust2::Status::StreamEnd)
-                    .map_err(|_| ScanError::Invalid("LZMA stream"));
+                    .map_err(|error| lzma_error(error, "LZMA stream"));
                 Progress {
                     consumed: (decoder.total_in() - before_in) as usize,
                     produced: (decoder.total_out() - before_out) as usize,
                     ended,
                 }
             }
+            Self::Lzma2(decoder) => {
+                let before_in = decoder.total_in();
+                let before_out = decoder.total_out();
+                let ended = decoder
+                    .process(input, output, action)
+                    .map(|progress| progress.status == lzma_rust2::Status::StreamEnd)
+                    .map_err(|error| lzma_error(error, "LZMA2 stream"));
+                Progress {
+                    consumed: (decoder.total_in() - before_in) as usize,
+                    produced: (decoder.total_out() - before_out) as usize,
+                    ended,
+                }
+            }
+            Self::Zstd(decoder) => decoder.process(input, output, finished),
         }
     }
 }
@@ -138,7 +214,7 @@ impl<'a, S: ReadAt> Forward<'a, S> {
         work: &'a DecodeBudget<'a>,
     ) -> Result<Self> {
         work.start()?;
-        let stream = Stream::new(0..source.size(), codec);
+        let stream = Stream::new(0..source.size(), codec, work)?;
         Ok(Self {
             source,
             stream,
@@ -153,7 +229,7 @@ impl<S: ReadAt> Forward<'_, S> {
     pub(crate) fn rewind_for(&mut self, offset: u64) -> Result<()> {
         if offset < self.stream.decoded {
             self.work.start()?;
-            self.stream = Stream::new(0..self.source.size(), self.codec);
+            self.stream = Stream::new(0..self.source.size(), self.codec, self.work)?;
         }
         Ok(())
     }
@@ -199,17 +275,17 @@ pub(crate) struct Stream {
 }
 
 impl Stream {
-    pub(crate) fn new(range: Range<u64>, codec: Codec) -> Self {
-        Self {
+    pub(crate) fn new(range: Range<u64>, codec: Codec, work: &DecodeBudget<'_>) -> Result<Self> {
+        Ok(Self {
             range,
-            decoder: codec.stream(),
+            decoder: codec.stream(work)?,
             input: Vec::new(),
             consumed: 0,
             total_consumed: 0,
             fetched: 0,
             decoded: 0,
             ended: false,
-        }
+        })
     }
 
     fn check_read(&self, offset: u64, len: usize, work: &DecodeBudget<'_>) -> Result<()> {

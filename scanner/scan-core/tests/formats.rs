@@ -324,12 +324,12 @@ fn pkg_recovers_bom_checked_late_plist_and_scans_the_named_binary() {
 }
 
 #[test]
-fn tar_stops_after_plist_and_exact_executable() {
-    let result = run(TAR, u64::MAX);
+fn tar_keeps_the_main_when_inventory_reaches_the_byte_budget() {
+    let result = run(TAR, 68 * 1024);
     assert_eq!(result.format, Some("tar.gz"));
     assert_bundle(&result);
     assert!(result.total_size > result.bytes_read);
-    assert_eq!(result.reads, 2);
+    assert!(!result.inventory.as_ref().unwrap().complete);
 }
 
 #[test]
@@ -474,23 +474,33 @@ fn decoded_budget_is_shared_across_members_and_leaves_partial_results() {
             },
         ));
         assert_eq!(partial.format, Some(format));
-        assert!(
-            matches!(partial.status, Status::LimitReached),
-            "{partial:?}"
-        );
-        assert_eq!(
-            partial.error.as_deref(),
-            Some("scan limit: decoded-byte budget reached")
-        );
+        let message = "scan limit: decoded-byte budget reached";
         assert!(partial.decoded_bytes <= limit);
         assert_eq!(partial.bundle_id, full.bundle_id);
         assert_eq!(partial.architectures.len(), full.architectures.len());
-        assert!(
-            partial
-                .architectures
-                .iter()
-                .any(|arch| arch.code_signature_present.is_none())
-        );
+        if matches!(partial.status, Status::Complete) {
+            let inventory = partial.inventory.as_ref().unwrap();
+            assert!(!inventory.complete);
+            assert_eq!(inventory.incomplete_reason.as_deref(), Some(message));
+            assert!(
+                partial
+                    .architectures
+                    .iter()
+                    .all(|arch| arch.header_verified)
+            );
+        } else {
+            assert!(
+                matches!(partial.status, Status::LimitReached),
+                "{partial:?}"
+            );
+            assert_eq!(partial.error.as_deref(), Some(message));
+            assert!(
+                partial
+                    .architectures
+                    .iter()
+                    .any(|arch| arch.code_signature_present.is_none())
+            );
+        }
     }
 }
 

@@ -160,11 +160,26 @@ fn check_result_sizes(result: &ScanResult) -> std::result::Result<(), JsValue> {
             .iter()
             .map(|candidate| candidate.size),
     );
-    let architectures = result.architectures.iter().chain(
+    let architectures = result
+        .architectures
+        .iter()
+        .chain(
+            result
+                .candidate_executables
+                .iter()
+                .flat_map(|candidate| &candidate.architectures),
+        )
+        .chain(result.inventory.iter().flat_map(|inventory| {
+            inventory
+                .binaries
+                .iter()
+                .flat_map(|binary| &binary.architectures)
+        }));
+    let architectures = architectures.chain(
         result
-            .candidate_executables
+            .script_runtime
             .iter()
-            .flat_map(|candidate| &candidate.architectures),
+            .flat_map(|runtime| &runtime.architectures),
     );
     if sizes
         .chain(architectures.flat_map(|arch| [arch.offset, arch.size]))
@@ -183,4 +198,16 @@ fn check_result_sizes(result: &ScanResult) -> std::result::Result<(), JsValue> {
 pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> std::result::Result<String, JsValue> {
     let result = scan_core::bundle_metadata(plist, bundle_path);
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
+}
+
+/// Classify a path when the host enumerates an unpacked app directory.
+#[wasm_bindgen]
+pub fn bundle_binary_role(path: &str) -> Option<String> {
+    scan_core::bundle_binary_role(path).map(str::to_owned)
+}
+
+/// Check a file prefix without treating other archive formats as binaries.
+#[wasm_bindgen]
+pub fn bundle_binary_is_macho(header: &[u8]) -> bool {
+    scan_core::bundle_binary_is_macho(header)
 }

@@ -51,7 +51,7 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, p
     write_xar(path, payload)
 
 
-def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST):
+def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO):
     root = Element("xar")
     toc = SubElement(root, "toc")
     package = SubElement(toc, "file", id="1")
@@ -60,7 +60,7 @@ def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST):
     heap = bytearray()
     members = [
         (toc, "Distribution", distribution, False),
-        (package, "PackageInfo", INFO, True),
+        (package, "PackageInfo", package_info, True),
     ]
     if bom is not None:
         members.append((package, "Bom", bom, True))

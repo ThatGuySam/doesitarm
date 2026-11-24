@@ -25,7 +25,10 @@ pub(crate) fn plist_bundle(path: &str) -> Option<&str> {
 }
 
 pub(crate) fn outer_app(root: &str) -> bool {
-    !root.trim_end_matches(".app").contains(".app/")
+    let parent = root.rsplit_once('/').map_or("", |(parent, _)| parent);
+    !parent
+        .split('/')
+        .any(|part| part == "Contents" || part.ends_with(".app"))
 }
 
 pub(crate) fn outer_plist(path: &str) -> Option<&str> {
@@ -66,6 +69,7 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
             .filter(|s| !s.is_empty())
     };
     out.bundle_path = Some(bundle.to_owned());
+    out.bundle_kind = Some(installed_bundle_kind(bundle).unwrap_or("bundle"));
     out.bundle_id = get("CFBundleIdentifier").map(str::to_owned);
     out.version = get("CFBundleShortVersionString")
         .or_else(|| get("CFBundleVersion"))
@@ -100,5 +104,51 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
     if components.len() < 2 || matches!(executable, "." | "..") || executable.ends_with('/') {
         return Err(ScanError::Invalid("CFBundleExecutable path"));
     }
-    Ok(format!("{bundle}/{}", components.join("/")))
+    let path = format!("{bundle}/{}", components.join("/"));
+    out.executable_path = Some(path.clone());
+    Ok(path)
+}
+
+/// Some publishers record the Contents-relative MacOS/file spelling.
+/// Prefer the normal MacOS-relative lookup when both entries exist.
+pub(crate) fn contents_relative_alias(path: &str, root: &str) -> Option<String> {
+    let leaf = path
+        .strip_prefix(root)?
+        .strip_prefix("/Contents/MacOS/MacOS/")?;
+    Some(format!("{root}/Contents/MacOS/{leaf}"))
+}
+
+/// Normalize a reference entirely inside the artifact.
+pub(crate) fn normalize_archive_path(path: &str) -> Option<String> {
+    if path.starts_with('/') || path.contains(['\\', '\0']) {
+        return None;
+    }
+    let mut components = Vec::new();
+    for part in path.split('/') {
+        match part {
+            "" | "." => (),
+            ".." => {
+                components.pop()?;
+            }
+            _ => components.push(part),
+        }
+    }
+    let value = components.join("/");
+    archive_path(&value)?;
+    Some(value)
+}
+
+pub(crate) fn installed_bundle_kind(path: &str) -> Option<&'static str> {
+    let extension = path.rsplit_once('.')?.1;
+    if extension.contains('/') {
+        return None;
+    }
+    match extension {
+        "app" => Some("app"),
+        "vst" | "vst3" | "component" | "aaxplugin" => Some("audio_plugin"),
+        "kext" | "dext" | "driver" | "systemextension" => Some("driver"),
+        "bundle" if path.contains("SmartCardServices/drivers/") => Some("driver"),
+        "jdk" => Some("runtime"),
+        _ => None,
+    }
 }

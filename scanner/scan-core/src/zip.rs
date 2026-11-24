@@ -2,7 +2,8 @@ use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
-    le16, le32, le64, macho, nested,
+    inventory::{self, Allowance},
+    launcher, le16, le32, le64, macho, nested,
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
@@ -21,6 +22,13 @@ struct Entry {
     expanded: u64,
     method: u16,
     flags: u16,
+    mode: u16,
+}
+
+impl Entry {
+    fn is_symlink(&self) -> bool {
+        self.mode & 0o170000 == 0o120000
+    }
 }
 
 pub(crate) async fn scan(
@@ -50,13 +58,26 @@ pub(crate) async fn scan(
             ))?;
         out.executable_path = Some(executable.1.to_owned());
         out.executable_size = Some(executable.0.expanded);
-        let mut data = member(input, executable.0, directory.offset, work).await?;
-        return macho::scan(&mut data, &mut out.architectures).await;
+        let primary = {
+            let mut data = member(input, executable.0, directory.offset, work).await?;
+            launcher::inspect(
+                &mut data,
+                executable.1,
+                &mut out.architectures,
+                &mut out.script_runtime,
+            )
+            .await
+        };
+        read_runtime(input, &entries, directory.offset, work, out).await;
+        return primary;
     }
 
     let app = entries
         .iter()
         .filter_map(|entry| {
+            if entry.is_symlink() {
+                return None;
+            }
             let path = bundle::archive_path(&entry.path)?;
             Some((entry, bundle::selected_plist(path, target)?))
         })
@@ -75,15 +96,89 @@ pub(crate) async fn scan(
         .await?;
     let path = bundle::apply_plist(&plist, name, out)?;
 
+    let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
+    read_runtime(input, &entries, directory.offset, work, out).await;
+    let mut inventory = crate::BinaryInventory::default();
+    if let Err(error) = &primary {
+        inventory.partial(error.to_string());
+    }
+    let mut allowance = Allowance::new(input, work);
+    for entry in &entries {
+        let Some(relative) = bundle::archive_path(&entry.path)
+            .filter(|candidate| *candidate != path)
+            .and_then(|candidate| inventory::relative(candidate, name))
+        else {
+            continue;
+        };
+        let Some(role) = inventory::role(relative) else {
+            continue;
+        };
+        if relative.ends_with('/') || entry.expanded < 8 || entry.is_symlink() {
+            continue;
+        }
+        if let Err(error) = allowance.step(input, work) {
+            inventory.partial(error.to_string());
+            break;
+        }
+        let observed = match member(input, entry, directory.offset, work).await {
+            Ok(mut data) => inventory::read(&mut data, relative, role, &mut inventory).await,
+            Err(error) => Err(error),
+        };
+        if let Err(error) = observed {
+            let stop = inventory::stop(&error);
+            inventory.partial(error.to_string());
+            if stop {
+                break;
+            }
+        }
+    }
+    out.inventory = Some(inventory);
+    primary
+}
+
+async fn read_main(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    path: &str,
+    out: &mut ScanResult,
+) -> Result<()> {
     let executable = entries
         .iter()
-        .find(|entry| bundle::archive_path(&entry.path) == Some(&path))
+        .find(|entry| bundle::archive_path(&entry.path) == Some(path))
         .ok_or(ScanError::NotFound(
             "declared executable in ZIP central directory",
         ))?;
     out.executable_size = Some(executable.expanded);
-    let mut data = member(input, executable, directory.offset, work).await?;
-    macho::scan(&mut data, &mut out.architectures).await
+    let mut data = member(input, executable, heap_end, work).await?;
+    launcher::inspect(
+        &mut data,
+        path,
+        &mut out.architectures,
+        &mut out.script_runtime,
+    )
+    .await
+}
+
+async fn read_runtime(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    out: &mut ScanResult,
+) {
+    let Some(runtime) = out.script_runtime.as_mut() else {
+        return;
+    };
+    let Some(entry) = entries.iter().find(|entry| {
+        !entry.is_symlink() && bundle::archive_path(&entry.path) == Some(&runtime.path)
+    }) else {
+        return;
+    };
+    if let Ok(mut data) = member(input, entry, heap_end, work).await {
+        let _ = macho::scan(&mut data, &mut runtime.architectures).await;
+    }
 }
 
 async fn scan_nested(
@@ -98,6 +193,9 @@ async fn scan_nested(
         .iter()
         .filter_map(|entry| {
             let path = bundle::archive_path(&entry.path)?;
+            if entry.is_symlink() {
+                return None;
+            }
             let kind = nested::Kind::from_path(path)?;
             Some((entry, path, kind))
         })
@@ -321,7 +419,7 @@ fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
         let mode_type = le32(bytes, 38) >> 28;
         if let Ok(path) = name
             && !path.ends_with('/')
-            && (bytes[5] != 3 || matches!(mode_type, 0 | 8))
+            && (bytes[5] != 3 || matches!(mode_type, 0 | 8 | 10))
         {
             let extra = &bytes[46 + name_len..end - comment_len];
             let mut expanded = le32(bytes, 24) as u64;
@@ -356,6 +454,7 @@ fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
                 expanded,
                 method,
                 flags,
+                mode: if bytes[5] == 3 { le16(bytes, 40) } else { 0 },
             });
         }
         bytes = &bytes[end..];

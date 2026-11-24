@@ -339,7 +339,22 @@ async fn scan_payload(
         return Err(ScanError::Unsupported("PKG Payload compression"));
     };
 
-    let mut target = StreamBundle::new(selection);
+    let install = out.installer.as_ref();
+    let mount = install
+        .and_then(|meta| meta.install_location.as_deref())
+        .and_then(bundle_mount)
+        .map(str::to_owned);
+    let selected_product = if mount.is_none() && matches!(selection, Target::Auto) {
+        install
+            .and_then(|meta| product_bundle(&meta.payload_bundles))
+            .map(str::to_owned)
+    } else {
+        None
+    };
+    let selection = selected_product
+        .as_deref()
+        .map_or(selection, Target::Bundle);
+    let mut target = StreamBundle::new(selection).with_mount(mount.clone());
     let budget = input.remaining_budget();
     if !matches!(selection, Target::Executable(_))
         && matches!(kind, Payload::Compressed(Codec::Gzip) | Payload::Pbzx)
@@ -355,7 +370,7 @@ async fn scan_payload(
             source,
             kind,
             work,
-            StreamBundle::new(selection),
+            StreamBundle::new(selection).with_mount(mount.clone()),
             &mut preview,
         )
         .await;
@@ -369,10 +384,18 @@ async fn scan_payload(
         // There is no reason to fetch a detached plist if the prefix already
         // found it and is spending its remaining input on the executable.
         if preview.executable_name.is_none()
-            && let Some((path, provenance)) =
-                recover_target(input, kind, member, bom, work, selection, out).await
+            && let Some((path, provenance)) = recover_target(
+                input,
+                kind,
+                member,
+                bom,
+                work,
+                (selection, mount.as_deref()),
+                out,
+            )
+            .await
         {
-            target = StreamBundle::with_target(path);
+            target = target.with_target(path);
             out.bundle_metadata_source = Some(provenance);
         }
     }
@@ -418,11 +441,17 @@ async fn recover_target(
     payload: &Member<'_>,
     bom: &Member<'_>,
     work: &DecodeBudget<'_>,
-    selection: Target<'_>,
+    (selection, mount): (Target<'_>, Option<&str>),
     out: &mut ScanResult,
 ) -> Option<(String, &'static str)> {
     let bom = read_small_member(input, bom, MAX_BOM, work).await.ok()??;
-    let expected = bom::late_plist(&bom)?;
+    let expected = bom::late_plist(&bom, |path| {
+        if let Some(root) = mount {
+            bundle::selected_plist(&format!("{root}/{path}"), selection).is_some()
+        } else {
+            bundle::selected_plist(path, selection).is_some()
+        }
+    })?;
     let mut source = Window::new(input, payload.offset, payload.packed).ok()?;
     let (bytes, evidence) = match kind {
         Payload::Compressed(Codec::Gzip) => {
@@ -443,7 +472,14 @@ async fn recover_target(
         }
         Payload::Cpio | Payload::Compressed(_) => return None,
     };
-    let root = bundle::selected_plist(&expected.path, selection)?;
+    let mounted_path;
+    let path = if let Some(root) = mount {
+        mounted_path = format!("{root}/{}", expected.path);
+        &mounted_path
+    } else {
+        &expected.path
+    };
+    let root = bundle::selected_plist(path, selection)?;
     let mut bundle = ScanResult::new(out.total_size);
     let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
     bundle.installer = out.installer.take();
@@ -484,6 +520,28 @@ impl<S: ReadAt> ReadAt for Preview<S> {
         self.remaining -= len as u64;
         Ok(bytes)
     }
+}
+
+fn product_bundle(bundles: &[String]) -> Option<&str> {
+    if bundles
+        .iter()
+        .any(|path| bundle::installed_bundle_kind(path) == Some("app"))
+    {
+        return None;
+    }
+    let mut products = bundles.iter().filter(|path| {
+        matches!(
+            bundle::installed_bundle_kind(path),
+            Some("audio_plugin" | "driver" | "runtime")
+        )
+    });
+    let product = products.next()?;
+    products.next().is_none().then_some(product)
+}
+
+fn bundle_mount(install_location: &str) -> Option<&str> {
+    let path = install_location.strip_prefix('/')?.trim_end_matches('/');
+    bundle::archive_path(path).filter(|path| path.ends_with(".app"))
 }
 
 async fn read_metadata(
@@ -547,6 +605,26 @@ async fn read_metadata(
         let meta = out.installer.get_or_insert_with(InstallerMetadata::default);
         meta.package_id = root.attribute("identifier").map(str::to_owned);
         meta.package_version = root.attribute("version").map(str::to_owned);
+        meta.install_location = root
+            .attribute("install-location")
+            .filter(|location| location.starts_with('/') && location.len() <= 4096)
+            .map(str::to_owned);
+        meta.payload_bundles = root
+            .children()
+            .filter(|node| node.has_tag_name("bundle"))
+            .filter_map(|node| bundle::archive_path(node.attribute("path")?))
+            .filter(|path| path.len() <= 4096)
+            .take(128)
+            .map(str::to_owned)
+            .collect();
+        meta.script_entries = named_child(root, "scripts")
+            .into_iter()
+            .flat_map(|scripts| scripts.children().filter_map(|node| node.attribute("file")))
+            .filter_map(bundle::archive_path)
+            .filter(|path| path.len() <= 4096)
+            .take(32)
+            .map(str::to_owned)
+            .collect();
     }
     Ok(())
 }

@@ -15,21 +15,21 @@ def fork(size, blocks, extents):
     ).ljust(64, b"\0")
 
 
-def node(kind, records, *, next_node=0, prev_node=0, height=1):
+def node(kind, records, *, next_node=0, prev_node=0, height=1, size=SECTOR):
     header = pack(">IIbBHH", next_node, prev_node, kind, height, len(records), 0)
     offsets = [len(header)]
     for record in records:
         offsets.append(offsets[-1] + len(record))
     index = b"".join(pack(">H", offset) for offset in reversed(offsets))
-    return (header + b"".join(records)).ljust(SECTOR - len(index), b"\0") + index
+    return (header + b"".join(records)).ljust(size - len(index), b"\0") + index
 
 
-def tree_header(root, leaves, first_leaf, last_leaf, nodes, depth):
+def tree_header(root, leaves, first_leaf, last_leaf, nodes, depth, *, size=SECTOR):
     record = bytearray(106)
     pack_into(">HIIIIHHII", record, 0, depth, root, leaves, first_leaf, last_leaf,
-              SECTOR, 516, nodes, 0)
+              size, 516, nodes, 0)
     record[37] = 0xBC  # HFSX binary comparison
-    return node(1, [record], height=0)
+    return node(1, [record], height=0, size=size)
 
 
 def key(parent, name):
@@ -156,3 +156,46 @@ def pkg_dmg_fixture(path, package):
     data_at(volume, 6, node(-1, [node_name + file(16, fork(len(package), blocks, [(16, blocks)]))]))
     data_at(volume, 16, package)
     write_udif(path, volume, [(0x80000005, VOLUME_SECTORS, zlib.compress)], "Apple_HFSX")
+
+
+def hfs_tree(files, *, case_sensitive=False):
+    sectors = 256
+    size = 16384
+    volume = bytearray(sectors * SECTOR)
+    header = bytearray(SECTOR)
+    header[:4] = b"HX\0\5" if case_sensitive else b"H+\0\4"
+    pack_into(">II", header, 40, SECTOR, sectors)
+    header[192:272] = fork(0, 0, [])
+    catalog_blocks = 2 * size // SECTOR
+    header[272:352] = fork(2 * size, catalog_blocks, [(8, catalog_blocks)])
+    data_at(volume, 2, header)
+
+    directories = {"": 2}
+    records = []
+    block = 8 + catalog_blocks
+    next_id = 16
+    for path, data in sorted(files.items()):
+        parts = path.split("/")
+        parent = ""
+        for component in parts[:-1]:
+            child = f"{parent}/{component}"
+            if child not in directories:
+                directories[child] = next_id
+                records.append((directories[parent], component, folder(next_id)))
+                next_id += 1
+            parent = child
+        count = (len(data) + SECTOR - 1) // SECTOR
+        records.append((directories[parent], parts[-1], file(
+            next_id, fork(len(data), count, [(block, count)] if count else []))))
+        data_at(volume, block, data)
+        block += count
+        next_id += 1
+
+    assert block <= sectors
+    order = lambda record: (record[0], record[1] if case_sensitive else record[1].casefold())
+    entries = [key(parent, name) + value for parent, name, value in sorted(records, key=order)]
+    leaf = node(-1, entries, size=size)
+    assert len(leaf) == size
+    data_at(volume, 8, tree_header(1, len(entries), 1, 1, 2, 1, size=size))
+    data_at(volume, 8 + size // SECTOR, leaf)
+    return volume

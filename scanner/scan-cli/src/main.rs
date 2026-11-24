@@ -1,6 +1,7 @@
 #![forbid(unsafe_code)]
 
 mod http;
+mod local;
 
 use scan_core::{
     Profile, REMOTE_BUDGET_TIERS, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status,
@@ -285,7 +286,11 @@ fn run(args: &Args) -> Output {
         }
         Err(ScanError::Source("URL must use HTTPS".into()))
     } else {
-        FileSource::open(Path::new(&args.input)).map(|mut file| {
+        let path = Path::new(&args.input);
+        if path.is_dir() {
+            return Output::new(local::scan_app(path, args.limits, target, deadline));
+        }
+        FileSource::open(path).map(|mut file| {
             let expired = || deadline.is_some_and(Deadline::expired);
             ready(scan_target_with_deadline(
                 &mut file,

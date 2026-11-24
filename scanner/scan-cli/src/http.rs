@@ -67,6 +67,7 @@ pub(crate) fn scan(
         delay: options.delay,
         last_request: now,
         deadline,
+        ignored_range: None,
     };
     let budget = if limits.profile == Profile::Worker {
         limits.byte_budget.min(source.size().saturating_sub(1))
@@ -79,6 +80,20 @@ pub(crate) fn scan(
     result.bytes_requested += 1;
     // A successful core read of the magic already covers the probe at zero.
     result.bytes_read = result.bytes_read.max(1);
+    if options.allow_stream
+        && matches!(result.status, scan_core::Status::SourceError)
+        && let Some(response) = source.ignored_range.take()
+    {
+        limits.byte_budget = budget.saturating_sub(result.bytes_requested);
+        if limits.byte_budget == 0 {
+            result.set_error(ScanError::Budget);
+        } else {
+            let mut restarted = scan_stream(response, limits, target, deadline);
+            restarted.scan.bytes_requested += result.bytes_requested;
+            restarted.scan.reads += result.reads;
+            return restarted;
+        }
+    }
     Output {
         source_etag,
         source_transport: Some("range"),
@@ -174,9 +189,6 @@ struct StreamSource {
 impl StreamSource {
     fn open(response: Response<Body>, budget: u64) -> Result<Self> {
         require_identity(response.headers(), "stream")?;
-        if response.headers().contains_key(header::CONTENT_RANGE) {
-            return Err(source_error("stream: HTTP 200 supplied Content-Range"));
-        }
         let size = response
             .headers()
             .get(header::CONTENT_LENGTH)
@@ -188,6 +200,17 @@ impl StreamSource {
                     .ok_or_else(|| source_error("stream: invalid Content-Length"))
             })
             .transpose()?;
+        if let Some(range) = response.headers().get(header::CONTENT_RANGE) {
+            let reported = range.to_str().ok().and_then(content_range);
+            let whole = reported.is_some_and(|(start, stop, total)| {
+                start == 0 && stop + 1 == total && size == Some(total)
+            });
+            if !whole {
+                return Err(source_error(
+                    "stream: HTTP 200 supplied a partial Content-Range",
+                ));
+            }
+        }
         Ok(Self {
             body: response.into_body().into_reader(),
             spool: tempfile::tempfile().map_err(source_error)?,
@@ -269,6 +292,7 @@ struct HttpSource {
     delay: Duration,
     last_request: Instant,
     deadline: Option<Deadline>,
+    ignored_range: Option<Response<Body>>,
 }
 
 impl ReadAt for HttpSource {
@@ -291,6 +315,13 @@ impl ReadAt for HttpSource {
             Some(&self.representation),
             self.deadline,
         )?;
+        if response.status().as_u16() == 200 {
+            self.ignored_range = Some(response);
+            return Err(source_error(format!(
+                "range {offset}-{}: HTTP 200 OK (expected 206)",
+                offset + len as u64 - 1
+            )));
+        }
         let (representation, bytes) =
             accept_range(response, offset, len, Some(&self.representation)).map_err(|error| {
                 if self.deadline.is_some_and(Deadline::expired) {
@@ -539,7 +570,7 @@ mod tests {
         let artifact = include_bytes!("../../fixtures/app.tar.gz");
         let result = scan_stream(
             whole_response(artifact, Some(artifact.len() as u64)),
-            ScanLimits::new(1_000_000),
+            ScanLimits::new(68 * 1024),
             Target::Auto,
             None,
         );
