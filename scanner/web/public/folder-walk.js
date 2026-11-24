@@ -134,19 +134,23 @@ const bundlePlist = (relative) => relative === 'Contents/Info.plist' || relative
 function discoveryCallbacks({ stats, onJob, onProgress, signal }) {
   const pause = timeSlice();
   let nextUpdate = 0;
+  function progress() {
+    const now = performance.now();
+    if (now >= nextUpdate) {
+      nextUpdate = now + 90;
+      onProgress?.(stats);
+    }
+  }
   return {
     check: () => signal?.throwIfAborted(),
     job: onJob,
-    async pause() {
+    pause() {
       const waiting = pause();
-      if (waiting) {
-        await waiting;
+      if (waiting) return waiting.then(() => {
         signal?.throwIfAborted();
-      }
-      if (performance.now() >= nextUpdate) {
-        nextUpdate = performance.now() + 90;
-        onProgress?.(stats);
-      }
+        progress();
+      });
+      progress();
     },
   };
 }
@@ -211,7 +215,8 @@ export async function walkFileList(files, options) {
   let previous = '';
   let parent = null;
 
-  for (let i = 0; i < files.length; i += 1) {
+  const total = files.length;
+  for (let i = 0; i < total; i += 1) {
     const file = files[i];
     const path = file.webkitRelativePath || file.name;
     const split = path.lastIndexOf('/');
@@ -256,14 +261,16 @@ export async function walkFileList(files, options) {
       if (wait) await wait;
     }
     // Native File.size can obtain filesystem metadata synchronously.
-    await flow.pause();
+    const wait = flow.pause();
+    if (wait) await wait;
   }
 
   await probes.drain();
   for (const bundle of bundles.values()) {
     flow.check();
     flow.job(bundleJob(bundle, stats));
-    await flow.pause();
+    const wait = flow.pause();
+    if (wait) await wait;
   }
 }
 
@@ -395,7 +402,8 @@ export async function walkDirectory(root, method, options) {
           flow.job(bundleJob(top.bundle, stats));
         }
       }
-      await flow.pause();
+      const wait = flow.pause();
+      if (wait) await wait;
     }
     await probes.drain();
   } finally {
