@@ -4,7 +4,6 @@ use scan_core::{ReadAt, ScanError, ScanLimits, Target};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
-#[cfg(test)]
 use std::time::Instant;
 use ureq::{Body, ResponseExt, http::Response};
 
@@ -397,7 +396,6 @@ pub(super) fn replay_phase(
     })
 }
 
-#[cfg(test)]
 pub(super) fn local(
     path: &std::path::Path,
     limits: ScanLimits,

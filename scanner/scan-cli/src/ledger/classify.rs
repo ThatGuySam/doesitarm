@@ -83,6 +83,13 @@ pub(super) fn category(scan: &Value, target: Option<&Value>, app: &Value) -> &'s
     if status == "timeout" {
         return "timeout";
     }
+    if status == "cli_error" {
+        return if error.contains("unknown or repeated flag") {
+            "cli_options_rejected"
+        } else {
+            "cli_error"
+        };
+    }
     if status == "source_error" {
         return "other_source_error";
     }
@@ -146,6 +153,9 @@ pub(super) fn category(scan: &Value, target: Option<&Value>, app: &Value) -> &'s
         };
     }
     if status == "not_found" {
+        if error.contains("bundle path in hfs catalog") {
+            return "bundle_path_not_found";
+        }
         if error.contains("executable") || error.contains("mach-o") {
             return "executable_not_found";
         }
@@ -155,6 +165,10 @@ pub(super) fn category(scan: &Value, target: Option<&Value>, app: &Value) -> &'s
     }
     if status == "invalid" {
         "invalid_container"
+    } else if status == "limit_reached" && error.contains("deadline reached") {
+        "timeout"
+    } else if status == "limit_reached" {
+        "parser_limit"
     } else {
         "other"
     }

@@ -102,7 +102,7 @@ pub(super) fn capture_url(
         .iter()
         .position(|f| f == "--request-delay-ms")
         .and_then(|i| settings.flags.get(i + 1)?.parse().ok())
-        .unwrap_or(75);
+        .unwrap_or(0);
     let has_flag = |flag: &str| settings.flags.iter().any(|f| f == flag);
     let mut capture = Capture::new(keep_bytes);
     let result = http::scan_with_capture(
@@ -187,7 +187,7 @@ pub(super) fn enrich(record: &mut Record, capture: &Capture) -> Result<()> {
     Ok(())
 }
 
-fn entry_for(before: &Record) -> Value {
+pub(super) fn entry_for(before: &Record) -> Value {
     let mut entry = if before.evidence["artifact"].is_object() {
         before.evidence["artifact"].clone()
     } else {
@@ -214,6 +214,9 @@ pub(super) fn rerun_settings(before: &Record) -> Settings {
     }
     if settings.tier_bytes.is_none() {
         settings.tier_bytes = Some(REMOTE_BUDGET_TIERS[0]);
+    }
+    if settings.deadline_ms.is_none() && settings.timeout_ms.is_none() {
+        settings.deadline_ms = Some(45_000);
     }
     settings
 }

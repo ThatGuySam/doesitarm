@@ -94,6 +94,7 @@ fn main() -> ExitCode {
         Ok(Some(args)) => args,
         Ok(None) => {
             println!("{USAGE}");
+            println!("Use scan-cli ledger --help for scan history, reports, and offline replay.");
             println!("Local files default to local with no work budget or deadline.");
             println!(
                 "Local .app directories scan one bundle. Other directories scan recursively; --json emits a JSON array."

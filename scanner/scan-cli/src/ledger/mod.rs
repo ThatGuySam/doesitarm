@@ -18,7 +18,7 @@ const USAGE: &str = "Usage: scan-cli ledger [--root DIR] import [--scanner DIR] 
        scan-cli ledger [--root DIR] resume [--scanner DIR] [--limit N] [--seconds N]
        scan-cli ledger [--root DIR] rerun <id|class|--all-failures> [--limit N]
        scan-cli ledger [--root DIR] report
-       scan-cli ledger [--root DIR] kit <id> --out DIR
+       scan-cli ledger [--root DIR] kit <id> --out DIR [--input FILE]
        scan-cli ledger replay DIR
        scan-cli ledger [--root DIR] show <id>
        scan-cli ledger [--root DIR] history [URL]
@@ -122,10 +122,11 @@ fn run(mut args: Vec<String>) -> Result<()> {
         }
         "kit" => {
             let out = option(&mut args, "--out")?.ok_or("Missing --out DIR")?;
+            let input = option(&mut args, "--input")?.map(PathBuf::from);
             if args.len() != 1 {
                 return Err("Expected one attempt ID".into());
             }
-            kit::create(&root, &args[0], Path::new(&out))
+            kit::create(&root, &args[0], Path::new(&out), input.as_deref())
         }
         "replay" if args.len() == 1 => kit::inspect(Path::new(&args[0])),
         "show" if args.len() == 1 => {

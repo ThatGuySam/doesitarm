@@ -208,7 +208,11 @@ fn historical(
     row.status =
         string(attempt, "category").unwrap_or_else(|| classify::category(scan, None, entry).into());
     if !success(&row.status) {
-        row.failure_class = Some(row.status.clone());
+        row.failure_class = Some(if row.status == "other" {
+            classify::category(scan, attempt.get("target"), entry).into()
+        } else {
+            row.status.clone()
+        });
     }
     let local = attempt.get("evidence_source").is_some() || attempt.get("download").is_some();
     let mut flags: Vec<_> = meta["cli_options"]
@@ -472,7 +476,8 @@ fn source_pilot(
             catalog.push(json!({"kind":"pilot_triage", "text":line, "provenance":origin(&imported_from, i+1, None, line)}));
         }
         catalog.push(
-            json!({"kind":"source_document","path":imported_from,"sha256":privacy::sha(&input)}),
+            json!({"kind":"source_document","path":imported_from,"sha256":privacy::sha(&input),
+                "content":(input.len() <= 128_000).then_some(input)}),
         );
     }
     Ok(())

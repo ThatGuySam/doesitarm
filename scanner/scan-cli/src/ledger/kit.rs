@@ -1,7 +1,7 @@
 use super::{
     Result,
     capture::{self, Capture, HttpEvidence, KIT_BYTES, Phase},
-    classify, live, privacy,
+    classify, import, live, privacy,
     store::{Record, Settings, Store, success},
 };
 use crate::Output;
@@ -157,7 +157,7 @@ fn publish(
     Ok(())
 }
 
-pub(super) fn create(root: &Path, id: &str, out: &Path) -> Result<()> {
+pub(super) fn create(root: &Path, id: &str, out: &Path, input: Option<&Path>) -> Result<()> {
     let rows = Store::open(root.to_path_buf())?.records()?;
     let requested = rows
         .iter()
@@ -166,7 +166,35 @@ pub(super) fn create(root: &Path, id: &str, out: &Path) -> Result<()> {
     if requested.failure_class.is_none() || success(&requested.status) {
         return Err("Kit requires a recorded failure".into());
     }
-    let (record, capture) = live::rerun_record(requested, true)?;
+    let (record, capture) = if let Some(input) = input {
+        let mut settings = requested.settings.clone();
+        settings.profile = Some("local".into());
+        let (output, capture, elapsed) = capture::local(
+            input,
+            live::limits(&settings)?,
+            live::target(&settings),
+            None,
+        )?;
+        let entry = live::entry_for(requested);
+        let mut row =
+            import::live_record(&entry, settings, &serde_json::to_value(output)?, elapsed);
+        live::enrich(&mut row, &capture)?;
+        row.evidence = json!({"artifact":entry, "capture_source":"supplied_local_file"});
+        row.previous_id = Some(requested.ledger_id.clone());
+        row.change = Some(classify::compare(requested, &row).into());
+        row.provenance = requested.provenance.clone();
+        (
+            row.seal(&format!("local-kit:{}", requested.ledger_id))?,
+            capture,
+        )
+    } else {
+        if requested.settings.profile.as_deref() == Some("local") {
+            return Err(
+                "This record uses the local profile. Supply its archive with --input FILE".into(),
+            );
+        }
+        live::rerun_record(requested, true)?
+    };
     let store = Store::open(root.to_path_buf())?;
     store.append(&record)?;
     if record.failure_class != requested.failure_class {

@@ -16,7 +16,7 @@ static URL: LazyLock<Regex> =
 static CREDENTIALS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)^(https?://)([^/@?#]+)@").unwrap());
 static QUERY: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"([?&])([^=&#?\s"'<>]+)=([^&#\s"'<>]*)"#).unwrap());
+    LazyLock::new(|| Regex::new(r#"([?&#](?:amp;)?)([^=&#?\s"'<>]+)=([^&#\s"'<>]*)"#).unwrap());
 
 fn decoded_key(key: &str) -> String {
     let mut chars = key.bytes();

@@ -2,7 +2,7 @@ use super::{Result, privacy};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use serde_json::{Value, json};
 use std::{
-    collections::{BTreeMap, HashSet},
+    collections::{BTreeMap, HashMap},
     fs::{self, File},
     io::{BufRead, BufReader, BufWriter, Read, Seek, SeekFrom, Write},
     path::{Path, PathBuf},
@@ -171,7 +171,9 @@ impl Record {
             "\"$ARTIFACT\"".to_owned()
         } else {
             let input = self.original_url.as_ref()?;
-            if !self.rerunnable() || privacy::text(input) != *input {
+            if (!self.rerunnable() && self.failure_class.as_deref() != Some("cli_options_rejected"))
+                || privacy::text(input) != *input
+            {
                 return None;
             }
             quote(input)
@@ -225,6 +227,7 @@ impl Record {
                     | "license_required"
                     | "payment_required"
                     | "authentication_required"
+                    | "cli_options_rejected"
                     | "http_401"
             )
         ) && self.evidence["stage"] != "discover"
@@ -340,12 +343,32 @@ impl Store {
 
     pub fn merge(&self, mut rows: Vec<Record>) -> Result<Vec<Record>> {
         let mut previous = self.records()?;
-        let ids: HashSet<_> = previous.iter().map(|r| r.ledger_id.clone()).collect();
-        rows.retain(|row| !ids.contains(&row.ledger_id));
+        let mut indices: HashMap<_, _> = previous
+            .iter()
+            .enumerate()
+            .map(|(index, row)| (row.ledger_id.clone(), index))
+            .collect();
         rows.sort_by(|a, b| a.order().cmp(&b.order()));
-        rows.dedup_by(|a, b| a.ledger_id == b.ledger_id);
-        if !rows.is_empty() {
-            previous.extend(rows);
+        let mut changed = false;
+        for row in rows {
+            if let Some(&index) = indices.get(&row.ledger_id) {
+                // Refresh normalized imports when an importer learns to map
+                // additional facts. A rerun is a distinct immutable entry.
+                let existing = &previous[index];
+                if existing.previous_id.is_none()
+                    && existing.campaign_entry.is_none()
+                    && serde_json::to_value(existing)? != serde_json::to_value(&row)?
+                {
+                    previous[index] = row;
+                    changed = true;
+                }
+            } else {
+                indices.insert(row.ledger_id.clone(), previous.len());
+                previous.push(row);
+                changed = true;
+            }
+        }
+        if changed {
             self.write_lines("attempts.jsonl", &previous)?;
         }
         self.update_latest(&previous)?;
