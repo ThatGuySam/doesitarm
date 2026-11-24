@@ -9,3 +9,8 @@ serde.workspace = true
 serde_json.workspace = true
 tempfile = "3"
 ureq = { version = "3", default-features = false, features = ["rustls"] }
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
+regex = "1"
+sha2 = "0.11"
+time = { version = "0.3", features = ["formatting", "parsing"] }
+unicode-normalization = "0.1"

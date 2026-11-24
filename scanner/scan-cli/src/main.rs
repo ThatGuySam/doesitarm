@@ -1,6 +1,7 @@
 #![forbid(unsafe_code)]
 
 mod http;
+mod ledger;
 mod local;
 mod local_folder;
 
@@ -85,6 +86,9 @@ impl Output {
 }
 
 fn main() -> ExitCode {
+    if std::env::args_os().nth(1).as_deref() == Some(std::ffi::OsStr::new("ledger")) {
+        return ledger::cli();
+    }
     let args = match args() {
         Ok(Some(args)) => args,
         Ok(None) => {
