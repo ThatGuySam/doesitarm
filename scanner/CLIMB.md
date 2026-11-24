@@ -34,6 +34,8 @@ Additional final regression outcomes were two script executables, one declared e
 
 The full manifest pins 7,570 HTTP(S) artifacts across 5,138 casks from a fresh 7,851-cask Homebrew catalog. It includes distinct macOS platform and language URLs and preserves disabled entries with direct URLs. Three catalog variants declare a POST body. GrADS declares FTP. The manifest records those exclusions. Per-artifact JSON includes the CLI evidence and architecture comparisons. [Full manifest](results/climb/full-run/manifest.json.gz)
 
+A verified app has a bundle identifier, bundle version, minimum macOS, and verified Mach-O slice headers for the declared executable. A verified standalone executable has verified slice headers and a macOS deployment target. The pinned catalog version and observed bundle version are separate fields. The scoreboard groups by detected format when available and uses the catalog or filename to label earlier failures. Budget hits, timeouts, and parser limits remain open.
+
 ## Changes and evidence
 
 - Range discovery and fallback preserve the byte cap. Stream fallback uses an anonymous spool and closes it after the scan. Kunkun verified from a single 327,680-byte response.
@@ -53,9 +55,55 @@ The full manifest pins 7,570 HTTP(S) artifacts across 5,138 casks from a fresh 7
 | Segger J-Link returned 27,647 bytes of HTML. Its catalog declares a POST body for the download. Two other origins reported HTTP 500 or a global request timeout. | Treat the HTML and transport responses as observations. Recheck transient sources separately. |
 | Warp returned HTTP 404 on its pinned URL. Anka Build Cloud Registry's CPIO traversal found no app plist. | Preserve the pinned error evidence. Scan any differently declared artifact as a new representation. |
 
-## Full run progress
+## Full run at the deadline
 
-The live catalog run started at 02:00 Central with 250-artifact checkpoint batches. The campaign is scheduled to pause at 02:44 Central. The first launch used a CLI option spelling that the parser rejects. That launch made zero HTTP requests. Its records are archived separately, and the runner now aborts if the CLI rejects its options. [Launch diagnostics](results/climb/full-launch-error/metadata.json) · [Live scoreboard](results/climb/full-run/scoreboard.md)
+The catalog campaign paused at 02:44 Central with **676/7,570 artifacts checked**. It verified **517 apps and 12 standalone executables**. The scoreboard records an outcome and evidence for each of the other 147 checked artifacts. Another **6,894 artifacts remain pending**. [Catalog scoreboard](results/climb/full-run/scoreboard.md) · [Per-artifact results](results/climb/full-run/run.json)
+
+The checked artifacts cover 587/5,138 distinct casks. All pinned variants were checked for 364 casks and verified for 300. Across all completed attempts, the CLI reported 10,538,618,364 bytes and 11,560 reads. 3 attempts ended without byte counts.
+
+| Container | Checked | Apps verified | Executables verified | Other outcomes |
+| --- | ---: | ---: | ---: | ---: |
+| dmg | 423 | 333 | 1 | 89 |
+| macho | 4 | 0 | 4 | 0 |
+| pkg | 60 | 36 | 0 | 24 |
+| tar.bz2 | 3 | 2 | 1 | 0 |
+| tar.gz | 12 | 3 | 4 | 5 |
+| tar.xz | 4 | 2 | 0 | 2 |
+| tar.zst | 1 | 0 | 0 | 1 |
+| unknown | 4 | 0 | 0 | 4 |
+| zip | 165 | 141 | 2 | 22 |
+
+| Unresolved outcome | Artifacts | Distinct casks |
+| --- | ---: | ---: |
+| other | 47 | 8 |
+| plist_not_found | 24 | 23 |
+| nested_container | 12 | 12 |
+| other_source_error | 12 | 12 |
+| metadata_missing | 11 | 11 |
+| script_executable | 10 | 9 |
+| budget_hit | 7 | 7 |
+| http_403 | 4 | 4 |
+| http_404 | 4 | 4 |
+| unsupported_container | 4 | 4 |
+| timeout | 3 | 3 |
+| executable_not_found | 2 | 2 |
+| host_200_to_range | 2 | 2 |
+| html_response | 2 | 2 |
+| http_429 | 1 | 1 |
+| multi_executable | 1 | 1 |
+| unsupported_codec | 1 | 1 |
+
+Architecture hints produced **360 agreements and 0 disagreements**. Another 118 were unavailable and 7 inconclusive. The scoreboard lists any disagreement with its expected and observed architectures. [Architecture hints and disagreements](results/climb/full-run/scoreboard.md#architecture-hints)
+
+The HFS catalog path error accounts for 42 artifacts across 3 casks. Many are language variants of the two LibreOffice language-pack casks. Use the declared nested path and inspect the actual registered artifact before expanding the HFS search.
+
+- **Embedded installers.** Elecom Mouse Utility and TAL-Drum exceeded the 32 MiB expanded limit for compressed members inside ZIP. A bounded seekable reader for inner images and packages would allow further inspection. Chef Workstation, Zulu, Vagrant, and other installers reached a package with no found app plist. Compare install locations and package declarations to the files present in each component.
+- **Range consistency.** Baretorrent and WordPress.com Studio accepted the first range and returned HTTP 200 on a later range. Future fallback can restart against one bounded stream and account for earlier bytes before accepting metadata.
+- **Slow and unsupported containers.** Use codec or package indexes before raising the transfer cap. Parse XZ filter and dictionary properties for invalid-stream cases. The pinned manifest includes two 7z artifacts and one tar.zst artifact.
+
+The next pending manifest entry is **677**, `synology-surveillance-station-client`.
+
+The first full-run launch produced 248 local CLI argument rejections and zero HTTP requests. The launch diagnostics are archived separately. The runner now aborts on rejected CLI options. [Launch diagnostics](results/climb/full-launch-error/README.md)
 
 ## Resume the catalog run
 
