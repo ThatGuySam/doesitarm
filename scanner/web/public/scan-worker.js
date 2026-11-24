@@ -102,7 +102,7 @@ const THIN_HEADERS = new Map([
   [0xfeedfacf, 32], [0xcffaedfe, 32],
 ]);
 
-async function capturePrefix(file, path, evidence) {
+async function capturePrefix(file, path, evidence, onRead) {
   const length = Math.min(file.size, 64);
   if (!length) {
     evidence.executable_prefix_hex = '';
@@ -116,6 +116,7 @@ async function capturePrefix(file, path, evidence) {
     const bytes = new Uint8Array(await file.slice(0, length).arrayBuffer());
     if (bytes.length !== length) return false;
     record.outcome = 'ok';
+    onRead(bytes.length);
     evidence.executable_prefix_hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
     return bytes[0] === 0x23 && bytes[1] === 0x21;
   } catch {
@@ -196,7 +197,11 @@ async function scanFile(file, path, progress, evidence, declared = false) {
   const diagnostic = result.diagnostic;
   delete result.diagnostic;
   if (sourceError) result.error = sourceError;
-  if (declared || result.format === 'macho') script = await capturePrefix(file, path, evidence) || script;
+  if (declared || result.format === 'macho') {
+    const capturedScript = await capturePrefix(file, path, evidence, (length) =>
+      progress(read + length, file.size, planned));
+    script ||= capturedScript;
+  }
   if (declared && script) {
     result.status = 'script';
     result.error_class = 'executable_is_script';

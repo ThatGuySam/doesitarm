@@ -76,7 +76,7 @@ pub(crate) fn inventory(
                 continue;
             }
             if let Err(error) = inspect_candidate(
-                &root,
+                root,
                 &relative,
                 role,
                 &mut inventory,

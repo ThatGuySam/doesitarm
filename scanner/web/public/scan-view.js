@@ -40,13 +40,15 @@ export function architectures(scan) {
 }
 
 // Plain-language verdict with a non-colour cue.
+const isIntel = (name) => ['x86_64', 'x86_64h', 'i386'].includes(name);
+
 export function verdict(result) {
   if (result.status !== 'complete') {
     return { tone: 'unknown', icon: '?', text: `Unknown — ${reasons[result.status] ?? result.status}` };
   }
   const names = new Set(result.architectures.filter((arch) => arch.header_verified).map((arch) => arch.name));
   const arm = names.has('arm64') || names.has('arm64e');
-  const intel = names.has('x86_64') || names.has('x86_64h') || names.has('i386');
+  const intel = [...names].some(isIntel);
   if (arm && intel) return { tone: 'native', icon: '✓', text: 'Apple Silicon native (Universal)' };
   if (arm) return { tone: 'native', icon: '✓', text: 'Apple Silicon native' };
   if (intel) return { tone: 'intel', icon: '◆', text: 'Intel only · may run with Rosetta' };
@@ -197,13 +199,16 @@ export class ScanCards {
   }
 
   #showInventory(row, card) {
-    if (!row.result) return;
+    if (!row.result || row.status === 'canceled') return;
     const inventory = this.#inventory(row);
     const details = card.el.querySelector('.result-details');
     if (!inventory) return;
-    const { binaries, x86_64_only: intel } = inventory;
-    const mainIsIntel = verdict(row.result).tone === 'intel';
-    if (intel.length && !mainIsIntel) {
+    const { binaries } = inventory;
+    const mainHasOtherSlice = row.result.architectures.some(({ name, header_verified }) =>
+      header_verified && !isIntel(name));
+    const intel = mainHasOtherSlice ? binaries.filter(({ architectures }) =>
+      architectures.length && architectures.every(({ name, header_verified }) => header_verified && isIntel(name))) : [];
+    if (intel.length) {
       card.inventorySummary ??= document.createElement('span');
       card.inventorySummary.className = 'result-arch';
       setText(card.inventorySummary, `${binaries.length} ${binaries.length === 1 ? 'binary' : 'binaries'}, ${intel.length} Intel-only`);
@@ -213,8 +218,8 @@ export class ScanCards {
     const panel = details.querySelector('.panel');
     const next = inventoryDetails(inventory, row.label);
     next.className = 'binary-inventory';
+    next.open = card.inventoryDetails?.open ?? true;
     if (card.inventoryDetails) {
-      next.open = card.inventoryDetails.open;
       card.inventoryDetails.replaceWith(next);
     } else panel.append(next);
     card.inventory = inventory;

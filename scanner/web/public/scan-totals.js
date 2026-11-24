@@ -80,7 +80,7 @@ export function emptyBatchTotals() {
   return { checked: 0, scanned: 0, read: 0, unsized: 0, notChecked: 0 };
 }
 
-export function recordBatchResult(totals, { status, size, read }) {
+export function recordBatchResult(totals, { status, size, read, sizeAlreadyCounted = false }) {
   if (status === 'pending' || status === 'canceled') return;
   if (status !== 'complete') {
     totals.notChecked += 1;
@@ -88,6 +88,7 @@ export function recordBatchResult(totals, { status, size, read }) {
   }
   totals.checked += 1;
   totals.read += Math.max(0, read ?? 0);
+  if (sizeAlreadyCounted) return;
   if (Number.isFinite(size) && size > 0) totals.scanned += size;
   else totals.unsized += 1;
 }

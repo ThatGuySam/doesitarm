@@ -156,7 +156,7 @@ export class ResultsList {
         }
       };
       // Only settled rows are included. The header records the run snapshot.
-      return { header: await runHeader(run, count, this.#longTasks), rows: rows(), count };
+      return { header: await runHeader(run, count, this.#longTasks), rows: rows(), count, cutoff };
     });
     this.#tools.append(toolSummary, this.#summary, controls, this.#diagnostics.element);
     this.#list.after(this.#tools);
@@ -185,7 +185,7 @@ export class ResultsList {
     const run = {
       stats, mode, profile, started: performance.now(), enumerated: null, firstScan: null, lastScan: null,
       ended: null, canceled: false, appCount: 0, bytes: 0, active: 0, peak: 0, finished: 0,
-      pending: 0, listing: 0, rows: [], children: new Map(), bundles: new Map(), modes: new Set([this.#modeLabel(mode)]),
+      pending: 0, listing: 0, rows: [], children: new Map(), bundles: new Map(), bundleCoverage: new Map(), modes: new Set([this.#modeLabel(mode)]),
     };
     const { field, input } = this.#runsByChoice;
     const value = String(this.#runs.length);
@@ -369,7 +369,7 @@ export class ResultsList {
         }
         count(this.#archCounts, arch, 1);
       }
-      recordBatchResult(this.#batch.totals, { status: row.status, size: row.size, read: row.bytes });
+      this.#recordTotals(row, run);
       if (row.status === 'canceled') this.#batch.canceled += 1;
       this.#batch.finished += 1;
       this.#pending.delete(row.id);
@@ -381,6 +381,26 @@ export class ResultsList {
     }
     if (this.#rendered.has(row.id)) this.#dirty.add(row.id);
     this.#requestRefresh();
+  }
+
+  #recordTotals(row, run) {
+    const totals = this.#batch.totals;
+    const source = { status: row.status, size: row.size, read: row.bytes };
+    if (row.status === 'complete' && row.size > 0) {
+      if (row.kind === 'bundle') {
+        // A picked bundle's known size includes all direct files. Reconcile
+        // members such as archives that finished before their bundle did.
+        totals.scanned -= run.bundleCoverage.get(row.label) ?? 0;
+      } else if (row.parentBundlePath) {
+        const parent = run.bundles.get(row.parentBundlePath);
+        source.sizeAlreadyCounted = parent?.status === 'complete' && parent.size > 0;
+        if (!source.sizeAlreadyCounted) {
+          const bytes = run.bundleCoverage.get(row.parentBundlePath) ?? 0;
+          run.bundleCoverage.set(row.parentBundlePath, bytes + row.size);
+        }
+      }
+    }
+    recordBatchResult(totals, source);
   }
 
   #read(row, run, bytes, planned, now) {

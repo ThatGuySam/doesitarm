@@ -8,6 +8,7 @@ import test from 'node:test';
 import { chromium } from 'playwright-core';
 import { createScanner } from '../../pkg/worker/scan_wasm_factory.js';
 import { DEFAULT_BUDGET } from '../public/scan-result.js';
+import { formatSize } from '../public/scan-totals.js';
 import { startPreview } from '../scripts/serve.mjs';
 import { createHandler } from '../worker/handler.js';
 import { dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat } from './browser-helpers.mjs';
@@ -147,7 +148,9 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     assert.match(await picked.locator('.verdict-text').textContent(), /Apple Silicon native/);
     assert.equal(await picked.locator('.binary-inventory li').count(), 0);
     assertBundle(await scanResult(page, 'Fixture.app'), xmlBundle);
-    await picked.locator('.binary-inventory summary').click();
+    const pickedSize = ['Contents/Info.plist', 'Contents/MacOS/FixtureBinary', 'Contents/MacOS/OtherExecutable']
+      .reduce((total, path) => total + statSync(join(xmlBundle, path)).size, 0);
+    assert.ok((await page.locator('#batch-metrics').textContent()).includes(`${formatSize(pickedSize)} scanned`));
     await picked.locator('.binary-inventory li').filter({ hasText: 'OtherExecutable' }).waitFor();
     assert.match(await picked.locator('.binary-inventory li').filter({ hasText: 'OtherExecutable' }).textContent(),
       /Helper.*x86_64.*macOS.*signature/);
@@ -292,7 +295,6 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
       assert.equal(result.bundle_id, '/Users/<user>/metadata');
       assert.equal(result.error, 'Cannot open /Users/<user>/app');
       assert.equal(result.bundle_path, '/Users/<user>/Application.app');
-      await card.locator('.binary-inventory summary').click();
       assert.equal(await card.locator('.binary-inventory li code').textContent(), '/Users/<user>/bin/tool');
       assert.doesNotMatch(await privacyPage.locator('main').innerText(), /(?:mac|linux|windows|helper)-account/);
 

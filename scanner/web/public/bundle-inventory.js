@@ -18,7 +18,7 @@ function role(path) {
 
 // Match scanner-edge's inventory schema. The browser sees only the members
 // delivered by its picker or drop API and positively identified as binaries.
-export function observedInventory(row) {
+export function observedInventory(row, cutoff = Infinity) {
   const { result } = row;
   if (result.inventory) return result.inventory;
   const binaries = [];
@@ -36,7 +36,7 @@ export function observedInventory(row) {
     if (child.children) {
       for (const member of child.children) pending.push(member);
     }
-    if (!binary || (binary.format !== 'macho' && child.kind !== 'bundle')) continue;
+    if (!binary || child.ended > cutoff || (binary.format !== 'macho' && child.kind !== 'bundle')) continue;
     const path = binary.executable_path ?? (binary.format === 'macho' ? child.label : null);
     if (path) record(path, role(path.slice(row.label.length + 1)), binary.architectures);
   }

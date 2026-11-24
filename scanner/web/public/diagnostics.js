@@ -67,7 +67,7 @@ export async function runHeader(run, finished, longTasks) {
   };
 }
 
-export function resultRecord(row, full) {
+export function resultRecord(row, full, cutoff) {
   const { result, evidence } = row;
   const displayPath = row.label;
   const parent = row.parentBundlePath;
@@ -119,7 +119,7 @@ export function resultRecord(row, full) {
     load_commands: evidence?.load_commands ?? null,
     directory_listings: row.directoryListings ?? null,
     candidate_executables: candidates,
-    inventory: result.inventory ?? (row.kind === 'bundle' ? observedInventory(row) : null),
+    inventory: result.inventory ?? (row.kind === 'bundle' ? observedInventory(row, cutoff) : null),
     nested_artifacts: nestedArtifacts,
     read_log: evidence?.read_log ?? null,
     reproduction: ['complete', 'canceled'].includes(result.status) ? null : {
@@ -160,7 +160,7 @@ function button(id, text) {
   return el;
 }
 
-export async function makeExport(header, rows, { count, format = 'ndjson.gz', scope = 'diagnostics' }) {
+export async function makeExport(header, rows, { count, format = 'ndjson.gz', scope = 'diagnostics', cutoff }) {
   if ((format === 'json' && !(count < PLAIN_JSON_LIMIT)) || !['json', 'ndjson.gz'].includes(format)) {
     throw new RangeError('Plain JSON is available for exports under 5,000 rows.');
   }
@@ -188,7 +188,7 @@ export async function makeExport(header, rows, { count, format = 'ndjson.gz', sc
     };
     for (const row of rows) {
       if (row.result && (scope !== 'failures' || !['complete', 'canceled'].includes(row.result.status))) {
-        records.push(resultRecord(row, scope !== 'results'));
+        records.push(resultRecord(row, scope !== 'results', cutoff));
         if (records.length >= 16) send();
       }
       if (sent >= 8) {
@@ -245,9 +245,9 @@ export function diagnosticControls(resolver) {
     feedback.textContent = 'Preparing the local export…';
     try {
       const filter = kind === 'failures' ? 'failures' : kind === 'results' || kind === 'copy' ? 'results' : 'diagnostics';
-      const { header, rows, count } = await resolver();
+      const { header, rows, count, cutoff } = await resolver();
       const type = count >= PLAIN_JSON_LIMIT ? 'ndjson.gz' : filter === 'diagnostics' ? format.value : 'json';
-      const blob = await makeExport(header, rows, { count, format: type, scope: filter });
+      const blob = await makeExport(header, rows, { count, format: type, scope: filter, cutoff });
       blobURL = URL.createObjectURL(blob);
       save.href = blobURL;
       save.download = `scanner-${filter}.${type}`;
