@@ -636,6 +636,19 @@ def annotate(args):
     save(args.output, manifest)
 
 
+def scanner_commit(cli, cli_sha256):
+    provenance = cli.with_name(cli.name + ".provenance.json")
+    if provenance.is_file():
+        recorded = load(provenance)
+        if recorded.get("sha256") != cli_sha256:
+            raise ValueError(f"Scanner binary does not match its provenance at {provenance}")
+        commit = recorded["commit"]
+        if re.fullmatch(r"[0-9a-f]{40}", commit) is None:
+            raise ValueError(f"Scanner provenance lacks a full Git commit at {provenance}")
+        return commit
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+
+
 def run(args):
     args.cli = args.cli.resolve()
     if not args.cli.is_file():
@@ -668,7 +681,7 @@ def run(args):
             if any(metadata.get(key) != value for key, value in parameters.items()):
                 raise ValueError("Checkpoint uses different inputs, scanner binary, or scan policy. Choose a new output directory.")
         else:
-            commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+            commit = scanner_commit(args.cli, parameters["cli_sha256"])
             metadata = {**parameters, "scanner_commit_at_start": commit, "started_at": timestamp()}
             save(metadata_path, metadata)
         checkpoint = args.output / "checkpoint.ndjson"
