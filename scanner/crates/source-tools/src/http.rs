@@ -906,7 +906,7 @@ mod tests {
 
     #[test]
     fn bounds_gzip_metadata_and_accepts_xml_served_as_html() {
-        let body = include_bytes!("../tests/fixtures/sparkle-appcast.xml");
+        let body = include_bytes!("../tests/fixtures/sparkle-browserstack.xml");
         let mut encoder = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
         std::io::Write::write_all(&mut encoder, body).unwrap();
         let compressed = encoder.finish().unwrap();

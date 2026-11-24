@@ -151,16 +151,28 @@ pub fn inspect(transport: &dyn Transport, candidate: &Candidate, options: ScanOp
             Some(&expired),
         ));
         let timed_out = Instant::now() >= deadline;
+        let transport_failed = source.failure.is_some();
         let failure = if transport.cancelled() {
             Some(Failure::new("cancelled", "run interrupted"))
         } else if timed_out {
             Some(Failure::new("timeout", "candidate deadline reached"))
         } else {
-            source.failure.or_else(|| classify(&result, candidate))
+            source
+                .failure
+                .take()
+                .or_else(|| classify(&result, candidate))
         };
         let should_escalate = failure
             .as_ref()
             .is_some_and(|err| err.class == "budget_hit");
+        if !transport_failed
+            && !timed_out
+            && !transport.cancelled()
+            && failure.is_some()
+            && !should_escalate
+        {
+            source.collect_failure_prefix();
+        }
         outcome
             .attempts
             .push(budget + u64::from(outcome.attempts.is_empty()));
@@ -268,6 +280,21 @@ struct RangeSource<'a> {
     traffic: &'a mut Traffic,
     failure: Option<Failure>,
     evidence: &'a mut Option<HttpEvidence>,
+}
+
+impl RangeSource<'_> {
+    fn collect_failure_prefix(&mut self) {
+        let length = self.size().min(512) as usize;
+        let have = self
+            .evidence
+            .as_ref()
+            .map_or(0, |prior| prior.first_bytes_hex.len() / 2);
+        if have < length && self.remaining_budget() >= length as u64 {
+            // Evidence reads use the same deadline, policy, representation and
+            // physical budget. They cannot replace the original parser outcome.
+            let _ = ready(self.read_at(0, length));
+        }
+    }
 }
 
 impl ReadAt for RangeSource<'_> {

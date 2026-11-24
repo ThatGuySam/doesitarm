@@ -228,6 +228,15 @@ impl<'a> Context<'a> {
                         "304 without a matching cached representation",
                     )
                 })?;
+            if response
+                .header("etag")
+                .is_some_and(|observed| weak_etag(observed) != weak_etag(&cached.etag))
+            {
+                return Err(
+                    Failure::new("invalid_cache", "304 carries a different ETag")
+                        .with_http(response.evidence(&url)),
+                );
+            }
             response.status = 200;
             response.headers.insert("etag".into(), cached.etag);
             if let Some(kind) = cached.content_type {
@@ -264,7 +273,8 @@ impl<'a> Context<'a> {
             path,
             response.header("etag"),
             std::str::from_utf8(&response.body),
-        ) && response.url == url
+        ) && !body.is_empty()
+            && response.url == url
             && !sensitive_url(&response.url)
         {
             let cache = Cached {
@@ -289,6 +299,10 @@ pub fn looks_like_html(prefix: &[u8]) -> bool {
     text.starts_with("<html") || text.starts_with("<!doctype html") || text.starts_with("<head")
 }
 
+fn weak_etag(value: &str) -> &str {
+    value.strip_prefix("W/").unwrap_or(value)
+}
+
 fn looks_like_feed(prefix: &[u8]) -> bool {
     let text = String::from_utf8_lossy(prefix);
     let text = text.trim_start_matches('\u{feff}').trim_start();
@@ -311,8 +325,8 @@ fn read_cache(path: &Path, limit: usize) -> AnyResult<Cached> {
         return Err("oversize cache entry".into());
     }
     let cache: Cached = serde_json::from_reader(std::io::BufReader::new(file))?;
-    if cache.body.len() > limit {
-        return Err("oversize cache body".into());
+    if cache.body.is_empty() || cache.body.len() > limit {
+        return Err("empty or oversize cache body".into());
     }
     Ok(cache)
 }

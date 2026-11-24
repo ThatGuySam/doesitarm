@@ -263,4 +263,27 @@ mod tests {
         assert_eq!(calls[0].1, None);
         assert_eq!(calls[3].1.as_deref(), Some("\"fixture\""));
     }
+
+    #[test]
+    fn preserves_public_identity_and_the_recorded_binary_endpoint() {
+        let seed = Seed {
+            url: "https://github.com/AllenReder/not-boring-notch/releases/tag/v1.5.0".into(),
+            ..Seed::default()
+        };
+        let recorded = include_bytes!("../../tests/fixtures/github-not-boring-notch.json");
+        let candidates = Github
+            .parse(&seed, "AllenReder", "not-boring-notch", recorded)
+            .unwrap();
+        let [candidate] = candidates.as_slice() else {
+            panic!("expected one eligible release asset")
+        };
+        assert!(candidate.url.ends_with("/Not-Boring-Notch-v1.5.0.dmg"));
+        assert_eq!(
+            candidate.download_url.as_deref(),
+            Some(
+                "https://api.github.com/repos/AllenReder/not-boring-notch/releases/assets/770796900"
+            )
+        );
+        assert_eq!(candidate.size, Some(14_846_117));
+    }
 }

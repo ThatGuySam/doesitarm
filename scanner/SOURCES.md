@@ -4,7 +4,7 @@ The `sources` binary discovers public macOS distributions, probes them with HTTP
 
 ## Run
 
-From `scanner/`:
+Run these commands from `scanner/`.
 
 ```sh
 export PATH="$HOME/.cargo/bin:$HOME/.local/share/mise/installs/node/latest/bin:$PATH"
@@ -20,7 +20,7 @@ target/debug/sources verify --task "$OUT/agent-tasks/budget_hit.md" --sample 1
 
 Input is a text file with one seed per line or JSONL. Blank lines and `#` comments are allowed. JSONL accepts `url`, `name`, `vendor`, `bundle_id`, `version`, `format_guess`, `size`, `etag`, `minimum_system_version`, `build_version`, `platform`, and `direct`. It also accepts the research corpus's `bundle_id_if_known` and `version_if_known`. GitHub seeds can be `OWNER/REPO`, public repository URLs, or release tag URLs. Sparkle seeds can be appcast URLs or public Info.plist files with `SUFeedURL`. A row marked `direct: true` uses an already pinned artifact URL. `--pinned` applies this to the whole file.
 
-The default run validates a one-byte range. A rejected range can fall back to HEAD for reachability and size evidence. `--scan-ranges` allows the useful ranges requested by the existing `remote-cli` profile. Its transfer ladder starts at 8 MiB and escalates only on budget exhaustion, up to 64 and 256 MiB. `--max-tier 8` keeps the pilot on the first step. The scanner keeps no app files and skips streaming fallback for servers that ignore ranges. Error and landing-page evidence may contain up to 512 bytes of text. Valid range results retain up to 512 bytes of prefix evidence already read during the scan. Signed CDN URLs are used in memory and recorded with credential-bearing queries removed.
+The default run validates a one-byte range. A rejected range can fall back to HEAD for reachability and size evidence. `--scan-ranges` allows the useful ranges requested by the existing `remote-cli` profile. Its transfer ladder starts at 8 MiB and escalates only on budget exhaustion, up to 64 and 256 MiB. `--max-tier 8` keeps the pilot on the first step. The scanner keeps no app files and skips streaming fallback for servers that ignore ranges. Error and landing-page evidence may contain up to 512 bytes of text. Failed range scans retain up to 512 bytes of prefix evidence and can use one bounded diagnostic range within the original byte budget. Signed CDN URLs are used in memory and recorded with credential-bearing queries removed.
 
 Each invocation uses at most two concurrent HTTP requests, one per hostname, with at least one second between request starts and a small jitter. The same scheduler covers robots, metadata, redirects, and artifact requests. Retryable failures back off and respect Retry-After and GitHub rate-limit reset times. Long resets return `rate_limited` so the run can finish other work. Each redirect receives its own policy and robots check. The client accepts public HTTP(S) destinations and rejects private DNS addresses, embedded credentials, and HTTPS downgrades. Schedule one live invocation at a time if several runs share a machine.
 
@@ -64,7 +64,7 @@ HTTP and access classes include `http_<status>`, `rate_limited`, `needs_login`, 
 
 `sources triage --dir DIR` writes up to three representative samples per class to `triage.md` and each task file. `sources verify --task TASK --sample N` reruns the saved sample and exits 0 after the required probe or verified scan. It exits 1 when the outcome is still a failure and 2 when the task or command cannot be evaluated. Replays retain the original scan mode and limits. A live publisher can change between replays, so use immutable fixtures for patch promotion.
 
-The default launcher template is `codex --ask-for-approval never exec --ephemeral --sandbox workspace-write - < "$1"`. The healing runner is offline by construction. A hosted Codex login needs its own authorized drafting session. Bring the resulting patch into the runner through a local `AGENT_CMD` that receives the task file as its first argument. The runner does not execute a hosted agent with general network access.
+The default launcher template is `codex --ask-for-approval never exec --ephemeral --sandbox workspace-write - < "$1"`. The healing runner is offline by construction. A hosted Codex login needs its own authorized drafting session. Bring the resulting patch into the runner through a local `AGENT_CMD` that receives the task file as its first argument.
 
 ```sh
 AGENT_CMD='bash /path/to/offline-agent-wrapper "$1"' \
@@ -72,7 +72,7 @@ AGENT_CMD='bash /path/to/offline-agent-wrapper "$1"' \
   scripts/self-heal.sh "$OUT" --limit 3 --budget-secs 240
 ```
 
-Start from a clean worktree and a built `sources` binary. Place a trusted fixture named `<class>.replay.json` beside the task. It can contain:
+Start from a clean worktree and a built `sources` binary. Place a trusted fixture named `<class>.replay.json` beside the task. The fixture can use the following structure.
 
 ```json
 {
@@ -100,3 +100,17 @@ The runner stages the agent's work in a disposable directory inside the worktree
 Both research markers were present when this worktree started from `scanner-wasm` at `5a7e79a`. The checkout contains [MERGE.md](MERGE.md) and [CLIMB.md](CLIMB.md). `EDGE.md` was absent.
 
 The initial pilot used 55 GitHub candidates and 60 Sparkle discovery events at 8 MiB. It wrote results and generated tasks under `~/Code/doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot/`. GitHub's browser download paths were disallowed by robots. Sparkle verified 29 of 39 scans, with 20 feed discovery failures. The retained observations are the baseline for a follow-up on GitHub's documented asset API and two feed-response fixes.
+
+### Follow-up commands
+
+The follow-up uses the public asset API for the first 22 GitHub release tags and keeps pinned browser URLs for the rest of its comparison cohort. Sparkle uses the full 74-seed list. Run these commands from `scanner/`.
+
+```sh
+BASE="$HOME/Code/doesitarm-data/app-sources/runs/2026-11-24-source-tools-pilot"
+OUT="$BASE/follow-up"
+target/debug/sources run --connector github-releases --input "$OUT/github-input.jsonl" \
+  --limit 60 --out "$OUT" --scan-ranges --max-tier 8 --timeout-secs 100
+target/debug/sources run --connector sparkle-appcasts --input "$BASE/sparkle-input.jsonl" \
+  --limit 74 --out "$OUT" --scan-ranges --max-tier 8 --timeout-secs 95
+target/debug/sources triage --dir "$OUT"
+```

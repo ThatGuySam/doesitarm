@@ -183,3 +183,30 @@ fn head_fallback_describes_the_artifact_without_starting_a_scan() {
     assert_eq!(result.failure.unwrap().class, "post_required");
     assert_eq!(result.traffic.requests, 1);
 }
+
+#[test]
+fn unsupported_nar_retains_prefix_and_does_not_claim_compatibility() {
+    let scratch = tempfile::tempdir().unwrap();
+    let fixture_path = scratch.path().join("nar.json");
+    let artifact = "https://cache.nixos.org/nar/example.nar";
+    let body = b"\r\0\0\0\0\0\0\0nix-archive-1\0\0\0";
+    let hex: String = body.iter().map(|b| format!("{b:02x}")).collect();
+    fs::write(
+        &fixture_path,
+        json!({"assets": {artifact: {"hex": hex}}}).to_string(),
+    )
+    .unwrap();
+    let fixture = Fixture::open(&fixture_path).unwrap();
+    let candidate = ConnectorId::UrlList
+        .connector()
+        .direct(&Default::default(), artifact)
+        .unwrap();
+    let options = ScanOptions {
+        scan_ranges: true,
+        ..ScanOptions::default()
+    };
+    let outcome = source_tools::artifact::inspect(&fixture, &candidate, options);
+    assert_eq!(outcome.failure.unwrap().class, "unsupported_container:nar");
+    assert_eq!(outcome.evidence.unwrap().first_bytes_hex, hex);
+    assert_eq!(outcome.attempts, [8 * 1024 * 1024]);
+}
