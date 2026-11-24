@@ -88,6 +88,7 @@ export class ResultsList {
   #refresh;
   #clock;
   #batch;
+  #batchStatus;
   #discoveries = 0;
   #latestFolder;
   #skeleton;
@@ -104,6 +105,12 @@ export class ResultsList {
   constructor(pool, mode) {
     this.#pool = pool;
     this.#mode = mode;
+    const count = get('results-count');
+    count.removeAttribute('role');
+    this.#batchStatus = document.createElement('span');
+    this.#batchStatus.className = 'visually-hidden';
+    this.#batchStatus.setAttribute('role', 'status');
+    count.after(this.#batchStatus);
     const change = () => {
       this.#page = 0;
       this.#searchVersion += 1;
@@ -568,12 +575,22 @@ export class ResultsList {
     if (folder && folder.enumerated !== null) {
       counts.push(`Found ${number.format(folder.appCount)} apps in ${number.format(folder.stats.files_seen)} files`);
     }
-    if (batch.total) counts.push(`${number.format(batch.finished)} of ${number.format(batch.total)} finished`);
-    if (scanning && this.#active.size) counts.push(`${number.format(this.#active.size)} scanning`);
-    const queued = this.#pending.size - this.#active.size;
-    if (queued) counts.push(`${number.format(queued)} queued`);
+    if (batch.total) {
+      if (scanning && folder?.enumerated != null && !this.#discoveries) {
+        counts.push(`scanning ${number.format(Math.min(batch.finished + 1, batch.total))} of ${number.format(batch.total)}`);
+      } else {
+        counts.push(`${number.format(batch.finished)} of ${number.format(batch.total)} finished`);
+        if (scanning && this.#active.size) counts.push(`${number.format(this.#active.size)} scanning`);
+        const queued = this.#pending.size - this.#active.size;
+        if (queued) counts.push(`${number.format(queued)} queued`);
+      }
+    }
     if (batch.canceled) counts.push(`${number.format(batch.canceled)} canceled`);
     setText(get('results-count'), counts.join(' · '));
+    setText(this.#batchStatus, batch.total && !scanning ? `Scan finished with ${number.format(batch.total)} results.` :
+      scanning && folder?.enumerated != null ? `${number.format(folder.appCount)} apps found. Scanning.` : '');
+    get('batch-readout').hidden = !batch.total && !scanning;
+    get('empty-results').hidden = Boolean(this.#rows.length || scanning || folder);
     const progress = get('overall-progress');
     if (this.#discoveries || !batch.total || (!folder && batch.extended && batch.finished < batch.total)) {
       progress.removeAttribute('value');
