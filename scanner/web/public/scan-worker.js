@@ -1,9 +1,10 @@
-import init, { bundle_metadata, scan } from './pkg/scan_wasm.js';
+import init, { bundle_metadata, bundle_binary_is_macho, bundle_binary_role, scan } from './pkg/scan_wasm.js';
 import { scanRemote } from './range-scan.js';
-import { emptyResult, MIB } from './scan-result.js';
+import { emptyResult, MIB, summarizeInventory } from './scan-result.js';
 
 let passive = false;
 let executableRequest;
+let inventoryRequest;
 
 function yieldForPassive() {
   if (!passive) return;
@@ -18,7 +19,11 @@ self.addEventListener('message', async ({ data }) => {
     return;
   }
   if (data.type === 'executable') {
-    if (executableRequest?.id === data.id) executableRequest.resolve(data.file ?? null);
+    if (executableRequest?.id === data.id) executableRequest.resolve(data);
+    return;
+  }
+  if (data.type === 'inventory') {
+    if (inventoryRequest?.id === data.id) inventoryRequest.resolve(data);
     return;
   }
 
@@ -155,33 +160,69 @@ async function scanBundle(job, progress, id) {
   const metadata = JSON.parse(bundle_metadata(bytes, label));
   if (metadata.error) return metadata;
 
-  const executable = await new Promise((resolve) => {
+  const primaryPath = metadata.executable_path.slice(label.length + 1);
+  const { file, path, resolution } = await new Promise((resolve) => {
     executableRequest = { id, resolve };
-    self.postMessage({ type: 'executable-needed', id, name: metadata.executable_name });
+    self.postMessage({ type: 'executable-needed', id, path: primaryPath });
   });
   executableRequest = undefined;
-  if (!executable) {
-    return {
-      ...metadata,
-      status: 'not_found',
-      error: 'The CFBundleExecutable named in Info.plist could not be opened under Contents/MacOS.',
-    };
+  let totalSize = plist.size + (file?.size ?? 0);
+  const primary = file
+    ? await scanFile(file, (read) => progress(plist.size + read, totalSize))
+    : emptyResult('not_found', 'The CFBundleExecutable named in Info.plist could not be opened.');
+
+  const { files, reason } = await new Promise((resolve) => {
+    inventoryRequest = { id, resolve };
+    self.postMessage({ type: 'inventory-needed', id });
+  });
+  inventoryRequest = undefined;
+  const candidates = files
+    .filter(([name, candidate]) => name !== path && candidate.size >= 8)
+    .map(([name, candidate]) => ({ name, candidate, role: bundle_binary_role(name) }))
+    .filter(({ role }) => role);
+  totalSize += candidates.reduce((size, { candidate }) => size + candidate.size, 0);
+
+  const binaries = primary.architectures.length
+    ? [{ path, role: 'main', architectures: primary.architectures }] : [];
+  let incomplete = reason ?? (primary.error === 'unsupported: declared executable is a script' ? null : primary.error);
+  let bytesRead = plist.size + primary.bytes_read;
+  let requested = plist.size + primary.bytes_requested;
+  let reads = metadata.reads + primary.reads;
+  for (const { name, candidate, role } of candidates) {
+    try {
+      const waiting = yieldForPassive();
+      if (waiting) await waiting;
+      const header = new Uint8Array(await candidate.slice(0, 12).arrayBuffer());
+      requested += header.length;
+      reads += 1;
+      bytesRead += header.length;
+      progress(bytesRead, totalSize);
+      if (!bundle_binary_is_macho(header)) continue;
+      const observed = await scanFile(candidate, (read) => progress(bytesRead + read, totalSize));
+      if (observed.architectures.length) binaries.push({ path: name, role, architectures: observed.architectures });
+      incomplete ||= observed.error;
+      bytesRead += observed.bytes_read;
+      requested += observed.bytes_requested;
+      reads += observed.reads;
+    } catch (error) {
+      incomplete ||= error instanceof Error ? error.message : 'A bundle file could not be read.';
+    }
   }
 
-  const totalSize = plist.size + executable.size;
-  const result = await scanFile(executable, (read, size, planned) =>
-    progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned));
   return {
     ...metadata,
-    status: result.status,
-    error: result.error,
-    architectures: result.architectures,
-    min_macos: metadata.min_macos ?? result.min_macos,
-    executable_size: executable.size,
-    bytes_read: plist.size + result.bytes_read,
-    bytes_requested: plist.size + result.bytes_requested,
-    decoded_bytes: result.decoded_bytes,
-    reads: metadata.reads + result.reads,
+    status: primary.status,
+    error: primary.error,
+    architectures: primary.architectures,
+    min_macos: metadata.min_macos ?? primary.min_macos,
+    executable_path: `${label}/${path}`,
+    executable_resolution: resolution,
+    executable_size: file?.size ?? null,
+    inventory: summarizeInventory(binaries, incomplete),
+    bytes_read: bytesRead,
+    bytes_requested: requested,
+    decoded_bytes: primary.decoded_bytes,
+    reads,
     total_size: totalSize,
   };
 }

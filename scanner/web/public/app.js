@@ -1,3 +1,4 @@
+import { inventoryDetails } from './inventory-view.js';
 import { droppedJobs, pickedFolders } from './local-inputs.js';
 import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
@@ -216,6 +217,9 @@ async function loadHomebrew() {
         cell.textContent = value ?? '—';
         row.append(cell);
       }
+      const inventory = document.createElement('td');
+      inventory.append(inventoryDetails(scan.inventory, app.cask) ?? '—');
+      row.append(inventory);
       rows.append(row);
     }
     body.append(rows);

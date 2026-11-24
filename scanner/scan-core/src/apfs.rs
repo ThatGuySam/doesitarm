@@ -1,7 +1,9 @@
 //! Selective reads of ordinary APFS volumes using the Apple File System Reference.
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range, decode::DecodeBudget, le16,
-    le32, le64, macho, nested, pkg,
+    ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range,
+    decode::DecodeBudget,
+    inventory::{self, Allowance},
+    le16, le32, le64, macho, nested, pkg,
 };
 use std::{
     collections::{HashSet, VecDeque},
@@ -81,15 +83,19 @@ impl<S: ReadAt> Device<'_, S> {
         if slots & 0x8000_0000 != 0 {
             return Err(ScanError::Unsupported("APFS checkpoint descriptor tree"));
         }
-        if slots > 128 {
-            return Err(ScanError::Limit("APFS checkpoint ring exceeds 128 blocks"));
+        let maximum = if self.work.strict() { 128 } else { 4096 };
+        if slots > maximum {
+            return Err(ScanError::Limit(
+                "APFS checkpoint ring exceeds profile limit",
+            ));
         }
         check_range(self.blocks, base, slots as u64)?;
-        if slots != 0 {
-            let start = base * self.block_size as u64;
+        for index in (0..slots).step_by(128) {
+            let start = (base + u64::from(index)) * self.block_size as u64;
+            let count = (slots - index).min(128);
             let ring = self
                 .disk
-                .read_at(start, slots as usize * self.block_size)
+                .read_at(start, count as usize * self.block_size)
                 .await?;
             for candidate in ring.chunks_exact(self.block_size) {
                 if &candidate[32..36] == b"NXSB"
@@ -585,6 +591,10 @@ impl<S: ReadAt> ReadAt for ApfsFile<'_, S> {
         self.data.size
     }
 
+    fn remaining_budget(&self) -> u64 {
+        self.disk.remaining_budget()
+    }
+
     async fn read_at(&mut self, mut offset: u64, len: usize) -> Result<Vec<u8>> {
         check_range(self.data.size, offset, len as u64)?;
         let mut result = Vec::with_capacity(len);
@@ -763,10 +773,76 @@ async fn read_app(
     .await?;
     let path = bundle::apply_plist(&plist, app_path, out)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
-    let item = volume
-        .find_path(device, contents.id, relative, FILE)
-        .await?;
-    read_executable(device, volume, item, out).await
+    let primary = match volume.find_path(device, contents.id, relative, FILE).await {
+        Ok(item) => read_executable(device, volume, item, out).await,
+        Err(error) => Err(error),
+    };
+    let mut inventory = crate::BinaryInventory::default();
+    inventory.record_primary(&primary);
+    let work = device.work;
+    let mut allowance = Allowance::new(device.disk, work);
+    let mut pending = vec![(contents.id, "Contents".to_owned())];
+    let mut visited = HashSet::new();
+    'walk: while let Some((parent, prefix)) = pending.pop() {
+        if !visited.insert(parent) || prefix.len() > 8192 {
+            inventory.partial("invalid APFS directory hierarchy");
+            continue;
+        }
+        if let Err(error) = allowance.step(device.disk, work) {
+            inventory.partial(error.to_string());
+            break;
+        }
+        let children = match volume.children(device, parent).await {
+            Ok(children) => children,
+            Err(error) => {
+                inventory.partial(error.to_string());
+                if inventory::stop(&error) {
+                    break;
+                }
+                continue;
+            }
+        };
+        for item in children {
+            let path = format!("{prefix}/{}", item.name);
+            let Some(role) = inventory::role(&path) else {
+                continue;
+            };
+            if item.kind == DIRECTORY {
+                pending.push((item.id, path));
+                continue;
+            }
+            if item.kind != FILE || path.strip_prefix("Contents/") == Some(relative) {
+                continue;
+            }
+            if let Err(error) = allowance.step(device.disk, work) {
+                inventory.partial(error.to_string());
+                break 'walk;
+            }
+            let observed = match volume.file(device, item.id).await {
+                Ok(data) => {
+                    inventory::read(
+                        &mut ApfsFile {
+                            data,
+                            disk: device.disk,
+                        },
+                        &path,
+                        role,
+                        &mut inventory,
+                    )
+                    .await
+                }
+                Err(error) => Err(error),
+            };
+            if let Err(error) = observed {
+                inventory.partial(error.to_string());
+                if inventory::stop(&error) {
+                    break 'walk;
+                }
+            }
+        }
+    }
+    out.inventory = Some(inventory);
+    primary
 }
 
 async fn read_executable(

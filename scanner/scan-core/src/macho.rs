@@ -44,9 +44,17 @@ pub(crate) fn kind(bytes: &[u8]) -> Option<Kind> {
 }
 
 pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut Vec<Architecture>) -> Result<()> {
-    let size = input.size();
     let first = input.read_at(0, 8).await?;
-    let kind = kind(&first).ok_or_else(|| {
+    scan_after_header(input, &first, out).await
+}
+
+pub(crate) async fn scan_after_header(
+    input: &mut impl ReadAt,
+    first: &[u8],
+    out: &mut Vec<Architecture>,
+) -> Result<()> {
+    let size = input.size();
+    let kind = kind(first).ok_or_else(|| {
         if first.starts_with(b"#!") {
             ScanError::Unsupported("declared executable is a script")
         } else if first.starts_with(b"MZ") {
@@ -58,16 +66,22 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut Vec<Architecture>) -
         }
     })?;
     if !kind.fat {
-        return thin(input, 0, size, &first, None, out).await;
+        return thin(input, 0, size, first, None, out).await;
     }
 
-    let count = kind.word(&first, 4) as usize;
+    let count = kind.word(first, 4) as usize;
     if !(1..=128).contains(&count) {
         return Err(ScanError::Invalid("Mach-O fat slice count"));
     }
     let record_size = if kind.wide { 32 } else { 20 };
     let table_end = 8 + (count * record_size) as u64;
-    let records = input.read_at(8, count * record_size).await?;
+    let prefix = &first[8..];
+    let mut records = prefix.to_vec();
+    records.extend(
+        input
+            .read_at(first.len() as u64, count * record_size - prefix.len())
+            .await?,
+    );
     let mut arches = Vec::with_capacity(count);
     for record in records.chunks_exact(record_size) {
         let (offset, length) = if kind.wide {

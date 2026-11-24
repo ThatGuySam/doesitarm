@@ -28,7 +28,7 @@ FORMATS = {
 }
 QUOTAS = {"zip": 19, "dmg": 19, "tar.gz": 12, "pkg": 15, "other": 5}
 APP_ARTIFACTS = {"app", "pkg", "installer", "binary", "suite"}
-VERIFIED = {"verified", "verified_executable"}
+VERIFIED = {"verified", "verified_executable", "verified_plugin"}
 
 
 class DeadlineReached(Exception):
@@ -299,6 +299,8 @@ def category(entry_, scan, target=None):
             return "executable_not_found"
         if not scan.get("bundle_id") or not scan.get("version") or not scan.get("min_macos"):
             return "metadata_missing"
+        if scan.get("bundle_kind") not in (None, "app"):
+            return "verified_plugin"
         return "verified"
     if status == "budget_exhausted":
         return "budget_hit"
@@ -324,7 +326,8 @@ def category(entry_, scan, target=None):
     if "nested" in error or scan.get("nested_artifacts"):
         return "nested_container"
     if "declared executable is a script" in error:
-        return "script_executable"
+        slices = (scan.get("script_runtime") or {}).get("architectures", [])
+        return "script_runtime_verified" if slices and all(arch["header_verified"] for arch in slices) else "script_executable"
     if any(text in error for text in ("executable is not mach-o", "executable is elf", "dos/pe magic")):
         return "non_macho_executable"
     if "executable" in error and any(text in error for text in ("symlink", " is a link")):
@@ -387,6 +390,7 @@ def attempt(cli, entry_, budget, timeout, cli_options, target=None, deadline=Non
     record = {
         "budget": budget,
         "elapsed_seconds": round(time.monotonic() - start, 3),
+        "scanned_at": timestamp(),
         "exit_code": exit_code,
         "category": category(entry_, scan, target),
         "scan": scan,
@@ -402,7 +406,7 @@ def attempts_for(args, entry_, target):
         previous = attempts[-1]
         scan = previous["scan"]
         format_ = scan.get("format") or entry_["expected_format"]
-        sequential = {"pkg", "zip", "tar.gz", "tar.xz", "tar.bz2", "tar.zst", "tgz", "txz", "tbz", "tbz2"}
+        sequential = {"pkg", "zip", "7z", "tar.gz", "tar.xz", "tar.bz2", "tar.zst", "tgz", "txz", "tbz", "tbz2"}
         if previous["category"] != "budget_hit":
             break
         nested_package = any(
@@ -500,7 +504,8 @@ def publish(output, metadata, rows):
     lines = [
         "# Homebrew scanner scoreboard", "",
         f"{len(rows):,}/{metadata['manifest_count']:,} artifacts checked. "
-        f"{categories['verified']:,} app results and {categories['verified_executable']:,} standalone executable results verified. "
+        f"{categories['verified']:,} apps, {categories['verified_executable']:,} standalone executables, "
+        f"and {categories['verified_plugin']:,} installed products verified. "
         f"Run started {metadata['started_at']}.", "",
         f"Checked artifacts cover {checked_casks:,} of {metadata.get('manifest_casks', metadata['manifest_count']):,} casks.", "",
         f"Across all attempts, the CLI reported {accepted_bytes:,} bytes and {reads:,} reads. "
@@ -631,6 +636,19 @@ def annotate(args):
     save(args.output, manifest)
 
 
+def scanner_commit(cli, cli_sha256):
+    provenance = cli.with_name(cli.name + ".provenance.json")
+    if provenance.is_file():
+        recorded = load(provenance)
+        if recorded.get("sha256") != cli_sha256:
+            raise ValueError(f"Scanner binary does not match its provenance at {provenance}")
+        commit = recorded["commit"]
+        if re.fullmatch(r"[0-9a-f]{40}", commit) is None:
+            raise ValueError(f"Scanner provenance lacks a full Git commit at {provenance}")
+        return commit
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+
+
 def run(args):
     args.cli = args.cli.resolve()
     if not args.cli.is_file():
@@ -663,7 +681,7 @@ def run(args):
             if any(metadata.get(key) != value for key, value in parameters.items()):
                 raise ValueError("Checkpoint uses different inputs, scanner binary, or scan policy. Choose a new output directory.")
         else:
-            commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+            commit = scanner_commit(args.cli, parameters["cli_sha256"])
             metadata = {**parameters, "scanner_commit_at_start": commit, "started_at": timestamp()}
             save(metadata_path, metadata)
         checkpoint = args.output / "checkpoint.ndjson"

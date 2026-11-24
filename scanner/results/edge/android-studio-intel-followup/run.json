@@ -1,0 +1,65 @@
+{
+  "manifest_count": 1,
+  "manifest_casks": 1,
+  "manifest_sha256": "30771d3df83875790a385ff2a7135f7f5846ee449545a53a944fa7395c1dee57",
+  "cli_sha256": "bc9aae18c3c66c745ea6eb417322ff926c8611a916372b9728c4001bda3c0501",
+  "scanner_commit_at_start": "b8572dc849858c94f341112dd6a910ae1540a777",
+  "started_at": "2026-11-24T19:50:22+00:00",
+  "updated_at": "2026-11-24T19:50:38+00:00",
+  "totals": {
+    "checked": 1,
+    "by_outcome": {
+      "other_source_error": 1
+    },
+    "by_container": {
+      "dmg": {
+        "other_source_error": 1
+      }
+    },
+    "architecture_hints": {},
+    "accepted_bytes": 0,
+    "reported_reads": 0,
+    "attempts_with_unknown_bytes": 1
+  },
+  "artifacts": [
+    {
+      "cask": "android-studio",
+      "url": "https://edgedl.me.gvt1.com/android/studio/install/2026.2.2.10/android-studio-rabbit2-patch2-mac.dmg",
+      "version": "2026.2.2.10,rabbit2-patch2",
+      "sha256": "087d4966a0c46890812ce28477f5fdd636f533f1760a0475f91ecd2f6a0ebb58",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Android Studio.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "host": "edgedl.me.gvt1.com",
+      "category": "other_source_error",
+      "comparison": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 16.462,
+          "scanned_at": "2026-11-24T19:50:38+00:00",
+          "exit_code": 56,
+          "category": "other_source_error",
+          "scan": {
+            "status": "source_error",
+            "error": "download: 200 220756019 application/x-apple-diskimage curl: (56) Recv failure: Connection reset by peer"
+          },
+          "sha256_observed": null,
+          "sha256_matches_pinned": null,
+          "download": "200 220756019 application/x-apple-diskimage",
+          "evidence_source": "download_attempt",
+          "target": {
+            "kind": "bundle",
+            "path": "Android Studio.app"
+          }
+        }
+      ]
+    }
+  ]
+}

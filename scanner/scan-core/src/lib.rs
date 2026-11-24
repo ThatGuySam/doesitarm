@@ -10,16 +10,23 @@ mod dmg;
 mod gzip_tail;
 mod hfs;
 mod inflate;
+mod inventory;
+mod launcher;
 mod macho;
 mod nested;
 mod pbzx;
 mod pkg;
 mod plist_value;
+mod sevenz;
 mod stream_bundle;
 mod tar;
 mod udif_codec;
 mod zip;
 
+pub use inventory::{
+    BinaryInventory, BundleBinary, is_macho as bundle_binary_is_macho, role as bundle_binary_role,
+};
+pub use launcher::ScriptRuntime;
 use serde::Serialize;
 use std::{collections::BTreeMap, fmt, str::FromStr};
 
@@ -164,6 +171,12 @@ pub struct InstallerMetadata {
     pub host_architectures: Vec<String>,
     pub package_id: Option<String>,
     pub package_version: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub install_location: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub payload_bundles: Vec<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub script_entries: Vec<String>,
     pub min_macos: Option<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub remote_components: Vec<String>,
@@ -175,6 +188,8 @@ pub struct ScanResult {
     pub status: Status,
     pub architectures: Vec<Architecture>,
     pub bundle_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bundle_kind: Option<&'static str>,
     pub bundle_id: Option<String>,
     pub version: Option<String>,
     pub name: Option<String>,
@@ -184,12 +199,18 @@ pub struct ScanResult {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub executable_path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub executable_resolution: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_metadata_source: Option<&'static str>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub nested_artifacts: Vec<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
     pub installer: Option<InstallerMetadata>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inventory: Option<BinaryInventory>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub script_runtime: Option<ScriptRuntime>,
     /// Unique source bytes in successful range responses.
     pub bytes_read: u64,
     /// Sum of lengths of attempted source requests, including overlaps and failures.
@@ -208,6 +229,7 @@ impl ScanResult {
             status: Status::Complete,
             architectures: Vec::new(),
             bundle_path: None,
+            bundle_kind: None,
             bundle_id: None,
             version: None,
             name: None,
@@ -215,10 +237,13 @@ impl ScanResult {
             executable_name: None,
             executable_size: None,
             executable_path: None,
+            executable_resolution: None,
             bundle_metadata_source: None,
             nested_artifacts: Vec::new(),
             candidate_executables: Vec::new(),
             installer: None,
+            inventory: None,
+            script_runtime: None,
             bytes_read: 0,
             bytes_requested: 0,
             decoded_bytes: 0,
@@ -319,14 +344,9 @@ pub async fn scan_target_with_deadline(
     } else {
         u64::MAX
     };
-    let work = decode::DecodeBudget::with_limits(decoded, strict, expired);
-    match inspect(&mut input, &work, target, &mut result).await {
-        Err(error) => result.set_error(error),
-        Ok(()) => {
-            if let Err(error) = work.check_deadline() {
-                result.set_error(error);
-            }
-        }
+    let work = decode::DecodeBudget::with_limits(decoded, limits.profile, expired);
+    if let Err(error) = inspect(&mut input, &work, target, &mut result).await {
+        result.set_error(error);
     }
     if result.min_macos.is_none() {
         result.min_macos = result
@@ -345,6 +365,7 @@ pub async fn scan_target_with_deadline(
             })
             .cloned();
     }
+    inventory::finalize(&mut result);
     result.bytes_read = input.coverage.bytes;
     result.bytes_requested = input.requested;
     result.decoded_bytes = work.used();
@@ -379,6 +400,11 @@ async fn inspect(
         macho::scan(input, &mut out.architectures).await?;
         return Ok(());
     }
+    if magic.starts_with(b"#!") {
+        out.format = Some("script");
+        out.executable_size = Some(input.size());
+        return Err(ScanError::Unsupported("declared executable is a script"));
+    }
     if matches!(
         magic.as_slice(),
         b"PK\x03\x04" | b"PK\x05\x06" | b"PK\x07\x08"
@@ -398,6 +424,10 @@ async fn inspect(
                 .await;
         }
     }
+    if magic == b"7z\xbc\xaf" && input.size() >= 32 && input.read_at(4, 2).await? == b"\x27\x1c" {
+        out.format = Some("7z");
+        return sevenz::scan(input, work, target, out).await;
+    }
     if magic == b"xar!" {
         out.format = Some("pkg");
         return pkg::scan(input, work, target, out).await;
@@ -411,6 +441,9 @@ async fn inspect(
     }
     // UDIF stores compressed runs from byte zero. Its koly footer takes
     // precedence over a bzip2 or XZ prefix from the first run.
+    if inflate::zstd_magic(&magic) {
+        return compressed_tar(input, work, target, out, "tar.zst", inflate::Codec::Zstd).await;
+    }
     if magic.starts_with(b"BZh") {
         return compressed_tar(input, work, target, out, "tar.bz2", inflate::Codec::Bzip2).await;
     }
@@ -422,6 +455,15 @@ async fn inspect(
         if tar::is_header(&header) {
             out.format = Some("tar");
             return tar::scan(input, work, target, out).await;
+        }
+        if dmg::scan_raw(input, &header, work, target, out).await? {
+            return Ok(());
+        }
+        // Archive prefixes such as Steam's 20-byte wrapper precede the
+        // first local file header. ZIP validates the shifted directory.
+        if let Some(offset) = header.windows(4).position(|magic| magic == b"PK\x03\x04") {
+            out.format = Some("zip");
+            return zip::scan_prefixed(input, offset as u64, work, target, out).await;
         }
     }
     Err(ScanError::Unsupported("unrecognized file format"))
@@ -438,13 +480,16 @@ async fn compressed_tar(
     out.format = Some(format);
     let size = input.size();
     let source = Window::new(input, 0, size)?;
-    tar::scan(
-        &mut inflate::Forward::new(source, work.stream_limit(), codec, work)?,
-        work,
-        target,
-        out,
-    )
-    .await
+    let mut source = inflate::Forward::new(source, work.stream_limit(), codec, work)?;
+    let primary = tar::scan(&mut source, work, target, out).await;
+    if let Some(runtime) = out.script_runtime.as_mut()
+        && runtime.architectures.is_empty()
+        && source.remaining_budget() > 64 * 1024
+        && source.rewind_for(0).is_ok()
+    {
+        tar::read_runtime(&mut source, work, runtime).await;
+    }
+    primary
 }
 
 struct Metered<'a, S> {

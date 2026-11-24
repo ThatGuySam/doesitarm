@@ -1,0 +1,6053 @@
+{
+  "manifest_sha256": "ce3882c772f2b960989956bb78e40adacf05bd78a641478c020bdb342502f416",
+  "catalog_sha256": "7370436779861f2f546a1a78ccf1c16aa5d50017de39b0c212384a1db17786a8",
+  "manifest_count": 142,
+  "manifest_casks": 100,
+  "cli_sha256": "73a24a511353b512266d63345640a200c004bdf0a2490a40edab7055ba6113b7",
+  "budget": 8388608,
+  "escalate": [
+    67108864,
+    268435456
+  ],
+  "timeout": 31,
+  "cli_options": [
+    "--allow-stream",
+    "--allow-http",
+    "--deadline-ms",
+    "28000"
+  ],
+  "host_cooldown": 1.0,
+  "use_cask_targets": true,
+  "scanner_commit_at_start": "8e805c045d39a6ed69ed7a1b47ba3e04fd24bea5",
+  "started_at": "2026-11-24T19:31:06+00:00",
+  "updated_at": "2026-11-24T19:38:11+00:00",
+  "totals": {
+    "checked": 41,
+    "by_outcome": {
+      "plist_not_found": 5,
+      "http_403": 2,
+      "script_executable": 13,
+      "verified": 5,
+      "nested_container": 5,
+      "metadata_missing": 3,
+      "budget_hit": 2,
+      "other": 1,
+      "unsupported_container": 1,
+      "other_source_error": 2,
+      "http_404": 1,
+      "verified_plugin": 1
+    },
+    "by_container": {
+      "dmg": {
+        "http_403": 2,
+        "script_executable": 11,
+        "nested_container": 5,
+        "other": 1,
+        "unsupported_container": 1,
+        "metadata_missing": 2,
+        "plist_not_found": 2
+      },
+      "pkg": {
+        "plist_not_found": 2,
+        "verified": 2,
+        "budget_hit": 1
+      },
+      "tar.gz": {
+        "other_source_error": 1
+      },
+      "unknown": {
+        "other_source_error": 1
+      },
+      "zip": {
+        "verified": 3,
+        "metadata_missing": 1,
+        "script_executable": 2,
+        "plist_not_found": 1,
+        "http_404": 1,
+        "budget_hit": 1,
+        "verified_plugin": 1
+      }
+    },
+    "architecture_hints": {
+      "unavailable": 27,
+      "agrees": 4,
+      "inconclusive": 1
+    },
+    "accepted_bytes": 1650891155,
+    "reported_reads": 2443,
+    "attempts_with_unknown_bytes": 0
+  },
+  "artifacts": [
+    {
+      "cask": "fx-cast-bridge",
+      "url": "https://github.com/hensm/fx_cast/releases/download/v0.3.0/fx_cast_bridge-0.3.0-x64.pkg",
+      "version": "0.3.0",
+      "sha256": "f24e347fd240d5e74b488c83aee8c939b5abf7498dd047b4d3cdb5912a71e8aa",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "github.com",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.139,
+          "scanned_at": "2026-11-24T19:31:07+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "fx_cast_bridge",
+              "host_architectures": [],
+              "package_id": "tf.matt.fx_cast_bridge",
+              "package_version": "0.3.0",
+              "script_entries": [
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 8126453,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 21462449,
+            "reads": 22,
+            "total_size": 18893475,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DA8FE93F08D845\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 1.649,
+          "scanned_at": "2026-11-24T19:31:09+00:00",
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "pkg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "fx_cast_bridge",
+              "host_architectures": [],
+              "package_id": "tf.matt.fx_cast_bridge",
+              "package_version": "0.3.0",
+              "script_entries": [
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 18892153,
+            "bytes_requested": 18892164,
+            "decoded_bytes": 54965052,
+            "reads": 22,
+            "total_size": 18893475,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"0x8DA8FE93F08D845\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ftdi-vcp-driver",
+      "url": "https://ftdichip.com/wp-content/uploads/2022/06/FTDIUSBSerialDextInstaller_1_5_0.dmg",
+      "version": "1.5.0,2022,06",
+      "sha256": "f535d604d5098c4ecde0f213a80732cd45906339472ae30c0723959336a50b9c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app",
+        "installer"
+      ],
+      "declared_apps": [
+        "FTDIUSBSerialDextInstaller_1_5_0.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "ftdichip.com",
+      "category": "http_403",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.136,
+          "scanned_at": "2026-11-24T19:31:09+00:00",
+          "exit_code": 1,
+          "category": "http_403",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "bytes_requested": 1,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 403 Forbidden (expected 206)"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "FTDIUSBSerialDextInstaller_1_5_0.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_ta.dmg",
+      "version": "26.2.7",
+      "sha256": "ab8c01c62cc5ccaa1f9426f52d91ef69762a7cd38bb3f2fabdfbda9ec35674a3",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "ta"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.791,
+          "scanned_at": "2026-11-24T19:31:11+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1602830,
+            "bytes_requested": 1602831,
+            "decoded_bytes": 2728960,
+            "reads": 8,
+            "total_size": 3723740,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"38d1dc-65eecc73df3a9\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "empoche",
+      "url": "https://empoche-desktop.s3.amazonaws.com/Empoche-0.4.5-mac.zip",
+      "version": "0.4.5",
+      "sha256": "8a4c57928da42a3ed60b1e0648b24614f84ecc582f3b9c9ee04cd5323e58ea4f",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Empoche.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "empoche-desktop.s3.amazonaws.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 28.008,
+          "scanned_at": "2026-11-24T19:31:39+00:00",
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 207712,
+                "header_verified": true,
+                "min_macos": "10.10",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Empoche.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.empoche.app",
+            "version": "0.4.5",
+            "name": "Empoche",
+            "min_macos": "10.13.2",
+            "executable_name": "Empoche",
+            "executable_size": 207712,
+            "executable_path": "Empoche.app/Contents/MacOS/Empoche",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: scan deadline reached",
+              "binaries": [
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 117102592,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libEGL.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 225360,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libGLESv2.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 10237936,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 3061568,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libEGL.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 253552,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libGLESv2.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 3432624,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 992496,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/Empoche",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 207712,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libEGL.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libGLESv2.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libEGL.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libGLESv2.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler",
+                "Contents/MacOS/Empoche"
+              ]
+            },
+            "bytes_read": 2067772,
+            "bytes_requested": 2112913,
+            "decoded_bytes": 31086,
+            "reads": 160,
+            "total_size": 74945413,
+            "error": null,
+            "source_etag": "\"7a52b19c340375b8321b1228b08757a5-15\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Empoche.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "chef-workstation",
+      "url": "https://packages.chef.io/files/stable/chef-workstation/25.14.2/mac_os_x/14/chef-workstation-25.14.2-1.arm64.dmg",
+      "version": "25.14.2,14",
+      "sha256": "35f28e3bd3549a322a287cee6b85a1ddc5a9e8f013aa32154e7dd36c741a7004",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "packages.chef.io",
+      "category": "nested_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.973,
+          "scanned_at": "2026-11-24T19:31:41+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "chef-workstation-25.14.2-1.arm64.pkg"
+            ],
+            "installer": {
+              "title": "Chef Workstation",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.getchef.pkg.chef-workstation",
+              "package_version": "25.14.2",
+              "install_location": "/opt/chef-workstation",
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 8388607,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 26613768,
+            "reads": 27,
+            "total_size": 223145122,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 4.664,
+          "scanned_at": "2026-11-24T19:31:45+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "chef-workstation-25.14.2-1.arm64.pkg"
+            ],
+            "installer": {
+              "title": "Chef Workstation",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.getchef.pkg.chef-workstation",
+              "package_version": "25.14.2",
+              "install_location": "/opt/chef-workstation",
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 67108863,
+            "bytes_requested": 67108864,
+            "decoded_bytes": 111307635,
+            "reads": 97,
+            "total_size": 223145122,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 14.697,
+          "scanned_at": "2026-11-24T19:32:00+00:00",
+          "exit_code": 1,
+          "category": "nested_container",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "chef-workstation-25.14.2-1.arm64.pkg"
+            ],
+            "installer": {
+              "title": "Chef Workstation",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.getchef.pkg.chef-workstation",
+              "package_version": "25.14.2",
+              "install_location": "/opt/chef-workstation",
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 220105673,
+            "bytes_requested": 220105674,
+            "decoded_bytes": 858015199,
+            "reads": 277,
+            "total_size": 223145122,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "zoho-cliq",
+      "url": "https://downloads.zohocdn.com/chat-desktop/mac/Cliq-arm64-1.8.6.pkg",
+      "version": "1.8.6",
+      "sha256": "8161ca4792a57923fc57c125a441bcfb3ba133e50163dead3fc89d6044199d6a",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "downloads.zohocdn.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 27.685,
+          "scanned_at": "2026-11-24T19:32:28+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Cliq.app/Contents/MacOS/Cliq",
+                "size": 52944,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 52944,
+                    "header_verified": true,
+                    "min_macos": "12.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "Cliq",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "com.zoho.cliq",
+              "package_version": "1.8.6",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "Cliq.app"
+              ],
+              "min_macos": "12.0"
+            },
+            "bytes_read": 8126453,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 14247342,
+            "reads": 22,
+            "total_size": 113338090,
+            "error": "byte budget reached",
+            "source_etag": "\"a5119fe9fc5e5632420cb9467937a8a1\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 4.856,
+          "scanned_at": "2026-11-24T19:32:33+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Cliq.app/Contents/MacOS/Cliq",
+                "size": 52944,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 52944,
+                    "header_verified": true,
+                    "min_macos": "12.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "Cliq",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "com.zoho.cliq",
+              "package_version": "1.8.6",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "Cliq.app"
+              ],
+              "min_macos": "12.0"
+            },
+            "bytes_read": 66846709,
+            "bytes_requested": 67108864,
+            "decoded_bytes": 144681374,
+            "reads": 36,
+            "total_size": 113338090,
+            "error": "byte budget reached",
+            "source_etag": "\"a5119fe9fc5e5632420cb9467937a8a1\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 7.707,
+          "scanned_at": "2026-11-24T19:32:40+00:00",
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "pkg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 52944,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Cliq.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.zoho.cliq",
+            "version": "1.8.6",
+            "name": "Cliq",
+            "min_macos": "12.0",
+            "executable_name": "Cliq",
+            "executable_size": 52944,
+            "executable_path": "Cliq.app/Contents/MacOS/Cliq",
+            "installer": {
+              "title": "Cliq",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "com.zoho.cliq",
+              "package_version": "1.8.6",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "Cliq.app"
+              ],
+              "min_macos": "12.0"
+            },
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "bundle entries before the primary executable were skipped",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/Cliq",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 0,
+                      "size": 52944,
+                      "header_verified": true,
+                      "min_macos": "12.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 113280486,
+            "bytes_requested": 113280497,
+            "decoded_bytes": 272206568,
+            "reads": 44,
+            "total_size": 113338090,
+            "error": null,
+            "source_etag": "\"a5119fe9fc5e5632420cb9467937a8a1\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "aw-edid-editor",
+      "url": "https://s3.eu-west-3.amazonaws.com/aw.store01/Site+Internet/Software/AW+EDID+Editor/Software/Setup+Application/awedideditor_3_0_20_macos.zip",
+      "version": "3.0.20",
+      "sha256": "489fcd0fd08fb4a2633bf5fef4dd36e022f5947f425a15a1c49612b3dbb62336",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "AW EDID Editor.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "s3.eu-west-3.amazonaws.com",
+      "category": "metadata_missing",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 4.73,
+          "scanned_at": "2026-11-24T19:32:45+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388603,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 8432476,
+            "reads": 18,
+            "total_size": 24584204,
+            "error": "byte budget reached",
+            "source_etag": "\"7359e0c71e92a9f53876fc3e7899c242-2\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "AW EDID Editor.app"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 6.945,
+          "scanned_at": "2026-11-24T19:32:52+00:00",
+          "exit_code": 0,
+          "category": "metadata_missing",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 0,
+                "size": 5012192,
+                "header_verified": true,
+                "min_macos": "10.14",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "AW EDID Editor.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.analogway.AW-EDID-EDITOR",
+            "version": null,
+            "name": null,
+            "min_macos": "10.14",
+            "executable_name": "AW EDID Editor",
+            "executable_size": 5012192,
+            "executable_path": "AW EDID Editor.app/Contents/MacOS/AW EDID Editor",
+            "nested_artifacts": [
+              "AwEdidEditor_3_0_20_macos.dmg"
+            ],
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/Frameworks/QtCore.framework/Versions/A/QtCore",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 32768,
+                      "size": 5992400,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 6029312,
+                      "size": 5442640,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/QtDBus.framework/Versions/A/QtDBus",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 686704,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 704512,
+                      "size": 652752,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/QtGui.framework/Versions/A/QtGui",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 8313808,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 8339456,
+                      "size": 7568960,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/QtNetwork.framework/Versions/A/QtNetwork",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 1497296,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 1540096,
+                      "size": 1429984,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/QtSvg.framework/Versions/A/QtSvg",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 366400,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 393216,
+                      "size": 365744,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/QtWidgets.framework/Versions/A/QtWidgets",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 6368768,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 6389760,
+                      "size": 5966240,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/AW EDID Editor",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 5012192,
+                      "header_verified": true,
+                      "min_macos": "10.14",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/MacOS/AW EDID Editor"
+              ]
+            },
+            "bytes_read": 24584204,
+            "bytes_requested": 24584209,
+            "decoded_bytes": 39953373,
+            "reads": 22,
+            "total_size": 24584204,
+            "error": null,
+            "source_etag": "\"7359e0c71e92a9f53876fc3e7899c242-2\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "AW EDID Editor.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "mamp",
+      "url": "https://downloads.mamp.info/MAMP-PRO/macOS/MAMP-PRO/MAMP-MAMP-PRO-7.6-Intel-x86.pkg",
+      "version": "7.6",
+      "sha256": "fc0b22e4409141199d84b71652b840f83101304bbd4210b0f0b3e6a2a6be0138",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "downloads.mamp.info",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.048,
+          "scanned_at": "2026-11-24T19:32:54+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64"
+              ],
+              "package_id": null,
+              "package_version": null,
+              "min_macos": null
+            },
+            "bytes_read": 426590,
+            "bytes_requested": 426590,
+            "decoded_bytes": 45217,
+            "reads": 1,
+            "total_size": 714295966,
+            "error": "byte budget reached",
+            "source_transport": "stream",
+            "source_content_type": "application/octet-stream"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 1.976,
+          "scanned_at": "2026-11-24T19:32:56+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64"
+              ],
+              "package_id": null,
+              "package_version": null,
+              "min_macos": null
+            },
+            "bytes_read": 426590,
+            "bytes_requested": 426590,
+            "decoded_bytes": 45217,
+            "reads": 1,
+            "total_size": 714295966,
+            "error": "byte budget reached",
+            "source_transport": "stream",
+            "source_content_type": "application/octet-stream"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 2.021,
+          "scanned_at": "2026-11-24T19:32:58+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64"
+              ],
+              "package_id": null,
+              "package_version": null,
+              "min_macos": null
+            },
+            "bytes_read": 426590,
+            "bytes_requested": 426590,
+            "decoded_bytes": 45217,
+            "reads": 1,
+            "total_size": 714295966,
+            "error": "byte budget reached",
+            "source_transport": "stream",
+            "source_content_type": "application/octet-stream"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ai-studio",
+      "url": "https://releases.rapidminer.com/archive/rapidminer-studio/2026.1.1/ai-studio-osx-2026.1.1.dmg",
+      "version": "2026.1.1",
+      "sha256": "39936193aac589e127535bc2660a1d744dac8d83ec16243b5b1af28332f305f1",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "AI Studio 2026.1.1.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "releases.rapidminer.com",
+      "category": "other",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.962,
+          "scanned_at": "2026-11-24T19:33:00+00:00",
+          "exit_code": 1,
+          "category": "other",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": "AI Studio 2026.1.1.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.rapidminer.studio",
+            "version": "2026.1",
+            "name": "Altair AI Studio",
+            "min_macos": null,
+            "executable_name": "Resources/AI-Studio-App.sh",
+            "executable_size": null,
+            "executable_path": "AI Studio 2026.1.1.app/Contents/MacOS/Resources/AI-Studio-App.sh",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "not found: bundle path in HFS catalog",
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 2362387,
+            "bytes_requested": 3035864,
+            "decoded_bytes": 7217152,
+            "reads": 11,
+            "total_size": 585846473,
+            "error": "not found: bundle path in HFS catalog",
+            "source_etag": "\"1dfd22d957eb629b11a2595fe85e2c1e\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "AI Studio 2026.1.1.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_ss.dmg",
+      "version": "26.2.7",
+      "sha256": "4b0ab4297a95a0a2c45b99a3fec3dcbefb5f87781672f482669f12cd6275b235",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "ss"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.533,
+          "scanned_at": "2026-11-24T19:33:01+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 266669,
+            "bytes_requested": 266670,
+            "decoded_bytes": 1393664,
+            "reads": 7,
+            "total_size": 270189,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"6ae26136-41f6d\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "jamovi",
+      "url": "https://www.jamovi.org/downloads/jamovi-28.18.0.0-macos-x64.dmg",
+      "version": "28.18.0.0",
+      "sha256": "7242a2effe65113fbe2e4e80ca6905b658d35f5c53d350f00dab1636e6011a73",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "jamovi.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "referer"
+      ],
+      "host": "www.jamovi.org",
+      "category": "unsupported_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.622,
+          "scanned_at": "2026-11-24T19:33:02+00:00",
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 1026,
+            "bytes_requested": 1031,
+            "decoded_bytes": 0,
+            "reads": 5,
+            "total_size": 36984,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"0fd51fadf1b2ae03d6aaffffc16abe25\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "jamovi.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "zulu@17",
+      "url": "https://cdn.azul.com/zulu/bin/zulu17.70.201-ca-jdk17.0.21.1-macosx_x64.dmg",
+      "version": "17.0.21.1,17.70.201",
+      "sha256": "01e382709179a5b89822d901e7df7f8f2aa2b5eaa241f4ef892a976892072881",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "referer"
+      ],
+      "host": "cdn.azul.com",
+      "category": "nested_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.095,
+          "scanned_at": "2026-11-24T19:33:04+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "Double-Click to Install Azul Zulu JDK 17.pkg"
+            ],
+            "installer": {
+              "title": null,
+              "host_architectures": [],
+              "package_id": "com.azulsystems.zulu.17",
+              "package_version": "17.70+201",
+              "install_location": "/Library/Java/JavaVirtualMachines/zulu-17.jdk",
+              "min_macos": null
+            },
+            "bytes_read": 7328888,
+            "bytes_requested": 8007741,
+            "decoded_bytes": 19127021,
+            "reads": 15,
+            "total_size": 197035151,
+            "error": "byte budget reached",
+            "source_etag": "\"07fac3821160272e29dd39256a21a6af-24\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 10.822,
+          "scanned_at": "2026-11-24T19:33:15+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "Double-Click to Install Azul Zulu JDK 17.pkg"
+            ],
+            "installer": {
+              "title": null,
+              "host_architectures": [],
+              "package_id": "com.azulsystems.zulu.17",
+              "package_version": "17.70+201",
+              "install_location": "/Library/Java/JavaVirtualMachines/zulu-17.jdk",
+              "min_macos": null
+            },
+            "bytes_read": 66306242,
+            "bytes_requested": 66985095,
+            "decoded_bytes": 176979322,
+            "reads": 71,
+            "total_size": 197035151,
+            "error": "byte budget reached",
+            "source_etag": "\"07fac3821160272e29dd39256a21a6af-24\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 28.003,
+          "scanned_at": "2026-11-24T19:33:43+00:00",
+          "exit_code": 1,
+          "category": "nested_container",
+          "scan": {
+            "format": "dmg",
+            "status": "limit_reached",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "Double-Click to Install Azul Zulu JDK 17.pkg"
+            ],
+            "installer": {
+              "title": null,
+              "host_architectures": [],
+              "package_id": "com.azulsystems.zulu.17",
+              "package_version": "17.70+201",
+              "install_location": "/Library/Java/JavaVirtualMachines/zulu-17.jdk",
+              "min_macos": null
+            },
+            "bytes_read": 192098522,
+            "bytes_requested": 192777375,
+            "decoded_bytes": 515999340,
+            "reads": 192,
+            "total_size": 197035151,
+            "error": "scan limit: scan deadline reached",
+            "source_etag": "\"07fac3821160272e29dd39256a21a6af-24\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "vagrant",
+      "url": "https://releases.hashicorp.com/vagrant/2.4.9/vagrant_2.4.9_darwin_arm64.dmg",
+      "version": "2.4.9",
+      "sha256": "8de08bd435ef8ae0fc5fbd6acefa9c68e62fb898c5ae0fbdacd26853bea9d4d6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "releases.hashicorp.com",
+      "category": "nested_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.973,
+          "scanned_at": "2026-11-24T19:33:45+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "vagrant.pkg"
+            ],
+            "installer": {
+              "title": "Vagrant",
+              "host_architectures": [],
+              "package_id": "com.vagrant.vagrant",
+              "package_version": "2.4.9",
+              "install_location": "/opt/vagrant",
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 8388607,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 28877437,
+            "reads": 25,
+            "total_size": 56202968,
+            "error": "byte budget reached",
+            "source_etag": "\"1317295974fa345061746a7d9163ef5a\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 7.457,
+          "scanned_at": "2026-11-24T19:33:52+00:00",
+          "exit_code": 1,
+          "category": "nested_container",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "vagrant.pkg"
+            ],
+            "installer": {
+              "title": "Vagrant",
+              "host_architectures": [],
+              "package_id": "com.vagrant.vagrant",
+              "package_version": "2.4.9",
+              "install_location": "/opt/vagrant",
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 56157030,
+            "bytes_requested": 56157031,
+            "decoded_bytes": 181390779,
+            "reads": 81,
+            "total_size": 56202968,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"1317295974fa345061746a7d9163ef5a\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ijhttp",
+      "url": "https://download.jetbrains.com/resources/intellij/http-client/261.25134.95/intellij-http-client.zip",
+      "version": "261.25134.95",
+      "sha256": "4656e9c1e2c798fbe7fd78ed8fc124bc071ebb46e02770e198a562689da32c9d",
+      "expected_format": "zip",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [
+        "ijhttp/ijhttp"
+      ],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.jetbrains.com",
+      "category": "script_executable",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.496,
+          "scanned_at": "2026-11-24T19:33:53+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "zip",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": 8358,
+            "executable_path": "ijhttp/ijhttp",
+            "installer": null,
+            "bytes_read": 19374,
+            "bytes_requested": 19375,
+            "decoded_bytes": 8358,
+            "reads": 7,
+            "total_size": 124389053,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"7dc57924f6771731ae943cb3039a8103-15\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "executable",
+            "path": "ijhttp/ijhttp"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "paraview",
+      "url": "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.2&type=binary&os=macOS%20Intel&downloadFile=ParaView-6.2.1-MPI-OSX10.15-Python3.12-x86_64.dmg",
+      "version": "6.2.1,MPI-OSX10.15-Python3.12",
+      "sha256": "4b33a67f2c7209c0b4124eb47bb6834dc3bcf6e4be15a6843ef82c106de15852",
+      "expected_format": "unknown",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "ParaView-6.2.1.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "user_agent"
+      ],
+      "host": "www.paraview.org",
+      "category": "other_source_error",
+      "comparison": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.322,
+          "scanned_at": "2026-11-24T19:33:53+00:00",
+          "exit_code": 1,
+          "category": "other_source_error",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "bytes_requested": 0,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: stream: HTTP 200 supplied a partial Content-Range",
+            "source_transport": "stream",
+            "source_content_type": "application/force-download"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "ParaView-6.2.1.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ifunbox",
+      "url": "http://dl.i-funbox.com/mac/ifunboxmac.1.8.dmg",
+      "version": "1.8",
+      "sha256": "19bef7c6079cb3d13dc109478c473e420643e3164ed02b668f76220f60884a11",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "iFunBox.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "dl.i-funbox.com",
+      "category": "http_403",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.186,
+          "scanned_at": "2026-11-24T19:33:53+00:00",
+          "exit_code": 1,
+          "category": "http_403",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "bytes_requested": 1,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 403 Forbidden (expected 206)"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "iFunBox.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "baretorrent",
+      "url": "https://launchpad.net/baretorrent/trunk/0.4.4/+download/baretorrent-0.4.4-osx-x64.dmg",
+      "version": "0.4.4",
+      "sha256": "dea7c210e9b57b74fc44b498d8f5d238458ffffff3c66b2a91bd77f5cec5238d",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "baretorrent.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "launchpad.net",
+      "category": "metadata_missing",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "x86_64"
+          ],
+          "verdict": "inconclusive"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.533,
+          "scanned_at": "2026-11-24T19:33:55+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": null,
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 4,
+            "bytes_requested": 4,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 21265183,
+            "error": "byte budget reached",
+            "source_transport": "stream",
+            "source_content_type": "application/x-apple-diskimage"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "baretorrent.app"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 11.021,
+          "scanned_at": "2026-11-24T19:34:06+00:00",
+          "exit_code": 0,
+          "category": "metadata_missing",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 69584,
+                "header_verified": true,
+                "min_macos": null,
+                "code_signature_present": false
+              }
+            ],
+            "bundle_path": "baretorrent.app",
+            "bundle_kind": "app",
+            "bundle_id": "baretorrent",
+            "version": "0.1",
+            "name": "baretorrent",
+            "min_macos": null,
+            "executable_name": "baretorrent",
+            "executable_size": 69584,
+            "executable_path": "baretorrent.app/Contents/MacOS/baretorrent",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/baretorrent",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 69584,
+                      "header_verified": true,
+                      "min_macos": null,
+                      "code_signature_present": false
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/MacOS/baretorrent"
+              ]
+            },
+            "bytes_read": 21265183,
+            "bytes_requested": 21265183,
+            "decoded_bytes": 1835008,
+            "reads": 1,
+            "total_size": 21265183,
+            "error": null,
+            "source_transport": "stream",
+            "source_content_type": "application/x-apple-diskimage"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "baretorrent.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "steinberg-download-assistant",
+      "url": "https://download.steinberg.net/automated_updates/sda-selfupdate/releases/absolute-downloader-1.40.1-b1287-424e60f3-94d9-4868-9d78-9a4e59e7829a/mac/Steinberg_Download_Assistant_1.40.1_Installer_mac.dmg",
+      "version": "1.40.1,b1287-424e60f3-94d9-4868-9d78-9a4e59e7829a",
+      "sha256": "48d1da57bba4f28141ec58333958233e3a0a2bdbcf7c5bea262b6e9ae76870db",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.steinberg.net",
+      "category": "script_executable",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.903,
+          "scanned_at": "2026-11-24T19:34:07+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "Steinberg Download Assistant Setup.app",
+            "bundle_kind": "app",
+            "bundle_id": "net.steinberg.eLicenser.installer.SteinbergDownloadAssistant",
+            "version": "1.40.1",
+            "name": "Steinberg Download Assistant",
+            "min_macos": null,
+            "executable_name": "installbuilder.sh",
+            "executable_size": 839,
+            "executable_path": "Steinberg Download Assistant Setup.app/Contents/MacOS/installbuilder.sh",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/osx-arm64",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 0,
+                      "size": 1215328,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/osx-x86_64",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 1400176,
+                      "header_verified": true,
+                      "min_macos": "10.7",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/MacOS/osx-x86_64"
+              ]
+            },
+            "bytes_read": 2747656,
+            "bytes_requested": 3231953,
+            "decoded_bytes": 6554624,
+            "reads": 16,
+            "total_size": 203550538,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"30ca74ea8701f8fa8082d803dcf80a74-39\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ampps",
+      "url": "https://s1.softaculous.com/a/ampps/files/versions/AMPPS-4.4-x86_64.dmg",
+      "version": "4.4",
+      "sha256": "77b1107c02b7ca33cefa785432867f9706ac3eeaa3ab3723c8b63a1f30cfb28c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "s1.softaculous.com",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.452,
+          "scanned_at": "2026-11-24T19:34:07+00:00",
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 16775,
+            "bytes_requested": 16778,
+            "decoded_bytes": 0,
+            "reads": 9,
+            "total_size": 62998351,
+            "error": "not found: app or package at the HFS volume root",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_et.dmg",
+      "version": "26.2.7",
+      "sha256": "e4d49d57a7f380308a43662cefb772be71d52fb6051e46be0bac26b27fe9b654",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "et"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.686,
+          "scanned_at": "2026-11-24T19:34:09+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1560894,
+            "bytes_requested": 1560895,
+            "decoded_bytes": 2712576,
+            "reads": 8,
+            "total_size": 4707071,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"47d2ff-65eecc6f54201\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ecamm-live",
+      "url": "https://downloads.ecamm.com/EcammLive.zip",
+      "version": "4.6.3",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Ecamm/Ecamm Live.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "downloads.ecamm.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.519,
+          "scanned_at": "2026-11-24T19:34:10+00:00",
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "zip",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 2314147,
+            "bytes_requested": 2314148,
+            "decoded_bytes": 0,
+            "reads": 4,
+            "total_size": 836480589,
+            "error": "not found: app Info.plist in ZIP central directory",
+            "source_etag": "\"39cdc329589c87b52a332e369a41744f-100\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Ecamm/Ecamm Live.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "kotlin-lsp",
+      "url": "https://download.jetbrains.com/language-server/kotlin-server/271.2085.0/kotlin-server-271.2085.0.sit",
+      "version": "271.2085.0",
+      "sha256": "68457ab1825331e3eac85191b7c32737cbd8993867f5a9c50dfe012c5509e8f7",
+      "expected_format": "unknown",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [
+        "kotlin-server-271.2085.0/kotlin-lsp.sh"
+      ],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.jetbrains.com",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.41,
+          "scanned_at": "2026-11-24T19:34:10+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "zip",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": 441,
+            "executable_path": "kotlin-server-271.2085.0/kotlin-lsp.sh",
+            "installer": null,
+            "bytes_read": 177707,
+            "bytes_requested": 177708,
+            "decoded_bytes": 441,
+            "reads": 7,
+            "total_size": 366007900,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"d1a30d461e2dccbb6d754b409a9bba34-44\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "executable",
+            "path": "kotlin-server-271.2085.0/kotlin-lsp.sh"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_gl.dmg",
+      "version": "26.2.7",
+      "sha256": "b06359538ab861c127aafbeeb6b48c0de59a5bd782552783bc93682478887eb4",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "gl"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.535,
+          "scanned_at": "2026-11-24T19:34:12+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1499832,
+            "bytes_requested": 1499833,
+            "decoded_bytes": 2614272,
+            "reads": 8,
+            "total_size": 5754564,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"57cec4-65eecc7b6ae62\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "logmein-hamachi",
+      "url": "https://vpn.net/installers/osx_23000049/LogMeInHamachi.zip",
+      "version": "23000049",
+      "sha256": "f479ebba6f4a166fe26d78ba47de64fd27f8008d407de2b66cd61e6c64d633e5",
+      "expected_format": "zip",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_tahoe",
+        "golden_gate",
+        "sequoia",
+        "tahoe"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "vpn.net",
+      "category": "http_404",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.548,
+          "scanned_at": "2026-11-24T19:34:12+00:00",
+          "exit_code": 1,
+          "category": "http_404",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "bytes_requested": 1,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 404 Not Found (expected 206)"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "gingko",
+      "url": "https://github.com/gingko/client/releases/download/v2.4.15/Gingko-2.4.15-mac.zip",
+      "version": "2.4.15",
+      "sha256": "bb1367b0a07a80872be253eda0519ec801e0b96b04d59c5bff3f825cf9e380c4",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Gingko.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "github.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 4.132,
+          "scanned_at": "2026-11-24T19:34:16+00:00",
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 206992,
+                "header_verified": true,
+                "min_macos": "10.10",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Gingko.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.gingkoapp.desktop",
+            "version": "2.4.15",
+            "name": "Gingko",
+            "min_macos": "10.10.0",
+            "executable_name": "Gingko",
+            "executable_size": 206992,
+            "executable_path": "Gingko.app/Contents/MacOS/Gingko",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 127863728,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 1025648,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libEGL.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 224608,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libGLESv2.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 10101040,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 3073120,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libEGL.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 252384,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libGLESv2.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 3419104,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib",
+                  "role": "framework",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 4623472,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/Gingko",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 206992,
+                      "header_verified": true,
+                      "min_macos": "10.10",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libEGL.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libGLESv2.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libEGL.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libswiftshader_libGLESv2.dylib",
+                "Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib",
+                "Contents/MacOS/Gingko"
+              ]
+            },
+            "bytes_read": 2152163,
+            "bytes_requested": 2198494,
+            "decoded_bytes": 34059,
+            "reads": 161,
+            "total_size": 106636085,
+            "error": null,
+            "source_etag": "\"0x8D9B8F1068D583F\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Gingko.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "stolendata-mpv",
+      "url": "https://laboratory.stolendata.net/~djinn/mpv_osx/mpv-0.39.0.tar.gz",
+      "version": "0.39.0",
+      "sha256": "35ec81ad86a97b24956a8d0f4fa1ba2690b44ae7741c920e923620bcd7bd402a",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "mpv.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_monterey",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "laboratory.stolendata.net",
+      "category": "other_source_error",
+      "comparison": [
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.152,
+          "scanned_at": "2026-11-24T19:34:18+00:00",
+          "exit_code": 1,
+          "category": "other_source_error",
+          "scan": {
+            "format": "tar.gz",
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": "mpv.app",
+            "bundle_kind": "app",
+            "bundle_id": "io.mpv",
+            "version": "0.39.0",
+            "name": "mpv",
+            "min_macos": null,
+            "executable_name": "mpv",
+            "executable_size": null,
+            "executable_path": "mpv.app/Contents/MacOS/mpv",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "source: range 851968-1114111: HTTP 503 Service Unavailable (expected 206)",
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 851968,
+            "bytes_requested": 1114117,
+            "decoded_bytes": 897421,
+            "reads": 7,
+            "total_size": 23791174,
+            "error": "source: range 851968-1114111: HTTP 503 Service Unavailable (expected 206)",
+            "source_etag": "\"66f866fd-16b0646\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "mpv.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "valhalla-space-modulator",
+      "url": "https://valhallaproduction.s3.us-west-2.amazonaws.com/spacemod/ValhallaSpaceModulatorOSX_1_2_8.dmg",
+      "version": "1.2.8",
+      "sha256": "12033f7f35e97e6e06e3852e42f50caff17165bc6e79696d6837d61b34858598",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "valhallaproduction.s3.us-west-2.amazonaws.com",
+      "category": "nested_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 6.941,
+          "scanned_at": "2026-11-24T19:34:25+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "ValhallaSpaceModulatorOSX.pkg"
+            ],
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.valhalladsp.SpaceModulator.pkg.vst",
+              "package_version": "1.2.8",
+              "install_location": "/",
+              "script_entries": [
+                "preinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 8126439,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 22388937,
+            "reads": 54,
+            "total_size": 8905760,
+            "error": "byte budget reached",
+            "source_etag": "\"9bee7bb219c3abbc48086c410e070863\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 9.258,
+          "scanned_at": "2026-11-24T19:34:35+00:00",
+          "exit_code": 1,
+          "category": "nested_container",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "ValhallaSpaceModulatorOSX.pkg"
+            ],
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.valhalladsp.SpaceModulator.pkg.aax",
+              "package_version": "1.2.8",
+              "install_location": "/",
+              "script_entries": [
+                "preinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 8878132,
+            "bytes_requested": 8878163,
+            "decoded_bytes": 23762922,
+            "reads": 55,
+            "total_size": 8905760,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"9bee7bb219c3abbc48086c410e070863\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "elecom-mouse-util",
+      "url": "https://dl.elecom.co.jp/support/download/peripheral/mouse/assistant/mac/ELECOM_MA_Setup_6.4.1.zip",
+      "version": "6.4.1",
+      "sha256": "f46dd67b60bc63cd35e6dc9be048686c03a8a51504fbe76d5f5d7ba580771892",
+      "expected_format": "zip",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "golden_gate",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "dl.elecom.co.jp",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.063,
+          "scanned_at": "2026-11-24T19:34:36+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "ELECOM_MA_Setup_6.4.1.dmg"
+            ],
+            "installer": null,
+            "bytes_read": 8388603,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 8580224,
+            "reads": 18,
+            "total_size": 238184024,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 4.172,
+          "scanned_at": "2026-11-24T19:34:40+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "ELECOM_MA_Setup_6.4.1.dmg"
+            ],
+            "installer": null,
+            "bytes_read": 67108859,
+            "bytes_requested": 67108864,
+            "decoded_bytes": 67409270,
+            "reads": 32,
+            "total_size": 238184024,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 13.026,
+          "scanned_at": "2026-11-24T19:34:53+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "ELECOM_MA_Setup_6.4.1.dmg"
+            ],
+            "installer": null,
+            "bytes_read": 238183976,
+            "bytes_requested": 268435456,
+            "decoded_bytes": 269407877,
+            "reads": 91,
+            "total_size": 238184024,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_tt.dmg",
+      "version": "26.2.7",
+      "sha256": "93b3366270dc72f3b1aea9045299bfa9712207d381985f6954442600f7e44da4",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "tt"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.327,
+          "scanned_at": "2026-11-24T19:34:54+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 174739,
+            "bytes_requested": 174740,
+            "decoded_bytes": 1299456,
+            "reads": 7,
+            "total_size": 178259,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"2b853-65eecc7462171\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_ta.dmg",
+      "version": "26.8.3",
+      "sha256": "d32c2a63a80d331160d7e4e48ce1fed9ac17d3c5cc63529649fad0508f66a85a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "ta"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.74,
+          "scanned_at": "2026-11-24T19:34:57+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1571090,
+            "bytes_requested": 1571091,
+            "decoded_bytes": 2696192,
+            "reads": 8,
+            "total_size": 3692099,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"385643-66003f3218330\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/x86_64/LibreOffice_26.2.7_MacOS_x86-64_langpack_zh-TW.dmg",
+      "version": "26.2.7",
+      "sha256": "e017a6fa8647c45b7abd942148ed39319b0df65b80174be63d8c51a3abf6e40c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "zh-TW"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.488,
+          "scanned_at": "2026-11-24T19:35:00+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 2070453,
+            "bytes_requested": 2070454,
+            "decoded_bytes": 3175424,
+            "reads": 9,
+            "total_size": 4190984,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"6ae26138-3ff308\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ripx",
+      "url": "https://s3.us-east-2.amazonaws.com/downloads.hitnmix.com/RipXDAW_900.dmg",
+      "version": "9.0.0",
+      "sha256": "5a4c91fe8fc5631e22da10921cfa7f4dd82540bdde3ba750545e94028ff9f77d",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "s3.us-east-2.amazonaws.com",
+      "category": "nested_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 3.397,
+          "scanned_at": "2026-11-24T19:35:04+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "RipX DAW.pkg"
+            ],
+            "candidate_executables": [
+              {
+                "path": "RipX DAW.app/Contents/MacOS/ffmpeg",
+                "size": 41940032,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 23492448,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 23511040,
+                    "size": 18428992,
+                    "header_verified": false,
+                    "min_macos": null,
+                    "code_signature_present": null
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "RipX DAW",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.hitnmix.HitnMix.pkg",
+              "package_version": "9.0.0",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "RipX DAW.app/Contents/Frameworks/Scintilla.framework",
+                "RipX DAW.app",
+                "RipX DAW.app/Contents/MacOS/Ripper.app"
+              ],
+              "min_macos": "10.12.0"
+            },
+            "bytes_read": 8388601,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 22933348,
+            "reads": 27,
+            "total_size": 1582743140,
+            "error": "byte budget reached",
+            "source_etag": "\"43fb48bcb54dc3cd19e940e829ef444f\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 10.943,
+          "scanned_at": "2026-11-24T19:35:15+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "dmg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "RipX DAW.pkg"
+            ],
+            "candidate_executables": [
+              {
+                "path": "RipX DAW.app/Contents/MacOS/ffmpeg",
+                "size": 41940032,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 23492448,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 23511040,
+                    "size": 18428992,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/libtcl8.6.dylib",
+                "size": 3332208,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 1674272,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 1703936,
+                    "size": 1628272,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/python3.9",
+                "size": 150512,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 52336,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 81920,
+                    "size": 68592,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/MP4Box",
+                "size": 14040944,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 7479280,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 7503872,
+                    "size": 6537072,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/libpython3.9.dylib",
+                "size": 6518352,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 3331088,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 3358720,
+                    "size": 3159632,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/ffprobe",
+                "size": 41853712,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 23404608,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 23429120,
+                    "size": 18424592,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/NTRegTool2.",
+                "size": 195920,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 77728,
+                    "header_verified": true,
+                    "min_macos": "10.15",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 98304,
+                    "size": 97616,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/libtk8.6.dylib",
+                "size": 3022816,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 1549392,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 1572864,
+                    "size": 1449952,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/RipX DAW",
+                "size": 25202976,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 13016464,
+                    "header_verified": true,
+                    "min_macos": "10.15",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 13041664,
+                    "size": 12161312,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "RipX DAW",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.hitnmix.HitnMix.pkg",
+              "package_version": "9.0.0",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "RipX DAW.app/Contents/Frameworks/Scintilla.framework",
+                "RipX DAW.app",
+                "RipX DAW.app/Contents/MacOS/Ripper.app"
+              ],
+              "min_macos": "10.12.0"
+            },
+            "bytes_read": 67108857,
+            "bytes_requested": 67108864,
+            "decoded_bytes": 161803218,
+            "reads": 98,
+            "total_size": 1582743140,
+            "error": "byte budget reached",
+            "source_etag": "\"43fb48bcb54dc3cd19e940e829ef444f\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 28.005,
+          "scanned_at": "2026-11-24T19:35:43+00:00",
+          "exit_code": 1,
+          "category": "nested_container",
+          "scan": {
+            "format": "dmg",
+            "status": "limit_reached",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "RipX DAW.pkg"
+            ],
+            "candidate_executables": [
+              {
+                "path": "RipX DAW.app/Contents/MacOS/ffmpeg",
+                "size": 41940032,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 23492448,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 23511040,
+                    "size": 18428992,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/libtcl8.6.dylib",
+                "size": 3332208,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 1674272,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 1703936,
+                    "size": 1628272,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/python3.9",
+                "size": 150512,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 52336,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 81920,
+                    "size": 68592,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/MP4Box",
+                "size": 14040944,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 7479280,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 7503872,
+                    "size": 6537072,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/libpython3.9.dylib",
+                "size": 6518352,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 3331088,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 3358720,
+                    "size": 3159632,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/ffprobe",
+                "size": 41853712,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 2147483651,
+                    "offset": 16384,
+                    "size": 23404608,
+                    "header_verified": true,
+                    "min_macos": "10.10",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 23429120,
+                    "size": 18424592,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/NTRegTool2.",
+                "size": 195920,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 77728,
+                    "header_verified": true,
+                    "min_macos": "10.15",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 98304,
+                    "size": 97616,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/libtk8.6.dylib",
+                "size": 3022816,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 1549392,
+                    "header_verified": true,
+                    "min_macos": "10.12",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 1572864,
+                    "size": 1449952,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "RipX DAW.app/Contents/MacOS/RipX DAW",
+                "size": 25202976,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 13016464,
+                    "header_verified": true,
+                    "min_macos": "10.15",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 13041664,
+                    "size": 12161312,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "RipX DAW",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.hitnmix.HitnMix.pkg",
+              "package_version": "9.0.0",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "RipX DAW.app/Contents/Frameworks/Scintilla.framework",
+                "RipX DAW.app",
+                "RipX DAW.app/Contents/MacOS/Ripper.app"
+              ],
+              "min_macos": "10.12.0"
+            },
+            "bytes_read": 183438257,
+            "bytes_requested": 184486840,
+            "decoded_bytes": 650214789,
+            "reads": 238,
+            "total_size": 1582743140,
+            "error": "scan limit: scan deadline reached",
+            "source_etag": "\"43fb48bcb54dc3cd19e940e829ef444f\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_ru.dmg",
+      "version": "26.2.7",
+      "sha256": "fdadc1a055ff797924881c0f967db02027b40ea4c4fa238d10825da0444d7aec",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "ru"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 5.564,
+          "scanned_at": "2026-11-24T19:35:48+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 2065106,
+            "bytes_requested": 2065107,
+            "decoded_bytes": 3179520,
+            "reads": 9,
+            "total_size": 5245171,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"6ae2612a-5008f3\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/x86_64/LibreOffice_26.8.3_MacOS_x86-64_langpack_es.dmg",
+      "version": "26.8.3",
+      "sha256": "ed46e71da18c492506780678d21f7dbfac2383b226727644c800bfa45f8df787",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [
+        "es"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.692,
+          "scanned_at": "2026-11-24T19:35:51+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1162936,
+            "bytes_requested": 1162937,
+            "decoded_bytes": 2278400,
+            "reads": 8,
+            "total_size": 10698556,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"a33f3c-66003f113fde6\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "folding-at-home@beta",
+      "url": "https://download.foldingathome.org/releases/beta/fah-client/macos-12-universal/release/fah-client_8.5.6_universal.pkg",
+      "version": "8.5.6",
+      "sha256": "ed1ac610285280cb6636200e869b73ddd8f6241c00b9f3f3a4fa9730fbb75a48",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.foldingathome.org",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 4.522,
+          "scanned_at": "2026-11-24T19:35:56+00:00",
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "pkg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "Folding@home Client 8.5.6",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "org.foldingathome.fahclient.pkg",
+              "package_version": "8.5.6",
+              "install_location": "/",
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": "10.13"
+            },
+            "bytes_read": 8307558,
+            "bytes_requested": 8307569,
+            "decoded_bytes": 21001811,
+            "reads": 19,
+            "total_size": 8395224,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"69664a4c-8019d8\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "kobo",
+      "url": "https://cdn.kobo.com/downloads/desktop/kobodesktop/kobosetup.dmg",
+      "version": "latest",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Kobo.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "cdn.kobo.com",
+      "category": "metadata_missing",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.789,
+          "scanned_at": "2026-11-24T19:35:56+00:00",
+          "exit_code": 0,
+          "category": "metadata_missing",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 2937296,
+                "header_verified": true,
+                "min_macos": "10.9",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Kobo.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.kobo.desktop.Kobo",
+            "version": null,
+            "name": "Kobo",
+            "min_macos": "10.9.0",
+            "executable_name": "Kobo",
+            "executable_size": 2937296,
+            "executable_path": "Kobo.app/Contents/MacOS/Kobo",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/Kobo",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 2937296,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/imageformats/libqgif.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 60944,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/imageformats/libqico.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 59152,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/imageformats/libqjpeg.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 305680,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/imageformats/libqmng.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 640496,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/imageformats/libqsvg.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 58384,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/libqsvgicon.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 70304,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/mediaservice/libqavfcamera.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 286320,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/mediaservice/libqavfmediaplayer.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 158128,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/mediaservice/libqtmedia_audioengine.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 92096,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/platforms/libqcocoa.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 741168,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/printsupport/libcocoaprintersupport.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 43600,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/PlugIns/sqldrivers/libqsqlite.dylib",
+                  "role": "plugin",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 1322384,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/MacOS/Kobo",
+                "Contents/PlugIns/imageformats/libqgif.dylib",
+                "Contents/PlugIns/imageformats/libqico.dylib",
+                "Contents/PlugIns/imageformats/libqjpeg.dylib",
+                "Contents/PlugIns/imageformats/libqmng.dylib",
+                "Contents/PlugIns/imageformats/libqsvg.dylib",
+                "Contents/PlugIns/libqsvgicon.dylib",
+                "Contents/PlugIns/mediaservice/libqavfcamera.dylib",
+                "Contents/PlugIns/mediaservice/libqavfmediaplayer.dylib",
+                "Contents/PlugIns/mediaservice/libqtmedia_audioengine.dylib",
+                "Contents/PlugIns/platforms/libqcocoa.dylib",
+                "Contents/PlugIns/printsupport/libcocoaprintersupport.dylib",
+                "Contents/PlugIns/sqldrivers/libqsqlite.dylib"
+              ]
+            },
+            "bytes_read": 2940517,
+            "bytes_requested": 3275168,
+            "decoded_bytes": 10391552,
+            "reads": 14,
+            "total_size": 44559249,
+            "error": null,
+            "source_etag": "\"97762b0d4435118527aeef139a5e5774-6\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Kobo.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "tal-drum",
+      "url": "https://tal-software.com/downloads/plugins/TAL-Drum-installer_macos.zip",
+      "version": "4.1.1",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "tal-software.com",
+      "category": "verified_plugin",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 3.434,
+          "scanned_at": "2026-11-24T19:36:00+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "TAL-Drum-installer.pkg"
+            ],
+            "installer": null,
+            "bytes_read": 8388603,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 8475801,
+            "reads": 18,
+            "total_size": 40307721,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 10.77,
+          "scanned_at": "2026-11-24T19:36:11+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "TAL-Drum-installer.pkg"
+            ],
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.talsoftware.pkg.TAL-Drum-VST3",
+              "package_version": "1.0",
+              "install_location": "/Library/Audio/Plug-Ins/VST3",
+              "payload_bundles": [
+                "TAL-Drum.vst3"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 33620242,
+            "bytes_requested": 67108864,
+            "decoded_bytes": 64874142,
+            "reads": 52,
+            "total_size": 40307721,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 11.445,
+          "scanned_at": "2026-11-24T19:36:22+00:00",
+          "exit_code": 0,
+          "category": "verified_plugin",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 11996016,
+                "header_verified": true,
+                "min_macos": "10.11",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 12025856,
+                "size": 11121456,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "TAL-Drum.vst3",
+            "bundle_kind": "audio_plugin",
+            "bundle_id": "ch.toguaudioline.taldrum",
+            "version": "4.1.1",
+            "name": "TAL-Drum",
+            "min_macos": "10.11",
+            "executable_name": "TAL-Drum",
+            "executable_size": 23147312,
+            "executable_path": "TAL-Drum.vst3/Contents/MacOS/TAL-Drum",
+            "nested_artifacts": [
+              "TAL-Drum-installer.pkg"
+            ],
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.talsoftware.pkg.TAL-Drum-VST3",
+              "package_version": "1.0",
+              "install_location": "/Library/Audio/Plug-Ins/VST3",
+              "payload_bundles": [
+                "TAL-Drum.vst3"
+              ],
+              "min_macos": null
+            },
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "bundle entries before the primary executable were skipped",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/TAL-Drum",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 11996016,
+                      "header_verified": true,
+                      "min_macos": "10.11",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 12025856,
+                      "size": 11121456,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 33620242,
+            "bytes_requested": 92471575,
+            "decoded_bytes": 112138978,
+            "reads": 58,
+            "total_size": 40307721,
+            "error": null,
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "sys-pc-tool",
+      "url": "https://www.syride.com/downloads/SYS_PC_Tool_setup_mac-6.33.pkg",
+      "version": "6.33",
+      "sha256": "509e6b833c7fc907c3c0989704b941acba6f9d13abe5f0c20834ee4d77eb0c4f",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "www.syride.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 5.974,
+          "scanned_at": "2026-11-24T19:36:28+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Applications/SYS-PC-Tool.app/Contents/MacOS/sys_pc_tool",
+                "size": 412208,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 0,
+                    "size": 412208,
+                    "header_verified": true,
+                    "min_macos": "10.9",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": null,
+              "host_architectures": [],
+              "package_id": "com.syride.syspctool",
+              "package_version": "0",
+              "install_location": "/Applications/SYS-PC-Tool.app",
+              "min_macos": null
+            },
+            "bytes_read": 8126453,
+            "bytes_requested": 8388608,
+            "decoded_bytes": 19521622,
+            "reads": 22,
+            "total_size": 40658436,
+            "error": "byte budget reached",
+            "source_etag": "\"26c6604-5fc80bf0f07c0\"",
+            "source_transport": "range"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 13.579,
+          "scanned_at": "2026-11-24T19:36:42+00:00",
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "pkg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 0,
+                "size": 412208,
+                "header_verified": true,
+                "min_macos": "10.9",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Applications/SYS-PC-Tool.app",
+            "bundle_kind": "app",
+            "bundle_id": "Syride.SYS-PC-Tool",
+            "version": "6.33",
+            "name": "SYS-PC-Tool",
+            "min_macos": "10.9",
+            "executable_name": "sys_pc_tool",
+            "executable_size": 412208,
+            "executable_path": "Applications/SYS-PC-Tool.app/Contents/MacOS/sys_pc_tool",
+            "installer": {
+              "title": null,
+              "host_architectures": [],
+              "package_id": "com.syride.syspctool",
+              "package_version": "0",
+              "install_location": "/Applications/SYS-PC-Tool.app",
+              "min_macos": null
+            },
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "bundle entries before the primary executable were skipped",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/sys_pc_tool",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 412208,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/MacOS/sys_pc_tool"
+              ]
+            },
+            "bytes_read": 40567385,
+            "bytes_requested": 40567396,
+            "decoded_bytes": 109280066,
+            "reads": 26,
+            "total_size": 40658436,
+            "error": null,
+            "source_etag": "\"26c6604-5fc80bf0f07c0\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "wordpresscom-studio",
+      "url": "https://appscdn.wordpress.com/downloads/wordpress-com-studio/mac-silicon/v2.3.1/26606/update/studio-arm64-v2.3.1.zip",
+      "version": "2.3.1,26606",
+      "sha256": "325c34dcc75248b73daedd57f4df79e4cbb947f850e29741d23a411b96bfd5ab",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Studio.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "appscdn.wordpress.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.38,
+          "scanned_at": "2026-11-24T19:36:42+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 4,
+            "bytes_requested": 31,
+            "decoded_bytes": 0,
+            "reads": 4,
+            "total_size": 315348578,
+            "error": "byte budget reached",
+            "source_transport": "stream",
+            "source_content_type": "application/zip"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Studio.app"
+          }
+        },
+        {
+          "budget": 67108864,
+          "elapsed_seconds": 11.778,
+          "scanned_at": "2026-11-24T19:36:54+00:00",
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 53328,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Studio.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.electron.studio",
+            "version": "2.3.1",
+            "name": "Studio",
+            "min_macos": "13.0",
+            "executable_name": "Studio",
+            "executable_size": 53328,
+            "executable_path": "Studio.app/Contents/MacOS/Studio",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/Studio",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 0,
+                      "size": 53328,
+                      "header_verified": true,
+                      "min_macos": "13.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Resources/bin/node",
+                  "role": "resource",
+                  "architectures": [
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 0,
+                      "size": 121833472,
+                      "header_verified": true,
+                      "min_macos": "13.5",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Resources/php-bin/8.4.27-studio-2/ext/xdebug.so",
+                  "role": "resource",
+                  "architectures": [
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 0,
+                      "size": 604880,
+                      "header_verified": true,
+                      "min_macos": "12.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Resources/php-bin/8.4.27-studio-2/php",
+                  "role": "resource",
+                  "architectures": [
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 0,
+                      "size": 87191712,
+                      "header_verified": true,
+                      "min_macos": "12.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 1034533,
+            "bytes_requested": 1034534,
+            "decoded_bytes": 11435,
+            "reads": 154,
+            "total_size": 315348578,
+            "error": null,
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Studio.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "wings3d",
+      "url": "https://downloads.sourceforge.net/wings/2.3/wings-2.3-macos-x86_64.dmg",
+      "version": "2.3",
+      "sha256": "dbb1bbb229c3a3737fc2558d7a64996780dada3da3c75e46bc357789dde8092a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Wings3D.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "downloads.sourceforge.net",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 27.45,
+          "scanned_at": "2026-11-24T19:37:21+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "Wings3D.app",
+            "bundle_kind": "app",
+            "bundle_id": "com.wings3d.wings3d",
+            "version": "2.3",
+            "name": null,
+            "min_macos": null,
+            "executable_name": "Wings3D",
+            "executable_size": 314,
+            "executable_path": "Wings3D.app/Contents/MacOS/Wings3D",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/Resources/lib/wx-2.3.1/priv/erl_gl.so",
+                  "role": "resource",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 617024,
+                      "header_verified": true,
+                      "min_macos": "13.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Resources/wings_convert",
+                  "role": "resource",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 92608,
+                      "header_verified": true,
+                      "min_macos": "13.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/Resources/lib/wx-2.3.1/priv/erl_gl.so",
+                "Contents/Resources/wings_convert"
+              ]
+            },
+            "bytes_read": 2914290,
+            "bytes_requested": 3270649,
+            "decoded_bytes": 10522624,
+            "reads": 16,
+            "total_size": 15152606,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"65242818-e735de\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "Wings3D.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "sketchup",
+      "url": "https://download.sketchup.com/SketchUp-2027-0-277-186.dmg",
+      "version": "2027.0.277.186",
+      "sha256": "83164a6acfdece31a4e881c1c62959618c54bc9f05793017a719fc80762bceb7",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.sketchup.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.41,
+          "scanned_at": "2026-11-24T19:37:22+00:00",
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 391630,
+            "bytes_requested": 391631,
+            "decoded_bytes": 4194304,
+            "reads": 8,
+            "total_size": 1496301038,
+            "error": "not found: app or package at the HFS volume root",
+            "source_etag": "\"e6795d786ea67cb2001ef3b256b01cde\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    }
+  ]
+}

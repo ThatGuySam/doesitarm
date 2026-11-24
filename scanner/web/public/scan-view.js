@@ -1,3 +1,4 @@
+import { inventoryDetails } from './inventory-view.js';
 import { emptyResult } from './scan-result.js';
 import { estimateBatch, estimateRemaining, formatDuration, recordSample } from './scan-progress.js';
 import {
@@ -293,6 +294,22 @@ export class ScanView {
       const error = details.querySelector('.result-error');
       error.textContent = result.error;
       error.hidden = false;
+    }
+    if (result.inventory) {
+      const { binaries, x86_64_only: intel } = result.inventory;
+      if (intel.length && !binaries.some(({ path, role }) => role === 'main' && intel.includes(path))) {
+        const summary = document.createElement('span');
+        summary.className = 'result-arch';
+        summary.textContent = `${binaries.length} ${binaries.length === 1 ? 'binary' : 'binaries'}, ${intel.length} Intel-only`;
+        row.el.querySelector('.result-verdict').append(summary);
+      }
+      details.addEventListener('toggle', () => {
+        if (details.open && !details.querySelector('.binary-inventory')) {
+          const inventory = inventoryDetails(result.inventory, row.label);
+          inventory.className = 'binary-inventory';
+          details.querySelector('.panel').append(inventory);
+        }
+      });
     }
     details.hidden = false;
   }

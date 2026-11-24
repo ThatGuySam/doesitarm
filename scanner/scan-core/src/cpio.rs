@@ -65,8 +65,19 @@ pub(crate) async fn scan_with(
     mut bundle: StreamBundle<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
+    let traversal = scan_entries(input, work, &mut bundle, out).await;
+    bundle.finish(traversal, out)
+}
+
+async fn scan_entries(
+    input: &mut impl ReadAt,
+    work: &DecodeBudget<'_>,
+    bundle: &mut StreamBundle<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let mut offset = 0;
     for _ in 0..work.archive_entry_limit() {
+        bundle.check_traversal(input, work)?;
         let mut header = input.read_at(offset, 76).await?;
         let encoding = Encoding::from_magic(&header[..6])
             .ok_or(ScanError::Unsupported("CPIO payload encoding"))?;
@@ -83,13 +94,15 @@ pub(crate) async fn scan_with(
         let bytes = input.read_at(name_at, name_size as usize).await?;
         let name = bytes.strip_suffix(b"\0").ok_or(INVALID)?;
         if name == b"TRAILER!!!" {
-            return Err(bundle.missing());
+            return Ok(());
         }
         let start = encoding.align(name_at + name_size)?;
         check_range(input.size(), start, size)?;
         if let Ok(path) = std::str::from_utf8(name) {
             match mode & 0o170000 {
-                0o100000 if bundle.file(input, path, start, size, out).await? => return Ok(()),
+                0o100000 if bundle.file(input, work, path, start, size, out).await? => {
+                    return Ok(());
+                }
                 0o120000 if bundle.is_executable_path(path) => {
                     return Err(ScanError::Unsupported(
                         "declared CPIO executable is a symlink",

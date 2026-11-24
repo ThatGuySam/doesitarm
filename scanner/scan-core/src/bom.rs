@@ -147,7 +147,7 @@ fn resolve(records: &BTreeMap<u32, Record<'_>>, mut id: u32) -> Option<String> {
 
 /// A BOM can verify detached file bytes and indicate where to look. Near-final
 /// path IDs are only a hint. The CPIO parser must independently confirm the path.
-pub(crate) fn late_plist(bytes: &[u8]) -> Option<Plist> {
+pub(crate) fn late_plist(bytes: &[u8], selected: impl Fn(&str) -> bool) -> Option<Plist> {
     if bytes.get(..8)? != b"BOMStore" || number(bytes, 8)? != 1 {
         return None;
     }
@@ -167,9 +167,7 @@ pub(crate) fn late_plist(bytes: &[u8]) -> Option<Plist> {
             continue;
         }
         let path = resolve(&records, id)?;
-        let Some(path) =
-            bundle::archive_path(&path).filter(|path| bundle::outer_plist(path).is_some())
-        else {
+        let Some(path) = bundle::archive_path(&path).filter(|path| selected(path)) else {
             continue;
         };
         let size = be32(record.metadata, 18) as usize;

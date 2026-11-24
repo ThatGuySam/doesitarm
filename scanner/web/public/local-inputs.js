@@ -4,12 +4,13 @@ function fromFile(file, label = file.name) {
   return { kind: 'file', label, file };
 }
 
-function bundleJob(label, open) {
+function bundleJob(label, open, files) {
   return {
     kind: 'bundle',
     label,
     getPlist: () => open(['Contents', 'Info.plist']),
-    getExecutable: (name) => open(['Contents', 'MacOS', name]),
+    getExecutable: (relative) => open(relative.split('/')),
+    getBundleFiles: files,
   };
 }
 
@@ -28,10 +29,7 @@ export function* pickedFolders(files) {
     const info = bundles.get(bundle);
     info.size += file.size;
     const relative = parts.slice(position + 1);
-    if (relative.join('/') === 'Contents/Info.plist' ||
-        (relative.length === 3 && relative[0] === 'Contents' && relative[1] === 'MacOS')) {
-      info.entries.set(relative.join('/'), file);
-    }
+    if (relative[0] === 'Contents') info.entries.set(relative.join('/'), file);
   }
 
   for (const [label, { entries, size }] of bundles) {
@@ -40,7 +38,7 @@ export function* pickedFolders(files) {
       const file = entries.get(path);
       if (!file) throw new Error(`The selected app has no readable ${path}.`);
       return file;
-    });
+    }, () => entries);
     yield { ...job, size };
   }
 }
@@ -56,11 +54,25 @@ async function readEntryPath(directory, parts) {
   return entryFile(await entryChild(entry, parts.at(-1), 'getFile'));
 }
 
+async function* entryFiles(directory, prefix = '') {
+  const reader = directory.createReader();
+  while (true) {
+    const children = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+    if (!children.length) break;
+    for (const child of children) {
+      if (!prefix && child.name !== 'Contents') continue;
+      const path = prefix + child.name;
+      if (child.isFile) yield [path, await entryFile(child)];
+      else if (child.isDirectory) yield* entryFiles(child, `${path}/`);
+    }
+  }
+}
+
 async function* walkEntry(entry, path = entry.name) {
   if (entry.isFile) {
     yield fromFile(await entryFile(entry), path);
   } else if (entry.isDirectory && isApp(entry.name)) {
-    yield bundleJob(path, (parts) => readEntryPath(entry, parts));
+    yield bundleJob(path, (parts) => readEntryPath(entry, parts), () => entryFiles(entry));
   } else if (entry.isDirectory) {
     const reader = entry.createReader();
     while (true) {
@@ -77,11 +89,20 @@ async function readHandlePath(directory, parts) {
   return (await handle.getFileHandle(parts.at(-1))).getFile();
 }
 
+async function* handleFiles(directory, prefix = '') {
+  for await (const handle of directory.values()) {
+    if (!prefix && handle.name !== 'Contents') continue;
+    const path = prefix + handle.name;
+    if (handle.kind === 'file') yield [path, await handle.getFile()];
+    else yield* handleFiles(handle, `${path}/`);
+  }
+}
+
 async function* walkHandle(handle, path = handle.name) {
   if (handle.kind === 'file') {
     yield fromFile(await handle.getFile(), path);
   } else if (isApp(handle.name)) {
-    yield bundleJob(path, (parts) => readHandlePath(handle, parts));
+    yield bundleJob(path, (parts) => readHandlePath(handle, parts), () => handleFiles(handle));
   } else {
     for await (const child of handle.values()) yield* walkHandle(child, `${path}/${child.name}`);
   }

@@ -51,7 +51,8 @@ pub(crate) fn decode(
         }
         LZMA => {
             // ULMO uses XZ framing and needs a bounded LZMA2 dictionary.
-            let mut reader = lzma_rust2::XzReader::new_mem_limit(input, false, 32 * 1024);
+            let mut reader =
+                lzma_rust2::XzReader::new_mem_limit(input, false, work.lzma_memory_kib());
             let decoded = decode::exact(&mut reader, size, INVALID, work)?;
             let consumed = input.len() - reader.inner().len();
             work.check_chunk_ratio(consumed as u64, size as u64)?;

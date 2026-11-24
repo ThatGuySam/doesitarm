@@ -85,6 +85,38 @@ pub(crate) async fn scan(
     }
 }
 
+pub(crate) async fn scan_raw(
+    disk: &mut impl ReadAt,
+    prefix: &[u8],
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<bool> {
+    if disk.size() < 1536 {
+        return Ok(false);
+    }
+    let full = 0..disk.size();
+    let filesystem = if prefix.get(32..36) == Some(b"NXSB") {
+        Some((full, Filesystem::Apfs))
+    } else if hfs_signature(disk, &full).await? {
+        Some((full, Filesystem::Hfs))
+    } else if prefix.starts_with(b"ER") || prefix.get(510..512) == Some(b"\x55\xaa") {
+        partition_map(disk).await?
+    } else {
+        None
+    };
+    let Some((range, filesystem)) = filesystem else {
+        return Ok(false);
+    };
+    out.format = Some("dmg");
+    let mut volume = Window::new(disk, range.start, range.end - range.start)?;
+    match filesystem {
+        Filesystem::Hfs => hfs::scan(&mut volume, work, target, out).await?,
+        Filesystem::Apfs => apfs::scan(&mut volume, work, target, out).await?,
+    }
+    Ok(true)
+}
+
 fn sectors(sectors: u64) -> Result<u64> {
     sectors
         .checked_mul(SECTOR)
@@ -198,6 +230,10 @@ fn parse_index(
 impl<S: ReadAt> ReadAt for Image<'_, S> {
     fn size(&self) -> u64 {
         self.size
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.source.remaining_budget()
     }
 
     async fn read_at(&mut self, mut offset: u64, len: usize) -> Result<Vec<u8>> {

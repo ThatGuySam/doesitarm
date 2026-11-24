@@ -2,7 +2,8 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { closeSync, openSync, readSync } from 'node:fs';
-import { open, readFile, readdir, stat } from 'node:fs/promises';
+import { mkdtemp, open, readFile, readdir, rm, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -11,7 +12,8 @@ import { crc32, deflateRawSync, gzipSync } from 'node:zlib';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const cli = resolve(root, process.argv[2] ?? 'target/debug/scan-cli');
 const pkg = resolve(root, process.argv[3] ?? 'pkg');
-const { default: init, scan, bundle_metadata, scan_target: scanTarget } =
+const { default: init, scan, bundle_metadata, bundle_binary_role, bundle_binary_is_macho,
+  scan_target: scanTarget } =
   await import(pathToFileURL(resolve(pkg, 'scan_wasm.js')));
 await init({ module_or_path: await readFile(resolve(pkg, 'scan_wasm_bg.wasm')) });
 
@@ -26,7 +28,7 @@ const boundary = JSON.parse(await scan(maxSafeSize, 1028n, (offset, length) => {
   offsets.push(offset);
   return new Uint8Array(length);
 }));
-assert.equal(boundary.status, 'unsupported');
+assert.equal(boundary.status, 'budget_exhausted');
 assert.deepEqual(offsets, [0n, maxSafeSize - 512n, 0n]);
 assert.equal(boundary.total_size, Number.MAX_SAFE_INTEGER);
 
@@ -229,5 +231,54 @@ assert.deepEqual(replayed.nested_artifacts, ['nested.dmg']);
 const bounded = JSON.parse(await scan(BigInt(zip.length), 8n * 1024n * 1024n, fromZip, undefined, 'worker'));
 assert.equal(bounded.status, 'limit_reached');
 assert.match(bounded.error, /compressed nested ZIP member/);
+
+assert.equal(bundle_binary_role('Contents/jbr/Contents/Home/bin/java'), 'runtime');
+assert.equal(bundle_binary_role('Contents/Home/lib/server/libjvm.dylib'), 'runtime');
+assert.equal(bundle_binary_role('Contents/Info.plist'), undefined);
+assert.ok(bundle_binary_is_macho(new Uint8Array(await readFile(resolve(fixtures, 'thin.macho')))));
+assert.equal(bundle_binary_is_macho(Buffer.from('cafebabe0000004100020100', 'hex')), false);
+
+const edgeDirectory = await mkdtemp(resolve(tmpdir(), 'doesitarm-wasm-edge-'));
+try {
+  for (const [token, path] of [
+    ['android-studio'],
+    ['backuploupe'],
+    ['mailmate@beta'],
+    ['qt-design-studio'],
+    ['codeql-bundle', 'codeql/codeql'],
+    ['cursor-cli', 'dist-package/cursor-agent'],
+    ['terminal-browser', 'terminal-browser/bin/terminal-browser'],
+    ['steam'],
+    ['tiptoi-manager'],
+    ['prezi-video'],
+    ['libreoffice-language-pack'],
+    ['empoche'],
+    ['gingko'],
+    ['hydrus-network'],
+    ['linked-zip'],
+    ['ti-smartview-ce-for-the-ti-84-plus-family'],
+  ]) {
+    const file = resolve(edgeDirectory, token);
+    const generated = spawnSync(resolve(fixtures, 'edge', token, 'fixture.sh'), [file], { encoding: 'utf8' });
+    assert.equal(generated.status, 0, generated.stderr);
+    const bytes = await readFile(file);
+    const read = (offset, length) => bytes.subarray(Number(offset), Number(offset) + length);
+    for (const profile of ['local', 'worker']) {
+      const budget = 8 * 1024 * 1024;
+      const args = ['scan', file, '--profile', profile, '--budget', String(budget), '--json'];
+      if (path) args.push('--binary-path', path);
+      const native = spawnSync(cli, args, { encoding: 'utf8' });
+      assert.ok([0, 1].includes(native.status), native.stderr);
+      const size = BigInt(bytes.length);
+      const normalized = path
+        ? await scanTarget(size, BigInt(budget), read, 'executable', path, undefined, profile)
+        : await scan(size, BigInt(budget), read, undefined, profile);
+      assert.deepEqual(JSON.parse(normalized), JSON.parse(native.stdout), `${token}: ${profile}`);
+      comparisons++;
+    }
+  }
+} finally {
+  await rm(edgeDirectory, { recursive: true, force: true });
+}
 
 console.log(`${comparisons} native/Wasm comparisons passed, plus JS boundary, plist, callback, and profile cases.`);

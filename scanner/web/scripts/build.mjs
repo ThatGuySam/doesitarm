@@ -44,4 +44,4 @@ mkdirSync(join(dist, 'pkg'));
 for (const asset of ['scan_wasm.js', 'scan_wasm_bg.wasm']) {
   cpSync(join(scanner, 'pkg', asset), join(dist, 'pkg', asset));
 }
-cpSync(join(scanner, 'results/homebrew-run-1.json'), join(dist, 'homebrew-run-1.json'));
+cpSync(join(scanner, 'results/homebrew-edge-sample.json'), join(dist, 'homebrew-run-1.json'));

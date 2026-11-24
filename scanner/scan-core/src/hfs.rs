@@ -1,7 +1,9 @@
 //! HFS+ and HFSX structures and block addressing follow Apple TN1150.
 use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle, check_range,
-    decode::DecodeBudget, macho, nested, pkg,
+    decode::DecodeBudget,
+    inventory::{self, Allowance},
+    launcher, macho, nested, pkg,
 };
 use std::collections::VecDeque;
 use unicode_normalization::UnicodeNormalization;
@@ -136,6 +138,10 @@ struct ForkReader<'a, 'disk, S> {
 impl<S: ReadAt> ReadAt for ForkReader<'_, '_, S> {
     fn size(&self) -> u64 {
         self.fork.size
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.volume.disk.remaining_budget()
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
@@ -589,16 +595,120 @@ pub(crate) async fn scan(
     let plist = volume.read_fork(&mut info, 0, info_size).await?;
     let path = bundle::apply_plist(&plist, &app_path, out)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
-    let item = catalog
-        .find_path(&mut volume, contents.id, relative, true)
-        .await?;
-    let fork = file_fork(item, geometry)?;
-    out.executable_size = Some(fork.size);
-    let mut reader = ForkReader {
-        volume: &mut volume,
-        fork,
+    let primary = read_main(&mut volume, &mut catalog, contents.id, relative, out).await;
+    let mut inventory = crate::BinaryInventory::default();
+    inventory.record_primary(&primary);
+    let mut allowance = Allowance::new(volume.disk, work);
+    let mut pending = vec![(contents.id, "Contents".to_owned())];
+    let mut visited = std::collections::HashSet::new();
+    'walk: while let Some((parent, prefix)) = pending.pop() {
+        if !visited.insert(parent) || prefix.len() > 8192 {
+            inventory.partial("invalid HFS directory hierarchy");
+            continue;
+        }
+        if let Err(error) = allowance.step(volume.disk, work) {
+            inventory.partial(error.to_string());
+            break;
+        }
+        let children = match catalog.children(&mut volume, parent).await {
+            Ok(children) => children,
+            Err(error) => {
+                inventory.partial(error.to_string());
+                if inventory::stop(&error) {
+                    break;
+                }
+                continue;
+            }
+        };
+        for item in children {
+            let path = format!("{prefix}/{}", item.name);
+            let Some(role) = inventory::role(&path) else {
+                continue;
+            };
+            if item.file.is_none() {
+                pending.push((item.id, path));
+                continue;
+            }
+            if path.strip_prefix("Contents/") == Some(relative)
+                || item
+                    .file
+                    .as_ref()
+                    .is_some_and(|file| file.mode & 0o170000 == 0o120000)
+            {
+                continue;
+            }
+            if let Err(error) = allowance.step(volume.disk, work) {
+                inventory.partial(error.to_string());
+                break 'walk;
+            }
+            let observed = match file_fork(item, geometry) {
+                Ok(fork) => {
+                    inventory::read(
+                        &mut ForkReader {
+                            volume: &mut volume,
+                            fork,
+                        },
+                        &path,
+                        role,
+                        &mut inventory,
+                    )
+                    .await
+                }
+                Err(error) => Err(error),
+            };
+            if let Err(error) = observed {
+                inventory.partial(error.to_string());
+                if inventory::stop(&error) {
+                    break 'walk;
+                }
+            }
+        }
+    }
+    out.inventory = Some(inventory);
+    primary
+}
+
+async fn read_main<S: ReadAt>(
+    volume: &mut Volume<'_, S>,
+    catalog: &mut Catalog,
+    contents: u32,
+    relative: &str,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let (item, chosen) = match catalog.find_path(volume, contents, relative, true).await {
+        Ok(item) => (item, relative),
+        Err(error @ ScanError::NotFound(_)) => {
+            let Some(leaf) = relative
+                .strip_prefix("MacOS/")
+                .filter(|leaf| !leaf.contains('/'))
+            else {
+                return Err(error);
+            };
+            let children = catalog.children(volume, contents).await?;
+            if children
+                .iter()
+                .any(|item| item.name.eq_ignore_ascii_case("MacOS"))
+            {
+                return Err(error);
+            }
+            let item = catalog.find(volume, contents, leaf, true).await?;
+            out.executable_resolution = Some("legacy_contents_executable");
+            (item, leaf)
+        }
+        Err(error) => return Err(error),
     };
-    macho::scan(&mut reader, &mut out.architectures).await
+    let fork = file_fork(item, volume.geometry)?;
+    out.executable_size = Some(fork.size);
+    let path = format!("{}/Contents/{chosen}", out.bundle_path.as_deref().unwrap());
+    out.executable_path = Some(path.clone());
+    let mut reader = ForkReader { volume, fork };
+    launcher::inspect(
+        &mut reader,
+        &path,
+        &mut out.architectures,
+        &mut out.script_runtime,
+    )
+    .await
 }
 
 async fn read_package<S: ReadAt>(
