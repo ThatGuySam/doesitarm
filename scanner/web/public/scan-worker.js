@@ -1,28 +1,43 @@
 import init, { bundle_metadata, scan } from './pkg/scan_wasm.js';
 import { scanRemote } from './range-scan.js';
-import { emptyResult, MIB, URL_BUDGET_TIERS } from './scan-result.js';
+import { emptyResult, MIB } from './scan-result.js';
 
-let resolveExecutable;
+let passive = false;
+let executableRequest;
+
+function yieldForPassive() {
+  if (!passive) return;
+  return globalThis.scheduler?.postTask
+    ? scheduler.postTask(() => {}, { priority: 'background' })
+    : new Promise((resolve) => setTimeout(resolve, 0));
+}
 
 self.addEventListener('message', async ({ data }) => {
+  if (data.type === 'mode') {
+    passive = data.passive;
+    return;
+  }
   if (data.type === 'executable') {
-    resolveExecutable?.(data.file ?? null);
+    if (executableRequest?.id === data.id) executableRequest.resolve(data.file ?? null);
     return;
   }
 
-  const { id, job, budget } = data;
-  const start = performance.now();
+  const { id, job } = data;
+  passive = data.passive;
   let lastProgress = -Infinity;
   let bytes = 0;
   let total = job.file?.size ?? job.plist?.size ?? 0;
+  let planned = null;
 
-  function progress(read, size, force = false) {
+  function progress(read, size, work = null) {
+    const now = performance.now();
+    const changedPlan = work !== planned;
     bytes = read;
     total = size;
-    const now = performance.now();
-    if (force || now - lastProgress >= 80) {
+    planned = work;
+    if (changedPlan || now - lastProgress >= 150) {
       lastProgress = now;
-      self.postMessage({ type: 'progress', id, bytes, total, elapsed: now - start });
+      self.postMessage({ type: 'progress', id, bytes, planned });
     }
   }
 
@@ -36,34 +51,31 @@ self.addEventListener('message', async ({ data }) => {
       result = await scanBundle(job, progress, id);
     } else {
       if (!job.forceWorker) {
-        for (const tier of URL_BUDGET_TIERS) {
-          if (tier > budget) break;
-          const direct = await scanRemote({
-            scan,
-            budget: tier,
-            profile: 'remote-cli',
-            onProgress: progress,
-            fetchRange: (range) => fetch(job.url, {
+        const direct = await scanRemote({
+          scan,
+          budget: 0,
+          profile: 'local',
+          onProgress: progress,
+          fetchRange: async (range) => {
+            const waiting = yieldForPassive();
+            if (waiting) await waiting;
+            return fetch(job.url, {
               headers: { Range: range },
               mode: 'cors',
               redirect: 'error',
               credentials: 'omit',
               cache: 'no-store',
-            }),
-          });
-          result = direct.result;
-          if (result.status === 'source_error') {
-            result = undefined;
-            break;
-          }
-          if (result.status !== 'budget_exhausted') break;
-        }
+            });
+          },
+        });
+        if (direct.result.status !== 'source_error') result = direct.result;
       }
 
       if (!result) {
         source = 'Cloudflare Worker';
-        self.postMessage({ type: 'remote', id });
+        self.postMessage({ type: 'remote', id, bytes });
         result = await requestWorker(job.url);
+        bytes += result.bytes_read;
       }
     }
   } catch (error) {
@@ -73,24 +85,54 @@ self.addEventListener('message', async ({ data }) => {
     result = emptyResult(limited ? 'limit_reached' : 'source_error', message, total);
     result.bytes_read = bytes;
   }
-  self.postMessage({ type: 'done', id, result, source, elapsed: performance.now() - start });
+  self.postMessage({ type: 'done', id, result, source, bytes });
 });
+
+const READ_CHUNK = 4 * MIB;
+const PLANNED_READ_CHUNK = 64 * 1024;
+const THIN_HEADERS = new Map([
+  [0xfeedface, 28], [0xcefaedfe, 28],
+  [0xfeedfacf, 32], [0xcffaedfe, 32],
+]);
 
 async function scanFile(file, progress) {
   let read = 0;
   let sourceError;
+  let thinHeader;
+  let planned = null;
   const result = JSON.parse(await scan(BigInt(file.size), 0n, async (offset, length) => {
     const start = Number(offset);
     const end = start + length;
-    if (!Number.isSafeInteger(end) || end > file.size || length > 16 * MIB) {
+    if (!length) return new Uint8Array();
+    if (!Number.isSafeInteger(end) || end > file.size) {
       sourceError = 'The scanner requested a range outside the supported file bounds.';
       throw new RangeError(sourceError);
     }
+
+    // A bare thin Mach-O's final source read is the load command table.
+    // Use the range selected by Wasm. Archive and fat Mach-O reads remain open-ended.
+    if (start === thinHeader) {
+      planned = read + length;
+      progress(read, file.size, planned);
+    }
     try {
-      const bytes = new Uint8Array(await file.slice(start, end).arrayBuffer());
-      read += bytes.byteLength;
-      progress(read, file.size);
-      return bytes;
+      const chunk = planned === null ? READ_CHUNK : PLANNED_READ_CHUNK;
+      const range = length > chunk ? new Uint8Array(length) : null;
+      for (let position = start; position < end; position += chunk) {
+        const waiting = yieldForPassive();
+        if (waiting) await waiting;
+        const chunkEnd = Math.min(position + chunk, end);
+        const bytes = new Uint8Array(await file.slice(position, chunkEnd).arrayBuffer());
+        if (bytes.byteLength !== chunkEnd - position) throw new Error('Incomplete file range');
+        read += bytes.byteLength;
+        progress(read, file.size, planned);
+        if (!range) {
+          if (start === 0 && length === 4) thinHeader = THIN_HEADERS.get(new DataView(bytes.buffer).getUint32(0));
+          return bytes;
+        }
+        range.set(bytes, position - start);
+      }
+      return range;
     } catch (error) {
       sourceError = 'The browser could not read this file range. Check that the file is still available.';
       throw error;
@@ -103,18 +145,21 @@ async function scanFile(file, progress) {
 async function scanBundle(job, progress, id) {
   const { plist, label } = job;
   if (!plist) return emptyResult('not_found', 'The app folder has no readable Contents/Info.plist.');
+  // Match the core's structural plist bound before allocating the buffer.
   if (plist.size > 2 * MIB) return emptyResult('limit_reached', 'Info.plist exceeds 2 MiB.', plist.size);
 
+  const waiting = yieldForPassive();
+  if (waiting) await waiting;
   const bytes = new Uint8Array(await plist.slice(0, plist.size).arrayBuffer());
+  progress(bytes.byteLength, plist.size);
   const metadata = JSON.parse(bundle_metadata(bytes, label));
-  progress(metadata.bytes_read, plist.size, true);
   if (metadata.error) return metadata;
 
   const executable = await new Promise((resolve) => {
-    resolveExecutable = resolve;
+    executableRequest = { id, resolve };
     self.postMessage({ type: 'executable-needed', id, name: metadata.executable_name });
   });
-  resolveExecutable = undefined;
+  executableRequest = undefined;
   if (!executable) {
     return {
       ...metadata,
@@ -124,8 +169,8 @@ async function scanBundle(job, progress, id) {
   }
 
   const totalSize = plist.size + executable.size;
-  progress(plist.size, totalSize, true);
-  const result = await scanFile(executable, (read) => progress(plist.size + read, totalSize));
+  const result = await scanFile(executable, (read, size, planned) =>
+    progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned));
   return {
     ...metadata,
     status: result.status,

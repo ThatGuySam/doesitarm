@@ -17,7 +17,7 @@ export function cli(path, budget = DEFAULT_BUDGET, profile = 'local') {
 
 export function expectedRemote(path, budget, etag = '"fixture"', profile = 'worker') {
   const size = readFileSync(path).length;
-  if (!budget) return emptyResult('budget_exhausted', 'byte budget reached');
+  if (!budget && profile !== 'local') return emptyResult('budget_exhausted', 'byte budget reached');
   const cap = profile === 'worker' ? Math.min(budget, size - 1) : budget;
   const result = cli(path, Math.max(0, cap - 1), profile);
   result.bytes_read = Math.max(1, result.bytes_read);

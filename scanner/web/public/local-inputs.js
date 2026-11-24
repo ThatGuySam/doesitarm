@@ -24,21 +24,24 @@ export function* pickedFolders(files) {
       continue;
     }
     const bundle = parts.slice(0, position + 1).join('/');
-    if (!bundles.has(bundle)) bundles.set(bundle, new Map());
+    if (!bundles.has(bundle)) bundles.set(bundle, { entries: new Map(), size: 0 });
+    const info = bundles.get(bundle);
+    info.size += file.size;
     const relative = parts.slice(position + 1);
     if (relative.join('/') === 'Contents/Info.plist' ||
         (relative.length === 3 && relative[0] === 'Contents' && relative[1] === 'MacOS')) {
-      bundles.get(bundle).set(relative.join('/'), file);
+      info.entries.set(relative.join('/'), file);
     }
   }
 
-  for (const [label, entries] of bundles) {
-    yield bundleJob(label, (parts) => {
+  for (const [label, { entries, size }] of bundles) {
+    const job = bundleJob(label, (parts) => {
       const path = parts.join('/');
       const file = entries.get(path);
       if (!file) throw new Error(`The selected app has no readable ${path}.`);
       return file;
     });
+    yield { ...job, size };
   }
 }
 

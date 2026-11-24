@@ -6,6 +6,12 @@ import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
 
 const dist = fileURLToPath(new URL('../dist', import.meta.url));
+const source = fileURLToPath(new URL('../public', import.meta.url));
+const sourceAssets = new Map([
+  ['/pkg/scan_wasm.js', new URL('../../pkg/scan_wasm.js', import.meta.url)],
+  ['/pkg/scan_wasm_bg.wasm', new URL('../../pkg/scan_wasm_bg.wasm', import.meta.url)],
+  ['/homebrew-run-1.json', new URL('../../results/homebrew-run-1.json', import.meta.url)],
+]);
 const contentTypes = {
   html: 'text/html; charset=utf-8',
   css: 'text/css; charset=utf-8',
@@ -14,8 +20,9 @@ const contentTypes = {
   wasm: 'application/wasm',
 };
 
-export async function startPreview({ port = 0, api = null } = {}) {
-  const lines = (await readFile(resolve(dist, '_headers'), 'utf8')).trimEnd().split('\n');
+export async function startPreview({ port = 0, api = null, fromSource = false, extraAssets = new Map() } = {}) {
+  const root = fromSource ? source : dist;
+  const lines = (await readFile(resolve(root, '_headers'), 'utf8')).trimEnd().split('\n');
   const headers = Object.fromEntries(lines.slice(1).map((line) => {
     const colon = line.indexOf(':');
     return [line.slice(0, colon).trim(), line.slice(colon + 1).trim()];
@@ -37,9 +44,11 @@ export async function startPreview({ port = 0, api = null } = {}) {
       }
 
       const pathname = url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname);
-      const path = resolve(dist, `.${pathname}`);
+      const asset = extraAssets.get(pathname) ?? (fromSource ? sourceAssets.get(pathname) : undefined);
+      const path = asset ? fileURLToPath(asset) : resolve(root, `.${pathname}`);
+      if (!asset && !path.startsWith(`${root}${sep}`)) throw new Error();
       const type = contentTypes[path.split('.').at(-1)];
-      if (!path.startsWith(`${dist}${sep}`) || !type || !(await stat(path)).isFile()) throw new Error();
+      if (!type || !(await stat(path)).isFile()) throw new Error();
       response.writeHead(200, { ...headers, 'Content-Type': type });
       createReadStream(path).pipe(response);
     } catch {

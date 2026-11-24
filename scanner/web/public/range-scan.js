@@ -106,7 +106,7 @@ export async function scanRemote({
       bytesRequested += length;
       try {
         if (signal?.aborted) throw deadlineError();
-        if (length > 16 * MIB) {
+        if (profile !== 'local' && length > 16 * MIB) {
           throw new RangeFailure('Scan requested a range larger than 16 MiB.', 'limit_reached', 503);
         }
         const range = await readRange(fetchRange, signal, Number(offset), length, representation);

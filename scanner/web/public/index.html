@@ -19,14 +19,14 @@
   </header>
   <main class="wrap">
     <section id="scan" aria-labelledby="scan-title">
-      <h1 id="scan-title">App Scanner</h1>
+      <h1 id="scan-title">Apple Silicon App Test</h1>
       <p class="intro">Find out which architectures a Mac app ships and which macOS version its main executable requires.</p>
       <div class="input-grid">
         <div id="drop-zone" class="drop-zone">
           <h2>Scan local files</h2>
           <p>Drop DMG, ZIP, PKG, tar.gz, Mach-O files or folders. Local files stay in your browser.</p>
           <div class="actions">
-            <button type="button" id="choose-files">Choose files</button>
+            <button type="button" id="choose-files">Select Apps</button>
             <button type="button" id="choose-folder" class="secondary">Choose folder</button>
           </div>
           <input id="files" type="file" multiple hidden>
@@ -42,12 +42,8 @@
         </form>
       </div>
       <div class="settings">
-        <label for="budget">URL range limit per attempt</label>
-        <select id="budget">
-          <option value="8">8 MiB</option>
-          <option value="64">64 MiB</option>
-          <option value="256" selected>256 MiB</option>
-        </select>
+        <label class="gentle-toggle"><input type="checkbox" id="gentle"> Gentle</label>
+        <p id="mode-status" class="muted" role="status"></p>
       </div>
       <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
       <p id="input-status" class="error" role="status"></p>
@@ -56,10 +52,18 @@
     <section id="results" aria-labelledby="results-title">
       <div class="section-bar">
         <h2 id="results-title" tabindex="-1">Results</h2>
-        <p id="results-count" role="status"></p>
+        <button type="button" id="cancel-all" class="secondary cancel-button" hidden>Cancel all</button>
       </div>
       <p id="empty-results" class="muted">Choose files, a folder, or a download URL to start a scan.</p>
-      <ul id="scan-results" class="result-list"></ul>
+      <div id="batch-progress">
+        <p id="results-count" role="status"></p>
+        <div id="batch-readout" hidden>
+          <progress id="overall-progress" aria-label="Batch progress by scans finished"></progress>
+          <p id="batch-metrics" class="muted"></p>
+        </div>
+      </div>
+      <p id="timer-notice" class="visually-hidden" role="status"></p>
+      <ul id="scan-results" class="result-list" role="list"></ul>
     </section>
 
     <section id="homebrew" aria-labelledby="homebrew-title">
@@ -92,24 +96,40 @@
   </main>
   <template id="result-card">
     <li class="result">
-      <div class="result-heading">
-        <h3></h3>
-        <span class="scan-status"></span>
+      <span class="result-monogram" aria-hidden="true"></span>
+      <div class="result-content">
+        <div class="result-heading">
+          <h3 tabindex="-1"></h3>
+          <span class="result-size muted"></span>
+        </div>
+        <div class="result-status">
+          <span class="scan-status">Queued</span>
+          <span class="result-arch"></span>
+          <span class="result-source muted"></span>
+        </div>
+        <span class="result-read-label visually-hidden">Source reads</span>
+        <progress hidden></progress>
+        <div class="result-readout muted">
+          <span class="result-metrics"></span>
+          <span class="result-timer" hidden></span>
+          <span class="result-estimate"></span>
+        </div>
+        <p class="result-error error" hidden></p>
+        <details hidden>
+          <summary>Details</summary>
+          <dl class="result-facts">
+            <div><dt>Architectures</dt><dd data-field="architectures"></dd></div>
+            <div><dt>Bundle ID</dt><dd data-field="bundle_id"></dd></div>
+            <div><dt>App version</dt><dd data-field="version"></dd></div>
+            <div><dt>Min macOS</dt><dd data-field="min_macos"></dd></div>
+          </dl>
+          <details>
+            <summary>Scan details (JSON)</summary>
+            <pre></pre>
+          </details>
+        </details>
       </div>
-      <p class="result-source muted"></p>
-      <progress aria-label="Fraction of source bytes read"></progress>
-      <p class="result-metrics"></p>
-      <dl class="result-facts" hidden>
-        <div><dt>Architectures</dt><dd data-field="architectures"></dd></div>
-        <div><dt>Bundle ID</dt><dd data-field="bundle_id"></dd></div>
-        <div><dt>App version</dt><dd data-field="version"></dd></div>
-        <div><dt>Min macOS</dt><dd data-field="min_macos"></dd></div>
-      </dl>
-      <p class="result-error error" hidden></p>
-      <details hidden>
-        <summary>Scan details (JSON)</summary>
-        <pre></pre>
-      </details>
+      <button type="button" class="secondary cancel-button">Cancel</button>
     </li>
   </template>
 </body>

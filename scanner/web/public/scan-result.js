@@ -1,6 +1,5 @@
 export const MIB = 1024 ** 2;
 export const DEFAULT_BUDGET = 8 * MIB;
-export const URL_BUDGET_TIERS = [DEFAULT_BUDGET, 64 * MIB, 256 * MIB];
 
 export function emptyResult(status, error, totalSize = 0) {
   return {

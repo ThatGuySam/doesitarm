@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { closeSync, copyFileSync, linkSync, mkdtempSync, openSync, readFileSync, rmSync, statSync, writeSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { copyFileSync, linkSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import test from 'node:test';
@@ -11,6 +10,7 @@ import { createScanner } from '../../pkg/worker/scan_wasm_factory.js';
 import { DEFAULT_BUDGET } from '../public/scan-result.js';
 import { startPreview } from '../scripts/serve.mjs';
 import { createHandler } from '../worker/handler.js';
+import { dropPaths, processMemory, sparseFat } from './browser-helpers.mjs';
 import { cli, dnsResponse, expectedRemote, fixture, rangedResponse } from './helpers.mjs';
 
 const names = [
@@ -51,58 +51,18 @@ function expectedBundle(bundle, archive) {
   };
 }
 
-function sparseFat(path) {
-  const data = readFileSync(fixture('fat64.macho'));
-  const offset = 4 * 1024 ** 3 + 4096;
-  const size = 5 * 1024 ** 3;
-  execFileSync('truncate', ['-s', String(size), path]);
-  const headerAndArm = data.subarray(0, 1024);
-  headerAndArm.writeBigUInt64BE(BigInt(offset), 16);
-  const fd = openSync(path, 'r+');
-  try {
-    writeSync(fd, headerAndArm, 0, headerAndArm.length, 0);
-    writeSync(fd, data, 1024, data.length - 1024, offset);
-  } finally {
-    closeSync(fd);
-  }
-  assert.equal(statSync(path).size, size);
-  assert.ok(statSync(path).blocks * 512 < 64 * 1024);
-  return { offset, size };
-}
-
-async function processMemory(session) {
-  const { processInfo } = await session.send('SystemInfo.getProcessInfo');
-  const samples = await Promise.allSettled(processInfo.map(({ id }) => readFile(`/proc/${id}/smaps_rollup`, 'utf8')));
-  return samples.reduce((sum, sample) => {
-    if (sample.status !== 'fulfilled') return sum;
-    return sum + Number(/^Pss:\s+(\d+)/m.exec(sample.value)?.[1] ?? 0);
-  }, 0) * 1024;
-}
-
 function resultCard(page, label) {
   return page.locator('.result').filter({ has: page.getByRole('heading', { name: label, exact: true }) }).first();
 }
 
 async function scanResult(page, label) {
   const card = resultCard(page, label);
-  await card.locator('details:not([hidden])').waitFor({ state: 'visible' });
+  await card.locator('details').first().waitFor({ state: 'visible' });
   return JSON.parse(await card.locator('pre').textContent());
 }
 
-async function dropPaths(page, session, paths) {
-  const zone = page.locator('#drop-zone');
-  await zone.scrollIntoViewIfNeeded();
-  const bounds = await zone.boundingBox();
-  const x = Math.round(bounds.x + bounds.width / 2);
-  const y = Math.round(bounds.y + bounds.height / 2);
-  const data = { items: [], files: paths, dragOperationsMask: 1 };
-  for (const type of ['dragEnter', 'dragOver', 'drop']) {
-    await session.send('Input.dispatchDragEvent', { type, x, y, data });
-  }
-}
-
 test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew comparisons', { timeout: 90_000 }, async (t) => {
-  const scratch = mkdtempSync(join(tmpdir(), 'doesitarm-browser-'));
+  const scratch = mkdtempSync(join(homedir(), '.cache', 'doesitarm-browser-'));
   t.after(() => rmSync(scratch, { recursive: true, force: true }));
   const directFile = fixture('fat.macho');
   const backendFile = fixture('hfsx.dmg');
@@ -140,17 +100,17 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
   const session = await context.newCDPSession(page);
   const browserSession = await browser.newBrowserCDPSession();
   await page.goto(url);
-  await page.getByRole('heading', { name: 'App Scanner' }).waitFor();
+  await page.getByRole('heading', { name: 'Apple Silicon App Test' }).waitFor();
   assert.match(await page.evaluate(() => navigator.userAgent), /Chrome\//);
 
-  await t.test('multiselect picker scans 12 inputs using at most four module workers', async () => {
+  await t.test('multiselect picker scans 12 inputs using the foreground module worker limit', async () => {
     const chooserPromise = page.waitForEvent('filechooser');
-    await page.getByRole('button', { name: 'Choose files' }).click();
+    await page.getByRole('button', { name: 'Select Apps' }).click();
     const chooser = await chooserPromise;
     assert.ok(chooser.isMultiple());
     await chooser.setFiles(names.map(fixture));
     for (const name of names) assert.deepEqual(await scanResult(page, name), cli(fixture(name)), name);
-    const size = await page.evaluate(() => Math.min(4, navigator.hardwareConcurrency || 1));
+    const size = await page.evaluate(() => Math.min(6, Math.max(1, (navigator.hardwareConcurrency || 1) - 2)));
     assert.equal(page.workers().length, size);
     assert.equal(apiCalls.length, 0);
   });
@@ -230,7 +190,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     });
 
     for (const [filename, result] of [
-      ['direct.macho', expectedRemote(directFile, DEFAULT_BUDGET, '"fixture"', 'remote-cli')],
+      ['direct.macho', expectedRemote(directFile, 0, '"fixture"', 'local')],
       ['cors.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
       ['whole.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
     ]) {

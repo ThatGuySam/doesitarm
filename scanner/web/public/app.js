@@ -1,128 +1,88 @@
 import { droppedJobs, pickedFolders } from './local-inputs.js';
-import { emptyResult, MIB } from './scan-result.js';
+import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
+import { architectures, get, prettyBytes, ScanView, statuses } from './scan-view.js';
 
-const get = (id) => document.getElementById(id);
 const files = get('files');
 const folder = get('folder');
 const dropZone = get('drop-zone');
-const results = get('scan-results');
-const pool = new ScanPool(Math.max(1, Math.min(4, navigator.hardwareConcurrency || 1)));
+const gentleToggle = get('gentle');
+const notice = get('input-status');
+const discoveries = new Set();
 const divider = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
-const bytePercent = new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 });
-const statuses = {
-  complete: 'Complete',
-  budget_exhausted: 'Byte limit reached',
-  limit_reached: 'Scan limit reached',
-  invalid: 'Invalid data',
-  unsupported: 'Unsupported',
-  not_found: 'Missing data',
-  source_error: 'Read failed',
-};
-let submitted = 0;
-let finished = 0;
-let announceTimer;
+const coveragePercent = new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 });
 
-function reportCount() {
-  clearTimeout(announceTimer);
-  announceTimer = setTimeout(() => {
-    get('results-count').textContent = `${finished} of ${submitted} finished`;
-  }, 150);
+try {
+  gentleToggle.checked = localStorage.getItem('scan-mode') === 'gentle';
+} catch {
+  // A blocked storage policy does not prevent scanning.
 }
 
-function prettyBytes(bytes) {
-  const units = [[1024 ** 3, 'GiB'], [MIB, 'MiB'], [1024, 'KiB']];
-  const unit = units.find(([size]) => bytes >= size);
-  return unit ? `${divider.format(bytes / unit[0])} ${unit[1]}` : `${bytes} B`;
+let onLowBattery = false;
+function currentMode() {
+  return scanMode({
+    cores: navigator.hardwareConcurrency,
+    visible: document.visibilityState === 'visible',
+    focused: document.hasFocus(),
+    gentle: gentleToggle.checked,
+    conserve: navigator.connection?.saveData || onLowBattery,
+  });
 }
 
-function readFraction(bytes, total) {
-  if (!total) return `${prettyBytes(bytes)} read`;
-  const percent = (100 * bytes) / total;
-  const formatted = percent > 0 && percent < 0.001 ? '<0.001' : bytePercent.format(percent);
-  return `${prettyBytes(bytes)} of ${prettyBytes(total)} read (${formatted}%)`;
-}
+let mode = currentMode();
+const pool = new ScanPool(mode);
+const view = new ScanView(pool);
 
-function architectures(scan) {
-  return scan.architectures.map(({ name, header_verified }) =>
-    header_verified ? name : `${name} (slice unverified)`).join(', ') || '—';
-}
-
-function newScan(job) {
-  const id = ++submitted;
-  reportCount();
-  get('empty-results').hidden = true;
-  const card = get('result-card').content.firstElementChild.cloneNode(true);
-  const heading = card.querySelector('h3');
-  heading.textContent = job.label;
-  const status = card.querySelector('.scan-status');
-  const sourceLabel = card.querySelector('.result-source');
-  const progress = card.querySelector('progress');
-  progress.setAttribute('aria-label', `Fraction of source bytes read for ${job.label}`);
-  const metrics = card.querySelector('.result-metrics');
-  const facts = card.querySelector('.result-facts');
-  const errorLabel = card.querySelector('.result-error');
-  const details = card.querySelector('details');
-  status.textContent = 'Queued';
-  progress.hidden = true;
-  if (job.kind === 'file') metrics.textContent = readFraction(0, job.file.size);
-  results.prepend(card);
-
-  function setProgress(bytes, total, elapsed) {
-    if (total > 0) progress.value = Math.min(bytes / total, 1);
-    else progress.removeAttribute('value');
-    metrics.textContent = `${readFraction(bytes, total)} · ${divider.format(elapsed / 1000)} s`;
+function updateMode() {
+  const next = currentMode();
+  if (mode.passive !== next.passive || mode.limit !== next.limit) {
+    mode = next;
+    pool.setMode(mode);
+    view.resetEstimates();
   }
-
-  function update(event) {
-    if (event.type === 'start') {
-      status.textContent = 'Scanning';
-      progress.hidden = false;
-      if (job.kind === 'file') progress.value = 0;
-    } else if (event.type === 'progress') {
-      setProgress(event.bytes, event.total, event.elapsed);
-    } else if (event.type === 'remote') {
-      status.textContent = 'Scanning on Cloudflare';
-      progress.removeAttribute('value');
-      metrics.textContent = '';
-    } else if (event.type === 'done') {
-      const { result, source, elapsed } = event;
-      card.dataset.status = result.status;
-      status.textContent = statuses[result.status] ?? result.status;
-      sourceLabel.textContent = [source, result.format].filter(Boolean).join(' · ');
-      setProgress(result.bytes_read, result.total_size, elapsed);
-      progress.hidden = !result.total_size;
-      facts.hidden = false;
-      const values = { ...result, architectures: architectures(result) };
-      for (const field of facts.querySelectorAll('dd')) {
-        field.textContent = values[field.dataset.field] ?? '—';
-      }
-      if (result.error) {
-        errorLabel.textContent = result.error;
-        errorLabel.hidden = false;
-      }
-      details.querySelector('pre').textContent = JSON.stringify(result, null, 2);
-      details.hidden = false;
-      finished += 1;
-      reportCount();
-    }
-  }
-
-  if (job.kind === 'error') {
-    update({ type: 'done', result: emptyResult('source_error', job.error), source: 'Browser', elapsed: 0 });
-  } else {
-    pool.submit(id, job, job.kind === 'url' ? Number(get('budget').value) * MIB : undefined, update);
-  }
+  const status = get('mode-status');
+  const text = `${mode.passive ? 'Passive' : 'Foreground'} · up to ${mode.limit} ${mode.limit === 1 ? 'worker' : 'workers'}`;
+  if (status.textContent !== text) status.textContent = text;
 }
+
+gentleToggle.addEventListener('change', () => {
+  try {
+    localStorage.setItem('scan-mode', gentleToggle.checked ? 'gentle' : 'automatic');
+  } catch {
+    // The setting still works for this page.
+  }
+  updateMode();
+});
+document.addEventListener('visibilitychange', updateMode);
+window.addEventListener('focus', updateMode);
+window.addEventListener('blur', updateMode);
+navigator.connection?.addEventListener('change', updateMode);
+navigator.getBattery?.().then((battery) => {
+  function updateBattery() {
+    onLowBattery = !battery.charging && battery.level <= 0.2;
+    updateMode();
+  }
+  battery.addEventListener('chargingchange', updateBattery);
+  battery.addEventListener('levelchange', updateBattery);
+  updateBattery();
+}).catch(() => {});
+updateMode();
+
+get('cancel-all').addEventListener('click', () => {
+  discoveries.clear();
+  pool.cancelAll();
+  notice.textContent = '';
+  view.setDiscovering(false);
+});
 
 get('choose-files').addEventListener('click', () => files.click());
 get('choose-folder').addEventListener('click', () => folder.click());
 files.addEventListener('change', () => {
-  for (const file of files.files) newScan({ kind: 'file', file, label: file.name });
+  view.add(Array.from(files.files, (file) => ({ kind: 'file', file, label: file.name })));
   files.value = '';
 });
 folder.addEventListener('change', () => {
-  for (const job of pickedFolders(folder.files)) newScan(job);
+  view.add([...pickedFolders(folder.files)]);
   folder.value = '';
 });
 
@@ -148,17 +108,28 @@ window.addEventListener('drop', async (event) => {
   dragDepth = 0;
   dropZone.classList.remove('dragging');
   if (!dropZone.contains(event.target)) return;
-  const notice = get('input-status');
-  notice.textContent = '';
-  let found = false;
+  const discovery = {};
+  discoveries.add(discovery);
+  view.setDiscovering(true);
+  notice.textContent = 'Finding apps and files…';
+  const jobs = [];
   try {
     for await (const job of droppedJobs(event.dataTransfer)) {
-      found = true;
-      newScan(job);
+      if (!discoveries.has(discovery)) return;
+      jobs.push(job);
+      if (jobs.length % 50 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
     }
-    if (!found) notice.textContent = 'No files were found. Try choosing the folder directly.';
+    if (!discoveries.has(discovery)) return;
+    view.add(jobs);
+    notice.textContent = jobs.length ? '' : 'No files were found. Try choosing the folder directly.';
   } catch {
-    notice.textContent = 'The browser could not open this drop. Try the file or folder picker.';
+    if (discoveries.has(discovery)) {
+      view.add(jobs);
+      notice.textContent = 'The browser could not open this drop. Try the file or folder picker.';
+    }
+  } finally {
+    discoveries.delete(discovery);
+    view.setDiscovering(discoveries.size > 0);
   }
 });
 
@@ -180,13 +151,20 @@ get('url-form').addEventListener('submit', (event) => {
   try {
     const url = publicDownload(input.value);
     const path = url.pathname.split('/').filter(Boolean).at(-1);
-    newScan({ kind: 'url', url: url.href, label: path || url.hostname });
+    view.add([{ kind: 'url', url: url.href, label: path || url.hostname }]);
   } catch {
     error.textContent = 'Enter a public HTTPS download URL without credentials.';
     input.setAttribute('aria-invalid', 'true');
     input.focus();
   }
 });
+
+function recordedCoverage(bytes, size) {
+  if (!size) return `${prettyBytes(bytes)} read`;
+  const percent = (100 * bytes) / size;
+  const label = percent > 0 && percent < 0.001 ? '<0.001' : coveragePercent.format(percent);
+  return `${prettyBytes(bytes)} of ${prettyBytes(size)} read (${label}%)`;
+}
 
 async function loadHomebrew() {
   const status = get('run-status');
@@ -206,7 +184,7 @@ async function loadHomebrew() {
       button.textContent = app.cask;
       button.setAttribute('aria-label', `Rescan ${app.cask}`);
       button.addEventListener('click', () => {
-        newScan({ kind: 'url', url: app.url, label: app.cask, forceWorker: true });
+        view.add([{ kind: 'url', url: app.url, label: app.cask, forceWorker: true }]);
         get('results-title').focus();
       });
       name.append(button);
@@ -216,11 +194,11 @@ async function loadHomebrew() {
       const values = [
         app.expected_format,
         statuses[scan.status] ?? scan.status,
-        architectures(scan),
+        architectures(scan) || '—',
         scan.bundle_id,
         scan.version,
         scan.min_macos,
-        readFraction(scan.bytes_read, scan.total_size),
+        recordedCoverage(scan.bytes_read, scan.total_size),
         `${divider.format(app.elapsed_seconds)} s`,
       ];
       for (const value of values) {
