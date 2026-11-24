@@ -33,6 +33,7 @@ pub const METADATA_LIMIT: usize = 8 * 1024 * 1024;
 pub enum BodyMode {
     Head,
     Metadata(usize),
+    Directory(usize),
     Range { start: u64, end: u64 },
     Robots,
 }
@@ -181,6 +182,9 @@ pub struct Traffic {
 pub trait Transport: Sync {
     fn fetch(&self, request: Request, traffic: &mut Traffic) -> Result<Response, Failure>;
     fn cancelled(&self) -> bool {
+        false
+    }
+    fn github_authenticated(&self) -> bool {
         false
     }
 }
@@ -343,7 +347,13 @@ impl Http {
             if !visited.insert(request.url.clone()) {
                 break;
             }
-            let response = self.attempt(&request, stats)?;
+            let response = self.attempt(&request, stats).map_err(|error| {
+                error.with_http(HttpEvidence {
+                    url: recorded_url(original.as_str()),
+                    final_url: recorded_url(request.url.as_str()),
+                    ..HttpEvidence::default()
+                })
+            })?;
             if !matches!(response.status, 301 | 302 | 303 | 307 | 308) {
                 return Ok(response);
             }
@@ -512,8 +522,10 @@ impl Http {
             .header("content-encoding")
             .unwrap_or("identity")
             .to_ascii_lowercase();
-        if matches!(request.mode, BodyMode::Metadata(_) | BodyMode::Robots)
-            && (200..300).contains(&status)
+        if matches!(
+            request.mode,
+            BodyMode::Metadata(_) | BodyMode::Directory(_) | BodyMode::Robots
+        ) && (200..300).contains(&status)
             && !matches!(encoding.as_str(), "identity" | "gzip")
         {
             result.read_failure = Some(Failure::new(
@@ -522,6 +534,7 @@ impl Http {
             ));
         } else if let Some(cap) = body_limit(request.mode, &result) {
             let mut reader = response.body_mut().as_reader();
+            let allow_html = matches!(request.mode, BodyMode::Directory(_));
             match cap {
                 BodyLimit::Exact(size) => {
                     read_counted(&mut reader, &mut result, size, &self.cancelled)
@@ -534,12 +547,13 @@ impl Http {
                         &mut result,
                         size,
                         &self.cancelled,
+                        allow_html,
                     );
                     result.received = (maximum - compressed.limit()) as usize;
                     result.too_large |= compressed.limit() == 0;
                 }
                 BodyLimit::Metadata(size) => {
-                    read_metadata(&mut reader, &mut result, size, &self.cancelled)
+                    read_metadata(&mut reader, &mut result, size, &self.cancelled, allow_html)
                 }
             }
         }
@@ -554,6 +568,10 @@ impl Transport for Http {
 
     fn cancelled(&self) -> bool {
         self.cancelled.load(Ordering::Relaxed)
+    }
+
+    fn github_authenticated(&self) -> bool {
+        self.token.is_some()
     }
 }
 
@@ -647,6 +665,7 @@ fn body_limit(mode: BodyMode, response: &Response) -> Option<BodyLimit> {
     match mode {
         BodyMode::Head => None,
         BodyMode::Robots => Some(BodyLimit::Metadata(512 * 1024)),
+        BodyMode::Directory(limit) => Some(BodyLimit::Metadata(limit)),
         BodyMode::Metadata(limit)
             if textual
                 || matches!(
@@ -680,7 +699,13 @@ fn body_limit(mode: BodyMode, response: &Response) -> Option<BodyLimit> {
     }
 }
 
-fn read_metadata(reader: &mut impl Read, result: &mut Response, limit: usize, cancel: &AtomicBool) {
+fn read_metadata(
+    reader: &mut impl Read,
+    result: &mut Response,
+    limit: usize,
+    cancel: &AtomicBool,
+    allow_html: bool,
+) {
     let maximum = limit + 1;
     read_counted(reader, result, maximum.min(SNIPPET), cancel);
     if !metadata_text(&result.body) {
@@ -692,7 +717,7 @@ fn read_metadata(reader: &mut impl Read, result: &mut Response, limit: usize, ca
         });
         return;
     }
-    if crate::connectors::looks_like_html(&result.body) {
+    if !allow_html && crate::connectors::looks_like_html(&result.body) {
         return;
     }
     read_counted(reader, result, maximum, cancel);
@@ -904,13 +929,25 @@ mod tests {
             Some(BodyLimit::Metadata(4096))
         ));
         let mut decoder = flate2::read::GzDecoder::new(compressed.as_slice());
-        read_metadata(&mut decoder, &mut result, 4096, &AtomicBool::new(false));
+        read_metadata(
+            &mut decoder,
+            &mut result,
+            4096,
+            &AtomicBool::new(false),
+            false,
+        );
         assert_eq!(result.body, body);
         assert!(!result.too_large);
 
         let mut limited = make_response();
         let mut decoder = flate2::read::GzDecoder::new(compressed.as_slice());
-        read_metadata(&mut decoder, &mut limited, 40, &AtomicBool::new(false));
+        read_metadata(
+            &mut decoder,
+            &mut limited,
+            40,
+            &AtomicBool::new(false),
+            false,
+        );
         assert!(limited.too_large);
         assert_eq!(limited.body.len(), 40);
     }

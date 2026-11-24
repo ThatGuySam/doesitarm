@@ -73,16 +73,18 @@ impl Connector for Github {
         let repo = repo.trim_end_matches(".git");
         // Only query releases on a public repository, including when a token can see private repos.
         let api = format!("https://api.github.com/repos/{owner}/{repo}");
-        let visibility = context.metadata_bounded(&api, true, 256 * 1024)?;
-        let repo_info: Repo = serde_json::from_slice(&visibility.body).map_err(|_| {
-            self.parse_error("invalid GitHub repository JSON")
-                .with_http(visibility.evidence(&public_url(&api).unwrap()))
-        })?;
-        if repo_info.private {
-            return Err(Failure::new(
-                "needs_login",
-                "private repositories require a separate workflow",
-            ));
+        if context.transport.github_authenticated() {
+            let visibility = context.metadata_bounded(&api, true, 256 * 1024)?;
+            let repo_info: Repo = serde_json::from_slice(&visibility.body).map_err(|_| {
+                self.parse_error("invalid GitHub repository JSON")
+                    .with_http(visibility.evidence(&public_url(&api).unwrap()))
+            })?;
+            if repo_info.private {
+                return Err(Failure::new(
+                    "needs_login",
+                    "private repositories require a separate workflow",
+                ));
+            }
         }
         let endpoint = format!(
             "{api}/releases/{}",
@@ -201,6 +203,10 @@ mod tests {
     }
 
     impl Transport for GitHubFixture {
+        fn github_authenticated(&self) -> bool {
+            true
+        }
+
         fn fetch(&self, request: Request, _: &mut Traffic) -> Result<Response, Failure> {
             assert!(request.github_api);
             let etag = request.if_none_match;

@@ -38,6 +38,8 @@ pub struct Seed {
     #[serde(default, alias = "version_if_known")]
     pub version: Option<String>,
     #[serde(default)]
+    pub build_version: Option<String>,
+    #[serde(default)]
     pub format_guess: Option<String>,
     #[serde(default)]
     pub size: Option<u64>,
@@ -45,6 +47,8 @@ pub struct Seed {
     pub etag: Option<String>,
     #[serde(default)]
     pub minimum_system_version: Option<String>,
+    #[serde(default)]
+    pub platform: Option<String>,
     #[serde(default)]
     pub direct: bool,
 }
@@ -59,6 +63,8 @@ pub struct Candidate {
     pub format_guess: Option<String>,
     pub bundle_id: Option<String>,
     pub version: Option<String>,
+    #[serde(default)]
+    pub build_version: Option<String>,
     pub size: Option<u64>,
     pub etag: Option<String>,
     pub discovered_at: String,
@@ -85,6 +91,7 @@ impl Candidate {
                 .or_else(|| seed.format_guess.clone()),
             bundle_id: seed.bundle_id.clone(),
             version: seed.version.clone(),
+            build_version: seed.build_version.clone(),
             size: seed.size,
             etag: seed.etag.clone(),
             discovered_at: now(),
@@ -138,6 +145,10 @@ pub fn format_guess(name: &str) -> Option<&'static str> {
         (".rar", "rar"),
         (".7z", "7z"),
         (".nar", "nar"),
+        (".nar.zst", "nar"),
+        (".nar.xz", "nar"),
+        (".nar.bz2", "nar"),
+        (".nar.gz", "nar"),
     ]
     .into_iter()
     .find_map(|(extension, kind)| name.ends_with(extension).then_some(kind))

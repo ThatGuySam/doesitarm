@@ -2,6 +2,8 @@ mod autopkg;
 mod electron;
 mod github;
 mod installomator;
+mod macports;
+mod nix;
 mod sparkle;
 mod tauri;
 mod url_list;
@@ -31,6 +33,8 @@ pub enum ConnectorId {
     SparkleAppcasts,
     Electron,
     Tauri,
+    Macports,
+    Nix,
     UrlList,
 }
 
@@ -43,6 +47,8 @@ impl ConnectorId {
             Self::SparkleAppcasts => &sparkle::Sparkle,
             Self::Electron => &electron::Electron,
             Self::Tauri => &tauri::Tauri,
+            Self::Macports => &macports::MacPorts,
+            Self::Nix => &nix::Nix,
             Self::UrlList => &url_list::UrlList,
         }
     }
@@ -55,6 +61,8 @@ impl ConnectorId {
             Self::SparkleAppcasts => "sparkle.rs",
             Self::Electron => "electron.rs",
             Self::Tauri => "tauri.rs",
+            Self::Macports => "macports.rs",
+            Self::Nix => "nix.rs",
             Self::UrlList => "url_list.rs",
         }
     }
@@ -74,7 +82,9 @@ impl fmt::Display for ConnectorId {
 
 pub struct Discovery {
     pub seed: Seed,
-    pub candidates: Result<Vec<Candidate>, Failure>,
+    pub seed_index: usize,
+    pub candidate_index: usize,
+    pub candidate: Result<Candidate, Failure>,
     pub traffic: Traffic,
 }
 
@@ -94,21 +104,40 @@ pub trait Connector: Sync {
         transport: &'a dyn Transport,
         cache: Option<&'a Path>,
     ) -> Box<dyn Iterator<Item = Discovery> + 'a> {
-        Box::new(seeds.map(move |(seed, error)| {
-            let mut context = Context::new(transport, cache);
-            let candidates = match error {
-                Some(error) => Err(error),
-                None if seed.direct => self
-                    .direct(&seed, &seed.url)
-                    .map(|candidate| vec![candidate]),
-                None => self.discover_one(&seed, &mut context),
-            };
-            Discovery {
-                seed,
-                candidates,
-                traffic: context.traffic,
-            }
-        }))
+        Box::new(
+            seeds
+                .enumerate()
+                .flat_map(move |(seed_index, (seed, error))| {
+                    let mut context = Context::new(transport, cache);
+                    let found = match error {
+                        Some(error) => Err(error),
+                        None if seed.direct => self
+                            .direct(&seed, &seed.url)
+                            .map(|candidate| vec![candidate]),
+                        None => self.discover_one(&seed, &mut context),
+                    };
+                    let items = match found {
+                        Ok(candidates) if !candidates.is_empty() => {
+                            candidates.into_iter().map(Ok).collect()
+                        }
+                        Ok(_) => vec![Err(Failure::new(
+                            "no_mac_assets",
+                            "discovery returned no candidates",
+                        ))],
+                        Err(error) => vec![Err(error)],
+                    };
+                    items
+                        .into_iter()
+                        .enumerate()
+                        .map(move |(candidate_index, candidate)| Discovery {
+                            seed: seed.clone(),
+                            seed_index: seed_index + 1,
+                            candidate_index,
+                            candidate,
+                            traffic: std::mem::take(&mut context.traffic),
+                        })
+                }),
+        )
     }
 
     fn resolve(
@@ -158,6 +187,21 @@ impl<'a> Context<'a> {
         github_api: bool,
         limit: usize,
     ) -> Result<Response, Failure> {
+        self.get_metadata(target, github_api, BodyMode::Metadata(limit), limit)
+    }
+
+    fn directory(&mut self, target: &str) -> Result<Response, Failure> {
+        const LIMIT: usize = 2 * 1024 * 1024;
+        self.get_metadata(target, false, BodyMode::Directory(LIMIT), LIMIT)
+    }
+
+    fn get_metadata(
+        &mut self,
+        target: &str,
+        github_api: bool,
+        mode: BodyMode,
+        limit: usize,
+    ) -> Result<Response, Failure> {
         let url = public_url(target)?;
         if sensitive_url(&url) {
             return Err(Failure::new(
@@ -165,12 +209,12 @@ impl<'a> Context<'a> {
                 "credential-bearing URL requires a separate workflow",
             ));
         }
-        let key = format!("{}\n{}\n{}", url, github_api, limit);
+        let key = format!("{}\n{}\n{:?}", url, github_api, mode);
         let path = self
             .cache
             .map(|dir| dir.join(format!("{}.json", crate::digest(&key))));
         let cached = path.as_ref().and_then(|p| read_cache(p, limit).ok());
-        let mut request = Request::new(url.clone(), BodyMode::Metadata(limit));
+        let mut request = Request::new(url.clone(), mode);
         request.if_none_match = cached.as_ref().map(|entry| entry.etag.clone());
         request.github_api = github_api;
         request.deadline = Some(self.deadline);
@@ -197,7 +241,9 @@ impl<'a> Context<'a> {
         let media_html = response
             .header("content-type")
             .is_some_and(|value| value.to_ascii_lowercase().starts_with("text/html"));
-        if looks_like_html(prefix) || media_html && !looks_like_feed(prefix) {
+        if !matches!(mode, BodyMode::Directory(_))
+            && (looks_like_html(prefix) || media_html && !looks_like_feed(prefix))
+        {
             return Err(
                 Failure::new("html_landing_page", "metadata endpoint served HTML")
                     .with_http(response.evidence(&url)),

@@ -36,7 +36,7 @@ mod tests {
                 &Offline,
                 None,
             )
-            .map(|entry| entry.candidates.unwrap().pop().unwrap())
+            .map(|entry| entry.candidate.unwrap())
             .collect();
         assert_eq!(candidates[0].format_guess.as_deref(), Some("zip"));
         assert_eq!(candidates[1].bundle_id.as_deref(), Some("example.viewer"));

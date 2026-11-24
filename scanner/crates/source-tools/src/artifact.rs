@@ -64,6 +64,8 @@ pub struct Probe {
     pub reachable: bool,
     pub method: Option<String>,
     pub status: Option<u16>,
+    #[serde(default)]
+    pub head_status: Option<u16>,
     pub final_url: Option<String>,
     pub content_length: Option<u64>,
     pub bytes_total: Option<u64>,
@@ -189,6 +191,7 @@ fn probe(
         reachable: matches!(response.status, 200..=299),
         method: Some("GET bytes=0-0".into()),
         status: Some(response.status),
+        head_status: None,
         final_url: Some(recorded_url(response.url.as_str())),
         content_length: length,
         bytes_total: range
@@ -198,6 +201,34 @@ fn probe(
         range_supported: Some(false),
         etag: response.header("etag").map(str::to_owned),
     };
+    if matches!(response.status, 400 | 405 | 416)
+        && !response.header("allow").is_some_and(|allow| {
+            allow
+                .split(',')
+                .any(|method| method.trim().eq_ignore_ascii_case("POST"))
+        })
+    {
+        let mut head = Request::new(original.clone(), BodyMode::Head);
+        head.deadline = Some(deadline);
+        if let Ok(headers) = transport.fetch(head, &mut outcome.traffic)
+            && (200..300).contains(&headers.status)
+            && !is_html(&headers)
+        {
+            outcome.probe.reachable = true;
+            outcome.probe.head_status = Some(headers.status);
+            outcome.probe.method = Some("GET bytes=0-0; HEAD".into());
+            outcome.probe.content_length = headers
+                .header("content-length")
+                .and_then(|length| length.parse().ok());
+            outcome.probe.bytes_total = outcome.probe.content_length;
+            outcome.probe.accept_ranges = headers.header("accept-ranges").map(str::to_owned);
+            outcome.probe.etag = headers.header("etag").map(str::to_owned);
+            return Err(Failure::new(
+                "no_range_support",
+                "HEAD succeeded but the range probe was rejected",
+            ));
+        }
+    }
     response.require_success(original)?;
     if is_html(&response) {
         outcome.probe.reachable = false;
@@ -375,6 +406,11 @@ fn classify(result: &ScanResult, candidate: &Candidate) -> Option<Failure> {
     }
     let observed = result.error.as_deref().unwrap_or_default();
     let class = match result.status {
+        Status::Unsupported | Status::Invalid
+            if candidate.format_guess.as_deref() == Some("nar") =>
+        {
+            "unsupported_container:nar".into()
+        }
         Status::BudgetExhausted => "budget_hit".into(),
         Status::LimitReached => "scan_limit".into(),
         Status::Invalid => "invalid_container".into(),

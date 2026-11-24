@@ -68,7 +68,7 @@ mkdir "$scratch/control"
 git -c init.defaultBranch=master init --quiet --bare "$scratch/control/compare.git"
 cp -- "$trusted" "$scratch/control/baseline-sources"
 
-agent_cmd=${AGENT_CMD:-'codex --ask-for-approval never exec --ephemeral --sandbox workspace-write - < "$1"'}
+agent_cmd=${AGENT_CMD:-'"${HEAL_AGENT_BIN:-codex}" --ask-for-approval never exec --ephemeral --sandbox workspace-write - < "$1"'}
 agent_bin=
 if [[ -n ${HEAL_AGENT_BIN:-} ]]; then
     agent_bin=$(realpath -e -- "$HEAL_AGENT_BIN")
@@ -199,10 +199,18 @@ attempt() {
     cp -- "$task" "$job/inputs/task.md"
     cp -- "$fixture" "$job/inputs/replay.json"
     cp -- "$scratch/control/baseline-sources" "$job/inputs/baseline-sources"
-    if ! sandbox 8 "$job/validate" "$job/inputs" "$job/baseline.log" "$job/inputs/baseline-sources" verify \
-        --task "$job/inputs/task.md" --fixture "$job/inputs/replay.json" --expect-failure; then
+    local sample reproduced=
+    for sample in 1 2 3; do
+        seconds=$(remaining) || break
+        if (( seconds > 8 )); then seconds=8; fi
+        if sandbox "$seconds" "$job/validate" "$job/inputs" "$job/baseline.log" "$job/inputs/baseline-sources" verify \
+            --task "$job/inputs/task.md" --fixture "$job/inputs/replay.json" --sample "$sample" --expect-failure; then
+            reproduced=$sample
+            break
+        fi
+    done
+    if [[ -z $reproduced ]]; then
         log "$class" skipped baseline_did_not_reproduce_or_sandbox_unavailable
-        sed -n '1,12p' "$job/baseline.log" >&2
         return
     fi
     snapshot "$job/agent"
@@ -228,15 +236,24 @@ attempt() {
     git -C "$repo" archive "$revision" | tar -x -C "$job/validate"
     GIT_CEILING_DIRECTORIES="$job" git -C "$job/validate" apply -- "$job/candidate.patch"
     seconds=$(remaining) || { log "$class" reverted budget_elapsed; return; }
-    if ! sandbox "$seconds" "$job/validate" "$job/inputs" "$job/validate.log" \
+    local rejected
+    if sandbox "$seconds" "$job/validate" "$job/inputs" "$job/validate.log" \
         /usr/bin/bash -c '
             set -eu
             cd scanner
-            cargo test --locked --offline -j2 -p scan-core -p source-tools
-            cargo build --locked --offline -j2 -p source-tools --bin sources
-            "$CARGO_TARGET_DIR/debug/sources" verify --task "$1" --fixture "$2"
-        ' source-heal "$job/inputs/task.md" "$job/inputs/replay.json"; then
-        log "$class" reverted tests_or_verification_failed
+            cargo test --locked --offline -j2 -p scan-core -p source-tools || exit 71
+            cargo build --locked --offline -j2 -p source-tools --bin sources || exit 72
+            "$CARGO_TARGET_DIR/debug/sources" verify --task "$1" --fixture "$2" --sample "$3" || exit 73
+        ' source-heal "$job/inputs/task.md" "$job/inputs/replay.json" "$reproduced"; then
+        :
+    else
+        case $? in
+            71) rejected=rust_tests_failed ;;
+            72) rejected=scanner_build_failed ;;
+            73) rejected=replay_not_fixed ;;
+            *) rejected=sandbox_or_budget_failed ;;
+        esac
+        log "$class" reverted "$rejected"
         tail -n 24 "$job/validate.log" >&2
         return
     fi

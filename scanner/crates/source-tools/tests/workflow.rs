@@ -157,3 +157,29 @@ fn feeds_scan_core_only_the_requested_ranges_and_exports_verified_architecture()
     assert!(rows[0]["native_apple_silicon"].is_null()); // Core did not inventory all bundled helpers.
     assert_eq!(rows[0]["bytes_read"], summary.bytes_read);
 }
+
+#[test]
+fn head_fallback_describes_the_artifact_without_starting_a_scan() {
+    use source_tools::artifact::inspect;
+
+    let fixture = Fixture::open(&fixture_path("range-errors.json")).unwrap();
+    let connector = ConnectorId::UrlList.connector();
+    let options = ScanOptions {
+        scan_ranges: true,
+        ..ScanOptions::default()
+    };
+    let head_url = "https://downloads.example.org/head-only.zip";
+    let candidate = connector.direct(&Default::default(), head_url).unwrap();
+    let result = inspect(&fixture, &candidate, options);
+    assert!(result.probe.reachable);
+    assert_eq!(result.probe.head_status, Some(200));
+    assert_eq!(result.probe.bytes_total, Some(700));
+    assert!(result.result.is_none());
+    assert_eq!(result.failure.unwrap().class, "no_range_support");
+
+    let post_url = "https://downloads.example.org/post-only.zip";
+    let candidate = connector.direct(&Default::default(), post_url).unwrap();
+    let result = inspect(&fixture, &candidate, options);
+    assert_eq!(result.failure.unwrap().class, "post_required");
+    assert_eq!(result.traffic.requests, 1);
+}

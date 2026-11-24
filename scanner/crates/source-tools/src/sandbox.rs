@@ -29,8 +29,9 @@ pub fn print_filter() -> io::Result<()> {
 
     let forbidden = [
         libc::SYS_socket,
-        libc::SYS_socketpair,
         libc::SYS_connect,
+        // Anonymous socketpair() is used by Rust process startup. Disallow
+        // explicit destination sends, including from a Unix datagram pair.
         libc::SYS_sendto,
         libc::SYS_sendmsg,
         libc::SYS_sendmmsg,

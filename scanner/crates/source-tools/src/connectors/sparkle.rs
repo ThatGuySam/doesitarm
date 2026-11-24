@@ -125,7 +125,10 @@ impl Sparkle {
                     } else {
                         observed.name.clone()
                     },
-                    version: display.or(build).or_else(|| observed.version.clone()),
+                    version: display
+                        .or_else(|| build.clone())
+                        .or_else(|| observed.version.clone()),
+                    build_version: build.or_else(|| observed.build_version.clone()),
                     size: enclosure
                         .attribute("length")
                         .and_then(|value| value.parse().ok()),
@@ -225,6 +228,7 @@ mod tests {
         let app = &candidates[0];
         assert_eq!(app.url, "https://example.org/releases/files/Viewer.zip");
         assert_eq!(app.version.as_deref(), Some("2.1"));
+        assert_eq!(app.build_version.as_deref(), Some("2100"));
         assert_eq!(app.minimum_system_version.as_deref(), Some("12.0"));
         assert_eq!(app.size, Some(42365));
         assert_eq!(app.bundle_id.as_deref(), Some("org.example.viewer"));

@@ -11,7 +11,7 @@ use scan_core::ScanResult;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
-    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap},
     fs::{self, File, OpenOptions},
     io::{BufRead, BufReader, Read, Write},
     path::{Path, PathBuf},
@@ -68,6 +68,12 @@ struct Record {
     failure: Option<FailureRecord>,
     #[serde(default)]
     discovered: bool,
+    #[serde(default = "one")]
+    resolution_size: usize,
+}
+
+fn one() -> usize {
+    1
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -107,6 +113,8 @@ struct Row {
     discovery_bytes_read: u64,
     discovery_requests: u64,
     minimum_system_version_from_feed: Option<String>,
+    #[serde(default)]
+    source_build_version: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -158,6 +166,10 @@ struct Duplicate {
     name: String,
     reason: String,
     kept_candidate_id: String,
+    #[serde(default)]
+    discovery_bytes_read: u64,
+    #[serde(default)]
+    discovery_requests: u64,
 }
 
 #[derive(Default)]
@@ -199,6 +211,8 @@ impl Seen {
             name: candidate.name.clone(),
             reason: reason.into(),
             kept_candidate_id: original.clone(),
+            discovery_bytes_read: 0,
+            discovery_requests: 0,
         })
     }
 
@@ -232,6 +246,7 @@ pub struct Summary {
     pub by_failure_class: BTreeMap<String, usize>,
     pub bytes_read: u64,
     pub discovery_bytes_read: u64,
+    pub discovery_requests: u64,
     pub requests: u64,
     pub bytes_per_app_median: Option<u64>,
     pub bytes_per_app_p95: Option<u64>,
@@ -245,7 +260,11 @@ impl Summary {
         let mut bytes = Vec::new();
         for record in records {
             summary.discovered += usize::from(record.discovered);
-            summary.duplicate += usize::from(record.duplicate.is_some());
+            if let Some(duplicate) = record.duplicate {
+                summary.duplicate += 1;
+                summary.discovery_bytes_read += duplicate.discovery_bytes_read;
+                summary.discovery_requests += duplicate.discovery_requests;
+            }
             if let Some(failure) = record.failure {
                 summary.failed += 1;
                 summary.discovery_failed += usize::from(!record.discovered);
@@ -263,6 +282,7 @@ impl Summary {
                 }
                 summary.bytes_read += row.bytes_read;
                 summary.discovery_bytes_read += row.discovery_bytes_read;
+                summary.discovery_requests += row.discovery_requests;
                 summary.requests += row.requests;
                 *summary.by_status.entry(row.status).or_default() += 1;
             }
@@ -284,7 +304,7 @@ impl Summary {
 struct Journal {
     file: File,
     records: Vec<Record>,
-    keys: HashSet<String>,
+    keys: HashMap<String, usize>,
     seen: Seen,
 }
 
@@ -317,10 +337,13 @@ impl Journal {
             file.set_len(complete)?;
             file.sync_data()?;
         }
-        let mut keys = HashSet::new();
+        let mut keys = HashMap::new();
         let mut seen = Seen::default();
         for record in &records {
-            if !keys.insert(record.key.clone()) {
+            if keys
+                .insert(record.key.clone(), record.resolution_size)
+                .is_some()
+            {
                 return Err("checkpoint contains duplicate events".into());
             }
             if let Some(identity) = &record.identity {
@@ -336,14 +359,14 @@ impl Journal {
     }
 
     fn append(&mut self, record: Record) -> AnyResult<()> {
-        if self.keys.contains(&record.key) {
+        if self.keys.contains_key(&record.key) {
             return Err("duplicate checkpoint event".into());
         }
         let mut line = serde_json::to_vec(&record)?;
         line.push(b'\n');
         self.file.write_all(&line)?;
         self.file.sync_data()?;
-        self.keys.insert(record.key.clone());
+        self.keys.insert(record.key.clone(), record.resolution_size);
         if let Some(identity) = &record.identity {
             self.seen.insert(identity);
         }
@@ -513,23 +536,22 @@ pub fn run(
     let mut consumed = 0;
     let mut last_export = journal.records.len();
     let mut failed = false;
-    let mut input_index = 0;
     let mut seeds = connector.discover(Box::new(seeds), transport, config.cache.as_deref());
     while consumed < config.limit && !transport.cancelled() {
         let Some(discovered) = seeds.next() else {
             break;
         };
-        input_index += 1;
+        let input_index = discovered.seed_index;
         let mut discovery_traffic = discovered.traffic;
-        let candidates = match discovered.candidates {
-            Ok(candidates) => candidates,
+        let candidate = match discovered.candidate {
+            Ok(candidate) => candidate,
             Err(error) => {
-                consumed += 1;
                 if error.class == "cancelled" {
                     break;
                 }
+                consumed += 1;
                 let key = digest(&format!("{}:{input_index}:discover", config.connector));
-                if !journal.keys.contains(&key) {
+                if !journal.keys.contains_key(&key) {
                     journal.append(seed_failure(
                         config,
                         key,
@@ -543,88 +565,94 @@ pub fn run(
                 continue;
             }
         };
-        for (index, candidate) in candidates.into_iter().enumerate() {
+        let key = digest(&format!(
+            "{}:{input_index}:{}:{}",
+            config.connector,
+            discovered.candidate_index,
+            candidate.id()
+        ));
+        if let Some(&count) = journal.keys.get(&key) {
+            let wanted = count.min(config.limit - consumed);
+            if (1..wanted).all(|index| journal.keys.contains_key(&alternative_key(&key, index))) {
+                consumed += wanted;
+                continue;
+            }
+        }
+        let mut context = Context::new(transport, config.cache.as_deref());
+        let resolved = connector.resolve(&candidate, &mut context);
+        discovery_traffic.bytes += context.traffic.bytes;
+        discovery_traffic.requests += context.traffic.requests;
+        let resolved = match resolved {
+            Ok(candidates) if !candidates.is_empty() => candidates,
+            other => {
+                let error = other.err().unwrap_or_else(|| {
+                    Failure::new("no_mac_assets", "resolver produced no direct artifacts")
+                });
+                if error.class == "cancelled" {
+                    break;
+                }
+                if journal.keys.contains_key(&key) {
+                    return Err(
+                        "partially completed resolver no longer provides its pinned alternatives"
+                            .into(),
+                    );
+                }
+                consumed += 1;
+                journal.append(seed_failure(
+                    config,
+                    key,
+                    &candidate.seed,
+                    Some(&candidate),
+                    error,
+                    "resolve",
+                    &discovery_traffic,
+                ))?;
+                continue;
+            }
+        };
+        let count = resolved.len();
+        for (index, candidate) in resolved.into_iter().enumerate() {
             if consumed >= config.limit || transport.cancelled() {
                 break;
             }
-            let key = digest(&format!(
-                "{}:{input_index}:{index}:{}",
-                config.connector,
-                candidate.id()
-            ));
-            if journal.keys.contains(&key) {
-                consumed += 1;
+            consumed += 1;
+            let key = alternative_key(&key, index);
+            if journal.keys.contains_key(&key) {
                 continue;
             }
-            let mut context = Context::new(transport, config.cache.as_deref());
-            let resolved = connector.resolve(&candidate, &mut context);
-            discovery_traffic.bytes += context.traffic.bytes;
-            discovery_traffic.requests += context.traffic.requests;
-            let resolved = match resolved {
-                Ok(candidates) if !candidates.is_empty() => candidates,
-                other => {
-                    let error = other.err().unwrap_or_else(|| {
-                        Failure::new("no_mac_assets", "resolver produced no direct artifacts")
-                    });
-                    if error.class == "cancelled" {
-                        break;
-                    }
-                    consumed += 1;
-                    journal.append(seed_failure(
-                        config,
-                        key,
-                        &candidate.seed,
-                        Some(&candidate),
-                        error,
-                        "resolve",
-                        &discovery_traffic,
-                    ))?;
-                    discovery_traffic = Traffic::default();
-                    continue;
-                }
-            };
-            for (alternative, candidate) in resolved.into_iter().enumerate() {
-                if consumed >= config.limit || transport.cancelled() {
-                    break;
-                }
-                consumed += 1;
-                let key = if alternative == 0 {
-                    key.clone()
-                } else {
-                    digest(&format!("{key}:{alternative}"))
-                };
-                if journal.keys.contains(&key) {
-                    continue;
-                }
-                let identity = Identity::from_candidate(&candidate);
-                if let Some(duplicate) = journal.seen.check(&identity, &candidate, config.connector)
-                {
-                    journal.append(Record {
-                        key,
-                        source: config.connector,
-                        identity: None,
-                        duplicate: Some(duplicate),
-                        result: None,
-                        failure: None,
-                        discovered: true,
-                    })?;
-                    continue;
-                }
-                // Reserve before starting both workers so completion order cannot change deduplication.
-                journal.seen.insert(&identity);
-                pending.push((
+            let identity = Identity::from_candidate(&candidate);
+            let traffic = std::mem::take(&mut discovery_traffic);
+            if let Some(mut duplicate) = journal.seen.check(&identity, &candidate, config.connector)
+            {
+                duplicate.discovery_bytes_read = traffic.bytes;
+                duplicate.discovery_requests = traffic.requests;
+                journal.append(Record {
                     key,
-                    identity,
-                    candidate,
-                    std::mem::take(&mut discovery_traffic),
-                ));
-                if pending.len() == 2 {
-                    failed |= flush(&mut pending, &mut journal, transport, config)?;
-                }
-                if journal.records.len() >= last_export + 25 {
-                    journal.export(config, false, 0)?;
-                    last_export = journal.records.len();
-                }
+                    source: config.connector,
+                    identity: None,
+                    duplicate: Some(duplicate),
+                    result: None,
+                    failure: None,
+                    discovered: true,
+                    resolution_size: count,
+                })?;
+                continue;
+            }
+            // Reserve before starting both workers so completion order cannot change deduplication.
+            journal.seen.insert(&identity);
+            pending.push(ScanJob {
+                key,
+                identity,
+                candidate,
+                traffic,
+                resolution_size: count,
+            });
+            if pending.len() == 2 {
+                failed |= flush(&mut pending, &mut journal, transport, config)?;
+            }
+            if journal.records.len() >= last_export + 25 {
+                journal.export(config, false, 0)?;
+                last_export = journal.records.len();
             }
         }
     }
@@ -632,7 +660,21 @@ pub fn run(
     journal.export(config, transport.cancelled() || failed, robots_bytes())
 }
 
-type ScanJob = (String, Identity, Candidate, Traffic);
+fn alternative_key(root: &str, index: usize) -> String {
+    if index == 0 {
+        root.into()
+    } else {
+        digest(&format!("{root}:{index}"))
+    }
+}
+
+struct ScanJob {
+    key: String,
+    identity: Identity,
+    candidate: Candidate,
+    traffic: Traffic,
+    resolution_size: usize,
+}
 
 fn flush(
     jobs: &mut Vec<ScanJob>,
@@ -645,10 +687,10 @@ fn flush(
     let completed = thread::scope(|scope| {
         let handles: Vec<_> = jobs
             .into_iter()
-            .map(|(key, identity, candidate, traffic)| {
+            .map(|job| {
                 scope.spawn(move || {
-                    let outcome = artifact::inspect(transport, &candidate, config.options);
-                    (key, identity, candidate, traffic, outcome)
+                    let outcome = artifact::inspect(transport, &job.candidate, config.options);
+                    (job, outcome)
                 })
             })
             .collect();
@@ -657,7 +699,7 @@ fn flush(
             .map(|handle| handle.join().map_err(|_| "scanner worker panicked"))
             .collect::<Result<Vec<_>, _>>()
     })?;
-    for (key, identity, candidate, traffic, outcome) in completed {
+    for (job, outcome) in completed {
         if outcome
             .failure
             .as_ref()
@@ -666,9 +708,16 @@ fn flush(
             cancelled = true;
             continue;
         }
-        journal.append(scanned(
-            config, key, identity, &candidate, &traffic, outcome,
-        ))?;
+        let mut row = scanned(
+            config,
+            job.key,
+            job.identity,
+            &job.candidate,
+            &job.traffic,
+            outcome,
+        );
+        row.resolution_size = job.resolution_size;
+        journal.append(row)?;
     }
     Ok(cancelled)
 }
@@ -716,6 +765,7 @@ fn seed_failure(
         result: Some(row),
         failure: Some(failure),
         discovered: candidate.is_some(),
+        resolution_size: 1,
     }
 }
 
@@ -746,6 +796,7 @@ fn scanned(
     row.scanned = result.is_some();
     row.budget_attempts = outcome.attempts;
     row.minimum_system_version_from_feed = candidate.minimum_system_version.clone();
+    row.source_build_version = candidate.build_version.clone();
     if let Some(result) = result {
         enrich(&mut row, result);
     }
@@ -792,6 +843,7 @@ fn scanned(
         result: Some(row),
         failure,
         discovered: true,
+        resolution_size: 1,
     }
 }
 
@@ -844,6 +896,7 @@ fn empty_row(
         discovery_bytes_read: 0,
         discovery_requests: 0,
         minimum_system_version_from_feed: None,
+        source_build_version: None,
     }
 }
 

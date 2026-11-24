@@ -56,6 +56,7 @@ impl Transport for Fixture {
         let mode = match request.mode {
             BodyMode::Head => "head".into(),
             BodyMode::Metadata(_) => "metadata".into(),
+            BodyMode::Directory(_) => "directory".into(),
             BodyMode::Robots => "robots".into(),
             BodyMode::Range { start, end } => format!("bytes={start}-{end}"),
         };
@@ -142,16 +143,18 @@ fn fixture_error(message: impl Into<String>) -> Failure {
 }
 
 fn decode_hex(value: &str) -> Result<Vec<u8>, Failure> {
-    let data = value.as_bytes().chunks_exact(2);
-    if !data.remainder().is_empty() {
+    let (pairs, remainder) = value.as_bytes().as_chunks::<2>();
+    if !remainder.is_empty() {
         return Err(fixture_error("invalid fixture hex length"));
     }
-    data.map(|pair| {
-        let byte = |value: u8| (value as char).to_digit(16).map(|n| n as u8);
-        byte(pair[0])
-            .zip(byte(pair[1]))
-            .map(|(a, b)| a * 16 + b)
-            .ok_or_else(|| fixture_error("invalid fixture hex"))
-    })
-    .collect()
+    pairs
+        .iter()
+        .map(|pair| {
+            let byte = |value: u8| (value as char).to_digit(16).map(|n| n as u8);
+            byte(pair[0])
+                .zip(byte(pair[1]))
+                .map(|(a, b)| a * 16 + b)
+                .ok_or_else(|| fixture_error("invalid fixture hex"))
+        })
+        .collect()
 }

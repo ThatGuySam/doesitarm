@@ -105,12 +105,33 @@ fn ranked<'a>(
 }
 
 fn samples<'a>(failures: &'a [&'a FailureRecord]) -> impl Iterator<Item = &'a FailureRecord> {
-    failures
+    let mut selected = Vec::new();
+    let mut groups = std::collections::HashSet::new();
+    let mut ids = std::collections::HashSet::new();
+    let ordered = failures
         .iter()
         .copied()
         .filter(|r| r.replay.is_some())
-        .chain(failures.iter().copied().filter(|r| r.replay.is_none()))
-        .take(3)
+        .chain(failures.iter().copied().filter(|r| r.replay.is_none()));
+    for sample in ordered.clone().filter(|row| row.replay.is_some()) {
+        if groups.insert((sample.source.to_string(), sample.stage.as_str()))
+            && ids.insert(&sample.candidate_id)
+        {
+            selected.push(sample);
+        }
+        if selected.len() == 3 {
+            return selected.into_iter();
+        }
+    }
+    for sample in ordered {
+        if ids.insert(&sample.candidate_id) {
+            selected.push(sample);
+        }
+        if selected.len() == 3 {
+            break;
+        }
+    }
+    selected.into_iter()
 }
 
 fn write_task(dir: &Path, class: &str, failures: &[&FailureRecord]) -> AnyResult<()> {
@@ -148,6 +169,9 @@ fn write_task(dir: &Path, class: &str, failures: &[&FailureRecord]) -> AnyResult
                 writeln!(file, "Replay requires a fresh public input.\n")?;
             }
             evidence(file, sample)?;
+        }
+        if let Some(hint) = next_step(class) {
+            writeln!(file, "## Investigation\n\n{hint}\n")?;
         }
         writeln!(file, "## Acceptance\n")?;
         writeln!(
@@ -202,6 +226,27 @@ fn command(path: &Path, index: usize) -> String {
     format!(
         "cargo run --locked --offline -j2 -p source-tools --bin sources -- verify --task '{quoted}' --sample {index}"
     )
+}
+
+fn next_step(class: &str) -> Option<&'static str> {
+    match class {
+        "robots_disallowed" | "source_policy" => Some(
+            "Check the current robots rules and the research access notes. Use a separately documented public publisher endpoint if allowed, or keep the source blocked and record the permission needed.",
+        ),
+        "needs_login" | "post_required" | "http_403" => Some(
+            "Check for a documented public distribution endpoint or publisher permission. Keep authentication and forms outside an unattended scan.",
+        ),
+        "budget_hit" => Some(
+            "Inspect the container prefix, index, and target selection. Demonstrate a bounded change that finds the expected metadata within the original tier.",
+        ),
+        "invalid_container" | "nested_container" => Some(
+            "Identify the exact container variant or failed structural check before changing the parser. Reduce the input to the smallest relevant header, table, or nested member.",
+        ),
+        "timeout" | "transport_error" => Some(
+            "Verify whether the failure also occurs on a permitted retry. Preserve the host delay, timeout, and byte budget in the regression.",
+        ),
+        _ => None,
+    }
 }
 
 fn patch_files(records: &[FailureRecord]) -> std::collections::BTreeSet<String> {

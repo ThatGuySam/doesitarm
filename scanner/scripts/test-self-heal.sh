@@ -10,6 +10,7 @@ case_repo="$scratch/checkout"
 run="$scratch/run"
 mkdir -p -- "$case_repo"
 git -C "$repo" archive HEAD | tar -x -C "$case_repo"
+cp -- "$repo/scanner/scripts/self-heal.sh" "$case_repo/scanner/scripts/self-heal.sh"
 git -C "$case_repo" init --quiet --initial-branch=master
 git -C "$case_repo" -c core.hooksPath=/dev/null add --all
 git -C "$case_repo" -c core.hooksPath=/dev/null -c user.name=Fixture -c user.email=fixture@example.org commit --quiet \
@@ -71,14 +72,25 @@ prefix = 'export ' if sys.argv[1] == 'good' else 'declare '
 replacement = anchor + f'\n            let line = line.strip_prefix("{prefix}").unwrap_or(line);'
 src.write_text(text.replace(anchor, replacement))
 PY
+prefix=declare
+if [[ $1 == good ]]; then prefix=export; fi
+cat >scanner/crates/source-tools/tests/fixtures/exported-recipe.json <<FIXTURE
+{"responses":[{"url":"https://example.org/viewer.sh","mode":"metadata","status":200,
+"body_text":"$prefix downloadURL='https://downloads.example.org/viewer.dmg'"}]}
+FIXTURE
 cat >scanner/crates/source-tools/tests/exported_recipe.rs <<'RUST'
-use source_tools::connectors::{ConnectorId, parse_seed};
+use source_tools::connectors::{ConnectorId, Context, parse_seed};
+use source_tools::triage::Fixture;
+use std::path::Path;
 
 #[test]
-fn accepts_a_public_recipe_seed() {
+fn resolves_literal_download_url_with_declaration() {
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/exported-recipe.json");
+    let fixture = Fixture::open(&path).unwrap();
     let seed = parse_seed("https://example.org/viewer.sh").unwrap();
-    assert_eq!(seed.url, "https://example.org/viewer.sh");
-    assert_eq!(ConnectorId::Installomator.to_string(), "installomator");
+    let connector = ConnectorId::Installomator.connector();
+    let rows = connector.discover_one(&seed, &mut Context::new(&fixture, None)).unwrap();
+    assert_eq!(rows[0].url, "https://downloads.example.org/viewer.dmg");
 }
 RUST
 STUB
@@ -91,7 +103,7 @@ for patch in bad good; do
         "$case_repo/scanner/scripts/self-heal.sh" "$run" --limit 1 --budget-secs 240
     if [[ $patch == bad ]]; then
         test -z "$(git -C "$case_repo" status --porcelain=v1)"
-        rg -q '"status":"reverted","detail":"tests_or_verification_failed"' "$run/heal-log.jsonl"
+        rg -q '"status":"reverted","detail":"replay_not_fixed"' "$run/heal-log.jsonl"
     else
         rg -q '"status":"kept","detail":"tests_and_replay_passed"' "$run/heal-log.jsonl"
         rg -q 'strip_prefix\("export "\)' "$case_repo/scanner/crates/source-tools/src/connectors/installomator.rs"
