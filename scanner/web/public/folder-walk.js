@@ -252,14 +252,15 @@ export async function walkFileList(files, options) {
     }
 
     const relative = parent && path.slice(parent.label.length + 1);
+    const size = file.size;
     if (parent) {
-      parent.size = (parent.size ?? 0) + file.size;
+      parent.size = (parent.size ?? 0) + size;
       bundleEntry(parent, relative, 'file', file);
     }
     if (ARCHIVE.test(name)) {
       parent?.nestedArtifacts.push(path);
       flow.job(fileJob(file, path, parent?.label));
-    } else if (!bundlePlist(relative) && file.size >= 4 && worthProbing(name)) {
+    } else if (!bundlePlist(relative) && size >= 4 && worthProbing(name)) {
       const wait = probes.add(() => file, path, parent);
       if (wait) await wait;
     }

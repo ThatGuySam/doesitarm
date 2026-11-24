@@ -271,7 +271,7 @@ async function scanBundle(job, progress, id, evidence) {
   const totalSize = plist.size + executable.size;
   const result = await scanFile(executable, path, (read, size, planned) =>
     progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned), evidence, true);
-  if (result.format && result.format !== 'macho') {
+  if (result.status !== 'script' && result.format && result.format !== 'macho') {
     result.status = 'invalid';
     result.error_class = 'executable_not_macho';
     result.error = 'CFBundleExecutable names a file that is not a Mach-O executable.';
