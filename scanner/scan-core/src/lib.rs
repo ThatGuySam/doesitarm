@@ -2,9 +2,11 @@
 #![forbid(unsafe_code)]
 
 mod apfs;
+mod bom;
 mod bundle;
 mod cpio;
 mod dmg;
+mod gzip_tail;
 mod hfs;
 mod inflate;
 mod macho;
@@ -109,6 +111,8 @@ pub struct ScanResult {
     pub min_macos: Option<String>,
     pub executable_name: Option<String>,
     pub executable_size: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bundle_metadata_source: Option<&'static str>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
     pub installer: Option<InstallerMetadata>,
@@ -131,6 +135,7 @@ impl ScanResult {
             min_macos: None,
             executable_name: None,
             executable_size: None,
+            bundle_metadata_source: None,
             candidate_executables: Vec::new(),
             installer: None,
             bytes_read: 0,

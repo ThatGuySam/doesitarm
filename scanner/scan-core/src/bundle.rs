@@ -24,6 +24,14 @@ pub(crate) fn plist_bundle(path: &str) -> Option<&str> {
     bundle.ends_with(".app").then_some(bundle)
 }
 
+pub(crate) fn outer_app(root: &str) -> bool {
+    !root.trim_end_matches(".app").contains(".app/")
+}
+
+pub(crate) fn outer_plist(path: &str) -> Option<&str> {
+    plist_bundle(path).filter(|root| outer_app(root))
+}
+
 pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
     let parsed = Value::from_reader(Cursor::new(bytes))
         .map_err(|_| ScanError::Invalid("bundle Info.plist"))?;

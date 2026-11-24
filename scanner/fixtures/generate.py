@@ -11,7 +11,7 @@ from struct import pack
 
 from apfs_fixture import apfs_fixture
 from dmg_fixture import dmg_fixture
-from pkg_fixture import pkg_fixture
+from pkg_fixture import late_bom_fixture, pkg_fixture
 
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
@@ -92,6 +92,7 @@ def tar_fixture(path, *, binary_first=False, long_path=False):
                 archive.addfile(entry, io.BytesIO(data))
 
 
+
 if __name__ == "__main__":
     (ROOT / "thin.macho").write_bytes(thin())
     (ROOT / "fat.macho").write_bytes(fat())
@@ -108,3 +109,4 @@ if __name__ == "__main__":
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)
+    late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())

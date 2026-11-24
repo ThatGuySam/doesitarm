@@ -131,6 +131,31 @@ const TAR: &[u8] = include_bytes!("../../fixtures/app.tar.gz");
 const TAR_REVERSED: &[u8] = include_bytes!("../../fixtures/app-binary-first.tar.gz");
 
 #[test]
+fn pkg_recovers_bom_checked_late_plist_and_scans_the_named_binary() {
+    let artifact = include_bytes!("../../fixtures/late-bom.pkg");
+    let budget = 600 * 1024;
+    let result = run(artifact, budget);
+    assert_bundle(&result);
+    assert_eq!(
+        result.bundle_metadata_source,
+        Some("bom_verified_gzip_cpio_tail")
+    );
+    assert!(result.bytes_read < budget);
+
+    let mut changed = artifact.to_vec();
+    let identifier = b"org.doesitarm.fixture</string>";
+    let at = changed
+        .windows(identifier.len())
+        .position(|window| window == identifier)
+        .unwrap();
+    changed[at] = b'x';
+    let rejected = run(&changed, budget);
+    assert!(matches!(rejected.status, Status::BudgetExhausted));
+    assert!(rejected.bundle_id.is_none());
+    assert!(rejected.bundle_metadata_source.is_none());
+}
+
+#[test]
 fn tar_stops_after_plist_and_exact_executable() {
     let result = run(TAR, u64::MAX);
     assert_eq!(result.format, Some("tar.gz"));

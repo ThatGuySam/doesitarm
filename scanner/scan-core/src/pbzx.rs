@@ -69,6 +69,50 @@ impl<S: ReadAt> Pbzx<S> {
         self.next_logical = end;
         Ok(result)
     }
+
+    pub(crate) async fn tail(&mut self) -> Result<Option<(u64, Vec<u8>)>> {
+        while self.next_packed < self.source.size() {
+            let chunk = self.next().await?;
+            if self.next_packed != self.source.size() {
+                continue;
+            }
+            let packed = chunk.packed.end - chunk.packed.start;
+            let expanded = chunk.logical.end - chunk.logical.start;
+            if packed > 4 * 1024 * 1024
+                || expanded > 16 * 1024 * 1024
+                || packed > self.source.remaining_budget() / 2
+            {
+                return Ok(None);
+            }
+            let bytes = self
+                .source
+                .read_at(chunk.packed.start, packed as usize)
+                .await?;
+            let data = if packed == expanded {
+                bytes
+            } else {
+                let mut decoder = XzStream::new_mem_limit(false, 32 * 1024);
+                let mut decoded = vec![0; expanded as usize + 1];
+                let update = decoder
+                    .process(&bytes, &mut decoded, Action::Finish)
+                    .map_err(|_| BAD_XZ)?;
+                if update.status != Status::StreamEnd
+                    || update.bytes_consumed != bytes.len()
+                    || update.bytes_produced != expanded as usize
+                {
+                    return Err(BAD_XZ);
+                }
+                decoded.truncate(expanded as usize);
+                decoded
+            };
+            let tail_len = data.len().min(512 * 1024);
+            return Ok(Some((
+                chunk.logical.end - tail_len as u64,
+                data[data.len() - tail_len..].to_vec(),
+            )));
+        }
+        Ok(None)
+    }
 }
 
 impl<S: ReadAt> ReadAt for Pbzx<S> {

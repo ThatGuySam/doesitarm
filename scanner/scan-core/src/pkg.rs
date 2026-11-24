@@ -1,7 +1,7 @@
 use crate::pbzx::Pbzx;
 use crate::{
-    InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Window, be16, be64, check_range,
-    cpio, inflate::Inflate,
+    InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Window, be16, be64, bom, bundle,
+    check_range, cpio, gzip_tail, inflate::Inflate, stream_bundle::StreamBundle,
 };
 use flate2::read::ZlibDecoder;
 use roxmltree::{Document, Node, ParsingOptions};
@@ -9,6 +9,8 @@ use std::io::Read;
 
 const MAX_TOC: u64 = 8 * 1024 * 1024;
 const MAX_METADATA: u64 = 2 * 1024 * 1024;
+const MAX_BOM: u64 = 8 * 1024 * 1024;
+const PREVIEW_BYTES: u64 = 256 * 1024;
 const TOC_ERROR: ScanError = ScanError::Invalid("XAR table of contents");
 
 struct Member<'a> {
@@ -40,11 +42,12 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
     let mut distribution = None;
     let mut package_infos = Vec::new();
     let mut payloads = Vec::new();
+    let mut boms = Vec::new();
     for file in root.descendants().filter(|node| node.has_tag_name("file")) {
         let Some(name) = field(file, "name") else {
             continue;
         };
-        if !matches!(name, "Distribution" | "PackageInfo" | "Payload") {
+        if !matches!(name, "Distribution" | "PackageInfo" | "Payload" | "Bom") {
             continue;
         }
         if field(file, "type") != Some("file") {
@@ -76,6 +79,7 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
             "Distribution" if distribution.is_none() => distribution = Some(member),
             "PackageInfo" => package_infos.push((file.parent(), member)),
             "Payload" => payloads.push((file.parent(), member)),
+            "Bom" => boms.push((file.parent(), member)),
             _ => {}
         }
     }
@@ -99,25 +103,145 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         read_metadata(input, member, out).await?;
     }
 
-    let (_, member) = selected.ok_or(ScanError::NotFound("Payload in flat PKG"))?;
+    let (parent, member) = selected.ok_or(ScanError::NotFound("Payload in flat PKG"))?;
     if member.encoding != "application/octet-stream" || member.packed != member.expanded {
         return Err(ScanError::Unsupported("XAR-level compressed PKG Payload"));
     }
-    let mut source = Window::new(input, member.offset, member.packed)?;
-    if source.size() < 6 {
+    if member.packed < 6 {
         return Err(ScanError::Invalid("short PKG Payload"));
     }
-    let magic = source.read_at(0, 6).await?;
-    if magic.starts_with(b"\x1f\x8b") {
-        return cpio::scan(&mut Inflate::gzip(source), out).await;
+    let magic = input.read_at(member.offset, 6).await?;
+    let kind = if magic.starts_with(b"\x1f\x8b") {
+        Payload::Gzip
+    } else if magic.starts_with(b"pbzx") {
+        Payload::Pbzx
+    } else if cpio::recognized(&magic) {
+        Payload::Cpio
+    } else {
+        return Err(ScanError::Unsupported("PKG Payload compression"));
+    };
+
+    let mut target = StreamBundle::default();
+    let budget = input.remaining_budget();
+    if matches!(kind, Payload::Gzip | Payload::Pbzx)
+        && member.packed > budget
+        && let Some((_, bom)) = boms.iter().find(|(container, _)| *container == parent)
+        && bom.packed <= MAX_BOM
+        && bom.expanded <= MAX_BOM
+        && budget > 2 * PREVIEW_BYTES + bom.packed + gzip_tail::TAIL_BYTES
+    {
+        let mut preview = ScanResult::new(out.total_size);
+        let source = Preview::new(Window::new(input, member.offset, member.packed)?);
+        let result = inspect_payload(source, kind, StreamBundle::default(), &mut preview).await;
+        if !matches!(result, Err(ScanError::Budget)) {
+            preview.installer = out.installer.take();
+            preview.format = out.format;
+            *out = preview;
+            return result;
+        }
+        // There is no reason to fetch a detached plist if the prefix already
+        // found it and is spending its remaining input on the executable.
+        if preview.executable_name.is_none()
+            && let Some((path, provenance)) = recover_target(input, kind, &member, bom, out).await
+        {
+            target = StreamBundle::with_target(path);
+            out.bundle_metadata_source = Some(provenance);
+        }
     }
-    if cpio::recognized(&magic) {
-        return cpio::scan(&mut source, out).await;
+
+    let source = Window::new(input, member.offset, member.packed)?;
+    inspect_payload(source, kind, target, out).await
+}
+
+#[derive(Clone, Copy)]
+enum Payload {
+    Cpio,
+    Gzip,
+    Pbzx,
+}
+
+async fn inspect_payload(
+    mut source: impl ReadAt,
+    kind: Payload,
+    target: StreamBundle,
+    out: &mut ScanResult,
+) -> Result<()> {
+    match kind {
+        Payload::Cpio => cpio::scan(&mut source, out).await,
+        Payload::Gzip => cpio::scan_with(&mut Inflate::gzip(source), target, out).await,
+        Payload::Pbzx => cpio::scan_with(&mut Pbzx::open(source).await?, target, out).await,
     }
-    if magic.starts_with(b"pbzx") {
-        return cpio::scan(&mut Pbzx::open(source).await?, out).await;
+}
+
+async fn recover_target(
+    input: &mut impl ReadAt,
+    kind: Payload,
+    payload: &Member<'_>,
+    bom: &Member<'_>,
+    out: &mut ScanResult,
+) -> Option<(String, &'static str)> {
+    let bom = read_small_member(input, bom, MAX_BOM).await.ok()??;
+    let expected = bom::late_plist(&bom)?;
+    let mut source = Window::new(input, payload.offset, payload.packed).ok()?;
+    let (bytes, evidence) = match kind {
+        Payload::Gzip => {
+            let span = source.size().min(gzip_tail::TAIL_BYTES);
+            let tail = source
+                .read_at(source.size() - span, span as usize)
+                .await
+                .ok()?;
+            (
+                gzip_tail::recover(&tail, &expected)?,
+                "bom_verified_gzip_cpio_tail",
+            )
+        }
+        Payload::Pbzx => {
+            let (start, tail) = Pbzx::open(source).await.ok()?.tail().await.ok()??;
+            let (_, bytes) = cpio::tail_plist(&tail, start, &expected)?;
+            (bytes.to_vec(), "bom_verified_pbzx_cpio_tail")
+        }
+        Payload::Cpio => return None,
+    };
+    let root = bundle::outer_plist(&expected.path)?;
+    let mut bundle = ScanResult::new(out.total_size);
+    let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
+    bundle.installer = out.installer.take();
+    bundle.format = out.format;
+    *out = bundle;
+    Some((target, evidence))
+}
+
+struct Preview<S> {
+    source: S,
+    remaining: u64,
+}
+
+impl<S> Preview<S> {
+    fn new(source: S) -> Self {
+        Self {
+            source,
+            remaining: PREVIEW_BYTES,
+        }
     }
-    Err(ScanError::Unsupported("PKG Payload compression"))
+}
+
+impl<S: ReadAt> ReadAt for Preview<S> {
+    fn size(&self) -> u64 {
+        self.source.size()
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.remaining.min(self.source.remaining_budget())
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        if len as u64 > self.remaining_budget() {
+            return Err(ScanError::Budget);
+        }
+        let bytes = self.source.read_at(offset, len).await?;
+        self.remaining -= len as u64;
+        Ok(bytes)
+    }
 }
 
 async fn read_metadata(
@@ -125,17 +249,8 @@ async fn read_metadata(
     member: &Member<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
-    if member.packed > MAX_METADATA || member.expanded > MAX_METADATA {
+    let Some(data) = read_small_member(input, member, MAX_METADATA).await? else {
         return Ok(());
-    }
-    let data = input.read_at(member.offset, member.packed as usize).await?;
-    let data = match member.encoding {
-        "application/octet-stream" if member.packed == member.expanded => data,
-        "application/x-gzip" => match expand_zlib(&data, member.expanded as usize) {
-            Ok(data) => data,
-            Err(_) => return Ok(()),
-        },
-        _ => return Ok(()),
     };
     let Ok(doc) = parse_xml(&data) else {
         return Ok(());
@@ -176,6 +291,22 @@ async fn read_metadata(
         meta.package_version = root.attribute("version").map(str::to_owned);
     }
     Ok(())
+}
+
+async fn read_small_member(
+    input: &mut impl ReadAt,
+    member: &Member<'_>,
+    limit: u64,
+) -> Result<Option<Vec<u8>>> {
+    if member.packed > limit || member.expanded > limit {
+        return Ok(None);
+    }
+    let data = input.read_at(member.offset, member.packed as usize).await?;
+    Ok(match member.encoding {
+        "application/octet-stream" if member.packed == member.expanded => Some(data),
+        "application/x-gzip" => expand_zlib(&data, member.expanded as usize).ok(),
+        _ => None,
+    })
 }
 
 fn expand_zlib(bytes: &[u8], expanded: usize) -> std::io::Result<Vec<u8>> {

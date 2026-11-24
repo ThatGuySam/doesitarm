@@ -35,7 +35,8 @@ for (const name of (await readdir(fixtures)).sort()) {
       const { bytesRead } = await handle.read(destination, 0, size, Number(offset));
       return destination.subarray(0, bytesRead);
     };
-    for (const budget of [0, 52, 64 * 1024 * 1024]) {
+    const budgets = name === 'late-bom.pkg' ? [0, 52, 600 * 1024, 64 * 1024 * 1024] : [0, 52, 64 * 1024 * 1024];
+    for (const budget of budgets) {
       const native = spawnSync(cli, ['scan', file, '--budget', String(budget), '--json'], {
         encoding: 'utf8',
       });
@@ -43,6 +44,10 @@ for (const name of (await readdir(fixtures)).sort()) {
       assert.ok([0, 1].includes(native.status), native.stderr);
       const expected = JSON.parse(native.stdout);
       if (budget === 64 * 1024 * 1024) assert.equal(expected.status, 'complete', name);
+      if (name === 'late-bom.pkg' && budget === 600 * 1024) {
+        assert.equal(expected.status, 'complete', name);
+        assert.equal(expected.bundle_metadata_source, 'bom_verified_gzip_cpio_tail');
+      }
       for (const [mode, reader] of [['sync', read], ['async', readAsync]]) {
         let reads = 0;
         let bytesRead = 0;

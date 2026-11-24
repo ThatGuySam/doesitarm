@@ -27,6 +27,13 @@ pub(crate) struct StreamBundle {
 }
 
 impl StreamBundle {
+    pub(crate) fn with_target(target: String) -> Self {
+        Self {
+            target: Some(target),
+            ..Self::default()
+        }
+    }
+
     pub(crate) async fn file(
         &mut self,
         source: &mut impl ReadAt,
@@ -48,7 +55,7 @@ impl StreamBundle {
                 .await?;
                 return Ok(true);
             }
-        } else if let Some(root) = bundle::plist_bundle(path).filter(|root| is_outer_app(root)) {
+        } else if let Some(root) = bundle::outer_plist(path) {
             out.bundle_path = Some(root.to_owned());
             if size > bundle::MAX_PLIST {
                 return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
@@ -68,7 +75,7 @@ impl StreamBundle {
         } else if path
             .rsplit_once("/Contents/MacOS/")
             .is_some_and(|(root, leaf)| {
-                root.ends_with(".app") && is_outer_app(root) && !leaf.contains('/')
+                root.ends_with(".app") && bundle::outer_app(root) && !leaf.contains('/')
             })
         {
             if self.candidates.len() == 64 {
@@ -110,8 +117,4 @@ impl StreamBundle {
             ScanError::NotFound("declared executable in sequential archive")
         }
     }
-}
-
-fn is_outer_app(root: &str) -> bool {
-    !root.trim_end_matches(".app").contains(".app/")
 }
