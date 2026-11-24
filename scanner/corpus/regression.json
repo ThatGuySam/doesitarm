@@ -1,0 +1,1676 @@
+{
+  "catalog_url": "https://formulae.brew.sh/api/cask.json",
+  "catalog_sha256": "78e2e5fc666464ff8857c5f5bbd58aad901c95381469eb4a249405911d895e72",
+  "entries": [
+    {
+      "cask": "claude",
+      "url": "https://downloads.claude.ai/releases/darwin/universal/6.28899.6/Claude-2f5fc59b2d1c672dd9dced86720c50f48cca0cf9.zip",
+      "version": "6.28899.6,2f5fc59b2d1c672dd9dced86720c50f48cca0cf9",
+      "sha256": "ae58c31858b41dd2a3bca78da26433f4f17c044ce3c2486128fb82a82e457f16",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Claude.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "codex-app",
+      "url": "https://persistent.oaistatic.com/codex-app-prod/Codex-darwin-arm64-26.623.141536.zip",
+      "version": "26.623.141536",
+      "sha256": "d948dc36b8358f5a2924b033fbf08398eea7860dc9e97cb5ab9b354490283a0a",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Codex.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "telegram",
+      "url": "https://osx.telegram.org/updates/Telegram-13.2.0.283494.app.zip",
+      "version": "13.2.0,283494",
+      "sha256": "614418f797eb875fafecfcbcc21cc23a61cfab98c70012cefe6b94a338478c91",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Telegram.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "cursor",
+      "url": "https://downloads.cursor.com/production/3eb8c13390837371c7c2f2013dc57fdbc802c753/darwin/arm64/Cursor-darwin-arm64.zip",
+      "version": "3.31.15,3eb8c13390837371c7c2f2013dc57fdbc802c753",
+      "sha256": "0a25a373ca8f4fbc365ec4661da68acd8c29a4123195cb4660b17bbf065ac54f",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Cursor.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "macwhisper",
+      "url": "https://cdn.macwhisper.com/macwhisper/MacWhisper-1594.zip",
+      "version": "15.11,1594",
+      "sha256": "0bffab6e82ca9b5d2d04d6683a98f65d2b04d9af4c190190a49a3166d3664f09",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "MacWhisper.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "visual-studio-code",
+      "url": "https://update.code.visualstudio.com/1.147.0/darwin-arm64/stable",
+      "version": "1.147.0",
+      "sha256": "149d944feb599b076b48406b174e1c3cd1d510e9d673854777a20a6f4116a59a",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Visual Studio Code.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "appcleaner",
+      "url": "https://www.freemacsoft.net/downloads/AppCleaner_3.7.zip",
+      "version": "3.7",
+      "sha256": "3d7fa6146fb57da955dca408587fc658ac14aeb86eda7907763ae66397c9e65e",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "AppCleaner.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "iterm2",
+      "url": "https://iterm2.com/downloads/stable/iTerm2-3_7_9.zip",
+      "version": "3.7.9",
+      "sha256": "beb96a1089b061c80e030101947aee13d54ba5e4058ad00b82e79633be29d3d2",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "iTerm.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "signal",
+      "url": "https://updates.signal.org/desktop/signal-desktop-mac-arm64-8.36.0.zip",
+      "version": "8.36.0",
+      "sha256": "2a5f42c7c9bd8fbb10ac082877832a76842ce82e4eb1389de335df11e13d08e3",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Signal.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "zed",
+      "url": "https://github.com/zed-industries/zed/releases/download/v1.29.3/Zed-aarch64.dmg",
+      "version": "1.29.3",
+      "sha256": "b692c9effdfcec874c47f56c3b27df069a63c6b3d23ecd070ffec9238a708bb8",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Zed.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "raycast",
+      "url": "https://x.raycast-releases.com/download?platform=macos&architecture=arm64&version=2.13.1.0",
+      "version": "2.13.1.0",
+      "sha256": "e62777491febe5bfadf461d3f9a1ce761c2e661e635bc13e6921a16d75660c77",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Raycast.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        }
+      ]
+    },
+    {
+      "cask": "warp",
+      "url": "https://app.warp.dev/download/brew?version=v0.2026.11.18.08.17.stable_04&package=dmg",
+      "version": "0.2026.11.18.08.17.stable_04",
+      "sha256": "ff5127346cb10c63b499ad177f2c3916848234001cebe23420b53f0313131969",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Warp.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "timing",
+      "url": "https://updates.timingapp.com/download/Timing-2026.6.1.dmg",
+      "version": "2026.6.1",
+      "sha256": "643b740355d6cbecfcdf8223bc6c244e12f7b414aa3334bc44452578a8309612",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Timing.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "little-snitch",
+      "url": "https://www.obdev.at/downloads/littlesnitch/LittleSnitch-6.5.dmg",
+      "version": "6.5",
+      "sha256": "a83763bbf416676231bcd9c414b16a36c31cc85c14aa0de43cabaf1ef97fa8ba",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Little Snitch.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "google-chrome",
+      "url": "https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg",
+      "version": "158.0.8127.89",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Google Chrome.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "firefox",
+      "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/160.0.1/mac/en-US/Firefox%20160.0.1.dmg",
+      "version": "160.0.1",
+      "sha256": "db9a522291d82cbe9a2b2922822def4db0a79d4fa3e614979039d705b13b1c25",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Firefox.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "rider",
+      "url": "https://download.jetbrains.com/rider/JetBrains.Rider-2026.3.0.1-aarch64.dmg",
+      "version": "2026.3.0.1,263.7307.325",
+      "sha256": "16ec16fc16a2cbaf32102086adf7f26182574d81ebed6dfc775ac3767ca8e5ab",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Rider.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "vlc",
+      "url": "https://get.videolan.org/vlc/3.0.24/macosx/vlc-3.0.24-arm64.dmg",
+      "version": "3.0.24",
+      "sha256": "64a89d93cdd30b0e97131743e246373db82d6826ea882d265d46d74b136da2b7",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "VLC.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "gimp",
+      "url": "https://download.gimp.org/gimp/v3.2/macos/gimp-3.2.8-arm64.dmg",
+      "version": "3.2.8",
+      "sha256": "06404a375106b7613ba3a14c7d8d9a7cbe18b9b9e2b2050bb72f3162cbcfc395",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "GIMP.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "slack",
+      "url": "https://downloads.slack-edge.com/desktop-releases/mac/arm64/4.53.292/Slack-4.53.292-macOS.dmg",
+      "version": "4.53.292",
+      "sha256": "b358a20e933a889e76faa46c581e3d9c59f036dd3be1692eb593db900646006a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Slack.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "alfred@5",
+      "url": "https://cachefly.alfredapp.com/Alfred_5.8.2_2353.tar.gz",
+      "version": "5.8.2,2353",
+      "sha256": "2ed591779a7afb41dc5770516d91ec7093d23371bc939862eb8c148f98519a59",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Alfred 5.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "gitbutler",
+      "url": "https://releases.gitbutler.com/releases/release/0.23.5-3373/macos/aarch64/GitButler.app.tar.gz",
+      "version": "0.23.5,3373",
+      "sha256": "783a91ef5da43e28fab6b672bf9e65d0d49e9671489daaac9646c5429d9122f4",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "GitButler.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "kunkun",
+      "url": "https://download.kunkun.sh/Kunkun-v0.1.37/kunkun_aarch64.app.tar.gz",
+      "version": "0.1.37",
+      "sha256": "d93fcacc2e8a1c364f1cfaa2be3b1664401e17ddf3a33c4e5caea7f4dd386aa1",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "kunkun.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "phoenix",
+      "url": "https://github.com/kasper/phoenix/releases/download/4.0.1/phoenix-4.0.1.tar.gz",
+      "version": "4.0.1",
+      "sha256": "7d194ca75f33f6c018fe8fb974e372544a61a058222d62d57e6c929fe91949c3",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Phoenix.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "openpencil",
+      "url": "https://github.com/open-pencil/open-pencil/releases/download/v0.17.0/OpenPencil_aarch64.app.tar.gz",
+      "version": "0.17.0",
+      "sha256": "a8d90e57335c05178e26c939e616f512d8a330a3b41bf6ea0813dbafcf7cb315",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "OpenPencil.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "zoom",
+      "url": "https://cdn.zoom.us/prod/7.2.5.90525/arm64/zoomusInstallerFull.pkg",
+      "version": "7.2.5.90525",
+      "sha256": "4c26ebed8bd29ce258ac9dbe0f2b327fad0a0734246ea588339a2cc5fd10533e",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "microsoft-teams",
+      "url": "https://statics.teams.cdn.office.net/production-osx/26289.204.5281.6363/MicrosoftTeams.pkg",
+      "version": "26289.204.5281.6363",
+      "sha256": "393e25369198068c2715f3f32ad200de712a74d9184934c39ce1d5c42b39cc2c",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "teamviewer",
+      "url": "https://dl.teamviewer.com/download/version_15x/update/15.82.6/TeamViewer.pkg",
+      "version": "15.82.6",
+      "sha256": "9acd5a6cefe859e81f85001b1b90279e02495f3829ced8df1a3b9d37f3d5bcf1",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "mullvad-vpn",
+      "url": "https://cdn.mullvad.net/app/desktop/releases/2026.5/MullvadVPN-2026.5.pkg",
+      "version": "2026.5",
+      "sha256": "7c68dd93ae01c1b56ce29c48b293a6ecb29ad61769ee90619887fa71a7dd867b",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "microsoft-auto-update",
+      "url": "https://res.public.onecdn.static.microsoft/mro1cdnstorage/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/Microsoft_AutoUpdate_4.86.26110224_Updater.pkg",
+      "version": "4.86.26110224",
+      "sha256": "9f0b5b7b697a187175aa86efb6aa83071d91d39a8d4bc8bd1ff9509cd6bc21a7",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "cursor-cli",
+      "url": "https://downloads.cursor.com/lab/2026.11.22-e9042b2/darwin/arm64/agent-cli-package.tar.gz",
+      "version": "2026.11.22-e9042b2",
+      "sha256": "92f39e448218897538bd801cdb01d69106ab37a86aaf3dc0e6b55159c79b75e2",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "altserver",
+      "url": "https://cdn.altstore.io/file/altstore/altserver/1_8_4.zip",
+      "version": "1.8.4",
+      "sha256": "3bfcf46e9f3d68ba9376325bb40f0b5e04fb37d8096be5cd8c618cf1cadae42e",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "AltServer.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "sketch@beta",
+      "url": "https://beta-download.sketch.com/sketch-2026.4.1-238351.zip",
+      "version": "2026.4.1,238351",
+      "sha256": "f45448ac873f7bd7f83990f8bf6ac1939fadf49f88f15c9653a68d2ce7d2327d",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Sketch Beta.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "unifi-identity-endpoint",
+      "url": "https://fw-download.ubnt.com/data/uid-identity-standard-desktop-app/4ee6-macOS-4.3.0-33561c14-bddd-500d-9fe7-2baa836bd457.pkg",
+      "version": "4.3.0,33561c14-bddd-500d-9fe7-2baa836bd457,4ee6",
+      "sha256": "b62b181d37fe5c3c1b9d794460b85c73eb784d446ec211f0d89a4e8d51802ede",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "bloom",
+      "url": "https://bloomapp.club/downloads/bloom/Bloom-v1.5.52.dmg",
+      "version": "1.5.52",
+      "sha256": "4a5cb55a2550270bbabb81c7a3cee6fe221156b56696b7777de7bb42d7c53f1f",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Bloom.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "monocle-app",
+      "url": "https://files.heyiam.dk/updates/monocle/Monocle-3-5-1.zip",
+      "version": "3.5.1",
+      "sha256": "6c80a580d1b2e16fd956212efc71fc7e78adf10071b5cd53d3d29103fbbfb439",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Monocle.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "devin-cli",
+      "url": "https://static.devin.ai/cli/3000.14.30821/devin-3000.14.30821-aarch64-apple-darwin.tar.gz",
+      "version": "3000.14.30821",
+      "sha256": "46ef1a75d8bd851665179e136b7e39ad597d3d7913b95d67fd2b88e9c8af0061",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "mailplane",
+      "url": "https://builds.mailplaneapp.com/Mailplane_4_4967.tbz",
+      "version": "4.3.16,4967",
+      "sha256": "093d9b8696e53655bc5f9bf3b3a5e439a630be72533dc73044586113977f16fc",
+      "expected_format": "tbz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Mailplane.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "dockfix",
+      "url": "https://www.dockfix.app/downloads/DockFix.dmg",
+      "version": "5.4.1",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "DockFix.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "metashapepro",
+      "url": "https://download.agisoft.com/metashape-pro_2_3_2.dmg",
+      "version": "2.3.2",
+      "sha256": "8b6829b9c49e4b34658d04c41913047b1cd9d3e16abcf70c92295c492dd4a2c0",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "MetashapePro.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "popchar",
+      "url": "https://storage.ergonis.com/apps/production/popchar/archive/PopChar_110.zip",
+      "version": "11.0",
+      "sha256": "ef47095bd1f8aac4419f10d23ed071b9b8475bb13322cc9c1ca91f54461002b7",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "PopChar.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "anka-build-cloud-registry",
+      "url": "https://downloads.veertu.com/anka/anka-registry-arm64-1.52.1-72c29153.pkg",
+      "version": "1.52.1-72c29153",
+      "sha256": "df7a3083d9bfd0f16a8f08e94a1970bd62a5ab69788d79fe9eebe3f9205c9803",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "segger-jlink",
+      "url": "https://www.segger.com/downloads/jlink/JLink_MacOSX_V996a_universal.pkg",
+      "version": "9.96a",
+      "sha256": "08c057da06599e1da722800c12c9ea874b07e59fe70bb37a8ab1e304722f9f6d",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "warp-agent-cli",
+      "url": "https://releases.warp.dev/stable/v0.2026.11.18.08.17.stable_04/tui/macos/aarch64/warp-tui-stable-macos-aarch64.tar.gz",
+      "version": "0.2026.11.18.08.17.stable_04",
+      "sha256": "eff016d3bb602bdad35eaac754b965837de23a1804d4de07e31154ad038349d8",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "komet",
+      "url": "https://zgcoder.net/software/komet/Komet_1.5.1_54.tar.xz",
+      "version": "1.5.1,54",
+      "sha256": "bce616503ab914cf9140dde87395a39a8069e008f71bee1467f0f85255a9b227",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Komet.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "browserstacklocal",
+      "url": "https://www.browserstack.com/local-testing/downloads/native-app/BrowserStackLocal.tar.gz",
+      "version": "3.7.8",
+      "sha256": "no_check",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "BrowserStackLocal.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "youku",
+      "url": "https://pcclient.download.youku.com/iku_electron_client/youkuclient_setup_9.5.6.1001.dmg",
+      "version": "9.5.6.1001",
+      "sha256": "760731a825c63be82f96a2b460125d844121a956334123e176398961b9670abf",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "优酷.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "tangleguard-cli",
+      "url": "https://tangleguard-cli-builds.s3.eu-central-1.amazonaws.com/v0.29.0/tangleguard-cli_0.29.0_aarch64-apple-darwin.tar.gz",
+      "version": "0.29.0",
+      "sha256": "ea4d064d145cde1838a1889b7cabceabf6773e247cb8769714ee5dc8a083fa45",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "gallery-remote",
+      "url": "https://www.ntwind.com/files/GalleryRemote_1.0.3-mac.dmg",
+      "version": "1.0.3",
+      "sha256": "0bdc00c57dcab2511ee0dba490796a77ea7526535626719ea764b79e2d4dc546",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Gallery Remote.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "enpass",
+      "url": "https://dl.enpass.io/stable/mac/package/6.12.8.2837/Enpass.pkg",
+      "version": "6.12.8.2837",
+      "sha256": "b3f4f96a925bf874132135b517a160db6d2281ea53fb2f8af95a7aeb86597d92",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "rightfont",
+      "url": "https://rightfontapp.com/update/rightfont.zip",
+      "version": "2026.1",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "RightFont.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "clipgrab",
+      "url": "https://download.clipgrab.org/ClipGrab-3.9.16.dmg",
+      "version": "3.9.16",
+      "sha256": "cb0b5b47ac8c3de64487994bd03519cd5f99a63221100ac97370138802e5dd2c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ClipGrab.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "network-weather",
+      "url": "https://pkgs.networkweather.com/macOS/NetworkWeather-1.3.3.119-Universal.pkg",
+      "version": "1.3.3,119",
+      "sha256": "366ac8a229e9698043f9c32cd0e9f65624d87ee26981432037b8c9238dbb7817",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "mumuplayer",
+      "url": "https://a11.gdl.netease.com/MuMuPlayer_1.10.1_default.tar.gz",
+      "version": "1.10.1",
+      "sha256": "cb94943a00aa9229fe3b1db8f77123988152b839defb7298be9f57cabbe0b0e3",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "MuMuPlayer.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        }
+      ]
+    },
+    {
+      "cask": "readyapi",
+      "url": "https://dl.eviware.com/ready-api/4.3.1/ReadyAPI-arm64-4.3.1.dmg",
+      "version": "4.3.1",
+      "sha256": "46eccd1e132460d5716c6b8f23ef4d605c8c6fd09eb7163df0c6e21d865cd4e8",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ReadyAPI-4.3.1.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "tripmode",
+      "url": "https://tripmode-updates.ch/app/TripMode-3.2.4-1385.zip",
+      "version": "3.2.4,1385",
+      "sha256": "2a5a21ac4c13b5a1a5d43e6aeb2b7588ea9af0116e41829fca19cf9752265410",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "TripMode.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "confluent-cli",
+      "url": "https://s3-us-west-2.amazonaws.com/confluent.cloud/confluent-cli/archives/4.83.0/confluent_4.83.0_darwin_arm64.tar.gz",
+      "version": "4.83.0",
+      "sha256": "5e3aeaf2d6ae58ffe16a0d628d438ebac9ce3e7f2e39e460faa09aae67c9820e",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "kindavim",
+      "url": "https://releases.kindavim.app/kindaVim.zip",
+      "version": "99",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "kindaVim.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "unite",
+      "url": "https://bzgdownloads.s3.amazonaws.com/Unite/Unite+6.6.zip",
+      "version": "6.6",
+      "sha256": "3b6e006e91d61694262c807598c7c4c62938fa642757083ef224cbce6e36d5ff",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Unite.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "monero-wallet",
+      "url": "https://downloads.getmonero.org/gui/monero-gui-mac-armv8-v0.18.5.4.dmg",
+      "version": "0.18.5.4",
+      "sha256": "d28c951bf84c71ad4d0ffa2ae5a72406b7f4f9b3c06dd5bbf007a0386a0c648c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "monero-wallet-gui.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "senadevicemanager",
+      "url": "https://firmware.sena.com/senabluetoothmanager/SENADeviceManagerForMAC-v4.4.20.pkg",
+      "version": "4.4.20",
+      "sha256": "5dd8f7538f4f9b7a0c1f8e892315f9338ddeb378749e7a6829ae169ffed5070e",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "sourcetree",
+      "url": "https://product-downloads.atlassian.com/software/sourcetree/ga/Sourcetree_4.2.21_326.zip",
+      "version": "4.2.21,326",
+      "sha256": "2d369e0266cae6ddc436e6af07d6bc56cbbadbe05153e2529a2046d29d0ba2f4",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Sourcetree.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "local@beta",
+      "url": "https://cdn.localwp.com/releases-beta/10.2.0+local-beta-7017/local-beta-10.2.0-b7017-mac-arm64.dmg",
+      "version": "10.2.0,7017",
+      "sha256": "166435b1beb0e161e0a474da5ffd1dd9c694a7345011f424462ebbf222eaf1b1",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Local Beta.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "spotify-soloist",
+      "url": "https://soloist-builds.spotifycdn.com/soloist_release_osx_arm64.tar.gz",
+      "version": "latest",
+      "sha256": "no_check",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        },
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "framer",
+      "url": "https://updates.framer.com/electron/darwin/arm64/Framer-2026.46.10.zip",
+      "version": "2026.46.10",
+      "sha256": "d5225e4ab58e736438c9a2b18cd66e12d0ed89848a237f7af752fb9fae14eda6",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Framer.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "soothe2",
+      "url": "https://oeksound.ams3.cdn.digitaloceanspaces.com/soothe2_v133_Mac.pkg",
+      "version": "1.3.3",
+      "sha256": "ee27005e6a55ac300f9af51dd0897ed707636566f7f6b7bbe02a7c8a5e396aae",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "pictogram",
+      "url": "https://pictogramapp.com/updates/v0.1%20%28Build%2013%29.zip",
+      "version": "0.1,13",
+      "sha256": "fb35a21dcc548f0226453701632ebaa478ab8cb68fccfd0ae995cbb5c80d741b",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Pictogram.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "aqua-data-studio",
+      "url": "https://downloads.aquafold.com/v26.1.0/osx/ads-osx-26.1.0.tar.gz",
+      "version": "26.1.0",
+      "sha256": "bbb1cb4d1074d8500ad24fa9a7c545a27957f806e5e30baac9cacf665f99ad4c",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Aqua Data Studio.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "atomcode",
+      "url": "https://atomgit.com/atomgit_atomcode/atomcode/releases/download/v5.2.8/atomcode-v5.2.8-darwin-arm64.tar.gz",
+      "version": "5.2.8",
+      "sha256": "7f1a0561f760e68d67df98af7341cacd97080298fc0e48c173bb7d5837ca1fa8",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "discord",
+      "url": "https://stable.dl2.discordapp.net/distro/app/stable/osx/universal/0.0.424/Discord.dmg",
+      "version": "0.0.424",
+      "sha256": "38617824808249eecce6377d6e467936bf695f62662dbcf372e95c930a7b7e4d",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Discord.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "keysmith",
+      "url": "https://keysmith.app/versions/Keysmith-1.18.7.dmg",
+      "version": "1.18.7",
+      "sha256": "d5be3d267ddedd38b67b04b2cc0608969e85b65b4317a32d66de2d6f9c4318eb",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Keysmith.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "konica-minolta-bizhub-c759-c658-c368-c287-c3851-driver",
+      "url": "https://dl.konicaminolta.eu/en?tx_kmdownloadproxy_downloadproxy[fileId]=eb6d403e0fae336969cf627b3e38a647&tx_kmdownloadproxy_downloadproxy[documentId]=139511&tx_kmdownloadproxy_downloadproxy[system]=KonicaMinolta&tx_kmdownloadproxy_downloadproxy[language]=EN&type=1558521685",
+      "version": "11.9.0A,eb6d403e0fae336969cf627b3e38a647,139511",
+      "sha256": "1e21d40a62e37222b350299f95496898e7934fef71421a4990f7e78f0bf91fe2",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "4k-video-to-mp3",
+      "url": "https://dl.4kdownload.com/app/4kvideotomp3_3.0.1.dmg",
+      "version": "3.0.1",
+      "sha256": "3a9b4b9920a712e3e356ea09ca770b8d59c88926ae7a63bd530a2d9682a24a8b",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "4K Video to MP3.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "sublime-merge@dev",
+      "url": "https://download.sublimetext.com/sublime_merge_build_2135_mac.zip",
+      "version": "2135",
+      "sha256": "ee96cdd37af7873800d22c3d1addd23ac83a6ca4ba33ced956a72f5d649b72e5",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Sublime Merge.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "camerabag-photo",
+      "url": "https://nevercenter.com/camerabag/download/filearchive/Install_CameraBag_Photo_2027_0_0_mac.dmg",
+      "version": "2027.0.0",
+      "sha256": "89fe1bf44d9ae56e45e57d6eb3208feca7bf5ebff6adf2a54e4b683a3e2717d1",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "CameraBag Photo.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "eagle",
+      "url": "https://trial2.autodesk.com/NET17SWDLD/2017/EGLPRM/ESD/Autodesk_EAGLE_9.6.2_English_Mac_64bit.pkg",
+      "version": "9.6.2",
+      "sha256": "bda7c9a5cc0bb8ae0489ca2d2772e5dd869f466fdd56454d94144e34887d9712",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "label-live",
+      "url": "https://download.label.live/Label-LIVE-4.14.3.dmg",
+      "version": "4.14.3",
+      "sha256": "5085e35d6801fc7e1174f78d0df808968f857bb799a768747c4acee55dea4635",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Label LIVE.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "suuntodm5",
+      "url": "https://dm5.movescount.com/SuuntoDM5.dmg",
+      "version": "1.5.4",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "SuuntoDM5.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "netviews",
+      "url": "https://www.netviews.app/installers/NetViews-2.14.zip",
+      "version": "2.14",
+      "sha256": "073996fda22ec9b09991fd672510f3019c7675104af227f646b0ece4d5518c71",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "NetViews.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "vivaldi@snapshot",
+      "url": "https://downloads.vivaldi.com/snapshot-auto/Vivaldi.8.4.4241.3.universal.tar.xz",
+      "version": "8.4.4241.3",
+      "sha256": "1cdf2bde2153d8a602c20d7e70087e45e49eec4d12551a90605d346bf61ad7f2",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Vivaldi Snapshot.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "merlin-project",
+      "url": "https://www.projectwizards.net/downloads/MerlinProject.zip",
+      "version": "9.2.1",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Merlin Project.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "ricoh-theta",
+      "url": "https://theta360-statics.s3.amazonaws.com/app/viewer/SphericalViewerUpdate/RICOH%20THETA.3.21.0.app.zip",
+      "version": "3.21.0",
+      "sha256": "4c1d58b4bb1087c9129b99ac9cce1ff4cdc0439d1fa269b683b7f8b9e608f7a3",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "RICOH THETA.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "sidenotes",
+      "url": "https://www.apptorium.com/public/products/sidenotes/releases/SideNotes-1.6.6.zip",
+      "version": "1.6.6",
+      "sha256": "e467e19cf65eca726985997d3884793c86f2addc2294128988ac4f7f2b9052ac",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "SideNotes.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "scrub-utility",
+      "url": "https://eclecticlight.co/wp-content/uploads/2023/06/scrub13.zip",
+      "version": "1.3,2023.06",
+      "sha256": "d4537bc05615fcb4ef2a00b042a494b071b9cfaeb4ced7e8884fd3945034655d",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "scrub13/Scrub.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "qt-design-studio",
+      "url": "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/tools_qtdesignstudio_generation2/qt.tools.qtdesignstudio/4.8.3-0-202609070646opensource.7z",
+      "version": "4.8.3-0-202609070646",
+      "sha256": "b1459ec8ec89d18560ed0439dee491e2513a311c1c5f1ed167832b53efb15693",
+      "expected_format": "7z",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Qt Design Studio.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "fabfilter-pro-ds",
+      "url": "https://cdn-b.fabfilter.com/downloads/ffprods132.dmg",
+      "version": "1.32",
+      "sha256": "c16c371d3b0bbbe5bb767c35d931a267e30e7a962be30bc4a037f702e33913c6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "sleep-aid",
+      "url": "https://ohanaware.com/sleepaid/release/Sleep_Aid_1_5_arm64.pkg",
+      "version": "1.5",
+      "sha256": "07565853c8c4695b5431ffcde576d0bb45df636a3c6041b1a7013cf0c245fe59",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "flutter",
+      "url": "https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.50.1-stable.zip",
+      "version": "3.50.1",
+      "sha256": "872883d49965e0cc1d8e477d2d87f2f45930d13f94b34889e53783586f04c715",
+      "expected_format": "zip",
+      "artifact_types": [
+        "binary",
+        "suite"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "expose",
+      "url": "https://assets.beyondco.de/expose/client/4.6.0/expose_darwin_arm64.tar.gz",
+      "version": "4.6.0",
+      "sha256": "b45b5d492486e6401fa2df6130dfe127316d9cfe85021c5919cefc68a5595f72",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "vercel",
+      "url": "https://registry.npmjs.org/@vercel/vc-native-darwin-arm64/-/vc-native-darwin-arm64-66.6.0.tgz",
+      "version": "66.6.0",
+      "sha256": "53a1d43302d70a143668efbe029e3e922753e4127bb832a431688783ad24b93c",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "backuploupe",
+      "url": "https://www.soma-zone.com/download/files/BackupLoupe-3.15.4.tar.xz",
+      "version": "3.15.4",
+      "sha256": "c416e74e65bf6557fd17f86767c5ca51e2a54248064905097039a36664537de2",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "BackupLoupe.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "paragon-extfs@11",
+      "url": "https://dl.paragon-software.com/demo/trial_extfs.dmg",
+      "version": "11.8.612",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "mipony",
+      "url": "https://download.mipony.net/downloads/mac/Mipony-Installer.pkg",
+      "version": "2.0.1,0",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "hyper",
+      "url": "https://github.com/vercel/hyper/releases/download/v3.4.1/Hyper-3.4.1-mac-arm64.zip",
+      "version": "3.4.1",
+      "sha256": "7d2440fdd93fde4101e603fe2de46732b54292a868ad17dbcb55288e6f8430a8",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Hyper.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    },
+    {
+      "cask": "insta360-link-controller",
+      "url": "https://wassets.insta360.com/common/5691fa4c032d4c15bbaa33dee8188008/Insta360LinkController_2.2.5(build25).pkg",
+      "version": "2.2.5,build25,5691fa4c032d4c15bbaa33dee8188008",
+      "sha256": "5e8b28bac1b038185ca3da80b53771c9d81d62f97a8ae073280358013129fc62",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "displaylink",
+      "url": "https://www.synaptics.com/sites/default/files/exe_files/2026-11/DisplayLink%20Manager%20Graphics%20Connectivity17.1-EXE.pkg",
+      "version": "17.1,2026-11",
+      "sha256": "e6e8c86f722d05fc4b5bca22d9627df00dfd11dadffb472278b075fb5b66067e",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "jollysfastvnc",
+      "url": "https://www.jinx.de/JollysFastVNC_files/JollysFastVNC.1.66.(26010802).11.0.dmg",
+      "version": "1.66,26010802",
+      "sha256": "061ab6792ec0574420752a422c123b9325557bd130f65c0ab4acc42c37f8a74d",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "JollysFastVNC.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "balsamiq-wireframes",
+      "url": "https://builds.balsamiq.com/bwd/Balsamiq%20Wireframes%204.8.6.dmg",
+      "version": "4.8.6",
+      "sha256": "3817553ac4801b3a245b55f1996870371cd3599a8c99f0054dd796bc09ceeca7",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Balsamiq Wireframes.app"
+      ],
+      "architecture_hints": []
+    },
+    {
+      "cask": "steelseries-gg",
+      "url": "https://engine.steelseriescdn.com/SteelSeriesGG108.3.0.pkg",
+      "version": "108.3.0",
+      "sha256": "80c2eec20da51a6144bb18c70cf511ba986941ab0ebd224151ec54dc5e6b4b41",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": []
+    },
+    {
+      "cask": "tnas-pc",
+      "url": "https://download3.terra-master.com/Apps/TNAS%20PC/macOS/arm/TNAS%20PC-arm64-5.2.564.pkg",
+      "version": "5.2.564",
+      "sha256": "24cc3c0344c4bdbe519de2eeda20f8a804b9677f95cb86bc0d2d4b44077c4ecd",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ]
+    }
+  ]
+}
