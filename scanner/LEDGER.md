@@ -41,8 +41,8 @@ Path usernames and known credential-bearing URL query values are scrubbed recurs
 
 ## Fixer handoff
 
-Ten classes were verified against current observations and independently replayed from their stored spans. See the generated report under `~/Code/doesitarm-data/scan-ledger/LEDGER.md` for attempt IDs and folders.
+Eleven classes were verified against current observations and independently replayed from their stored spans. The generated Cargo test passed for every published kit. See the generated report under `~/Code/doesitarm-data/scan-ledger/LEDGER.md` for attempt IDs and folders.
 
-- Container and budget work can start with the JProfiler stream budget kit and AMPPS HFS image kit.
+- Container and budget work can start with XAMPP’s invalid DMG range, the JProfiler stream budget kit, and the AMPPS HFS image kit.
 - Bundle work can start with the SQLCipher Nightly missing executable key and Rolisteam missing metadata kits. Kotlin LSP retains the declared script outcome.
 - Acquisition work can start with Dropzone's representation-size mismatch. Warp and Send to Kindle preserve their pinned HTTP rejections. SEGGER J-Link preserves the HTML response before any license attestation.
