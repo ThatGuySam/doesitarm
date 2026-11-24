@@ -1,5 +1,6 @@
 """Construct a flat XAR package containing Distribution, PackageInfo and CPIO."""
 import gzip
+import lzma
 import plistlib
 import zlib
 from struct import pack
@@ -36,11 +37,16 @@ def cpio(files, *, odc):
     return output
 
 
-def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False):
+def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, pbzx=False):
     plist = plistlib.dumps(metadata)
     files = [(bin_path, executable), (info_path, plist)] if odc else [(info_path, plist), (bin_path, executable)]
+    if pbzx:
+        files.insert(1, ("unused", bytes(range(256)) * 64))
     archive = cpio(files, odc=odc)
-    payload = bytes(archive) if odc else gzip.compress(archive, mtime=0)
+    if pbzx:
+        payload = encode_pbzx(archive)
+    else:
+        payload = bytes(archive) if odc else gzip.compress(archive, mtime=0)
 
     root = Element("xar")
     toc = SubElement(root, "toc")
@@ -67,3 +73,16 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False):
     compressed = zlib.compress(toc_data)
     header = pack(">4sHHQQI", b"xar!", 28, 1, len(compressed), len(toc_data), 0)
     path.write_bytes(header + compressed + heap)
+
+
+def encode_pbzx(data):
+    block_size = 512
+    output = bytearray(pack(">4sQ", b"pbzx", block_size))
+    for offset in range(0, len(data), block_size):
+        block = data[offset:offset + block_size]
+        compressed = lzma.compress(block, check=lzma.CHECK_NONE)
+        # Include both encodings and an unrelated member that spans chunks.
+        packed = compressed if offset % 1024 == 0 and len(compressed) < len(block) else block
+        output.extend(pack(">QQ", len(block), len(packed)))
+        output.extend(packed)
+    return bytes(output)

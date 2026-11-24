@@ -8,6 +8,7 @@ mod dmg;
 mod hfs;
 mod inflate;
 mod macho;
+mod pbzx;
 mod pkg;
 mod stream_bundle;
 mod tar;
@@ -23,6 +24,7 @@ use std::fmt;
 pub trait ReadAt {
     fn size(&self) -> u64;
 
+    /// Upper bound for the next physical read when a wrapper meters a source.
     fn remaining_budget(&self) -> u64 {
         u64::MAX
     }
@@ -79,6 +81,13 @@ pub struct Architecture {
     pub code_signature_present: Option<bool>,
 }
 
+#[derive(Debug, Serialize)]
+pub struct ExecutableCandidate {
+    pub path: String,
+    pub size: u64,
+    pub architectures: Vec<Architecture>,
+}
+
 #[derive(Debug, Default, Serialize)]
 pub struct InstallerMetadata {
     pub title: Option<String>,
@@ -100,6 +109,8 @@ pub struct ScanResult {
     pub min_macos: Option<String>,
     pub executable_name: Option<String>,
     pub executable_size: Option<u64>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub candidate_executables: Vec<ExecutableCandidate>,
     pub installer: Option<InstallerMetadata>,
     pub bytes_read: u64,
     pub reads: u64,
@@ -120,6 +131,7 @@ impl ScanResult {
             min_macos: None,
             executable_name: None,
             executable_size: None,
+            candidate_executables: Vec::new(),
             installer: None,
             bytes_read: 0,
             reads: 0,
@@ -241,13 +253,13 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
         }
         self.reads += 1;
         let bytes = self.source.read_at(offset, len).await?;
-        self.bytes += bytes.len() as u64;
         if bytes.len() != len {
             return Err(ScanError::Source(format!(
                 "range at {offset} expected {len} bytes, received {}",
                 bytes.len()
             )));
         }
+        self.bytes += len as u64;
         Ok(bytes)
     }
 }

@@ -1,3 +1,4 @@
+use crate::pbzx::Pbzx;
 use crate::{
     InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Window, be16, be64, check_range,
     cpio, inflate::Inflate,
@@ -114,7 +115,7 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         return cpio::scan(&mut source, out).await;
     }
     if magic.starts_with(b"pbzx") {
-        return Err(ScanError::Unsupported("PBZX-compressed PKG Payload"));
+        return cpio::scan(&mut Pbzx::open(source).await?, out).await;
     }
     Err(ScanError::Unsupported("PKG Payload compression"))
 }

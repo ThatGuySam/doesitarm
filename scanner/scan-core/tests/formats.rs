@@ -238,3 +238,38 @@ fn apfs_dmg_uses_latest_checkpoint_and_seeks_through_file_extents() {
     assert!(result.architectures.iter().all(|arch| arch.header_verified));
     assert!(result.bytes_read < result.total_size / 10);
 }
+
+const PBZX: &[u8] = include_bytes!("../../fixtures/pbzx.pkg");
+
+#[test]
+fn pbzx_pkg_skips_unneeded_chunks_and_reads_a_mixed_raw_and_xz_payload() {
+    let result = run(PBZX, 8192);
+    assert_bundle(&result);
+    assert!(result.bytes_read < result.total_size / 2);
+}
+
+#[test]
+fn budget_preserves_an_unconfirmed_executable_candidate_before_the_plist() {
+    let mut evidence = None;
+    for budget in 100..2048 {
+        let result = run(TAR_REVERSED, budget);
+        if matches!(result.status, Status::BudgetExhausted)
+            && result
+                .candidate_executables
+                .iter()
+                .any(|exe| !exe.architectures.is_empty())
+        {
+            evidence = Some(result);
+            break;
+        }
+    }
+    let result =
+        evidence.expect("a compressed prefix that reaches the candidate but not the plist");
+    assert!(result.architectures.is_empty());
+    assert!(result.bundle_id.is_none());
+    assert!(
+        result.candidate_executables[0]
+            .path
+            .ends_with("/Contents/MacOS/FixtureBinary")
+    );
+}

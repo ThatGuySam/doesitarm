@@ -1,4 +1,6 @@
-use crate::{Architecture, ReadAt, Result, ScanError, ScanResult, Window, bundle, macho};
+use crate::{
+    Architecture, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, Window, bundle, macho,
+};
 
 struct Candidate {
     path: String,
@@ -53,6 +55,7 @@ impl StreamBundle {
             }
             let plist = source.read_at(offset, size as usize).await?;
             let target = bundle::apply_plist(&plist, root, out)?;
+            out.candidate_executables.clear();
             if let Some(index) = self
                 .candidates
                 .iter()
@@ -78,6 +81,13 @@ impl StreamBundle {
             let mut architectures = Vec::new();
             let outcome =
                 macho::scan(&mut Window::new(source, offset, size)?, &mut architectures).await;
+            if !architectures.is_empty() {
+                out.candidate_executables.push(ExecutableCandidate {
+                    path: path.to_owned(),
+                    size,
+                    architectures: architectures.clone(),
+                });
+            }
             if let Err(error @ (ScanError::Budget | ScanError::Source(_))) = outcome {
                 return Err(error);
             }

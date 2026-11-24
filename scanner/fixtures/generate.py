@@ -107,3 +107,4 @@ if __name__ == "__main__":
     pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
+    pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)

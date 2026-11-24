@@ -119,7 +119,7 @@ impl<S: ReadAt> ReadAt for Inflate<S> {
     }
 }
 
-fn chunk_size(position: u64) -> u64 {
+pub(crate) fn chunk_size(position: u64) -> u64 {
     if position < INPUT_CHUNK {
         INPUT_CHUNK
     } else if position < 1024 * 1024 {
