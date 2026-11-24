@@ -355,7 +355,7 @@ pub(super) fn continue_catalog(
         .open(cache.join("campaign.lock"))?;
     job.try_lock()?;
     let manifest = import::manifest(scanner)?;
-    let initial = import::initial_progress(scanner)?;
+    let initial = import::campaign_start(scanner, &manifest)?;
     let mut checked = initial;
     let prior = Store::open(root.to_path_buf())?.records()?;
     let done: std::collections::BTreeSet<_> = prior

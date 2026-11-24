@@ -105,6 +105,34 @@ pub(super) fn initial_progress(scanner: &Path) -> Result<usize> {
     Ok(count)
 }
 
+pub(super) fn campaign_start(scanner: &Path, manifest: &[Value]) -> Result<usize> {
+    let path = scanner.join(CHECKPOINT);
+    let metadata: Value = serde_json::from_str(&read(&path.with_file_name("metadata.json"))?)?;
+    let manifest_hash = privacy::sha(fs::read(scanner.join(MANIFEST))?);
+    if metadata["manifest_sha256"] != manifest_hash {
+        return Err(
+            "Pinned manifest SHA-256 disagrees with the historical campaign metadata".into(),
+        );
+    }
+    let input = read(&path)?;
+    let mut checked = 0;
+    for entry in jsonl(&input) {
+        let (entry, line, _) = entry?;
+        if manifest.get(checked).is_none_or(|pin| {
+            ["cask", "version", "url"]
+                .iter()
+                .any(|key| entry[*key] != pin[*key])
+        }) {
+            return Err(format!(
+                "Historical checkpoint line {line} differs from its pinned artifact"
+            )
+            .into());
+        }
+        checked += 1;
+    }
+    Ok(checked)
+}
+
 fn app(row: &Value) -> Record {
     let token = string(row, "token")
         .or_else(|| string(row, "cask"))
@@ -250,6 +278,13 @@ fn historical(
         "cli_sha256":meta["cli_sha256"], "campaign_status": entry["category"],
         "download":attempt["download"], "observed_artifact_sha256":attempt["sha256_observed"],
         "evidence_source":attempt["evidence_source"]});
+    // The old runner sometimes labeled an already-built CLI with the
+    // orchestrator's current HEAD. Keep that label as historical provenance
+    // and preserve the separately documented binary revision.
+    if meta["cli_sha256"] == "15d61d5ce4534ecf7265a1a1188cf1118f5d42fe9f0f612fe65700a5631c5fee" {
+        row.evidence["documented_binary_commit"] = json!("ce2f329");
+        row.evidence["binary_commit_evidence"] = json!("scanner/CLIMB.md:121");
+    }
     let discriminator = format!(
         "{}:{}:{index}",
         provenance.imported_from, provenance.original_line
@@ -295,6 +330,36 @@ fn scan_run(path: &Path, scanner: &Path, rows: &mut Vec<Record>) -> Result<()> {
         } else {
             "apps"
         };
+        if let Some(missing) = meta["catalog"]["requested_cask_unavailable"].as_array() {
+            let line = input
+                .lines()
+                .position(|line| line.contains("\"requested_cask_unavailable\""))
+                .unwrap_or(0)
+                + 1;
+            for (i, token) in missing.iter().filter_map(Value::as_str).enumerate() {
+                let record = Record {
+                    name: token.into(),
+                    token: token.into(),
+                    source: "homebrew-cask".into(),
+                    status: "catalog_cask_unavailable".into(),
+                    failure_class: Some("catalog_cask_unavailable".into()),
+                    scanner_commit: string(&meta, "scanner_commit"),
+                    scanned_at: string(&meta, "started_at"),
+                    error: Some(
+                        "The requested cask was absent from the pinned Homebrew catalog".into(),
+                    ),
+                    provenance: vec![origin(
+                        &imported_from,
+                        line,
+                        Some(format!("/catalog/requested_cask_unavailable/{i}")),
+                        &missing[i].to_string(),
+                    )],
+                    evidence: json!({"stage":"discover", "catalog":meta["catalog"]}),
+                    ..Record::default()
+                };
+                rows.push(record.seal(&format!("{imported_from}:{line}:discovery:{i}"))?);
+            }
+        }
         for (idx, (entry, line, raw)) in array(&input, field)?.into_iter().enumerate() {
             let from = origin(&imported_from, line, Some(format!("/{field}/{idx}")), raw);
             if let Some(attempts) = entry["attempts"].as_array() {

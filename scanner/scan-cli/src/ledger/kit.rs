@@ -40,8 +40,33 @@ struct Kit {
     payload_sha256: String,
 }
 
+fn stores_whole_artifact(phases: &[Phase]) -> bool {
+    let mut by_size = std::collections::BTreeMap::<u64, Vec<_>>::new();
+    for phase in phases.iter().filter(|phase| phase.size > 0) {
+        let stored = phase
+            .read_log
+            .iter()
+            .filter(|read| read.payload_offset.is_some());
+        by_size.entry(phase.size).or_default().extend(stored);
+    }
+    by_size.into_iter().any(|(size, mut reads)| {
+        reads.sort_unstable_by_key(|read| read.offset);
+        let mut end = 0;
+        for read in reads {
+            if read.offset > end {
+                break;
+            }
+            end = end.max(read.offset.saturating_add(read.length as u64));
+        }
+        end >= size
+    })
+}
+
 impl Kit {
     fn create(record: &Record, capture: &Capture) -> Result<Self> {
+        if record.original_url.is_some() && stores_whole_artifact(&capture.phases) {
+            return Err("Replay requires the complete artifact. Use a generated minimal fixture for this case".into());
+        }
         if capture.over_limit || capture.phases.iter().any(|p| p.log_overflow > 0) {
             return Err("Read evidence exceeds the 2 MB kit limit. Capture a smaller failing tier or fixture".into());
         }
@@ -293,6 +318,22 @@ mod tests {
                 .to_string()
                 .contains("lacks coverage")
         );
+    }
+
+    #[test]
+    fn declines_to_publish_a_whole_download_as_a_range_kit() {
+        let file = tempfile::NamedTempFile::new().unwrap();
+        // The only physical read fetches the entire four-byte input.
+        fs::write(file.path(), b"nope").unwrap();
+        let limits = ScanLimits::for_profile(Profile::Local);
+        let (_, capture, _) = local(file.path(), limits, Target::Auto, None).unwrap();
+        let record = Record {
+            original_url: Some("https://example.invalid/app".into()),
+            failure_class: Some("unsupported_container".into()),
+            ..Record::default()
+        };
+        let error = Kit::create(&record, &capture).err().unwrap();
+        assert!(error.to_string().contains("complete artifact"));
     }
 
     #[test]
