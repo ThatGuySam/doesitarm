@@ -1,5 +1,6 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, check_range, stream_bundle::StreamBundle,
+    ReadAt, Result, ScanError, ScanResult, Target, check_range, decode::DecodeBudget,
+    stream_bundle::StreamBundle,
 };
 
 const BLOCK: usize = 512;
@@ -7,6 +8,7 @@ const MAX_METADATA: u64 = 64 * 1024;
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -15,7 +17,7 @@ pub(crate) async fn scan(
     let mut next_size = None;
     let mut bundle = StreamBundle::new(target);
 
-    for _ in 0..250_000 {
+    for _ in 0..work.archive_entry_limit() {
         let header = input.read_at(pos, BLOCK).await?;
         if header.iter().all(|byte| *byte == 0) {
             return Err(bundle.missing());

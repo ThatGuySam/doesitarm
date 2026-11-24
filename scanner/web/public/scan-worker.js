@@ -1,6 +1,6 @@
 import init, { bundle_metadata, scan } from './pkg/scan_wasm.js';
 import { scanRemote } from './range-scan.js';
-import { emptyResult, MIB } from './scan-result.js';
+import { emptyResult, MIB, URL_BUDGET_TIERS } from './scan-result.js';
 
 let resolveExecutable;
 
@@ -31,32 +31,39 @@ self.addEventListener('message', async ({ data }) => {
   try {
     if (job.kind !== 'url' || !job.forceWorker) await init();
     if (job.kind === 'file') {
-      result = await scanFile(job.file, budget, progress);
+      result = await scanFile(job.file, progress);
     } else if (job.kind === 'bundle') {
-      result = await scanBundle(job, budget, progress, id);
+      result = await scanBundle(job, progress, id);
     } else {
       if (!job.forceWorker) {
-        const direct = await scanRemote({
-          scan,
-          budget,
-          signal: AbortSignal.timeout(12_000),
-          onProgress: progress,
-          fetchRange: (range, _etag, signal) => fetch(job.url, {
-            headers: { Range: range },
-            mode: 'cors',
-            redirect: 'error',
-            credentials: 'omit',
-            cache: 'no-store',
-            signal,
-          }),
-        });
-        if (direct.result.status !== 'source_error') result = direct.result;
+        for (const tier of URL_BUDGET_TIERS) {
+          if (tier > budget) break;
+          const direct = await scanRemote({
+            scan,
+            budget: tier,
+            profile: 'remote-cli',
+            onProgress: progress,
+            fetchRange: (range) => fetch(job.url, {
+              headers: { Range: range },
+              mode: 'cors',
+              redirect: 'error',
+              credentials: 'omit',
+              cache: 'no-store',
+            }),
+          });
+          result = direct.result;
+          if (result.status === 'source_error') {
+            result = undefined;
+            break;
+          }
+          if (result.status !== 'budget_exhausted') break;
+        }
       }
 
       if (!result) {
         source = 'Cloudflare Worker';
         self.postMessage({ type: 'remote', id });
-        result = await requestWorker(job.url, budget);
+        result = await requestWorker(job.url);
       }
     }
   } catch (error) {
@@ -69,10 +76,10 @@ self.addEventListener('message', async ({ data }) => {
   self.postMessage({ type: 'done', id, result, source, elapsed: performance.now() - start });
 });
 
-async function scanFile(file, budget, progress) {
+async function scanFile(file, progress) {
   let read = 0;
   let sourceError;
-  const result = JSON.parse(await scan(BigInt(file.size), BigInt(budget), async (offset, length) => {
+  const result = JSON.parse(await scan(BigInt(file.size), 0n, async (offset, length) => {
     const start = Number(offset);
     const end = start + length;
     if (!Number.isSafeInteger(end) || end > file.size || length > 16 * MIB) {
@@ -88,16 +95,15 @@ async function scanFile(file, budget, progress) {
       sourceError = 'The browser could not read this file range. Check that the file is still available.';
       throw error;
     }
-  }));
+  }, undefined, 'local'));
   if (sourceError) result.error = sourceError;
   return result;
 }
 
-async function scanBundle(job, budget, progress, id) {
+async function scanBundle(job, progress, id) {
   const { plist, label } = job;
   if (!plist) return emptyResult('not_found', 'The app folder has no readable Contents/Info.plist.');
   if (plist.size > 2 * MIB) return emptyResult('limit_reached', 'Info.plist exceeds 2 MiB.', plist.size);
-  if (plist.size > budget) return emptyResult('budget_exhausted', 'The byte budget is smaller than Info.plist.', plist.size);
 
   const bytes = new Uint8Array(await plist.slice(0, plist.size).arrayBuffer());
   const metadata = JSON.parse(bundle_metadata(bytes, label));
@@ -119,7 +125,7 @@ async function scanBundle(job, budget, progress, id) {
 
   const totalSize = plist.size + executable.size;
   progress(plist.size, totalSize, true);
-  const result = await scanFile(executable, budget - plist.size, (read) => progress(plist.size + read, totalSize));
+  const result = await scanFile(executable, (read) => progress(plist.size + read, totalSize));
   return {
     ...metadata,
     status: result.status,
@@ -128,18 +134,18 @@ async function scanBundle(job, budget, progress, id) {
     min_macos: metadata.min_macos ?? result.min_macos,
     executable_size: executable.size,
     bytes_read: plist.size + result.bytes_read,
+    bytes_requested: plist.size + result.bytes_requested,
+    decoded_bytes: result.decoded_bytes,
     reads: metadata.reads + result.reads,
     total_size: totalSize,
   };
 }
 
-async function requestWorker(url, budget) {
+async function requestWorker(url) {
   const endpoint = new URL('/api/scan', self.location.origin);
   endpoint.searchParams.set('url', url);
-  endpoint.searchParams.set('budget', budget);
-  const signal = AbortSignal.timeout(25_000);
   try {
-    const response = await fetch(endpoint, { signal, cache: 'no-store' });
+    const response = await fetch(endpoint, { headers: { 'X-Scan-Client': 'browser' }, cache: 'no-store' });
     if (response.headers.get('Content-Type')?.includes('application/json')) {
       const result = await response.json();
       if (typeof result.status === 'string' && Array.isArray(result.architectures)) return result;
@@ -155,8 +161,6 @@ async function requestWorker(url, budget) {
     }
     return emptyResult('source_error', `The scanner API returned HTTP ${response.status} without a scan result.`);
   } catch {
-    return signal.aborted
-      ? emptyResult('limit_reached', 'The scanner API reached the network time limit.')
-      : emptyResult('source_error', 'The scanner API could not be reached.');
+    return emptyResult('source_error', 'The scanner API could not be reached.');
   }
 }

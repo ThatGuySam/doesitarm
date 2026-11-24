@@ -1,6 +1,5 @@
-import { initSync, scan } from '../../pkg/scan_wasm.js';
-import module from '../../pkg/scan_wasm_bg.wasm';
+import { createScanner } from '../../pkg/worker/scan_wasm_factory.js';
+import module from '../../pkg/worker/scan_wasm_bg.wasm';
 import { createHandler } from './handler.js';
 
-initSync({ module });
-export default { fetch: createHandler({ scan, outbound: (...args) => fetch(...args) }) };
+export default { fetch: createHandler({ createScan: () => createScanner(module), outbound: (...args) => fetch(...args) }) };

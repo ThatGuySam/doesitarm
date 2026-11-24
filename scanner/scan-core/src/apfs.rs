@@ -33,12 +33,17 @@ struct Device<'a, S> {
     block_size: usize,
     blocks: u64,
     cache: VecDeque<(u64, Rc<[u8]>)>,
+    work: &'a DecodeBudget<'a>,
     nodes_left: usize,
     records_left: usize,
 }
 
 impl<S: ReadAt> Device<'_, S> {
     fn charge_tree_node(&mut self, records: usize) -> Result<()> {
+        self.work.check_deadline()?;
+        if !self.work.strict() {
+            return Ok(());
+        }
         if self.nodes_left == 0 || records > self.records_left {
             return Err(ScanError::WorkLimit("APFS B-tree work limit reached"));
         }
@@ -48,6 +53,7 @@ impl<S: ReadAt> Device<'_, S> {
     }
 
     async fn block(&mut self, address: u64) -> Result<Rc<[u8]>> {
+        self.work.check_deadline()?;
         if address >= self.blocks {
             return Err(BAD_OBJECT);
         }
@@ -609,7 +615,7 @@ impl<S: ReadAt> ReadAt for ApfsFile<'_, S> {
 
 pub(crate) async fn scan(
     disk: &mut impl ReadAt,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -631,6 +637,7 @@ pub(crate) async fn scan(
         block_size,
         blocks,
         cache: VecDeque::new(),
+        work,
         nodes_left: MAX_TREE_NODES,
         records_left: MAX_TREE_RECORDS,
     };
@@ -784,7 +791,7 @@ async fn read_package(
     device: &mut Device<'_, impl ReadAt>,
     volume: &Volume,
     entry: Entry,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {

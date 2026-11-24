@@ -66,6 +66,7 @@ export function createEgress({ target, ownHost, outbound, signal }) {
   const checked = new Set();
 
   function subrequest(url, options) {
+    signal.throwIfAborted();
     requests += 1;
     if (requests > MAX_SUBREQUESTS) {
       throw new RangeFailure('Scan reached the 36-subrequest limit.', 'limit_reached', 503);
@@ -93,7 +94,15 @@ export function createEgress({ target, ownHost, outbound, signal }) {
     while (true) {
       await checkDNS(url.hostname);
       const response = await subrequest(url, { headers, cache: 'no-store' });
-      if (!REDIRECTS.has(response.status)) return response;
+      if (signal.aborted) {
+        discard(response);
+        signal.throwIfAborted();
+      }
+      if (response.status === 206) return response;
+      if (!REDIRECTS.has(response.status)) {
+        discard(response);
+        throw new RangeFailure('The download origin did not provide a usable byte range.');
+      }
       discard(response);
       redirects += 1;
       if (redirects > MAX_REDIRECTS) {

@@ -1,13 +1,12 @@
 use crate::{
     ReadAt, Result, ScanError, check_range,
-    decode::{DecodeBudget, STEP, check_stream_ratio},
+    decode::{DecodeBudget, STEP, append_output},
 };
 use flate2::{Decompress, FlushDecompress};
 use lzma_rust2::{Action, XzStream};
 use std::ops::Range;
 
 const INPUT_CHUNK: u64 = 64 * 1024;
-pub(crate) const STREAM_OUTPUT_LIMIT: u64 = 4 * 1024 * 1024 * 1024;
 
 #[derive(Clone, Copy)]
 pub(crate) enum Codec {
@@ -55,11 +54,11 @@ enum Decoder {
 struct Progress {
     consumed: usize,
     produced: usize,
-    ended: bool,
+    ended: Result<bool>,
 }
 
 impl Decoder {
-    fn process(&mut self, input: &[u8], output: &mut [u8], finished: bool) -> Result<Progress> {
+    fn process(&mut self, input: &[u8], output: &mut [u8], finished: bool) -> Progress {
         let action = if finished {
             Action::Finish
         } else {
@@ -69,46 +68,54 @@ impl Decoder {
             Self::Deflate(decoder) => {
                 let before_in = decoder.total_in();
                 let before_out = decoder.total_out();
-                let status = decoder
+                let ended = decoder
                     .decompress(input, output, FlushDecompress::None)
-                    .map_err(|_| ScanError::Invalid("DEFLATE stream"))?;
-                Ok(Progress {
+                    .map(|status| status == flate2::Status::StreamEnd)
+                    .map_err(|_| ScanError::Invalid("DEFLATE stream"));
+                Progress {
                     consumed: (decoder.total_in() - before_in) as usize,
                     produced: (decoder.total_out() - before_out) as usize,
-                    ended: status == flate2::Status::StreamEnd,
-                })
+                    ended,
+                }
             }
             Self::Bzip2(decoder) => {
                 let before_in = decoder.total_in();
                 let before_out = decoder.total_out();
-                let status = decoder
+                let ended = decoder
                     .decompress(input, output)
-                    .map_err(|_| ScanError::Invalid("bzip2 stream"))?;
-                Ok(Progress {
+                    .map(|status| status == bzip2::Status::StreamEnd)
+                    .map_err(|_| ScanError::Invalid("bzip2 stream"));
+                Progress {
                     consumed: (decoder.total_in() - before_in) as usize,
                     produced: (decoder.total_out() - before_out) as usize,
-                    ended: status == bzip2::Status::StreamEnd,
-                })
+                    ended,
+                }
             }
             Self::Xz(decoder) => {
-                let progress = decoder
+                let before_in = decoder.total_in();
+                let before_out = decoder.total_out();
+                let ended = decoder
                     .process(input, output, action)
-                    .map_err(|_| ScanError::Invalid("XZ stream"))?;
-                Ok(Progress {
-                    consumed: progress.bytes_consumed,
-                    produced: progress.bytes_produced,
-                    ended: progress.status == lzma_rust2::Status::StreamEnd,
-                })
+                    .map(|progress| progress.status == lzma_rust2::Status::StreamEnd)
+                    .map_err(|_| ScanError::Invalid("XZ stream"));
+                Progress {
+                    consumed: (decoder.total_in() - before_in) as usize,
+                    produced: (decoder.total_out() - before_out) as usize,
+                    ended,
+                }
             }
             Self::Lzma(decoder) => {
-                let progress = decoder
+                let before_in = decoder.total_in();
+                let before_out = decoder.total_out();
+                let ended = decoder
                     .process(input, output, action)
-                    .map_err(|_| ScanError::Invalid("LZMA stream"))?;
-                Ok(Progress {
-                    consumed: progress.bytes_consumed,
-                    produced: progress.bytes_produced,
-                    ended: progress.status == lzma_rust2::Status::StreamEnd,
-                })
+                    .map(|progress| progress.status == lzma_rust2::Status::StreamEnd)
+                    .map_err(|_| ScanError::Invalid("LZMA stream"));
+                Progress {
+                    consumed: (decoder.total_in() - before_in) as usize,
+                    produced: (decoder.total_out() - before_out) as usize,
+                    ended,
+                }
             }
         }
     }
@@ -118,20 +125,37 @@ impl Decoder {
 pub(crate) struct Forward<'a, S> {
     source: S,
     stream: Stream,
+    codec: Codec,
     size: u64,
-    work: &'a DecodeBudget,
+    work: &'a DecodeBudget<'a>,
 }
 
 impl<'a, S: ReadAt> Forward<'a, S> {
-    pub(crate) fn new(source: S, size: u64, codec: Codec, work: &'a DecodeBudget) -> Result<Self> {
+    pub(crate) fn new(
+        source: S,
+        size: u64,
+        codec: Codec,
+        work: &'a DecodeBudget<'a>,
+    ) -> Result<Self> {
         work.start()?;
         let stream = Stream::new(0..source.size(), codec);
         Ok(Self {
             source,
             stream,
+            codec,
             size,
             work,
         })
+    }
+}
+
+impl<S: ReadAt> Forward<'_, S> {
+    pub(crate) fn rewind_for(&mut self, offset: u64) -> Result<()> {
+        if offset < self.stream.decoded {
+            self.work.start()?;
+            self.stream = Stream::new(0..self.source.size(), self.codec);
+        }
+        Ok(())
     }
 }
 
@@ -140,13 +164,25 @@ impl<S: ReadAt> ReadAt for Forward<'_, S> {
         self.size
     }
 
+    fn remaining_budget(&self) -> u64 {
+        self.source.remaining_budget()
+    }
+
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
         check_range(self.size, offset, len as u64)?;
         self.stream.check_read(offset, len, self.work)?;
-        let mut data = vec![0; len];
         self.stream
-            .read(&mut self.source, self.work, offset, &mut data)
+            .advance(&mut self.source, self.work, offset)
             .await?;
+        let mut data = Vec::new();
+        let mut scratch = vec![0; len.min(STEP)];
+        while data.len() < len {
+            let count = (len - data.len()).min(scratch.len());
+            self.stream
+                .fill(&mut self.source, self.work, &mut scratch[..count])
+                .await?;
+            append_output(&mut data, &scratch[..count])?;
+        }
         Ok(data)
     }
 }
@@ -176,42 +212,56 @@ impl Stream {
         }
     }
 
-    fn check_read(&self, offset: u64, len: usize, work: &DecodeBudget) -> Result<()> {
+    fn check_read(&self, offset: u64, len: usize, work: &DecodeBudget<'_>) -> Result<()> {
         if offset < self.decoded {
             return Err(ScanError::Invalid("backward read from a compressed stream"));
         }
-        if offset > STREAM_OUTPUT_LIMIT || len as u64 > STREAM_OUTPUT_LIMIT - offset {
+        let end = offset
+            .checked_add(len as u64)
+            .ok_or(ScanError::Invalid("compressed stream offset overflow"))?;
+        if end > work.stream_limit() {
             return Err(ScanError::Limit(
                 "compressed stream traversal exceeds 4 GiB",
             ));
         }
-        work.require(offset - self.decoded + len as u64)
+        work.require(end - self.decoded)
     }
 
     pub(crate) async fn read(
         &mut self,
         source: &mut impl ReadAt,
-        work: &DecodeBudget,
+        work: &DecodeBudget<'_>,
         offset: u64,
         buffer: &mut [u8],
     ) -> Result<()> {
         self.check_read(offset, buffer.len(), work)?;
-        let mut scratch = [0; STEP];
+        self.advance(source, work, offset).await?;
+        self.fill(source, work, buffer).await
+    }
+
+    async fn advance(
+        &mut self,
+        source: &mut impl ReadAt,
+        work: &DecodeBudget<'_>,
+        offset: u64,
+    ) -> Result<()> {
+        let mut scratch = vec![0; (offset - self.decoded).min(STEP as u64) as usize];
         while self.decoded < offset {
             let count = (offset - self.decoded).min(scratch.len() as u64) as usize;
             self.fill(source, work, &mut scratch[..count]).await?;
         }
-        self.fill(source, work, buffer).await
+        Ok(())
     }
 
     async fn fill(
         &mut self,
         source: &mut impl ReadAt,
-        work: &DecodeBudget,
+        work: &DecodeBudget<'_>,
         mut output: &mut [u8],
     ) -> Result<()> {
         let packed = self.range.end - self.range.start;
         while !output.is_empty() {
+            work.check_deadline()?;
             if self.ended {
                 return Err(ScanError::Invalid(
                     "compressed stream ended before requested output",
@@ -221,11 +271,11 @@ impl Stream {
             let count = output.len().min(STEP);
             let update =
                 self.decoder
-                    .process(unconsumed, &mut output[..count], self.fetched == packed)?;
+                    .process(unconsumed, &mut output[..count], self.fetched == packed);
             work.charge(update.produced as u64)?;
             self.total_consumed += update.consumed as u64;
-            check_stream_ratio(self.total_consumed, self.decoded + update.produced as u64)?;
-            self.ended = update.ended;
+            work.check_stream_ratio(self.total_consumed, self.decoded + update.produced as u64)?;
+            self.ended = update.ended?;
             self.consumed += update.consumed;
             self.decoded += update.produced as u64;
             output = &mut output[update.produced..];

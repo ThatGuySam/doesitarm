@@ -25,7 +25,7 @@ struct Entry {
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -90,7 +90,7 @@ async fn scan_nested(
     input: &mut impl ReadAt,
     entries: &[Entry],
     heap_end: u64,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -106,7 +106,11 @@ async fn scan_nested(
         (path.matches('/').count(), std::cmp::Reverse(entry.expanded))
     });
     let mut first_failure = None;
-    for (entry, path, kind) in candidates.into_iter().take(8) {
+    for (entry, path, kind) in
+        candidates
+            .into_iter()
+            .take(if work.strict() { 8 } else { usize::MAX })
+    {
         let mut result = ScanResult::new(out.total_size);
         result.format = out.format;
         let attempt = scan_nested_member(
@@ -145,7 +149,7 @@ async fn scan_nested_member(
     entry: &Entry,
     heap_end: u64,
     (path, kind): (&str, nested::Kind),
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -155,13 +159,40 @@ async fn scan_nested_member(
         return nested::scan(&mut source, kind, path, work, target, out).await;
     }
     if entry.expanded > MAX_EXPANDED {
-        out.nested_artifacts.push(path.to_owned());
-        return Err(ScanError::Limit(
-            "compressed nested ZIP member exceeds 32 MiB",
-        ));
+        if work.strict() {
+            out.nested_artifacts.push(path.to_owned());
+            return Err(ScanError::Limit(
+                "compressed nested ZIP member exceeds 32 MiB",
+            ));
+        }
+        return nested::scan(&mut SeekableMember(member), kind, path, work, target, out).await;
     }
     let bytes = member.read_at(0, entry.expanded as usize).await?;
     nested::scan(&mut Buffered(bytes), kind, path, work, target, out).await
+}
+
+/// Large nested images can jump back to earlier decoded offsets. Replay their
+/// compressed member on demand, holding only the ranges the inner parser reads.
+struct SeekableMember<'a, S>(Member<'a, S>);
+
+impl<S: ReadAt> ReadAt for SeekableMember<'_, S> {
+    fn size(&self) -> u64 {
+        self.0.size()
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.0.remaining_budget()
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        check_range(self.size(), offset, len as u64)?;
+        match &mut self.0 {
+            Member::Compressed(source) => source.rewind_for(offset)?,
+            Member::Lzma(source) => source.rewind_for(offset)?,
+            Member::Stored(_) => {}
+        }
+        self.0.read_at(offset, len).await
+    }
 }
 
 struct Buffered(Vec<u8>);
@@ -350,7 +381,7 @@ async fn member<'a, S: ReadAt>(
     input: &'a mut S,
     entry: &Entry,
     heap_end: u64,
-    work: &'a DecodeBudget,
+    work: &'a DecodeBudget<'a>,
 ) -> Result<Member<'a, S>> {
     if entry.flags & 1 != 0 {
         return Err(ScanError::Unsupported("encrypted ZIP member"));
@@ -429,6 +460,14 @@ impl<S: ReadAt> ReadAt for Member<'_, S> {
             Self::Stored(source) => source.size(),
             Self::Compressed(source) => source.size(),
             Self::Lzma(source) => source.size(),
+        }
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        match self {
+            Self::Stored(source) => source.remaining_budget(),
+            Self::Compressed(source) => source.remaining_budget(),
+            Self::Lzma(source) => source.remaining_budget(),
         }
     }
 

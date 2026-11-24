@@ -6,6 +6,13 @@ compatibility_flags = ["global_fetch_strictly_public"]
 workers_dev = true
 preview_urls = false
 
+[limits]
+cpu_ms = 5000
+subrequests = 36
+
+[vars]
+SCAN_MAX_BUDGET = "8388608"
+
 [assets]
 directory = "./dist"
 binding = "ASSETS"

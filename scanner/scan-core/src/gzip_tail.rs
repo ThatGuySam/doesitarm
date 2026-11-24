@@ -1,4 +1,4 @@
-use crate::{bom, cpio, le16, le32};
+use crate::{bom, cpio, decode::DecodeBudget, le16, le32};
 use flate2::{Decompress, FlushDecompress, Status};
 
 pub(crate) const TAIL_BYTES: u64 = 64 * 1024;
@@ -9,7 +9,12 @@ const MAX_PROBES: usize = 4096;
 /// Raw DEFLATE copies and literals are independent of byte values in the
 /// preceding window. Any bytes derived from that unknown window must differ
 /// between the two decodes. Only the matching, BOM-checked CPIO tail is used.
-pub(crate) fn recover(tail: &[u8], target: &bom::Plist) -> Option<Vec<u8>> {
+pub(crate) fn recover(
+    tail: &[u8],
+    target: &bom::Plist,
+    work: &DecodeBudget<'_>,
+) -> Option<Vec<u8>> {
+    work.start().ok()?;
     let (compressed, trailer) = tail.split_at_checked(tail.len().checked_sub(8)?)?;
     let decoded_size = u64::from(le32(trailer, 4));
     let mut decoder = Decompress::new(false);
@@ -19,6 +24,9 @@ pub(crate) fn recover(tail: &[u8], target: &bom::Plist) -> Option<Vec<u8>> {
     let mut output_left = MAX_TOTAL_OUTPUT;
     let mut probes = 0;
     for at in (0..compressed.len()).rev() {
+        if at.is_multiple_of(1024) {
+            work.check_deadline().ok()?;
+        }
         let input = &compressed[at..];
         let mut header = [0; 16];
         let count = header.len().min(input.len());
@@ -29,17 +37,17 @@ pub(crate) fn recover(tail: &[u8], target: &bom::Plist) -> Option<Vec<u8>> {
                 continue;
             }
             probes += 1;
-            if probes > MAX_PROBES || output_left == 0 {
+            if probes > MAX_PROBES || output_left == 0 || work.remaining() == 0 {
                 return None;
             }
             let first = decode(
                 &mut decoder,
                 &mut staged,
                 input,
-                bit,
-                0,
+                (bit, 0),
                 &mut primary,
                 &mut output_left,
+                work,
             );
             let Some(first) = first else { continue };
             let Some(start) = decoded_size.checked_sub(first.len() as u64) else {
@@ -52,10 +60,10 @@ pub(crate) fn recover(tail: &[u8], target: &bom::Plist) -> Option<Vec<u8>> {
                 &mut decoder,
                 &mut staged,
                 input,
-                bit,
-                255,
+                (bit, 255),
                 &mut confirmation,
                 &mut output_left,
+                work,
             );
             if second.is_some_and(|second| {
                 second.len() == first.len() && second[record_at..] == first[record_at..]
@@ -101,10 +109,10 @@ fn decode<'a>(
     decoder: &mut Decompress,
     staged: &mut Vec<u8>,
     input: &[u8],
-    bit: usize,
-    seed: u8,
+    (bit, seed): (usize, u8),
     output: &'a mut [u8],
     output_left: &mut usize,
+    work: &DecodeBudget<'_>,
 ) -> Option<&'a [u8]> {
     decoder.reset(false);
     decoder.set_dictionary(&[seed; 32 * 1024]).ok()?;
@@ -114,13 +122,19 @@ fn decode<'a>(
         stage_aligned(staged, input, bit, seed);
         staged.as_slice()
     };
-    let limit = output.len().min(*output_left);
+    let limit = output
+        .len()
+        .min(*output_left)
+        .min(usize::try_from(work.remaining()).unwrap_or(usize::MAX));
     let status = decoder.decompress(encoded, &mut output[..limit], FlushDecompress::Finish);
     let count = decoder.total_out() as usize;
     *output_left = output_left.saturating_sub(count);
+    work.charge(count as u64).ok()?;
     if status.ok()? != Status::StreamEnd || decoder.total_in() != encoded.len() as u64 {
         return None;
     }
+    work.check_stream_ratio(input.len() as u64, count as u64)
+        .ok()?;
     output.get((bit % 2)..count)
 }
 
@@ -174,15 +188,16 @@ mod tests {
             let mut staged = Vec::new();
             let mut output = [0; 10];
             let mut cap = 10;
+            let work = DecodeBudget::new(10);
             for seed in [0, 255] {
                 let out = decode(
                     &mut decoder,
                     &mut staged,
                     &input,
-                    bit,
-                    seed,
+                    (bit, seed),
                     &mut output,
                     &mut cap,
+                    &work,
                 );
                 assert_eq!(out, Some(&b"x"[..]), "start bit {bit}");
             }

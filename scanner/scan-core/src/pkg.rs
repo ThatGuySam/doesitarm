@@ -4,10 +4,11 @@ use crate::{
     bundle, check_range, cpio,
     decode::{self, DecodeBudget},
     gzip_tail,
-    inflate::{Codec, Forward, STREAM_OUTPUT_LIMIT},
+    inflate::{Codec, Forward},
     stream_bundle::StreamBundle,
 };
 use roxmltree::{Document, Node, ParsingOptions};
+use std::rc::Rc;
 
 const MAX_TOC: u64 = 8 * 1024 * 1024;
 const MAX_METADATA: u64 = 2 * 1024 * 1024;
@@ -27,28 +28,47 @@ struct Member<'a> {
 struct Segment {
     offset: u64,
     size: u64,
-    components: Vec<String>,
+    components: Vec<Rc<str>>,
 }
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     let mut pending = vec![Segment {
         size: input.size(),
-        components: out.nested_artifacts.clone(),
+        components: out
+            .nested_artifacts
+            .iter()
+            .map(|path| Rc::from(path.as_str()))
+            .collect(),
         ..Segment::default()
     }];
     let mut first_failure = None;
-    for _ in 0..32 {
-        let Some(segment) = pending.pop() else { break };
+    let mut attempts = 0;
+    while let Some(segment) = pending.pop() {
+        work.check_deadline()?;
+        if work.strict() {
+            if attempts == 32 {
+                break;
+            }
+            attempts += 1;
+        }
         let mut candidate = ScanResult::new(out.total_size);
         candidate.format = out.format;
-        candidate.nested_artifacts = segment.components;
-        let span = (segment.offset, segment.size);
-        match inspect_xar(input, span, &mut pending, work, selection, &mut candidate).await {
+        candidate.nested_artifacts = segment.components.iter().map(ToString::to_string).collect();
+        match inspect_xar(
+            input,
+            &segment,
+            &mut pending,
+            work,
+            selection,
+            &mut candidate,
+        )
+        .await
+        {
             result @ (Ok(())
             | Err(ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_))) => {
                 *out = candidate;
@@ -77,12 +97,13 @@ pub(crate) async fn scan(
 
 async fn inspect_xar(
     input: &mut impl ReadAt,
-    (start, size): (u64, u64),
+    segment: &Segment,
     pending: &mut Vec<Segment>,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
+    let (start, size) = (segment.offset, segment.size);
     check_range(size, 0, 28)?;
     let head = input.read_at(start, 28).await?;
     if &head[..4] != b"xar!" {
@@ -99,10 +120,10 @@ async fn inspect_xar(
     }
     check_range(size, header_size, packed)?;
     let heap = header_size + packed;
-    let toc = input.read_at(start + header_size, packed as usize).await?;
     work.check_chunk(packed, expanded)?;
+    let toc = input.read_at(start + header_size, packed as usize).await?;
     work.start_chunk(expanded)?;
-    let toc = decode::zlib(&toc, expanded as usize, TOC_ERROR)?;
+    let toc = decode::zlib(&toc, expanded as usize, TOC_ERROR, work)?;
     let doc = parse_xml(&toc).map_err(|_| TOC_ERROR)?;
     let root = named_child(doc.root_element(), "toc").ok_or(TOC_ERROR)?;
 
@@ -154,20 +175,20 @@ async fn inspect_xar(
         }
     }
 
-    const MAX_COMPONENTS: usize = 8;
+    let max_components = if work.strict() { 8 } else { usize::MAX };
     if !embedded.is_empty() && out.nested_artifacts.len() < 4 {
         embedded.sort_by_key(|member| member.packed);
         let can_scan = embedded
             .iter()
             .rev()
-            .take(MAX_COMPONENTS)
+            .take(max_components)
             .filter(|member| {
                 member.encoding == "application/octet-stream" && member.packed == member.expanded
             })
             .collect::<Vec<_>>();
         for member in can_scan.iter().rev() {
-            let mut components = out.nested_artifacts.clone();
-            components.push(member.name.to_owned());
+            let mut components = segment.components.clone();
+            components.push(Rc::from(member.name));
             pending.push(Segment {
                 offset: member.offset,
                 size: member.packed,
@@ -209,7 +230,7 @@ async fn inspect_xar(
     payloads.sort_by_key(|(_, payload)| std::cmp::Reverse(payload.packed));
     let mut first_miss = None;
     let installer = out.installer.clone();
-    for (parent, member) in payloads.into_iter().take(MAX_COMPONENTS) {
+    for (parent, member) in payloads.into_iter().take(max_components) {
         let mut result = ScanResult::new(out.total_size);
         result.format = out.format;
         result.nested_artifacts = out.nested_artifacts.clone();
@@ -249,20 +270,20 @@ pub(crate) fn package_name(path: &str) -> bool {
 /// payload can use tar or CPIO framing depending on the package producer.
 pub(crate) async fn scan_legacy(
     input: &mut impl ReadAt,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     let size = input.size();
     let source = Window::new(input, 0, size)?;
-    let mut stream = Forward::new(source, STREAM_OUTPUT_LIMIT, Codec::Gzip, work)?;
+    let mut stream = Forward::new(source, work.stream_limit(), Codec::Gzip, work)?;
     let prefix = stream.read_at(0, 6).await?;
     let is_cpio = cpio::recognized(&prefix);
     let mut source = Replay { prefix, stream };
     if is_cpio {
-        return cpio::scan_with(&mut source, StreamBundle::new(target), out).await;
+        return cpio::scan_with(&mut source, work, StreamBundle::new(target), out).await;
     }
-    crate::tar::scan(&mut source, target, out).await
+    crate::tar::scan(&mut source, work, target, out).await
 }
 
 struct Replay<S> {
@@ -297,7 +318,7 @@ async fn scan_payload(
     input: &mut impl ReadAt,
     member: &Member<'_>,
     bom: Option<&Member<'_>>,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -370,21 +391,24 @@ enum Payload {
 async fn inspect_payload(
     mut source: impl ReadAt,
     kind: Payload,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: StreamBundle<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     match kind {
-        Payload::Cpio => cpio::scan_with(&mut source, target, out).await,
+        Payload::Cpio => cpio::scan_with(&mut source, work, target, out).await,
         Payload::Compressed(codec) => {
             cpio::scan_with(
-                &mut Forward::new(source, STREAM_OUTPUT_LIMIT, codec, work)?,
+                &mut Forward::new(source, work.stream_limit(), codec, work)?,
+                work,
                 target,
                 out,
             )
             .await
         }
-        Payload::Pbzx => cpio::scan_with(&mut Pbzx::open(source, work).await?, target, out).await,
+        Payload::Pbzx => {
+            cpio::scan_with(&mut Pbzx::open(source, work).await?, work, target, out).await
+        }
     }
 }
 
@@ -393,7 +417,7 @@ async fn recover_target(
     kind: Payload,
     payload: &Member<'_>,
     bom: &Member<'_>,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
 ) -> Option<(String, &'static str)> {
@@ -408,7 +432,7 @@ async fn recover_target(
                 .await
                 .ok()?;
             (
-                gzip_tail::recover(&tail, &expected)?,
+                gzip_tail::recover(&tail, &expected, work)?,
                 "bom_verified_gzip_cpio_tail",
             )
         }
@@ -465,7 +489,7 @@ impl<S: ReadAt> ReadAt for Preview<S> {
 async fn read_metadata(
     input: &mut impl ReadAt,
     member: &Member<'_>,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     let Some(data) = read_small_member(input, member, MAX_METADATA, work).await? else {
@@ -531,7 +555,7 @@ async fn read_small_member(
     input: &mut impl ReadAt,
     member: &Member<'_>,
     limit: u64,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
 ) -> Result<Option<Vec<u8>>> {
     if member.packed > limit || member.expanded > limit {
         return Ok(None);
@@ -544,7 +568,7 @@ async fn read_small_member(
         "application/octet-stream" if member.packed == member.expanded => Some(data),
         "application/x-gzip" => {
             work.start_chunk(member.expanded)?;
-            match decode::zlib(&data, member.expanded as usize, TOC_ERROR) {
+            match decode::zlib(&data, member.expanded as usize, TOC_ERROR, work) {
                 Ok(data) => Some(data),
                 Err(ScanError::Invalid(_)) => None,
                 Err(error) => return Err(error),

@@ -6,6 +6,7 @@ import { open, readFile, readdir, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { crc32, deflateRawSync, gzipSync } from 'node:zlib';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const cli = resolve(root, process.argv[2] ?? 'target/debug/scan-cli');
@@ -58,8 +59,8 @@ try {
 const help = spawnSync(cli, ['--help'], { encoding: 'utf8' });
 assert.ifError(help.error);
 assert.equal(help.status, 0);
-assert.match(help.stdout, /Default requested-byte budget: 67108864 bytes/);
-assert.match(help.stdout, /Default decoded-byte budget: 67108864 bytes/);
+assert.match(help.stdout, /URL attempts default to remote-cli with 8, 64, and 256 MiB tiers/);
+assert.match(help.stdout, /Worker defaults: 8388608 bytes requested, 67108864 bytes decoded/);
 
 const fixtures = resolve(root, 'fixtures');
 let comparisons = 0;
@@ -87,7 +88,7 @@ for (const name of (await readdir(fixtures)).sort()) {
     const budgets = [[0], [52], [64 * 1024 * 1024], [8192, 0]];
     if (name === 'late-bom.pkg') budgets.push([600 * 1024]);
     for (const [budget, decoded] of budgets) {
-      const args = ['scan', file, '--budget', String(budget), '--json'];
+      const args = ['scan', file, '--profile', 'worker', '--budget', String(budget), '--json'];
       if (decoded !== undefined) args.push('--decoded-budget', String(decoded));
       const native = spawnSync(cli, args, {
         encoding: 'utf8',
@@ -129,7 +130,7 @@ for (const name of (await readdir(fixtures)).sort()) {
         { kind: 'executable', option: '--binary-path', path: 'Fixture.app/Contents/MacOS/FixtureBinary' },
       ]) {
         const budget = 8 * 1024 * 1024;
-        const native = spawnSync(cli, ['scan', file, '--budget', String(budget), '--json', option, path], {
+        const native = spawnSync(cli, ['scan', file, '--profile', 'worker', '--budget', String(budget), '--json', option, path], {
           encoding: 'utf8',
         });
         assert.ifError(native.error);
@@ -157,4 +158,76 @@ const wrong = JSON.parse(await scan(72n, 72n, () => new Uint8Array(3)));
 assert.equal(wrong.status, 'source_error');
 assert.equal(wrong.bytes_read, 0);
 assert.equal(wrong.bytes_requested, 4);
-console.log(`${comparisons} native/Wasm comparisons passed, plus JS boundary, plist and callback cases.`);
+const thin = await readFile(resolve(fixtures, 'thin.macho'));
+let deadlineReads = 0;
+const timed = JSON.parse(await scan(BigInt(thin.length), 1024n,
+  () => { deadlineReads++; }, undefined, 'worker', () => true));
+assert.equal(timed.status, 'limit_reached');
+assert.match(timed.error, /deadline/);
+assert.equal(deadlineReads, 0);
+
+const padding = 65 * 1024 * 1024;
+const payload = await readFile(resolve(fixtures, 'app.tar'));
+const tar = Buffer.alloc(512 + padding + payload.length);
+tar.write('padding');
+tar.write(padding.toString(8).padStart(11, '0') + '\0', 124);
+tar.fill(32, 148, 156);
+tar.write('0', 156);
+tar.write('ustar\0', 257);
+const checksum = tar.subarray(0, 512).reduce((sum, byte) => sum + byte, 0);
+tar.write(checksum.toString(8).padStart(6, '0') + '\0 ', 148);
+payload.copy(tar, 512 + padding);
+const large = gzipSync(tar);
+const fromTar = (offset, length) => large.subarray(Number(offset), Number(offset) + length);
+const local = JSON.parse(await scan(BigInt(large.length), 1n, fromTar, 1n, 'local'));
+assert.equal(local.status, 'complete');
+assert.ok(local.decoded_bytes > 64 * 1024 * 1024);
+const worker = JSON.parse(await scan(BigInt(large.length), 8n * 1024n * 1024n, fromTar, undefined, 'worker'));
+assert.equal(worker.status, 'limit_reached');
+assert.match(worker.error, /decoded-byte budget/);
+
+// Put a supported image past the buffering threshold. Its trailer sits after
+// the padding, then the filesystem parser seeks back to earlier ranges.
+function zipMember(name, data) {
+  const path = Buffer.from(name);
+  const packed = deflateRawSync(data);
+  const crc = crc32(data);
+  const local = Buffer.alloc(30);
+  local.writeUInt32LE(0x04034b50, 0);
+  local.writeUInt16LE(20, 4);
+  local.writeUInt16LE(8, 8);
+  local.writeUInt32LE(crc, 14);
+  local.writeUInt32LE(packed.length, 18);
+  local.writeUInt32LE(data.length, 22);
+  local.writeUInt16LE(path.length, 26);
+  const directory = Buffer.alloc(46);
+  directory.writeUInt32LE(0x02014b50, 0);
+  directory.writeUInt16LE(20, 4);
+  directory.writeUInt16LE(20, 6);
+  directory.writeUInt16LE(8, 10);
+  directory.writeUInt32LE(crc, 16);
+  directory.writeUInt32LE(packed.length, 20);
+  directory.writeUInt32LE(data.length, 24);
+  directory.writeUInt16LE(path.length, 28);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(1, 8);
+  end.writeUInt16LE(1, 10);
+  end.writeUInt32LE(directory.length + path.length, 12);
+  end.writeUInt32LE(local.length + path.length + packed.length, 16);
+  return Buffer.concat([local, path, packed, directory, path, end]);
+}
+
+const dmg = await readFile(resolve(fixtures, 'hfsx.dmg'));
+const nested = Buffer.concat([dmg.subarray(0, -512), Buffer.alloc(33 * 1024 * 1024), dmg.subarray(-512)]);
+const zip = zipMember('nested.dmg', nested);
+const fromZip = (offset, length) => zip.subarray(Number(offset), Number(offset) + length);
+const replayed = JSON.parse(await scan(BigInt(zip.length), 0n, fromZip, undefined, 'local'));
+assert.equal(replayed.status, 'complete', replayed.error);
+assert.equal(replayed.bundle_id, 'org.doesitarm.fixture');
+assert.deepEqual(replayed.nested_artifacts, ['nested.dmg']);
+const bounded = JSON.parse(await scan(BigInt(zip.length), 8n * 1024n * 1024n, fromZip, undefined, 'worker'));
+assert.equal(bounded.status, 'limit_reached');
+assert.match(bounded.error, /compressed nested ZIP member/);
+
+console.log(`${comparisons} native/Wasm comparisons passed, plus JS boundary, plist, callback, and profile cases.`);

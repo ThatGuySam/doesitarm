@@ -1,6 +1,6 @@
 # Scanner hardening
 
-November 24, 2026. This pass addresses the six defects in the independent QA-A report against `b0752dd`.
+November 24, 2026. This pass addresses the six defects in the independent QA-A report against `b0752dd`. The strict Worker profile carries these defaults forward. [Current profiles](PROFILES.md)
 
 ## Fixes and regression coverage
 

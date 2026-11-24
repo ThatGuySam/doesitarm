@@ -14,7 +14,7 @@ The workspace, fixtures, adapters, and benchmark are under `scanner/`. The origi
 
 `scan-core` makes no filesystem or network calls. Its async `ReadAt` accepts unsigned 64-bit offsets. Native file and HTTPS reads complete synchronously in the CLI. Wasm accepts source sizes through `2^53 − 1` and calls `readAt(offset: bigint, length: number)`. The callback can return a `Uint8Array` immediately or after async I/O. The scanner checks the requested-byte budget before calling the host and reports unique accepted bytes and total requested bytes separately. The thin Mach-O parser visits fat slices in physical order so the same logic works over seekable and forward-only sources.
 
-The CLI defaults to 64 MiB each for requested bytes and decoded output. Use `--budget` and `--decoded-budget` to change them independently. The benchmark uses an 8 MiB request budget. Wasm takes a required request budget and an optional fourth BigInt argument for decoded bytes, defaulting to 64 MiB.
+The CLI chooses the local profile for files and the remote-cli profile for URLs. The benchmark uses an 8 MiB request budget. The Wasm API also takes a profile and optional host deadline. [Current safety profiles and Wasm arguments](PROFILES.md)
 
 ## Verification and reproduction
 
@@ -56,19 +56,19 @@ python3 scripts/homebrew-run.py target/homebrew-cask.json --output target/homebr
 | Parser | Limits |
 | --- | --- |
 | Mach-O | 128 fat slices and 1 MiB of load commands per slice. `LC_BUILD_VERSION` contributes a minimum only for macOS. |
-| ZIP | 16 MiB and 150,000 entries in the central directory. Up to 64 KiB of archive comment. Supports stored and DEFLATE members. Encrypted members and executable symlinks are unsupported. |
-| tar and CPIO | 250,000 entries, 64 KiB tar extensions or CPIO names, and 64 early executable candidates. tar.gz uses one gzip member. Tar links and sparse members are unsupported. |
-| PKG and PBZX | 8 MiB XAR TOC, 2 MiB per installer metadata file, and 120,000 XML nodes. Oversized or unsupported metadata is skipped. PBZX supports up to 4,096 raw or XZ chunks, at most 32 MiB expanded per chunk. |
+| ZIP | 16 MiB and 150,000 entries in the central directory. Up to 64 KiB of archive comment. Supports stored, DEFLATE, bzip2, LZMA, and XZ members. Encrypted members and executable symlinks are unsupported. |
+| tar and CPIO | 250,000 entries on Worker, 64 KiB tar extensions or CPIO names, and 64 early executable candidates. tar.gz uses one gzip member. Tar links and sparse members are unsupported. |
+| PKG and PBZX | 8 MiB XAR TOC, 2 MiB per installer metadata file, and 120,000 XML nodes. Oversized or unsupported metadata is skipped. PBZX supports raw or XZ chunks, at most 32 MiB expanded per chunk, and a 4,096 chunk ceiling on Worker. |
 | UDIF | Last 512 bytes hold the trailer. Indexes have an 8 MiB limit, with at most 128 `blkx` tables and 131,072 run descriptions. Compressed chunks have a 16 MiB packed and expanded limit. The XZ decoder has a 32 MiB dictionary and overhead cap. |
 | HFS+ and APFS | HFS+ limits a fork to 4,096 extents, a catalog lookup to 256 leaves, and a tree descent to 32 levels. APFS supports up to eight volumes, 128 checkpoint slots, 4–64 KiB blocks, and 256 nodes and 4,096 matching records per filesystem lookup. |
 | CLI HTTPS | The one-byte discovery probe counts toward the request budget. Each request has a 15-second timeout and follows up to eight redirects. |
 
 - Main executable architecture describes one binary. For app-wide compatibility, sample required runtimes, helpers, and framework binaries separately. Installer `hostArchitectures` describes installer policy. Add macOS reference checks with `lipo`, `vtool`, and `plutil` for pinned artifacts. Code-signature observations cover the load command.
-- ZIP selects the shallowest matching bundle. Sequential archives select the first outer app plist and retain bounded early binary evidence. Disk images select a root-level app. Multiple apps, nested installers, and installer scripts that generate or fetch an app need separate traversal and reporting.
+- ZIP selects the shallowest matching bundle. Sequential archives select the first outer app plist and retain bounded early binary evidence. Disk images select a root-level app. Selected paths can identify a bundle or standalone Mach-O. ZIP, flat XAR, and disk images can inspect supported nested installers. Installer scripts are inspected only as static evidence.
 - Disk image coverage is limited to unencrypted, single-segment UDIF with a plist index. Files stored with `decmpfs` and APFS encrypted or sealed volumes are unsupported. APFS also omits descriptor-tree checkpoints, Fusion, and hashed or headerless B-trees. APM/GPT discovery is implemented. The corpus verified published HFS+ and APFS app images. The synthetic HFSX image exercised overflow extents.
-- PKG chooses the largest Payload and reads its sibling PackageInfo where present. Nested or legacy packages and other payload codecs need additional support. A gzip stream may require reading most earlier bytes. A late inner fat slice in DEFLATE has the same limitation. Benchmark adaptive reads and alternative evidence levels before changing the default budget.
+- PKG prefers larger Payload members and reads their sibling PackageInfo where present. BOM evidence can identify some late plists in gzip and PBZX. A gzip stream or a late inner fat slice in DEFLATE can require decoding earlier bytes.
 - ZIP and streaming archive scans inspect prefixes and metadata. Extracting or authenticating whole members, verifying signature blobs, and validating complete archive checksums are outside this scanner’s result.
-- Hosts that return HTTP 200 for a range or fail discovery produce a source error. The CLI checks a strong ETag when available. A same-sized update without a validator can go undetected. Browser URL scans also depend on the origin’s CORS policy.
+- The CLI can accept a whole response at discovery with `--allow-stream`. The Worker requires validated range responses. The CLI checks a strong ETag when available. A same-sized update without a validator can go undetected. Browser URL scans also depend on the origin’s CORS policy.
 
 ## Implementation references
 

@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,10 +14,28 @@ function run(command, args) {
   if (status !== 0) process.exit(status ?? 1);
 }
 
+const wasm = 'target/wasm32-unknown-unknown/release/scan_wasm.wasm';
+run('cargo', ['build', '--locked', '-j2', '-p', 'scan-wasm', '--release', '--target', 'wasm32-unknown-unknown']);
+run(bindgen, ['--target', 'web', '--out-dir', 'pkg', wasm]);
+
 // Leave headroom for the Worker isolate's JS heap and HTTP buffers.
 run('cargo', ['rustc', '--locked', '-j2', '-p', 'scan-wasm', '--release',
   '--target', 'wasm32-unknown-unknown', '--', '-C', 'link-arg=--max-memory=83886080']);
-run(bindgen, ['--target', 'web', '--out-dir', 'pkg', 'target/wasm32-unknown-unknown/release/scan_wasm.wasm']);
+run(bindgen, ['--target', 'web', '--out-dir', 'pkg/worker', wasm]);
+
+// wasm-bindgen's web glue normally caches one instance per module. Give each
+// factory invocation its own Wasm exports, JS handles, and memory views so
+// discarded scans can never access a replacement instance.
+const workerPkg = join(scanner, 'pkg/worker');
+const glue = readFileSync(join(workerPkg, 'scan_wasm.js'), 'utf8');
+const exports = glue.replace(/^export (?=(?:async )?function )/gm, '')
+  .replace(/^export \{ initSync, __wbg_init as default \};$/m, '');
+if (/^export /m.test(exports) || !/^function initSync\(/m.test(exports) ||
+    !/^function scan\(/m.test(exports)) {
+  throw new Error('Unexpected wasm-bindgen web glue. Check the Worker instance factory.');
+}
+writeFileSync(join(workerPkg, 'scan_wasm_factory.js'),
+  `export function createScanner(moduleOrBytes) {\n${exports}\ninitSync({ module: moduleOrBytes });\nreturn scan;\n}\n`);
 
 const dist = join(web, 'dist');
 rmSync(dist, { recursive: true, force: true });

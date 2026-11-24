@@ -26,7 +26,7 @@ pub(crate) async fn scan(
     input: &mut impl ReadAt,
     kind: Kind,
     path: &str,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -52,7 +52,7 @@ pub(crate) async fn package(
     input: &mut impl ReadAt,
     kind: Kind,
     path: &str,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {

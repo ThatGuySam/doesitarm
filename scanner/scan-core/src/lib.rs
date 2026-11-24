@@ -21,22 +21,60 @@ mod udif_codec;
 mod zip;
 
 use serde::Serialize;
-use std::{collections::BTreeMap, fmt};
+use std::{collections::BTreeMap, fmt, str::FromStr};
 
-pub const DEFAULT_DECODED_BYTE_BUDGET: u64 = 64 * 1024 * 1024;
+const MIB: u64 = 1024 * 1024;
+pub const REMOTE_BUDGET_TIERS: [u64; 3] = [8 * MIB, 64 * MIB, 256 * MIB];
+pub const DEFAULT_DECODED_BYTE_BUDGET: u64 = 64 * MIB;
+pub const WORKER_WALL_TIME_MS: u32 = 20_000;
 const MAX_HOST_READS: u64 = 8192;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Profile {
+    Local,
+    RemoteCli,
+    Worker,
+}
+
+impl FromStr for Profile {
+    type Err = &'static str;
+
+    fn from_str(value: &str) -> std::result::Result<Self, Self::Err> {
+        match value {
+            "local" => Ok(Self::Local),
+            "remote-cli" => Ok(Self::RemoteCli),
+            "worker" => Ok(Self::Worker),
+            _ => Err("Expected a profile of local, remote-cli, or worker."),
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct ScanLimits {
+    pub profile: Profile,
     pub byte_budget: u64,
     pub decoded_byte_budget: u64,
 }
 
 impl ScanLimits {
+    /// Keep the original bounded behavior for callers that supply a byte budget.
     pub const fn new(byte_budget: u64) -> Self {
         Self {
             byte_budget,
-            decoded_byte_budget: DEFAULT_DECODED_BYTE_BUDGET,
+            ..Self::for_profile(Profile::Worker)
+        }
+    }
+
+    pub const fn for_profile(profile: Profile) -> Self {
+        let (byte_budget, decoded_byte_budget) = match profile {
+            Profile::Local => (u64::MAX, u64::MAX),
+            Profile::RemoteCli => (REMOTE_BUDGET_TIERS[0], u64::MAX),
+            Profile::Worker => (REMOTE_BUDGET_TIERS[0], DEFAULT_DECODED_BYTE_BUDGET),
+        };
+        Self {
+            profile,
+            byte_budget,
+            decoded_byte_budget,
         }
     }
 }
@@ -240,19 +278,55 @@ pub async fn scan_target_with_limits(
     limits: ScanLimits,
     target: Target<'_>,
 ) -> ScanResult {
+    scan_target_with_deadline(source, limits, target, None).await
+}
+
+/// A host can supply a cooperative deadline for the scan. Wasm hosts supply
+/// their own clock. Native Worker-profile scans default to a 20 s deadline.
+pub async fn scan_target_with_deadline(
+    source: &mut impl ReadAt,
+    limits: ScanLimits,
+    target: Target<'_>,
+    expired: Option<&dyn Fn() -> bool>,
+) -> ScanResult {
+    let strict = limits.profile == Profile::Worker;
+    #[cfg(not(target_arch = "wasm32"))]
+    let start = std::time::Instant::now();
+    #[cfg(not(target_arch = "wasm32"))]
+    let worker_expired =
+        || start.elapsed() >= std::time::Duration::from_millis(WORKER_WALL_TIME_MS.into());
+    #[cfg(not(target_arch = "wasm32"))]
+    let expired = expired.or_else(|| strict.then_some(&worker_expired as &dyn Fn() -> bool));
+
     let size = source.size();
     let mut result = ScanResult::new(size);
     let mut input = Metered {
         source,
         size,
-        budget: limits.byte_budget,
+        budget: if limits.profile == Profile::Local {
+            u64::MAX
+        } else {
+            limits.byte_budget
+        },
+        strict,
+        expired,
         requested: 0,
         reads: 0,
         coverage: Coverage::default(),
     };
-    let work = decode::DecodeBudget::new(limits.decoded_byte_budget);
-    if let Err(error) = inspect(&mut input, &work, target, &mut result).await {
-        result.set_error(error);
+    let decoded = if strict {
+        limits.decoded_byte_budget
+    } else {
+        u64::MAX
+    };
+    let work = decode::DecodeBudget::with_limits(decoded, strict, expired);
+    match inspect(&mut input, &work, target, &mut result).await {
+        Err(error) => result.set_error(error),
+        Ok(()) => {
+            if let Err(error) = work.check_deadline() {
+                result.set_error(error);
+            }
+        }
     }
     if result.min_macos.is_none() {
         result.min_macos = result
@@ -280,7 +354,7 @@ pub async fn scan_target_with_limits(
 
 async fn inspect(
     input: &mut impl ReadAt,
-    work: &decode::DecodeBudget,
+    work: &decode::DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -320,7 +394,8 @@ async fn inspect(
         cpio_magic.extend(input.read_at(4, 2).await?);
         if cpio::recognized(&cpio_magic) {
             out.format = Some("cpio");
-            return cpio::scan_with(input, stream_bundle::StreamBundle::new(target), out).await;
+            return cpio::scan_with(input, work, stream_bundle::StreamBundle::new(target), out)
+                .await;
         }
     }
     if magic == b"xar!" {
@@ -346,7 +421,7 @@ async fn inspect(
         let header = input.read_at(0, 512).await?;
         if tar::is_header(&header) {
             out.format = Some("tar");
-            return tar::scan(input, target, out).await;
+            return tar::scan(input, work, target, out).await;
         }
     }
     Err(ScanError::Unsupported("unrecognized file format"))
@@ -354,7 +429,7 @@ async fn inspect(
 
 async fn compressed_tar(
     input: &mut impl ReadAt,
-    work: &decode::DecodeBudget,
+    work: &decode::DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
     format: &'static str,
@@ -364,7 +439,8 @@ async fn compressed_tar(
     let size = input.size();
     let source = Window::new(input, 0, size)?;
     tar::scan(
-        &mut inflate::Forward::new(source, inflate::STREAM_OUTPUT_LIMIT, codec, work)?,
+        &mut inflate::Forward::new(source, work.stream_limit(), codec, work)?,
+        work,
         target,
         out,
     )
@@ -375,6 +451,8 @@ struct Metered<'a, S> {
     source: &'a mut S,
     size: u64,
     budget: u64,
+    strict: bool,
+    expired: Option<&'a dyn Fn() -> bool>,
     requested: u64,
     reads: u64,
     coverage: Coverage,
@@ -390,6 +468,7 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        decode::check_deadline(self.expired)?;
         check_range(self.size, offset, len as u64)?;
         if len == 0 {
             return Ok(Vec::new());
@@ -397,7 +476,7 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
         if len as u64 > self.remaining_budget() {
             return Err(ScanError::Budget);
         }
-        if self.reads == MAX_HOST_READS {
+        if self.strict && self.reads == MAX_HOST_READS {
             return Err(ScanError::WorkLimit("too many source range requests"));
         }
         self.reads += 1;
@@ -410,6 +489,7 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
             )));
         }
         self.coverage.insert(offset, offset + len as u64);
+        decode::check_deadline(self.expired)?;
         Ok(bytes)
     }
 }

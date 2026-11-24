@@ -6,20 +6,22 @@ import { emptyResult, DEFAULT_BUDGET } from '../public/scan-result.js';
 export const fixture = (name) => fileURLToPath(new URL(`../../fixtures/${name}`, import.meta.url));
 const native = fileURLToPath(new URL('../../target/debug/scan-cli', import.meta.url));
 
-export function cli(path, budget = DEFAULT_BUDGET) {
+export function cli(path, budget = DEFAULT_BUDGET, profile = 'local') {
   try {
-    return JSON.parse(execFileSync(native, ['scan', path, '--budget', String(budget), '--json']));
+    return JSON.parse(execFileSync(native, ['scan', path, '--budget', String(budget), '--profile', profile, '--json']));
   } catch (error) {
     if (error.status === 1) return JSON.parse(error.stdout);
     throw error;
   }
 }
 
-export function expectedRemote(path, budget, etag = '"fixture"') {
+export function expectedRemote(path, budget, etag = '"fixture"', profile = 'worker') {
   const size = readFileSync(path).length;
   if (!budget) return emptyResult('budget_exhausted', 'byte budget reached');
-  const result = cli(path, Math.max(0, Math.min(budget, size - 1) - 1));
-  result.bytes_read += 1;
+  const cap = profile === 'worker' ? Math.min(budget, size - 1) : budget;
+  const result = cli(path, Math.max(0, cap - 1), profile);
+  result.bytes_read = Math.max(1, result.bytes_read);
+  result.bytes_requested += 1;
   result.reads += 1;
   if (etag) result.source_etag = etag;
   return result;

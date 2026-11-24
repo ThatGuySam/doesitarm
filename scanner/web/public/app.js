@@ -111,7 +111,7 @@ function newScan(job) {
   if (job.kind === 'error') {
     update({ type: 'done', result: emptyResult('source_error', job.error), source: 'Browser', elapsed: 0 });
   } else {
-    pool.submit(id, job, Number(get('budget').value) * MIB, update);
+    pool.submit(id, job, job.kind === 'url' ? Number(get('budget').value) * MIB : undefined, update);
   }
 }
 

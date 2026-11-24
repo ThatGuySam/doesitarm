@@ -34,7 +34,7 @@ npm test
 npm run test:browser
 ```
 
-The build regenerates `scanner/pkg/` and assembles `scanner/web/dist/` with the client Wasm and the recorded 30-cask Homebrew run. Both generated directories are ignored by Git. `npm run serve` serves the static preview on `127.0.0.1:8787`, including local scans and direct browser URL reads. Use the deployed preview for Cloudflare scans. The browser test starts and closes its own loopback server with the API handler injected.
+The build regenerates `scanner/pkg/`, places the Worker-specific Wasm and its instance factory in `scanner/pkg/worker/`, and assembles `scanner/web/dist/` with the client Wasm and the recorded 30-cask Homebrew run. Both generated directories are ignored by Git. `npm run serve` serves the static preview on `127.0.0.1:8787`, including local scans and direct browser URL reads. Use the deployed preview for Cloudflare scans. The browser test starts and closes its own loopback server with the API handler injected.
 
 To reproduce Wrangler’s build and deploy from `scanner/web` with the existing login, use the explicit configuration path. The bundler warned about the existing site’s unavailable `astro/tsconfigs/base` and built the JavaScript Worker successfully.
 
@@ -51,7 +51,9 @@ node /home/tiki/.npm/_npx/c943b712072b77c4/node_modules/wrangler/bin/wrangler.js
 - **Sparse run.** The picker scanned 12 paths to a sparse 5 GiB Mach-O. Each path was a hard link to the same inode, which occupied 8 KiB on disk. Each scan read under 1 KiB, verified a slice beyond 4 GiB, and matched the CLI JSON. The batch took 273 ms, including CLI comparisons. Combined Chromium proportional set size rose from 327 MiB to a sampled peak of 334 MiB.
 - **Browser coverage.** Safari, real Firefox, and macOS Finder package drops were untested. The Chromium test used actual file paths for the directory drop. When the browser cannot expose a macOS package as a directory, use the folder picker or a ZIP of the app.
 
-## Behavior and limits
+## Behavior and limits at the original deployment
+
+[Current browser and Worker behavior](../PROFILES.md) · [Merge and verification](../MERGE.md)
 
 Local scans run in dedicated module workers, with up to four active jobs according to `navigator.hardwareConcurrency`. Folder scans count `Contents/Info.plist` and the executable as the input size. The displayed read percentage measures cumulative source bytes and can exceed 100% if ranges overlap. The browser uses a 12-second direct network deadline. CORS and invalid range responses trigger a Cloudflare scan. Browsers need access to the origin’s `Content-Range` header. The Cloudflare scan shows indeterminate progress until its JSON arrives.
 

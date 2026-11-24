@@ -3,7 +3,8 @@
 mod http;
 
 use scan_core::{
-    ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, Target, scan_target_with_limits,
+    Profile, REMOTE_BUDGET_TIERS, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status,
+    Target, WORKER_WALL_TIME_MS, scan_target_with_deadline,
 };
 use serde::Serialize;
 use std::{
@@ -15,18 +16,35 @@ use std::{
     pin::pin,
     process::ExitCode,
     task::{Context, Poll, Waker},
-    time::Duration,
+    time::{Duration, Instant},
 };
 
-const DEFAULT_BUDGET: u64 = 64 * 1024 * 1024;
-const USAGE: &str = "Usage: scan-cli scan <path-or-url> [--budget BYTES] [--decoded-budget BYTES] [--json] [--allow-stream] [--allow-http] [--request-delay-ms MS] [--bundle-path PATH | --binary-path PATH]";
+const USAGE: &str = "Usage: scan-cli scan <path-or-url> [--profile local|remote-cli|worker] [--budget BYTES] [--deadline-ms MS] [--decoded-budget BYTES] [--json] [--allow-stream] [--allow-http] [--request-delay-ms MS] [--bundle-path PATH | --binary-path PATH]";
 
 struct Args {
     input: OsString,
     limits: ScanLimits,
+    escalate: bool,
+    deadline: Option<Duration>,
     json: bool,
     http: http::Options,
     target: Option<Requested>,
+}
+
+#[derive(Clone, Copy)]
+struct Deadline {
+    start: Instant,
+    duration: Duration,
+}
+
+impl Deadline {
+    fn remaining(self) -> Duration {
+        self.duration.saturating_sub(self.start.elapsed())
+    }
+
+    fn expired(self) -> bool {
+        self.remaining().is_zero()
+    }
 }
 
 enum Requested {
@@ -69,9 +87,13 @@ fn main() -> ExitCode {
         Ok(Some(args)) => args,
         Ok(None) => {
             println!("{USAGE}");
+            println!("Local files default to local with no work budget or deadline.");
+            println!("URL attempts default to remote-cli with 8, 64, and 256 MiB tiers.");
             println!(
-                "Default requested-byte budget: {DEFAULT_BUDGET} bytes\nDefault decoded-byte budget: {} bytes",
-                scan_core::DEFAULT_DECODED_BYTE_BUDGET
+                "Worker defaults: {} bytes requested, {} bytes decoded, {} ms wall time.",
+                REMOTE_BUDGET_TIERS[0],
+                scan_core::DEFAULT_DECODED_BYTE_BUDGET,
+                WORKER_WALL_TIME_MS,
             );
             return ExitCode::SUCCESS;
         }
@@ -141,6 +163,8 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
     }
     let input = values.next().ok_or("Missing path or HTTPS URL.")?;
     let mut budget = None;
+    let mut profile = None;
+    let mut deadline = None;
     let mut decoded_budget = None;
     let mut json = false;
     let mut http = http::Options::default();
@@ -148,6 +172,22 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
     let mut target = None;
     while let Some(value) = values.next() {
         match value.to_str() {
+            Some("--profile") if profile.is_none() => {
+                profile = Some(
+                    values
+                        .next()
+                        .and_then(|value| value.to_str()?.parse::<Profile>().ok())
+                        .ok_or("Expected a profile of local, remote-cli, or worker.")?,
+                );
+            }
+            Some("--deadline-ms") if deadline.is_none() => {
+                deadline = Some(Duration::from_millis(
+                    values
+                        .next()
+                        .and_then(|value| value.to_str()?.parse().ok())
+                        .ok_or("Expected a nonnegative integer deadline in milliseconds.")?,
+                ));
+            }
             Some("--budget") if budget.is_none() => {
                 budget = Some(
                     values
@@ -185,14 +225,32 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
             _ => return Err("Unknown or repeated flag."),
         }
     }
-    let mut limits = ScanLimits::new(budget.unwrap_or(DEFAULT_BUDGET));
+    let url = input.to_str().is_some_and(|text| text.contains("://"));
+    let profile = profile.unwrap_or(if url {
+        Profile::RemoteCli
+    } else {
+        Profile::Local
+    });
+    if url && profile == Profile::Local {
+        return Err("URL scans require remote-cli or worker.");
+    }
+    let mut limits = ScanLimits::for_profile(profile);
+    if let Some(budget) = budget {
+        limits.byte_budget = budget;
+    }
     if let Some(decoded_budget) = decoded_budget {
         limits.decoded_byte_budget = decoded_budget;
+    }
+    if profile == Profile::Worker {
+        let worker_deadline = Duration::from_millis(WORKER_WALL_TIME_MS.into());
+        deadline = Some(deadline.map_or(worker_deadline, |explicit| explicit.min(worker_deadline)));
     }
     http.delay = Duration::from_millis(delay.unwrap_or(0));
     Ok(Some(Args {
         input,
         limits,
+        escalate: url && profile == Profile::RemoteCli && budget.is_none(),
+        deadline,
         json,
         http,
         target,
@@ -200,6 +258,10 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
 }
 
 fn run(args: &Args) -> Output {
+    let deadline = args.deadline.map(|duration| Deadline {
+        start: Instant::now(),
+        duration,
+    });
     let target = match &args.target {
         Some(Requested::Bundle(path)) => Target::Bundle(path),
         Some(Requested::Executable(path)) => Target::Executable(path),
@@ -208,12 +270,30 @@ fn run(args: &Args) -> Output {
     let source = args.input.to_str();
     let result = if let Some(url) = source.filter(|s| s.contains("://")) {
         if url.starts_with("https://") || (args.http.allow_http && url.starts_with("http://")) {
-            return http::scan(url, args.limits, target, &args.http);
+            let mut limits = args.limits;
+            let mut result = http::scan(url, limits, target, &args.http, deadline);
+            if args.escalate {
+                for budget in REMOTE_BUDGET_TIERS.into_iter().skip(1) {
+                    if !matches!(result.scan.status, Status::BudgetExhausted) {
+                        break;
+                    }
+                    limits.byte_budget = budget;
+                    result = http::scan(url, limits, target, &args.http, deadline);
+                }
+            }
+            return result;
         }
         Err(ScanError::Source("URL must use HTTPS".into()))
     } else {
-        FileSource::open(Path::new(&args.input))
-            .map(|mut file| ready(scan_target_with_limits(&mut file, args.limits, target)))
+        FileSource::open(Path::new(&args.input)).map(|mut file| {
+            let expired = || deadline.is_some_and(Deadline::expired);
+            ready(scan_target_with_deadline(
+                &mut file,
+                args.limits,
+                target,
+                deadline.map(|_| &expired as &dyn Fn() -> bool),
+            ))
+        })
     };
     Output::new(result.unwrap_or_else(|error| failure(error, 0)))
 }

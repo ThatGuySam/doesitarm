@@ -31,13 +31,13 @@ struct Image<'a, S> {
     size: u64,
     runs: Vec<Run>,
     cache: VecDeque<(usize, Vec<u8>)>,
-    work: &'a DecodeBudget,
+    work: &'a DecodeBudget<'a>,
     run_reads: usize,
 }
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     trailer: &[u8],
     target: Target<'_>,
     out: &mut ScanResult,
@@ -204,10 +204,13 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
         check_range(self.size, offset, len as u64)?;
         let mut bytes = Vec::with_capacity(len);
         while bytes.len() < len {
-            if self.run_reads == MAX_IMAGE_RUN_READS {
-                return Err(ScanError::WorkLimit("too many UDIF run reads"));
+            self.work.check_deadline()?;
+            if self.work.strict() {
+                if self.run_reads == MAX_IMAGE_RUN_READS {
+                    return Err(ScanError::WorkLimit("too many UDIF run reads"));
+                }
+                self.run_reads += 1;
             }
-            self.run_reads += 1;
             let index = self.runs.partition_point(|run| run.disk.end <= offset);
             let run = self
                 .runs

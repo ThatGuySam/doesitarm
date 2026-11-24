@@ -1,5 +1,6 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, bom, bundle, check_range, stream_bundle::StreamBundle,
+    ReadAt, Result, ScanError, ScanResult, bom, bundle, check_range, decode::DecodeBudget,
+    stream_bundle::StreamBundle,
 };
 
 const INVALID: ScanError = ScanError::Invalid("CPIO archive header");
@@ -60,11 +61,12 @@ pub(crate) fn recognized(magic: &[u8]) -> bool {
 
 pub(crate) async fn scan_with(
     input: &mut impl ReadAt,
+    work: &DecodeBudget<'_>,
     mut bundle: StreamBundle<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     let mut offset = 0;
-    for _ in 0..250_000 {
+    for _ in 0..work.archive_entry_limit() {
         let mut header = input.read_at(offset, 76).await?;
         let encoding = Encoding::from_magic(&header[..6])
             .ok_or(ScanError::Unsupported("CPIO payload encoding"))?;
@@ -77,6 +79,7 @@ pub(crate) async fn scan_with(
             return Err(INVALID);
         }
         let name_at = offset + head_size as u64;
+        check_range(input.size(), name_at, name_size)?;
         let bytes = input.read_at(name_at, name_size as usize).await?;
         let name = bytes.strip_suffix(b"\0").ok_or(INVALID)?;
         if name == b"TRAILER!!!" {

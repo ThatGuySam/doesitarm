@@ -72,16 +72,19 @@ async function readRange(fetchRange, signal, from, length, previous) {
 
 // Match the CLI's discovery accounting and retrieval cap. The range stream
 // is consumed only after validating its headers.
-export async function scanRemote({ scan, fetchRange, budget, signal, onProgress = () => {} }) {
+export async function scanRemote({
+  scan, fetchRange, budget, signal, profile = 'remote-cli', expired, throwOnTrap = false, onProgress = () => {},
+}) {
   let representation;
   let sourceFailure;
   let bytesRead = 0;
+  let bytesRequested = 0;
   let reads = 0;
   const progress = () => onProgress(bytesRead, representation?.size ?? 0);
 
   function classify(error) {
     if (error instanceof RangeFailure) return error;
-    if (signal.aborted) return deadlineError();
+    if (signal?.aborted) return deadlineError();
     if (error instanceof WebAssembly.RuntimeError) {
       return new RangeFailure('The scanner could not continue within its Wasm resources.', 'limit_reached', 503);
     }
@@ -90,16 +93,19 @@ export async function scanRemote({ scan, fetchRange, budget, signal, onProgress 
 
   try {
     reads += 1;
+    bytesRequested += 1;
     const { size, etag } = await readRange(fetchRange, signal, 0, 1);
     representation = { size, etag };
     bytesRead = 1;
     progress();
 
-    const coreBudget = Math.max(0, Math.min(budget, size - 1) - 1);
+    const cap = profile === 'worker' ? Math.min(budget, size - 1) : budget;
+    const coreBudget = Math.max(0, cap - 1);
     const result = JSON.parse(await scan(BigInt(size), BigInt(coreBudget), async (offset, length) => {
       reads += 1;
+      bytesRequested += length;
       try {
-        if (signal.aborted) throw deadlineError();
+        if (signal?.aborted) throw deadlineError();
         if (length > 16 * MIB) {
           throw new RangeFailure('Scan requested a range larger than 16 MiB.', 'limit_reached', 503);
         }
@@ -112,19 +118,24 @@ export async function scanRemote({ scan, fetchRange, budget, signal, onProgress 
         sourceFailure = classify(error);
         throw error;
       }
-    }));
-    result.bytes_read = bytesRead;
+    }, undefined, profile, expired));
+    result.bytes_read = Math.max(1, result.bytes_read);
+    result.bytes_requested = bytesRequested;
     result.reads = reads;
     if (representation.etag) result.source_etag = representation.etag;
     if (sourceFailure) {
       result.status = sourceFailure.status;
       result.error = sourceFailure.message;
     }
-    return { result, httpStatus: sourceFailure?.status === 'source_error' ? sourceFailure.httpStatus : 200 };
+    const httpStatus = sourceFailure && (sourceFailure.status === 'source_error' || sourceFailure.httpStatus === 504)
+      ? sourceFailure.httpStatus : 200;
+    return { result, httpStatus };
   } catch (error) {
+    if (throwOnTrap && error instanceof WebAssembly.RuntimeError) throw error;
     const failure = sourceFailure ?? classify(error);
     const result = emptyResult(failure.status, failure.message, representation?.size);
     result.bytes_read = bytesRead;
+    result.bytes_requested = bytesRequested;
     result.reads = reads;
     if (representation?.etag) result.source_etag = representation.etag;
     return { result, httpStatus: failure.httpStatus };

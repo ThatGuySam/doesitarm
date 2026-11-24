@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import test from 'node:test';
 import { chromium } from 'playwright-core';
-import { initSync, scan } from '../../pkg/scan_wasm.js';
+import { createScanner } from '../../pkg/worker/scan_wasm_factory.js';
 import { DEFAULT_BUDGET } from '../public/scan-result.js';
 import { startPreview } from '../scripts/serve.mjs';
 import { createHandler } from '../worker/handler.js';
@@ -44,6 +44,8 @@ function expectedBundle(bundle, archive) {
     format: 'app',
     architectures: executable.architectures,
     bytes_read: plistSize + executable.bytes_read,
+    bytes_requested: plistSize + executable.bytes_requested,
+    decoded_bytes: executable.decoded_bytes,
     reads: 1 + executable.reads,
     total_size: plistSize + executable.total_size,
   };
@@ -106,9 +108,9 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
   const backendFile = fixture('hfsx.dmg');
   const directBytes = readFileSync(directFile);
   const backendBytes = readFileSync(backendFile);
-  initSync({ module: new WebAssembly.Module(readFileSync(new URL('../../pkg/scan_wasm_bg.wasm', import.meta.url))) });
+  const module = new WebAssembly.Module(readFileSync(new URL('../../pkg/worker/scan_wasm_bg.wasm', import.meta.url)));
   const handler = createHandler({
-    scan,
+    createScan: () => createScanner(module),
     outbound: async (url, options) => url.hostname === 'cloudflare-dns.com'
       ? dnsResponse(url)
       : rangedResponse(options.headers.get('Range'), backendBytes),
@@ -116,6 +118,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
   const apiCalls = [];
   const { server, url } = await startPreview({
     api: (request) => {
+      assert.equal(request.headers.get('X-Scan-Client'), 'browser');
       const download = new URL(request.url).searchParams.get('url');
       apiCalls.push(download);
       if (download.endsWith('/resource.dmg')) return new Response('Error 1102', { status: 503 });
@@ -227,7 +230,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     });
 
     for (const [filename, result] of [
-      ['direct.macho', expectedRemote(directFile, DEFAULT_BUDGET)],
+      ['direct.macho', expectedRemote(directFile, DEFAULT_BUDGET, '"fixture"', 'remote-cli')],
       ['cors.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
       ['whole.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
     ]) {

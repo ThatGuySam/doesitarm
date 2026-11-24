@@ -1,6 +1,6 @@
-use super::{Output, failure, ready, source_error};
+use super::{Deadline, Output, failure, ready, source_error};
 use scan_core::{
-    ReadAt, Result, ScanError, ScanLimits, ScanResult, Target, scan_target_with_limits,
+    Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Target, scan_target_with_deadline,
 };
 use std::{
     fs::File,
@@ -12,6 +12,9 @@ use ureq::{
     Agent, Body, BodyReader, ResponseExt,
     http::{HeaderValue, Response, Uri, header},
 };
+
+const REQUEST_TIMEOUT: Duration = Duration::from_secs(15);
+const DEADLINE: ScanError = ScanError::WorkLimit("scan deadline reached");
 
 #[derive(Default)]
 pub(crate) struct Options {
@@ -25,7 +28,11 @@ pub(crate) fn scan(
     mut limits: ScanLimits,
     target: Target<'_>,
     options: &Options,
+    deadline: Option<Deadline>,
 ) -> Output {
+    if deadline.is_some_and(Deadline::expired) {
+        return Output::new(failure(DEADLINE, 0));
+    }
     if limits.byte_budget == 0 {
         return Output::new(failure(ScanError::Budget, 0));
     }
@@ -33,7 +40,7 @@ pub(crate) fn scan(
         .http_status_as_error(false)
         .https_only(!options.allow_http)
         .max_redirects(8)
-        .timeout_global(Some(Duration::from_secs(15)))
+        .timeout_global(Some(REQUEST_TIMEOUT))
         .build();
     let agent = Agent::new_with_config(config);
     let uri = match url.parse::<Uri>() {
@@ -41,15 +48,16 @@ pub(crate) fn scan(
         _ => return Output::new(failure(ScanError::Source("invalid HTTP URL".into()), 0)),
     };
     let now = Instant::now();
-    let response = match request(&agent, &uri, 0, 1, None) {
+    let response = match request(&agent, &uri, 0, 1, None, deadline) {
         Ok(response) => response,
         Err(error) => return probe_failure(error),
     };
     if response.status().as_u16() == 200 && options.allow_stream {
-        return scan_stream(response, limits, target);
+        return scan_stream(response, limits, target, deadline);
     }
     let (probe, _) = match accept_range(response, 0, 1, None) {
         Ok(response) => response,
+        Err(_) if deadline.is_some_and(Deadline::expired) => return probe_failure(DEADLINE),
         Err(error) => return probe_failure(error),
     };
     let source_etag = etag_text(probe.etag.as_ref());
@@ -58,9 +66,15 @@ pub(crate) fn scan(
         representation: probe,
         delay: options.delay,
         last_request: now,
+        deadline,
     };
-    limits.byte_budget -= 1;
-    let mut result = ready(scan_target_with_limits(&mut source, limits, target));
+    let budget = if limits.profile == Profile::Worker {
+        limits.byte_budget.min(source.size().saturating_sub(1))
+    } else {
+        limits.byte_budget
+    };
+    limits.byte_budget = budget.saturating_sub(1);
+    let mut result = scan_core(&mut source, limits, target, deadline);
     result.reads += 1;
     result.bytes_requested += 1;
     // A successful core read of the magic already covers the probe at zero.
@@ -78,7 +92,27 @@ fn probe_failure(error: ScanError) -> Output {
     Output::new(scan)
 }
 
-fn scan_stream(response: Response<Body>, mut limits: ScanLimits, target: Target<'_>) -> Output {
+fn scan_core(
+    source: &mut impl ReadAt,
+    limits: ScanLimits,
+    target: Target<'_>,
+    deadline: Option<Deadline>,
+) -> ScanResult {
+    let expired = || deadline.is_some_and(Deadline::expired);
+    ready(scan_target_with_deadline(
+        source,
+        limits,
+        target,
+        deadline.map(|_| &expired as &dyn Fn() -> bool),
+    ))
+}
+
+fn scan_stream(
+    response: Response<Body>,
+    mut limits: ScanLimits,
+    target: Target<'_>,
+    deadline: Option<Deadline>,
+) -> Output {
     let source_etag = etag_text(
         response
             .headers()
@@ -97,7 +131,7 @@ fn scan_stream(response: Response<Body>, mut limits: ScanLimits, target: Target<
                     // The spool meters physical transfer. Reads served from it
                     // can revisit cached bytes without a second network charge.
                     limits.byte_budget = u64::MAX;
-                    ready(scan_target_with_limits(&mut source, limits, target))
+                    scan_core(&mut source, limits, target, deadline)
                 }
                 Err(error) => {
                     let mut result = ScanResult::new(source.size());
@@ -105,8 +139,12 @@ fn scan_stream(response: Response<Body>, mut limits: ScanLimits, target: Target<
                     result
                 }
             };
+            if deadline.is_some_and(Deadline::expired) {
+                result.set_error(DEADLINE);
+            }
             result.reads = 1;
             result.bytes_read = source.received;
+            result.bytes_requested = source.received;
             result
         }
         Err(error) => failure(error, 1),
@@ -230,6 +268,7 @@ struct HttpSource {
     representation: Representation,
     delay: Duration,
     last_request: Instant,
+    deadline: Option<Deadline>,
 }
 
 impl ReadAt for HttpSource {
@@ -238,7 +277,11 @@ impl ReadAt for HttpSource {
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
-        thread::sleep(self.delay.saturating_sub(self.last_request.elapsed()));
+        let delay = self.delay.saturating_sub(self.last_request.elapsed());
+        thread::sleep(
+            self.deadline
+                .map_or(delay, |deadline| delay.min(deadline.remaining())),
+        );
         self.last_request = Instant::now();
         let response = request(
             &self.agent,
@@ -246,9 +289,16 @@ impl ReadAt for HttpSource {
             offset,
             len,
             Some(&self.representation),
+            self.deadline,
         )?;
         let (representation, bytes) =
-            accept_range(response, offset, len, Some(&self.representation))?;
+            accept_range(response, offset, len, Some(&self.representation)).map_err(|error| {
+                if self.deadline.is_some_and(Deadline::expired) {
+                    DEADLINE
+                } else {
+                    error
+                }
+            })?;
         self.representation = representation;
         Ok(bytes)
     }
@@ -260,6 +310,7 @@ fn request(
     offset: u64,
     len: usize,
     expected: Option<&Representation>,
+    deadline: Option<Deadline>,
 ) -> Result<Response<Body>> {
     let end = offset + len as u64 - 1;
     let mut request = agent
@@ -270,7 +321,23 @@ fn request(
     if let Some(etag) = expected.and_then(|value| value.etag.as_ref()) {
         request = request.header(header::IF_MATCH, etag);
     }
-    request.call().map_err(source_error)
+    if let Some(deadline) = deadline {
+        let remaining = deadline.remaining();
+        if remaining.is_zero() {
+            return Err(DEADLINE);
+        }
+        request = request
+            .config()
+            .timeout_global(Some(remaining.min(REQUEST_TIMEOUT)))
+            .build();
+    }
+    request.call().map_err(|error| {
+        if deadline.is_some_and(Deadline::expired) {
+            DEADLINE
+        } else {
+            source_error(error)
+        }
+    })
 }
 
 fn accept_range(
@@ -421,7 +488,7 @@ mod tests {
             etag: Some(HeaderValue::from_static("\"abc\"")),
         };
         (
-            request(&agent, &url, 8, 4, Some(&planned))
+            request(&agent, &url, 8, 4, Some(&planned), None)
                 .and_then(|response| accept_range(response, 8, 4, Some(&planned))),
             server.join().unwrap(),
         )
@@ -474,6 +541,7 @@ mod tests {
             whole_response(artifact, Some(artifact.len() as u64)),
             ScanLimits::new(1_000_000),
             Target::Auto,
+            None,
         );
         assert!(matches!(result.scan.status, scan_core::Status::Complete));
         assert_eq!(result.source_transport, Some("stream"));

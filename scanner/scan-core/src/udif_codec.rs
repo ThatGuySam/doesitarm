@@ -1,6 +1,6 @@
 use crate::{
     Result, ScanError,
-    decode::{self, DecodeBudget, check_chunk_ratio},
+    decode::{self, DecodeBudget},
 };
 use std::io::{self, Write};
 
@@ -14,7 +14,12 @@ pub(crate) const LZFSE: u32 = 0x8000_0007;
 pub(crate) const LZMA: u32 = 0x8000_0008;
 const INVALID: ScanError = ScanError::Invalid("UDIF compressed chunk");
 
-pub(crate) fn decode(kind: u32, input: &[u8], size: usize, work: &DecodeBudget) -> Result<Vec<u8>> {
+pub(crate) fn decode(
+    kind: u32,
+    input: &[u8],
+    size: usize,
+    work: &DecodeBudget<'_>,
+) -> Result<Vec<u8>> {
     if !matches!(kind, ADC | LZFSE | ZLIB | BZIP2 | LZMA) {
         return Err(ScanError::Unsupported("UDIF chunk codec"));
     }
@@ -24,11 +29,11 @@ pub(crate) fn decode(kind: u32, input: &[u8], size: usize, work: &DecodeBudget) 
         return adc(input, size);
     }
     if kind == LZFSE {
-        let mut out = Bounded(Vec::with_capacity(size), size);
-        let (consumed, _) = lzfse_rust::LzfseRingDecoder::default()
-            .decode(&mut { input }, &mut out)
-            .map_err(|_| INVALID)?;
-        check_chunk_ratio(consumed, size as u64)?;
+        let mut out = Bounded(Vec::new(), size);
+        let progress = lzfse_rust::LzfseRingDecoder::default().decode(&mut { input }, &mut out);
+        work.check_deadline()?;
+        let (consumed, _) = progress.map_err(|_| INVALID)?;
+        work.check_chunk_ratio(consumed, size as u64)?;
         return if out.0.len() == size {
             Ok(out.0)
         } else {
@@ -37,19 +42,19 @@ pub(crate) fn decode(kind: u32, input: &[u8], size: usize, work: &DecodeBudget) 
     }
 
     match kind {
-        ZLIB => decode::zlib(input, size, INVALID),
+        ZLIB => decode::zlib(input, size, INVALID, work),
         BZIP2 => {
             let mut decoder = bzip2::read::BzDecoder::new(input);
-            let decoded = decode::exact(&mut decoder, size, INVALID)?;
-            check_chunk_ratio(decoder.total_in(), size as u64)?;
+            let decoded = decode::exact(&mut decoder, size, INVALID, work)?;
+            work.check_chunk_ratio(decoder.total_in(), size as u64)?;
             Ok(decoded)
         }
         LZMA => {
             // ULMO uses XZ framing and needs a bounded LZMA2 dictionary.
             let mut reader = lzma_rust2::XzReader::new_mem_limit(input, false, 32 * 1024);
-            let decoded = decode::exact(&mut reader, size, INVALID)?;
+            let decoded = decode::exact(&mut reader, size, INVALID, work)?;
             let consumed = input.len() - reader.inner().len();
-            check_chunk_ratio(consumed as u64, size as u64)?;
+            work.check_chunk_ratio(consumed as u64, size as u64)?;
             Ok(decoded)
         }
         _ => Err(ScanError::Unsupported("UDIF chunk codec")),
@@ -63,6 +68,7 @@ impl Write for Bounded {
         if bytes.len() > self.1 - self.0.len() {
             return Err(io::Error::other("UDIF chunk expands past declared size"));
         }
+        self.0.try_reserve(bytes.len()).map_err(io::Error::other)?;
         self.0.extend_from_slice(bytes);
         Ok(bytes.len())
     }
@@ -73,7 +79,7 @@ impl Write for Bounded {
 }
 
 fn adc(mut input: &[u8], size: usize) -> Result<Vec<u8>> {
-    let mut out = Vec::with_capacity(size);
+    let mut out = Vec::new();
     while let Some((&tag, rest)) = input.split_first() {
         input = rest;
         if tag & 0x80 != 0 {
@@ -81,7 +87,7 @@ fn adc(mut input: &[u8], size: usize) -> Result<Vec<u8>> {
             if count > input.len() || count > size - out.len() {
                 return Err(INVALID);
             }
-            out.extend_from_slice(&input[..count]);
+            decode::append_output(&mut out, &input[..count])?;
             input = &input[count..];
         } else {
             let first = *input.first().ok_or(INVALID)?;
@@ -102,6 +108,8 @@ fn adc(mut input: &[u8], size: usize) -> Result<Vec<u8>> {
             if distance > out.len() || count > size - out.len() {
                 return Err(INVALID);
             }
+            out.try_reserve(count)
+                .map_err(|_| ScanError::Limit("decoded buffer could not be allocated"))?;
             for _ in 0..count {
                 out.push(out[out.len() - distance]);
             }

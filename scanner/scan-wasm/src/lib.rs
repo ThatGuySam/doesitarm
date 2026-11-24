@@ -2,7 +2,9 @@
 #![cfg(target_arch = "wasm32")]
 
 use js_sys::{BigInt, Function, Promise, RangeError, Uint8Array};
-use scan_core::{ReadAt, Result, ScanError, ScanLimits, ScanResult, Target};
+use scan_core::{
+    Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Target, WORKER_WALL_TIME_MS,
+};
 use wasm_bindgen::{JsCast, prelude::*};
 use wasm_bindgen_futures::JsFuture;
 
@@ -48,6 +50,8 @@ pub async fn scan(
     budget: BigInt,
     read_at: Function,
     decoded_byte_budget: Option<BigInt>,
+    profile: Option<String>,
+    expired: Option<Function>,
 ) -> std::result::Result<String, JsValue> {
     scan_with_target(
         total_size,
@@ -55,6 +59,8 @@ pub async fn scan(
         read_at,
         Target::Auto,
         decoded_byte_budget,
+        profile,
+        expired,
     )
     .await
 }
@@ -67,6 +73,7 @@ pub async fn scan_target(
     kind: &str,
     path: &str,
     decoded_byte_budget: Option<BigInt>,
+    profile: Option<String>,
 ) -> std::result::Result<String, JsValue> {
     let target = match kind {
         "bundle" => Target::Bundle(path),
@@ -77,7 +84,16 @@ pub async fn scan_target(
             ));
         }
     };
-    scan_with_target(total_size, budget, read_at, target, decoded_byte_budget).await
+    scan_with_target(
+        total_size,
+        budget,
+        read_at,
+        target,
+        decoded_byte_budget,
+        profile,
+        None,
+    )
+    .await
 }
 
 async fn scan_with_target(
@@ -86,12 +102,20 @@ async fn scan_with_target(
     read_at: Function,
     target: Target<'_>,
     decoded_byte_budget: Option<BigInt>,
+    profile: Option<String>,
+    expired: Option<Function>,
 ) -> std::result::Result<String, JsValue> {
     let total_size = u64::try_from(total_size)
         .ok()
         .filter(|&size| size <= MAX_SAFE_INTEGER)
         .ok_or_else(|| RangeError::new("total size must be between 0 and 2^53 - 1"))?;
-    let mut limits = ScanLimits::new(parse_budget(budget)?);
+    let profile: Profile = profile
+        .as_deref()
+        .unwrap_or("worker")
+        .parse()
+        .map_err(JsValue::from_str)?;
+    let mut limits = ScanLimits::for_profile(profile);
+    limits.byte_budget = parse_budget(budget)?;
     if let Some(decoded) = decoded_byte_budget {
         limits.decoded_byte_budget = parse_budget(decoded)?;
     }
@@ -99,7 +123,19 @@ async fn scan_with_target(
         total_size,
         read_at,
     };
-    let result = scan_core::scan_target_with_limits(&mut source, limits, target).await;
+    let start = (profile == Profile::Worker).then(js_sys::Date::now);
+    let deadline = || {
+        start.is_some_and(|start| js_sys::Date::now() - start >= f64::from(WORKER_WALL_TIME_MS))
+            || expired.as_ref().is_some_and(|expired| {
+                expired
+                    .call0(&JsValue::UNDEFINED)
+                    .ok()
+                    .and_then(|value| value.as_bool())
+                    .unwrap_or(true)
+            })
+    };
+    let check = (start.is_some() || expired.is_some()).then_some(&deadline as &dyn Fn() -> bool);
+    let result = scan_core::scan_target_with_deadline(&mut source, limits, target, check).await;
     check_result_sizes(&result)?;
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
 }

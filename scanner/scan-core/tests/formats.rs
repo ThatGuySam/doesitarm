@@ -1,9 +1,10 @@
 use scan_core::{
-    ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, Target, scan, scan_target,
-    scan_with_limits,
+    Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, Target, scan, scan_target,
+    scan_target_with_deadline, scan_with_limits,
 };
 use std::{
     future::Future,
+    io::{Read, Write},
     pin::pin,
     task::{Context, Poll, Waker},
 };
@@ -469,6 +470,7 @@ fn decoded_budget_is_shared_across_members_and_leaves_partial_results() {
             ScanLimits {
                 byte_budget: 8192,
                 decoded_byte_budget: limit,
+                ..ScanLimits::new(8192)
             },
         ));
         assert_eq!(partial.format, Some(format));
@@ -516,4 +518,94 @@ fn budget_preserves_an_unconfirmed_executable_candidate_before_the_plist() {
             .path
             .ends_with("/Contents/MacOS/FixtureBinary")
     );
+}
+
+fn padded_tar(mut compressor: impl Write, size: u64) {
+    let mut header = [0_u8; 512];
+    header[..7].copy_from_slice(b"padding");
+    header[124..136].copy_from_slice(format!("{size:011o}\0").as_bytes());
+    header[148..156].fill(b' ');
+    header[156] = b'0';
+    header[257..263].copy_from_slice(b"ustar\0");
+    let checksum: u64 = header.iter().map(|byte| u64::from(*byte)).sum();
+    header[148..156].copy_from_slice(format!("{checksum:06o}\0 ").as_bytes());
+    compressor.write_all(&header).unwrap();
+    let mut zeros = std::io::repeat(0).take(size);
+    std::io::copy(&mut zeros, &mut compressor).unwrap();
+    compressor
+        .write_all(include_bytes!("../../fixtures/app.tar"))
+        .unwrap();
+}
+
+#[test]
+fn local_scans_large_output_while_worker_enforces_decoded_and_ratio_limits() {
+    let mut gzip = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+    padded_tar(&mut gzip, 2 * 1024 * 1024);
+    let gzip = gzip.finish().unwrap();
+    let mut bzip = bzip2::write::BzEncoder::new(Vec::new(), bzip2::Compression::fast());
+    padded_tar(&mut bzip, 1024 * 1024);
+    let bzip = bzip.finish().unwrap();
+
+    for (artifact, worker_decoded_budget, policy) in [
+        (gzip.as_slice(), 1024 * 1024, "decoded-byte budget reached"),
+        (
+            bzip.as_slice(),
+            scan_core::DEFAULT_DECODED_BYTE_BUDGET,
+            "compression expansion ratio exceeded",
+        ),
+    ] {
+        let local = ScanLimits {
+            byte_budget: 1,
+            decoded_byte_budget: 1,
+            ..ScanLimits::for_profile(Profile::Local)
+        };
+        let result = ready(scan_with_limits(&mut Memory(artifact), local));
+        assert_bundle(&result);
+        assert!(result.decoded_bytes > 1024 * 1024);
+
+        let remote = ScanLimits {
+            decoded_byte_budget: 1,
+            ..ScanLimits::for_profile(Profile::RemoteCli)
+        };
+        assert_bundle(&ready(scan_with_limits(&mut Memory(artifact), remote)));
+
+        let worker = ready(scan_with_limits(
+            &mut Memory(artifact),
+            ScanLimits {
+                decoded_byte_budget: worker_decoded_budget,
+                ..ScanLimits::for_profile(Profile::Worker)
+            },
+        ));
+        assert!(matches!(worker.status, Status::LimitReached), "{worker:?}");
+        assert_eq!(
+            worker.error.as_deref(),
+            Some(format!("scan limit: {policy}").as_str())
+        );
+    }
+}
+
+#[test]
+fn worker_stops_at_explicit_deadline_and_profiles_keep_container_bounds() {
+    let limited = ready(scan_target_with_deadline(
+        &mut Memory(THIN),
+        ScanLimits::for_profile(Profile::Worker),
+        Target::Auto,
+        Some(&|| true),
+    ));
+    assert!(matches!(limited.status, Status::LimitReached));
+    assert_eq!(limited.reads, 0);
+    assert_eq!(
+        limited.error.as_deref(),
+        Some("scan limit: scan deadline reached")
+    );
+
+    let mut truncated = FAT.to_vec();
+    truncated.truncate(128);
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(&truncated),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Invalid), "{result:?}");
+    }
 }

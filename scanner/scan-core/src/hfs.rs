@@ -509,7 +509,7 @@ fn file_fork(item: Item, geometry: Geometry) -> Result<Fork> {
 
 pub(crate) async fn scan(
     disk: &mut impl ReadAt,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -605,7 +605,7 @@ async fn read_package<S: ReadAt>(
     volume: &mut Volume<'_, S>,
     catalog: &mut Catalog,
     root: Vec<Item>,
-    work: &DecodeBudget,
+    work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {

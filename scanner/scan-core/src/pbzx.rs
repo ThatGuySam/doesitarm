@@ -1,9 +1,9 @@
 use crate::{
     ReadAt, Result, ScanError, be64, check_range,
-    decode::{DecodeBudget, check_chunk_ratio},
-    inflate::{Codec, STREAM_OUTPUT_LIMIT, Stream},
+    decode::{self, DecodeBudget},
+    inflate::{Codec, Stream},
 };
-use lzma_rust2::{Action, Status, XzStream};
+use lzma_rust2::XzReader;
 use std::ops::Range;
 
 const BAD_PBZX: ScanError = ScanError::Invalid("PKG PBZX chunk");
@@ -16,7 +16,7 @@ pub(crate) struct Pbzx<'a, S> {
     next_logical: u64,
     chunk: Option<Chunk>,
     count: usize,
-    work: &'a DecodeBudget,
+    work: &'a DecodeBudget<'a>,
 }
 
 struct Chunk {
@@ -26,7 +26,7 @@ struct Chunk {
 }
 
 impl<'a, S: ReadAt> Pbzx<'a, S> {
-    pub(crate) async fn open(mut source: S, work: &'a DecodeBudget) -> Result<Self> {
+    pub(crate) async fn open(mut source: S, work: &'a DecodeBudget<'a>) -> Result<Self> {
         let header = source.read_at(0, 12).await?;
         let block_size = be64(&header, 4);
         if &header[..4] != b"pbzx" || block_size == 0 {
@@ -47,9 +47,12 @@ impl<'a, S: ReadAt> Pbzx<'a, S> {
     }
 
     async fn next(&mut self) -> Result<Chunk> {
-        self.count += 1;
-        if self.count > 4096 {
-            return Err(ScanError::Limit("PKG PBZX exceeds 4096 chunks"));
+        self.work.check_deadline()?;
+        if self.work.strict() {
+            if self.count == 4096 {
+                return Err(ScanError::Limit("PKG PBZX exceeds 4096 chunks"));
+            }
+            self.count += 1;
         }
         let header = self.source.read_at(self.next_packed, 16).await?;
         let expanded = be64(&header, 0);
@@ -59,8 +62,8 @@ impl<'a, S: ReadAt> Pbzx<'a, S> {
         }
         let at = self.next_packed + 16;
         check_range(self.source.size(), at, packed)?;
-        let end = self.next_logical + expanded;
-        if end > STREAM_OUTPUT_LIMIT {
+        let end = self.next_logical.checked_add(expanded).ok_or(BAD_PBZX)?;
+        if end > self.work.stream_limit() {
             return Err(ScanError::Limit("PKG PBZX traversal exceeds 4 GiB"));
         }
         let result = Chunk {
@@ -96,19 +99,11 @@ impl<'a, S: ReadAt> Pbzx<'a, S> {
             } else {
                 self.work.check_chunk(packed, expanded)?;
                 self.work.start_chunk(expanded)?;
-                let mut decoder = XzStream::new_mem_limit(false, 32 * 1024);
-                let mut decoded = vec![0; expanded as usize + 1];
-                let update = decoder
-                    .process(&bytes, &mut decoded, Action::Finish)
-                    .map_err(|_| BAD_XZ)?;
-                if update.status != Status::StreamEnd
-                    || update.bytes_consumed != bytes.len()
-                    || update.bytes_produced != expanded as usize
-                {
+                let mut decoder = XzReader::new_mem_limit(bytes.as_slice(), false, 32 * 1024);
+                let decoded = decode::exact(&mut decoder, expanded as usize, BAD_XZ, self.work)?;
+                if !decoder.inner().is_empty() {
                     return Err(BAD_XZ);
                 }
-                check_chunk_ratio(update.bytes_consumed as u64, expanded)?;
-                decoded.truncate(expanded as usize);
                 decoded
             };
             let tail_len = data.len().min(512 * 1024);
@@ -123,7 +118,7 @@ impl<'a, S: ReadAt> Pbzx<'a, S> {
 
 impl<S: ReadAt> ReadAt for Pbzx<'_, S> {
     fn size(&self) -> u64 {
-        STREAM_OUTPUT_LIMIT
+        self.work.stream_limit()
     }
 
     async fn read_at(&mut self, mut offset: u64, len: usize) -> Result<Vec<u8>> {
