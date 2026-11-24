@@ -1,6 +1,6 @@
 # Scanner preview integration
 
-November 24, 2026. `scanner-preview` starts from the restyled `scanner-ui` at `3c9a7bb`. Merge `589fec5` brings in `scanner-edge` at `f1bd4ee`. Merge `df50493` brings in `scanner-bigfolder` at `1617136`, including its large-folder fixtures and ladder. `scanner-sources` remains outside the branch ancestry.
+November 24, 2026. `scanner-preview` starts from the restyled `scanner-ui` at `3c9a7bb`. Merge `589fec5` brings in `scanner-edge` at `f1bd4ee`. Merge `df50493` brings in `scanner-bigfolder` at `1617136`, including its large-folder fixtures and ladder. These are the only component branches merged into the preview.
 
 ## Merge resolutions
 
@@ -38,14 +38,14 @@ Rust 1.99.1, Node 26.13.0, wasm-bindgen-cli 0.2.130, and Linux headless Chromium
 | `npm run test:ui` | 10 passed, including both cancellation paths, the 5-second timer, and a local archive that decoded 68,161,536 bytes |
 | `npm run test:a11y` | 18 passed |
 | `npm run count` | All six measurements inside the original ±10% bands |
-| `node scripts/build.mjs` from `scanner/web` | Passed. Built browser Wasm, capped Worker Wasm and its isolated instance factory, and static assets |
+| `node scripts/build.mjs` from `scanner/web` | Passed. Built browser Wasm, capped Worker Wasm and its isolated instance factory, and static assets. Both builds produced identical Wasm SHA-256 hashes. |
 
 | Width | Idle, original → preview | Mid-scan, original → preview | Done, original → preview |
 |---|---:|---:|---:|
 | 1440 px | 11 → 11 | 31 → 33 | 47 → 44 |
 | 390 px | 11 → 11 | 29 → 31 | 41 → 38 |
 
-The 50,000-row diagnostics fixture produced **1,450,782 bytes** of gzip-compressed NDJSON, down 99.05% from the 152,940,575-byte JSON baseline in [BIGFOLDER.md](web/BIGFOLDER.md). The run took 6.44 s with 878 MiB peak Chromium RSS and zero main-thread tasks at or above 50 ms. The 4,999-row plain JSON check produced 12,464,855 bytes. Both formats preserved the complete fixture plist and Mach-O evidence, and all three exported failures replayed through the native CLI. The separate 50,000-result view mounted 24 rows with 1,469 initial connected elements and zero tasks at or above 50 ms.
+The 50,000-row diagnostics fixture produced **1,450,782 bytes** of gzip-compressed NDJSON, down 99.05% from the 152,940,575-byte JSON baseline in [BIGFOLDER.md](web/BIGFOLDER.md). The final run took 5.77 s with 885 MiB peak Chromium RSS and zero main-thread tasks at or above 50 ms. The 4,999-row plain JSON check produced 12,464,855 bytes. Both formats preserved the complete fixture plist and Mach-O evidence, and all three exported failures replayed through the native CLI. The separate 50,000-result view mounted 24 rows with 1,469 initial connected elements and zero tasks at or above 50 ms.
 
 The browser’s direct URL and file scans use `local`. Diagnostic file scans select the same profile in Wasm. The Worker uses `worker` with its 8 MiB request budget, 64 MiB decoded-byte limit, 20 s deadline, 80 MiB Wasm memory ceiling, and configured 5,000 ms CPU and 36-subrequest limits. Unit tests exercise the Worker profile, budget, deadlines, memory ceiling, and instance reset. The browser package has no declared Wasm memory maximum and the Worker package declares 1,280 pages.
 
@@ -55,10 +55,12 @@ The real Chromium `drop-entry` route matched result paths, statuses, verified ar
 
 | Files | Results matched | First card | Last result | Peak Chromium RSS | Mounted rows | Longest task ≥ 50 ms |
 |---:|---:|---:|---:|---:|---:|---:|
-| 10,000 | 125/125 | 316 ms | 2.94 s | 995 MiB | 24 | 63 ms |
-| 100,000 | 675/675 | 332 ms | 17.39 s | 1,115 MiB | 24 | None |
+| 10,000 | 125/125 | 277 ms | 2.17 s | 1,012 MiB | 24 | 63 ms |
+| 100,000 | 675/675 | 296 ms | 15.28 s | 1,120 MiB | 24 | 56 ms |
+| 300,000 | 1,995/1,995 | 418 ms | 37.13 s | 1,234 MiB | 24 | 56 ms |
+| 500,000 | 3,315/3,315 | 475 ms | 57.93 s | 1,234 MiB | 24 | 78 ms |
 
-These measurements ran during the Wasm rebuild. The benchmark no longer waits for the collapsed Homebrew table to open. The manifest comparison caught a script-launcher status regression, now covered at both scales.
+Each rung mounted 24 cards with 1,898 connected elements at completion. All four rungs matched the reference results. Each untraced run reported at least one task over 50 ms. A traced 10,000-file repeat also matched 125/125 and finished in 2.52 s with zero tasks at or above 50 ms. The manifest comparison caught and verified the fix for the declared script-launcher status. The harness now waits for cask rows to load inside the collapsed Homebrew panel.
 
 The Linux native Chromium picker also matched both manifests with symlink fixtures disabled. The loader appeared about 2 ms after delivery of the FileList at each scale.
 
@@ -69,7 +71,7 @@ The Linux native Chromium picker also matched both manifests with symlink fixtur
 
 ## Worker build for the lead
 
-From the preview worktree on Omarchy, with the installed wasm-bindgen-cli:
+Run these commands from the preview worktree on Omarchy with the installed wasm-bindgen-cli.
 
 ```sh
 cd "$HOME/Code/doesitarm-scanner-preview/scanner/web"
@@ -83,4 +85,4 @@ A fresh machine needs the Rust target `rustup target add wasm32-unknown-unknown`
 
 ## Unverified
 
-Live Cloudflare routing and isolate behavior, macOS Finder and native permission dialogs, Safari, Firefox, physical touch devices, and screen-reader speech are outside these offline checks.
+Live Cloudflare routing and isolate behavior, macOS Finder and native permission dialogs, Safari, Firefox, physical touch devices, and screen-reader speech are outside these offline checks. The 300,000- and 500,000-file rungs used directory drop.
