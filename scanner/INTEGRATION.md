@@ -60,6 +60,13 @@ The real Chromium `drop-entry` route matched result paths, statuses, verified ar
 
 These measurements ran during the Wasm rebuild. The benchmark no longer waits for the collapsed Homebrew table to open. The manifest comparison caught a script-launcher status regression, now covered at both scales.
 
+The Linux native Chromium picker also matched both manifests with symlink fixtures disabled. The loader appeared about 2 ms after delivery of the FileList at each scale.
+
+| Picker files | Results matched | Last result | Native task crossing the change event | Longest task after change | Peak Chromium RSS |
+|---:|---:|---:|---:|---:|---:|
+| 10,000 | 125/125 | 5.87 s | 1.98 s | 90 ms | 1,085 MiB |
+| 100,000 | 675/675 | 75.81 s | 19.68 s | 125 ms | 1,963 MiB |
+
 ## Worker build for the lead
 
 From the preview worktree on Omarchy, with the installed wasm-bindgen-cli:
