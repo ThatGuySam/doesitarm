@@ -13,15 +13,17 @@ use std::{
     pin::pin,
     process::ExitCode,
     task::{Context, Poll, Waker},
+    time::Duration,
 };
 
 const DEFAULT_BUDGET: u64 = 64 * 1024 * 1024;
-const USAGE: &str = "Usage: scan-cli scan <path-or-https-url> [--budget BYTES] [--json]";
+const USAGE: &str = "Usage: scan-cli scan <path-or-url> [--budget BYTES] [--json] [--allow-stream] [--allow-http] [--request-delay-ms MS]";
 
 struct Args {
     input: OsString,
     budget: u64,
     json: bool,
+    http: http::Options,
 }
 
 #[derive(Serialize)]
@@ -30,6 +32,21 @@ struct Output {
     scan: ScanResult,
     #[serde(skip_serializing_if = "Option::is_none")]
     source_etag: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    source_transport: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    source_content_type: Option<String>,
+}
+
+impl Output {
+    fn new(scan: ScanResult) -> Self {
+        Self {
+            scan,
+            source_etag: None,
+            source_transport: None,
+            source_content_type: None,
+        }
+    }
 }
 
 fn main() -> ExitCode {
@@ -102,6 +119,8 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
     let input = values.next().ok_or("Missing path or HTTPS URL.")?;
     let mut budget = None;
     let mut json = false;
+    let mut http = http::Options::default();
+    let mut delay = None;
     while let Some(value) = values.next() {
         match value.to_str() {
             Some("--budget") if budget.is_none() => {
@@ -113,30 +132,40 @@ fn args() -> std::result::Result<Option<Args>, &'static str> {
                 );
             }
             Some("--json") if !json => json = true,
+            Some("--allow-stream") if !http.allow_stream => http.allow_stream = true,
+            Some("--allow-http") if !http.allow_http => http.allow_http = true,
+            Some("--request-delay-ms") if delay.is_none() => {
+                delay = Some(
+                    values
+                        .next()
+                        .and_then(|value| value.to_str()?.parse::<u64>().ok())
+                        .filter(|value| *value <= 60_000)
+                        .ok_or("Expected a request delay of 0 to 60000 milliseconds.")?,
+                );
+            }
             _ => return Err("Unknown or repeated flag."),
         }
     }
+    http.delay = Duration::from_millis(delay.unwrap_or(0));
     Ok(Some(Args {
         input,
         budget: budget.unwrap_or(DEFAULT_BUDGET),
         json,
+        http,
     }))
 }
 
 fn run(args: &Args) -> Output {
     let source = args.input.to_str();
     let result = if let Some(url) = source.filter(|s| s.contains("://")) {
-        if url.starts_with("https://") {
-            return http::scan(url, args.budget);
+        if url.starts_with("https://") || (args.http.allow_http && url.starts_with("http://")) {
+            return http::scan(url, args.budget, &args.http);
         }
         Err(ScanError::Source("URL must use HTTPS".into()))
     } else {
         FileSource::open(Path::new(&args.input)).map(|mut file| ready(scan(&mut file, args.budget)))
     };
-    Output {
-        scan: result.unwrap_or_else(|error| failure(error, 0)),
-        source_etag: None,
-    }
+    Output::new(result.unwrap_or_else(|error| failure(error, 0)))
 }
 
 fn failure(error: ScanError, reads: u64) -> ScanResult {
