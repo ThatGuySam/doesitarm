@@ -1,5 +1,4 @@
-import init, * as wasm from './pkg/scan_wasm.js';
-const { local_bundle_metadata, scan, scan_diagnostic } = wasm;
+import init, { local_bundle_metadata, scan, scan_diagnostic } from './pkg/scan_wasm.js';
 import { machoEvidence } from './macho-evidence.js';
 import { scanRemote } from './range-scan.js';
 import { emptyResult, MIB } from './scan-result.js';
@@ -154,8 +153,13 @@ async function scanFile(file, path, progress, evidence, declared = false) {
         const waiting = yieldForPassive();
         if (waiting) await waiting;
         const chunkEnd = Math.min(position + chunk, end);
+        const physical = length > chunk ? {
+          path, offset: position, length: chunkEnd - position, purpose, scope: 'source_chunk', outcome: 'error',
+        } : record;
+        if (physical !== record) evidence.read_log.push(physical);
         const current = new Uint8Array(await file.slice(position, chunkEnd).arrayBuffer());
         if (current.byteLength !== chunkEnd - position) throw new Error('Incomplete file range');
+        physical.outcome = 'ok';
         read += current.byteLength;
         progress(read, file.size, planned);
         if (length > chunk) bytes.set(current, position - start);
@@ -175,21 +179,19 @@ async function scanFile(file, path, progress, evidence, declared = false) {
       throw error;
     }
   };
-  const includeArchiveEvidence = !declared && scan_diagnostic &&
-    /\.(?:dmg|zip|pkg|tar(?:\.(?:gz|xz|bz2))?|tgz)$/i.test(path);
-  const result = JSON.parse(await (includeArchiveEvidence
-    ? scan_diagnostic(BigInt(file.size), readAt)
-    : scan(BigInt(file.size), 0n, readAt, undefined, 'local')));
+  const result = JSON.parse(await (declared
+    ? scan(BigInt(file.size), 0n, readAt, undefined, 'local')
+    : scan_diagnostic(BigInt(file.size), readAt)));
   const diagnostic = result.diagnostic;
   delete result.diagnostic;
   if (sourceError) result.error = sourceError;
-  if (declared || result.format === 'macho') script = await capturePrefix(file, path, evidence) || script;
+  if (declared) script = await capturePrefix(file, path, evidence) || script;
   if (declared && script) {
     result.status = 'script';
     result.error_class = 'executable_is_script';
     result.error = 'CFBundleExecutable is a script. Its file does not declare a Mach-O architecture.';
   }
-  if (diagnostic) Object.assign(evidence, diagnostic, { plist_in_container: true });
+  if (diagnostic) Object.assign(evidence, diagnostic, { plist_in_container: Boolean(diagnostic.info_plist_path) });
   else evidence.load_commands = macho.lists.length ? macho.lists : null;
   return result;
 }
@@ -253,7 +255,7 @@ async function scanBundle(job, progress, id, evidence) {
   const totalSize = plist.size + executable.size;
   const result = await scanFile(executable, path, (read, size, planned) =>
     progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned), evidence, true);
-  if (result.format !== 'macho' && result.status === 'complete') {
+  if (result.format && result.format !== 'macho') {
     result.status = 'invalid';
     result.error_class = 'executable_not_macho';
     result.error = 'CFBundleExecutable names a file that is not a Mach-O executable.';

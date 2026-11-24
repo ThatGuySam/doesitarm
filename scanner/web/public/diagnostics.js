@@ -92,7 +92,7 @@ export function resultRecord(row, full) {
     ? [plistPath && `${displayPath}/${plistPath}`, existingExecutable && executablePath].filter(Boolean)
     : [displayPath];
   const embedded = evidence?.plist_in_container ? [plistPath, executablePath].filter(Boolean) : [];
-  const candidates = result.candidate_executables ?? (row.relativeCandidates ?? []).map((candidate) => {
+  const candidates = result.candidate_executables?.slice() ?? (row.relativeCandidates ?? []).map((candidate) => {
     const path = typeof candidate === 'string' ? candidate : candidate.path;
     const fullPath = `${displayPath}/${path}`;
     return {
@@ -102,6 +102,10 @@ export function resultRecord(row, full) {
       architectures: fullPath === executablePath ? result.architectures : [],
     };
   });
+  if (executablePath && row.kind === 'bundle' && !candidates.some(({ path }) => path === executablePath)) {
+    candidates.push({ path: executablePath, size: record.executable_size, architectures: result.architectures });
+  }
+  const nestedArtifacts = result.nested_artifacts ?? row.nestedArtifacts ?? [];
   return {
     ...record,
     info_plist: evidence?.info_plist ?? null,
@@ -114,12 +118,15 @@ export function resultRecord(row, full) {
     directory_listings: row.directoryListings ?? null,
     candidate_executables: candidates,
     inventory: result.inventory ?? (row.kind === 'bundle' ? observedInventory(row) : null),
-    nested_artifacts: result.nested_artifacts ?? row.nestedArtifacts ?? [],
+    nested_artifacts: nestedArtifacts,
     read_log: evidence?.read_log ?? null,
     reproduction: ['complete', 'canceled'].includes(result.status) ? null : {
       relative_path: displayPath,
       copy_from_selection: copy,
       container_member_paths: embedded,
+      supporting_paths: row.kind === 'bundle' ? [...new Set([
+        ...candidates.filter(({ size }) => size !== null).map(({ path }) => path), ...nestedArtifacts,
+      ])].filter((path) => !copy.includes(path)) : [],
       missing_executable: result.status === 'no_executable',
       expected_executable_path: executablePath,
       expected_status: result.status,
