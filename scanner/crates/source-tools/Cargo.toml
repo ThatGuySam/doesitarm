@@ -1,0 +1,23 @@
+[package]
+name = "source-tools"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+scan-core = { path = "../../scan-core" }
+serde.workspace = true
+serde_json.workspace = true
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+clap = { version = "4", features = ["derive"] }
+httpdate = "1"
+libc = "0.2"
+plist = "1"
+roxmltree = "0.21"
+sha2 = "0.11"
+tempfile = "3"
+ureq = { version = "3", default-features = false, features = ["rustls"] }
+url = "2"
+
+[[bin]]
+name = "sources"
+path = "src/main.rs"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:s="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel><title>Viewer</title>
+    <item><s:channel>beta</s:channel><enclosure url="beta.zip" s:version="2200"/></item>
+    <item>
+      <s:version>2100</s:version><s:shortVersionString>2.1</s:shortVersionString>
+      <s:minimumSystemVersion>12.0</s:minimumSystemVersion>
+      <enclosure length="42365" url="files/Viewer.zip" s:os="macos"/>
+      <enclosure length="400" url="files/delta.zip" s:deltaFrom="2000"/>
+      <enclosure length="100" url="files/Windows.zip" s:os="windows"/>
+    </item>
+  </channel>
+</rss>

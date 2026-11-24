@@ -1,0 +1,5 @@
+{"responses":[
+  {"url":"https://downloads.example.org/moved.dmg","mode":"bytes=0-0","final_url":"https://cdn.example.org/moved.dmg","status":404,"headers":{"content-type":"text/plain","content-length":"17"},"body_text":"release moved"},
+  {"url":"https://downloads.example.org/page","mode":"bytes=0-0","status":200,"headers":{"content-type":"text/html","content-length":"32"},"body_text":"<!doctype html><title>Download"},
+  {"url":"https://downloads.example.org/ignore.zip","mode":"bytes=0-0","status":200,"headers":{"content-type":"application/zip","content-length":"311"}}
+]}
