@@ -72,6 +72,7 @@ export function resultRecord(row, full) {
   const record = {
     ...result,
     id: row.id,
+    stable_id: `${row.kind}:${displayPath}`,
     display_path: displayPath,
     parent_bundle_path: parent,
     bundle_role: result.bundle_role ?? (row.kind === 'bundle' ? (parent ? 'nested_app' : 'app') : null),
