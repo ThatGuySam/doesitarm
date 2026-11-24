@@ -98,6 +98,7 @@ export class ResultsList {
   #latestFolder;
   #skeleton;
   #tools;
+  #diagnostics;
   #summary;
   #filters;
   #nav;
@@ -128,7 +129,10 @@ export class ResultsList {
     const controls = document.createElement('div');
     controls.className = 'result-tools';
     controls.append(status.field, arch.field, sort.field);
-    const exportRun = select('Export scan', [], () => {});
+    const exportRun = select('Export scan', [], () => {
+      this.#diagnostics.reset();
+      this.#updateDiagnostics();
+    });
     exportRun.field.hidden = true;
     this.#runsByChoice = exportRun;
     controls.append(exportRun.field);
@@ -139,9 +143,11 @@ export class ResultsList {
     this.#tools.hidden = true;
     const toolSummary = document.createElement('summary');
     toolSummary.textContent = 'Results tools';
-    this.#tools.append(toolSummary, this.#summary, controls, diagnosticControls(async () => {
+    this.#diagnostics = diagnosticControls(async () => {
       const run = this.#runs[Number(exportRun.input.value)];
+      if (!run) return { header: {}, rows: [], count: 0 };
       const length = run.rows.length;
+      const count = run.finished;
       const cutoff = performance.now();
       const rows = function* () {
         for (let i = 0; i < length; i += 1) {
@@ -150,8 +156,9 @@ export class ResultsList {
         }
       };
       // Only settled rows are included. The header records the run snapshot.
-      return { header: await runHeader(run, run.finished, this.#longTasks), rows: rows() };
-    }));
+      return { header: await runHeader(run, count, this.#longTasks), rows: rows(), count };
+    });
+    this.#tools.append(toolSummary, this.#summary, controls, this.#diagnostics.element);
     this.#list.after(this.#tools);
     const previous = navButton('Previous page', () => this.#showPage(this.#page - 1));
     const next = navButton('Next page', () => this.#showPage(this.#page + 1));
@@ -495,6 +502,7 @@ export class ResultsList {
     this.#rowCount = 0;
     this.#runs = [];
     this.#runsByChoice.input.replaceChildren();
+    this.#diagnostics.reset();
     this.#tools.open = false;
     delete this.#tools.dataset.paged;
     this.#statusCounts.clear();
@@ -582,8 +590,14 @@ export class ResultsList {
       'No results match these filters.');
   }
 
+  #updateDiagnostics() {
+    const run = this.#runs[Number(this.#runsByChoice.input.value)];
+    this.#diagnostics.update(run?.finished ?? 0);
+  }
+
   #render() {
     this.#updateSelection();
+    this.#updateDiagnostics();
     const now = performance.now();
     this.#renderPage(now);
     const summary = [

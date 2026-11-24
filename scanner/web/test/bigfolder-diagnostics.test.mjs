@@ -8,6 +8,7 @@ import { createInterface } from 'node:readline';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { createGunzip } from 'node:zlib';
 import { chromium } from 'playwright-core';
 import { startPreview } from '../scripts/serve.mjs';
 import { monitorChromiumMemory, requireBrowserHeadroom } from './browser-helpers.mjs';
@@ -15,7 +16,7 @@ import { monitorChromiumMemory, requireBrowserHeadroom } from './browser-helpers
 const MiB = 1024 ** 2;
 const rowCount = 50_000;
 const failureCount = 3;
-const exportBudget = 200 * MiB;
+const gzipBudget = 15 * MiB;
 const run = promisify(execFile);
 const fixtureTool = fileURLToPath(new URL('../../scripts/diagnostics-to-fixtures.mjs', import.meta.url));
 const cli = fileURLToPath(new URL('../../target/debug/scan-cli', import.meta.url));
@@ -89,7 +90,7 @@ async function measureExport({ format, rowCount, failureCount, executablePrefix 
   }
 
   const started = performance.now();
-  const blob = await makeExport(header, rows(), format, true);
+  const blob = await makeExport(header, rows(), { count: rowCount, format });
   const ended = performance.now();
   await new Promise((resolve) => setTimeout(resolve, 75));
   msec.push(...observer.takeRecords());
@@ -106,7 +107,7 @@ async function measureExport({ format, rowCount, failureCount, executablePrefix 
   };
 }
 
-async function verifyArtifact(path, format) {
+async function verifyArtifact(path, format, expectedCount) {
   let seen = 0;
   let headers = 0;
   let failures = 0;
@@ -135,11 +136,17 @@ async function verifyArtifact(path, format) {
       assert.equal(result.status, 'complete');
       assert.equal(result.executable_prefix_hex.length, 128);
       assert.equal(result.architectures[0].header_verified, true);
+      assert.equal(result.inventory.binaries[0].role, 'main');
+      assert.equal(result.load_commands[0].commands.length, 2);
+      assert.equal(result.read_log.length, 5);
+      assert.equal(result.reproduction, undefined);
+      assert.equal(result.info_plist_keys, undefined);
+      assert.equal(result.candidate_executables, undefined);
     }
   }
 
-  if (format === 'ndjson') {
-    const lines = createInterface({ input: createReadStream(path), crlfDelay: Infinity });
+  if (format === 'ndjson.gz') {
+    const lines = createInterface({ input: createReadStream(path).pipe(createGunzip()), crlfDelay: Infinity });
     for await (const line of lines) {
       const row = JSON.parse(line);
       if (row.type === 'run') verifyHeader(row);
@@ -154,11 +161,11 @@ async function verifyArtifact(path, format) {
     for (const result of artifact.results) verifyResult(result);
   }
   assert.equal(headers, 1);
-  assert.equal(seen, rowCount);
+  assert.equal(seen, expectedCount);
   assert.equal(failures, failureCount);
 }
 
-async function verifySkeletons(path, output) {
+async function verifySkeletons(path, output, expectedCount) {
   const { stdout } = await run(process.execPath, [fixtureTool, path, output]);
   assert.match(stdout, /Created 3 fixture skeletons/);
   const fixtures = await readdir(output, { withFileTypes: true });
@@ -182,10 +189,10 @@ async function verifySkeletons(path, output) {
     assert.deepEqual(actual.architectures, []);
   }
   assert.deepEqual([...labels].sort(), Array.from({ length: failureCount }, (_, index) =>
-    `Applications/Synthetic ${rowCount - failureCount + index}.app`));
+    `Applications/Synthetic ${String(expectedCount - failureCount + index).padStart(5, '0')}.app`));
 }
 
-test('50,000 full browser diagnostics stay responsive in JSON and NDJSON', { timeout: 180_000 }, async (t) => {
+test('50,000 full browser diagnostics gzip NDJSON and small exports can use plain JSON', { timeout: 180_000 }, async (t) => {
   await requireBrowserHeadroom();
   const root = await mkdtemp(join(homedir(), '.cache', 'bigfolder-diagnostics-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -196,7 +203,7 @@ test('50,000 full browser diagnostics stay responsive in JSON and NDJSON', { tim
   try {
     browser = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/usr/bin/chromium' });
     const executablePrefix = (await readFile(new URL('../../fixtures/thin.macho', import.meta.url))).subarray(0, 64).toString('hex');
-    for (const format of ['json', 'ndjson']) {
+    for (const [format, count] of [['ndjson.gz', rowCount], ['json', 4_999]]) {
       await requireBrowserHeadroom();
       const context = await browser.newContext();
       let peakRss = 0;
@@ -206,13 +213,13 @@ test('50,000 full browser diagnostics stay responsive in JSON and NDJSON', { tim
         await page.goto(url);
         const awaitingDownload = page.waitForEvent('download', { timeout: 60_000 });
         void awaitingDownload.catch(() => {});
-        const result = await page.evaluate(measureExport, { format, rowCount, failureCount, executablePrefix });
+        const result = await page.evaluate(measureExport, { format, rowCount: count, failureCount, executablePrefix });
         const download = await awaitingDownload;
         const path = join(root, `diagnostics.${format}`);
         await download.saveAs(path);
         await download.delete();
         assert.equal((await stat(path)).size, result.size);
-        runStats.push({ path, format, ...result, peakRssMiB: Math.round(peakRss / MiB) });
+        runStats.push({ path, format, count, ...result, peakRssMiB: Math.round(peakRss / MiB) });
       } catch (error) {
         throw monitor.failure ?? error;
       } finally {
@@ -226,11 +233,11 @@ test('50,000 full browser diagnostics stay responsive in JSON and NDJSON', { tim
     await new Promise((resolve) => server.close(resolve));
   }
 
-  for (const { path, format, size, elapsedMs, longTasks, peakRssMiB } of runStats) {
-    await verifyArtifact(path, format);
-    await verifySkeletons(path, join(root, `fixtures-${format}`));
-    t.diagnostic(`${format.toUpperCase()} ${size} bytes · ${elapsedMs} ms · ${peakRssMiB} MiB Chromium RSS · ${longTasks.length} long tasks`);
-    assert.ok(size < exportBudget, 'Synthetic export exceeds 200 MiB.');
+  for (const { path, format, count, size, elapsedMs, longTasks, peakRssMiB } of runStats) {
+    await verifyArtifact(path, format, count);
+    await verifySkeletons(path, join(root, `fixtures-${format}`), count);
+    t.diagnostic(`${count.toLocaleString()} rows · ${format.toUpperCase()} ${size} bytes · ${elapsedMs} ms · ${peakRssMiB} MiB Chromium RSS · ${longTasks.length} long tasks`);
+    if (format === 'ndjson.gz') assert.ok(size < gzipBudget, 'The gzip export exceeds 15 MiB.');
     assert.deepEqual(longTasks, [], 'Export generated a main-thread task of at least 50 ms.');
   }
 });

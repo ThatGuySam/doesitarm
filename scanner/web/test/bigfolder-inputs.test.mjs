@@ -76,6 +76,7 @@ test('read-only folder picker scans real OPFS handles and exports all local evid
     await page.getByText('Found 2 apps in 5 files · 3 of 3 finished', { exact: true }).waitFor();
     assert.ok(await page.getByRole('checkbox', { name: 'Hide my username' }).isChecked());
     await page.locator('#results-tools-disclosure > summary').click();
+    await page.locator('.diagnostic-actions select').selectOption('json');
     await page.locator('#download-diagnostics').click();
     const link = page.locator('a[download="scanner-diagnostics.json"]');
     await link.waitFor();

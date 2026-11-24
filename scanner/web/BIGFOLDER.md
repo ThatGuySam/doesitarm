@@ -9,6 +9,8 @@ Worktree `~/Code/doesitarm-scanner-bigfolder`, branch `scanner-bigfolder`, based
 - Full headless directory-drop ladder completed. Raw optimized reports are `/tmp/bigfolder-optimized-drop-small.json` and `/tmp/bigfolder-optimized-drop-large.json`. The native alternate picker report is `/tmp/bigfolder-final-native-picker.json`. The harness removes each owned tree after its rung.
 - From `scanner/web/`, run `npm test` for Node tests and `npm run test:browser` for serial Chromium tests. Build the native test oracle with `cargo build --locked -j2 -p scan-cli` from `scanner/` and browser assets with `npm run build` from `scanner/web/`. Set `WASM_BINDGEN` if the tool is outside `PATH`.
 
+The integrated preview defaults to gzip-compressed NDJSON. Runs under 5,000 settled rows can also export plain JSON. All exports redact home-directory usernames. The size measurement for the integrated export is in [INTEGRATION.md](../INTEGRATION.md).
+
 ## Browser and native evidence
 
 The browser reuses the status, architecture and binary inventory shape from `scanner-edge`. Its inventory is marked partial because folder picker and drop APIs expose a subset of filesystem evidence. It reports only what it positively observed. It preserves the nearest enclosing app as `parent_bundle_path`, even when the enclosing app's own executable is missing. The native walker identifies and skips symlink loops and duplicate directory aliases. Browser directory APIs may omit symlink metadata and targets entirely. The export marks that capability unavailable and records duplicates, depth guards and read errors it can observe.
@@ -67,7 +69,7 @@ The tagged source plist has the bundle ID `com.triada.AgentSessions` and omits `
 | `secondary-macos-binary` | The helper has an independent Mach-O row beside the app. The main executable appears once. |
 | `archive-as-executable` | An archive at the declared launch path yields `invalid` with `executable_not_macho`. |
 
-Use `node scanner/scripts/diagnostics-to-fixtures.mjs diagnostics.ndjson` from the repo root to create skeletons in the fixture tree. The optional second argument selects a different output directory. Each skeleton contains `repro.json`, a README with the native CLI command, the matching diagnostic record, and any files reconstructable from the export. An embedded archive, unavailable plist or executable beyond the prefix may require the original files listed in the reproduction evidence.
+Use `node scanner/scripts/diagnostics-to-fixtures.mjs scanner-diagnostics.ndjson.gz` from the repo root to create skeletons in the fixture tree. The optional second argument selects a different output directory. Each skeleton contains `repro.json`, a README with the native CLI command, the matching diagnostic record, and any files reconstructable from the export. An embedded archive, unavailable plist or executable beyond the prefix may require the original files listed in the reproduction evidence.
 
 ## Do we need MCP for the Mac?
 

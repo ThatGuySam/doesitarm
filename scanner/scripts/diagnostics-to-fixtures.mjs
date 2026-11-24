@@ -4,11 +4,12 @@ import { createReadStream } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
+import { createGunzip } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
 const [, , input, requestedOutput] = process.argv;
 if (!input || process.argv.length > 4) {
-  console.error('Usage: node scanner/scripts/diagnostics-to-fixtures.mjs <diagnostics.json|ndjson> [fixture-output-directory]');
+  console.error('Usage: node scanner/scripts/diagnostics-to-fixtures.mjs <diagnostics.json|ndjson|ndjson.gz> [fixture-output-directory]');
   process.exit(2);
 }
 
@@ -16,13 +17,17 @@ const output = resolve(requestedOutput ??
   fileURLToPath(new URL('../fixtures/bigfolder/', import.meta.url)));
 
 async function* failures(file) {
-  if (!file.toLowerCase().endsWith('.ndjson')) {
+  const gzip = file.toLowerCase().endsWith('.ndjson.gz');
+  if (!gzip && !file.toLowerCase().endsWith('.ndjson')) {
     const document = JSON.parse(await readFile(file, 'utf8'));
     if (!Array.isArray(document.results)) throw new Error('Expected a diagnostics results array.');
     for (const row of document.results) if (row.reproduction) yield row;
     return;
   }
-  const lines = createInterface({ input: createReadStream(file, { encoding: 'utf8' }), crlfDelay: Infinity });
+  const source = createReadStream(file);
+  const input = gzip ? source.pipe(createGunzip()) : source;
+  if (gzip) source.on('error', (error) => input.destroy(error));
+  const lines = createInterface({ input, crlfDelay: Infinity });
   let header;
   for await (const line of lines) {
     if (!line.trim()) continue;

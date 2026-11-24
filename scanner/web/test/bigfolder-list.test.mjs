@@ -64,6 +64,12 @@ test('whole-list filtering and paging keep the DOM bounded at 50,000 results', {
     const firstNodeCount = await page.evaluate(() => document.getElementsByTagName('*').length);
     await page.getByText('1–24 of 50,000', { exact: true }).waitFor();
     assert.equal(await rendered.count(), 24);
+    assert.equal(await page.locator('.diagnostic-actions select option[value="json"]').count(), 0);
+    assert.equal(await page.locator('#copy-results').isVisible(), false);
+    await assert.rejects(page.evaluate(async () => {
+      const { makeExport } = await import('/diagnostics.js');
+      return makeExport({}, [], { count: 5_000, format: 'json' });
+    }), /Plain JSON is available for exports under 5,000 rows/);
     assert.equal(await heading.textContent(), 'Catalog/Product 50000.app');
     assert.match(await page.locator('.result-summary').textContent(), /10,000 No executable.*40,000 Complete.*x86_64 20,000/);
 

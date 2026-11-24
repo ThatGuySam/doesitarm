@@ -2,6 +2,8 @@ import { observedInventory } from './bundle-inventory.js';
 import { timeSlice } from './folder-walk.js';
 import { prettyBytes } from './scan-view.js';
 
+export const PLAIN_JSON_LIMIT = 5_000;
+
 const duration = (end, start) => start === null || end === null ? null : Math.max(0, end - start);
 
 export function watchLongTasks() {
@@ -106,7 +108,7 @@ export function resultRecord(row, full) {
     candidates.push({ path: executablePath, size: record.executable_size, architectures: result.architectures });
   }
   const nestedArtifacts = result.nested_artifacts ?? row.nestedArtifacts ?? [];
-  return {
+  const diagnostic = {
     ...record,
     info_plist: evidence?.info_plist ?? null,
     info_plist_path: plistPath,
@@ -133,6 +135,20 @@ export function resultRecord(row, full) {
       command: ['scan-cli', 'scan', displayPath, '--profile', 'local', '--json'],
     },
   };
+  return result.status === 'complete' ? compactSuccess(diagnostic) : diagnostic;
+}
+
+function compactSuccess(record) {
+  if (record.info_plist != null) delete record.info_plist_keys;
+  if (record.bundle_path === record.display_path) delete record.bundle_path;
+  if (!record.plist_in_container) delete record.plist_in_container;
+  record.candidate_executables = record.candidate_executables.filter((candidate) => {
+    if (candidate.path !== record.executable_path || candidate.size !== record.executable_size) return true;
+    const slices = candidate.architectures ?? [];
+    return slices.length && JSON.stringify(slices) !== JSON.stringify(record.architectures);
+  });
+  return Object.fromEntries(Object.entries(record).filter(([key, value]) =>
+    value != null && value !== '' && (key === 'info_plist' || !Array.isArray(value) || value.length > 0)));
 }
 
 function button(id, text) {
@@ -144,7 +160,10 @@ function button(id, text) {
   return el;
 }
 
-export async function makeExport(header, rows, kind) {
+export async function makeExport(header, rows, { count, format = 'ndjson.gz', scope = 'diagnostics' }) {
+  if ((format === 'json' && !(count < PLAIN_JSON_LIMIT)) || !['json', 'ndjson.gz'].includes(format)) {
+    throw new RangeError('Plain JSON is available for exports under 5,000 rows.');
+  }
   const worker = new Worker(new URL('./diagnostics-worker.js', import.meta.url), { type: 'module' });
   let acknowledge;
   const finished = new Promise((resolve, reject) => {
@@ -157,7 +176,7 @@ export async function makeExport(header, rows, kind) {
   });
   // Attach a handler while the producer is still sending rows.
   void finished.catch(() => {});
-  worker.postMessage({ header, kind });
+  worker.postMessage({ header, format, plainLimit: PLAIN_JSON_LIMIT });
   try {
     const pause = timeSlice();
     const records = [];
@@ -168,8 +187,8 @@ export async function makeExport(header, rows, kind) {
       sent += 1;
     };
     for (const row of rows) {
-      if (row.result && (kind !== 'failures' || !['complete', 'canceled'].includes(row.result.status))) {
-        records.push(resultRecord(row, kind !== 'results' && kind !== 'copy'));
+      if (row.result && (scope !== 'failures' || !['complete', 'canceled'].includes(row.result.status))) {
+        records.push(resultRecord(row, scope !== 'results'));
         if (records.length >= 16) send();
       }
       if (sent >= 8) {
@@ -201,13 +220,16 @@ export function diagnosticControls(resolver) {
   feedback.className = 'muted diagnostic-summary';
   const formatLabel = document.createElement('label');
   const format = document.createElement('select');
-  format.append(new Option('JSON', 'json'), new Option('NDJSON', 'ndjson'));
+  const compressed = new Option('Compressed NDJSON (.ndjson.gz)', 'ndjson.gz');
+  const plain = new Option('Plain JSON', 'json');
+  format.append(compressed, plain);
   formatLabel.append('Diagnostics format ', format);
   const save = document.createElement('a');
   save.hidden = true;
   let blobURL;
   let selection;
-  const controls = [];
+  const controls = new Map();
+  let small = true;
 
   function reset() {
     if (blobURL) URL.revokeObjectURL(blobURL);
@@ -218,24 +240,24 @@ export function diagnosticControls(resolver) {
 
   async function prepare(kind) {
     reset();
-    for (const control of controls) control.disabled = true;
+    for (const control of controls.values()) control.disabled = true;
     format.disabled = true;
     feedback.textContent = 'Preparing the local export…';
     try {
       const filter = kind === 'failures' ? 'failures' : kind === 'results' || kind === 'copy' ? 'results' : 'diagnostics';
-      const { header, rows } = await resolver();
-      const type = filter === 'diagnostics' ? format.value : 'json';
-      const blob = await makeExport(header, rows, filter === 'diagnostics' ? type : kind);
+      const { header, rows, count } = await resolver();
+      const type = count >= PLAIN_JSON_LIMIT ? 'ndjson.gz' : filter === 'diagnostics' ? format.value : 'json';
+      const blob = await makeExport(header, rows, { count, format: type, scope: filter });
       blobURL = URL.createObjectURL(blob);
       save.href = blobURL;
       save.download = `scanner-${filter}.${type}`;
-      save.textContent = kind === 'copy' ? 'Save results JSON' : `Save ${filter} ${type.toUpperCase()}`;
+      save.textContent = `Save ${filter} ${type === 'json' ? 'JSON' : 'gzip'}`;
       save.hidden = false;
       selection = kind;
       const contents = filter === 'results' ? 'Scan results and metadata' :
         `${filter === 'failures' ? 'Failure' : 'Success and failure'} details, including Info.plist and up to 64 executable bytes per result`;
       feedback.textContent = `${contents} · ${prettyBytes(blob.size)} · local file`;
-      if (kind === 'copy') {
+      if (kind === 'copy' && type === 'json') {
         const copy = button('copy-results-ready', 'Copy prepared results JSON');
         copy.addEventListener('click', async () => {
           try {
@@ -254,7 +276,7 @@ export function diagnosticControls(resolver) {
       reset();
       feedback.textContent = 'The browser could not prepare the export.';
     } finally {
-      for (const control of controls) control.disabled = false;
+      for (const control of controls.values()) control.disabled = false;
       format.disabled = false;
     }
   }
@@ -265,9 +287,26 @@ export function diagnosticControls(resolver) {
   ]) {
     const control = button(kind === 'copy' ? 'copy-results' : `download-${kind}`, text);
     control.addEventListener('click', () => void prepare(kind));
-    controls.push(control);
+    controls.set(kind, control);
   }
   format.addEventListener('change', () => { if (selection === 'diagnostics') reset(); });
-  container.append(...controls, formatLabel, feedback, save);
-  return container;
+  container.append(...controls.values(), formatLabel, feedback, save);
+  return {
+    element: container,
+    reset,
+    update(count) {
+      const allowPlain = count < PLAIN_JSON_LIMIT;
+      if (small === allowPlain) return;
+      small = allowPlain;
+      if (allowPlain) format.append(plain);
+      else {
+        format.value = compressed.value;
+        plain.remove();
+      }
+      formatLabel.hidden = !allowPlain;
+      controls.get('copy').hidden = !allowPlain;
+      controls.get('results').textContent = allowPlain ? 'Download results JSON' : 'Download results';
+      controls.get('failures').textContent = allowPlain ? 'Download failures JSON' : 'Download failures';
+    },
+  };
 }
