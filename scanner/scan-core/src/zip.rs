@@ -83,30 +83,42 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
         return Err(ScanError::Invalid("ZIP end record missing"));
     }
 
-    // Most ZIPs have no comment. Only spend 64 KiB when the short read misses.
-    let tail = input.read_at(size - 22, 22).await?;
-    let (eocd_offset, eocd) = if end_record(&tail) == Some(0) {
-        (size - 22, tail)
-    } else {
-        let len = size.min(22 + u16::MAX as u64) as usize;
-        let tail = input.read_at(size - len as u64, len).await?;
-        let index = end_record(&tail).ok_or(ScanError::Invalid("ZIP end record missing"))?;
-        (
-            size - len as u64 + index as u64,
-            tail[index..index + 22].to_vec(),
-        )
+    // Grow the suffix only when it contains a comment. Retain each fetched
+    // window so long comments never trigger duplicate reads.
+    let max_tail = size.min(22 + u16::MAX as u64) as usize;
+    let mut tail = input.read_at(size - 22, 22).await?;
+    let (eocd_offset, eocd) = loop {
+        if let Some(index) = end_record(&tail) {
+            break (
+                size - tail.len() as u64 + index as u64,
+                &tail[index..index + 22],
+            );
+        }
+        if tail.len() == max_tail {
+            return Err(ScanError::Invalid("ZIP end record missing"));
+        }
+        let len = max_tail.min((tail.len() * 4).max(128));
+        let mut prefix = input.read_at(size - len as u64, len - tail.len()).await?;
+        prefix.append(&mut tail);
+        tail = prefix;
     };
 
-    let disk = le16(&eocd, 4);
-    let directory_disk = le16(&eocd, 6);
-    let count_disk = le16(&eocd, 8);
-    let count = le16(&eocd, 10);
-    if disk != 0 || directory_disk != 0 || count_disk != count {
+    let disk = le16(eocd, 4);
+    let directory_disk = le16(eocd, 6);
+    let count_disk = le16(eocd, 8);
+    let count = le16(eocd, 10);
+    if !matches!(disk, 0 | u16::MAX)
+        || !matches!(directory_disk, 0 | u16::MAX)
+        || (count_disk != count && count_disk != u16::MAX && count != u16::MAX)
+    {
         return Err(ScanError::Unsupported("multi-disk ZIP"));
     }
-    let length = le32(&eocd, 12);
-    let offset = le32(&eocd, 16);
-    if count != u16::MAX && length != u32::MAX && offset != u32::MAX {
+    let length = le32(eocd, 12);
+    let offset = le32(eocd, 16);
+    let zip64 = [disk, directory_disk, count_disk, count].contains(&u16::MAX)
+        || length == u32::MAX
+        || offset == u32::MAX;
+    if !zip64 {
         return Ok(Directory {
             offset: offset as u64,
             size: length as u64,

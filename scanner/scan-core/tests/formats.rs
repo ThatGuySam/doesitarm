@@ -111,9 +111,10 @@ fn stored_zip_seeks_to_bundle_executable() {
 
 #[test]
 fn zip64_with_comment_reads_binary_plist_and_deflated_executable() {
-    let result = run(ZIP64, u64::MAX);
+    let result = run(ZIP64, ZIP64.len() as u64 - 1);
     assert_eq!(result.format, Some("zip"));
     assert_bundle(&result);
+    assert!(result.bytes_read < result.total_size);
 }
 
 #[test]
