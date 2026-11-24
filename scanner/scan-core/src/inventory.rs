@@ -133,6 +133,7 @@ pub fn role(relative: &str) -> Option<&'static str> {
             | "jdk"
             | "runtime"
             | "Java"
+            | "Home"
     ) && !top.ends_with(".app")
         && !top.ends_with(".jdk")
         && !top.ends_with(".bundle")
@@ -164,7 +165,7 @@ pub fn role(relative: &str) -> Option<&'static str> {
         "PlugIns" | "Plugins" => "plugin",
         "Resources" => "resource",
         "SharedSupport" => "shared_support",
-        "jbr" | "jre" | "jdk" | "runtime" | "Java" => "runtime",
+        "jbr" | "jre" | "jdk" | "runtime" | "Java" | "Home" => "runtime",
         _ if top.ends_with(".jdk") => "runtime",
         _ => "helper",
     })

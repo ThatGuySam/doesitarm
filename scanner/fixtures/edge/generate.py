@@ -100,7 +100,11 @@ def generate(mode, name, output):
     elif mode == "7z-pkg":
         with tempfile.TemporaryDirectory() as directory:
             pkg = Path(directory) / "PL2303HXD_G_Mac Driver_v2.2.11_20250314.pkg"
-            write_xar(pkg, cpio([("./Library/Extensions/Prolific.kext/Contents/MacOS/Prolific", thin())], odc=False))
+            files = {
+                **app("Applications/PL2303Serial.app"),
+                "./Library/Extensions/Prolific.kext/Contents/MacOS/Prolific": thin(),
+            }
+            write_xar(pkg, cpio(list(files.items()), odc=False))
             return sevenz({pkg.name: pkg.read_bytes()}, output)
     elif mode == "zstd":
         payload = tar({"codeql/codeql": b"#!/bin/sh\nexit 0\n", "codeql/tools/codeql.jar": b"jar"})
@@ -224,6 +228,17 @@ def generate(mode, name, output):
         files = {path.removeprefix(root + "/"): data for path, data in app(root, "tiptoi® Manager").items()}
         metadata = f'<pkg-info identifier="com.ravensburger.tiptoi.TipToiBindings" version="1.0.0" install-location="/Applications/{root}"/>'
         write_xar(output, gzip.compress(cpio(list(reversed(list(files.items()))), odc=False), mtime=0),
+                  package_info=metadata.encode())
+        return
+    elif mode == "jdk-pkg":
+        root = "amazon-corretto-17.jdk"
+        files = {
+            **app(root, "libjli.dylib", CFBundleName="Amazon Corretto 17"),
+            f"{root}/Contents/Home/bin/java": thin(),
+            f"{root}/Contents/Home/lib/server/libjvm.dylib": thin(),
+        }
+        metadata = f'<pkg-info identifier="com.amazon.corretto.17" version="17.0.21.1.2" install-location="/Library/Java/JavaVirtualMachines/"><bundle path="./{root}"/></pkg-info>'
+        write_xar(output, gzip.compress(cpio(list(files.items()), odc=False), mtime=0),
                   package_info=metadata.encode())
         return
     elif mode.startswith("inventory"):

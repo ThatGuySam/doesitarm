@@ -86,7 +86,8 @@ def verify(token, artifact, cli):
         result = scan(cli, artifact)
         assert result["format"] == "7z", result
         assert result["nested_artifacts"] == ["PL2303HXD_G_Mac Driver_v2.2.11_20250314.pkg"], result
-        assert result["installer"] is not None and result["bundle_path"] is None, result
+        assert result["installer"] is not None and result["bundle_path"] == "Applications/PL2303Serial.app", result
+        assert result["status"] == "complete" and all(arch["header_verified"] for arch in result["architectures"]), result
     else:
         result = scan(cli, artifact)
         assert result["status"] == "complete", result
@@ -101,6 +102,13 @@ def verify(token, artifact, cli):
         elif token == "tiptoi-manager":
             assert result["bundle_path"] == "Applications/tiptoi® Manager.app", result
             assert result["installer"]["install_location"] == "/Applications/tiptoi® Manager.app"
+        elif token == "corretto@17":
+            assert result["bundle_path"] == "amazon-corretto-17.jdk", result
+            assert result["bundle_kind"] == "runtime", result
+            assert result["inventory"]["complete"], result
+            assert {item["path"] for item in result["inventory"]["binaries"] if item["role"] == "runtime"} == {
+                "Contents/Home/bin/java", "Contents/Home/lib/server/libjvm.dylib",
+            }, result
         elif token == "mailmate@beta":
             assert result["format"] == "tar.bz2" and result["bundle_path"] == "MailMate.app", result
         elif token == "qt-design-studio":
