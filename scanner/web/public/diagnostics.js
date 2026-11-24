@@ -84,6 +84,7 @@ export function resultRecord(row, full, cutoff) {
     error_class: result.error_class ?? (result.error ? result.status : null),
     elapsed_ms: duration(row.ended, row.started),
     info_plist_keys: evidence?.info_plist_keys ?? null,
+    inventory: result.inventory ?? (row.kind === 'bundle' ? observedInventory(row, cutoff) : null),
   };
   if (!full) return record;
   const plistPath = evidence?.info_plist_path ?? null;
@@ -119,7 +120,6 @@ export function resultRecord(row, full, cutoff) {
     load_commands: evidence?.load_commands ?? null,
     directory_listings: row.directoryListings ?? null,
     candidate_executables: candidates,
-    inventory: result.inventory ?? (row.kind === 'bundle' ? observedInventory(row, cutoff) : null),
     nested_artifacts: nestedArtifacts,
     read_log: evidence?.read_log ?? null,
     reproduction: ['complete', 'canceled'].includes(result.status) ? null : {

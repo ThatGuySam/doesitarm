@@ -210,8 +210,8 @@ export class ScanCards {
       architectures.length && architectures.every(({ name, header_verified }) => header_verified && isIntel(name))) : [];
     if (intel.length) {
       card.inventorySummary ??= document.createElement('span');
-      card.inventorySummary.className = 'result-arch';
-      setText(card.inventorySummary, `${binaries.length} ${binaries.length === 1 ? 'binary' : 'binaries'}, ${intel.length} Intel-only`);
+      card.inventorySummary.className = 'inventory-summary';
+      setText(card.inventorySummary, ` ${binaries.length} ${binaries.length === 1 ? 'binary' : 'binaries'}, ${intel.length} Intel-only`);
       if (!card.inventorySummary.isConnected) card.el.querySelector('.result-verdict').append(card.inventorySummary);
     }
     if (!details.open || card.inventory === inventory) return;

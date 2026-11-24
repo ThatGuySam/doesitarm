@@ -284,6 +284,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   font-weight: 500;
   color: var(--text);
 }
+.inventory-summary { margin-inline-start: .45rem; color: var(--muted); font-weight: 500; }
+.binary-inventory { overflow-wrap: anywhere; }
 .result-details { margin-block-start: .3rem; font-size: .8rem; }
 .result-details > .panel { padding-block: .5rem .2rem; }
 .result-speed { margin-block-end: .6rem; }

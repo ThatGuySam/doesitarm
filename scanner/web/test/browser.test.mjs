@@ -304,7 +304,9 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
       await privacyPage.waitForFunction(() => typeof window.copiedResults === 'string');
       const copied = await privacyPage.evaluate(() => window.copiedResults);
       assert.doesNotMatch(copied, /(?:mac|linux|windows|helper)-account/);
-      assert.equal(JSON.parse(copied).results[0].display_path, '/Users/<user>/Application.app');
+      const [exported] = JSON.parse(copied).results;
+      assert.equal(exported.display_path, '/Users/<user>/Application.app');
+      assert.equal(exported.inventory.binaries[0].path, '/Users/<user>/bin/tool');
       assert.equal(await privacyPage.locator('#hide-username').count(), 0);
     } finally {
       await privacyPage.close();

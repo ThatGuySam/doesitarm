@@ -159,7 +159,7 @@ export class ResultsList {
       return { header: await runHeader(run, count, this.#longTasks), rows: rows(), count, cutoff };
     });
     this.#tools.append(toolSummary, this.#summary, controls, this.#diagnostics.element);
-    this.#list.after(this.#tools);
+    this.#list.before(this.#tools);
     const previous = navButton('Previous page', () => this.#showPage(this.#page - 1));
     const next = navButton('Next page', () => this.#showPage(this.#page + 1));
     const caption = document.createElement('span');
