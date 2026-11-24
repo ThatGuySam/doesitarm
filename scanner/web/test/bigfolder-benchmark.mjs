@@ -178,29 +178,33 @@ async function buildFileList(expected) {
   const response = await fetch('/benchmark-file-list.json');
   if (!response.ok) throw new Error(`Could not load FileList recipe: ${response.status}`);
   const recipe = await response.json();
-  const transfer = new DataTransfer();
-  const items = transfer.items;
-  let populated = 0;
-  const add = (path, contents) => {
-    items.add(new File(contents, path));
-    if ((++populated & 127) === 0) return scheduler.yield();
-  };
-  for (const [path, data] of recipe) {
-    if (typeof data === 'number') {
-      for (let i = 0; i < data; i += 1) {
-        const pause = add(`${path}/cache-${String(i).padStart(6, '0')}.dat`, []);
-        if (pause) await pause;
+  let length = 0;
+  const ranges = recipe.map(([path, data]) => {
+    const start = length;
+    length += typeof data === 'number' ? data : 1;
+    return { start, end: length, path, data };
+  });
+  if (length !== expected || !ranges[0]?.path.startsWith('Applications/')) throw new Error('Invalid FileList recipe.');
+  let section = 0;
+  const files = new Proxy({ length }, {
+    get(list, property) {
+      if (property === 'length') return list.length;
+      if (typeof property !== 'string') return;
+      const index = Number(property);
+      if (!Number.isSafeInteger(index) || index < 0 || index >= length) return;
+      if (index < ranges[section].start) section = 0;
+      while (index >= ranges[section].end) section++;
+      const { start, path, data } = ranges[section];
+      if (typeof data === 'number') {
+        const name = `${path}/cache-${String(index - start).padStart(6, '0')}.dat`;
+        return { name, size: 0 };
       }
-    } else {
-      const pause = add(path, data ? [Uint8Array.fromBase64(data)] : []);
-      if (pause) await pause;
-    }
-  }
-  const files = transfer.files;
-  if (files.length !== expected || !files[0].name.startsWith('Applications/')) {
-    throw new Error('The browser did not preserve every constructed file and its relative path.');
-  }
-  document.getElementById('folder').files = files;
+      return new File(data ? [Uint8Array.fromBase64(data)] : [], path);
+    },
+  });
+  // Chromium rebuilds DataTransfer's FileList on each items.add() call.
+  // Use metadata for empty filler and real Files for inputs the scanner reads.
+  Object.defineProperty(document.getElementById('folder'), 'files', { value: files });
 }
 
 async function submitNativePicker(session, input) {
@@ -282,7 +286,7 @@ async function runRung(browser, browserSession, url, cache, files, report, extra
     let fixtureFileListMs = null;
     if (synthetic) {
       const setup = performance.now();
-      await page.evaluate(buildFileList, files);
+      await within(page.evaluate(buildFileList, files), timeout, 'Synthetic FileList setup did not finish.');
       fixtureFileListMs = performance.now() - setup;
     }
     if (values.trace) await browserSession.send('Tracing.start', {
@@ -295,9 +299,9 @@ async function runRung(browser, browserSession, url, cache, files, report, extra
     });
     console.error(`Submitting ${files.toLocaleString('en-US')} files through ${values.route}.`);
     if (drop) {
-      await dropPaths(page, session, [input]);
+      await within(dropPaths(page, session, [input]), timeout, 'CDP directory drop did not return.');
     } else if (synthetic) {
-      await page.locator('#folder').dispatchEvent('change');
+      await within(page.locator('#folder').dispatchEvent('change'), timeout, 'Synthetic change did not return.');
     } else {
       await submitNativePicker(session, input);
     }
