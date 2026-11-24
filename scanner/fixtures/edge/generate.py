@@ -17,6 +17,7 @@ import zlib
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from generate import INTEL, METADATA, fat, thin
 from pkg_fixture import cpio, write_xar
+from apfs_fixture import apfs_fixture
 from dmg_fixture import hfs_tree, pkg_dmg_fixture, write_udif
 
 
@@ -80,7 +81,8 @@ def runtime_files(root):
 def generate(mode, name, output):
     if mode == "xz64":
         root = name + ".app"
-        files = {**app(root), f"{root}/Contents/Frameworks/Local.framework/Versions/A/Local": thin()}
+        executable = "wine" if name == "Wine Stable" else name
+        files = {**app(root, executable), f"{root}/Contents/Frameworks/Local.framework/Versions/A/Local": thin()}
         payload = lzma.compress(tar(files), check=lzma.CHECK_CRC64,
                                 filters=[{"id": lzma.FILTER_LZMA2, "dict_size": 64 << 20}])
     elif mode == "bzip2-multistream":
@@ -159,6 +161,9 @@ def generate(mode, name, output):
         with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
             for path, data in app("WordPress.com Studio.app", "Studio").items():
                 archive.writestr(path, data)
+        return
+    elif mode == "apfs-ring":
+        apfs_fixture(output, METADATA, fat(intel_offset=4096), checkpoint_slots=256)
         return
     elif mode == "mounted-pkg":
         root = "tiptoi® Manager.app"

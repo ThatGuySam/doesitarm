@@ -99,7 +99,7 @@ def extent(data_id, offset, address):
     return key(data_id, 8) + pack("<Q", offset), pack("<QQQ", BLOCK, address, 0)
 
 
-def apfs_fixture(path, metadata, executable):
+def apfs_fixture(path, metadata, executable, *, checkpoint_slots=3):
     volume = bytearray(BLOCK * BLOCKS)
 
     def put(address, data):
@@ -138,4 +138,13 @@ def apfs_fixture(path, metadata, executable):
     put(18, executable[BLOCK:])
 
     chunks = [(0x80000005, 14 * 8, zlib.compress), (1, (BLOCKS - 14) * 8, bytes)]
+    if checkpoint_slots != 3:
+        volume.extend(bytes(checkpoint_slots * BLOCK))
+        for address, xid, omap in ((0, 11, 30), (BLOCKS + checkpoint_slots - 1, 12, 6)):
+            data = superblock(xid, omap)
+            pack_into("<Q", data, 40, BLOCKS + checkpoint_slots)
+            pack_into("<I", data, 104, checkpoint_slots)
+            pack_into("<Q", data, 112, BLOCKS)
+            put(address, checksum(data))
+        chunks.append((0x80000005, checkpoint_slots * 8, zlib.compress))
     write_udif(path, volume, chunks, "Apple_APFS")

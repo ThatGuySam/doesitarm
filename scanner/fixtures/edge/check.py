@@ -10,7 +10,7 @@ import tempfile
 from threading import Thread
 
 ROOT = Path(__file__).resolve().parent
-XZ = {"ammonite", "backuploupe", "imageoptim", "launchcontrol"}
+XZ = {"ammonite", "backuploupe", "imageoptim", "launchcontrol", "wine-stable"}
 
 
 def scan(cli, artifact, *flags):
@@ -106,6 +106,10 @@ def verify(token, artifact, cli):
             assert result["format"] == "dmg" and result["bundle_path"] == expected, result
         elif token in ("soothe2", "fabfilter-pro-ds", "fabfilter-timeless"):
             assert result["bundle_kind"] == "audio_plugin", result
+        elif token == "ti-smartview-ce-for-the-ti-84-plus-family":
+            assert result["format"] == "dmg" and result["inventory"]["complete"], result
+            limited = scan(cli, artifact, "--profile", "worker")
+            assert limited["error"] == "scan limit: APFS checkpoint ring exceeds profile limit", limited
         elif token == "android-studio":
             inventory = result["inventory"]
             assert inventory["complete"] and inventory["all_arm64_capable"] is False, inventory
