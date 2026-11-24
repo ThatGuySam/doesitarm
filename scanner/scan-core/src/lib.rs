@@ -1,7 +1,10 @@
 //! Range-based inspection of macOS downloads. The caller supplies all I/O.
 #![forbid(unsafe_code)]
 
+mod bundle;
+mod inflate;
 mod macho;
+mod zip;
 
 use serde::Serialize;
 use std::fmt;
@@ -11,6 +14,10 @@ use std::fmt;
 #[allow(async_fn_in_trait)]
 pub trait ReadAt {
     fn size(&self) -> u64;
+
+    fn remaining_budget(&self) -> u64 {
+        u64::MAX
+    }
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>>;
 }
 
@@ -130,6 +137,23 @@ pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {
     if let Err(error) = inspect(&mut input, &mut result).await {
         result.set_error(error);
     }
+    if result.min_macos.is_none() {
+        result.min_macos = result
+            .architectures
+            .iter()
+            .filter_map(|arch| arch.min_macos.as_ref())
+            .min_by_key(|version| {
+                let mut parts = version
+                    .split('.')
+                    .map(|part| part.parse::<u16>().unwrap_or(0));
+                [
+                    parts.next().unwrap_or(0),
+                    parts.next().unwrap_or(0),
+                    parts.next().unwrap_or(0),
+                ]
+            })
+            .cloned();
+    }
     result.bytes_read = input.bytes;
     result.reads = input.reads;
     result
@@ -145,6 +169,13 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
         out.executable_size = Some(input.size());
         macho::scan(input, &mut out.architectures).await?;
         return Ok(());
+    }
+    if matches!(
+        magic.as_slice(),
+        b"PK\x03\x04" | b"PK\x05\x06" | b"PK\x07\x08"
+    ) {
+        out.format = Some("zip");
+        return zip::scan(input, out).await;
     }
     Err(ScanError::Unsupported("unrecognized file format"))
 }
@@ -162,12 +193,16 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
         self.size
     }
 
+    fn remaining_budget(&self) -> u64 {
+        self.budget.saturating_sub(self.bytes)
+    }
+
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
         check_range(self.size, offset, len as u64)?;
         if len == 0 {
             return Ok(Vec::new());
         }
-        if len as u64 > self.budget - self.bytes {
+        if len as u64 > self.remaining_budget() {
             return Err(ScanError::Budget);
         }
         self.reads += 1;
@@ -196,4 +231,45 @@ pub(crate) fn le32(b: &[u8], i: usize) -> u32 {
 
 pub(crate) fn be32(b: &[u8], i: usize) -> u32 {
     u32::from_be_bytes(b[i..i + 4].try_into().unwrap())
+}
+
+fn le16(b: &[u8], i: usize) -> u16 {
+    u16::from_le_bytes(b[i..i + 2].try_into().unwrap())
+}
+
+fn le64(b: &[u8], i: usize) -> u64 {
+    u64::from_le_bytes(b[i..i + 8].try_into().unwrap())
+}
+
+/// Virtual subfile whose reads are metered by the underlying host.
+struct Window<'a, S> {
+    source: &'a mut S,
+    offset: u64,
+    size: u64,
+}
+
+impl<'a, S: ReadAt> Window<'a, S> {
+    fn new(source: &'a mut S, offset: u64, size: u64) -> Result<Self> {
+        check_range(source.size(), offset, size)?;
+        Ok(Self {
+            source,
+            offset,
+            size,
+        })
+    }
+}
+
+impl<S: ReadAt> ReadAt for Window<'_, S> {
+    fn size(&self) -> u64 {
+        self.size
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.source.remaining_budget()
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        check_range(self.size, offset, len as u64)?;
+        self.source.read_at(self.offset + offset, len).await
+    }
 }

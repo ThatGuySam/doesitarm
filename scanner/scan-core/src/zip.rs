@@ -1,0 +1,274 @@
+use crate::{
+    ReadAt, Result, ScanError, ScanResult, Window, bundle, check_range, inflate::Inflate, le16,
+    le32, le64, macho,
+};
+
+const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
+
+struct Directory {
+    offset: u64,
+    size: u64,
+    count: u64,
+    end_record: u64,
+}
+
+struct Entry {
+    path: String,
+    offset: u64,
+    packed: u64,
+    expanded: u64,
+    method: u16,
+    flags: u16,
+}
+
+pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+    let directory = read_directory(input).await?;
+    check_range(directory.end_record, directory.offset, directory.size)?;
+    if directory.size > MAX_DIRECTORY {
+        return Err(ScanError::Limit("ZIP central directory exceeds 16 MiB"));
+    }
+    let records = input
+        .read_at(directory.offset, directory.size as usize)
+        .await?;
+    let entries = read_entries(&records, directory.count)?;
+
+    let (entry, name) = entries
+        .iter()
+        .filter_map(|entry| {
+            let path = bundle::archive_path(&entry.path)?;
+            Some((entry, bundle::plist_bundle(path)?))
+        })
+        .min_by_key(|(_, name)| (name.matches('/').count(), *name))
+        .ok_or(ScanError::NotFound(
+            "app Info.plist in ZIP central directory",
+        ))?;
+    out.bundle_path = Some(name.to_owned());
+
+    if entry.expanded > bundle::MAX_PLIST {
+        return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
+    }
+    let data = member(input, entry, directory.offset).await?;
+    let plist = if entry.method == 0 {
+        let mut data = data;
+        data.read_at(0, entry.expanded as usize).await?
+    } else {
+        Inflate::new(data, entry.expanded)
+            .read_at(0, entry.expanded as usize)
+            .await?
+    };
+    let path = bundle::apply_plist(&plist, name, out)?;
+
+    let executable = entries
+        .iter()
+        .find(|entry| bundle::archive_path(&entry.path) == Some(&path))
+        .ok_or(ScanError::NotFound(
+            "declared executable in ZIP central directory",
+        ))?;
+    out.executable_size = Some(executable.expanded);
+    let data = member(input, executable, directory.offset).await?;
+    if executable.method == 0 {
+        macho::scan(&mut { data }, &mut out.architectures).await
+    } else {
+        macho::scan(
+            &mut Inflate::new(data, executable.expanded),
+            &mut out.architectures,
+        )
+        .await
+    }
+}
+
+async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
+    let size = input.size();
+    if size < 22 {
+        return Err(ScanError::Invalid("ZIP end record missing"));
+    }
+
+    // Most ZIPs have no comment. Only spend 64 KiB when the short read misses.
+    let tail = input.read_at(size - 22, 22).await?;
+    let (eocd_offset, eocd) = if end_record(&tail) == Some(0) {
+        (size - 22, tail)
+    } else {
+        let len = size.min(22 + u16::MAX as u64) as usize;
+        let tail = input.read_at(size - len as u64, len).await?;
+        let index = end_record(&tail).ok_or(ScanError::Invalid("ZIP end record missing"))?;
+        (
+            size - len as u64 + index as u64,
+            tail[index..index + 22].to_vec(),
+        )
+    };
+
+    let disk = le16(&eocd, 4);
+    let directory_disk = le16(&eocd, 6);
+    let count_disk = le16(&eocd, 8);
+    let count = le16(&eocd, 10);
+    if disk != 0 || directory_disk != 0 || count_disk != count {
+        return Err(ScanError::Unsupported("multi-disk ZIP"));
+    }
+    let length = le32(&eocd, 12);
+    let offset = le32(&eocd, 16);
+    if count != u16::MAX && length != u32::MAX && offset != u32::MAX {
+        return Ok(Directory {
+            offset: offset as u64,
+            size: length as u64,
+            count: count as u64,
+            end_record: eocd_offset,
+        });
+    }
+
+    let locator_at = eocd_offset
+        .checked_sub(20)
+        .ok_or(ScanError::Invalid("ZIP64 locator missing"))?;
+    let locator = input.read_at(locator_at, 20).await?;
+    if &locator[..4] != b"PK\x06\x07" {
+        return Err(ScanError::Invalid("ZIP64 locator signature"));
+    }
+    if le32(&locator, 4) != 0 || le32(&locator, 16) != 1 {
+        return Err(ScanError::Unsupported("multi-disk ZIP64"));
+    }
+    let record_at = le64(&locator, 8);
+    check_range(locator_at, record_at, 56)?;
+    let record = input.read_at(record_at, 56).await?;
+    let record_size = le64(&record, 4);
+    if &record[..4] != b"PK\x06\x06"
+        || record_size < 44
+        || record_size != locator_at - record_at - 12
+    {
+        return Err(ScanError::Invalid("ZIP64 end record"));
+    }
+    if le32(&record, 16) != 0 || le32(&record, 20) != 0 || le64(&record, 24) != le64(&record, 32) {
+        return Err(ScanError::Unsupported("multi-disk ZIP64"));
+    }
+    Ok(Directory {
+        offset: le64(&record, 48),
+        size: le64(&record, 40),
+        count: le64(&record, 32),
+        end_record: record_at,
+    })
+}
+
+fn end_record(tail: &[u8]) -> Option<usize> {
+    (0..=tail.len().checked_sub(22)?).rev().find(|&i| {
+        &tail[i..i + 4] == b"PK\x05\x06" && le16(tail, i + 20) as usize == tail.len() - i - 22
+    })
+}
+
+fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
+    if count > (bytes.len() / 46) as u64 {
+        return Err(ScanError::Invalid("ZIP central directory entry count"));
+    }
+    if count > 150_000 {
+        return Err(ScanError::Limit("ZIP directory exceeds 150,000 entries"));
+    }
+    let mut entries = Vec::with_capacity(count as usize);
+    for _ in 0..count {
+        if bytes.len() < 46 || &bytes[..4] != b"PK\x01\x02" {
+            return Err(ScanError::Invalid("ZIP central directory entry"));
+        }
+        let name_len = le16(bytes, 28) as usize;
+        let extra_len = le16(bytes, 30) as usize;
+        let comment_len = le16(bytes, 32) as usize;
+        let end = 46 + name_len + extra_len + comment_len;
+        if end > bytes.len() {
+            return Err(ScanError::Invalid("truncated ZIP directory entry"));
+        }
+
+        let name = std::str::from_utf8(&bytes[46..46 + name_len]);
+        let flags = le16(bytes, 8);
+        let method = le16(bytes, 10);
+        let mode_type = le32(bytes, 38) >> 28;
+        if let Ok(path) = name
+            && !path.ends_with('/')
+            && (bytes[5] != 3 || matches!(mode_type, 0 | 8))
+        {
+            let extra = &bytes[46 + name_len..end - comment_len];
+            let mut expanded = le32(bytes, 24) as u64;
+            let mut packed = le32(bytes, 20) as u64;
+            let mut offset = le32(bytes, 42) as u64;
+            let mut disk = le16(bytes, 34) as u32;
+            if [expanded, packed, offset].contains(&(u32::MAX as u64)) || disk == u16::MAX as u32 {
+                let mut ext = zip64_extra(extra)?;
+                for value in [&mut expanded, &mut packed, &mut offset] {
+                    if *value == u32::MAX as u64 {
+                        if ext.len() < 8 {
+                            return Err(ScanError::Invalid("short ZIP64 entry extra data"));
+                        }
+                        *value = le64(ext, 0);
+                        ext = &ext[8..];
+                    }
+                }
+                if disk == u16::MAX as u32 {
+                    if ext.len() < 4 {
+                        return Err(ScanError::Invalid("short ZIP64 disk field"));
+                    }
+                    disk = le32(ext, 0);
+                }
+            }
+            if disk != 0 {
+                return Err(ScanError::Unsupported("multi-disk ZIP entry"));
+            }
+            entries.push(Entry {
+                path: path.to_owned(),
+                offset,
+                packed,
+                expanded,
+                method,
+                flags,
+            });
+        }
+        bytes = &bytes[end..];
+    }
+    Ok(entries)
+}
+
+fn zip64_extra(mut extra: &[u8]) -> Result<&[u8]> {
+    while extra.len() >= 4 {
+        let end = 4 + le16(extra, 2) as usize;
+        if end > extra.len() {
+            break;
+        }
+        if le16(extra, 0) == 1 {
+            return Ok(&extra[4..end]);
+        }
+        extra = &extra[end..];
+    }
+    Err(ScanError::Invalid("missing ZIP64 entry extra data"))
+}
+
+async fn member<'a, S: ReadAt>(
+    input: &'a mut S,
+    entry: &Entry,
+    heap_end: u64,
+) -> Result<Window<'a, S>> {
+    if entry.flags & 1 != 0 {
+        return Err(ScanError::Unsupported("encrypted ZIP member"));
+    }
+    if !matches!(entry.method, 0 | 8) {
+        return Err(ScanError::Unsupported("ZIP member compression method"));
+    }
+    if entry.method == 0 && entry.packed != entry.expanded {
+        return Err(ScanError::Invalid("ZIP stored member lengths differ"));
+    }
+
+    check_range(heap_end, entry.offset, 30)?;
+    let header = input.read_at(entry.offset, 30).await?;
+    let name_len = le16(&header, 26) as usize;
+    if &header[..4] != b"PK\x03\x04"
+        || le16(&header, 8) != entry.method
+        || le16(&header, 6) != entry.flags
+        || name_len != entry.path.len()
+    {
+        return Err(ScanError::Invalid(
+            "ZIP local header differs from directory",
+        ));
+    }
+
+    let name_at = entry.offset + 30;
+    let extra_len = le16(&header, 28) as u64;
+    check_range(heap_end, name_at, name_len as u64 + extra_len)?;
+    let offset = name_at + name_len as u64 + extra_len;
+    check_range(heap_end, offset, entry.packed)?;
+    if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
+        return Err(ScanError::Invalid("ZIP local name differs from directory"));
+    }
+    Window::new(input, offset, entry.packed)
+}
