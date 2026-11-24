@@ -145,6 +145,59 @@ fn declared_targets_verify_named_bundles_and_binaries() {
 }
 
 #[test]
+fn nested_packages_and_images_keep_the_outer_format_and_named_app() {
+    for (format, inside, artifact) in [
+        (
+            "dmg",
+            "Fixture.pkg",
+            include_bytes!("../../fixtures/nested-pkg.dmg").as_slice(),
+        ),
+        (
+            "pkg",
+            "Component.pkg",
+            include_bytes!("../../fixtures/nested-flat.pkg").as_slice(),
+        ),
+        (
+            "zip",
+            "Wrapper/Fixture.dmg",
+            include_bytes!("../../fixtures/nested-dmg.zip").as_slice(),
+        ),
+        (
+            "zip",
+            "Fixture.pkg/Contents/Archive.pax.gz",
+            include_bytes!("../../fixtures/nested-legacy.zip").as_slice(),
+        ),
+    ] {
+        let result = ready(scan_target(
+            &mut Memory(artifact),
+            1024 * 1024,
+            Target::Bundle("Fixture.app"),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some(format));
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.nested_artifacts, [inside]);
+        assert_eq!(result.architectures.len(), 2);
+    }
+}
+
+#[test]
+fn installer_distribution_exposes_a_remote_component_without_scanning_it() {
+    let artifact = include_bytes!("../../fixtures/remote-component.xar");
+    let result = run(artifact, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported));
+    assert_eq!(
+        result.error.as_deref(),
+        Some("unsupported: installer Distribution references remote package components")
+    );
+    assert_eq!(
+        result.installer.unwrap().remote_components,
+        ["https://example.invalid/component.pkg"]
+    );
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
 fn zip_supports_bzip2_and_zip_framed_lzma_members() {
     for artifact in [
         include_bytes!("../../fixtures/bzip2.zip").as_slice(),

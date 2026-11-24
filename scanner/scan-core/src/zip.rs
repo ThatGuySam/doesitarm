@@ -1,7 +1,7 @@
 use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
     inflate::{Codec, Forward},
-    le16, le32, le64, macho,
+    le16, le32, le64, macho, nested,
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
@@ -52,16 +52,16 @@ pub(crate) async fn scan(
         return macho::scan(&mut data, &mut out.architectures).await;
     }
 
-    let (entry, name) = entries
+    let app = entries
         .iter()
         .filter_map(|entry| {
             let path = bundle::archive_path(&entry.path)?;
             Some((entry, bundle::selected_plist(path, target)?))
         })
-        .min_by_key(|(_, name)| (name.matches('/').count(), *name))
-        .ok_or(ScanError::NotFound(
-            "app Info.plist in ZIP central directory",
-        ))?;
+        .min_by_key(|(_, name)| (name.matches('/').count(), *name));
+    let Some((entry, name)) = app else {
+        return scan_nested(input, &entries, directory.offset, target, out).await;
+    };
     out.bundle_path = Some(name.to_owned());
 
     if entry.expanded > bundle::MAX_PLIST {
@@ -82,6 +82,85 @@ pub(crate) async fn scan(
     out.executable_size = Some(executable.expanded);
     let mut data = member(input, executable, directory.offset).await?;
     macho::scan(&mut data, &mut out.architectures).await
+}
+
+async fn scan_nested(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let mut candidates: Vec<_> = entries
+        .iter()
+        .filter_map(|entry| {
+            let path = bundle::archive_path(&entry.path)?;
+            let kind = nested::Kind::from_path(path)?;
+            Some((entry, path, kind))
+        })
+        .collect();
+    candidates.sort_by_key(|(entry, path, _)| {
+        (path.matches('/').count(), std::cmp::Reverse(entry.expanded))
+    });
+    let mut first_failure = None;
+    for (entry, path, kind) in candidates.into_iter().take(8) {
+        let mut result = ScanResult::new(out.total_size);
+        result.format = out.format;
+        let attempt =
+            scan_nested_member(input, entry, heap_end, path, kind, target, &mut result).await;
+        match attempt {
+            result_status @ (Ok(()) | Err(ScanError::Budget | ScanError::Source(_))) => {
+                *out = result;
+                return result_status;
+            }
+            Err(error) if first_failure.is_none() => first_failure = Some((error, result)),
+            Err(_) => (),
+        }
+    }
+    if let Some((error, result)) = first_failure {
+        *out = result;
+        return Err(error);
+    }
+    Err(ScanError::NotFound(
+        "app Info.plist in ZIP central directory",
+    ))
+}
+
+async fn scan_nested_member(
+    input: &mut impl ReadAt,
+    entry: &Entry,
+    heap_end: u64,
+    path: &str,
+    kind: nested::Kind,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    const MAX_EXPANDED: u64 = 32 * 1024 * 1024;
+    let mut member = member(input, entry, heap_end).await?;
+    if let Member::Stored(mut source) = member {
+        return nested::scan(&mut source, kind, path, target, out).await;
+    }
+    if entry.expanded > MAX_EXPANDED {
+        out.nested_artifacts.push(path.to_owned());
+        return Err(ScanError::Limit(
+            "compressed nested ZIP member exceeds 32 MiB",
+        ));
+    }
+    let bytes = member.read_at(0, entry.expanded as usize).await?;
+    nested::scan(&mut Buffered(bytes), kind, path, target, out).await
+}
+
+struct Buffered(Vec<u8>);
+
+impl ReadAt for Buffered {
+    fn size(&self) -> u64 {
+        self.0.len() as u64
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        check_range(self.size(), offset, len as u64)?;
+        Ok(self.0[offset as usize..offset as usize + len].to_vec())
+    }
 }
 
 async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {

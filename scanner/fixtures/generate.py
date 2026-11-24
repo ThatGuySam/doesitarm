@@ -11,8 +11,8 @@ from pathlib import Path
 from struct import pack
 
 from apfs_fixture import apfs_fixture
-from dmg_fixture import dmg_fixture, hfs_volume, write_udif
-from pkg_fixture import late_bom_fixture, pkg_fixture
+from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, write_udif
+from pkg_fixture import late_bom_fixture, pkg_fixture, write_xar
 
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
@@ -137,3 +137,16 @@ if __name__ == "__main__":
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)
     late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())
+
+    pkg_dmg_fixture(ROOT / "nested-pkg.dmg", (ROOT / "gzip-newc.pkg").read_bytes())
+    write_xar(ROOT / "remote-component.xar", distribution=b"""
+        <installer-gui-script><title>Remote fixture</title>
+          <pkg-ref id="remote">https://example.invalid/component.pkg</pkg-ref>
+        </installer-gui-script>
+    """)
+    write_xar(ROOT / "nested-flat.pkg", nested=(ROOT / "gzip-newc.pkg").read_bytes())
+    with zipfile.ZipFile(ROOT / "nested-dmg.zip", "w", compression=zipfile.ZIP_STORED) as archive:
+        archive.writestr(zipfile.ZipInfo("Wrapper/Fixture.dmg"), (ROOT / "hfsx.dmg").read_bytes())
+    with zipfile.ZipFile(ROOT / "nested-legacy.zip", "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr(zipfile.ZipInfo("Fixture.pkg/Contents/Archive.pax.gz"),
+                         (ROOT / "app.tar.gz").read_bytes(), compress_type=zipfile.ZIP_DEFLATED)

@@ -23,12 +23,68 @@ struct Member<'a> {
     expanded: u64,
 }
 
+#[derive(Default)]
+struct Segment {
+    offset: u64,
+    size: u64,
+    components: Vec<String>,
+}
+
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
     selection: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
-    let head = input.read_at(0, 28).await?;
+    let mut pending = vec![Segment {
+        size: input.size(),
+        components: out.nested_artifacts.clone(),
+        ..Segment::default()
+    }];
+    let mut first_failure = None;
+    for _ in 0..32 {
+        let Some(segment) = pending.pop() else { break };
+        let mut candidate = ScanResult::new(out.total_size);
+        candidate.format = out.format;
+        candidate.nested_artifacts = segment.components;
+        let span = (segment.offset, segment.size);
+        match inspect_xar(input, span, &mut pending, selection, &mut candidate).await {
+            result @ (Ok(()) | Err(ScanError::Budget | ScanError::Source(_))) => {
+                *out = candidate;
+                return result;
+            }
+            Err(error) => {
+                // Prefer the deeper package evidence when the outer package
+                // was an XAR wrapper with no local payload.
+                if first_failure.as_ref().is_none_or(
+                    |(before, result): &(ScanError, ScanResult)| {
+                        matches!(before, ScanError::NotFound("Payload in flat PKG"))
+                            && result.nested_artifacts.len() < candidate.nested_artifacts.len()
+                    },
+                ) {
+                    first_failure = Some((error, candidate));
+                }
+            }
+        }
+    }
+    if let Some((error, result)) = first_failure {
+        *out = result;
+        return Err(error);
+    }
+    Err(ScanError::NotFound("Payload in flat PKG"))
+}
+
+async fn inspect_xar(
+    input: &mut impl ReadAt,
+    (start, size): (u64, u64),
+    pending: &mut Vec<Segment>,
+    selection: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    check_range(size, 0, 28)?;
+    let head = input.read_at(start, 28).await?;
+    if &head[..4] != b"xar!" {
+        return Err(ScanError::Unsupported("nested PKG is not flat XAR"));
+    }
     let header_size = be16(&head, 4) as u64;
     if header_size < 28 || be16(&head, 6) != 1 {
         return Err(ScanError::Unsupported("XAR header version"));
@@ -38,9 +94,9 @@ pub(crate) async fn scan(
     if packed > MAX_TOC || expanded > MAX_TOC {
         return Err(ScanError::Limit("XAR table of contents exceeds 8 MiB"));
     }
-    check_range(input.size(), header_size, packed)?;
+    check_range(size, header_size, packed)?;
     let heap = header_size + packed;
-    let toc = input.read_at(header_size, packed as usize).await?;
+    let toc = input.read_at(start + header_size, packed as usize).await?;
     let toc = expand_zlib(&toc, expanded as usize).map_err(|_| TOC_ERROR)?;
     let doc = parse_xml(&toc).map_err(|_| TOC_ERROR)?;
     let root = named_child(doc.root_element(), "toc").ok_or(TOC_ERROR)?;
@@ -49,11 +105,13 @@ pub(crate) async fn scan(
     let mut package_infos = Vec::new();
     let mut payloads = Vec::new();
     let mut boms = Vec::new();
+    let mut embedded = Vec::new();
     for file in root.descendants().filter(|node| node.has_tag_name("file")) {
         let Some(name) = field(file, "name") else {
             continue;
         };
-        if !matches!(name, "Distribution" | "PackageInfo" | "Payload" | "Bom") {
+        let is_pkg = package_name(name);
+        if !matches!(name, "Distribution" | "PackageInfo" | "Payload" | "Bom") && !is_pkg {
             continue;
         }
         if field(file, "type") != Some("file") {
@@ -70,14 +128,14 @@ pub(crate) async fn scan(
         let offset = number("offset")?;
         let packed = number("length")?;
         let expanded = number("size")?;
-        check_range(input.size() - heap, offset, packed)?;
+        check_range(size - heap, offset, packed)?;
         let encoding = named_child(data, "encoding")
             .and_then(|node| node.attribute("style"))
             .unwrap_or("application/octet-stream");
         let member = Member {
             name,
             encoding,
-            offset: heap + offset,
+            offset: start + heap + offset,
             packed,
             expanded,
         };
@@ -86,30 +144,155 @@ pub(crate) async fn scan(
             "PackageInfo" => package_infos.push((file.parent(), member)),
             "Payload" => payloads.push((file.parent(), member)),
             "Bom" => boms.push((file.parent(), member)),
+            _ if is_pkg => embedded.push(member),
             _ => {}
         }
     }
 
-    // Prefer the largest component for single-result scans. Metadata for
-    // smaller components can describe unrelated helpers or uninstallers.
-    let selected = payloads
-        .into_iter()
-        .max_by_key(|(_, payload)| payload.packed);
-    let package = if let Some((parent, _)) = &selected {
-        package_infos
+    const MAX_COMPONENTS: usize = 8;
+    if !embedded.is_empty() && out.nested_artifacts.len() < 4 {
+        embedded.sort_by_key(|member| member.packed);
+        let can_scan = embedded
             .iter()
-            .find(|(container, _)| container == parent)
-    } else {
-        package_infos.first()
-    };
+            .rev()
+            .take(MAX_COMPONENTS)
+            .filter(|member| {
+                member.encoding == "application/octet-stream" && member.packed == member.expanded
+            })
+            .collect::<Vec<_>>();
+        for member in can_scan.iter().rev() {
+            let mut components = out.nested_artifacts.clone();
+            components.push(member.name.to_owned());
+            pending.push(Segment {
+                offset: member.offset,
+                size: member.packed,
+                components,
+            });
+        }
+    }
+
     if let Some(member) = distribution.as_ref() {
         read_metadata(input, member, out).await?;
     }
-    if let Some((_, member)) = package {
-        read_metadata(input, member, out).await?;
+    if payloads.is_empty() {
+        if let Some((_, member)) = package_infos.first() {
+            read_metadata(input, member, out).await?;
+        }
+        if out
+            .installer
+            .as_ref()
+            .is_some_and(|meta| !meta.remote_components.is_empty())
+        {
+            return Err(ScanError::Unsupported(
+                "installer Distribution references remote package components",
+            ));
+        }
+        if !embedded.is_empty()
+            && pending
+                .iter()
+                .all(|segment| segment.components.len() <= out.nested_artifacts.len())
+        {
+            out.nested_artifacts
+                .push(embedded.last().unwrap().name.to_owned());
+            return Err(ScanError::Unsupported(
+                "nested PKG encoding or nesting depth",
+            ));
+        }
+        return Err(ScanError::NotFound("Payload in flat PKG"));
     }
 
-    let (parent, member) = selected.ok_or(ScanError::NotFound("Payload in flat PKG"))?;
+    payloads.sort_by_key(|(_, payload)| std::cmp::Reverse(payload.packed));
+    let mut first_miss = None;
+    let installer = out.installer.clone();
+    for (parent, member) in payloads.into_iter().take(MAX_COMPONENTS) {
+        let mut result = ScanResult::new(out.total_size);
+        result.format = out.format;
+        result.nested_artifacts = out.nested_artifacts.clone();
+        result.installer.clone_from(&installer);
+        if let Some((_, package)) = package_infos
+            .iter()
+            .find(|(container, _)| *container == parent)
+        {
+            read_metadata(input, package, &mut result).await?;
+        }
+        let bom = boms
+            .iter()
+            .find(|(container, _)| *container == parent)
+            .map(|(_, member)| member);
+        match scan_payload(input, &member, bom, selection, &mut result).await {
+            outcome @ (Ok(()) | Err(ScanError::Budget | ScanError::Source(_))) => {
+                *out = result;
+                return outcome;
+            }
+            Err(error) if first_miss.is_none() => first_miss = Some((error, result)),
+            Err(_) => (),
+        }
+    }
+    let (error, result) = first_miss.unwrap();
+    *out = result;
+    Err(error)
+}
+
+pub(crate) fn package_name(path: &str) -> bool {
+    path.rsplit_once('.').is_some_and(|(_, extension)| {
+        extension.eq_ignore_ascii_case("pkg") || extension.eq_ignore_ascii_case("mpkg")
+    })
+}
+
+/// Legacy bundle packages ship one gzipped Archive.pax member. Its decoded
+/// payload can use tar or CPIO framing depending on the package producer.
+pub(crate) async fn scan_legacy(
+    input: &mut impl ReadAt,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let size = input.size();
+    let source = Window::new(input, 0, size)?;
+    let mut stream = Forward::new(source, STREAM_OUTPUT_LIMIT, Codec::Gzip);
+    let prefix = stream.read_at(0, 6).await?;
+    let is_cpio = cpio::recognized(&prefix);
+    let mut source = Replay { prefix, stream };
+    if is_cpio {
+        return cpio::scan_with(&mut source, StreamBundle::new(target), out).await;
+    }
+    crate::tar::scan(&mut source, target, out).await
+}
+
+struct Replay<S> {
+    prefix: Vec<u8>,
+    stream: S,
+}
+
+impl<S: ReadAt> ReadAt for Replay<S> {
+    fn size(&self) -> u64 {
+        self.stream.size()
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        if offset >= self.prefix.len() as u64 {
+            return self.stream.read_at(offset, len).await;
+        }
+        let at = offset as usize;
+        let count = len.min(self.prefix.len() - at);
+        let mut bytes = self.prefix[at..at + count].to_vec();
+        if count < len {
+            bytes.extend(
+                self.stream
+                    .read_at(offset + count as u64, len - count)
+                    .await?,
+            );
+        }
+        Ok(bytes)
+    }
+}
+
+async fn scan_payload(
+    input: &mut impl ReadAt,
+    member: &Member<'_>,
+    bom: Option<&Member<'_>>,
+    selection: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     if member.encoding != "application/octet-stream" || member.packed != member.expanded {
         return Err(ScanError::Unsupported("XAR-level compressed PKG Payload"));
     }
@@ -132,7 +315,7 @@ pub(crate) async fn scan(
     if !matches!(selection, Target::Executable(_))
         && matches!(kind, Payload::Compressed(Codec::Gzip) | Payload::Pbzx)
         && member.packed > budget
-        && let Some((_, bom)) = boms.iter().find(|(container, _)| *container == parent)
+        && let Some(bom) = bom
         && bom.packed <= MAX_BOM
         && bom.expanded <= MAX_BOM
         && budget > 2 * PREVIEW_BYTES + bom.packed + gzip_tail::TAIL_BYTES
@@ -144,6 +327,7 @@ pub(crate) async fn scan(
         if !matches!(result, Err(ScanError::Budget)) {
             preview.installer = out.installer.take();
             preview.format = out.format;
+            preview.nested_artifacts = std::mem::take(&mut out.nested_artifacts);
             *out = preview;
             return result;
         }
@@ -151,7 +335,7 @@ pub(crate) async fn scan(
         // found it and is spending its remaining input on the executable.
         if preview.executable_name.is_none()
             && let Some((path, provenance)) =
-                recover_target(input, kind, &member, bom, selection, out).await
+                recover_target(input, kind, member, bom, selection, out).await
         {
             target = StreamBundle::with_target(path);
             out.bundle_metadata_source = Some(provenance);
@@ -224,6 +408,7 @@ async fn recover_target(
     let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
     bundle.installer = out.installer.take();
     bundle.format = out.format;
+    bundle.nested_artifacts = std::mem::take(&mut out.nested_artifacts);
     *out = bundle;
     Some((target, evidence))
 }
@@ -289,6 +474,21 @@ async fn read_metadata(
                 .map(str::to_owned)
                 .collect();
         }
+        meta.remote_components.extend(
+            root.descendants()
+                .filter(|node| node.has_tag_name("pkg-ref"))
+                .filter_map(|node| node.text().map(str::trim))
+                .filter(|text| text.starts_with("https://") || text.starts_with("http://"))
+                .take(16)
+                .map(|url| {
+                    url.split('?')
+                        .next()
+                        .unwrap_or_default()
+                        .chars()
+                        .take(256)
+                        .collect()
+                }),
+        );
         meta.min_macos = named_child(root, "volume-check")
             .and_then(|element| named_child(element, "allowed-os-versions"))
             .and_then(|element| {

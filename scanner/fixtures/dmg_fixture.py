@@ -139,3 +139,20 @@ def write_udif(path, volume, chunks, name, *, with_preamble=True):
     pack_into(">QQ", trailer, 216, len(preamble) + len(body), len(index))
     pack_into(">Q", trailer, 492, sectors)
     path.write_bytes(preamble + body + index + trailer)
+
+
+def pkg_dmg_fixture(path, package):
+    volume = bytearray(VOLUME_SECTORS * SECTOR)
+    header = bytearray(SECTOR)
+    header[:4] = b"HX\0\5"
+    pack_into(">II", header, 40, SECTOR, VOLUME_SECTORS)
+    header[192:272] = fork(2 * SECTOR, 2, [(10, 2)])
+    header[272:352] = fork(2 * SECTOR, 2, [(5, 2)])
+    data_at(volume, 2, header)
+
+    blocks = (len(package) + SECTOR - 1) // SECTOR
+    data_at(volume, 5, tree_header(1, 1, 1, 1, 2, 1))
+    node_name = key(2, "Fixture.pkg")
+    data_at(volume, 6, node(-1, [node_name + file(16, fork(len(package), blocks, [(16, blocks)]))]))
+    data_at(volume, 16, package)
+    write_udif(path, volume, [(0x80000005, VOLUME_SECTORS, zlib.compress)], "Apple_HFSX")

@@ -10,6 +10,7 @@ mod gzip_tail;
 mod hfs;
 mod inflate;
 mod macho;
+mod nested;
 mod pbzx;
 mod pkg;
 mod stream_bundle;
@@ -98,13 +99,15 @@ pub struct ExecutableCandidate {
     pub architectures: Vec<Architecture>,
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Clone, Debug, Default, Serialize)]
 pub struct InstallerMetadata {
     pub title: Option<String>,
     pub host_architectures: Vec<String>,
     pub package_id: Option<String>,
     pub package_version: Option<String>,
     pub min_macos: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub remote_components: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -123,6 +126,8 @@ pub struct ScanResult {
     pub executable_path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_metadata_source: Option<&'static str>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub nested_artifacts: Vec<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
     pub installer: Option<InstallerMetadata>,
@@ -147,6 +152,7 @@ impl ScanResult {
             executable_size: None,
             executable_path: None,
             bundle_metadata_source: None,
+            nested_artifacts: Vec::new(),
             candidate_executables: Vec::new(),
             installer: None,
             bytes_read: 0,
