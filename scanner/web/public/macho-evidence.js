@@ -99,5 +99,5 @@ export function machoEvidence() {
     }
   }
 
-  return { purpose, observe, lists };
+  return { purpose, observe, lists, get recognized() { return thinAtZero || Boolean(fat); } };
 }

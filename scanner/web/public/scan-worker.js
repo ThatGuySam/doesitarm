@@ -179,13 +179,24 @@ async function scanFile(file, path, progress, evidence, declared = false) {
       throw error;
     }
   };
-  const result = JSON.parse(await (declared
-    ? scan(BigInt(file.size), 0n, readAt, undefined, 'local')
-    : scan_diagnostic(BigInt(file.size), readAt)));
+  let magic = !declared && file.size >= 4 ? await readAt(0n, 4) : null;
+  const readSource = (offset, length) => {
+    if (magic && offset === 0n && length === 4) {
+      const cached = magic;
+      magic = null;
+      return cached;
+    }
+    return readAt(offset, length);
+  };
+  // Keep the thin Mach-O read plan exact. Archive diagnostics can use the
+  // core's prefix cache because their progress is indeterminate.
+  const result = JSON.parse(await (declared || macho.recognized
+    ? scan(BigInt(file.size), 0n, readSource, undefined, 'local')
+    : scan_diagnostic(BigInt(file.size), readSource)));
   const diagnostic = result.diagnostic;
   delete result.diagnostic;
   if (sourceError) result.error = sourceError;
-  if (declared) script = await capturePrefix(file, path, evidence) || script;
+  if (declared || result.format === 'macho') script = await capturePrefix(file, path, evidence) || script;
   if (declared && script) {
     result.status = 'script';
     result.error_class = 'executable_is_script';
