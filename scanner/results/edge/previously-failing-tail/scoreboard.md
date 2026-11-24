@@ -1,45 +1,46 @@
 # Homebrew scanner scoreboard
 
-84/101 artifacts checked. 10 apps, 0 standalone executables, and 0 installed products verified. Run started 2026-11-24T19:38:12+00:00.
+101/101 artifacts checked. 11 apps, 0 standalone executables, and 0 installed products verified. Run started 2026-11-24T19:38:12+00:00.
 
-Checked artifacts cover 59 of 70 casks.
+Checked artifacts cover 70 of 70 casks.
 
-Across all attempts, the CLI reported 2,513,022,038 bytes and 1,875 reads. 0 attempts ended without byte counts.
+Across all attempts, the CLI reported 3,323,636,524 bytes and 2,300 reads. 0 attempts ended without byte counts.
 
 | Container | Scanned | Verified | Outcomes |
 | --- | ---: | ---: | --- |
-| dmg | 55 | 4 | executable_not_found 1, http_403 1, http_404 2, metadata_missing 5, nested_container 4, other 1, other_source_error 3, plist_not_found 4, script_executable 29, unsupported_codec 1, verified 4 |
-| pkg | 14 | 1 | budget_hit 3, metadata_missing 2, other 2, plist_not_found 6, verified 1 |
-| tar.gz | 2 | 0 | http_429 1, plist_not_found 1 |
+| dmg | 64 | 4 | executable_not_found 1, http_403 1, http_404 2, metadata_missing 6, nested_container 4, other 1, other_source_error 4, plist_not_found 4, script_executable 35, unsupported_codec 1, unsupported_container 1, verified 4 |
+| pkg | 18 | 2 | budget_hit 4, executable_not_found 1, metadata_missing 2, other 2, plist_not_found 7, verified 2 |
+| tar.gz | 4 | 0 | http_429 1, other 1, plist_not_found 1, script_executable 1 |
 | tar.xz | 1 | 0 | other 1 |
 | tar.zst | 1 | 0 | script_executable 1 |
 | unknown | 1 | 0 | html_response 1 |
-| zip | 10 | 5 | http_403 1, nested_container 1, other_source_error 1, script_executable 2, verified 5 |
+| zip | 12 | 5 | budget_hit 1, http_403 1, http_404 1, nested_container 1, other_source_error 1, script_executable 2, verified 5 |
 
 ## Outcome totals
 
 | Outcome | Count |
 | --- | ---: |
-| script_executable | 32 |
-| plist_not_found | 11 |
-| verified | 10 |
-| metadata_missing | 7 |
+| script_executable | 39 |
+| plist_not_found | 12 |
+| verified | 11 |
+| metadata_missing | 8 |
+| other | 5 |
+| other_source_error | 5 |
+| budget_hit | 5 |
 | nested_container | 5 |
-| other | 4 |
-| other_source_error | 4 |
-| budget_hit | 3 |
+| http_404 | 3 |
 | http_403 | 2 |
-| http_404 | 2 |
-| executable_not_found | 1 |
+| executable_not_found | 2 |
 | http_429 | 1 |
 | html_response | 1 |
 | unsupported_codec | 1 |
+| unsupported_container | 1 |
 
 ## Architecture hints
 
 - agrees 3
 - inconclusive 8
-- unavailable 61
+- unavailable 75
 
 ## Unresolved artifacts
 
@@ -119,3 +120,19 @@ Across all attempts, the CLI reported 2,513,022,038 bytes and 1,875 reads. 0 att
 | libreoffice-language-pack | dmg | script_executable | unsupported: declared executable is a script |
 | virtualbox@beta | dmg | nested_container | scan limit: scan deadline reached |
 | xampp | dmg | other | invalid data: range outside its container |
+| microsoft-openjdk@11 | pkg | executable_not_found | not found: declared executable in sequential archive |
+| libreoffice-still-language-pack | dmg | script_executable | unsupported: declared executable is a script |
+| libreoffice-language-pack | dmg | script_executable | unsupported: declared executable is a script |
+| microsoft-outlook | pkg | budget_hit | byte budget reached |
+| sunlogincontrol | dmg | other_source_error | source: timeout: global |
+| libreoffice-language-pack | dmg | script_executable | unsupported: declared executable is a script |
+| libreoffice-language-pack | dmg | script_executable | unsupported: declared executable is a script |
+| vienna-assistant | zip | budget_hit | byte budget reached |
+| x2goclient | dmg | metadata_missing | app registration ['x2goclient.app'], scanner bundle x2goclient.app |
+| sshfs-mac | pkg | plist_not_found | not found: app Info.plist in sequential archive |
+| jamovi | dmg | unsupported_container | unsupported: unrecognized file format |
+| roaringapps | zip | http_404 | source: range 0-0: HTTP 404 Not Found (expected 206) |
+| libreoffice-still-language-pack | dmg | script_executable | unsupported: declared executable is a script |
+| openframeworks | tar.gz | other | scan limit: scan deadline reached |
+| libreoffice-still-language-pack | dmg | script_executable | unsupported: declared executable is a script |
+| terminal-browser | tar.gz | script_executable | unsupported: declared executable is a script |

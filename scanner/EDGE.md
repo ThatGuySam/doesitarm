@@ -18,13 +18,13 @@ Started November 24, 2026 at 12:04 Central from scanner-wasm `5a7e79a`. Stop by 
 | --- | ---: | ---: | ---: | ---: |
 | [Regression](results/edge/regression/scoreboard.md) | 100/100 | 77 → 81 | 8 → 8 | 0 → 1 |
 | [Held-out](results/edge/held-out/scoreboard.md) | 100/100 | 65 → 71 | 8 → 7 | 0 → 2 |
-| Earlier failures | 125/142 | 0 → 15 | 0 → 0 | 0 → 1 |
+| Earlier failures | 142/142 | 0 → 16 | 0 → 0 | 0 → 1 |
 
 The regression replay recovered BrowserStack Local, Network Weather, Qt Design Studio, and BackupLoupe as apps. It verified the FabFilter Pro-DS AAX product. All 85 previously verified primary results remained verified. The 84 bundle inventories included two complete inventories and 82 partial ones, with ten inventories identifying at least one x86_64-only file. The transport used 3,531,500,436 read bytes and 6,237 requests across all attempts. [Raw scan facts](results/edge/regression/run.json)
 
 The held-out replay recovered LaunchControl, Prolific PL2303Serial, Ammonite, MailMate beta, tiptoi Manager, Cave Story, and ImageOptim as apps. The scanner verified the FabFilter Timeless AAX product and Amazon Corretto 17's JDK bundle. `btp` returned HTML. Jabra Direct's nested installer reached the scan deadline. Its previous verified result was `Jabra Avaya Integration.app`, an embedded helper. The 75 inventories included seven complete and 68 partial, with six identifying an x86_64-only file. Both 100-artifact cohorts used `11a817b` with the 8/64/256 MiB ladder and a 55-second cooperative per-attempt deadline. [Raw scan facts](results/edge/held-out/run.json)
 
-The additional pinned replay verified 15 app primaries, including the packaged Steam bootstrapper, and the Tal Drum installed product. All 125 completed observations are in the two groups below. Their distinct deadlines and CLI hashes are in the reports. [First 41](results/edge/previously-failing/scoreboard.md) · [Tail replay](results/edge/previously-failing-tail/scoreboard.md)
+The additional pinned replay verified 16 app primaries, including the packaged Steam bootstrapper, and the Tal Drum installed product. It also classified 52 script entry points. All 142 pinned identities completed in manifest order. Their distinct deadlines and CLI hashes are in the reports. [First 41](results/edge/previously-failing/scoreboard.md) · [Tail replay](results/edge/previously-failing-tail/scoreboard.md)
 
 ## Resume
 
@@ -78,7 +78,7 @@ The campaign's manifests reuse the ordered entries and pinned target declaration
 
 Rebuild the pinned manifests with `python3 scripts/edge-cohorts.py target/edge`. To resume a campaign use the same release binary and the `metadata.json` policy in that campaign's directory. `target/edge/run-campaign.sh` completed the two fixed cohorts. The first 41 of the remaining 142 artifacts used `8e805c0` with the same 8/64/256 MiB ladder and a 28-second cooperative per-attempt deadline. The remaining manifest skips those 41 exact identities. It uses `b8572dc` with a single 256 MiB allowance and a 16-second cooperative deadline for broader coverage within the time limit. Preserve the two reports' separate provenance. [First 41](results/edge/previously-failing/run.json) · [Remaining manifest](results/edge/previously-failing-tail/manifest.json)
 
-The tail replay takes new work until 13:44:45 Central, followed by full local verification of selected packages. To resume the tail checkpoint, use the frozen binary and the options below. The original run also set an absolute `--stop-at` deadline.
+The tail replay paused at 13:44:45 Central for full local verification of selected packages, then resumed with the same binary and options and finished before 13:53 Central. The original run also set an absolute `--stop-at` deadline.
 
 ```sh
 python3 scripts/climb.py run results/edge/previously-failing-tail/manifest.json target/edge/previously-failing-tail \
@@ -142,8 +142,10 @@ The complete, checksum-matching Prezi archive verified `Applications/Prezi Video
 
 The local retry completed Qt Design Studio's 652-binary inventory, including one x86_64-only helper. Aqua Data Studio's x86_64 and i386 main and 81-file inventory verified. Insta360's universal main and 133-binary inventory verified, with an Arm slice in every inventoried binary. Corretto's JDK inventory completed with 73 binaries, including `Contents/Home/bin/java` and `Contents/Home/lib/server/libjvm.dylib`.
 
-Soothe2's full installer still requires better product discovery. The generated VST3 fixture covers a declared product path, and the live installer left its product unclassified. The local Jabra transfer stopped at 159,383,552 of 270,448,755 bytes. The remote package metadata identifies `/Applications/Jabra Direct.app` as the intended install location.
+Soothe2's automatic product selection still fails on its full installer. A final checksum-matching scan with `--bundle-path 'Library/Audio/Plug-Ins/VST3/soothe2.vst3'` verified the universal VST3 executable and all four inventory entries. The local Jabra transfer stopped at 159,383,552 of 270,448,755 bytes. The remote package metadata identifies `/Applications/Jabra Direct.app` as the intended install location. [Targeted Soothe2 scan](results/edge/soothe2-targeted/run.json)
 
 The local batch recorded 19 outcomes, with seven app primaries, one installed runtime, four standalone executables, and two verified static script runtimes. Explicit, inspected package paths verified Orka, Orka 3, the YubiHSM connector, and the .NET SDK preview host executable. The batch closed to reserve time for the Intel Android Studio transfer and the remaining pinned cases. [Native scans and checksum evidence](results/edge/followup/run.json)
+
+The latest checksum-matching Arm Android Studio scan reproduced the 70-file inventory. The latest Intel transfers stopped at 1,528,303,381 and 220,756,019 bytes. The earlier complete Intel scan records the universal primary and the Intel-only Java runtime. The export retains the latest Intel transfer result and the earlier full inspection is linked above. [Intel transfer retry](results/edge/android-studio-intel-followup/run.json)
 
 Reddit, Stack Exchange, and the Wayback Machine were unavailable from this machine. Research used Apple documentation, upstream project sources, GitHub issues, the Hacker News Algolia API, and direct publisher responses.

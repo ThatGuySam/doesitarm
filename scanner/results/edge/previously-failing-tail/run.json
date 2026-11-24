@@ -17,49 +17,54 @@
   "use_cask_targets": true,
   "scanner_commit_at_start": "b8572dc849858c94f341112dd6a910ae1540a777",
   "started_at": "2026-11-24T19:38:12+00:00",
-  "updated_at": "2026-11-24T19:44:45+00:00",
+  "updated_at": "2026-11-24T19:52:19+00:00",
   "totals": {
-    "checked": 84,
+    "checked": 101,
     "by_outcome": {
-      "other": 4,
-      "script_executable": 32,
-      "verified": 10,
-      "other_source_error": 4,
-      "plist_not_found": 11,
-      "metadata_missing": 7,
-      "budget_hit": 3,
+      "other": 5,
+      "script_executable": 39,
+      "verified": 11,
+      "other_source_error": 5,
+      "plist_not_found": 12,
+      "metadata_missing": 8,
+      "budget_hit": 5,
       "http_403": 2,
-      "executable_not_found": 1,
+      "executable_not_found": 2,
       "http_429": 1,
-      "http_404": 2,
+      "http_404": 3,
       "html_response": 1,
       "unsupported_codec": 1,
-      "nested_container": 5
+      "nested_container": 5,
+      "unsupported_container": 1
     },
     "by_container": {
       "dmg": {
-        "script_executable": 29,
+        "script_executable": 35,
         "verified": 4,
-        "metadata_missing": 5,
-        "other_source_error": 3,
+        "metadata_missing": 6,
+        "other_source_error": 4,
         "plist_not_found": 4,
         "http_403": 1,
         "executable_not_found": 1,
         "http_404": 2,
         "unsupported_codec": 1,
         "nested_container": 4,
-        "other": 1
+        "other": 1,
+        "unsupported_container": 1
       },
       "pkg": {
-        "plist_not_found": 6,
+        "plist_not_found": 7,
         "metadata_missing": 2,
-        "budget_hit": 3,
+        "budget_hit": 4,
         "other": 2,
-        "verified": 1
+        "verified": 2,
+        "executable_not_found": 1
       },
       "tar.gz": {
         "http_429": 1,
-        "plist_not_found": 1
+        "plist_not_found": 1,
+        "other": 1,
+        "script_executable": 1
       },
       "tar.xz": {
         "other": 1
@@ -75,16 +80,18 @@
         "verified": 5,
         "script_executable": 2,
         "http_403": 1,
-        "nested_container": 1
+        "nested_container": 1,
+        "budget_hit": 1,
+        "http_404": 1
       }
     },
     "architecture_hints": {
-      "unavailable": 61,
+      "unavailable": 75,
       "inconclusive": 8,
       "agrees": 3
     },
-    "accepted_bytes": 2513022038,
-    "reported_reads": 1875,
+    "accepted_bytes": 3323636524,
+    "reported_reads": 2300,
     "attempts_with_unknown_bytes": 0
   },
   "artifacts": [
@@ -8812,6 +8819,2094 @@
             "error": null,
             "source_etag": "\"85c7ad3-660ace69db300\"",
             "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "microsoft-openjdk@11",
+      "url": "https://aka.ms/download-jdk/microsoft-jdk-11.0.33.1-macos-x64.pkg",
+      "version": "11.0.33.1",
+      "sha256": "236d943c6b78ff7a78d3ffd1a840c2a8f1cd04d97ddeb40791e007c554b97686",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "aka.ms",
+      "category": "executable_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 7.988,
+          "scanned_at": "2026-11-24T19:50:47+00:00",
+          "exit_code": 1,
+          "category": "executable_not_found",
+          "scan": {
+            "format": "pkg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": "Library/Java/JavaVirtualMachines/microsoft-11.jdk",
+            "bundle_kind": "runtime",
+            "bundle_id": "net.java.openjdk.jdk",
+            "version": "11.0.33.1",
+            "name": "OpenJDK 11.0.33.1",
+            "min_macos": null,
+            "executable_name": "libjli.dylib",
+            "executable_size": null,
+            "executable_path": "Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/MacOS/libjli.dylib",
+            "installer": {
+              "title": "Microsoft Build of OpenJDK",
+              "host_architectures": [
+                "x86_64"
+              ],
+              "package_id": "com.microsoft.11.jdk",
+              "package_version": "11.0.33.1",
+              "install_location": "/",
+              "payload_bundles": [
+                "Library/Java/JavaVirtualMachines/microsoft-11.jdk"
+              ],
+              "script_entries": [
+                "preinstall"
+              ],
+              "min_macos": null
+            },
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "bundle entries before the primary executable were skipped",
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 191502806,
+            "bytes_requested": 191502817,
+            "decoded_bytes": 326829108,
+            "reads": 63,
+            "total_size": 191560706,
+            "error": "not found: declared executable in sequential archive",
+            "source_etag": "\"0xCA2A0E87DCEDA0AA1147643B7DDFC0BF9AF19CC821906E6AF5AF21CDE282E7B4\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_be.dmg",
+      "version": "26.2.7",
+      "sha256": "d8282adcca0bdd0f62100babd786370a1350b2905630e73e4b8fab7a375179c5",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "be"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 1.645,
+          "scanned_at": "2026-11-24T19:50:49+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1500668,
+            "bytes_requested": 1500669,
+            "decoded_bytes": 2630656,
+            "reads": 8,
+            "total_size": 2560207,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"2710cf-65eecc6b60642\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_ks.dmg",
+      "version": "26.8.3",
+      "sha256": "4a635ea2301fec4c9598fdcf4e4f105672c4a45fd931effbcd24b38e23c8f85a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "ks"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 1.384,
+          "scanned_at": "2026-11-24T19:50:51+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 290596,
+            "bytes_requested": 290597,
+            "decoded_bytes": 1414144,
+            "reads": 7,
+            "total_size": 294114,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"47ce2-66003e8d02d10\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "microsoft-outlook",
+      "url": "https://res.public.onecdn.static.microsoft/mro1cdnstorage/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/Microsoft_Outlook_16.115.26110837_Installer.pkg",
+      "version": "16.115.26110837",
+      "sha256": "89a5f392de320615c0940716d19778d8c1ef3a012130147aef87d000a0c25675",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_sequoia",
+        "arm64_tahoe",
+        "golden_gate",
+        "sequoia",
+        "tahoe"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "res.public.onecdn.static.microsoft",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 13.756,
+          "scanned_at": "2026-11-24T19:51:05+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Microsoft Outlook.app/Contents/MacOS/Microsoft Outlook",
+                "size": 217288896,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 112770944,
+                    "header_verified": true,
+                    "min_macos": "15.0",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 112787456,
+                    "size": 104501440,
+                    "header_verified": true,
+                    "min_macos": "15.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "Microsoft Outlook",
+              "host_architectures": [
+                "arm64",
+                "x86_64"
+              ],
+              "package_id": "com.microsoft.package.Microsoft_Outlook.app",
+              "package_version": "16.115.26110837",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "Microsoft Outlook.app/Contents/Frameworks/OLEAutomation.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/UkrainianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/IberianPortugueseGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CssGermanSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/Xmllite.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/NorwegianBokmaalGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/PolishGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/BrazilianPortugueseGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ItalianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SerbianCyrillicSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/TurkishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/Gfx.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SwedishGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/mso99.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CssEnglishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/EnglishThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/mso99.framework/Versions/A/Resources/OUIOfficeSpaceBundle.bundle",
+                "Microsoft Outlook.app/Contents/Frameworks/Chart.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/MarathiSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Resources/hubsdkiOSResources.bundle",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CssSpanishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/RussianThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GenericThesaurus7.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/DanishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/DanishHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GermanGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/EnglishGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/KiswahiliSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Resources/OutlookModels.bundle",
+                "Microsoft Outlook.app/Contents/Frameworks/dwrite10.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/OfficeAddressBook.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/NorwegianBokmaalThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/IberianPortugueseSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/KazakhSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ItalianHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/FinnishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CatalanHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SpanishThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/BulgarianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/RussianHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SpanishGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/OPF.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GenericThesaurus8.proofingtool",
+                "Microsoft Outlook.app/Contents/PlugIns/CalendarWidgetExtension.appex/Contents/Frameworks/WidgetUIKit.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/MicrosoftFontLibrary.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/RussianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Resources/setupui_bundle.bundle",
+                "Microsoft Outlook.app/Contents/Frameworks/MicrosoftProofing.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/PowerLiftKit.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SpanishHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GreekSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/PolishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/MicrosoftCloudServices.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/mso99.framework/Versions/A/Resources/mso_intl.bundle",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/DutchSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/mbukernel.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/OutlookFoundation.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ArabicThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/FrenchSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/WidgetUIKit.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/NorwegianBokmaalHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/Resources/OfficePrefsUI.bundle",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CatalanSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/mbulocale.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GermanSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/EnglishSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Resources/OUIWhatsNewBundle_mac.bundle",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GujaratiSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GermanThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GalicianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CzechSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/IndonesianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/OutlookCore.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/MicrosoftIvy.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/CalendarWidgetModelKit.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/BrazilianPortugueseHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/COMBase.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ItalianGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/BrazilianPortugueseSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/WidgetFoundations.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/MSXML.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/FluentUI.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/FarsiSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/DanishGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ItalianThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/KoreanSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Microsoft Error Reporting.app",
+                "Microsoft Outlook.app/Contents/Frameworks/MicrosoftCredui.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/IsiZuluSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ArabicSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/NorwegianNynorskThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/MsoCF.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/ThaiSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CzechHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/FinnishGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/ai.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CroatianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/HungarianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SesothoSaLeboaSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/HebrewThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/PlugIns/CalendarWidgetExtension.appex/Contents/Frameworks/mbuinstrument.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/TamilSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/AfrikaansSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/RussianGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/mso40ui.framework",
+                "Microsoft Outlook.app/Contents/PlugIns/CalendarWidgetExtension.appex",
+                "Microsoft Outlook.app/Contents/PlugIns/CalendarWidgetExtension.appex/Contents/Frameworks/CalendarWidgetModelKit.framework",
+                "Microsoft Outlook.app/Contents/Frameworks/osfstorage2.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/DutchGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/Oimg.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/LithuanianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/SwedishHyphenator.proofingtool",
+                "Microsoft Outlook.app/Contents/Resources/OlkAudioFeedbackResources.bundle",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/PolishThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/EstonianSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/MicrosoftFBA.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/CssFrenchSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/FrenchGrammar.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/HxPlorer.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/BasqueSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/IsiXhosaSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/DutchThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/PlugIns/CalendarWidgetExtension.appex/Contents/Frameworks/WidgetFoundations.framework",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/IberianPortugueseThesaurus.proofingtool",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/GenericCssSpeller.proofingtool",
+                "Microsoft Outlook.app/Contents/Frameworks/OutlookRightsFramework.framework",
+                "Microsoft Outlook.app/Contents/Resources/DocsUIBundle_Mac.bundle",
+                "Microsoft Outlook.app/Contents/SharedSupport/Proofing Tools/FrenchHyphenator.proofingtool"
+              ],
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "bytes_read": 268435445,
+            "bytes_requested": 268435456,
+            "decoded_bytes": 619235371,
+            "reads": 81,
+            "total_size": 1252318554,
+            "error": "byte budget reached",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "eusamanager",
+      "url": "https://iit.com.ua/download/productfiles/EUSignWebInstall.pkg",
+      "version": "1.3.1,17",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "iit.com.ua",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 1.535,
+          "scanned_at": "2026-11-24T19:51:06+00:00",
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "pkg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 397104,
+                "header_verified": true,
+                "min_macos": "10.9",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 425984,
+                "size": 396496,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "EUSAManager.app",
+            "bundle_kind": "app",
+            "bundle_id": "ua.com.iit.EUSAManager",
+            "version": "1.3.1",
+            "name": "EUSAManager",
+            "min_macos": "10.9",
+            "executable_name": "EUSAManager",
+            "executable_size": 822480,
+            "executable_path": "EUSAManager.app/Contents/MacOS/EUSAManager",
+            "installer": {
+              "title": "APP_TITLE",
+              "host_architectures": [],
+              "package_id": "ua.com.iit.EUSAManager",
+              "package_version": "1.3.1",
+              "install_location": "/Applications",
+              "payload_bundles": [
+                "EUSAManager.app"
+              ],
+              "script_entries": [
+                "preinstall",
+                "postinstall"
+              ],
+              "min_macos": null
+            },
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/MacOS/EUSAManager",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 397104,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 425984,
+                      "size": 396496,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/euscp.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 1801584,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 1818624,
+                      "size": 1801072,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/euscprpc.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 368576,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 393216,
+                      "size": 381280,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 55184,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 81920,
+                      "size": 71744,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.eka1c.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 602928,
+                      "header_verified": true,
+                      "min_macos": "10.13",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 622592,
+                      "size": 520368,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.eka1cbt.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 602896,
+                      "header_verified": true,
+                      "min_macos": "10.13",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 622592,
+                      "size": 520336,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.ekc1.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 155440,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 180224,
+                      "size": 172128,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.fs.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 71760,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 98304,
+                      "size": 88320,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.ncmg301.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 88592,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 114688,
+                      "size": 105152,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/km.pkcs11.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 306960,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 327680,
+                      "size": 306992,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/ldapc.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 54048,
+                      "header_verified": true,
+                      "min_macos": "10.9",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 81920,
+                      "size": 70528,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/libav337p11d.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 509744,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 540672,
+                      "size": 493184,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/libavcryptokinxt.dylib",
+                  "role": "helper",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 16384,
+                      "size": 1902032,
+                      "header_verified": true,
+                      "min_macos": "10.12",
+                      "code_signature_present": true
+                    },
+                    {
+                      "name": "arm64",
+                      "cpu_type": 16777228,
+                      "cpu_subtype": 0,
+                      "offset": 1933312,
+                      "size": 1850112,
+                      "header_verified": true,
+                      "min_macos": "11.0",
+                      "code_signature_present": true
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": null,
+              "has_x86_64_only": null,
+              "x86_64_only": []
+            },
+            "bytes_read": 16850020,
+            "bytes_requested": 16850031,
+            "decoded_bytes": 33210348,
+            "reads": 21,
+            "total_size": 49062739,
+            "error": null,
+            "source_etag": "\"2eca353-65f65318e2a00\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "sunlogincontrol",
+      "url": "https://down.oray.com/sl/mac/SunloginRemote_x86_64_6.7.1.30758.dmg",
+      "version": "6.7.1.30758",
+      "sha256": "421c3a0d2ed80cdbcd125edbc3a382f6ce23c1174d6e87503b7fb762b2f6ef67",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "down.oray.com",
+      "category": "other_source_error",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 15.221,
+          "scanned_at": "2026-11-24T19:51:21+00:00",
+          "exit_code": 1,
+          "category": "other_source_error",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "bytes_requested": 1,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: timeout: global"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_gl.dmg",
+      "version": "26.8.3",
+      "sha256": "411d4a56e4669f9c38ca721c5bffa53f7d39b1131911da6a2f515383fb9f5fa4",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "gl"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 1.734,
+          "scanned_at": "2026-11-24T19:51:23+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1509653,
+            "bytes_requested": 1509654,
+            "decoded_bytes": 2626560,
+            "reads": 8,
+            "total_size": 5764638,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"57f61e-66003e810b4b1\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.3/mac/aarch64/LibreOffice_26.8.3_MacOS_aarch64_langpack_nl.dmg",
+      "version": "26.8.3",
+      "sha256": "e8b67f80bd4863663bdc506c1e697cc076b1358251679ebb7c8ce2e4e59b430c",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "nl"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 1.486,
+          "scanned_at": "2026-11-24T19:51:26+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1932364,
+            "bytes_requested": 1932365,
+            "decoded_bytes": 3040256,
+            "reads": 8,
+            "total_size": 5112342,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"4e0216-66003e940b9ff\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "vienna-assistant",
+      "url": "https://api.vsl.co.at/data/download/va?os=mac",
+      "version": "1.2.657",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "user_agent"
+      ],
+      "host": "api.vsl.co.at",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 11.19,
+          "scanned_at": "2026-11-24T19:51:37+00:00",
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "nested_artifacts": [
+              "Vienna Assistant 1.2.657.pkg"
+            ],
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "arm64",
+                "x86_64"
+              ],
+              "package_id": null,
+              "package_version": null,
+              "min_macos": null
+            },
+            "bytes_read": 150791763,
+            "bytes_requested": 268435456,
+            "decoded_bytes": 271221936,
+            "reads": 91,
+            "total_size": 150791791,
+            "error": "byte budget reached",
+            "source_etag": "\"6afd612e-8fce66f\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "x2goclient",
+      "url": "https://code.x2go.org/releases/X2GoClient_latest_macosx_10_13.dmg",
+      "version": "4.1.2.2",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "x2goclient.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": true,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "code.x2go.org",
+      "category": "metadata_missing",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 2.777,
+          "scanned_at": "2026-11-24T19:51:40+00:00",
+          "exit_code": 0,
+          "category": "metadata_missing",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 2825908,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": false
+              }
+            ],
+            "bundle_path": "x2goclient.app",
+            "bundle_kind": "app",
+            "bundle_id": null,
+            "version": "4.1",
+            "name": null,
+            "min_macos": "10.13",
+            "executable_name": "x2goclient",
+            "executable_size": 2825908,
+            "executable_path": "x2goclient.app/Contents/MacOS/x2goclient",
+            "installer": null,
+            "inventory": {
+              "complete": false,
+              "incomplete_reason": "scan limit: binary inventory budget reached",
+              "binaries": [
+                {
+                  "path": "Contents/Frameworks/libcom_err.1.1.dylib",
+                  "role": "library",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 14980,
+                      "header_verified": true,
+                      "min_macos": "10.13",
+                      "code_signature_present": false
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/libcrypto.1.1.dylib",
+                  "role": "library",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 2111860,
+                      "header_verified": true,
+                      "min_macos": "10.13",
+                      "code_signature_present": false
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/Frameworks/libgssapi_krb5.2.2.dylib",
+                  "role": "library",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 3,
+                      "offset": 0,
+                      "size": 227644,
+                      "header_verified": true,
+                      "min_macos": "10.13",
+                      "code_signature_present": false
+                    }
+                  ]
+                },
+                {
+                  "path": "Contents/MacOS/x2goclient",
+                  "role": "main",
+                  "architectures": [
+                    {
+                      "name": "x86_64",
+                      "cpu_type": 16777223,
+                      "cpu_subtype": 2147483651,
+                      "offset": 0,
+                      "size": 2825908,
+                      "header_verified": true,
+                      "min_macos": "10.13",
+                      "code_signature_present": false
+                    }
+                  ]
+                }
+              ],
+              "all_arm64_capable": false,
+              "has_x86_64_only": true,
+              "x86_64_only": [
+                "Contents/Frameworks/libcom_err.1.1.dylib",
+                "Contents/Frameworks/libcrypto.1.1.dylib",
+                "Contents/Frameworks/libgssapi_krb5.2.2.dylib",
+                "Contents/MacOS/x2goclient"
+              ]
+            },
+            "bytes_read": 2952343,
+            "bytes_requested": 3718650,
+            "decoded_bytes": 6291456,
+            "reads": 10,
+            "total_size": 13740480,
+            "error": null,
+            "source_etag": "\"d1a9c0-59e72cc4742d9\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "x2goclient.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "sshfs-mac",
+      "url": "https://github.com/libfuse/sshfs/releases/download/sshfs-3.7.5/sshfs-3.7.5.pkg",
+      "version": "3.7.5",
+      "sha256": "611713612179cf7ccd2995051165da7d19e0ca199ae70d9680c3d3551f456d46",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "github.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 0.752,
+          "scanned_at": "2026-11-24T19:51:40+00:00",
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "pkg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "SSHFS",
+              "host_architectures": [
+                "arm64",
+                "x86_64"
+              ],
+              "package_id": "io.macfuse.installer.components.sshfs",
+              "package_version": "3.7.5",
+              "install_location": "/",
+              "min_macos": null
+            },
+            "bytes_read": 2301115,
+            "bytes_requested": 2301126,
+            "decoded_bytes": 4410242,
+            "reads": 14,
+            "total_size": 2329909,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"0x8DE2164E7818F6B\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "jamovi",
+      "url": "https://www.jamovi.org/downloads/jamovi-28.18.0.0-macos-arm64.dmg",
+      "version": "28.18.0.0",
+      "sha256": "c529eb4517c7e67537bcb3f7bbdcf8495ab1ec8adf1849d2eb4094072a2174d6",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "jamovi.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [
+        "referer"
+      ],
+      "host": "www.jamovi.org",
+      "category": "unsupported_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 0.6,
+          "scanned_at": "2026-11-24T19:51:41+00:00",
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 1026,
+            "bytes_requested": 1031,
+            "decoded_bytes": 0,
+            "reads": 5,
+            "total_size": 36984,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"0fd51fadf1b2ae03d6aaffffc16abe25\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "jamovi.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "roaringapps",
+      "url": "https://roaringapps.com/downloads/RoaringApps-1.8.0.zip",
+      "version": "1.8.0",
+      "sha256": "ff6134fd5ba5d55ebacb48e8bc8d56ce8da299c0e55ad1a0611bbf9b390878d7",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "RoaringApps.app"
+      ],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "roaringapps.com",
+      "category": "http_404",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 0.156,
+          "scanned_at": "2026-11-24T19:51:41+00:00",
+          "exit_code": 1,
+          "category": "http_404",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "bytes_requested": 1,
+            "decoded_bytes": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 404 Not Found (expected 206)"
+          },
+          "target": {
+            "kind": "bundle",
+            "path": "RoaringApps.app"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_nn.dmg",
+      "version": "26.2.7",
+      "sha256": "d4a56cb92bb3e91854dd473e41892b8c82e057aa68287cd4ba98f7cb8ad11514",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "nn"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 2.078,
+          "scanned_at": "2026-11-24T19:51:43+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1689973,
+            "bytes_requested": 1689974,
+            "decoded_bytes": 2802688,
+            "reads": 8,
+            "total_size": 7002254,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"6ad88e-65eecc72049cc\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "openframeworks",
+      "url": "https://github.com/openframeworks/openFrameworks/releases/download/0.12.1/of_v0.12.1_osx_release.tar.gz",
+      "version": "0.12.1",
+      "sha256": "e4a2dd6e75805320aac905f9f82f7b85e67a8b799137d47f35d40f7c4c195c9b",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "suite"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura",
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "github.com",
+      "category": "other",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 16.003,
+          "scanned_at": "2026-11-24T19:51:59+00:00",
+          "exit_code": 1,
+          "category": "other",
+          "scan": {
+            "format": "tar.gz",
+            "status": "limit_reached",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 16842752,
+            "bytes_requested": 21037061,
+            "decoded_bytes": 38108973,
+            "reads": 17,
+            "total_size": 512487086,
+            "error": "scan limit: scan deadline reached",
+            "source_etag": "\"0x8DE0B9219B88488\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libreoffice-still-language-pack",
+      "url": "https://download.documentfoundation.org/libreoffice/stable/26.2.7/mac/aarch64/LibreOffice_26.2.7_MacOS_aarch64_langpack_lo.dmg",
+      "version": "26.2.7",
+      "sha256": "f84ff9c17115d71a8511af14d3a91a40b0cb0db642c8a2f5bda23f9491eb6436",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "arm64_big_sur",
+        "arm64_golden_gate",
+        "arm64_monterey",
+        "arm64_sequoia",
+        "arm64_sonoma",
+        "arm64_tahoe",
+        "arm64_ventura"
+      ],
+      "languages": [
+        "lo"
+      ],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "download.documentfoundation.org",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 3.559,
+          "scanned_at": "2026-11-24T19:52:03+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "dmg",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": "LibreOffice Language Pack.app",
+            "bundle_kind": "app",
+            "bundle_id": "org.libreoffice.script.langpack",
+            "version": "9",
+            "name": "LibreOffice Language Pack",
+            "min_macos": null,
+            "executable_name": "LibreOffice Language Pack",
+            "executable_size": 1170,
+            "executable_path": "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack",
+            "executable_resolution": "legacy_contents_executable",
+            "installer": null,
+            "inventory": {
+              "complete": true,
+              "incomplete_reason": null,
+              "binaries": [],
+              "all_arm64_capable": null,
+              "has_x86_64_only": false,
+              "x86_64_only": []
+            },
+            "bytes_read": 1917210,
+            "bytes_requested": 1917211,
+            "decoded_bytes": 3036160,
+            "reads": 8,
+            "total_size": 4038805,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"3da095-65eecc710a9bc\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "terminal-browser",
+      "url": "https://terminal-browser.sh/install/dl/stable/v0.16.1/terminal-browser-darwin-x64.tar.gz",
+      "version": "0.16.1",
+      "sha256": "0b7e82fa57dcc6eff2ef753d372f1a52cc47b9035cf1c4713a14bfc601e75625",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "declared_binaries": [
+        "terminal-browser/bin/terminal-browser"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "platforms": [
+        "big_sur",
+        "golden_gate",
+        "monterey",
+        "sequoia",
+        "sonoma",
+        "tahoe",
+        "ventura"
+      ],
+      "languages": [],
+      "disabled": false,
+      "container_hint": null,
+      "request_spec_fields": [],
+      "host": "terminal-browser.sh",
+      "category": "script_executable",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        },
+        {
+          "source": "platform-specific URL",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 268435456,
+          "elapsed_seconds": 16.01,
+          "scanned_at": "2026-11-24T19:52:19+00:00",
+          "exit_code": 1,
+          "category": "script_executable",
+          "scan": {
+            "format": "tar.gz",
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": 497,
+            "executable_path": "terminal-browser/bin/terminal-browser",
+            "installer": null,
+            "script_runtime": {
+              "path": "terminal-browser/electron/terminal-browser.app/Contents/MacOS/terminal-browser",
+              "evidence": "static_shell_exec_reference",
+              "architectures": []
+            },
+            "bytes_read": 152096752,
+            "bytes_requested": 215076853,
+            "decoded_bytes": 488991914,
+            "reads": 74,
+            "total_size": 152096752,
+            "error": "unsupported: declared executable is a script",
+            "source_etag": "\"f585d2cab43a24bcabfb4615f641223a\"",
+            "source_transport": "range"
+          },
+          "target": {
+            "kind": "executable",
+            "path": "terminal-browser/bin/terminal-browser"
           }
         }
       ]
