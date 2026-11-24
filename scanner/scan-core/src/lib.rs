@@ -153,6 +153,22 @@ impl ScanResult {
     }
 }
 
+/// Read metadata for a local app directory before opening its executable.
+pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
+    let mut result = ScanResult::new(plist.len() as u64);
+    result.format = Some("app");
+    if result.total_size > bundle::MAX_PLIST {
+        result.set_error(ScanError::Limit("bundle Info.plist size"));
+        return result;
+    }
+    result.bytes_read = result.total_size;
+    result.reads = 1;
+    if let Err(error) = bundle::apply_plist(plist, bundle_path, &mut result) {
+        result.set_error(error);
+    }
+    result
+}
+
 /// Byte budget covers successful host reads (including repeated ranges). A
 /// request exceeding the remaining budget is rejected before calling the host.
 pub async fn scan(source: &mut impl ReadAt, budget: u64) -> ScanResult {

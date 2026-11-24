@@ -52,3 +52,10 @@ pub async fn scan(
     let result = scan_core::scan(&mut source, budget).await;
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
 }
+
+/// Parse an XML or binary Info.plist using the archive scanner's metadata rules.
+#[wasm_bindgen]
+pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> std::result::Result<String, JsValue> {
+    let result = scan_core::bundle_metadata(plist, bundle_path);
+    serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
+}
