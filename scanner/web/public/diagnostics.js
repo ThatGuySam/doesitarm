@@ -139,12 +139,12 @@ function button(id, text) {
   const el = document.createElement('button');
   el.type = 'button';
   el.id = id;
-  el.className = 'secondary';
+  el.className = 'quiet-button';
   el.textContent = text;
   return el;
 }
 
-export async function makeExport(header, rows, kind, redact) {
+export async function makeExport(header, rows, kind) {
   const worker = new Worker(new URL('./diagnostics-worker.js', import.meta.url), { type: 'module' });
   let acknowledge;
   const finished = new Promise((resolve, reject) => {
@@ -157,7 +157,7 @@ export async function makeExport(header, rows, kind, redact) {
   });
   // Attach a handler while the producer is still sending rows.
   void finished.catch(() => {});
-  worker.postMessage({ header, kind, redact });
+  worker.postMessage({ header, kind });
   try {
     const pause = timeSlice();
     const records = [];
@@ -197,12 +197,6 @@ export async function makeExport(header, rows, kind, redact) {
 export function diagnosticControls(resolver) {
   const container = document.createElement('div');
   container.className = 'diagnostic-actions';
-  const label = document.createElement('label');
-  const privacy = document.createElement('input');
-  privacy.type = 'checkbox';
-  privacy.checked = true;
-  privacy.id = 'hide-username';
-  label.append(privacy, ' Hide my username');
   const feedback = document.createElement('p');
   feedback.className = 'muted diagnostic-summary';
   const formatLabel = document.createElement('label');
@@ -225,14 +219,13 @@ export function diagnosticControls(resolver) {
   async function prepare(kind) {
     reset();
     for (const control of controls) control.disabled = true;
-    privacy.disabled = true;
     format.disabled = true;
     feedback.textContent = 'Preparing the local export…';
     try {
       const filter = kind === 'failures' ? 'failures' : kind === 'results' || kind === 'copy' ? 'results' : 'diagnostics';
       const { header, rows } = await resolver();
       const type = filter === 'diagnostics' ? format.value : 'json';
-      const blob = await makeExport(header, rows, filter === 'diagnostics' ? type : kind, privacy.checked);
+      const blob = await makeExport(header, rows, filter === 'diagnostics' ? type : kind);
       blobURL = URL.createObjectURL(blob);
       save.href = blobURL;
       save.download = `scanner-${filter}.${type}`;
@@ -262,7 +255,6 @@ export function diagnosticControls(resolver) {
       feedback.textContent = 'The browser could not prepare the export.';
     } finally {
       for (const control of controls) control.disabled = false;
-      privacy.disabled = false;
       format.disabled = false;
     }
   }
@@ -275,8 +267,7 @@ export function diagnosticControls(resolver) {
     control.addEventListener('click', () => void prepare(kind));
     controls.push(control);
   }
-  privacy.addEventListener('change', reset);
   format.addEventListener('change', () => { if (selection === 'diagnostics') reset(); });
-  container.append(...controls, formatLabel, label, feedback, save);
+  container.append(...controls, formatLabel, feedback, save);
   return container;
 }

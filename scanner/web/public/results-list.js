@@ -1,3 +1,4 @@
+import { redactPath } from './path-privacy.js';
 import { diagnosticControls, runHeader, watchLongTasks } from './diagnostics.js';
 import { folderStats, timeSlice } from './folder-walk.js';
 import { formatDuration, estimateBatch, estimateRemaining, recordSample } from './scan-progress.js';
@@ -181,7 +182,7 @@ export class ResultsList {
     };
     const { field, input } = this.#runsByChoice;
     const value = String(this.#runs.length);
-    run.option = new Option(stats.folder_name || stats.method, value);
+    run.option = new Option(redactPath(stats.folder_name || stats.method), value);
     input.add(run.option);
     input.value = value;
     this.#page = 0;
@@ -211,7 +212,7 @@ export class ResultsList {
   finishFolder(run, canceled) {
     run.enumerated = performance.now();
     run.canceled ||= canceled;
-    run.option.text = run.stats.folder_name || run.stats.method;
+    run.option.text = redactPath(run.stats.folder_name || run.stats.method);
     if (!run.pending && !run.listing) run.ended = run.enumerated;
     this.#discoveries -= 1;
     this.#endBatch();
@@ -401,7 +402,7 @@ export class ResultsList {
     for (const row of this.#active) {
       if (!row.timerAnnounced && now - row.started >= 5_000) {
         row.timerAnnounced = true;
-        slow.push(row.label);
+        slow.push(redactPath(row.label));
       }
       row.eta = estimateRemaining(row.samples, now, row.bytes, row.planned);
       if (this.#rendered.has(row.id)) this.#dirty.add(row.id);

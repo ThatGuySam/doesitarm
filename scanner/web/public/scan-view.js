@@ -1,3 +1,4 @@
+import { redactPath, stringifyRedacted } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { formatDuration } from './scan-progress.js';
 import {
@@ -84,10 +85,11 @@ export class ScanCards {
   create(row) {
     const el = get('result-card').content.firstElementChild.cloneNode(true);
     const heading = el.querySelector('h3');
-    heading.textContent = row.label;
+    const label = redactPath(row.label);
+    heading.textContent = label;
     heading.id = `scan-${row.id}`;
     const monogram = el.querySelector('.result-monogram');
-    monogram.textContent = Array.from(row.label.split('/').at(-1))[0]?.toLocaleUpperCase() ?? '·';
+    monogram.textContent = Array.from(label.split(/[\\/]/).at(-1))[0]?.toLocaleUpperCase() ?? '·';
     // Full artifact size: the file, the picked bundle's files, or a URL's Content-Length once known.
     const sizeLabel = el.querySelector('.result-size');
     const progress = el.querySelector('progress');
@@ -95,10 +97,10 @@ export class ScanCards {
     const readLabel = el.querySelector('.result-read-label');
     readLabel.id = `${heading.id}-reads`;
     const cancel = el.querySelector('.cancel-button');
-    cancel.setAttribute('aria-label', `Cancel ${row.label}`);
+    cancel.setAttribute('aria-label', `Cancel ${redactPath(row.label)}`);
     cancel.addEventListener('click', () => this.#cancel(row.id));
     const dialogButton = el.querySelector('.open-dialog');
-    dialogButton.setAttribute('aria-label', `View full scan details for ${row.label}`);
+    dialogButton.setAttribute('aria-label', `View full scan details for ${redactPath(row.label)}`);
 
     const card = {
       el, heading, progress, cancel, dialogButton, sizeLabel,
@@ -156,7 +158,7 @@ export class ScanCards {
     const line = card.el.querySelector('.result-verdict');
     line.dataset.tone = tone;
     line.querySelector('.verdict-icon').textContent = icon;
-    line.querySelector('.verdict-text').textContent = text;
+    line.querySelector('.verdict-text').textContent = redactPath(text);
     const arch = architectures(result);
     const badges = line.querySelector('.result-arch');
     badges.replaceChildren(...result.architectures.map(({ name }) => {
@@ -176,14 +178,14 @@ export class ScanCards {
       status: statuses[result.status] ?? result.status,
     };
     for (const field of details.querySelectorAll('dd')) {
-      field.textContent = values[field.dataset.field] || '—';
+      field.textContent = redactPath(values[field.dataset.field]) || '—';
     }
     details.querySelector('.result-speed').textContent = result.status === 'complete'
       ? rowPhrase({ size: row.size, read: row.bytes, elapsedMs: elapsed })
       : `Stopped after ${formatSeconds(elapsed)}, reading ${formatSize(row.bytes)}. Not counted in the scanned total.`;
     if (result.error) {
       const error = details.querySelector('.result-error');
-      error.textContent = result.error;
+      error.textContent = redactPath(result.error);
       error.hidden = false;
     }
     details.hidden = false;
@@ -224,7 +226,7 @@ export class ScanCards {
     const { result } = row;
     if (!dialog || !result) return;
     this.#dialogTrigger = card.dialogButton;
-    get('scan-dialog-title').textContent = `Scan details for ${row.label}`;
+    get('scan-dialog-title').textContent = `Scan details for ${redactPath(row.label)}`;
     const elapsed = row.started === null ? 0 : row.ended - row.started;
     const facts = [
       ['Verdict', verdict(result).text],
@@ -247,15 +249,15 @@ export class ScanCards {
       const dt = document.createElement('dt');
       const dd = document.createElement('dd');
       dt.textContent = term;
-      dd.textContent = value;
+      dd.textContent = redactPath(value);
       wrap.append(dt, dd);
       return wrap;
     }));
     const review = get('dialog-review');
-    review.href = `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${encodeURIComponent(result.name || row.label)}`;
-    review.setAttribute('aria-label', `Request a review of ${row.label}`);
+    review.href = `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${encodeURIComponent(redactPath(result.name || row.label))}`;
+    review.setAttribute('aria-label', `Request a review of ${redactPath(row.label)}`);
     get('dialog-json').open = false;
-    get('dialog-json').querySelector('pre').textContent = JSON.stringify({ ...result, ...this.#inventoryField(row) }, null, 2);
+    get('dialog-json').querySelector('pre').textContent = stringifyRedacted({ ...result, ...this.#inventoryField(row) }, 2);
     dialog.showModal();
     get('scan-dialog-title').focus();
   }

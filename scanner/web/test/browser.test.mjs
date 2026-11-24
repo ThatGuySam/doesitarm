@@ -256,5 +256,58 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     assert.match(apiCalls.at(-1), /^https:\/\/github\.com\/zed-industries\/zed\/releases\/download\//);
   });
 
+  await t.test('home paths are masked in rows, Details, raw JSON, and copied results', async () => {
+    const privacyPage = await context.newPage();
+    try {
+      await privacyPage.addInitScript(() => {
+        Object.defineProperty(navigator, 'clipboard', { value: {
+          async write([item]) {
+            window.copiedResults = await (await item.getType('text/plain')).text();
+          },
+        } });
+      });
+      await privacyPage.route('**/app.js', (route) => route.fulfill({ contentType: 'text/javascript', body: '' }));
+      await privacyPage.goto(url);
+      await privacyPage.evaluate(async () => {
+        const { ResultsList } = await import('/results-list.js');
+        const { emptyResult } = await import('/scan-result.js');
+        const mode = { limit: 1, passive: false };
+        const view = new ResultsList({
+          submit(id, job, update) {
+            update({ type: 'done', source: 'Browser', result: {
+              ...emptyResult('source_error', String.raw`Cannot open C:\Users\windows-account\app`),
+              bundle_id: '/home/linux-account/metadata',
+              bundle_path: job.label,
+              inventory: {
+                complete: false, all_arm64_capable: null, x86_64_only: [],
+                binaries: [{ role: 'helper', path: '/Users/helper-account/bin/tool', architectures: [] }],
+              },
+            } });
+          },
+        }, () => mode);
+        view.add([{ kind: 'file', label: '/Users/mac-account/Application.app' }]);
+      });
+      const card = resultCard(privacyPage, '/Users/<user>/Application.app');
+      const result = await readScanJson(privacyPage, card);
+      assert.equal(result.bundle_id, '/Users/<user>/metadata');
+      assert.equal(result.error, 'Cannot open /Users/<user>/app');
+      assert.equal(result.bundle_path, '/Users/<user>/Application.app');
+      await card.locator('.binary-inventory summary').click();
+      assert.equal(await card.locator('.binary-inventory li code').textContent(), '/Users/<user>/bin/tool');
+      assert.doesNotMatch(await privacyPage.locator('main').innerText(), /(?:mac|linux|windows|helper)-account/);
+
+      await privacyPage.locator('#results-tools-disclosure > summary').click();
+      await privacyPage.locator('#copy-results').click();
+      await privacyPage.locator('#copy-results-ready').click();
+      await privacyPage.waitForFunction(() => typeof window.copiedResults === 'string');
+      const copied = await privacyPage.evaluate(() => window.copiedResults);
+      assert.doesNotMatch(copied, /(?:mac|linux|windows|helper)-account/);
+      assert.equal(JSON.parse(copied).results[0].display_path, '/Users/<user>/Application.app');
+      assert.equal(await privacyPage.locator('#hide-username').count(), 0);
+    } finally {
+      await privacyPage.close();
+    }
+  });
+
   assert.deepEqual(pageErrors, []);
 });

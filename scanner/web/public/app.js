@@ -1,3 +1,4 @@
+import { redactPath } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { bindLocalInputs } from './local-inputs.js';
 import { ResultsList } from './results-list.js';
@@ -85,7 +86,8 @@ get('url-form').addEventListener('submit', (event) => {
   input.removeAttribute('aria-invalid');
   try {
     const url = publicDownload(input.value);
-    const path = url.pathname.split('/').filter(Boolean).at(-1);
+    if (redactPath(input.value) !== input.value) input.value = '';
+    const path = redactPath(url.pathname).split('/').filter(Boolean).at(-1);
     view.add([{ kind: 'url', url: url.href, label: path || url.hostname }]);
   } catch {
     error.textContent = 'Enter a public HTTPS download URL without credentials.';
@@ -116,8 +118,8 @@ async function loadHomebrew() {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'cask-button';
-      button.textContent = app.cask;
-      button.setAttribute('aria-label', `Rescan ${app.cask}`);
+      button.textContent = redactPath(app.cask);
+      button.setAttribute('aria-label', `Rescan ${redactPath(app.cask)}`);
       button.addEventListener('click', () => {
         view.add([{ kind: 'url', url: app.url, label: app.cask, forceWorker: true }]);
         get('results-title').focus();
@@ -139,7 +141,7 @@ async function loadHomebrew() {
       ];
       for (const value of values) {
         const cell = document.createElement('td');
-        cell.textContent = value ?? '—';
+        cell.textContent = redactPath(value) ?? '—';
         row.append(cell);
       }
       const inventory = document.createElement('td');
