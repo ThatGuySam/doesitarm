@@ -228,6 +228,7 @@ export function diagnosticControls(resolver) {
   save.hidden = true;
   let blobURL;
   let selection;
+  let exportVersion = 0;
   const controls = new Map();
   let small = true;
 
@@ -236,18 +237,25 @@ export function diagnosticControls(resolver) {
     blobURL = undefined;
     save.hidden = true;
     feedback.textContent = '';
+    selection = undefined;
+    for (const control of controls.values()) control.disabled = false;
+    format.disabled = false;
+    exportVersion += 1;
   }
 
   async function prepare(kind) {
     reset();
+    const version = exportVersion;
     for (const control of controls.values()) control.disabled = true;
     format.disabled = true;
     feedback.textContent = 'Preparing the local export…';
     try {
       const filter = kind === 'failures' ? 'failures' : kind === 'results' || kind === 'copy' ? 'results' : 'diagnostics';
       const { header, rows, count, cutoff } = await resolver();
+      if (version !== exportVersion) return;
       const type = count >= PLAIN_JSON_LIMIT ? 'ndjson.gz' : filter === 'diagnostics' ? format.value : 'json';
       const blob = await makeExport(header, rows, { count, format: type, scope: filter, cutoff });
+      if (version !== exportVersion) return;
       blobURL = URL.createObjectURL(blob);
       save.href = blobURL;
       save.download = `scanner-${filter}.${type}`;
@@ -273,11 +281,15 @@ export function diagnosticControls(resolver) {
       }
       save.focus();
     } catch {
-      reset();
-      feedback.textContent = 'The browser could not prepare the export.';
+      if (version === exportVersion) {
+        reset();
+        feedback.textContent = 'The browser could not prepare the export.';
+      }
     } finally {
-      for (const control of controls.values()) control.disabled = false;
-      format.disabled = false;
+      if (version === exportVersion) {
+        for (const control of controls.values()) control.disabled = false;
+        format.disabled = false;
+      }
     }
   }
 
