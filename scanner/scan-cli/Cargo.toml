@@ -7,4 +7,5 @@ edition.workspace = true
 scan-core = { path = "../scan-core" }
 serde.workspace = true
 serde_json.workspace = true
+tempfile = "3"
 ureq = { version = "3", default-features = false, features = ["rustls"] }

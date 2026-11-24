@@ -1,7 +1,7 @@
 use crate::{
     ReadAt, Result, ScanError, be64, check_range,
-    decode::{DecodeBudget, STEP, check_stream_ratio},
-    inflate::{STREAM_OUTPUT_LIMIT, chunk_size},
+    decode::{DecodeBudget, check_chunk_ratio},
+    inflate::{Codec, STREAM_OUTPUT_LIMIT, Stream},
 };
 use lzma_rust2::{Action, Status, XzStream};
 use std::ops::Range;
@@ -16,17 +16,17 @@ pub(crate) struct Pbzx<'a, S> {
     next_logical: u64,
     chunk: Option<Chunk>,
     count: usize,
-    work: &'a mut DecodeBudget,
+    work: &'a DecodeBudget,
 }
 
 struct Chunk {
     logical: Range<u64>,
     packed: Range<u64>,
-    decoder: Option<XzPrefix>,
+    decoder: Option<Stream>,
 }
 
 impl<'a, S: ReadAt> Pbzx<'a, S> {
-    pub(crate) async fn open(mut source: S, work: &'a mut DecodeBudget) -> Result<Self> {
+    pub(crate) async fn open(mut source: S, work: &'a DecodeBudget) -> Result<Self> {
         let header = source.read_at(0, 12).await?;
         let block_size = be64(&header, 4);
         if &header[..4] != b"pbzx" || block_size == 0 {
@@ -72,6 +72,53 @@ impl<'a, S: ReadAt> Pbzx<'a, S> {
         self.next_logical = end;
         Ok(result)
     }
+
+    pub(crate) async fn tail(&mut self) -> Result<Option<(u64, Vec<u8>)>> {
+        while self.next_packed < self.source.size() {
+            let chunk = self.next().await?;
+            if self.next_packed != self.source.size() {
+                continue;
+            }
+            let packed = chunk.packed.end - chunk.packed.start;
+            let expanded = chunk.logical.end - chunk.logical.start;
+            if packed > 4 * 1024 * 1024
+                || expanded > 16 * 1024 * 1024
+                || packed > self.source.remaining_budget() / 2
+            {
+                return Ok(None);
+            }
+            let bytes = self
+                .source
+                .read_at(chunk.packed.start, packed as usize)
+                .await?;
+            let data = if packed == expanded {
+                bytes
+            } else {
+                self.work.check_chunk(packed, expanded)?;
+                self.work.start_chunk(expanded)?;
+                let mut decoder = XzStream::new_mem_limit(false, 32 * 1024);
+                let mut decoded = vec![0; expanded as usize + 1];
+                let update = decoder
+                    .process(&bytes, &mut decoded, Action::Finish)
+                    .map_err(|_| BAD_XZ)?;
+                if update.status != Status::StreamEnd
+                    || update.bytes_consumed != bytes.len()
+                    || update.bytes_produced != expanded as usize
+                {
+                    return Err(BAD_XZ);
+                }
+                check_chunk_ratio(update.bytes_consumed as u64, expanded)?;
+                decoded.truncate(expanded as usize);
+                decoded
+            };
+            let tail_len = data.len().min(512 * 1024);
+            return Ok(Some((
+                chunk.logical.end - tail_len as u64,
+                data[data.len() - tail_len..].to_vec(),
+            )));
+        }
+        Ok(None)
+    }
 }
 
 impl<S: ReadAt> ReadAt for Pbzx<'_, S> {
@@ -109,7 +156,7 @@ impl<S: ReadAt> ReadAt for Pbzx<'_, S> {
                 }
                 let decoder = chunk
                     .decoder
-                    .get_or_insert_with(|| XzPrefix::new(chunk.packed.clone()));
+                    .get_or_insert_with(|| Stream::new(chunk.packed.clone(), Codec::Xz));
                 decoder
                     .read(&mut self.source, self.work, within, output)
                     .await?;
@@ -118,97 +165,5 @@ impl<S: ReadAt> ReadAt for Pbzx<'_, S> {
             written += count;
         }
         Ok(bytes)
-    }
-}
-
-struct XzPrefix {
-    decoder: XzStream,
-    range: Range<u64>,
-    input: Vec<u8>,
-    input_start: u64,
-    ended: bool,
-}
-
-impl XzPrefix {
-    fn new(range: Range<u64>) -> Self {
-        Self {
-            decoder: XzStream::new_mem_limit(false, 32 * 1024),
-            range,
-            input: Vec::new(),
-            input_start: 0,
-            ended: false,
-        }
-    }
-
-    async fn read(
-        &mut self,
-        source: &mut impl ReadAt,
-        work: &mut DecodeBudget,
-        at: u64,
-        output: &mut [u8],
-    ) -> Result<()> {
-        let here = self.decoder.total_out();
-        if at < here {
-            return Err(ScanError::Invalid("backward read from a PBZX XZ stream"));
-        }
-        work.require(at - here + output.len() as u64)?;
-        if at > here {
-            let mut scratch = [0; STEP];
-            while self.decoder.total_out() < at {
-                let count = (at - self.decoder.total_out()).min(scratch.len() as u64) as usize;
-                self.fill(source, work, &mut scratch[..count]).await?;
-            }
-        }
-        self.fill(source, work, output).await
-    }
-
-    async fn fill(
-        &mut self,
-        source: &mut impl ReadAt,
-        work: &mut DecodeBudget,
-        mut output: &mut [u8],
-    ) -> Result<()> {
-        while !output.is_empty() {
-            if self.ended {
-                return Err(BAD_XZ);
-            }
-            let before = self.decoder.total_in();
-            let before_out = self.decoder.total_out();
-            let index = (before - self.input_start) as usize;
-            let unconsumed = &self.input[index..];
-            let available = self.range.end - self.range.start - before - unconsumed.len() as u64;
-            let action = if available == 0 {
-                Action::Finish
-            } else {
-                Action::Run
-            };
-            let count = output.len().min(STEP);
-            let update = self
-                .decoder
-                .process(unconsumed, &mut output[..count], action);
-            work.charge(self.decoder.total_out() - before_out)?;
-            check_stream_ratio(self.decoder.total_in(), self.decoder.total_out())?;
-            let update = update.map_err(|_| BAD_XZ)?;
-            self.ended = update.status == Status::StreamEnd;
-            output = &mut output[update.bytes_produced..];
-            if update.bytes_consumed != 0 || update.bytes_produced != 0 || self.ended {
-                continue;
-            }
-            let length = available
-                .min(chunk_size(before).saturating_sub(unconsumed.len() as u64))
-                .min(source.remaining_budget());
-            if length == 0 {
-                return Err(if available != 0 && source.remaining_budget() == 0 {
-                    ScanError::Budget
-                } else {
-                    BAD_XZ
-                });
-            }
-            let offset = self.range.start + before + unconsumed.len() as u64;
-            let next = source.read_at(offset, length as usize).await?;
-            self.input = [unconsumed, &next].concat();
-            self.input_start = before;
-        }
-        Ok(())
     }
 }

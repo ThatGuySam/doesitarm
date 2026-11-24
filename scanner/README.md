@@ -15,7 +15,11 @@ target/debug/scan-cli scan 'https://example.com/YourApp.dmg' --budget 8388608 --
 
 The CLI defaults to 64 MiB each for requested bytes and decoded bytes. Set them independently with `--budget BYTES` and `--decoded-budget BYTES`. The CLI exits with 0 after a complete scan, 1 when the scan returns partial evidence or an error, and 2 for invalid arguments. `--json` emits the result even on exit 1.
 
-URL scans start with `Range: bytes=0-0` to discover the total size. Every subsequent request has an inclusive absolute start and end. The CLI follows HTTPS redirects and validates HTTP 206, `Content-Range`, the total, the returned byte count and a strong ETag when available. It caps the retrieval budget below the known artifact size for files larger than the discovery byte.
+URL scans start with `Range: bytes=0-0` to discover the total size. Every subsequent request has an inclusive absolute start and end. The CLI follows HTTPS redirects and validates HTTP 206, `Content-Range`, the total, the returned byte count and a strong ETag when available. The byte budget includes the discovery byte and repeated ranges.
+
+`--allow-stream` accepts an HTTP 200 from the discovery probe and reads one response up to the budget. It reuses already delivered ranges from an anonymous temporary file. `--request-delay-ms` sets the minimum interval between range request starts. `--allow-http` enables plain HTTP sources and redirects for catalog URLs that require them.
+
+`--bundle-path "Example.app"` selects a registered bundle from a container with multiple candidates. `--binary-path "bin/example"` scans an exact standalone executable and reports its architecture and macOS deployment target. The Homebrew runner supplies these paths from artifact declarations. [Campaign and resume instructions](CLIMB.md)
 
 ## Build Wasm and check parity
 

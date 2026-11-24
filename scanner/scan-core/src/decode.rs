@@ -1,5 +1,5 @@
 use crate::{Result, ScanError};
-use std::io::Read;
+use std::{cell::Cell, io::Read};
 
 const STREAM_EXPANSION_RATIO: u64 = 1024;
 // Disk images can compress a mostly empty 1 MiB block to 45 bytes with bzip2.
@@ -10,35 +10,34 @@ const DECODE_LIMIT: ScanError = ScanError::WorkLimit("decoded-byte budget reache
 const RATIO_LIMIT: ScanError = ScanError::WorkLimit("compression expansion ratio exceeded");
 
 pub(crate) struct DecodeBudget {
-    remaining: u64,
-    used: u64,
-    starts: usize,
+    limit: u64,
+    used: Cell<u64>,
+    starts: Cell<usize>,
 }
 
 impl DecodeBudget {
     pub(crate) fn new(bytes: u64) -> Self {
         Self {
-            remaining: bytes,
-            used: 0,
-            starts: 0,
+            limit: bytes,
+            used: Cell::new(0),
+            starts: Cell::new(0),
         }
     }
 
     pub(crate) fn used(&self) -> u64 {
-        self.used
+        self.used.get()
     }
 
     pub(crate) fn require(&self, bytes: u64) -> Result<()> {
-        if bytes > self.remaining {
+        if bytes > self.limit - self.used() {
             return Err(DECODE_LIMIT);
         }
         Ok(())
     }
 
-    pub(crate) fn charge(&mut self, bytes: u64) -> Result<()> {
+    pub(crate) fn charge(&self, bytes: u64) -> Result<()> {
         self.require(bytes)?;
-        self.remaining -= bytes;
-        self.used += bytes;
+        self.used.set(self.used() + bytes);
         Ok(())
     }
 
@@ -47,15 +46,15 @@ impl DecodeBudget {
         self.require(expanded)
     }
 
-    pub(crate) fn start(&mut self) -> Result<()> {
-        if self.starts == MAX_DECODER_STARTS {
+    pub(crate) fn start(&self) -> Result<()> {
+        if self.starts.get() == MAX_DECODER_STARTS {
             return Err(ScanError::WorkLimit("too many decoder starts"));
         }
-        self.starts += 1;
+        self.starts.set(self.starts.get() + 1);
         Ok(())
     }
 
-    pub(crate) fn start_chunk(&mut self, expanded: u64) -> Result<()> {
+    pub(crate) fn start_chunk(&self, expanded: u64) -> Result<()> {
         self.start()?;
         self.charge(expanded)
     }

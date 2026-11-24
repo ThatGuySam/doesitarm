@@ -1,0 +1,6369 @@
+{
+  "manifest_sha256": "78c236a89dcdb305815d5cbaf57a7d2b1141be07d431f96d96b5ac13c2f767ee",
+  "catalog_sha256": "78e2e5fc666464ff8857c5f5bbd58aad901c95381469eb4a249405911d895e72",
+  "manifest_count": 100,
+  "cli_sha256": "e025c5be2834a8defdd314d6c73c14805ae7296b32b1d07428d8fef327260a69",
+  "budget": 8388608,
+  "escalate": [],
+  "timeout": 30,
+  "cli_options": [],
+  "host_cooldown": 1.0,
+  "scanner_commit_at_start": "8e260f1f58c7fdb629ea33504b34c4ec9f4b6b68",
+  "started_at": "2026-11-24T07:02:51+00:00",
+  "updated_at": "2026-11-24T07:07:03+00:00",
+  "totals": {
+    "checked": 100,
+    "by_outcome": {
+      "verified": 42,
+      "unsupported_container": 12,
+      "plist_not_found": 10,
+      "budget_hit": 31,
+      "host_200_to_range": 2,
+      "other": 1,
+      "http_403": 1,
+      "metadata_missing": 1
+    },
+    "by_container": {
+      "7z": {
+        "unsupported_container": 1
+      },
+      "dmg": {
+        "verified": 23,
+        "plist_not_found": 2,
+        "other": 1,
+        "unsupported_container": 1,
+        "metadata_missing": 1
+      },
+      "pkg": {
+        "plist_not_found": 1,
+        "budget_hit": 15,
+        "verified": 1,
+        "unsupported_container": 1,
+        "http_403": 1
+      },
+      "tar.bz2": {
+        "unsupported_container": 1
+      },
+      "tar.gz": {
+        "budget_hit": 14,
+        "plist_not_found": 3,
+        "host_200_to_range": 1
+      },
+      "tar.xz": {
+        "unsupported_container": 5
+      },
+      "tbz": {
+        "unsupported_container": 2
+      },
+      "txz": {
+        "unsupported_container": 1
+      },
+      "zip": {
+        "verified": 18,
+        "plist_not_found": 4,
+        "budget_hit": 2,
+        "host_200_to_range": 1
+      }
+    },
+    "architecture_hints": {
+      "agrees": 18,
+      "unavailable": 21
+    },
+    "accepted_bytes": 342773845,
+    "reported_reads": 1163,
+    "attempts_with_unknown_bytes": 0
+  },
+  "artifacts": [
+    {
+      "cask": "greensignal",
+      "url": "https://releases.greensignal.app/releases/v1.0.2/GreenSignal_1.0.2_universal.dmg",
+      "version": "1.0.2",
+      "sha256": "630614bcee392247a6ab127a4fc18f2ea2d589f139b6479da48b30cdb45e8d32",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "GreenSignal.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "releases.greensignal.app",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64",
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.662,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 11159504,
+                "header_verified": true,
+                "min_macos": "14.2",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 11190272,
+                "size": 10752976,
+                "header_verified": true,
+                "min_macos": "14.2",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "GreenSignal.app",
+            "bundle_id": "app.greensignal.app",
+            "version": "1.0.2",
+            "name": "GreenSignal",
+            "min_macos": "14.2",
+            "executable_name": "greensignal",
+            "executable_size": 21943248,
+            "installer": null,
+            "bytes_read": 536006,
+            "reads": 8,
+            "total_size": 11345097,
+            "error": null,
+            "source_etag": "\"f6b0af1f28de6bf962366c079ca959d5-2\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "app-fair",
+      "url": "https://github.com/App-Fair/App/releases/download/0.8.137/App-Fair-macOS.zip",
+      "version": "0.8.137",
+      "sha256": "c4a99410058cef2a3c7ac6bb073cf4cac06fb64f7c597140cbf0958e37fe2480",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "App Fair.app"
+      ],
+      "architecture_hints": [],
+      "host": "github.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.617,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 71872,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 98304,
+                "size": 71824,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "App Fair.app",
+            "bundle_id": "app.App-Fair",
+            "version": "0.8.137",
+            "name": "App Fair",
+            "min_macos": "12.0",
+            "executable_name": "App Fair",
+            "executable_size": 170128,
+            "installer": null,
+            "bytes_read": 107452,
+            "reads": 10,
+            "total_size": 12605762,
+            "error": null,
+            "source_etag": "\"0x8DADCB2D3F51116\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "launchcontrol",
+      "url": "https://www.soma-zone.com/download/files/LaunchControl-2.13.1.tar.xz",
+      "version": "2.13.1",
+      "sha256": "7724c06006e9d284217244d63c6ca451e33ab31b8b3e24453d8041978b32ae61",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "LaunchControl.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.soma-zone.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.621,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 5510472,
+            "error": "unsupported: unrecognized file format"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "prezi-video",
+      "url": "https://desktopassets.prezi.com/mac/prezi-video/releases/Prezi_Video_2.35.0.zip",
+      "version": "2.35.0",
+      "sha256": "aac8f4fd53e76f084383d22599982a95bf70a5a97e8cf8b98257251f66d4b406",
+      "expected_format": "zip",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "desktopassets.prezi.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.458,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "zip",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 100,
+            "reads": 4,
+            "total_size": 221106557,
+            "error": "not found: app Info.plist in ZIP central directory",
+            "source_etag": "\"9ea94f2d202ba6ed7045e0004abbcb33-27\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "prolific-pl2303",
+      "url": "https://www.prolific.com.tw/wp-content/uploads/2025/07/PL2303HXD_G_Mac-Driver_v2.2.11_20250314.pkg_-1.7z",
+      "version": "2.2.11,20250314,2025,07,_-1",
+      "sha256": "2c4c1ebf8f1eb997cde5c138b881c4389e17069114b6ef3a1aaff53e424465f2",
+      "expected_format": "7z",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "www.prolific.com.tw",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.171,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 566766,
+            "error": "unsupported: unrecognized file format"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "libifd-cyberjack",
+      "url": "https://support.reiner-sct.de/downloads/MAC/pcsc-cyberjack_3.99.5final.SP16-arm64-signed.pkg",
+      "version": "3.99.5final.SP16",
+      "sha256": "ce347734f78bbcc66fa8da24828a191f5f585adceb14cf5423aac7e12d9638fb",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "support.reiner-sct.de",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.011,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "pkg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "Reiner SCT cyberjack driver",
+              "host_architectures": [],
+              "package_id": "com.reiner-sct.pcsc-cyberjack_3.99.5final.SP16",
+              "package_version": "pcsc-cyberjack_3.99.5final.SP16",
+              "min_macos": null
+            },
+            "bytes_read": 175671,
+            "reads": 9,
+            "total_size": 865463,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"737e1fd09e3ad9d67712873b30099322\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "bricklink-partdesigner",
+      "url": "https://studio.download.bricklink.info/PartDesigner/Archive/2.26.11_1/PartDesigner.pkg",
+      "version": "2.26.11_1",
+      "sha256": "1d7a52a9443b22c6f7dcf59840a0559079f05d9160020d5ed690aa686927e0d4",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "studio.download.bricklink.info",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.533,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "PartDesigner.app/Contents/MacOS/PartDesigner",
+                "size": 150720,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 52288,
+                    "header_verified": true,
+                    "min_macos": "10.13",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 81920,
+                    "size": 68800,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "PartDesigner",
+              "host_architectures": [
+                "arm64",
+                "x86_64"
+              ],
+              "package_id": "com.bricklink.pkg.PartDesigner",
+              "package_version": "2.26.11.1",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 85246891,
+            "error": "byte budget reached",
+            "source_etag": "\"8fa681587b1c57443412461b5aaa5163\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "vernier-instrumental-analysis",
+      "url": "https://software-releases.graphicalanalysis.com/ia/mac/release/Vernier-Instrumental-Analysis-2.0.0-1994.zip",
+      "version": "2.0.0-1994",
+      "sha256": "8b0b7096d99a1b09e72b5ef768767651c03989016985a28d7668d1a54181005b",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Vernier Instrumental Analysis.app"
+      ],
+      "architecture_hints": [],
+      "host": "software-releases.graphicalanalysis.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.332,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 16384,
+                "size": 36400,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 65536,
+                "size": 69408,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Vernier Instrumental Analysis.app",
+            "bundle_id": "Vernier.InstrumentalAnalysis",
+            "version": "2.0.0-1994",
+            "name": "Vernier Instrumental Analysis",
+            "min_macos": "12.7.5",
+            "executable_name": "Vernier Instrumental Analysis",
+            "executable_size": 134944,
+            "installer": null,
+            "bytes_read": 773514,
+            "reads": 10,
+            "total_size": 204686528,
+            "error": null,
+            "source_etag": "\"163e84d30f19bb40e77db91c8b116860-12\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "mixed-in-key-live",
+      "url": "https://builds.mixedinkey.com/download/55/release/latest?key=public",
+      "version": "11.0.5.581,55",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "builds.mixedinkey.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.703,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "zip",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 118,
+            "reads": 4,
+            "total_size": 15941247,
+            "error": "not found: app Info.plist in ZIP central directory",
+            "source_etag": "\"000dc0803fe99b869dcd61cc0af6ad62\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "dotnet-sdk@preview",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/11.0.100/dotnet-sdk-11.0.100-osx-arm64.pkg",
+      "version": "11.0.100",
+      "sha256": "96b96a7d7ec00b2397d575ffa7acfe685d7261fe2a2719d80131e5f8003deaf9",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "binary",
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "builds.dotnet.microsoft.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.8,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "Microsoft .NET SDK 11.0.100 (arm64)",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "com.microsoft.dotnet.dev.11.0.100.component.osx.arm64",
+              "package_version": "11.0.100",
+              "min_macos": "12.0"
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 196386115,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DF3F4B78A402BB\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "hackolade",
+      "url": "https://hackolade.s3.amazonaws.com/previous/v9.0.1/Hackolade-macARM64-setup-signed.pkg",
+      "version": "9.0.1",
+      "sha256": "5373db97d8ff8ba0d0ae83a7c4207f898dc73b0f1b2303269a019685951d4c72",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "hackolade.s3.amazonaws.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 6.018,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Hackolade.app/Contents/MacOS/Hackolade",
+                "size": 47888,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 47888,
+                    "header_verified": true,
+                    "min_macos": "13.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "DISTRIBUTION_TITLE",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.hackolade.pkg.Hackolade",
+              "package_version": "8.3.2",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 147359219,
+            "error": "byte budget reached",
+            "source_etag": "\"8871e0048fbd8c44006726e0d0041245-18\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "apache-couchdb",
+      "url": "https://couchdbneighbourhoodie.fra1.digitaloceanspaces.com/downloads/3.5.3/mac/arm64/Apache-CouchDB.zip",
+      "version": "3.5.3",
+      "sha256": "08b6cf427ca48ba0449ba60d9fb669d6be58d1eee416dc50598f88c2dfb37129",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Apache CouchDB.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "couchdbneighbourhoodie.fra1.digitaloceanspaces.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64",
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.237,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 54032,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 81920,
+                "size": 91184,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Apache CouchDB.app",
+            "bundle_id": "org.apache.couchdb",
+            "version": "3.5.3",
+            "name": "Apache CouchDB",
+            "min_macos": "11.0",
+            "executable_name": "Apache CouchDB",
+            "executable_size": 173104,
+            "installer": null,
+            "bytes_read": 395120,
+            "reads": 10,
+            "total_size": 101073006,
+            "error": null,
+            "source_etag": "\"5d310c41bbe656fc392807cdea11c6a8\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "trivial",
+      "url": "https://download.decisivetactics.com/downloads/trivial/Trivial_1.0.10.zip",
+      "version": "1.0.10",
+      "sha256": "21f9b6a83f2eaa7c6f36c717b09723d4f66ae4d359b06a9fbf2c75fc244e1c84",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Trivial.app"
+      ],
+      "architecture_hints": [],
+      "host": "download.decisivetactics.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.685,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 4104160,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 4128768,
+                "size": 3238608,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Trivial.app",
+            "bundle_id": "com.decisivetactics.trivial",
+            "version": "1.0.10",
+            "name": "Trivial",
+            "min_macos": "10.13",
+            "executable_name": "Trivial",
+            "executable_size": 7367376,
+            "installer": null,
+            "bytes_read": 2170227,
+            "reads": 15,
+            "total_size": 7642722,
+            "error": null,
+            "source_etag": "\"65647f40-749e62\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "mitmproxy",
+      "url": "https://downloads.mitmproxy.org/12.3.1/mitmproxy-12.3.1-macos-arm64.tar.gz",
+      "version": "12.3.1",
+      "sha256": "9b7f7a8e3fd1b1544089c937c579ef1f0f503f0ea598c25bda9eab077c735b93",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "downloads.mitmproxy.org",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.907,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 55867766,
+            "error": "byte budget reached",
+            "source_etag": "\"16bf38d112b79d66f5c3d9bbd6eef851-7\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "unclutter",
+      "url": "https://unclutterapp.com/files/Unclutter.zip",
+      "version": "2.3.0d",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Unclutter.app"
+      ],
+      "architecture_hints": [],
+      "host": "unclutterapp.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.81,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2853184,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2883584,
+                "size": 2500576,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Unclutter.app",
+            "bundle_id": "com.softwareambience.Unclutter",
+            "version": "2.3.0d",
+            "name": "Unclutter",
+            "min_macos": "10.13",
+            "executable_name": "Unclutter",
+            "executable_size": 5384160,
+            "installer": null,
+            "bytes_read": 1248998,
+            "reads": 14,
+            "total_size": 22588878,
+            "error": null,
+            "source_etag": "\"dmxikygff6m9dg5ou\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "geekbench",
+      "url": "https://cdn.geekbench.com/Geekbench-7.0.0-Mac.zip",
+      "version": "7.0.0",
+      "sha256": "68e8e3821aa65f1b5d7e3b3e307c9f002c0f1efc02b3e62b96244a9e54bf1933",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Geekbench 7.app"
+      ],
+      "architecture_hints": [],
+      "host": "cdn.geekbench.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.491,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 168590608,
+                "header_verified": true,
+                "min_macos": "15.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 168607744,
+                "size": 152250016,
+                "header_verified": false,
+                "min_macos": null,
+                "code_signature_present": null
+              }
+            ],
+            "bundle_path": "Geekbench 7.app",
+            "bundle_id": "com.primatelabs.parkdale",
+            "version": "7.0.0",
+            "name": "Geekbench 7",
+            "min_macos": "15.0.0",
+            "executable_name": "Geekbench 7",
+            "executable_size": 320857760,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 21,
+            "total_size": 508922218,
+            "error": "byte budget reached",
+            "source_etag": "\"6a622152-1e55896a\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "typeit4me",
+      "url": "https://ettoresoftware.store/download/TypeIt4Me6.3.9b258.zip",
+      "version": "6.3.9,258",
+      "sha256": "7205f7e0ea0290b5d18d914abffc8efd994b9e74ffe8792c71a1907c09f86352",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "TypeIt4Me.app"
+      ],
+      "architecture_hints": [],
+      "host": "ettoresoftware.store",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.362,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 1109088,
+                "header_verified": true,
+                "min_macos": "10.12",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 1130496,
+                "size": 1057648,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "TypeIt4Me.app",
+            "bundle_id": "com.typeit4me.TypeIt4MeMenu",
+            "version": "6.3.9",
+            "name": "TypeIt4Me",
+            "min_macos": "10.12",
+            "executable_name": "TypeIt4Me",
+            "executable_size": 2188144,
+            "installer": null,
+            "bytes_read": 658241,
+            "reads": 12,
+            "total_size": 33672043,
+            "error": null,
+            "source_etag": "\"201cb6b-647ddd58-ce4ba6c35e99fdaa;;;\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "sonic-pi",
+      "url": "https://sonic-pi.net/files/releases/v5.0.0/Sonic-Pi-for-Mac-arm64-v5.0.0.dmg",
+      "version": "5.0.0",
+      "sha256": "3dd0b9873a74aa274d3723be098622fdea73896ceba29a1423af9e7b46a7c291",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Sonic Pi.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "sonic-pi.net",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.978,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 30945008,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Sonic Pi.app",
+            "bundle_id": "net.sonic-pi.app",
+            "version": "5.0.0",
+            "name": "Sonic Pi",
+            "min_macos": "14",
+            "executable_name": "Sonic Pi",
+            "executable_size": 30945008,
+            "installer": null,
+            "bytes_read": 665891,
+            "reads": 11,
+            "total_size": 183189169,
+            "error": null,
+            "source_etag": "\"6a74d89a-aeb3eb1\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "granola",
+      "url": "https://dr2v7l5emb758.cloudfront.net/7.821.0/Granola-7.821.0-mac-universal.dmg",
+      "version": "7.821.0",
+      "sha256": "a01fba01d5f3bc15d3e40c50aaa8dbbaf76ac8b640220b6f926625aac5c7fb4d",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Granola.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "dr2v7l5emb758.cloudfront.net",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64",
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.891,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 16384,
+                "size": 33232,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 65536,
+                "size": 53664,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Granola.app",
+            "bundle_id": "com.granola.app",
+            "version": "7.821.0",
+            "name": "Granola",
+            "min_macos": "13.0",
+            "executable_name": "Granola",
+            "executable_size": 119200,
+            "installer": null,
+            "bytes_read": 1767099,
+            "reads": 8,
+            "total_size": 267036226,
+            "error": null,
+            "source_etag": "\"8d43e07fdcb954ad9d2b8a0fff2172aa-32\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "liquibase-community",
+      "url": "https://package.liquibase.com/downloads/oss/homebrew/liquibase-5.0.4.tar.gz",
+      "version": "5.0.4",
+      "sha256": "bb08638d70dddd6af8cca6e033148576f8214b5996831b1f8864eb3528f4cfce",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "package.liquibase.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.227,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 8773410,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DEFD2508C02FA0\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "copilot-cli",
+      "url": "https://github.com/github/copilot-cli/releases/download/v1.0.114/copilot-darwin-arm64.tar.gz",
+      "version": "1.0.114",
+      "sha256": "35e8165a6ca811fb907b5afb7892e53d1bb85426bb77fe3f83b7f0b4e955249a",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "github.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.937,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 139620898,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DF45390EBA40C9\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "nutstore",
+      "url": "https://www.jianguoyun.com/static/exe/installer/NutstoreOSXInstaller.dmg",
+      "version": "6.4.8",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "www.jianguoyun.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 4.575,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 84192,
+                "header_verified": true,
+                "min_macos": "10.12",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 114688,
+                "size": 128304,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "坚果云安装程序.app",
+            "bundle_id": "net.nutstoer.osxapp.onlineinstaller",
+            "version": "1.0",
+            "name": "NutstoreOnlineInstaller",
+            "min_macos": "10.12",
+            "executable_name": "NutstoreOnlineInstaller",
+            "executable_size": 242992,
+            "installer": null,
+            "bytes_read": 735746,
+            "reads": 7,
+            "total_size": 738815,
+            "error": null,
+            "source_etag": "\"3c5c7ae0280bb5962495b49a00f1c0a2\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "etrecheckpro",
+      "url": "https://cdn.etrecheck.com/EtreCheckPro.zip",
+      "version": "6.9",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "EtreCheckPro.app"
+      ],
+      "architecture_hints": [],
+      "host": "cdn.etrecheck.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.469,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 1685712,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 1703936,
+                "size": 1503104,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "EtreCheckPro.app",
+            "bundle_id": "com.etresoft.EtreCheck4",
+            "version": "6.9.0",
+            "name": "EtreCheckPro",
+            "min_macos": "10.13",
+            "executable_name": "EtreCheckPro",
+            "executable_size": 3207040,
+            "installer": null,
+            "bytes_read": 900384,
+            "reads": 13,
+            "total_size": 12757048,
+            "error": null,
+            "source_etag": "\"931b66bcda4c74dd47c5b1dd7332ea4c\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "boinc",
+      "url": "https://boinc.berkeley.edu/dl/boinc_8.2.11_macOSX_universal.zip",
+      "version": "8.2.11",
+      "sha256": "0b98428629eebc83bd73404cfe8cfaafe8e35681acb184792ac825854def1bb5",
+      "expected_format": "zip",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "boinc.berkeley.edu",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64",
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.89,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 48224,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 65536,
+                "size": 76944,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "boinc_8.2.11_macOSX_universal/BOINC Installer.app",
+            "bundle_id": "edu.berkeley.boinc.Installer",
+            "version": "8.2.11",
+            "name": "BOINC Installer",
+            "min_macos": "10.0",
+            "executable_name": "BOINC Installer",
+            "executable_size": 142480,
+            "installer": null,
+            "bytes_read": 61682,
+            "reads": 10,
+            "total_size": 15405223,
+            "error": null,
+            "source_etag": "\"eb10a7-64fe09b228585\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "binance",
+      "url": "https://ftp.binance.com/electron-desktop/mac/production/binance-2.6.1-arm64.dmg",
+      "version": "2.6.1",
+      "sha256": "917d93de715225ee0189d223300e77f765401a9a9dc8bb507d99b0cdff243296",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Binance.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "ftp.binance.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 6.069,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 53632,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Binance.app",
+            "bundle_id": "com.binance.BinanceDesktop",
+            "version": "2.6.1",
+            "name": "Binance",
+            "min_macos": "12.0",
+            "executable_name": "Binance",
+            "executable_size": 53632,
+            "installer": null,
+            "bytes_read": 1118178,
+            "reads": 10,
+            "total_size": 244784018,
+            "error": null,
+            "source_etag": "\"6405efe2f17143b88672d4e3b3b24c94-30\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "wondershare-uniconverter",
+      "url": "https://download.wondershare.com/cbs_down/uniconverter-mac_arm_18.0.5_full14207.zip",
+      "version": "18.0.5",
+      "sha256": "7b00f0dba597583064f7a37ea82626bba20c22cb59037ed5fc20ee9c4581198c",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Wondershare UniConverter 18.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "download.wondershare.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.89,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 27790288,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Wondershare UniConverter 18.app",
+            "bundle_id": "com.Wondershare.UniConverter18",
+            "version": "18.0.5.156",
+            "name": "Wondershare UniConverter 18",
+            "min_macos": "10.13",
+            "executable_name": "Wondershare UniConverter 18",
+            "executable_size": 27790288,
+            "installer": null,
+            "bytes_read": 956744,
+            "reads": 10,
+            "total_size": 335589273,
+            "error": null,
+            "source_etag": "\"5BFD02C32679F512B0AC0820983FA971-33\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "liquibase-secure",
+      "url": "https://package.liquibase.com/downloads/secure/homebrew/liquibase-secure-6.0.2.tar.gz",
+      "version": "6.0.2",
+      "sha256": "1d4349626836f537d8f086736a1b08d5d9567396951ec39b3f351fd4667b2a85",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "package.liquibase.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.51,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 511045738,
+            "error": "byte budget reached",
+            "source_etag": "\"3788cfbc731b80d9714c30322218d60a-61\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "crystaldiffract",
+      "url": "https://crystalmaker.com/downloads/crystaldiffract7_mac.zip",
+      "version": "7.2.6",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "CrystalDiffract.app"
+      ],
+      "architecture_hints": [],
+      "host": "crystalmaker.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 8.849,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2423248,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2441216,
+                "size": 2128080,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "CrystalDiffract.app",
+            "bundle_id": "com.crystalmaker.crystaldiffract.v7",
+            "version": "7.2.6",
+            "name": "CrystalDiffract",
+            "min_macos": "11.0",
+            "executable_name": "CrystalDiffract",
+            "executable_size": 4569296,
+            "installer": null,
+            "bytes_read": 1407739,
+            "reads": 14,
+            "total_size": 197442332,
+            "error": null,
+            "source_etag": "\"bc4bb1c-65af53c2d977f\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "monal@beta",
+      "url": "https://downloads.monal-im.org/monal-im/beta/macOS/Monal-1100.zip",
+      "version": "1100",
+      "sha256": "f0956b00e4e0881c8e191c3d52ec674827199b7f0259e8dcfebd41947998aa74",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Monal.app"
+      ],
+      "architecture_hints": [],
+      "host": "downloads.monal-im.org",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 3.91,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 7903456,
+                "header_verified": true,
+                "min_macos": null,
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 7929856,
+                "size": 7825920,
+                "header_verified": true,
+                "min_macos": null,
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Monal.app",
+            "bundle_id": "org.monal-im.prod.catalyst.monal",
+            "version": "6.4.24",
+            "name": "Monal",
+            "min_macos": "11.0",
+            "executable_name": "Monal",
+            "executable_size": 15755776,
+            "installer": null,
+            "bytes_read": 2248699,
+            "reads": 15,
+            "total_size": 49059978,
+            "error": null,
+            "source_etag": "\"6ad67d39-2ec988a\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "lagrange",
+      "url": "https://git.skyjake.fi/gemini/lagrange/releases/download/v2.0.4/lagrange_v2.0.4_macos11.0-arm64.tbz",
+      "version": "2.0.4",
+      "sha256": "8bcfeaaba7f2b599f5dad6adce71c2248051aad2857efb1392736f8711a2fd12",
+      "expected_format": "tbz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Lagrange.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "git.skyjake.fi",
+      "category": "unsupported_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.924,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 11864349,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"965ebcdb-fd26-4a81-81ca-96acea82795a\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "arm-performance-libraries",
+      "url": "https://developer.arm.com/-/cdn-downloads/permalink/Arm-Performance-Libraries/Version_26.07/arm-performance-libraries_26.07_macOS.tgz",
+      "version": "26.07",
+      "sha256": "9aa4e969a560d726507841c73e89d29098bfc1b226d9d32a2d6c87181bb24218",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "installer"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        }
+      ],
+      "host": "developer.arm.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.488,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 194086631,
+            "error": "byte budget reached",
+            "source_etag": "\"7d42d7e5e11c483d330a3fd908003683:1785243496.958538\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ammonite",
+      "url": "https://www.soma-zone.com/download/files/Ammonite-1.30.tar.xz",
+      "version": "1.30",
+      "sha256": "0d5bc4d5042b240640331047a24dfeeb139adc4b89ba0e8f7601cd95ffaf65f7",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Ammonite.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.soma-zone.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.646,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 4886092,
+            "error": "unsupported: unrecognized file format"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "perforce",
+      "url": "https://filehost.perforce.com/perforce/r26.1/bin.macosx12arm64/helix-core-server.tgz",
+      "version": "2026.1,3141402",
+      "sha256": "1c40dd89db8bb063ef1e51c522bf443ae73b96483a39f543f3e6d447f73f8a2d",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "filehost.perforce.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.507,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 23886855,
+            "error": "byte budget reached",
+            "source_etag": "\"16c7c07-6606ae00cd080\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "whatsize",
+      "url": "https://www.whatsizemac.com/software/whatsize8/whatsize_8.2.9.pkg",
+      "version": "8.2.9",
+      "sha256": "9c00d80354f89093f797ab7d933542c79a46302e1e75fd439118838dbc92acb7",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "www.whatsizemac.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.463,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Applications/WhatSize.app/Contents/MacOS/WhatSize",
+                "size": 30460624,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 15658960,
+                    "header_verified": true,
+                    "min_macos": "11.5",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 15679488,
+                    "size": 14781136,
+                    "header_verified": true,
+                    "min_macos": "11.5",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "WhatSize 8.2.9",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.id-design.v8.whatsize.pkg",
+              "package_version": "8.2.9",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 33062719,
+            "error": "byte budget reached",
+            "source_etag": "\"1f87f3f-65a6b3e544238\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "butterkit",
+      "url": "https://download.butterkit.app/updates/ButterKit-Direct-3.3.03-macOS.zip",
+      "version": "3.3.03",
+      "sha256": "53152fe32e0e52dd8e83863e39b6b49c420c5758cc25c9a2d033fefcc50acc82",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ButterKit-Direct-3.3.03-macOS.app"
+      ],
+      "architecture_hints": [],
+      "host": "download.butterkit.app",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 3.607,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "zip",
+            "status": "budget_exhausted",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 19272224,
+                "header_verified": true,
+                "min_macos": "26.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 19300352,
+                "size": 18215056,
+                "header_verified": false,
+                "min_macos": null,
+                "code_signature_present": null
+              }
+            ],
+            "bundle_path": "ButterKit-Direct-3.3.03-macOS.app",
+            "bundle_id": "app.butterkit.direct",
+            "version": "3.3.03",
+            "name": "ButterKit",
+            "min_macos": "26.0",
+            "executable_name": "ButterKit",
+            "executable_size": 37515408,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 21,
+            "total_size": 196343788,
+            "error": "byte budget reached",
+            "source_etag": "\"747a0388b3ba6e280fa146f29ca0bb6f\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "btp",
+      "url": "https://tools.hana.ondemand.com/additional/btp-cli-darwin-arm64-2.116.3.tar.gz",
+      "version": "2.116.3",
+      "sha256": "312964f52700273fdcd75f3d9f90828cebb0933a10115c21d0a9c4df24dc2258",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "tools.hana.ondemand.com",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 4.378,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "tar.gz",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8216518,
+            "reads": 14,
+            "total_size": 8216519,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"c40556861e0b0f8b2ebd9c3c5004a45d\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "qt-creator@dev",
+      "url": "https://download.qt.io/development_releases/qtcreator/21.0/21.0.0-rc1/qt-creator-opensource-mac-universal-21.0.0-rc1.dmg",
+      "version": "21.0.0-rc1",
+      "sha256": "39702bc06039b7112ced331c0fb7a302fcbfb9927599b6c3e4dbc2ae80fb5e9f",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Qt Creator.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "download.qt.io",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64",
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.959,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 239392,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 262144,
+                "size": 260928,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Qt Creator.app",
+            "bundle_id": "org.qt-project.qtcreator",
+            "version": "20.0.84",
+            "name": null,
+            "min_macos": "13.0",
+            "executable_name": "Qt Creator",
+            "executable_size": 523072,
+            "installer": null,
+            "bytes_read": 3482637,
+            "reads": 19,
+            "total_size": 423156326,
+            "error": null,
+            "source_etag": "\"6adf89d1-1938da66\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "mailmate@beta",
+      "url": "https://updates.mailmate-app.com/archives/MailMateBeta.tbz",
+      "version": "6272",
+      "sha256": "no_check",
+      "expected_format": "tbz",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "MailMate.app"
+      ],
+      "architecture_hints": [],
+      "host": "updates.mailmate-app.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.305,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 16841015,
+            "error": "unsupported: unrecognized file format"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "manico",
+      "url": "https://manico.im/api/release_manager/downloads/im.manico.Manico/546.zip",
+      "version": "3.15,546",
+      "sha256": "e35122944d95570f26fe573041e82341c06f3a59a60a59906b04fc8a9786fe88",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Manico.app"
+      ],
+      "architecture_hints": [],
+      "host": "manico.im",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.975,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2885936,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2916352,
+                "size": 2772928,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Manico.app",
+            "bundle_id": "im.manico.Manico",
+            "version": "3.15",
+            "name": "Manico",
+            "min_macos": "14.0",
+            "executable_name": "Manico",
+            "executable_size": 5689280,
+            "installer": null,
+            "bytes_read": 2257393,
+            "reads": 15,
+            "total_size": 4955551,
+            "error": null,
+            "source_etag": "\"6af1ed51-4b9d9f\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "plex-htpc",
+      "url": "https://downloads.plex.tv/htpc/1.71.1.346-f62ce923/macos/PlexHTPC-1.71.1.346-f62ce923-universal.zip",
+      "version": "1.71.1.346,f62ce923",
+      "sha256": "98d7fe76c010945f261ae5ad0f83253973aad834d743fe9d6135f7ae6db165da",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Plex HTPC.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "downloads.plex.tv",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64",
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.388,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2548096,
+                "header_verified": true,
+                "min_macos": "10.14",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2572288,
+                "size": 2417632,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Plex HTPC.app",
+            "bundle_id": "tv.plex.htpc",
+            "version": "1.71.1",
+            "name": "Plex HTPC",
+            "min_macos": "10.12",
+            "executable_name": "Plex HTPC",
+            "executable_size": 4989920,
+            "installer": null,
+            "bytes_read": 1358748,
+            "reads": 14,
+            "total_size": 253961956,
+            "error": null,
+            "source_etag": "\"0ec6d5690c525613880eb7acf0d81b9b-31\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "codexmonitor",
+      "url": "https://github.com/Dimillian/CodexMonitor/releases/download/v0.7.66/CodexMonitor.app.tar.gz",
+      "version": "0.7.66",
+      "sha256": "e24ba50bb4e301693ec16705419bbca9f77b9c60ec3c0f8bf830b29d1494bc1f",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Codex Monitor.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        }
+      ],
+      "host": "github.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.234,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": "Codex Monitor.app",
+            "bundle_id": "com.dimillian.codexmonitor",
+            "version": "0.7.66",
+            "name": "Codex Monitor",
+            "min_macos": "10.13",
+            "executable_name": "codex-monitor",
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 22893892,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DE881B54200C42\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "workspaces",
+      "url": "https://www.apptorium.com/public/products/workspaces/releases/Workspaces-2.3.zip",
+      "version": "2.3",
+      "sha256": "eff13cfff0c139eeb7c457297c07a16a65253ad56f9c88a592d228fcae8e6336",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Workspaces.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.apptorium.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 3.236,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 4015584,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 4046848,
+                "size": 3740432,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Workspaces.app",
+            "bundle_id": "com.apptorium.Workspaces2-paddle",
+            "version": "2.3",
+            "name": "Workspaces",
+            "min_macos": "14.0",
+            "executable_name": "Workspaces",
+            "executable_size": 7787280,
+            "installer": null,
+            "bytes_read": 2264885,
+            "reads": 15,
+            "total_size": 31181466,
+            "error": null,
+            "source_etag": "\"1dbca9a-6a9a873b-7058d56f1c22a1a5;;;\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "mini-vmac",
+      "url": "https://www.gryphel.com/d/minivmac/minivmac-36.04/minivmac-36.04-mc64.bin.tgz",
+      "version": "36.04",
+      "sha256": "e8564a9827fe6a616489e29ee89f4bae85d4ecde76ea982e4a86af56b0108662",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Mini vMac.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.gryphel.com",
+      "category": "host_200_to_range",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.261,
+          "exit_code": 1,
+          "category": "host_200_to_range",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 200 OK (expected 206)"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "tiptoi-manager",
+      "url": "https://files.tiptoi.ravensburger.cloud/Installer/5.3/tiptoi_Manager_Installer.pkg",
+      "version": "5.3",
+      "sha256": "62dc38a2f41c7a2db310a6c8f2ed7a77dd27222f02645bdd778d086076c454cc",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "files.tiptoi.ravensburger.cloud",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 4.674,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "tiptoi® Manager",
+              "host_architectures": [],
+              "package_id": "com.ravensburger.tiptoi.TipToiBindings",
+              "package_version": "1.0.0",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 62917291,
+            "error": "byte budget reached",
+            "source_etag": "\"5e25a8372d0e69f91bc17049a17783c8\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "dintch",
+      "url": "https://eclecticlight.co/wp-content/uploads/2025/07/dintch18.zip",
+      "version": "1.8,2025.07",
+      "sha256": "4f336dcfc77fcc2c253a1d3b0684a47a1281f6e9fb9bb1b70040b6d27f5edd41",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "dintch18/Dintch.app"
+      ],
+      "architecture_hints": [],
+      "host": "eclecticlight.co",
+      "category": "host_200_to_range",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.176,
+          "exit_code": 1,
+          "category": "host_200_to_range",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 200 OK (expected 206)"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "fidelity-trader+",
+      "url": "https://digital.fidelity.com/stgw/digital/atp-mac/FidelityTraderPlus.pkg",
+      "version": "5.3.3",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "digital.fidelity.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.394,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Fidelity Trader+.app/Contents/MacOS/Fidelity Trader+",
+                "size": 841197888,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 13789264,
+                    "header_verified": true,
+                    "min_macos": null,
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 13811712,
+                    "size": 827386176,
+                    "header_verified": true,
+                    "min_macos": null,
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "Fidelity Trader+",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.fidelity.activetrader",
+              "package_version": "5.3.3",
+              "min_macos": "12.0"
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 287497653,
+            "error": "byte budget reached",
+            "source_etag": "\"7966ae8054b7df10d73a31c67ba9fb91\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "zerotier-one",
+      "url": "https://download.zerotier.com/RELEASES/1.16.2/dist/ZeroTier%20One.pkg",
+      "version": "1.16.2",
+      "sha256": "13b5054c0b51e337970e83da6f32bd245a70a5dd92421b08dadbefcaadf2f37f",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "download.zerotier.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.032,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "pkg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2332640,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2359296,
+                "size": 2184608,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Applications/ZeroTier.app",
+            "bundle_id": "com.zerotier.ZeroTier-UI",
+            "version": "1.16.1",
+            "name": "ZeroTier",
+            "min_macos": "10.10",
+            "executable_name": "ZeroTier",
+            "executable_size": 4543904,
+            "installer": {
+              "title": "ZeroTier One",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.zerotier.pkg.ZeroTierOne",
+              "package_version": "1.16.2",
+              "min_macos": null
+            },
+            "bytes_read": 7697754,
+            "reads": 19,
+            "total_size": 7709483,
+            "error": null,
+            "source_etag": "\"6a171f5a-75a32b\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "keycue",
+      "url": "https://www.ergonis.com/downloads/products/keycue/KeyCue1121-Install.dmg",
+      "version": "11.2.1",
+      "sha256": "22cd3f36c7327b92405569ab9d548e0fbc8d834d7cab99be84ef5176e0b5abff",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "KeyCue.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.ergonis.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.199,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2538832,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2555904,
+                "size": 2390288,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "KeyCue.app",
+            "bundle_id": "com.macility.keycue",
+            "version": "11.2.1",
+            "name": null,
+            "min_macos": "13.0",
+            "executable_name": "KeyCue",
+            "executable_size": 4946192,
+            "installer": null,
+            "bytes_read": 1448658,
+            "reads": 8,
+            "total_size": 4391216,
+            "error": null,
+            "source_etag": "\"bd65a1c318c3e8213b1b85b51cb9fdbd\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "fabfilter-timeless",
+      "url": "https://cdn-b.fabfilter.com/downloads/fftimeless310.dmg",
+      "version": "3.10",
+      "sha256": "7f0d65e013ad2992cfcbbd5f1c64b81af09178be10e25675fa94cc772f8e82f0",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "cdn-b.fabfilter.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.398,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 656523,
+            "reads": 6,
+            "total_size": 22061225,
+            "error": "not found: app at the APFS volume root",
+            "source_etag": "\"69e0bc27-150a0a9\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "terminal-browser",
+      "url": "https://terminal-browser.sh/install/dl/stable/v0.16.1/terminal-browser-darwin-arm64.tar.gz",
+      "version": "0.16.1",
+      "sha256": "7415324cac9182c672b25fd900673d68a6d99ced0718391a947962ca565e8614",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "terminal-browser.sh",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.001,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": "terminal-browser/electron/terminal-browser.app",
+            "bundle_id": "dev.zenbu.terminal-browser",
+            "version": "44.5.1",
+            "name": "terminal-browser",
+            "min_macos": "13.0",
+            "executable_name": "terminal-browser",
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 143837820,
+            "error": "byte budget reached",
+            "source_etag": "\"a6154d05e9cc25764dcfb4a977a45a9a\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "hancom-word",
+      "url": "https://cdn.hancom.com/pds/hnc/DOWN/HancomOfficeHWPGeneral.pkg",
+      "version": "12.30.0.6544",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "cdn.hancom.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.129,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 5,
+            "reads": 2,
+            "total_size": 82,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"6fa51255a38b6419ab4742978b068574:1731390027.692573\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "slack-cli",
+      "url": "https://downloads.slack-edge.com/slack-cli/slack_cli_4.14.0_macOS_arm64.tar.gz",
+      "version": "4.14.0",
+      "sha256": "b93806166c66cefa8cb3c8142cf1fa97888f47fce439f83676a8a8091bd4fedc",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "downloads.slack-edge.com",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.759,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "tar.gz",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 7651678,
+            "reads": 14,
+            "total_size": 7651679,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"82216cab80c8c2c5ed97ebe9437449b4\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "box-drive",
+      "url": "https://e3.boxcdn.net/desktop/releases/mac/BoxDrive-2.54.172.pkg",
+      "version": "2.54.172",
+      "sha256": "06d4fd378b5afe3f6184d6e9bfc69cb1f2b6eb9044b0a936377fd64b40dd6d73",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "e3.boxcdn.net",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.954,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Box.app/Contents/MacOS/streem",
+                "size": 16427728,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 8253632,
+                    "header_verified": true,
+                    "min_macos": "13.0",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 8273920,
+                    "size": 8153808,
+                    "header_verified": true,
+                    "min_macos": "13.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "Box.app/Contents/MacOS/Box",
+                "size": 186160,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 71264,
+                    "header_verified": true,
+                    "min_macos": "10.9",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 98304,
+                    "size": 87856,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "Box.app/Contents/MacOS/python",
+                "size": 117360,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 26928,
+                    "header_verified": true,
+                    "min_macos": "10.13",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 49152,
+                    "size": 68208,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "Box.app/Contents/MacOS/boxfileproviderctl",
+                "size": 3764912,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 1894144,
+                    "header_verified": true,
+                    "min_macos": "13.0",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 1916928,
+                    "size": 1847984,
+                    "header_verified": true,
+                    "min_macos": "13.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "Box",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.box.desktop.installer.desktop",
+              "package_version": "2.54.172",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 86529017,
+            "error": "byte budget reached",
+            "source_etag": "\"67969534366b2b2408e89c46f39ee8bc-11\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "fujifilm-x-raw-studio",
+      "url": "https://dl.fujifilm-x.com/support/software/x-raw-studio-mac1280-10wt23dg/XRawStudio1280.dmg",
+      "version": "1.28.0,10wt23dg",
+      "sha256": "9963268c999cd9b96c102fcf3673248a6f5c6dd3c428f9da69d8827e163fa634",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "FUJIFILM X RAW STUDIO.app"
+      ],
+      "architecture_hints": [],
+      "host": "dl.fujifilm-x.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 5.026,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 2284512,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 2310144,
+                "size": 2083328,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "FUJIFILM X RAW STUDIO.app",
+            "bundle_id": "com.fujifilm.denji.X-RAW-STUDIO",
+            "version": "1.28.0",
+            "name": "FUJIFILM X RAW STUDIO",
+            "min_macos": "11.0",
+            "executable_name": "FUJIFILM X RAW STUDIO",
+            "executable_size": 4393472,
+            "installer": null,
+            "bytes_read": 36772,
+            "reads": 21,
+            "total_size": 23359413,
+            "error": null,
+            "source_etag": "\"ba5bd88bdd2e172050377aa61733e5f1-2\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "local",
+      "url": "https://cdn.localwp.com/releases-stable/10.2.0+7022/local-10.2.0-mac-arm64.dmg",
+      "version": "10.2.0,7022",
+      "sha256": "845d161115b5d52b9c25fc9c7f0ff0518cf3bb05dd805b9639421283cfb5fb5d",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Local.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "cdn.localwp.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.364,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 52880,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Local.app",
+            "bundle_id": "com.getflywheel.lightning.local",
+            "version": "10.2.0",
+            "name": "Local",
+            "min_macos": "12.0",
+            "executable_name": "Local",
+            "executable_size": 52880,
+            "installer": null,
+            "bytes_read": 984633,
+            "reads": 8,
+            "total_size": 507161226,
+            "error": null,
+            "source_etag": "\"e65d03be6e06e82d71b9c53cc51d41e8\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ti-smartview-ce-for-the-ti-84-plus-family",
+      "url": "https://d13g8g4x8s9rc1.cloudfront.net/downloads/files/cdn/smartview/84ce/6.0.3/TI-SmartView-CE-84-6.0.3.619.dmg",
+      "version": "6.0.3.619",
+      "sha256": "07845acdc00a95e5c2e1b35aa39e81d2a3405cc751a0d0b4346059fae9f5d074",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "d13g8g4x8s9rc1.cloudfront.net",
+      "category": "other",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.357,
+          "exit_code": 1,
+          "category": "other",
+          "scan": {
+            "format": "dmg",
+            "status": "limit_reached",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 51810,
+            "reads": 5,
+            "total_size": 371212621,
+            "error": "scan limit: APFS checkpoint ring exceeds 128 blocks",
+            "source_etag": "\"37c5ea9741bfa239f9b0046031d1fe25-22\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "yubihsm2-sdk",
+      "url": "https://developers.yubico.com/YubiHSM2/Releases/yubihsm2-sdk-2026-04-darwin-arm64.pkg",
+      "version": "2026-04",
+      "sha256": "2f8e80e97acdb3e2bad353e545ff799b7951d8d13a8c313cf212b4554c9e0612",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "developers.yubico.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.393,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "yubihsm2-sdk",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.yubico.yubihsm2-sdk",
+              "package_version": "0",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 15361954,
+            "error": "byte budget reached",
+            "source_etag": "\"187800713154d4798114119004122922\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "nosqlbooster-for-mongodb",
+      "url": "https://s3.nosqlbooster.com/download/releasesv11/nosqlbooster4mongo-11.2.1-arm64.dmg",
+      "version": "11.2.1",
+      "sha256": "1fef04fea9f22085263d9d60438b56a8cf437fde3a40a3d69cf992e1268c9393",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "NoSQLBooster for MongoDB.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "s3.nosqlbooster.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.67,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 52848,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "NoSQLBooster for MongoDB.app",
+            "bundle_id": "com.nosqlbooster.mongodb",
+            "version": "11.2.1",
+            "name": "NoSQLBooster for MongoDB",
+            "min_macos": "12.0",
+            "executable_name": "NoSQLBooster for MongoDB",
+            "executable_size": 52848,
+            "installer": null,
+            "bytes_read": 1672990,
+            "reads": 7,
+            "total_size": 164135163,
+            "error": null,
+            "source_etag": "\"c8afcde821c901974ba6fafec1c32cd1-20\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "corretto@17",
+      "url": "https://corretto.aws/downloads/resources/17.0.21.1.2/amazon-corretto-17.0.21.1.2-macosx-aarch64.pkg",
+      "version": "17.0.21.1.2",
+      "sha256": "1efbae722a9252160db779fa1a6f3b6aa8cd8958dae33520099b85d5d81b16bb",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "corretto.aws",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.801,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "Amazon Corretto 17",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "com.amazon.corretto.17",
+              "package_version": "17.0.21.1.2",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 187110305,
+            "error": "byte budget reached",
+            "source_etag": "\"500d01668237e2efb7ea93d295834dcc\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "waveforms",
+      "url": "https://files.digilent.com/Software/Waveforms/3.25.1/digilent.waveforms_v3.25.1.dmg",
+      "version": "3.25.1",
+      "sha256": "84d213276e45309b4523e4ddf2fca76945402b06fb0794f0e849f803f73812cb",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "WaveForms.app"
+      ],
+      "architecture_hints": [],
+      "host": "files.digilent.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 5.507,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 14436912,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 14467072,
+                "size": 13395904,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "WaveForms.app",
+            "bundle_id": "com.digilent.waveforms",
+            "version": "3.25.1",
+            "name": null,
+            "min_macos": "12.0",
+            "executable_name": "WaveForms",
+            "executable_size": 27862976,
+            "installer": null,
+            "bytes_read": 746275,
+            "reads": 9,
+            "total_size": 130138409,
+            "error": null,
+            "source_etag": "\"3c0329cc45a0c29bdd46d043c939b337-8\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "final-fantasy-xiv-online",
+      "url": "https://gdl.square-enix.com/ffxiv/inst/pnvdkzgk77dj10/FINAL_FANTASY_XIV_ONLINE_x64.dmg",
+      "version": "pnvdkzgk77dj10",
+      "sha256": "bbf756f78e9606779972d3c8d0864d665eecfcda4dfbe6260ae0a6b63f84cb65",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "FINAL FANTASY XIV ONLINE.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "gdl.square-enix.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [
+            "x86_64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.737,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 274336,
+                "header_verified": true,
+                "min_macos": "10.12",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "FINAL FANTASY XIV ONLINE.app",
+            "bundle_id": "com.square-enix.finalfantasyxiv",
+            "version": "1.0.8",
+            "name": "FINAL FANTASY XIV ONLINE",
+            "min_macos": "10.12",
+            "executable_name": "FINAL FANTASY XIV ONLINE",
+            "executable_size": 274336,
+            "installer": null,
+            "bytes_read": 42397,
+            "reads": 14,
+            "total_size": 2551387063,
+            "error": null,
+            "source_etag": "\"466a4d134a3c5e10841ec16c7c33558c:1656996009.229408\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "1password-cli@beta",
+      "url": "https://cache.agilebits.com/dist/1P/op2/pkg/v2.44.0-beta.02/op_darwin_arm64_v2.44.0-beta.02.zip",
+      "version": "2.44.0-beta.02",
+      "sha256": "050f3ae96b5da8610d4e8232bc1bd79c96d2357eedf029e86437fb6b511a8ad6",
+      "expected_format": "zip",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "cache.agilebits.com",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.659,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "zip",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 175,
+            "reads": 4,
+            "total_size": 15303898,
+            "error": "not found: app Info.plist in ZIP central directory",
+            "source_etag": "\"b69a24ddf18bd6018afcfcc28c38d5ae-2\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "vivaldi",
+      "url": "https://downloads.vivaldi.com/stable-auto/Vivaldi.8.3.4191.47.universal.tar.xz",
+      "version": "8.3.4191.47",
+      "sha256": "de510e5f1bdc203b9fdaca5b2c277d0c67533808a6fff3039b22f6244b4058e3",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Vivaldi.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "downloads.vivaldi.com",
+      "category": "unsupported_container",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.222,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 234545592,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"6affef8c-dfae1b8\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "jumpshare",
+      "url": "https://apps.jumpshare.com/desktop/mac/3.6.0-234/updates/v2/Jumpshare-3.6.0.tar.bz2",
+      "version": "3.6.0,234",
+      "sha256": "c2805646d9e09f536b19f29401b301a91a84d704bf471e4b37d67c82805a8e87",
+      "expected_format": "tar.bz2",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Jumpshare.app"
+      ],
+      "architecture_hints": [],
+      "host": "apps.jumpshare.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.239,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 69637949,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"dddad8f07903d45b07d22c3b490c296e-9\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "cave-story",
+      "url": "https://www.cavestory.org/downloads/cavestory_010_r2.dmg",
+      "version": "0.1.0,2",
+      "sha256": "30e32c5123b984d0733a1e1e510a1255d511e69b694c4227119c69161ba1dc55",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Doukutsu.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.cavestory.org",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.575,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 10020864,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"6b028377-98e800\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "color-oracle",
+      "url": "https://colororacle.org/ColorOracleMac.zip",
+      "version": "1.3",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Color Oracle.app"
+      ],
+      "architecture_hints": [],
+      "host": "colororacle.org",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.758,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 0,
+                "size": 96560,
+                "header_verified": true,
+                "min_macos": "10.9",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Color Oracle.app",
+            "bundle_id": "ch.ethz.ika.colororacle",
+            "version": "1.3.0",
+            "name": null,
+            "min_macos": "10.9",
+            "executable_name": "Color Oracle",
+            "executable_size": 96560,
+            "installer": null,
+            "bytes_read": 44264,
+            "reads": 10,
+            "total_size": 191936,
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "cask": "touchswitcher",
+      "url": "https://hazeover.com/touchswitcher/TouchSwitcher-1.4.8.txz",
+      "version": "1.4.8",
+      "sha256": "78aa139d5b9e0ac16b340019d05cb897929c6e0a57733394496748e3724d5775",
+      "expected_format": "txz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "TouchSwitcher.app"
+      ],
+      "architecture_hints": [],
+      "host": "hazeover.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.335,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 970120,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"6aff6f2f-ecd88\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "jabra-direct",
+      "url": "https://jabraxpressonlineprod.blob.core.windows.net/jdo/JabraDirectSetup.dmg",
+      "version": "8.4.30601",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "jabraxpressonlineprod.blob.core.windows.net",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.619,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "dmg",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 49115,
+            "reads": 6,
+            "total_size": 270448755,
+            "error": "not found: app at the APFS volume root"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "send-to-kindle",
+      "url": "https://sendtokindle.s3.amazonaws.com/SendToKindleForMac-installer.pkg",
+      "version": "1.1.1.259",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "sendtokindle.s3.amazonaws.com",
+      "category": "http_403",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.232,
+          "exit_code": 1,
+          "category": "http_403",
+          "scan": {
+            "format": null,
+            "status": "source_error",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 0,
+            "reads": 1,
+            "total_size": 0,
+            "error": "source: range 0-0: HTTP 403 Forbidden (expected 206)"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "gcloud-cli",
+      "url": "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-594.0.1-darwin-arm.tar.gz",
+      "version": "594.0.1",
+      "sha256": "2e51f02d41d0d5f405e64f4db55f75dbc71de0c92ee4172c67a3d418427775a1",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary",
+        "installer"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "dl.google.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.807,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 54888757,
+            "error": "byte budget reached",
+            "source_etag": "\"7343d8b\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "farrago",
+      "url": "https://cdn.rogueamoeba.com/farrago/download/Farrago.zip",
+      "version": "2.2.0",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Farrago.app"
+      ],
+      "architecture_hints": [],
+      "host": "cdn.rogueamoeba.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.779,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 4846272,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 4866048,
+                "size": 4706976,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Farrago.app",
+            "bundle_id": "com.rogueamoeba.farrago",
+            "version": "2.2.0",
+            "name": "Farrago",
+            "min_macos": "14.0.0",
+            "executable_name": "Farrago",
+            "executable_size": 9573024,
+            "installer": null,
+            "bytes_read": 2276451,
+            "reads": 17,
+            "total_size": 45891298,
+            "error": null,
+            "source_etag": "\"2bc3ee2-65b0de71a1a04\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "bitmuse",
+      "url": "https://updates.bitmuse.app/BitMuse-1.6.4.dmg",
+      "version": "1.6.4",
+      "sha256": "978a4fb42109716f189084f690f7ca0129c709159dcbf6095bf0c6fb4369a00a",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "BitMuse.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        }
+      ],
+      "host": "updates.bitmuse.app",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.012,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 20439952,
+                "header_verified": true,
+                "min_macos": "15.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "BitMuse.app",
+            "bundle_id": "com.bitmuse.app",
+            "version": "1.6.4",
+            "name": "BitMuse",
+            "min_macos": "15.0",
+            "executable_name": "BitMuse",
+            "executable_size": 20439952,
+            "installer": null,
+            "bytes_read": 1120043,
+            "reads": 7,
+            "total_size": 36721326,
+            "error": null,
+            "source_etag": "\"6b0442b6-23052ae\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "jdk-mission-control",
+      "url": "https://download.java.net/java/GA/jmc9/05/binaries/jmc-9.1.2_macos-aarch64.tar.gz",
+      "version": "9.1.2,05",
+      "sha256": "c31c384e1d41e03a24826f0b3c6719f82538ee3a0045dee633e2922b38074676",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "jmc-9.1.2_macos-aarch64/JDK Mission Control.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "download.java.net",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 6.396,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "jmc-9.1.2_macos-aarch64/JDK Mission Control.app/Contents/MacOS/jmc",
+                "size": 76720,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 76720,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 107416900,
+            "error": "byte budget reached",
+            "source_etag": "\"2580689b27bf4a519881090c113daf16:1768524613.021784\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "sqlitemanager",
+      "url": "https://www.sqlabs.com/download/SQLiteManager.zip",
+      "version": "4.9.2",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "SQLiteManager.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.sqlabs.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 11.257,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 24947104,
+                "header_verified": true,
+                "min_macos": "10.10",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 24969216,
+                "size": 21119248,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "SQLiteManager.app",
+            "bundle_id": "com.sqlabs.sqlitemanager4",
+            "version": "4.9.2",
+            "name": "SQLiteManager",
+            "min_macos": "10.14",
+            "executable_name": "SQLiteManager",
+            "executable_size": 46088464,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 21,
+            "total_size": 36401907,
+            "error": null,
+            "source_etag": "\"22b72f3-6286bfd855373\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "kaleidoscope@2",
+      "url": "https://updates.kaleidoscope.app/v2/prod/Kaleidoscope-2.4.5-1457-dec-20-2021.app.zip",
+      "version": "2.4.5,1457,dec-20-2021",
+      "sha256": "bbe5afc9f9292309527b6149e832c85460624e330c0768cd706d0629e0755611",
+      "expected_format": "zip",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "Kaleidoscope.app"
+      ],
+      "architecture_hints": [],
+      "host": "updates.kaleidoscope.app",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.014,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "zip",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 0,
+                "size": 6231376,
+                "header_verified": true,
+                "min_macos": "10.12",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Kaleidoscope.app",
+            "bundle_id": "com.blackpixel.kaleidoscope",
+            "version": "2.4.5",
+            "name": "Kaleidoscope",
+            "min_macos": "10.12",
+            "executable_name": "Kaleidoscope",
+            "executable_size": 6231376,
+            "installer": null,
+            "bytes_read": 246929,
+            "reads": 10,
+            "total_size": 26949340,
+            "error": null,
+            "source_etag": "\"121e2bda91946b9b3bddd41f9bd4611f\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "mellel",
+      "url": "https://d1riogbqt3a9uw.cloudfront.net/mellel_68101.dmg",
+      "version": "6.8.1,68101",
+      "sha256": "a5e09f2f8ec2157a721584f59bbd74a388181d20070f6d1d8cd0963ca21a53da",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Mellel 6.app"
+      ],
+      "architecture_hints": [],
+      "host": "d1riogbqt3a9uw.cloudfront.net",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.076,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 8891488,
+                "header_verified": true,
+                "min_macos": "10.13",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 8912896,
+                "size": 7787344,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Mellel 6.app",
+            "bundle_id": "com.redlex.mellel.mac",
+            "version": "6.8.1",
+            "name": "Mellel 6",
+            "min_macos": "10.13",
+            "executable_name": "Mellel 6",
+            "executable_size": 16700240,
+            "installer": null,
+            "bytes_read": 816115,
+            "reads": 10,
+            "total_size": 108135266,
+            "error": null,
+            "source_etag": "\"14b69a741f4d17ba7f25e26f81c24303\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "caldera-amp",
+      "url": "https://releases.caldera.homes/music/amp/macos/v1.1.1/CalderaAmp-1.1.1.dmg",
+      "version": "1.1.1",
+      "sha256": "5b1b2d1760c2ba346e87e6d08ca2d63a93aa8a5a8f9315e5e7349024de9adeb8",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Caldera Amp.app"
+      ],
+      "architecture_hints": [],
+      "host": "releases.caldera.homes",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.232,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 24318624,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 24346624,
+                "size": 22569936,
+                "header_verified": true,
+                "min_macos": "13.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Caldera Amp.app",
+            "bundle_id": "com.nextamp.CalderaAmp",
+            "version": "1.1.1",
+            "name": "Caldera Amp",
+            "min_macos": "13.0",
+            "executable_name": "Caldera Amp",
+            "executable_size": 46916560,
+            "installer": null,
+            "bytes_read": 1390091,
+            "reads": 9,
+            "total_size": 48852245,
+            "error": null,
+            "source_etag": "\"b27c7f0efec2d6ffcdc0de722cf9fd40\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "coscreen",
+      "url": "https://update.coscreen.org/CoScreen-8.11.14-stable-arm64.dmg",
+      "version": "8.11.14",
+      "sha256": "00a91e0532ad699c3eb9b1df6bd56334e161e255026b9776bbe761f65c1e28b5",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "CoScreen.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "update.coscreen.org",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.042,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 53360,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "CoScreen.app",
+            "bundle_id": "org.coscreen.CoScreen",
+            "version": "8.11.14",
+            "name": "CoScreen",
+            "min_macos": "13.2",
+            "executable_name": "CoScreen",
+            "executable_size": 53360,
+            "installer": null,
+            "bytes_read": 636218,
+            "reads": 8,
+            "total_size": 185926953,
+            "error": null,
+            "source_etag": "\"65c466327721454785a461794e3b2f7a-23\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "tailscale-app",
+      "url": "https://pkgs.tailscale.com/stable/Tailscale-1.104.7-macos.pkg",
+      "version": "1.104.7",
+      "sha256": "0ecab60e098d31f9cbd334867474293dc08978154665da75c3f3fe1f8215d6e7",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "pkgs.tailscale.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 5.915,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Tailscale.app/Contents/MacOS/Tailscale",
+                "size": 13346064,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 6842864,
+                    "header_verified": true,
+                    "min_macos": "13.5",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 6864896,
+                    "size": 6481168,
+                    "header_verified": true,
+                    "min_macos": "13.5",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "Tailscale",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "com.tailscale.ipn.macsys",
+              "package_version": "1.104.7",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 34,
+            "total_size": 22369022,
+            "error": "byte budget reached",
+            "source_etag": "\"0ecab60e098d31f9cbd334867474293dc08978154665da75c3f3fe1f8215d6e7\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "orka",
+      "url": "https://cli-builds-public.s3.amazonaws.com/official/4.0.1/orka/macos/arm64/orka.pkg",
+      "version": "4.0.1",
+      "sha256": "1bc042d4cc2378467e02cda275b53bf9f2fe96f6a358d203d751251f66c44409",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "cli-builds-public.s3.amazonaws.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 9.199,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "Orka",
+              "host_architectures": [],
+              "package_id": "com.macstadium.orka.cli.pkg",
+              "package_version": "4.0.1",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 37872215,
+            "error": "byte budget reached",
+            "source_etag": "\"2e353e46e92f52fa1b84be4fde1c27e5-5\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "caldigit-docking-utility",
+      "url": "https://downloads.caldigit.com/CalDigit-Docking-Station-Utility.zip",
+      "version": "1.9.7",
+      "sha256": "no_check",
+      "expected_format": "zip",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "downloads.caldigit.com",
+      "category": "plist_not_found",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.731,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "zip",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 140,
+            "reads": 4,
+            "total_size": 32068377,
+            "error": "not found: app Info.plist in ZIP central directory",
+            "source_etag": "\"3dd9b1b48edd1:0\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "balance-lock",
+      "url": "https://www.tunabellysoftware.com/resources/Balance%20Lock%201.1.dmg",
+      "version": "1.1",
+      "sha256": "c943838667974ad96ff8582334c18754f3c35ceba5692f431f5dfd1cd8284765",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Balance Lock.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.tunabellysoftware.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.117,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 197280,
+                "header_verified": true,
+                "min_macos": "10.12",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 229376,
+                "size": 211552,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Balance Lock.app",
+            "bundle_id": "com.tunabelly.balancelock",
+            "version": "1.1",
+            "name": "Balance Lock",
+            "min_macos": "10.12",
+            "executable_name": "Balance Lock",
+            "executable_size": 440928,
+            "installer": null,
+            "bytes_read": 770115,
+            "reads": 7,
+            "total_size": 8277740,
+            "error": null,
+            "source_etag": "\"7e4eec-5c2690bd61a3c\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "carbide-create",
+      "url": "https://carbide-downloads.website-us-east-1.linodeobjects.com/cc/stable/876/CarbideCreate-876.dmg",
+      "version": "876",
+      "sha256": "d430027fe869d9c8d8ad0c788e68243a91301e12a7dfb2b8853c85be88897e35",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Carbide Create.app"
+      ],
+      "architecture_hints": [],
+      "host": "carbide-downloads.website-us-east-1.linodeobjects.com",
+      "category": "metadata_missing",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.333,
+          "exit_code": 0,
+          "category": "metadata_missing",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 23110560,
+                "header_verified": true,
+                "min_macos": "13.3",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Carbide Create.app",
+            "bundle_id": "com.carbide3d.Carbide Create",
+            "version": null,
+            "name": null,
+            "min_macos": "13.3",
+            "executable_name": "Carbide Create",
+            "executable_size": 23110560,
+            "installer": null,
+            "bytes_read": 763227,
+            "reads": 7,
+            "total_size": 94650557,
+            "error": null,
+            "source_etag": "\"4c5a1b2cf8a4ce446880033398d43f54\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "ollama-binary",
+      "url": "https://github.com/ollama/ollama/releases/download/v0.40.17/ollama-darwin.tgz",
+      "version": "0.40.17",
+      "sha256": "4b9db20d077c5a1e52fb4a6f2e6791f76ae945fd07c9b1a5647c82e927826653",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "github.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.883,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 187626746,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DF4780D4A69D6E\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "lm-studio-bionic",
+      "url": "https://bionic-installers.lmstudio.ai/darwin/arm64/1.2.2-3/Bionic-1.2.2-3-arm64.dmg",
+      "version": "1.2.2,3",
+      "sha256": "f1389439bd8063d2cb09e032c0be33abc8cf5bbcdb3764eb2e6316b2048bb302",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Bionic.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        },
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "bionic-installers.lmstudio.ai",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        },
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.146,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 53344,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Bionic.app",
+            "bundle_id": "ai.elementlabs.bionic",
+            "version": "1.2.2+3",
+            "name": "Bionic",
+            "min_macos": "12.0.0",
+            "executable_name": "Bionic",
+            "executable_size": 53344,
+            "installer": null,
+            "bytes_read": 856869,
+            "reads": 9,
+            "total_size": 964387613,
+            "error": null,
+            "source_etag": "\"5de58088dd4a07edbf1c2efede2e95c4\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "notion-cli",
+      "url": "https://ntn.dev/releases/v0.23.31/ntn-aarch64-apple-darwin.tar.gz",
+      "version": "0.23.31",
+      "sha256": "b83331f482c43d109e5f5c48b8c5f3c3bf63a06f06844437193801e8f23ef1d5",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "binary"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "ntn.dev",
+      "category": "plist_not_found",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.959,
+          "exit_code": 1,
+          "category": "plist_not_found",
+          "scan": {
+            "format": "tar.gz",
+            "status": "not_found",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 5773305,
+            "reads": 12,
+            "total_size": 5773306,
+            "error": "not found: app Info.plist in sequential archive",
+            "source_etag": "\"627e622b693ba68533fa040feebc5ac7\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "smartsynchronize",
+      "url": "https://www.syntevo.com/downloads/smartsynchronize/smartsynchronize-aarch64-4_6_3.dmg",
+      "version": "4.6.3",
+      "sha256": "980d3d4d95d1f19a6eaa15d2564d852107e02ba07cc9c1097e69627b27731c83",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app",
+        "binary"
+      ],
+      "declared_apps": [
+        "SmartSynchronize.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "www.syntevo.com",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 3.952,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 71312,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "SmartSynchronize.app",
+            "bundle_id": "com.syntevo.smartsynchronize",
+            "version": "4.6.3",
+            "name": "SmartSynchronize",
+            "min_macos": "11",
+            "executable_name": "SmartSynchronize",
+            "executable_size": 71312,
+            "installer": null,
+            "bytes_read": 662296,
+            "reads": 7,
+            "total_size": 41853652,
+            "error": null,
+            "source_etag": "\"27ea2d4-63febe5786100\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "bluestacks",
+      "url": "https://ak-build.bluestacks.com/public/app-player/mac/nxt_mac2/5.21.795.7549/af66de44892346fda48a77cf7df20d62/BlueStacksInstaller_5.21.795.7549.pkg",
+      "version": "5.21.795.7549,af66de44892346fda48a77cf7df20d62",
+      "sha256": "6750e1d1cf5fdae6b72f3e30808c1b20d1e5b24d310b22cd2da1e0e1c0c647ae",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any"
+        }
+      ],
+      "host": "ak-build.bluestacks.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.275,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "BlueStacks Air",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "com.now.gg.BlueStacks",
+              "package_version": "5.21.795.7549",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 1030086961,
+            "error": "byte budget reached",
+            "source_etag": "\"c6accf9b0ff35a9f2dfe201c6b46d6df:1795392105.194189\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "serviio",
+      "url": "https://download.serviio.org/releases/serviio-2.5-osx.tar.gz",
+      "version": "2.5",
+      "sha256": "a34474a502ee2e3ea4cbc77ee1326bc1dc6d7d66b7609ca983c2f34c2ac13a9f",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "download.serviio.org",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 26.39,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 173443402,
+            "error": "byte budget reached",
+            "source_etag": "\"be024-a56894a-65257abf73040\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "billy",
+      "url": "https://cdn.amore.computer/releases/com.simonlou.Billy/1.3.0-50/Billy.dmg",
+      "version": "1.3.0,50",
+      "sha256": "17021a426834e06a80a43802eb3111aee93d4d6473a34769ade341c68a9d995b",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Billy.app"
+      ],
+      "architecture_hints": [],
+      "host": "cdn.amore.computer",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.871,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 6151392,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 6176768,
+                "size": 5990800,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Billy.app",
+            "bundle_id": "com.simonlou.Billy",
+            "version": "1.3.0",
+            "name": "Billy",
+            "min_macos": "14.0",
+            "executable_name": "Billy",
+            "executable_size": 12167568,
+            "installer": null,
+            "bytes_read": 809443,
+            "reads": 9,
+            "total_size": 23183259,
+            "error": null,
+            "source_etag": "\"dbdd69ef6dfc676023171861a4d62d1d\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "maru-jan",
+      "url": "https://www.maru-jan.com/download/Inst_MaruJan_Mac.pkg",
+      "version": "23.4.0,8020",
+      "sha256": "no_check",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "www.maru-jan.com",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 11.14,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "Applications/Maru-Jan.app/Contents/MacOS/Maru-Jan",
+                "size": 9262064,
+                "architectures": [
+                  {
+                    "name": "x86_64",
+                    "cpu_type": 16777223,
+                    "cpu_subtype": 3,
+                    "offset": 16384,
+                    "size": 4725024,
+                    "header_verified": true,
+                    "min_macos": "10.13",
+                    "code_signature_present": true
+                  },
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 4751360,
+                    "size": 4510704,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "オンライン麻雀 Maru-Jan",
+              "host_architectures": [],
+              "package_id": "com.signaltalk.mji.macos",
+              "package_version": "1.0.0",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 52686477,
+            "error": "byte budget reached",
+            "source_etag": "\"323ee8d-660948f3019d2\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "izip",
+      "url": "https://www.izip.com/izip.dmg",
+      "version": "26.11",
+      "sha256": "no_check",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "iZip.app"
+      ],
+      "architecture_hints": [],
+      "host": "www.izip.com",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.084,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 3665152,
+                "header_verified": true,
+                "min_macos": "12.4",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 3686400,
+                "size": 3362624,
+                "header_verified": true,
+                "min_macos": "12.4",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "iZip.app",
+            "bundle_id": "com.codeius.izip",
+            "version": "26.11",
+            "name": "iZip",
+            "min_macos": "12.4",
+            "executable_name": "iZip",
+            "executable_size": 7049024,
+            "installer": null,
+            "bytes_read": 1776184,
+            "reads": 9,
+            "total_size": 6953115,
+            "error": null,
+            "source_etag": "\"6a189b-660246bec4780\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "imageoptim",
+      "url": "https://imageoptim.com/ImageOptim1.9.3.tar.xz",
+      "version": "1.9.3",
+      "sha256": "d4e453bbb55b6491d519a30e0e6de5beb7ce1a929e8f835767b638ef6ffd371d",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "ImageOptim.app"
+      ],
+      "architecture_hints": [],
+      "host": "imageoptim.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.114,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 3858908,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"653e8712-3ae1dc\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "wpsoffice-cn",
+      "url": "https://package.mac.wpscdn.cn/mac_wps_pkg/12.1.29697/WPS_Office_12.1.29697(29697)_arm64.dmg",
+      "version": "12.1.29697",
+      "sha256": "78e7d9d71d295b18ed80f9c062b54d6bbed2eabfd21f969030082e439b73a792",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "wpsoffice.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "package.mac.wpscdn.cn",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 7.742,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 212416,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "wpsoffice.app",
+            "bundle_id": "com.kingsoft.wpsoffice.mac",
+            "version": "12.1.29697",
+            "name": "wpsoffice",
+            "min_macos": "10.13",
+            "executable_name": "wpsoffice",
+            "executable_size": 212416,
+            "installer": null,
+            "bytes_read": 1052211,
+            "reads": 12,
+            "total_size": 1157295682,
+            "error": null,
+            "source_etag": "\"8d98d762e7007cb4d564be79ea57f542\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "purei-play",
+      "url": "https://purei.org/downloads/play/stable/0.72/Play.dmg",
+      "version": "0.72",
+      "sha256": "ad9e03164a5bfe79c99e6d9d8c04db7b706a749eba29b33bef39bb7db2a36f36",
+      "expected_format": "dmg",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Play.app"
+      ],
+      "architecture_hints": [],
+      "host": "purei.org",
+      "category": "verified",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.226,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "dmg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 6113456,
+                "header_verified": true,
+                "min_macos": "10.15",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 6144000,
+                "size": 5227856,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "Play.app",
+            "bundle_id": "com.virtualapplications.Play",
+            "version": "0.72",
+            "name": "Play!",
+            "min_macos": "10.15",
+            "executable_name": "Play",
+            "executable_size": 11371856,
+            "installer": null,
+            "bytes_read": 792226,
+            "reads": 9,
+            "total_size": 28581077,
+            "error": null,
+            "source_etag": "\"1b41cd5-64910690c92c0\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "jamie",
+      "url": "https://github.com/meetjamie/releases/releases/download/app-v5.8.0/Jamie_5.8.0_universal.app.tar.gz",
+      "version": "5.8.0",
+      "sha256": "e4acf288ff14e3f3766c005e43f84064620f2dbdcac4b24e1badab3539989c72",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "Jamie.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "github.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 1.645,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": "Jamie.app",
+            "bundle_id": "com.jamie.app",
+            "version": "5.8.0",
+            "name": "Jamie",
+            "min_macos": "14.2",
+            "executable_name": "Jamie",
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 31851858,
+            "error": "byte budget reached",
+            "source_etag": "\"0x8DF359DC487A814\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "liclipse",
+      "url": "https://www.mediafire.com/file_premium/o9ccnc5f0ks4dgq/liclipse_12.0.1_macosx.cocoa.aarch64.tar.gz",
+      "version": "12.0.1,o9ccnc5f0ks4dgq",
+      "sha256": "d0ecbe035cf7a0684d5e2481ac967b23d6c2fc42330f062bb0485c09dc25d931",
+      "expected_format": "tar.gz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "LiClipse_Aarch64/LiClipse.app"
+      ],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "www.mediafire.com",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 5.369,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "tar.gz",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": "LiClipse_Aarch64/LiClipse.app",
+            "bundle_id": "com.brainwy.liclipse.rcp.product",
+            "version": "12.0.1",
+            "name": "LiClipse",
+            "min_macos": null,
+            "executable_name": "LiClipse",
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 8388608,
+            "reads": 14,
+            "total_size": 198032746,
+            "error": "byte budget reached"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "xiv-on-mac",
+      "url": "https://softwareupdate.xivmac.com/sites/default/files/update_data/XIV%20on%20Mac5.5.1.tar.xz",
+      "version": "5.5.1",
+      "sha256": "b478b4c8865e773f82803a5aad9bbb67e179943f0da216a3d45b9193c218cfaa",
+      "expected_format": "tar.xz",
+      "artifact_types": [
+        "app"
+      ],
+      "declared_apps": [
+        "XIV on Mac.app"
+      ],
+      "architecture_hints": [],
+      "host": "softwareupdate.xivmac.com",
+      "category": "unsupported_container",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.871,
+          "exit_code": 1,
+          "category": "unsupported_container",
+          "scan": {
+            "format": null,
+            "status": "unsupported",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": null,
+            "bytes_read": 517,
+            "reads": 3,
+            "total_size": 76115516,
+            "error": "unsupported: unrecognized file format",
+            "source_etag": "\"6aaa9705-4896e3c\""
+          }
+        }
+      ]
+    },
+    {
+      "cask": "swi-prolog-app",
+      "url": "https://www.swi-prolog.org/download/stable/bin/swipl-11.0.0-1.fat.pkg",
+      "version": "11.0.0-1",
+      "sha256": "6085ea66dc4a08d95a6343df99aa5d9c491faf93504b300cebaab4c59fd69147",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "binary",
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [],
+      "host": "www.swi-prolog.org",
+      "category": "budget_hit",
+      "comparison": [],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 6.82,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "installer": {
+              "title": "SWI-Prolog 11.0.0",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "org.swi-prolog.swipl-win.pkg",
+              "package_version": "11.0.0",
+              "min_macos": null
+            },
+            "bytes_read": 8388608,
+            "reads": 19,
+            "total_size": 39841201,
+            "error": "byte budget reached"
+          }
+        }
+      ]
+    },
+    {
+      "cask": "filebot",
+      "url": "https://get.filebot.net/filebot/FileBot_5.3.0/FileBot_5.3.0_arm64.pkg",
+      "version": "5.3.0",
+      "sha256": "165ad8a6938197f0903637d35d1d09ad6f251d76c1c39ac25f621ba346e75768",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "get.filebot.net",
+      "category": "budget_hit",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [],
+          "verdict": "unavailable"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 2.011,
+          "exit_code": 1,
+          "category": "budget_hit",
+          "scan": {
+            "format": "pkg",
+            "status": "budget_exhausted",
+            "architectures": [],
+            "bundle_path": null,
+            "bundle_id": null,
+            "version": null,
+            "name": null,
+            "min_macos": null,
+            "executable_name": null,
+            "executable_size": null,
+            "candidate_executables": [
+              {
+                "path": "FileBot.app/Contents/MacOS/7zz",
+                "size": 3006480,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 3006480,
+                    "header_verified": true,
+                    "min_macos": "26.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "FileBot.app/Contents/MacOS/libjnidispatch.dylib",
+                "size": 178064,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 178064,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "FileBot.app/Contents/MacOS/filebot.launcher",
+                "size": 73632,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 73632,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "FileBot.app/Contents/MacOS/fpcalc",
+                "size": 2235136,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 2235136,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "FileBot.app/Contents/MacOS/libjcocoa.dylib",
+                "size": 77776,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 77776,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              },
+              {
+                "path": "FileBot.app/Contents/MacOS/libmediainfo.dylib",
+                "size": 8959696,
+                "architectures": [
+                  {
+                    "name": "arm64",
+                    "cpu_type": 16777228,
+                    "cpu_subtype": 0,
+                    "offset": 0,
+                    "size": 8959696,
+                    "header_verified": true,
+                    "min_macos": "11.0",
+                    "code_signature_present": true
+                  }
+                ]
+              }
+            ],
+            "installer": {
+              "title": "FileBot 5.3.0",
+              "host_architectures": [
+                "arm64"
+              ],
+              "package_id": "net.filebot.FileBot.pkg",
+              "package_version": "5.3.0",
+              "min_macos": "10.15"
+            },
+            "bytes_read": 8388608,
+            "reads": 37,
+            "total_size": 48043468,
+            "error": "byte budget reached",
+            "source_etag": "\"2dd15cc-65b172d9e7a00\""
+          }
+        }
+      ]
+    }
+  ]
+}

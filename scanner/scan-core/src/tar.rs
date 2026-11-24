@@ -1,6 +1,5 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, decode::DecodeBudget, inflate::Inflate,
-    stream_bundle::StreamBundle,
+    ReadAt, Result, ScanError, ScanResult, Target, check_range, stream_bundle::StreamBundle,
 };
 
 const BLOCK: usize = 512;
@@ -8,18 +7,16 @@ const MAX_METADATA: u64 = 64 * 1024;
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
-    work: &mut DecodeBudget,
+    target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
-    let size = input.size();
-    let mut stream = Inflate::gzip(Window::new(input, 0, size)?, work)?;
     let mut pos = 0;
     let mut next_path = None;
     let mut next_size = None;
-    let mut bundle = StreamBundle::default();
+    let mut bundle = StreamBundle::new(target);
 
     for _ in 0..250_000 {
-        let header = stream.read_at(pos, BLOCK).await?;
+        let header = input.read_at(pos, BLOCK).await?;
         if header.iter().all(|byte| *byte == 0) {
             return Err(bundle.missing());
         }
@@ -31,7 +28,7 @@ pub(crate) async fn scan(
                 if size > MAX_METADATA {
                     return Err(ScanError::Limit("tar extended header exceeds 64 KiB"));
                 }
-                let extension = stream.read_at(start, size as usize).await?;
+                let extension = input.read_at(start, size as usize).await?;
                 if header[156] == b'L' {
                     next_path = text(&extension);
                 } else if header[156] == b'x' {
@@ -43,11 +40,18 @@ pub(crate) async fn scan(
             kind => {
                 size = next_size.take().unwrap_or(size);
                 let path = next_path.take().or_else(|| header_path(&header));
-                if matches!(kind, b'0' | 0)
-                    && let Some(path) = path
-                    && bundle.file(&mut stream, &path, start, size, out).await?
-                {
-                    return Ok(());
+                if let Some(path) = path {
+                    match kind {
+                        b'0' | 0 if bundle.file(input, &path, start, size, out).await? => {
+                            return Ok(());
+                        }
+                        b'1' | b'2' if bundle.is_executable_path(&path) => {
+                            return Err(ScanError::Unsupported(
+                                "declared tar executable is a link",
+                            ));
+                        }
+                        _ => (),
+                    }
                 }
             }
         }
@@ -55,11 +59,16 @@ pub(crate) async fn scan(
             .checked_add(BLOCK as u64 - 1)
             .map(|n| n / BLOCK as u64 * BLOCK as u64)
             .ok_or(ScanError::Invalid("tar member size overflow"))?;
-        pos = start
-            .checked_add(padded)
-            .ok_or(ScanError::Invalid("tar offset overflow"))?;
+        check_range(input.size(), start, padded)?;
+        pos = start + padded;
     }
     Err(ScanError::Limit("tar exceeds 250,000 entries"))
+}
+
+pub(crate) fn is_header(header: &[u8]) -> bool {
+    header.len() == BLOCK
+        && matches!(&header[257..263], b"ustar\0" | b"ustar ")
+        && check_header(header).is_ok()
 }
 
 fn check_header(header: &[u8]) -> Result<()> {

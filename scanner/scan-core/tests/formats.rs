@@ -1,5 +1,6 @@
 use scan_core::{
-    ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, scan, scan_with_limits,
+    ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, Target, scan, scan_target,
+    scan_with_limits,
 };
 use std::{
     future::Future,
@@ -157,6 +158,106 @@ fn stored_zip_seeks_to_bundle_executable() {
 }
 
 #[test]
+fn declared_targets_verify_named_bundles_and_binaries() {
+    for artifact in [
+        ZIP,
+        include_bytes!("../../fixtures/app.tar.gz"),
+        include_bytes!("../../fixtures/hfsx.dmg"),
+        include_bytes!("../../fixtures/apfs.dmg"),
+        include_bytes!("../../fixtures/gzip-newc.pkg"),
+    ] {
+        let result = ready(scan_target(
+            &mut Memory(artifact),
+            u64::MAX,
+            Target::Bundle("Fixture.app"),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+        let binary = ready(scan_target(
+            &mut Memory(artifact),
+            u64::MAX,
+            Target::Executable(path),
+        ));
+        assert!(matches!(binary.status, Status::Complete), "{binary:?}");
+        assert_eq!(binary.executable_path.as_deref(), Some(path));
+        assert!(binary.bundle_id.is_none());
+        assert_eq!(binary.architectures.len(), 2);
+    }
+    let missing = ready(scan_target(
+        &mut Memory(ZIP),
+        u64::MAX,
+        Target::Bundle("Different.app"),
+    ));
+    assert!(matches!(missing.status, Status::NotFound));
+}
+
+#[test]
+fn nested_packages_and_images_keep_the_outer_format_and_named_app() {
+    for (format, inside, artifact) in [
+        (
+            "dmg",
+            "Fixture.pkg",
+            include_bytes!("../../fixtures/nested-pkg.dmg").as_slice(),
+        ),
+        (
+            "pkg",
+            "Component.pkg",
+            include_bytes!("../../fixtures/nested-flat.pkg").as_slice(),
+        ),
+        (
+            "zip",
+            "Wrapper/Fixture.dmg",
+            include_bytes!("../../fixtures/nested-dmg.zip").as_slice(),
+        ),
+        (
+            "zip",
+            "Fixture.pkg/Contents/Archive.pax.gz",
+            include_bytes!("../../fixtures/nested-legacy.zip").as_slice(),
+        ),
+    ] {
+        let result = ready(scan_target(
+            &mut Memory(artifact),
+            1024 * 1024,
+            Target::Bundle("Fixture.app"),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some(format));
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.nested_artifacts, [inside]);
+        assert_eq!(result.architectures.len(), 2);
+    }
+}
+
+#[test]
+fn installer_distribution_exposes_a_remote_component_without_scanning_it() {
+    let artifact = include_bytes!("../../fixtures/remote-component.xar");
+    let result = run(artifact, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported));
+    assert_eq!(
+        result.error.as_deref(),
+        Some("unsupported: installer Distribution references remote package components")
+    );
+    assert_eq!(
+        result.installer.unwrap().remote_components,
+        ["https://example.invalid/component.pkg"]
+    );
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn zip_supports_bzip2_and_zip_framed_lzma_members() {
+    for artifact in [
+        include_bytes!("../../fixtures/bzip2.zip").as_slice(),
+        include_bytes!("../../fixtures/lzma.zip").as_slice(),
+    ] {
+        let result = run(artifact, 64 * 1024);
+        assert_eq!(result.format, Some("zip"));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
 fn zip64_with_comment_reads_binary_plist_and_deflated_executable() {
     let result = run(ZIP64, ZIP64.len() as u64 - 1);
     assert_eq!(result.format, Some("zip"));
@@ -176,6 +277,50 @@ fn zip_budget_preserves_bundle_fields_before_executable() {
 
 const TAR: &[u8] = include_bytes!("../../fixtures/app.tar.gz");
 const TAR_REVERSED: &[u8] = include_bytes!("../../fixtures/app-binary-first.tar.gz");
+
+#[test]
+fn tar_walks_plain_bzip2_and_xz_headers() {
+    for (format, artifact) in [
+        ("tar", include_bytes!("../../fixtures/app.tar").as_slice()),
+        (
+            "tar.bz2",
+            include_bytes!("../../fixtures/app.tar.bz2").as_slice(),
+        ),
+        (
+            "tar.xz",
+            include_bytes!("../../fixtures/app.tar.xz").as_slice(),
+        ),
+    ] {
+        let result = run(artifact, 8 * 1024);
+        assert_eq!(result.format, Some(format));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
+fn pkg_recovers_bom_checked_late_plist_and_scans_the_named_binary() {
+    let artifact = include_bytes!("../../fixtures/late-bom.pkg");
+    let budget = 600 * 1024;
+    let result = run(artifact, budget);
+    assert_bundle(&result);
+    assert_eq!(
+        result.bundle_metadata_source,
+        Some("bom_verified_gzip_cpio_tail")
+    );
+    assert!(result.bytes_read < budget);
+
+    let mut changed = artifact.to_vec();
+    let identifier = b"org.doesitarm.fixture</string>";
+    let at = changed
+        .windows(identifier.len())
+        .position(|window| window == identifier)
+        .unwrap();
+    changed[at] = b'x';
+    let rejected = run(&changed, budget);
+    assert!(matches!(rejected.status, Status::BudgetExhausted));
+    assert!(rejected.bundle_id.is_none());
+    assert!(rejected.bundle_metadata_source.is_none());
+}
 
 #[test]
 fn tar_stops_after_plist_and_exact_executable() {
@@ -227,6 +372,16 @@ fn dmg_uses_hfsx_catalog_and_overflow_extents_across_udif_codecs() {
     assert_eq!(result.architectures[1].name, "arm64e");
     assert!(result.architectures.iter().all(|arch| arch.header_verified));
     assert!(result.bytes_read < result.total_size / 4);
+}
+
+#[test]
+fn dmg_footer_wins_over_first_bzip2_chunk_magic() {
+    let image = include_bytes!("../../fixtures/bzip2-prefix.dmg");
+    assert!(image.starts_with(b"BZh"));
+    let result = run(image, 1024 * 1024);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.format, Some("dmg"));
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
 }
 
 #[test]

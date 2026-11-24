@@ -46,7 +46,17 @@ pub(crate) fn kind(bytes: &[u8]) -> Option<Kind> {
 pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut Vec<Architecture>) -> Result<()> {
     let size = input.size();
     let first = input.read_at(0, 8).await?;
-    let kind = kind(&first).ok_or(ScanError::Invalid("executable is not Mach-O"))?;
+    let kind = kind(&first).ok_or_else(|| {
+        if first.starts_with(b"#!") {
+            ScanError::Unsupported("declared executable is a script")
+        } else if first.starts_with(b"MZ") {
+            ScanError::Unsupported("declared executable has DOS/PE magic")
+        } else if first.starts_with(b"\x7fELF") {
+            ScanError::Unsupported("declared executable is ELF")
+        } else {
+            ScanError::Invalid("executable is not Mach-O")
+        }
+    })?;
     if !kind.fat {
         return thin(input, 0, size, &first, None, out).await;
     }

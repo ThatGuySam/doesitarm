@@ -10,7 +10,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const cli = resolve(root, process.argv[2] ?? 'target/debug/scan-cli');
 const pkg = resolve(root, process.argv[3] ?? 'pkg');
-const { default: init, scan, bundle_metadata } = await import(pathToFileURL(resolve(pkg, 'scan_wasm.js')));
+const { default: init, scan, bundle_metadata, scan_target: scanTarget } =
+  await import(pathToFileURL(resolve(pkg, 'scan_wasm.js')));
 await init({ module_or_path: await readFile(resolve(pkg, 'scan_wasm_bg.wasm')) });
 
 const maxSafeSize = BigInt(Number.MAX_SAFE_INTEGER);
@@ -20,12 +21,12 @@ for (const size of [maxSafeSize + 1n, 1n << 64n, -1n]) {
   assert.equal(calls, 0);
 }
 const offsets = [];
-const boundary = JSON.parse(await scan(maxSafeSize, 516n, (offset, length) => {
+const boundary = JSON.parse(await scan(maxSafeSize, 1028n, (offset, length) => {
   offsets.push(offset);
   return new Uint8Array(length);
 }));
 assert.equal(boundary.status, 'unsupported');
-assert.deepEqual(offsets, [0n, maxSafeSize - 512n]);
+assert.deepEqual(offsets, [0n, maxSafeSize - 512n, 0n]);
 assert.equal(boundary.total_size, Number.MAX_SAFE_INTEGER);
 
 const depth = 65;
@@ -63,7 +64,7 @@ assert.match(help.stdout, /Default decoded-byte budget: 67108864 bytes/);
 const fixtures = resolve(root, 'fixtures');
 let comparisons = 0;
 for (const name of (await readdir(fixtures)).sort()) {
-  if (!/\.(macho|zip|tar\.gz|dmg|pkg)$/.test(name)) continue;
+  if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|pkg)$/.test(name)) continue;
   const file = resolve(fixtures, name);
   const size = (await stat(file, { bigint: true })).size;
   const fd = openSync(file, 'r');
@@ -83,7 +84,9 @@ for (const name of (await readdir(fixtures)).sort()) {
       const { bytesRead } = await handle.read(destination, 0, size, Number(offset));
       return destination.subarray(0, bytesRead);
     };
-    for (const [budget, decoded] of [[0], [52], [64 * 1024 * 1024], [8192, 0]]) {
+    const budgets = [[0], [52], [64 * 1024 * 1024], [8192, 0]];
+    if (name === 'late-bom.pkg') budgets.push([600 * 1024]);
+    for (const [budget, decoded] of budgets) {
       const args = ['scan', file, '--budget', String(budget), '--json'];
       if (decoded !== undefined) args.push('--decoded-budget', String(decoded));
       const native = spawnSync(cli, args, {
@@ -93,6 +96,10 @@ for (const name of (await readdir(fixtures)).sort()) {
       assert.ok([0, 1].includes(native.status), native.stderr);
       const expected = JSON.parse(native.stdout);
       if (budget === 64 * 1024 * 1024) assert.equal(expected.status, 'complete', name);
+      if (name === 'late-bom.pkg' && budget === 600 * 1024) {
+        assert.equal(expected.status, 'complete', name);
+        assert.equal(expected.bundle_metadata_source, 'bom_verified_gzip_cpio_tail');
+      }
       for (const [mode, reader] of [['sync', read], ['async', readAsync]]) {
         const ranges = [];
         let bytesRequested = 0;
@@ -113,6 +120,23 @@ for (const name of (await readdir(fixtures)).sort()) {
         assert.equal(actual.reads, ranges.length);
         assert.equal(actual.bytes_read, unique);
         assert.equal(actual.bytes_requested, bytesRequested);
+        comparisons++;
+      }
+    }
+    if (name === 'stored.zip' || name === 'apfs.dmg') {
+      for (const { kind, option, path } of [
+        { kind: 'bundle', option: '--bundle-path', path: 'Fixture.app' },
+        { kind: 'executable', option: '--binary-path', path: 'Fixture.app/Contents/MacOS/FixtureBinary' },
+      ]) {
+        const budget = 8 * 1024 * 1024;
+        const native = spawnSync(cli, ['scan', file, '--budget', String(budget), '--json', option, path], {
+          encoding: 'utf8',
+        });
+        assert.ifError(native.error);
+        assert.equal(native.status, 0, native.stderr);
+        const expected = JSON.parse(native.stdout);
+        const actual = JSON.parse(await scanTarget(size, BigInt(budget), readAsync, kind, path));
+        assert.deepEqual(actual, expected, `${name}, ${kind}, ${path}`);
         comparisons++;
       }
     }

@@ -1,5 +1,5 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, apfs, be16, be32, be64, check_range,
+    ReadAt, Result, ScanError, ScanResult, Target, Window, apfs, be16, be32, be64, check_range,
     decode::DecodeBudget,
     hfs, le32, le64, plist_value,
     udif_codec::{self, IGNORE, RAW, ZERO},
@@ -31,14 +31,15 @@ struct Image<'a, S> {
     size: u64,
     runs: Vec<Run>,
     cache: VecDeque<(usize, Vec<u8>)>,
-    work: &'a mut DecodeBudget,
+    work: &'a DecodeBudget,
     run_reads: usize,
 }
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
-    work: &mut DecodeBudget,
+    work: &DecodeBudget,
     trailer: &[u8],
+    target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     if be32(trailer, 4) != 4 || be32(trailer, 8) != 512 {
@@ -79,8 +80,8 @@ pub(crate) async fn scan(
     let (partition, fs) = find_filesystem(&mut image, &partitions).await?;
     let mut volume = Window::new(&mut image, partition.start, partition.end - partition.start)?;
     match fs {
-        Filesystem::Hfs => hfs::scan(&mut volume, out).await,
-        Filesystem::Apfs => apfs::scan(&mut volume, out).await,
+        Filesystem::Hfs => hfs::scan(&mut volume, work, target, out).await,
+        Filesystem::Apfs => apfs::scan(&mut volume, work, target, out).await,
     }
 }
 
@@ -414,16 +415,16 @@ mod tests {
             let packed = &image[run.stored.start as usize..run.stored.end as usize];
             let expanded = (run.disk.end - run.disk.start) as usize;
 
-            let mut short = DecodeBudget::new(expanded as u64 - 1);
+            let short = DecodeBudget::new(expanded as u64 - 1);
             assert!(matches!(
-                udif_codec::decode(kind, packed, expanded, &mut short),
+                udif_codec::decode(kind, packed, expanded, &short),
                 Err(ScanError::WorkLimit(_))
             ));
             assert_eq!(short.used(), 0);
 
-            let mut exact = DecodeBudget::new(expanded as u64);
+            let exact = DecodeBudget::new(expanded as u64);
             assert_eq!(
-                udif_codec::decode(kind, packed, expanded, &mut exact)
+                udif_codec::decode(kind, packed, expanded, &exact)
                     .unwrap()
                     .len(),
                 expanded

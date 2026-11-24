@@ -2,7 +2,7 @@
 #![cfg(target_arch = "wasm32")]
 
 use js_sys::{BigInt, Function, Promise, RangeError, Uint8Array};
-use scan_core::{ReadAt, Result, ScanError, ScanLimits, ScanResult};
+use scan_core::{ReadAt, Result, ScanError, ScanLimits, ScanResult, Target};
 use wasm_bindgen::{JsCast, prelude::*};
 use wasm_bindgen_futures::JsFuture;
 
@@ -49,6 +49,44 @@ pub async fn scan(
     read_at: Function,
     decoded_byte_budget: Option<BigInt>,
 ) -> std::result::Result<String, JsValue> {
+    scan_with_target(
+        total_size,
+        budget,
+        read_at,
+        Target::Auto,
+        decoded_byte_budget,
+    )
+    .await
+}
+
+#[wasm_bindgen]
+pub async fn scan_target(
+    total_size: BigInt,
+    budget: BigInt,
+    read_at: Function,
+    kind: &str,
+    path: &str,
+    decoded_byte_budget: Option<BigInt>,
+) -> std::result::Result<String, JsValue> {
+    let target = match kind {
+        "bundle" => Target::Bundle(path),
+        "executable" => Target::Executable(path),
+        _ => {
+            return Err(JsValue::from_str(
+                "Expected bundle or executable target kind",
+            ));
+        }
+    };
+    scan_with_target(total_size, budget, read_at, target, decoded_byte_budget).await
+}
+
+async fn scan_with_target(
+    total_size: BigInt,
+    budget: BigInt,
+    read_at: Function,
+    target: Target<'_>,
+    decoded_byte_budget: Option<BigInt>,
+) -> std::result::Result<String, JsValue> {
     let total_size = u64::try_from(total_size)
         .ok()
         .filter(|&size| size <= MAX_SAFE_INTEGER)
@@ -61,7 +99,7 @@ pub async fn scan(
         total_size,
         read_at,
     };
-    let result = scan_core::scan_with_limits(&mut source, limits).await;
+    let result = scan_core::scan_target_with_limits(&mut source, limits, target).await;
     check_result_sizes(&result)?;
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
 }

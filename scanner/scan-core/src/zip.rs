@@ -1,6 +1,8 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, bundle, check_range, decode::DecodeBudget,
-    inflate::Inflate, le16, le32, le64, macho,
+    ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
+    decode::DecodeBudget,
+    inflate::{Codec, Forward},
+    le16, le32, le64, macho, nested,
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
@@ -23,7 +25,8 @@ struct Entry {
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
-    work: &mut DecodeBudget,
+    work: &DecodeBudget,
+    target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
     let directory = read_directory(input).await?;
@@ -36,30 +39,40 @@ pub(crate) async fn scan(
         .await?;
     let entries = read_entries(&records, directory.count)?;
 
-    let (entry, name) = entries
+    if let Target::Executable(requested) = target {
+        let executable = entries
+            .iter()
+            .filter_map(|entry| Some((entry, bundle::archive_path(&entry.path)?)))
+            .filter(|(_, path)| bundle::matches_path(path, requested))
+            .min_by_key(|(_, path)| (path.matches('/').count(), *path))
+            .ok_or(ScanError::NotFound(
+                "declared standalone executable in ZIP central directory",
+            ))?;
+        out.executable_path = Some(executable.1.to_owned());
+        out.executable_size = Some(executable.0.expanded);
+        let mut data = member(input, executable.0, directory.offset, work).await?;
+        return macho::scan(&mut data, &mut out.architectures).await;
+    }
+
+    let app = entries
         .iter()
         .filter_map(|entry| {
             let path = bundle::archive_path(&entry.path)?;
-            Some((entry, bundle::plist_bundle(path)?))
+            Some((entry, bundle::selected_plist(path, target)?))
         })
-        .min_by_key(|(_, name)| (name.matches('/').count(), *name))
-        .ok_or(ScanError::NotFound(
-            "app Info.plist in ZIP central directory",
-        ))?;
+        .min_by_key(|(_, name)| (name.matches('/').count(), *name));
+    let Some((entry, name)) = app else {
+        return scan_nested(input, &entries, directory.offset, work, target, out).await;
+    };
     out.bundle_path = Some(name.to_owned());
 
     if entry.expanded > bundle::MAX_PLIST {
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
     }
-    let data = member(input, entry, directory.offset).await?;
-    let plist = if entry.method == 0 {
-        let mut data = data;
-        data.read_at(0, entry.expanded as usize).await?
-    } else {
-        Inflate::new(data, entry.expanded, work)?
-            .read_at(0, entry.expanded as usize)
-            .await?
-    };
+    let plist = member(input, entry, directory.offset, work)
+        .await?
+        .read_at(0, entry.expanded as usize)
+        .await?;
     let path = bundle::apply_plist(&plist, name, out)?;
 
     let executable = entries
@@ -69,15 +82,98 @@ pub(crate) async fn scan(
             "declared executable in ZIP central directory",
         ))?;
     out.executable_size = Some(executable.expanded);
-    let data = member(input, executable, directory.offset).await?;
-    if executable.method == 0 {
-        macho::scan(&mut { data }, &mut out.architectures).await
-    } else {
-        macho::scan(
-            &mut Inflate::new(data, executable.expanded, work)?,
-            &mut out.architectures,
+    let mut data = member(input, executable, directory.offset, work).await?;
+    macho::scan(&mut data, &mut out.architectures).await
+}
+
+async fn scan_nested(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let mut candidates: Vec<_> = entries
+        .iter()
+        .filter_map(|entry| {
+            let path = bundle::archive_path(&entry.path)?;
+            let kind = nested::Kind::from_path(path)?;
+            Some((entry, path, kind))
+        })
+        .collect();
+    candidates.sort_by_key(|(entry, path, _)| {
+        (path.matches('/').count(), std::cmp::Reverse(entry.expanded))
+    });
+    let mut first_failure = None;
+    for (entry, path, kind) in candidates.into_iter().take(8) {
+        let mut result = ScanResult::new(out.total_size);
+        result.format = out.format;
+        let attempt = scan_nested_member(
+            input,
+            entry,
+            heap_end,
+            (path, kind),
+            work,
+            target,
+            &mut result,
         )
-        .await
+        .await;
+        match attempt {
+            result_status @ (Ok(())
+            | Err(
+                ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_),
+            )) => {
+                *out = result;
+                return result_status;
+            }
+            Err(error) if first_failure.is_none() => first_failure = Some((error, result)),
+            Err(_) => (),
+        }
+    }
+    if let Some((error, result)) = first_failure {
+        *out = result;
+        return Err(error);
+    }
+    Err(ScanError::NotFound(
+        "app Info.plist in ZIP central directory",
+    ))
+}
+
+async fn scan_nested_member(
+    input: &mut impl ReadAt,
+    entry: &Entry,
+    heap_end: u64,
+    (path, kind): (&str, nested::Kind),
+    work: &DecodeBudget,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    const MAX_EXPANDED: u64 = 32 * 1024 * 1024;
+    let mut member = member(input, entry, heap_end, work).await?;
+    if let Member::Stored(mut source) = member {
+        return nested::scan(&mut source, kind, path, work, target, out).await;
+    }
+    if entry.expanded > MAX_EXPANDED {
+        out.nested_artifacts.push(path.to_owned());
+        return Err(ScanError::Limit(
+            "compressed nested ZIP member exceeds 32 MiB",
+        ));
+    }
+    let bytes = member.read_at(0, entry.expanded as usize).await?;
+    nested::scan(&mut Buffered(bytes), kind, path, work, target, out).await
+}
+
+struct Buffered(Vec<u8>);
+
+impl ReadAt for Buffered {
+    fn size(&self) -> u64 {
+        self.0.len() as u64
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        check_range(self.size(), offset, len as u64)?;
+        Ok(self.0[offset as usize..offset as usize + len].to_vec())
     }
 }
 
@@ -254,13 +350,19 @@ async fn member<'a, S: ReadAt>(
     input: &'a mut S,
     entry: &Entry,
     heap_end: u64,
-) -> Result<Window<'a, S>> {
+    work: &'a DecodeBudget,
+) -> Result<Member<'a, S>> {
     if entry.flags & 1 != 0 {
         return Err(ScanError::Unsupported("encrypted ZIP member"));
     }
-    if !matches!(entry.method, 0 | 8) {
-        return Err(ScanError::Unsupported("ZIP member compression method"));
-    }
+    let codec = match entry.method {
+        0 => None,
+        8 => Some(Codec::Deflate),
+        12 => Some(Codec::Bzip2),
+        14 => Some(Codec::Lzma),
+        95 => Some(Codec::Xz),
+        _ => return Err(ScanError::Unsupported("ZIP member compression method")),
+    };
     if entry.method == 0 && entry.packed != entry.expanded {
         return Err(ScanError::Invalid("ZIP stored member lengths differ"));
     }
@@ -286,5 +388,91 @@ async fn member<'a, S: ReadAt>(
     if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
         return Err(ScanError::Invalid("ZIP local name differs from directory"));
     }
-    Window::new(input, offset, entry.packed)
+    if matches!(codec, Some(Codec::Lzma)) {
+        const ZIP_LZMA_HEADER: u64 = 9;
+        check_range(entry.packed, 0, ZIP_LZMA_HEADER)?;
+        let properties = input.read_at(offset, ZIP_LZMA_HEADER as usize).await?;
+        if le16(&properties, 2) != 5 {
+            return Err(ScanError::Unsupported("ZIP LZMA properties length"));
+        }
+        let mut header = [0; 13];
+        header[..5].copy_from_slice(&properties[4..]);
+        header[5..].copy_from_slice(&entry.expanded.to_le_bytes());
+        let source = Window::new(
+            input,
+            offset + ZIP_LZMA_HEADER,
+            entry.packed - ZIP_LZMA_HEADER,
+        )?;
+        return Ok(Member::Lzma(Forward::new(
+            Prefixed { source, header },
+            entry.expanded,
+            Codec::Lzma,
+            work,
+        )?));
+    }
+    let source = Window::new(input, offset, entry.packed)?;
+    Ok(match codec {
+        Some(codec) => Member::Compressed(Forward::new(source, entry.expanded, codec, work)?),
+        None => Member::Stored(source),
+    })
+}
+
+enum Member<'a, S> {
+    Stored(Window<'a, S>),
+    Compressed(Forward<'a, Window<'a, S>>),
+    Lzma(Forward<'a, Prefixed<Window<'a, S>>>),
+}
+
+impl<S: ReadAt> ReadAt for Member<'_, S> {
+    fn size(&self) -> u64 {
+        match self {
+            Self::Stored(source) => source.size(),
+            Self::Compressed(source) => source.size(),
+            Self::Lzma(source) => source.size(),
+        }
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        match self {
+            Self::Stored(source) => source.read_at(offset, len).await,
+            Self::Compressed(source) => source.read_at(offset, len).await,
+            Self::Lzma(source) => source.read_at(offset, len).await,
+        }
+    }
+}
+
+/// ZIP separates LZMA properties from the plain byte stream. Present them
+/// together in the LZMA-alone framing understood by the incremental decoder.
+struct Prefixed<S> {
+    source: S,
+    header: [u8; 13],
+}
+
+impl<S: ReadAt> ReadAt for Prefixed<S> {
+    fn size(&self) -> u64 {
+        self.source.size() + self.header.len() as u64
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.source.remaining_budget()
+    }
+
+    async fn read_at(&mut self, mut offset: u64, len: usize) -> Result<Vec<u8>> {
+        check_range(self.size(), offset, len as u64)?;
+        let header_len = self.header.len() as u64;
+        let mut bytes = Vec::with_capacity(len);
+        if offset < header_len {
+            let count = ((header_len - offset) as usize).min(len);
+            bytes.extend_from_slice(&self.header[offset as usize..offset as usize + count]);
+            offset += count as u64;
+        }
+        if bytes.len() < len {
+            bytes.extend(
+                self.source
+                    .read_at(offset - header_len, len - bytes.len())
+                    .await?,
+            );
+        }
+        Ok(bytes)
+    }
 }

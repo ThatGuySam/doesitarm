@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Generate small, deterministic macOS archive fixtures without Apple tools."""
+import bz2
 import gzip
 import io
 import plistlib
@@ -10,8 +11,8 @@ from pathlib import Path
 from struct import pack
 
 from apfs_fixture import apfs_fixture
-from dmg_fixture import dmg_fixture
-from pkg_fixture import pkg_fixture
+from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, write_udif
+from pkg_fixture import late_bom_fixture, pkg_fixture, write_xar
 
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
@@ -92,6 +93,25 @@ def tar_fixture(path, *, binary_first=False, long_path=False):
                 archive.addfile(entry, io.BytesIO(data))
 
 
+def tar_codec_fixtures():
+    import lzma
+
+    data = io.BytesIO()
+    with tarfile.open(fileobj=data, mode="w") as archive:
+        for name, content in [
+            ("padding", b"N" * (128 * 1024)),
+            (INFO, plistlib.dumps(METADATA)),
+            (EXECUTABLE, fat()),
+        ]:
+            entry = tarfile.TarInfo(name)
+            entry.size = len(content)
+            archive.addfile(entry, io.BytesIO(content))
+    payload = data.getvalue()
+    (ROOT / "app.tar").write_bytes(payload)
+    (ROOT / "app.tar.bz2").write_bytes(bz2.compress(payload))
+    (ROOT / "app.tar.xz").write_bytes(lzma.compress(payload))
+
+
 if __name__ == "__main__":
     (ROOT / "thin.macho").write_bytes(thin())
     (ROOT / "fat.macho").write_bytes(fat())
@@ -102,9 +122,31 @@ if __name__ == "__main__":
 
     tar_fixture(ROOT / "app.tar.gz")
     tar_fixture(ROOT / "app-binary-first.tar.gz", binary_first=True, long_path=True)
+    tar_codec_fixtures()
+    zip_fixture(ROOT / "bzip2.zip", zipfile.ZIP_BZIP2, binary_plist=True)
+    zip_fixture(ROOT / "lzma.zip", zipfile.ZIP_LZMA, binary_plist=True)
 
     dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
+    volume = hfs_volume(METADATA, fat(intel_offset=4096))
+    write_udif(ROOT / "bzip2-prefix.dmg", volume, [
+        (0x80000006, 1, bz2.compress),
+        (1, len(volume) // 512 - 1, bytes),
+    ], "Apple_HFS", with_preamble=False)
     pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)
+    late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())
+
+    pkg_dmg_fixture(ROOT / "nested-pkg.dmg", (ROOT / "gzip-newc.pkg").read_bytes())
+    write_xar(ROOT / "remote-component.xar", distribution=b"""
+        <installer-gui-script><title>Remote fixture</title>
+          <pkg-ref id="remote">https://example.invalid/component.pkg</pkg-ref>
+        </installer-gui-script>
+    """)
+    write_xar(ROOT / "nested-flat.pkg", nested=(ROOT / "gzip-newc.pkg").read_bytes())
+    with zipfile.ZipFile(ROOT / "nested-dmg.zip", "w", compression=zipfile.ZIP_STORED) as archive:
+        archive.writestr(zipfile.ZipInfo("Wrapper/Fixture.dmg"), (ROOT / "hfsx.dmg").read_bytes())
+    with zipfile.ZipFile(ROOT / "nested-legacy.zip", "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr(zipfile.ZipInfo("Fixture.pkg/Contents/Archive.pax.gz"),
+                         (ROOT / "app.tar.gz").read_bytes(), compress_type=zipfile.ZIP_DEFLATED)

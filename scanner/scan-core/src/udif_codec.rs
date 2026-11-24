@@ -14,12 +14,7 @@ pub(crate) const LZFSE: u32 = 0x8000_0007;
 pub(crate) const LZMA: u32 = 0x8000_0008;
 const INVALID: ScanError = ScanError::Invalid("UDIF compressed chunk");
 
-pub(crate) fn decode(
-    kind: u32,
-    input: &[u8],
-    size: usize,
-    work: &mut DecodeBudget,
-) -> Result<Vec<u8>> {
+pub(crate) fn decode(kind: u32, input: &[u8], size: usize, work: &DecodeBudget) -> Result<Vec<u8>> {
     if !matches!(kind, ADC | LZFSE | ZLIB | BZIP2 | LZMA) {
         return Err(ScanError::Unsupported("UDIF chunk codec"));
     }
@@ -126,18 +121,18 @@ mod tests {
     #[test]
     fn adc_literals_and_overlapping_matches_obey_declared_size() {
         let encoded = b"\x81ab\x00\x01\x40\x00\x00";
-        let mut work = DecodeBudget::new(20);
-        assert_eq!(decode(ADC, encoded, 9, &mut work).unwrap(), b"ababaaaaa");
-        assert!(decode(ADC, encoded, 8, &mut work).is_err());
-        assert!(decode(ADC, b"\x00\x00", 3, &mut work).is_err());
+        let work = DecodeBudget::new(20);
+        assert_eq!(decode(ADC, encoded, 9, &work).unwrap(), b"ababaaaaa");
+        assert!(decode(ADC, encoded, 8, &work).is_err());
+        assert!(decode(ADC, b"\x00\x00", 3, &work).is_err());
     }
 
     #[test]
     fn expansion_ratio_rejects_chunks_before_reserving_output() {
         let expanded = 32 * 1024 + 1;
-        let mut work = DecodeBudget::new(expanded as u64);
+        let work = DecodeBudget::new(expanded as u64);
         assert!(
-            matches!(decode(BZIP2, b"x", expanded, &mut work), Err(ScanError::WorkLimit(reason)) if reason.contains("ratio"))
+            matches!(decode(BZIP2, b"x", expanded, &work), Err(ScanError::WorkLimit(reason)) if reason.contains("ratio"))
         );
         assert_eq!(work.used(), 0);
     }
@@ -149,11 +144,8 @@ mod tests {
         encoder.write_all(&block).unwrap();
         let packed = encoder.finish().unwrap();
         assert!(packed.len() * 1024 < block.len());
-        let mut work = DecodeBudget::new(block.len() as u64);
-        assert_eq!(
-            decode(BZIP2, &packed, block.len(), &mut work).unwrap(),
-            block
-        );
+        let work = DecodeBudget::new(block.len() as u64);
+        assert_eq!(decode(BZIP2, &packed, block.len(), &work).unwrap(), block);
         assert_eq!(work.used(), block.len() as u64);
     }
 }

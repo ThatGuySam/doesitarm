@@ -115,11 +115,12 @@ def dmg_fixture(path, metadata, executable):
     write_udif(path, volume, chunks, "Apple_HFSX")
 
 
-def write_udif(path, volume, chunks, name):
+def write_udif(path, volume, chunks, name, *, with_preamble=True):
     sectors = len(volume) // SECTOR
     assert sum(count for _, count, _ in chunks) == sectors
-    preamble = b"Test data fork at a nonzero file offset.\n"
-    body = bytearray(b"\0" * 16)  # Nonzero table-relative data offset.
+    preamble = b"Test data fork at a nonzero file offset.\n" if with_preamble else b""
+    data_offset = 16 if with_preamble else 0
+    body = bytearray(data_offset)
     mish = bytearray(204)
     pack_into(">4sIQQQ", mish, 0, b"mish", 1, 0, sectors, len(body))
     pack_into(">I", mish, 200, len(chunks) + 1)
@@ -127,7 +128,7 @@ def write_udif(path, volume, chunks, name):
     for kind, count, compress in chunks:
         data = volume[sector * SECTOR:(sector + count) * SECTOR]
         packed = compress(data)
-        mish.extend(pack(">IIQQQQ", kind, 0, sector, count, len(body) - 16, len(packed)))
+        mish.extend(pack(">IIQQQQ", kind, 0, sector, count, len(body) - data_offset, len(packed)))
         body.extend(packed)
         sector += count
     mish.extend(pack(">IIQQQQ", 0xFFFFFFFF, 0, sector, 0, 0, 0))
@@ -138,3 +139,20 @@ def write_udif(path, volume, chunks, name):
     pack_into(">QQ", trailer, 216, len(preamble) + len(body), len(index))
     pack_into(">Q", trailer, 492, sectors)
     path.write_bytes(preamble + body + index + trailer)
+
+
+def pkg_dmg_fixture(path, package):
+    volume = bytearray(VOLUME_SECTORS * SECTOR)
+    header = bytearray(SECTOR)
+    header[:4] = b"HX\0\5"
+    pack_into(">II", header, 40, SECTOR, VOLUME_SECTORS)
+    header[192:272] = fork(2 * SECTOR, 2, [(10, 2)])
+    header[272:352] = fork(2 * SECTOR, 2, [(5, 2)])
+    data_at(volume, 2, header)
+
+    blocks = (len(package) + SECTOR - 1) // SECTOR
+    data_at(volume, 5, tree_header(1, 1, 1, 1, 2, 1))
+    node_name = key(2, "Fixture.pkg")
+    data_at(volume, 6, node(-1, [node_name + file(16, fork(len(package), blocks, [(16, blocks)]))]))
+    data_at(volume, 16, package)
+    write_udif(path, volume, [(0x80000005, VOLUME_SECTORS, zlib.compress)], "Apple_HFSX")

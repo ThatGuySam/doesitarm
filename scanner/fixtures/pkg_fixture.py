@@ -48,17 +48,27 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, p
     else:
         payload = bytes(archive) if odc else gzip.compress(archive, mtime=0)
 
+    write_xar(path, payload)
+
+
+def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST):
     root = Element("xar")
     toc = SubElement(root, "toc")
     package = SubElement(toc, "file", id="1")
     SubElement(package, "name").text = "Fixture.pkg"
     SubElement(package, "type").text = "directory"
     heap = bytearray()
-    for index, (parent, name, data, compressed) in enumerate([
-        (toc, "Distribution", DIST, False),
+    members = [
+        (toc, "Distribution", distribution, False),
         (package, "PackageInfo", INFO, True),
-        (package, "Payload", payload, False),
-    ], 2):
+    ]
+    if bom is not None:
+        members.append((package, "Bom", bom, True))
+    if payload is not None:
+        members.append((package, "Payload", payload, False))
+    if nested is not None:
+        members.append((toc, "Component.pkg", nested, False))
+    for index, (parent, name, data, compressed) in enumerate(members, 2):
         entry = SubElement(parent, "file", id=str(index))
         SubElement(entry, "name").text = name
         SubElement(entry, "type").text = "file"
@@ -73,6 +83,78 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, p
     compressed = zlib.compress(toc_data)
     header = pack(">4sHHQQI", b"xar!", 28, 1, len(compressed), len(toc_data), 0)
     path.write_bytes(header + compressed + heap)
+
+
+def posix_cksum(data):
+    length = len(data)
+    remainder = 0
+    data += length.to_bytes((length.bit_length() + 7) // 8, "little")
+    for byte in data:
+        remainder ^= byte << 24
+        for _ in range(8):
+            if remainder & 0x80000000:
+                remainder = (remainder << 1) ^ 0x04c11db7
+            else:
+                remainder <<= 1
+            remainder &= 0xFFFFFFFF
+    return remainder ^ 0xFFFFFFFF
+
+
+def encode_bom(records):
+    blocks = [b""] * 5
+    entries = []
+    for index, (name, parent, data) in enumerate(records, 1):
+        is_file = data is not None
+        data = data or b""
+        permission = 0o100644 if is_file else 0o040755
+        metadata = pack(">BBHHIIIIBII", 1 if is_file else 2, 1, 0, permission,
+                        0, 0, 0, len(data), 1, posix_cksum(data) if is_file else 0, 0)
+        metadata_id = len(blocks)
+        blocks.extend([metadata, pack(">II", index, metadata_id), pack(">I", parent) + name.encode() + b"\0"])
+        entries.append(pack(">II", metadata_id + 1, metadata_id + 2))
+    blocks[1] = pack(">4sIIIIB", b"tree", 1, 2, 4096, len(entries), 0)
+    split = len(entries) - 1
+    blocks[2] = pack(">HHIIII", 0, 1, 0, 0, 3, 0)
+    blocks[3] = pack(">HHII", 1, split, 4, 0) + b"".join(entries[:split])
+    blocks[4] = pack(">HHII", 1, 1, 0, 3) + entries[-1]
+    output = bytearray(32)
+    indexes = []
+    for block in blocks:
+        indexes.append(pack(">II", len(output), len(block)))
+        output.extend(block)
+    variables = pack(">IIB5s", 1, 1, 5, b"Paths")
+    variable_offset = len(output)
+    output.extend(variables)
+    index = pack(">I", len(indexes)) + b"".join(indexes)
+    output[:32] = pack(">8s6I", b"BOMStore", 1, len(blocks) - 1, len(output),
+                       len(index), variable_offset, len(variables))
+    output.extend(index)
+    return output
+
+
+def late_bom_fixture(path, info_path, bin_path, metadata, executable):
+    plist = plistlib.dumps(metadata)
+    filler = b"F" * (710 * 1024)
+    prefix = cpio([(bin_path, executable), ("unrelated", filler)], odc=True)
+    end = cpio([(info_path, plist)], odc=True)
+    trailer_len = len(cpio([], odc=True))
+    encoder = zlib.compressobj(0, zlib.DEFLATED, 31)
+    payload = (
+        encoder.compress(prefix[:-trailer_len]) + encoder.flush(zlib.Z_FULL_FLUSH)
+        + encoder.compress(end) + encoder.flush()
+    )
+    root, contents, info = info_path.split("/")
+    binary = bin_path.split("/")[-1]
+    bom = encode_bom([
+        (".", 0, None),
+        (root, 1, None),
+        (contents, 2, None),
+        ("MacOS", 3, None),
+        (binary, 4, executable),
+        ("unrelated", 1, filler),
+        (info, 3, plist),
+    ])
+    write_xar(path, payload, bom)
 
 
 def encode_pbzx(data):

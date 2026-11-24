@@ -1,0 +1,21 @@
+{
+  "manifest_sha256": "78c236a89dcdb305815d5cbaf57a7d2b1141be07d431f96d96b5ac13c2f767ee",
+  "catalog_sha256": "78e2e5fc666464ff8857c5f5bbd58aad901c95381469eb4a249405911d895e72",
+  "manifest_count": 100,
+  "manifest_casks": 100,
+  "cli_sha256": "15d61d5ce4534ecf7265a1a1188cf1118f5d42fe9f0f612fe65700a5631c5fee",
+  "budget": 8388608,
+  "escalate": [
+    67108864,
+    268435456
+  ],
+  "timeout": 60,
+  "cli_options": [
+    "--allow-stream",
+    "--allow-http"
+  ],
+  "host_cooldown": 1.0,
+  "use_cask_targets": true,
+  "scanner_commit_at_start": "5b703e3c5edd55f48a184992ea4a7b4df16b51f5",
+  "started_at": "2026-11-24T07:49:42+00:00"
+}

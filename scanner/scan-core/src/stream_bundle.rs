@@ -1,5 +1,6 @@
 use crate::{
-    Architecture, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, Window, bundle, macho,
+    Architecture, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, Target, Window,
+    bundle, macho,
 };
 
 struct Candidate {
@@ -20,13 +21,28 @@ impl Candidate {
 /// When the executable precedes its plist, retain observations for plausible
 /// main executable paths until CFBundleExecutable confirms which one to use.
 #[derive(Default)]
-pub(crate) struct StreamBundle {
+pub(crate) struct StreamBundle<'a> {
+    selection: Target<'a>,
     target: Option<String>,
     candidates: Vec<Candidate>,
     dropped_candidates: bool,
 }
 
-impl StreamBundle {
+impl<'a> StreamBundle<'a> {
+    pub(crate) fn new(selection: Target<'a>) -> Self {
+        Self {
+            selection,
+            ..Self::default()
+        }
+    }
+
+    pub(crate) fn with_target(target: String) -> Self {
+        Self {
+            target: Some(target),
+            ..Self::default()
+        }
+    }
+
     pub(crate) async fn file(
         &mut self,
         source: &mut impl ReadAt,
@@ -38,6 +54,19 @@ impl StreamBundle {
         let Some(path) = bundle::archive_path(path) else {
             return Ok(false);
         };
+        if let Target::Executable(requested) = self.selection {
+            if !bundle::matches_path(path, requested) {
+                return Ok(false);
+            }
+            out.executable_path = Some(path.to_owned());
+            out.executable_size = Some(size);
+            macho::scan(
+                &mut Window::new(source, offset, size)?,
+                &mut out.architectures,
+            )
+            .await?;
+            return Ok(true);
+        }
         if let Some(target) = &self.target {
             if target == path {
                 out.executable_size = Some(size);
@@ -48,7 +77,7 @@ impl StreamBundle {
                 .await?;
                 return Ok(true);
             }
-        } else if let Some(root) = bundle::plist_bundle(path).filter(|root| is_outer_app(root)) {
+        } else if let Some(root) = bundle::selected_plist(path, self.selection) {
             out.bundle_path = Some(root.to_owned());
             if size > bundle::MAX_PLIST {
                 return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
@@ -68,7 +97,12 @@ impl StreamBundle {
         } else if path
             .rsplit_once("/Contents/MacOS/")
             .is_some_and(|(root, leaf)| {
-                root.ends_with(".app") && is_outer_app(root) && !leaf.contains('/')
+                !leaf.contains('/')
+                    && match self.selection {
+                        Target::Auto => root.ends_with(".app") && bundle::outer_app(root),
+                        Target::Bundle(asked) => bundle::matches_path(root, asked),
+                        Target::Executable(_) => false,
+                    }
             })
         {
             if self.candidates.len() == 64 {
@@ -105,7 +139,9 @@ impl StreamBundle {
     }
 
     pub(crate) fn missing(&self) -> ScanError {
-        if self.target.is_none() {
+        if matches!(self.selection, Target::Executable(_)) {
+            ScanError::NotFound("declared standalone executable in sequential archive")
+        } else if self.target.is_none() {
             ScanError::NotFound("app Info.plist in sequential archive")
         } else if self.dropped_candidates {
             ScanError::Limit("too many executable candidates before Info.plist")
@@ -113,8 +149,14 @@ impl StreamBundle {
             ScanError::NotFound("declared executable in sequential archive")
         }
     }
-}
 
-fn is_outer_app(root: &str) -> bool {
-    !root.trim_end_matches(".app").contains(".app/")
+    pub(crate) fn is_executable_path(&self, path: &str) -> bool {
+        let Some(path) = bundle::archive_path(path) else {
+            return false;
+        };
+        match self.selection {
+            Target::Executable(asked) => bundle::matches_path(path, asked),
+            _ => self.target.as_deref() == Some(path),
+        }
+    }
 }

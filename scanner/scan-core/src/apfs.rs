@@ -1,5 +1,8 @@
 //! Selective reads of ordinary APFS volumes using the Apple File System Reference.
-use crate::{ReadAt, Result, ScanError, ScanResult, bundle, check_range, le16, le32, le64, macho};
+use crate::{
+    ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range, decode::DecodeBudget, le16,
+    le32, le64, macho, nested, pkg,
+};
 use std::{
     collections::{HashSet, VecDeque},
     ops::Range,
@@ -447,6 +450,23 @@ impl Volume {
         Ok(entries.into_iter().nth(index).unwrap())
     }
 
+    async fn find_path(
+        &self,
+        device: &mut Device<'_, impl ReadAt>,
+        mut parent: u64,
+        path: &str,
+        kind: u16,
+    ) -> Result<Entry> {
+        let mut parts = path.trim_start_matches("./").split('/').peekable();
+        while let Some(part) = parts.next() {
+            if parts.peek().is_none() {
+                return self.find(device, parent, part, kind).await;
+            }
+            parent = self.find(device, parent, part, DIRECTORY).await?.id;
+        }
+        Err(ScanError::Invalid("empty APFS path"))
+    }
+
     async fn file(&self, device: &mut Device<'_, impl ReadAt>, id: u64) -> Result<FileData> {
         let mut inodes = self
             .entries(device, (id, INODE), |_, value| inode(value))
@@ -587,7 +607,12 @@ impl<S: ReadAt> ReadAt for ApfsFile<'_, S> {
     }
 }
 
-pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    disk: &mut impl ReadAt,
+    work: &DecodeBudget,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let first = disk.read_at(0, 48).await?;
     if &first[32..36] != b"NXSB" {
         return Err(BAD_OBJECT);
@@ -640,30 +665,83 @@ pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result
             }
             Err(error) => return Err(error),
         };
+        if let Target::Executable(path) = target {
+            let item = match volume
+                .find_path(&mut device, ROOT_DIRECTORY, path, FILE)
+                .await
+            {
+                Ok(item) => item,
+                Err(ScanError::NotFound(_)) => continue,
+                Err(error) => return Err(error),
+            };
+            out.executable_path = Some(path.to_owned());
+            return read_executable(&mut device, &volume, item, out).await;
+        }
+        if let Target::Bundle(path) = target {
+            match volume
+                .find_path(&mut device, ROOT_DIRECTORY, path, DIRECTORY)
+                .await
+            {
+                Ok(app) => {
+                    return read_app(
+                        &mut device,
+                        &volume,
+                        app.id,
+                        path.trim_start_matches("./"),
+                        out,
+                    )
+                    .await;
+                }
+                Err(ScanError::NotFound(_)) => (),
+                Err(error) => return Err(error),
+            }
+        }
         let root = volume.children(&mut device, ROOT_DIRECTORY).await?;
-        let app = root
-            .into_iter()
-            .filter(|entry| {
-                entry.kind == DIRECTORY
-                    && entry.name.ends_with(".app")
-                    && !entry.name.starts_with('.')
-            })
-            .min_by(|a, b| a.name.cmp(&b.name));
-        if let Some(app) = app {
-            return read_app(&mut device, &volume, app, out).await;
+        if matches!(target, Target::Auto)
+            && let Some(app) = root
+                .iter()
+                .filter(|entry| {
+                    entry.kind == DIRECTORY
+                        && entry.name.ends_with(".app")
+                        && !entry.name.starts_with('.')
+                })
+                .min_by(|a, b| a.name.cmp(&b.name))
+        {
+            return read_app(&mut device, &volume, app.id, &app.name, out).await;
+        }
+
+        let mut packages = root.into_iter().filter(|entry| {
+            matches!(entry.kind, FILE | DIRECTORY)
+                && !entry.name.starts_with('.')
+                && pkg::package_name(&entry.name)
+        });
+        if let Some(entry) = packages.next() {
+            if let Some(other) = packages.next() {
+                out.nested_artifacts.extend([entry.name, other.name]);
+                return Err(ScanError::Unsupported(
+                    "multiple nested PKGs in APFS volume",
+                ));
+            }
+            return read_package(&mut device, &volume, entry, work, target, out).await;
         }
     }
-    Err(unsupported.unwrap_or(ScanError::NotFound("app at the APFS volume root")))
+    let missing = match target {
+        Target::Auto => "app at the APFS volume root",
+        Target::Bundle(_) => "declared app in APFS volume",
+        Target::Executable(_) => "declared executable in APFS volume",
+    };
+    Err(unsupported.unwrap_or(ScanError::NotFound(missing)))
 }
 
 async fn read_app(
     device: &mut Device<'_, impl ReadAt>,
     volume: &Volume,
-    app: Entry,
+    app_id: u64,
+    app_path: &str,
     out: &mut ScanResult,
 ) -> Result<()> {
-    out.bundle_path = Some(app.name.clone());
-    let contents = volume.find(device, app.id, "Contents", DIRECTORY).await?;
+    out.bundle_path = Some(app_path.to_owned());
+    let contents = volume.find(device, app_id, "Contents", DIRECTORY).await?;
     let info = volume.find(device, contents.id, "Info.plist", FILE).await?;
     let data = volume.file(device, info.id).await?;
     if data.size > bundle::MAX_PLIST {
@@ -676,11 +754,20 @@ async fn read_app(
     }
     .read_at(0, len)
     .await?;
-    bundle::apply_plist(&plist, &app.name, out)?;
+    let path = bundle::apply_plist(&plist, app_path, out)?;
+    let relative = &path[app_path.len() + "/Contents/".len()..];
+    let item = volume
+        .find_path(device, contents.id, relative, FILE)
+        .await?;
+    read_executable(device, volume, item, out).await
+}
 
-    let macos = volume.find(device, contents.id, "MacOS", DIRECTORY).await?;
-    let executable = out.executable_name.as_ref().unwrap();
-    let item = volume.find(device, macos.id, executable, FILE).await?;
+async fn read_executable(
+    device: &mut Device<'_, impl ReadAt>,
+    volume: &Volume,
+    item: Entry,
+    out: &mut ScanResult,
+) -> Result<()> {
     let data = volume.file(device, item.id).await?;
     out.executable_size = Some(data.size);
     macho::scan(
@@ -691,4 +778,30 @@ async fn read_app(
         &mut out.architectures,
     )
     .await
+}
+
+async fn read_package(
+    device: &mut Device<'_, impl ReadAt>,
+    volume: &Volume,
+    entry: Entry,
+    work: &DecodeBudget,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let (file, name, kind) = if entry.kind == FILE {
+        let name = entry.name.clone();
+        (entry, name, nested::Kind::Package)
+    } else {
+        let name = format!("{}/Contents/Archive.pax.gz", entry.name);
+        let file = volume
+            .find_path(device, entry.id, "Contents/Archive.pax.gz", FILE)
+            .await?;
+        (file, name, nested::Kind::LegacyPackage)
+    };
+    let data = volume.file(device, file.id).await?;
+    let mut source = ApfsFile {
+        data,
+        disk: device.disk,
+    };
+    nested::package(&mut source, kind, &name, work, target, out).await
 }
