@@ -99,3 +99,14 @@ pub fn print_filter() -> io::Result<()> {
         "the offline healing filter requires x86_64 Linux",
     ))
 }
+
+pub fn exec(args: Vec<std::ffi::OsString>) -> io::Error {
+    use std::{os::unix::process::CommandExt, process::Command};
+
+    // SAFETY: close_range only closes inherited descriptors above stderr.
+    // No Rust-owned files or sockets have been opened by this subcommand.
+    if unsafe { libc::syscall(libc::SYS_close_range, 3, u32::MAX, 0) } != 0 {
+        return io::Error::last_os_error();
+    }
+    Command::new("/usr/bin/setpriv").args(args).exec()
+}

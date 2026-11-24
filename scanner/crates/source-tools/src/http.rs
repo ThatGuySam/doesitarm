@@ -326,10 +326,20 @@ impl Http {
         let mut visited = HashSet::new();
         for _ in 0..=8 {
             self.check(request.deadline)?;
-            policy(&request.url)?;
-            if obey_robots {
-                self.robots(&request.url, request.deadline)?;
-            }
+            let allowed = policy(&request.url).and_then(|()| {
+                if obey_robots {
+                    self.robots(&request.url, request.deadline)
+                } else {
+                    Ok(())
+                }
+            });
+            allowed.map_err(|error| {
+                error.with_http(HttpEvidence {
+                    url: recorded_url(original.as_str()),
+                    final_url: recorded_url(request.url.as_str()),
+                    ..HttpEvidence::default()
+                })
+            })?;
             if !visited.insert(request.url.clone()) {
                 break;
             }
@@ -406,7 +416,8 @@ impl Http {
             if let Ok(response) = &response {
                 stats.bytes += response.received as u64;
                 if let Some(delay) = documented_wait(response) {
-                    host.next = Some(Instant::now() + delay);
+                    let reset = Instant::now() + delay;
+                    host.next = Some(host.next.map_or(reset, |next| next.max(reset)));
                 }
             }
             let retryable = match &response {
@@ -415,10 +426,11 @@ impl Http {
                 }
                 Err(error) => matches!(error.class.as_str(), "timeout" | "transport_error"),
             };
-            if attempt == 2
-                || !retryable
-                || matches!(request.mode, BodyMode::Range { .. }) && response.is_err()
-            {
+            let consumed_range_body = matches!(request.mode, BodyMode::Range { .. })
+                && response
+                    .as_ref()
+                    .is_ok_and(|response| response.received > 0);
+            if attempt == 2 || !retryable || consumed_range_body {
                 return response;
             }
             let backoff = Instant::now() + Duration::from_millis((1000 << attempt) + jitter(251));
@@ -450,6 +462,14 @@ impl Http {
             if let Some(token) = &self.token {
                 wire = wire.header("authorization", format!("Bearer {token}"));
             }
+        }
+        if !request.github_api
+            && matches!(request.mode, BodyMode::Head | BodyMode::Range { .. })
+            && is_github_asset(&request.url)
+        {
+            wire = wire
+                .header("accept", "application/octet-stream")
+                .header("x-github-api-version", "2022-11-28");
         }
         if let Some(etag) = &request.if_none_match {
             wire = wire.header("if-none-match", etag);
@@ -488,31 +508,39 @@ impl Http {
             too_large: false,
             read_failure: None,
         };
-        if let Some(cap) = body_limit(request.mode, &result) {
+        let encoding = result
+            .header("content-encoding")
+            .unwrap_or("identity")
+            .to_ascii_lowercase();
+        if matches!(request.mode, BodyMode::Metadata(_) | BodyMode::Robots)
+            && (200..300).contains(&status)
+            && !matches!(encoding.as_str(), "identity" | "gzip")
+        {
+            result.read_failure = Some(Failure::new(
+                "unsupported_metadata_encoding",
+                "metadata encoding is neither identity nor gzip",
+            ));
+        } else if let Some(cap) = body_limit(request.mode, &result) {
             let mut reader = response.body_mut().as_reader();
-            let (limit, sniff) = match cap {
-                BodyLimit::Exact(size) => (size, false),
-                BodyLimit::Metadata(size) => (size + 1, true),
-            };
-            if sniff {
-                read_counted(
-                    &mut reader,
-                    &mut result,
-                    limit.min(SNIPPET),
-                    &self.cancelled,
-                );
-                if !metadata_text(&result.body) {
-                    result.read_failure = Some(Failure::new(
-                        "unexpected_metadata",
-                        "metadata endpoint returned binary data",
-                    ));
-                    return Ok(result);
+            match cap {
+                BodyLimit::Exact(size) => {
+                    read_counted(&mut reader, &mut result, size, &self.cancelled)
                 }
-            }
-            read_counted(&mut reader, &mut result, limit, &self.cancelled);
-            if sniff && result.body.len() == limit {
-                result.body.truncate(limit - 1);
-                result.too_large = true;
+                BodyLimit::Metadata(size) if encoding == "gzip" => {
+                    let maximum = size as u64 + 1;
+                    let mut compressed = reader.take(maximum);
+                    read_metadata(
+                        &mut flate2::read::GzDecoder::new(&mut compressed),
+                        &mut result,
+                        size,
+                        &self.cancelled,
+                    );
+                    result.received = (maximum - compressed.limit()) as usize;
+                    result.too_large |= compressed.limit() == 0;
+                }
+                BodyLimit::Metadata(size) => {
+                    read_metadata(&mut reader, &mut result, size, &self.cancelled)
+                }
             }
         }
         Ok(result)
@@ -599,38 +627,46 @@ fn body_limit(mode: BodyMode, response: &Response) -> Option<BodyLimit> {
     if mode == BodyMode::Head || matches!(response.status, 301 | 302 | 303 | 304 | 307 | 308) {
         return None;
     }
-    let textual = response.header("content-type").is_some_and(|value| {
-        value.starts_with("text/") || value.contains("json") || value.contains("xml")
-    });
+    let media = response
+        .header("content-type")
+        .unwrap_or_default()
+        .split(';')
+        .next()
+        .unwrap_or_default()
+        .trim()
+        .to_ascii_lowercase();
+    let textual = media.starts_with("text/") || media.contains("json") || media.contains("xml");
+    let snippet = match mode {
+        BodyMode::Range { start, end } if end > 0 => SNIPPET
+            .min(usize::try_from(end.saturating_sub(start).saturating_add(1)).unwrap_or(SNIPPET)),
+        _ => SNIPPET,
+    };
     if !(200..300).contains(&response.status) {
-        return textual.then_some(BodyLimit::Exact(SNIPPET));
-    }
-    if response
-        .header("content-encoding")
-        .is_some_and(|v| !v.eq_ignore_ascii_case("identity"))
-    {
-        return None;
+        return textual.then_some(BodyLimit::Exact(snippet));
     }
     match mode {
         BodyMode::Head => None,
         BodyMode::Robots => Some(BodyLimit::Metadata(512 * 1024)),
-        BodyMode::Metadata(limit) => {
-            let kind = response.header("content-type").unwrap_or_default();
-            if kind.starts_with("text/html")
-                || !textual
-                    && !matches!(
-                        kind.split(';').next().unwrap_or_default(),
-                        "" | "application/octet-stream"
-                            | "application/yaml"
-                            | "application/x-yaml"
-                            | "application/x-plist"
-                    )
-            {
-                return Some(BodyLimit::Exact(SNIPPET));
-            }
+        BodyMode::Metadata(limit)
+            if textual
+                || matches!(
+                    media.as_str(),
+                    "" | "application/octet-stream"
+                        | "application/yaml"
+                        | "application/x-yaml"
+                        | "application/x-plist"
+                ) =>
+        {
             Some(BodyLimit::Metadata(limit))
         }
+        BodyMode::Metadata(_) => Some(BodyLimit::Exact(SNIPPET)),
         BodyMode::Range { start, end } if response.status == 206 => {
+            if response
+                .header("content-encoding")
+                .is_some_and(|v| !v.eq_ignore_ascii_case("identity"))
+            {
+                return None;
+            }
             let (first, last, _) = response.header("content-range").and_then(content_range)?;
             let size = usize::try_from(end.checked_sub(start)?.checked_add(1)?).ok()?;
             (first == start
@@ -640,7 +676,29 @@ fn body_limit(mode: BodyMode, response: &Response) -> Option<BodyLimit> {
                     .is_none_or(|v| v.parse::<usize>() == Ok(size)))
             .then_some(BodyLimit::Exact(size))
         }
-        BodyMode::Range { .. } => textual.then_some(BodyLimit::Exact(SNIPPET)),
+        BodyMode::Range { .. } => textual.then_some(BodyLimit::Exact(snippet)),
+    }
+}
+
+fn read_metadata(reader: &mut impl Read, result: &mut Response, limit: usize, cancel: &AtomicBool) {
+    let maximum = limit + 1;
+    read_counted(reader, result, maximum.min(SNIPPET), cancel);
+    if !metadata_text(&result.body) {
+        result.read_failure.get_or_insert_with(|| {
+            Failure::new(
+                "unexpected_metadata",
+                "metadata endpoint returned binary data",
+            )
+        });
+        return;
+    }
+    if crate::connectors::looks_like_html(&result.body) {
+        return;
+    }
+    read_counted(reader, result, maximum, cancel);
+    if result.body.len() == maximum {
+        result.body.truncate(limit);
+        result.too_large = true;
     }
 }
 
@@ -712,6 +770,16 @@ pub fn content_range(value: &str) -> Option<(u64, u64, u64)> {
     };
     let (start, end, size) = (number(start)?, number(end)?, number(size)?);
     (start <= end && end < size).then_some((start, end, size))
+}
+
+pub(crate) fn is_github_asset(url: &Url) -> bool {
+    if url.host_str() != Some("api.github.com") || url.scheme() != "https" || url.query().is_some()
+    {
+        return false;
+    }
+    matches!(url.path().split('/').collect::<Vec<_>>().as_slice(),
+        ["", "repos", owner, repo, "releases", "assets", id] if !owner.is_empty() && !repo.is_empty() &&
+            !id.is_empty() && id.bytes().all(|b| b.is_ascii_digit()))
 }
 
 fn login_path(url: &Url) -> bool {
@@ -804,5 +872,73 @@ fn public_ip(ip: IpAddr) -> bool {
                 && first != 0x2002
                 && !(first == 0x2001 && (second <= 0x01ff || second == 0xdb8))
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bounds_gzip_metadata_and_accepts_xml_served_as_html() {
+        let body = include_bytes!("../tests/fixtures/sparkle-appcast.xml");
+        let mut encoder = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+        std::io::Write::write_all(&mut encoder, body).unwrap();
+        let compressed = encoder.finish().unwrap();
+        let make_response = || Response {
+            url: public_url("https://example.org/updates").unwrap(),
+            status: 200,
+            headers: [
+                ("content-type".into(), "text/html".into()),
+                ("content-encoding".into(), "gzip".into()),
+            ]
+            .into(),
+            body: Vec::new(),
+            received: 0,
+            too_large: false,
+            read_failure: None,
+        };
+        let mut result = make_response();
+        assert!(matches!(
+            body_limit(BodyMode::Metadata(4096), &result),
+            Some(BodyLimit::Metadata(4096))
+        ));
+        let mut decoder = flate2::read::GzDecoder::new(compressed.as_slice());
+        read_metadata(&mut decoder, &mut result, 4096, &AtomicBool::new(false));
+        assert_eq!(result.body, body);
+        assert!(!result.too_large);
+
+        let mut limited = make_response();
+        let mut decoder = flate2::read::GzDecoder::new(compressed.as_slice());
+        read_metadata(&mut decoder, &mut limited, 40, &AtomicBool::new(false));
+        assert!(limited.too_large);
+        assert_eq!(limited.body.len(), 40);
+    }
+
+    #[test]
+    fn range_probe_does_not_read_a_binary_200_or_invalid_206() {
+        let mut result = Response {
+            url: public_url("https://example.org/Viewer.zip").unwrap(),
+            status: 200,
+            headers: [("content-type".into(), "application/zip".into())].into(),
+            body: Vec::new(),
+            received: 0,
+            too_large: false,
+            read_failure: None,
+        };
+        let one = BodyMode::Range { start: 0, end: 0 };
+        assert!(body_limit(one, &result).is_none());
+        result.status = 206;
+        result
+            .headers
+            .insert("content-range".into(), "bytes 0-12/100".into());
+        assert!(body_limit(one, &result).is_none());
+        result
+            .headers
+            .insert("content-range".into(), "bytes 0-0/100".into());
+        assert!(matches!(
+            body_limit(one, &result),
+            Some(BodyLimit::Exact(1))
+        ));
     }
 }

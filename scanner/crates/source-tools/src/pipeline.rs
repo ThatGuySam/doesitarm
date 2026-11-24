@@ -36,6 +36,8 @@ pub struct Replay {
     pub connector: ConnectorId,
     pub seed: Seed,
     pub artifact: Option<String>,
+    #[serde(default)]
+    pub download_url: Option<String>,
     pub options: ScanOptions,
 }
 
@@ -690,6 +692,7 @@ fn seed_failure(
         connector: config.connector,
         seed: seed.clone(),
         artifact: None,
+        download_url: None,
         options: config.options,
     });
     let mut row = empty_row(
@@ -769,6 +772,7 @@ fn scanned(
             connector: config.connector,
             seed: candidate.seed.clone(),
             artifact: Some(original),
+            download_url: candidate.download_url.clone(),
             options: config.options,
         });
         make_failure(

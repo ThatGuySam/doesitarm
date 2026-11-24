@@ -77,6 +77,13 @@ enum Command {
     #[cfg(target_os = "linux")]
     #[command(hide = true)]
     HealFilter,
+    /// Close ambient descriptors and run the OS sandbox.
+    #[cfg(target_os = "linux")]
+    #[command(hide = true)]
+    HealSandbox {
+        #[arg(trailing_var_arg = true, required = true, allow_hyphen_values = true)]
+        args: Vec<std::ffi::OsString>,
+    },
 }
 
 #[cfg(target_os = "linux")]
@@ -160,6 +167,8 @@ fn execute(command: Command) -> AnyResult<u8> {
             sandbox::print_filter()?;
             Ok(0)
         }
+        #[cfg(target_os = "linux")]
+        Command::HealSandbox { args } => Err(sandbox::exec(args).into()),
     }
 }
 

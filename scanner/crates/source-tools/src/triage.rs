@@ -314,7 +314,9 @@ fn replay_sample(replay: &Replay, transport: &dyn Transport) -> Result<String, F
     let connector = replay.connector.connector();
     let mut context = Context::new(transport, None);
     if let Some(url) = &replay.artifact {
-        return repro_candidate(&connector.direct(&replay.seed, url)?, replay, transport);
+        let mut candidate = connector.direct(&replay.seed, url)?;
+        candidate.download_url = replay.download_url.clone();
+        return repro_candidate(&candidate, replay, transport);
     }
     let candidates = if replay.seed.direct {
         vec![connector.direct(&replay.seed, &replay.seed.url)?]

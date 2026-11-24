@@ -54,6 +54,8 @@ pub struct Candidate {
     pub source: String,
     pub name: String,
     pub url: String,
+    #[serde(default)]
+    pub download_url: Option<String>,
     pub format_guess: Option<String>,
     pub bundle_id: Option<String>,
     pub version: Option<String>,
@@ -77,6 +79,7 @@ impl Candidate {
             } else {
                 seed.name.clone()
             },
+            download_url: None,
             format_guess: format_guess(file_name(&url))
                 .map(str::to_owned)
                 .or_else(|| seed.format_guess.clone()),

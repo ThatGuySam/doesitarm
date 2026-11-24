@@ -205,7 +205,7 @@ mod tests {
                 url: request.url,
                 status: 200,
                 body: body.into(),
-                headers: Default::default(),
+                headers: [("content-type".into(), "text/html".into())].into(),
                 received: body.len(),
                 too_large: false,
                 read_failure: None,

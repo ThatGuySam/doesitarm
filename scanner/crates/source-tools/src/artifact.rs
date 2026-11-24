@@ -1,7 +1,7 @@
 use crate::{
     Candidate, Failure, HttpEvidence,
     connectors::looks_like_html,
-    http::{BodyMode, Request, Response, Traffic, Transport, content_range},
+    http::{BodyMode, Request, Response, Traffic, Transport, content_range, is_github_asset},
     public_url, recorded_url, sensitive_url,
 };
 use clap::ValueEnum;
@@ -97,7 +97,8 @@ pub fn inspect(transport: &dyn Transport, candidate: &Candidate, options: ScanOp
         attempts: Vec::new(),
     };
     let deadline = Instant::now() + Duration::from_secs(options.timeout_secs.min(3600));
-    let original = match public_url(&candidate.url) {
+    let direct = candidate.download_url.as_deref().unwrap_or(&candidate.url);
+    let original = match public_url(direct) {
         Ok(url) if !sensitive_url(&url) => url,
         Ok(_) => {
             outcome.failure = Some(Failure::new(
@@ -203,6 +204,18 @@ fn probe(
         return Err(Failure::new(
             "html_landing_page",
             "artifact endpoint returned HTML",
+        ));
+    }
+    if response.status == 200
+        && is_github_asset(original)
+        && response
+            .header("content-type")
+            .is_some_and(|kind| kind.contains("json"))
+    {
+        outcome.probe.reachable = false;
+        return Err(Failure::new(
+            "github_asset_metadata_only",
+            "GitHub returned asset metadata to the binary request",
         ));
     }
     let size = validate_range(&response, 0, 1, None)?;

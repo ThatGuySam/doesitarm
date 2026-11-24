@@ -193,14 +193,11 @@ impl<'a> Context<'a> {
             return Ok(response);
         }
         response.require_success(&url)?;
-        if response
+        let prefix = &response.body[..response.body.len().min(512)];
+        let media_html = response
             .header("content-type")
-            .is_some_and(|value| value.to_ascii_lowercase().starts_with("text/html"))
-            || response
-                .body
-                .get(..response.body.len().min(256))
-                .is_some_and(looks_like_html)
-        {
+            .is_some_and(|value| value.to_ascii_lowercase().starts_with("text/html"));
+        if looks_like_html(prefix) || media_html && !looks_like_feed(prefix) {
             return Err(
                 Failure::new("html_landing_page", "metadata endpoint served HTML")
                     .with_http(response.evidence(&url)),
@@ -244,6 +241,14 @@ pub fn looks_like_html(prefix: &[u8]) -> bool {
         .trim_start()
         .to_ascii_lowercase();
     text.starts_with("<html") || text.starts_with("<!doctype html") || text.starts_with("<head")
+}
+
+fn looks_like_feed(prefix: &[u8]) -> bool {
+    let text = String::from_utf8_lossy(prefix);
+    let text = text.trim_start_matches('\u{feff}').trim_start();
+    ["<?xml", "<rss", "<plist", "{", "["]
+        .iter()
+        .any(|start| text.starts_with(start))
 }
 
 #[derive(Serialize, Deserialize)]

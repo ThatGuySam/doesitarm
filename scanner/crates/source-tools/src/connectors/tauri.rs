@@ -1,5 +1,5 @@
 use super::{Connector, ConnectorId, Context, candidate_from, join_public};
-use crate::{Candidate, Failure, Seed, public_url};
+use crate::{Candidate, Failure, Seed, file_name, http::is_github_asset, public_url};
 use serde::Deserialize;
 use std::collections::BTreeMap;
 use url::Url;
@@ -64,25 +64,12 @@ impl Connector for Tauri {
                 .parse_error("asset descriptor did not return a public GitHub release download"));
         }
         let mut direct = candidate.clone();
+        direct.download_url = Some(url.into());
         direct.url = download.into();
         direct.format_guess =
             crate::format_guess(file_name(&public_url(&direct.url)?)).map(str::to_owned);
         Ok(vec![direct])
     }
-}
-
-fn file_name(url: &Url) -> &str {
-    crate::file_name(url)
-}
-
-fn is_github_asset(url: &Url) -> bool {
-    if url.host_str() != Some("api.github.com") || url.scheme() != "https" || url.query().is_some()
-    {
-        return false;
-    }
-    matches!(url.path().split('/').collect::<Vec<_>>().as_slice(),
-        ["", "repos", owner, repo, "releases", "assets", id] if !owner.is_empty() && !repo.is_empty() &&
-            !id.is_empty() && id.bytes().all(|b| b.is_ascii_digit()))
 }
 
 impl Tauri {

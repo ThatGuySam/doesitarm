@@ -14,6 +14,7 @@ struct Release {
 
 #[derive(Deserialize)]
 struct Asset {
+    id: Option<u64>,
     name: String,
     browser_download_url: String,
     size: u64,
@@ -143,7 +144,13 @@ impl Github {
                 version: Some(release.tag_name.clone()),
                 ..seed.clone()
             };
-            results.push(candidate_from(self, seed, observed, url.as_str())?);
+            let mut candidate = candidate_from(self, seed, observed, url.as_str())?;
+            if let Some(id) = asset.id {
+                candidate.download_url = Some(format!(
+                    "https://api.github.com/repos/{owner}/{repo}/releases/assets/{id}"
+                ));
+            }
+            results.push(candidate);
         }
         if results.is_empty() {
             return Err(Failure::new(
@@ -239,6 +246,10 @@ mod tests {
             assert!(result[0].url.ends_with("Viewer-universal.dmg"));
             assert_eq!(result[0].version.as_deref(), Some("v2.1"));
             assert_eq!(result[0].size, Some(12345));
+            assert_eq!(
+                result[0].download_url.as_deref(),
+                Some("https://api.github.com/repos/example/Viewer/releases/assets/42")
+            );
             assert!(result[1].url.ends_with("Viewer-darwin-x64.zip"));
         }
         let calls = fixture.requests.into_inner().unwrap();
