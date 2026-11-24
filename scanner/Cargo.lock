@@ -525,6 +525,7 @@ dependencies = [
  "ruzstd",
  "serde",
  "sevenz-rust2",
+ "sha2",
  "unicode-normalization",
 ]
 

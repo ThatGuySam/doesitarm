@@ -54,6 +54,9 @@ pub(crate) async fn scan(
     diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
     if let Some(diagnostic) = diagnostic {
+        if diagnostic.fingerprints_only {
+            return inspect(input, out, Some(diagnostic)).await;
+        }
         *diagnostic = ExecutableDiagnostic::default();
         let mut prefixed = Prefix::open(input, diagnostic).await?;
         inspect(&mut prefixed, out, Some(diagnostic)).await
@@ -67,7 +70,7 @@ async fn inspect(
     out: &mut Vec<Architecture>,
     diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
-    let first = input.read_at(0, 8).await?;
+    let first = input.read_at_for(0, 8, "macho_magic_and_cpu").await?;
     scan_after_header(input, &first, out, diagnostic).await
 }
 
@@ -103,9 +106,16 @@ pub(crate) async fn scan_after_header(
     let mut records = prefix.to_vec();
     records.extend(
         input
-            .read_at(first.len() as u64, count * record_size - prefix.len())
+            .read_at_for(
+                first.len() as u64,
+                count * record_size - prefix.len(),
+                "macho_fat_table",
+            )
             .await?,
     );
+    if let Some(trace) = diagnostic.as_deref_mut() {
+        trace.header(&first[..8], &records);
+    }
     let mut arches = Vec::with_capacity(count);
     for record in records.chunks_exact(record_size) {
         let (offset, length) = if kind.wide {
@@ -138,7 +148,7 @@ pub(crate) async fn scan_after_header(
     // Visit slices by file position so a compressed member only inflates forward.
     for index in order {
         let (offset, length) = (out[index].offset, out[index].size);
-        let first = input.read_at(offset, 8).await?;
+        let first = input.read_at_for(offset, 8, "macho_slice_magic").await?;
         thin(
             input,
             offset,
@@ -184,14 +194,21 @@ async fn thin(
     first: &[u8],
     index: Option<usize>,
     out: &mut Vec<Architecture>,
-    diagnostic: Option<&mut ExecutableDiagnostic>,
+    mut diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
     let kind = kind(first)
         .filter(|k| !k.fat)
         .ok_or(ScanError::Invalid("invalid thin Mach-O magic in slice"))?;
     let header_size = if kind.wide { 32 } else { 28 };
     check_range(size, 0, header_size as u64)?;
-    let rest = input.read_at(offset + 8, header_size - 8).await?;
+    let rest = input
+        .read_at_for(offset + 8, header_size - 8, "macho_fixed_header")
+        .await?;
+    if index.is_none()
+        && let Some(trace) = diagnostic.as_deref_mut()
+    {
+        trace.header(first, &rest);
+    }
     let cpu = kind.word(first, 4);
     let subtype = kind.word(&rest, 0);
     let arch = if let Some(index) = index {
@@ -208,14 +225,16 @@ async fn thin(
     };
     arch.header_verified = true;
 
-    let trace = diagnostic.map(|value| {
-        value.load_commands.push(SliceCommands {
-            slice_offset: offset,
-            commands: Vec::new(),
-            truncated: true,
+    let trace = diagnostic
+        .filter(|trace| !trace.fingerprints_only)
+        .map(|value| {
+            value.load_commands.push(SliceCommands {
+                slice_offset: offset,
+                commands: Vec::new(),
+                truncated: true,
+            });
+            value.load_commands.last_mut().unwrap()
         });
-        value.load_commands.last_mut().unwrap()
-    });
     let count = kind.word(&rest, 8);
     let length = kind.word(&rest, 12) as usize;
     if length > 1024 * 1024 {
@@ -225,7 +244,9 @@ async fn thin(
         return Err(ScanError::Invalid("Mach-O load command count"));
     }
     check_range(size, header_size as u64, length as u64)?;
-    let commands = input.read_at(offset + header_size as u64, length).await?;
+    let commands = input
+        .read_at_for(offset + header_size as u64, length, "macho_load_commands")
+        .await?;
 
     let mut trace = trace;
     let mut pos = 0;

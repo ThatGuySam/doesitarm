@@ -84,7 +84,11 @@ async fn scan_directory(
         return Err(ScanError::Limit("ZIP central directory exceeds 16 MiB"));
     }
     let records = input
-        .read_at(directory.offset, directory.size as usize)
+        .read_at_for(
+            directory.offset,
+            directory.size as usize,
+            "zip_central_directory",
+        )
         .await?;
     let entries = read_entries(&records, directory.count)?;
 
@@ -387,7 +391,7 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
     // Grow the suffix only when it contains a comment. Retain each fetched
     // window so long comments never trigger duplicate reads.
     let max_tail = size.min(22 + u16::MAX as u64) as usize;
-    let mut tail = input.read_at(size - 22, 22).await?;
+    let mut tail = input.read_at_for(size - 22, 22, "zip_eocd").await?;
     let (eocd_offset, eocd) = loop {
         if let Some(index) = end_record(&tail) {
             break (
@@ -399,7 +403,7 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
             let limit = size.min(256 * 1024) as usize;
             if limit > tail.len() {
                 let mut prefix = input
-                    .read_at(size - limit as u64, limit - tail.len())
+                    .read_at_for(size - limit as u64, limit - tail.len(), "zip_eocd_search")
                     .await?;
                 prefix.append(&mut tail);
                 tail = prefix;
@@ -410,7 +414,9 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
             break (tail_at + index as u64, &tail[index..index + 22]);
         }
         let len = max_tail.min((tail.len() * 4).max(128));
-        let mut prefix = input.read_at(size - len as u64, len - tail.len()).await?;
+        let mut prefix = input
+            .read_at_for(size - len as u64, len - tail.len(), "zip_eocd_search")
+            .await?;
         prefix.append(&mut tail);
         tail = prefix;
     };
@@ -442,7 +448,7 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
     let locator_at = eocd_offset
         .checked_sub(20)
         .ok_or(ScanError::Invalid("ZIP64 locator missing"))?;
-    let locator = input.read_at(locator_at, 20).await?;
+    let locator = input.read_at_for(locator_at, 20, "zip64_locator").await?;
     if &locator[..4] != b"PK\x06\x07" {
         return Err(ScanError::Invalid("ZIP64 locator signature"));
     }
@@ -451,7 +457,7 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
     }
     let record_at = le64(&locator, 8);
     check_range(locator_at, record_at, 56)?;
-    let record = input.read_at(record_at, 56).await?;
+    let record = input.read_at_for(record_at, 56, "zip64_eocd").await?;
     let record_size = le64(&record, 4);
     if &record[..4] != b"PK\x06\x06"
         || record_size < 44
@@ -603,7 +609,9 @@ async fn member<'a, S: ReadAt>(
     }
 
     check_range(heap_end, entry.offset, 30)?;
-    let header = input.read_at(entry.offset, 30).await?;
+    let header = input
+        .read_at_for(entry.offset, 30, "zip_local_header")
+        .await?;
     let name_len = le16(&header, 26) as usize;
     if &header[..4] != b"PK\x03\x04"
         || le16(&header, 8) != entry.method
@@ -620,13 +628,19 @@ async fn member<'a, S: ReadAt>(
     check_range(heap_end, name_at, name_len as u64 + extra_len)?;
     let offset = name_at + name_len as u64 + extra_len;
     check_range(heap_end, offset, entry.packed)?;
-    if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
+    if input
+        .read_at_for(name_at, name_len, "zip_local_filename")
+        .await?
+        != entry.path.as_bytes()
+    {
         return Err(ScanError::Invalid("ZIP local name differs from directory"));
     }
     if matches!(codec, Some(Codec::Lzma)) {
         const ZIP_LZMA_HEADER: u64 = 9;
         check_range(entry.packed, 0, ZIP_LZMA_HEADER)?;
-        let properties = input.read_at(offset, ZIP_LZMA_HEADER as usize).await?;
+        let properties = input
+            .read_at_for(offset, ZIP_LZMA_HEADER as usize, "zip_lzma_properties")
+            .await?;
         if le16(&properties, 2) != 5 {
             return Err(ScanError::Unsupported("ZIP LZMA properties length"));
         }

@@ -102,6 +102,16 @@ pub trait ReadAt {
         u64::MAX
     }
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>>;
+
+    /// Optional purpose annotation for hosts retaining a physical read log.
+    async fn read_at_for(
+        &mut self,
+        offset: u64,
+        len: usize,
+        _purpose: &'static str,
+    ) -> Result<Vec<u8>> {
+        self.read_at(offset, len).await
+    }
 }
 
 pub type Result<T> = std::result::Result<T, ScanError>;
@@ -324,7 +334,7 @@ pub async fn scan_target_with_deadline(
     target: Target<'_>,
     expired: Option<&dyn Fn() -> bool>,
 ) -> ScanResult {
-    scan_internal(source, limits, target, expired, false).await
+    scan_internal(source, limits, target, expired, None).await
 }
 
 /// A local scan that retains the property list and executable evidence the
@@ -340,7 +350,25 @@ pub async fn scan_target_with_diagnostics(
         limits,
         target,
         expired,
-        limits.profile == Profile::Local,
+        (limits.profile == Profile::Local).then(ScanDiagnostic::default),
+    )
+    .await
+}
+
+/// Hash only the plist and executable header bytes already consumed by the
+/// scanner. This does not change the source read plan or expand diagnostics.
+pub async fn scan_target_with_fingerprints(
+    source: &mut impl ReadAt,
+    limits: ScanLimits,
+    target: Target<'_>,
+    expired: Option<&dyn Fn() -> bool>,
+) -> ScanResult {
+    scan_internal(
+        source,
+        limits,
+        target,
+        expired,
+        Some(ScanDiagnostic::fingerprints()),
     )
     .await
 }
@@ -350,7 +378,7 @@ async fn scan_internal(
     limits: ScanLimits,
     target: Target<'_>,
     expired: Option<&dyn Fn() -> bool>,
-    diagnostic: bool,
+    diagnostic: Option<ScanDiagnostic>,
 ) -> ScanResult {
     let strict = limits.profile == Profile::Worker;
     #[cfg(not(target_arch = "wasm32"))]
@@ -363,9 +391,7 @@ async fn scan_internal(
 
     let size = source.size();
     let mut result = ScanResult::new(size);
-    if diagnostic {
-        result.diagnostic = Some(ScanDiagnostic::default());
-    }
+    result.diagnostic = diagnostic;
     let mut input = Metered {
         source,
         size,
@@ -428,7 +454,7 @@ async fn inspect(
     if input.size() < 4 {
         return Err(ScanError::Invalid("missing file magic"));
     }
-    let magic = input.read_at(0, 4).await?;
+    let magic = input.read_at_for(0, 4, "artifact_magic").await?;
     if macho::kind(&magic).is_some() {
         out.format = Some("macho");
         if matches!(target, Target::Bundle(_)) {
@@ -458,14 +484,17 @@ async fn inspect(
     }
     if magic == b"0707" && input.size() >= 6 {
         let mut cpio_magic = magic.clone();
-        cpio_magic.extend(input.read_at(4, 2).await?);
+        cpio_magic.extend(input.read_at_for(4, 2, "artifact_magic").await?);
         if cpio::recognized(&cpio_magic) {
             out.format = Some("cpio");
             return cpio::scan_with(input, work, stream_bundle::StreamBundle::new(target), out)
                 .await;
         }
     }
-    if magic == b"7z\xbc\xaf" && input.size() >= 32 && input.read_at(4, 2).await? == b"\x27\x1c" {
+    if magic == b"7z\xbc\xaf"
+        && input.size() >= 32
+        && input.read_at_for(4, 2, "artifact_magic").await? == b"\x27\x1c"
+    {
         out.format = Some("7z");
         return sevenz::scan(input, work, target, out).await;
     }
@@ -474,7 +503,9 @@ async fn inspect(
         return pkg::scan(input, work, target, out).await;
     }
     if input.size() >= 512 {
-        let trailer = input.read_at(input.size() - 512, 512).await?;
+        let trailer = input
+            .read_at_for(input.size() - 512, 512, "udif_footer_probe")
+            .await?;
         if trailer.starts_with(b"koly") {
             out.format = Some("dmg");
             return dmg::scan(input, work, &trailer, target, out).await;
@@ -488,11 +519,14 @@ async fn inspect(
     if magic.starts_with(b"BZh") {
         return compressed_tar(input, work, target, out, "tar.bz2", inflate::Codec::Bzip2).await;
     }
-    if magic == b"\xfd7zX" && input.size() >= 6 && input.read_at(4, 2).await? == b"Z\0" {
+    if magic == b"\xfd7zX"
+        && input.size() >= 6
+        && input.read_at_for(4, 2, "artifact_magic").await? == b"Z\0"
+    {
         return compressed_tar(input, work, target, out, "tar.xz", inflate::Codec::Xz).await;
     }
     if input.size() >= 512 {
-        let header = input.read_at(0, 512).await?;
+        let header = input.read_at_for(0, 512, "container_header_probe").await?;
         if tar::is_header(&header) {
             out.format = Some("tar");
             return tar::scan(input, work, target, out).await;
@@ -554,6 +588,15 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        self.read_at_for(offset, len, "container_data").await
+    }
+
+    async fn read_at_for(
+        &mut self,
+        offset: u64,
+        len: usize,
+        purpose: &'static str,
+    ) -> Result<Vec<u8>> {
         decode::check_deadline(self.expired)?;
         check_range(self.size, offset, len as u64)?;
         if len == 0 {
@@ -567,7 +610,7 @@ impl<S: ReadAt> ReadAt for Metered<'_, S> {
         }
         self.reads += 1;
         self.requested += len as u64;
-        let bytes = self.source.read_at(offset, len).await?;
+        let bytes = self.source.read_at_for(offset, len, purpose).await?;
         if bytes.len() != len {
             return Err(ScanError::Source(format!(
                 "range at {offset} expected {len} bytes, received {}",
@@ -660,8 +703,19 @@ impl<S: ReadAt> ReadAt for Window<'_, S> {
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        self.read_at_for(offset, len, "container_data").await
+    }
+
+    async fn read_at_for(
+        &mut self,
+        offset: u64,
+        len: usize,
+        purpose: &'static str,
+    ) -> Result<Vec<u8>> {
         check_range(self.size, offset, len as u64)?;
-        self.source.read_at(self.offset + offset, len).await
+        self.source
+            .read_at_for(self.offset + offset, len, purpose)
+            .await
     }
 }
 

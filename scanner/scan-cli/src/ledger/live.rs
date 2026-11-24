@@ -81,9 +81,10 @@ pub(super) fn capture_url(
     }
     let (spool_dir, _lock) = network_guard()?;
     let start = Instant::now();
-    let mut duration = settings
-        .deadline_ms
-        .or(settings.timeout_ms)
+    let mut duration = [settings.deadline_ms, settings.timeout_ms]
+        .into_iter()
+        .flatten()
+        .min()
         .map_or(Duration::from_secs(45), Duration::from_millis);
     let mut limits = limits(settings)?;
     if limits.profile == Profile::Worker {
@@ -130,6 +131,30 @@ pub(super) fn enrich(record: &mut Record, capture: &Capture) -> Result<()> {
                 .headers
                 .entry(key.clone())
                 .or_insert_with(|| value.clone());
+        }
+    }
+    if let Some(response) = capture
+        .phases
+        .iter()
+        .rev()
+        .find_map(|phase| phase.response.as_ref())
+    {
+        record.final_url = Some(response.final_url.clone());
+        record.http_status = record.http_status.or(Some(response.status));
+        if record.redirect_chain.last() != Some(&response.final_url)
+            && !response.redirects.is_empty()
+        {
+            record
+                .redirect_chain
+                .extend(response.redirects.iter().skip(1).cloned());
+        }
+        for (name, value) in &response.headers {
+            if !matches!(name.as_str(), "content-length" | "content-range") {
+                record
+                    .headers
+                    .entry(name.clone())
+                    .or_insert_with(|| value.clone());
+            }
         }
     }
     if !capture.prefix.is_empty() {

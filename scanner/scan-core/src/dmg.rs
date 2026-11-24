@@ -66,7 +66,9 @@ pub(crate) async fn scan(
 
     let size = sectors(be64(trailer, 492))?;
     let (runs, partitions) = {
-        let xml = input.read_at(xml_at, xml_len as usize).await?;
+        let xml = input
+            .read_at_for(xml_at, xml_len as usize, "udif_block_map")
+            .await?;
         parse_index(&xml, size, fork_at..fork_at + fork_len)?
     };
     let mut image = Image {
@@ -262,7 +264,7 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
                 }
                 RAW => bytes.extend(
                     self.source
-                        .read_at(run.stored.start + within, count)
+                        .read_at_for(run.stored.start + within, count, "dmg_uncompressed_run")
                         .await?,
                 ),
                 kind => {
@@ -282,7 +284,7 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
                         }
                         let input = self
                             .source
-                            .read_at(run.stored.start, packed as usize)
+                            .read_at_for(run.stored.start, packed as usize, "dmg_compressed_run")
                             .await?;
                         (
                             index,

@@ -1,9 +1,11 @@
 use super::{Result, privacy};
-use crate::{Deadline, Output, http, ready};
-use scan_core::{ReadAt, ScanError, ScanLimits, Target, scan_target_with_deadline};
+use crate::{Deadline, Output, blocking, http};
+use scan_core::{ReadAt, ScanError, ScanLimits, Target};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{collections::BTreeMap, time::Instant};
+use std::collections::BTreeMap;
+#[cfg(test)]
+use std::time::Instant;
 use ureq::{Body, ResponseExt, http::Response};
 
 pub(crate) type ReplayResult<T> = Result<T>;
@@ -54,7 +56,7 @@ impl HttpEvidence {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub(super) struct Span {
+pub(crate) struct Span {
     pub offset: u64,
     pub length: usize,
     pub purpose: String,
@@ -105,8 +107,9 @@ pub(crate) struct Phase {
     pub source_bytes: Option<u64>,
     pub source_etag: Option<String>,
     pub source_content_type: Option<String>,
+    pub response: Option<HttpEvidence>,
     pub early_error: Option<CapturedError>,
-    pub(super) read_log: Vec<Span>,
+    pub read_log: Vec<Span>,
     pub deadline_check: Option<u64>,
     pub log_overflow: usize,
     pub log_sha256: Option<String>,
@@ -174,18 +177,44 @@ impl<S: ReadAt> ReadAt for RecordReads<'_, S> {
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> scan_core::Result<Vec<u8>> {
-        let result = self.source.read_at(offset, len).await;
+        self.read_at_for(offset, len, "container_data").await
+    }
+
+    async fn read_at_for(
+        &mut self,
+        offset: u64,
+        len: usize,
+        purpose: &'static str,
+    ) -> scan_core::Result<Vec<u8>> {
+        let result = self.source.read_at_for(offset, len, purpose).await;
         let mut span = Span {
             offset,
             length: len,
-            purpose: self.phase.transport.clone(),
+            purpose: purpose.to_owned(),
             payload_offset: None,
             error: result.as_ref().err().map(CapturedError::from),
         };
         if let Ok(data) = &result {
             self.capture.prefix(offset, data);
             if self.capture.keep_bytes && !self.capture.over_limit {
-                if self.capture.payload.len() + data.len() <= KIT_BYTES {
+                let existing = self.phase.read_log.iter().find_map(|earlier| {
+                    let start = usize::try_from(offset.checked_sub(earlier.offset)?).ok()?;
+                    let position = earlier.payload_offset?.checked_add(start)?;
+                    if start.checked_add(len)? <= earlier.length
+                        && self
+                            .capture
+                            .payload
+                            .get(position..position.checked_add(len)?)
+                            == Some(data)
+                    {
+                        Some(position)
+                    } else {
+                        None
+                    }
+                });
+                if let Some(existing) = existing {
+                    span.payload_offset = Some(existing);
+                } else if self.capture.payload.len() + data.len() <= KIT_BYTES {
                     span.payload_offset = Some(self.capture.payload.len());
                     self.capture.payload.extend_from_slice(data);
                 } else {
@@ -234,12 +263,13 @@ pub(crate) fn core(
         phase,
         hash: Sha256::new(),
     };
-    let result = ready(scan_target_with_deadline(
+    let result = blocking::scan(
         &mut recording,
         limits,
         target,
         deadline.map(|_| &expired as &dyn Fn() -> bool),
-    ));
+        true,
+    );
     recording.phase.deadline_check = timed_out.get();
     if recording.phase.log_overflow > 0 {
         recording.phase.log_sha256 = Some(privacy::hex(&recording.hash.finalize()));
@@ -326,12 +356,7 @@ pub(super) fn replay_phase(
             checks.set(checks.get() + 1);
             phase.deadline_check.is_some_and(|at| checks.get() >= at)
         };
-        let scan = ready(scan_target_with_deadline(
-            &mut source,
-            limits,
-            target,
-            Some(&expired),
-        ));
+        let scan = blocking::scan(&mut source, limits, target, Some(&expired), true);
         if let Some((offset, length)) = source.absent {
             return Err(format!("Kit lacks coverage for offset {offset}, length {length}").into());
         }

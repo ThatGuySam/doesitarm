@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 
+mod blocking;
 mod http;
 mod ledger;
 mod local;
@@ -7,7 +8,7 @@ mod local_folder;
 
 use scan_core::{
     Profile, REMOTE_BUDGET_TIERS, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status,
-    Target, WORKER_WALL_TIME_MS, scan_target_with_deadline,
+    Target, WORKER_WALL_TIME_MS,
 };
 use serde::Serialize;
 use std::{
@@ -317,12 +318,13 @@ fn run(args: &Args) -> Output {
         }
         FileSource::open(path).map(|mut file| {
             let expired = || deadline.is_some_and(Deadline::expired);
-            ready(scan_target_with_deadline(
+            blocking::scan(
                 &mut file,
                 args.limits,
                 target,
                 deadline.map(|_| &expired as &dyn Fn() -> bool),
-            ))
+                false,
+            )
         })
     };
     Output::new(result.unwrap_or_else(|error| failure(error, 0)))

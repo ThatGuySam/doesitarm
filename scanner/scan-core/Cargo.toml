@@ -14,3 +14,4 @@ unicode-normalization = "0.1"
 roxmltree = "0.21"
 ruzstd = "0.9.1"
 sevenz-rust2 = { version = "0.25", default-features = false }
+sha2 = "0.11"

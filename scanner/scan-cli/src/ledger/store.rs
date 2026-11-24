@@ -166,20 +166,24 @@ impl Record {
     }
 
     pub fn command(&self) -> Option<String> {
-        if !self.rerunnable() {
-            return None;
-        }
-        let input = self.original_url.as_ref()?;
-        if privacy::text(input) != *input || self.settings.profile.as_deref() == Some("local") {
-            return None;
-        }
         let quote = |s: &str| format!("'{}'", s.replace('\'', "'\"'\"'"));
-        let mut argv = vec![
-            "scan-cli".to_owned(),
-            "scan".into(),
-            quote(input),
-            "--json".into(),
-        ];
+        let input = if self.settings.profile.as_deref() == Some("local") {
+            "\"$ARTIFACT\"".to_owned()
+        } else {
+            let input = self.original_url.as_ref()?;
+            if !self.rerunnable() || privacy::text(input) != *input {
+                return None;
+            }
+            quote(input)
+        };
+        let mut argv = Vec::new();
+        if let Some(timeout) = self.settings.timeout_ms {
+            argv.extend([
+                "timeout".into(),
+                format!("{}.{:03}s", timeout / 1000, timeout % 1000),
+            ]);
+        }
+        argv.extend(["scan-cli".to_owned(), "scan".into(), input, "--json".into()]);
         if let Some(profile) = &self.settings.profile {
             argv.extend(["--profile".into(), quote(profile)]);
         }

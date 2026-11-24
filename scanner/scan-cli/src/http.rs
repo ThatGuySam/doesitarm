@@ -1,8 +1,8 @@
-use super::{Deadline, Output, failure, ready, source_error};
+#[cfg(test)]
+use super::ready;
+use super::{Deadline, Output, blocking, failure, source_error};
 use crate::ledger::capture::{self, Capture, HttpEvidence, Phase};
-use scan_core::{
-    Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Target, scan_target_with_deadline,
-};
+use scan_core::{Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Target};
 use std::{
     fs::File,
     io::{Read, Seek, SeekFrom, Write},
@@ -98,6 +98,8 @@ pub(crate) fn scan_with_capture(
         last_request: now,
         deadline,
         ignored_range: None,
+        observe: capture.is_some(),
+        last_response: None,
     };
     let budget = if limits.profile == Profile::Worker {
         limits.byte_budget.min(source.size().saturating_sub(1))
@@ -115,6 +117,7 @@ pub(crate) fn scan_with_capture(
     } else {
         scan_core(&mut source, limits, target, deadline)
     };
+    phase.response = source.last_response.take();
     result.reads += 1;
     result.bytes_requested += 1;
     // A successful core read of the magic already covers the probe at zero.
@@ -177,12 +180,13 @@ fn scan_core(
     deadline: Option<Deadline>,
 ) -> ScanResult {
     let expired = || deadline.is_some_and(Deadline::expired);
-    ready(scan_target_with_deadline(
+    blocking::scan(
         source,
         limits,
         target,
         deadline.map(|_| &expired as &dyn Fn() -> bool),
-    ))
+        false,
+    )
 }
 
 fn scan_stream(
@@ -208,6 +212,9 @@ fn scan_stream(
         transport: "stream".into(),
         source_etag: source_etag.clone(),
         source_content_type: source_content_type.clone(),
+        response: capture
+            .as_ref()
+            .map(|_| HttpEvidence::from_response(&response)),
         ..Phase::default()
     };
     let result =
@@ -390,6 +397,8 @@ struct HttpSource {
     last_request: Instant,
     deadline: Option<Deadline>,
     ignored_range: Option<Response<Body>>,
+    observe: bool,
+    last_response: Option<HttpEvidence>,
 }
 
 impl ReadAt for HttpSource {
@@ -412,6 +421,9 @@ impl ReadAt for HttpSource {
             Some(&self.representation),
             self.deadline,
         )?;
+        if self.observe {
+            self.last_response = Some(HttpEvidence::from_response(&response));
+        }
         if response.status().as_u16() == 200 {
             self.ignored_range = Some(response);
             return Err(source_error(format!(

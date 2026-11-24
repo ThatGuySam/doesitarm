@@ -353,6 +353,39 @@ fn projection(row: &Value, failure: &Value, provenance: Origin, index: usize) ->
     record.error = string(evidence, "scanner_error")
         .or_else(|| string(failure, "message"))
         .or(record.error);
+    if record.source == "homebrew-cask"
+        && !success(&record.status)
+        && let Some(reason) = record.error.as_deref()
+    {
+        let status = if reason.starts_with("unsupported:") {
+            "unsupported"
+        } else if reason.starts_with("not found:") {
+            "not_found"
+        } else if reason.starts_with("source:") {
+            "source_error"
+        } else if reason == "byte budget reached" {
+            "budget_exhausted"
+        } else if reason.starts_with("invalid data:") {
+            "invalid"
+        } else {
+            ""
+        };
+        if status.is_empty()
+            && !reason.is_empty()
+            && reason.bytes().all(|b| b.is_ascii_lowercase() || b == b'_')
+        {
+            record.failure_class = Some(reason.into());
+        } else if !status.is_empty() {
+            record.failure_class = Some(
+                classify::category(
+                    &json!({"status":status, "error":reason}),
+                    None,
+                    &Value::Null,
+                )
+                .into(),
+            );
+        }
+    }
     record.settings = Settings {
         profile: (row["scanned"] != false).then(|| "remote-cli".into()),
         tier_bytes: row["budget_attempts"]
@@ -615,15 +648,29 @@ pub(super) fn all(store: &Store, scanner: &Path, data: &Path) -> Result<()> {
                     && row.token == projection.token
                     && row.original_url == projection.original_url
                     && row.scanner_commit == projection.scanner_commit
-                    && row.bytes_read.is_some()
                     && row.bytes_read == projection.bytes_read
                     && row.reads == projection.reads
-                    && row.status == projection.status
+                    && (row.bytes_read.is_some() || row.scanned_at == projection.scanned_at)
+                    && (success(&row.status) == success(&projection.status)
+                        || projection
+                            .result
+                            .as_ref()
+                            .is_some_and(|v| v["evidence_scope"] == "bootstrapper"))
+                    && (row.error == projection.error
+                        || row.error.is_none()
+                        || projection
+                            .result
+                            .as_ref()
+                            .is_some_and(|v| v["evidence_scope"] == "bootstrapper"))
             })
             .collect();
         if candidates.len() == 1 {
             let row = candidates.into_iter().next().unwrap();
             row.provenance.extend(projection.provenance);
+            if let Some(result) = projection.result {
+                row.evidence["cask_export"] = json!({"name":result["name"],"status":result["status"],
+                    "native_apple_silicon":result["native_apple_silicon"],"evidence_scope":result["evidence_scope"]});
+            }
         } else {
             rows.push(projection);
         }

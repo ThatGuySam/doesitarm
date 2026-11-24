@@ -28,7 +28,7 @@ async fn scan_entries(
     let mut next_size = None;
     for _ in 0..work.archive_entry_limit() {
         bundle.check_traversal(input, work)?;
-        let header = input.read_at(pos, BLOCK).await?;
+        let header = input.read_at_for(pos, BLOCK, "tar_member_header").await?;
         if header.iter().all(|byte| *byte == 0) {
             return Ok(());
         }
@@ -40,7 +40,9 @@ async fn scan_entries(
                 if size > MAX_METADATA {
                     return Err(ScanError::Limit("tar extended header exceeds 64 KiB"));
                 }
-                let extension = input.read_at(start, size as usize).await?;
+                let extension = input
+                    .read_at_for(start, size as usize, "tar_member_extension")
+                    .await?;
                 if header[156] == b'L' {
                     next_path = text(&extension);
                 } else if header[156] == b'x' {
