@@ -1,0 +1,10 @@
+[package]
+name = "scan-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+scan-core = { path = "../scan-core" }
+serde.workspace = true
+serde_json.workspace = true
+ureq = { version = "3", default-features = false, features = ["rustls"] }
