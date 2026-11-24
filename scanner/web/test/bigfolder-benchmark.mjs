@@ -264,7 +264,7 @@ async function runRung(browser, browserSession, url, cache, files, report, extra
     await page.addInitScript(trackDom, values.route === 'drop-entry');
     const session = await context.newCDPSession(page);
     await page.goto(url);
-    await page.locator('#cask-results tr').first().waitFor();
+    await page.locator('#cask-results tr').first().waitFor({ state: 'attached' });
     await page.bringToFront();
 
     async function sampleMemory() {
