@@ -38,3 +38,11 @@ Path usernames and known credential-bearing URL query values are scrubbed recurs
 - HTTP 404 preserves the pinned URL and response. A replacement URL from Homebrew or the vendor is a new representation.
 - HTTP 401, robots restrictions, and license or payment gates need their documented discovery or vendor acquisition flow. For SEGGER J-Link, the edge inspection records the landing page and the Homebrew POST declaration. An entitled user can obtain the installer through SEGGER's own flow and then run the local scanner.
 - High transfer failures stay tied to their actual tier and request log. When creating a test fixture, preserve the failing layout and the specific scanner condition using a small generated or recorded artifact.
+
+## Fixer handoff
+
+Ten classes were verified against current observations and independently replayed from their stored spans. See the generated report under `~/Code/doesitarm-data/scan-ledger/LEDGER.md` for attempt IDs and folders.
+
+- Container and budget work can start with the JProfiler stream budget kit and AMPPS HFS image kit.
+- Bundle work can start with the SQLCipher Nightly missing executable key and Rolisteam missing metadata kits. Kotlin LSP retains the declared script outcome.
+- Acquisition work can start with Dropzone's representation-size mismatch. Warp and Send to Kindle preserve their pinned HTTP rejections. SEGGER J-Link preserves the HTML response before any license attestation.
