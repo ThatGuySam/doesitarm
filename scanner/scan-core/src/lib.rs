@@ -463,14 +463,7 @@ async fn inspect(
         // first local file header. ZIP validates the shifted directory.
         if let Some(offset) = header.windows(4).position(|magic| magic == b"PK\x03\x04") {
             out.format = Some("zip");
-            let size = input.size() - offset as u64;
-            return zip::scan(
-                &mut Window::new(input, offset as u64, size)?,
-                work,
-                target,
-                out,
-            )
-            .await;
+            return zip::scan_prefixed(input, offset as u64, work, target, out).await;
         }
     }
     Err(ScanError::Unsupported("unrecognized file format"))

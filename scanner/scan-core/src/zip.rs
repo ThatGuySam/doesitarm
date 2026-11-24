@@ -38,6 +38,47 @@ pub(crate) async fn scan(
     out: &mut ScanResult,
 ) -> Result<()> {
     let directory = read_directory(input).await?;
+    scan_directory(input, work, target, out, directory).await
+}
+
+pub(crate) async fn scan_prefixed(
+    input: &mut impl ReadAt,
+    prefix: u64,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    // The ZIP writer may have counted the prefix in its stored offsets.
+    let relative = match read_directory(input).await {
+        Ok(directory)
+            if directory.offset.checked_add(directory.size) == Some(directory.end_record) =>
+        {
+            return scan_directory(input, work, target, out, directory).await;
+        }
+        Ok(directory) => {
+            directory
+                .offset
+                .checked_add(directory.size)
+                .and_then(|end| end.checked_add(prefix))
+                == Some(directory.end_record)
+        }
+        Err(ScanError::Invalid(_)) => true,
+        Err(error) => return Err(error),
+    };
+    if !relative {
+        return Err(ScanError::Invalid("prefixed ZIP central directory extent"));
+    }
+    let size = input.size() - prefix;
+    scan(&mut Window::new(input, prefix, size)?, work, target, out).await
+}
+
+async fn scan_directory(
+    input: &mut impl ReadAt,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+    directory: Directory,
+) -> Result<()> {
     check_range(directory.end_record, directory.offset, directory.size)?;
     if directory.size > MAX_DIRECTORY {
         return Err(ScanError::Limit("ZIP central directory exceeds 16 MiB"));
@@ -101,9 +142,7 @@ pub(crate) async fn scan(
     let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
     read_runtime(input, &entries, directory.offset, work, out).await;
     let mut inventory = crate::BinaryInventory::default();
-    if let Err(error) = &primary {
-        inventory.partial(error.to_string());
-    }
+    inventory.record_primary(&primary);
     let mut allowance = Allowance::new(input, work);
     for entry in &entries {
         let Some(relative) = bundle::archive_path(&entry.path)

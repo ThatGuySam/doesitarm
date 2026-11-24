@@ -638,22 +638,37 @@ async fn read_small_member(
     if member.packed > limit || member.expanded > limit {
         return Ok(None);
     }
-    if member.encoding == "application/x-gzip" {
+    let compressed = matches!(
+        member.encoding,
+        "application/x-gzip" | "application/x-bzip2"
+    );
+    if compressed {
         work.check_chunk(member.packed, member.expanded)?;
     }
     let data = input.read_at(member.offset, member.packed as usize).await?;
+    if compressed {
+        work.start_chunk(member.expanded)?;
+    }
+    let size = member.expanded as usize;
     Ok(match member.encoding {
         "application/octet-stream" if member.packed == member.expanded => Some(data),
-        "application/x-gzip" => {
-            work.start_chunk(member.expanded)?;
-            match decode::zlib(&data, member.expanded as usize, TOC_ERROR, work) {
-                Ok(data) => Some(data),
-                Err(ScanError::Invalid(_)) => None,
-                Err(error) => return Err(error),
-            }
-        }
+        "application/x-gzip" => optional_metadata(decode::zlib(&data, size, TOC_ERROR, work))?,
+        "application/x-bzip2" => optional_metadata(decode::exact(
+            &mut bzip2::read::BzDecoder::new(data.as_slice()),
+            size,
+            TOC_ERROR,
+            work,
+        ))?,
         _ => None,
     })
+}
+
+fn optional_metadata(result: Result<Vec<u8>>) -> Result<Option<Vec<u8>>> {
+    match result {
+        Ok(data) => Ok(Some(data)),
+        Err(ScanError::Invalid(_)) => Ok(None),
+        Err(error) => Err(error),
+    }
 }
 
 fn parse_xml(bytes: &[u8]) -> Result<Document<'_>> {

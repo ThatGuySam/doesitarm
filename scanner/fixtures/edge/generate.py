@@ -121,14 +121,37 @@ def generate(mode, name, output):
             "terminal-browser/bin/terminal-browser": b'#!/bin/sh\nSELF="$0"\nROOT="$(CDPATH= cd -- "$(dirname -- "$SELF")/.." && pwd -P)"\nexec "$ROOT/electron/terminal-browser.app/Contents/MacOS/terminal-browser" "$ROOT/cli/dist/main.js" "$@"\n',
         }), mtime=0)
     elif mode == "steam":
-        with output.open("wb") as stream:
-            stream.write(bytes.fromhex("963485d529d2bffd894f853278210eb7ee7ee278"))
-        wrapped = io.BytesIO()
-        with zipfile.ZipFile(wrapped, "w", zipfile.ZIP_DEFLATED) as archive:
+        output.write_bytes(bytes(20))
+        with zipfile.ZipFile(output, "a", zipfile.ZIP_DEFLATED) as archive:
             archive.writestr("SteamMacBootstrapper.tar.gz", gzip.compress(tar(app("Steam.app", "steam_osx")), mtime=0))
             archive.writestr("SteamMacBootstrapper.version", b"1234\n")
-        with output.open("ab") as stream:
-            stream.write(wrapped.getvalue())
+        return
+    elif mode == "legacy-contents":
+        root = "LibreOffice Language Pack.app"
+        launcher = "LibreOffice Language Pack"
+        files = app(root, launcher)
+        del files[f"{root}/Contents/MacOS/{launcher}"]
+        files[f"{root}/Contents/{launcher}"] = b"#!/bin/sh\nexit 0\n"
+        files[f"{root}/Contents/Resources/osx_install.applescript"] = b"-- stub\n"
+        files[f"{root}/Contents/Resources/tarball.tar.bz2"] = bz2.compress(tar({"locale/readme": b"stub"}))
+        volume = hfs_tree(files)
+        write_udif(output, volume, [(0x80000007, len(volume) // 512,
+                    lambda raw: b"bvx-" + pack("<I", len(raw)) + raw + b"bvx$")], "Apple_HFS")
+        return
+    elif mode == "nested-bzip2-xar":
+        root = "Prezi Video.app"
+        files = {path.removeprefix(root + "/"): data for path, data in app(root, "Prezi Video").items()}
+        files["Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/Info.plist"] = plistlib.dumps(METADATA)
+        metadata = f'<pkg-info identifier="com.prezi.PreziCast" version="11118" install-location="/Applications/{root}"/>'
+        with tempfile.TemporaryDirectory() as directory:
+            pkg = Path(directory) / "Prezi_Video.pkg"
+            write_xar(pkg, gzip.compress(cpio(list(reversed(list(files.items()))), odc=False), mtime=0),
+                      package_info=metadata.encode(), package_info_bzip2=True)
+            with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
+                with archive.open(pkg.name, "w") as member:
+                    member.write(pkg.read_bytes())
+                    for _ in range(33):
+                        member.write(bytes(1 << 20))
         return
     elif mode == "raw-gpt":
         disk = bytearray(40 * 512)

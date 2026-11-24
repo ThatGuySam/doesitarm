@@ -39,6 +39,17 @@ impl BinaryInventory {
         }
     }
 
+    pub(crate) fn record_primary(&mut self, primary: &Result<()>) {
+        if let Err(error) = primary
+            && !matches!(
+                error,
+                ScanError::Unsupported("declared executable is a script")
+            )
+        {
+            self.partial(error.to_string());
+        }
+    }
+
     pub fn push(&mut self, path: String, role: &'static str, architectures: Vec<Architecture>) {
         if architectures.is_empty() {
             return;

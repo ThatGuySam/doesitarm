@@ -1,4 +1,5 @@
 """Construct a flat XAR package containing Distribution, PackageInfo and CPIO."""
+import bz2
 import gzip
 import lzma
 import plistlib
@@ -51,7 +52,7 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, p
     write_xar(path, payload)
 
 
-def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO):
+def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO, package_info_bzip2=False):
     root = Element("xar")
     toc = SubElement(root, "toc")
     package = SubElement(toc, "file", id="1")
@@ -72,12 +73,19 @@ def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, pack
         entry = SubElement(parent, "file", id=str(index))
         SubElement(entry, "name").text = name
         SubElement(entry, "type").text = "file"
-        packed = zlib.compress(data) if compressed else data
+        encoding = "application/octet-stream"
+        packed = data
+        if name == "PackageInfo" and package_info_bzip2:
+            encoding = "application/x-bzip2"
+            packed = bz2.compress(data)
+        elif compressed:
+            encoding = "application/x-gzip"
+            packed = zlib.compress(data)
         member = SubElement(entry, "data")
         SubElement(member, "offset").text = str(len(heap))
         SubElement(member, "length").text = str(len(packed))
         SubElement(member, "size").text = str(len(data))
-        SubElement(member, "encoding", style="application/x-gzip" if compressed else "application/octet-stream")
+        SubElement(member, "encoding", style=encoding)
         heap.extend(packed)
     toc_data = tostring(root, encoding="utf-8", xml_declaration=True)
     compressed = zlib.compress(toc_data)

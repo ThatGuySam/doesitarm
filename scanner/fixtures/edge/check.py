@@ -60,6 +60,12 @@ def check_transport(cli, artifact, format_):
 def verify(token, artifact, cli):
     if token in ("baretorrent", "wordpresscom-studio"):
         check_transport(cli, artifact, "dmg" if token == "baretorrent" else "zip")
+    elif token in ("libreoffice-language-pack", "libreoffice-still-language-pack"):
+        result = scan(cli, artifact)
+        assert result["error"] == "unsupported: declared executable is a script", result
+        assert result["executable_resolution"] == "legacy_contents_executable", result
+        assert result["executable_path"] == "LibreOffice Language Pack.app/Contents/LibreOffice Language Pack"
+        assert not result["architectures"] and not result["inventory"]["binaries"], result
     elif token == "codeql-bundle":
         result = scan(cli, artifact, "--binary-path", "codeql/codeql")
         assert result["format"] == "tar.zst", result
@@ -109,6 +115,10 @@ def verify(token, artifact, cli):
             assert result["executable_name"] == "launcher" and result["executable_resolution"] == "archive_symlink", result
             assert result["executable_path"].endswith("/Runtime.framework/Versions/A/Runtime")
             assert [item["role"] for item in result["inventory"]["binaries"]] == ["main"]
+        elif token == "prezi-video":
+            assert result["bundle_path"] == "Applications/Prezi Video.app", result
+            assert result["installer"]["install_location"] == "/Applications/Prezi Video.app"
+            assert result["nested_artifacts"] == ["Prezi_Video.pkg"]
         elif token == "steam":
             assert result["format"] == "zip" and result["nested_artifacts"] == ["SteamMacBootstrapper.tar.gz"], result
         elif token in ("cave-story", "ipaverse"):

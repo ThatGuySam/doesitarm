@@ -3,7 +3,7 @@ use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle, check_range,
     decode::DecodeBudget,
     inventory::{self, Allowance},
-    macho, nested, pkg,
+    launcher, macho, nested, pkg,
 };
 use std::collections::VecDeque;
 use unicode_normalization::UnicodeNormalization;
@@ -597,9 +597,7 @@ pub(crate) async fn scan(
     let relative = &path[app_path.len() + "/Contents/".len()..];
     let primary = read_main(&mut volume, &mut catalog, contents.id, relative, out).await;
     let mut inventory = crate::BinaryInventory::default();
-    if let Err(error) = &primary {
-        inventory.partial(error.to_string());
-    }
+    inventory.record_primary(&primary);
     let mut allowance = Allowance::new(volume.disk, work);
     let mut pending = vec![(contents.id, "Contents".to_owned())];
     let mut visited = std::collections::HashSet::new();
@@ -677,11 +675,40 @@ async fn read_main<S: ReadAt>(
     relative: &str,
     out: &mut ScanResult,
 ) -> Result<()> {
-    let item = catalog.find_path(volume, contents, relative, true).await?;
+    let (item, chosen) = match catalog.find_path(volume, contents, relative, true).await {
+        Ok(item) => (item, relative),
+        Err(error @ ScanError::NotFound(_)) => {
+            let Some(leaf) = relative
+                .strip_prefix("MacOS/")
+                .filter(|leaf| !leaf.contains('/'))
+            else {
+                return Err(error);
+            };
+            let children = catalog.children(volume, contents).await?;
+            if children
+                .iter()
+                .any(|item| item.name.eq_ignore_ascii_case("MacOS"))
+            {
+                return Err(error);
+            }
+            let item = catalog.find(volume, contents, leaf, true).await?;
+            out.executable_resolution = Some("legacy_contents_executable");
+            (item, leaf)
+        }
+        Err(error) => return Err(error),
+    };
     let fork = file_fork(item, volume.geometry)?;
     out.executable_size = Some(fork.size);
+    let path = format!("{}/Contents/{chosen}", out.bundle_path.as_deref().unwrap());
+    out.executable_path = Some(path.clone());
     let mut reader = ForkReader { volume, fork };
-    macho::scan(&mut reader, &mut out.architectures).await
+    launcher::inspect(
+        &mut reader,
+        &path,
+        &mut out.architectures,
+        &mut out.script_runtime,
+    )
+    .await
 }
 
 async fn read_package<S: ReadAt>(

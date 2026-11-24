@@ -778,9 +778,7 @@ async fn read_app(
         Err(error) => Err(error),
     };
     let mut inventory = crate::BinaryInventory::default();
-    if let Err(error) = &primary {
-        inventory.partial(error.to_string());
-    }
+    inventory.record_primary(&primary);
     let work = device.work;
     let mut allowance = Allowance::new(device.disk, work);
     let mut pending = vec![(contents.id, "Contents".to_owned())];

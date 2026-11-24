@@ -119,9 +119,7 @@ pub(crate) async fn scan(
     if let Err(error) = coverage {
         inventory.partial(error.to_string());
     }
-    if let Err(error) = &primary {
-        inventory.partial(error.to_string());
-    }
+    inventory.record_primary(&primary);
     out.inventory = Some(inventory);
     primary
 }
