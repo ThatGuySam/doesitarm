@@ -65,6 +65,14 @@ def observed(row, run, names):
         or (inventory and inventory.get("binaries")) or scan.get("script_runtime")
     )
     status = "verified" if outcome in VERIFIED else "partial" if evidence else "unscannable"
+    bootstrapper = row["cask"] == "steam" and "SteamMacBootstrapper.tar.gz" in (
+        scan.get("nested_artifacts") or []
+    )
+    reason = None if status == "verified" else scan.get("error") or outcome
+    if bootstrapper:
+        native = None
+        status = "partial" if evidence else "unscannable"
+        reason = "download contains the Steam bootstrapper"
     actual = scan.get("format") or row.get("expected_format")
     comparisons = row.get("comparison", [])
     verdicts = {hint["verdict"] for hint in comparisons}
@@ -76,7 +84,7 @@ def observed(row, run, names):
         "container": actual if actual in BASE_CONTAINERS else "other",
         "detected_format": scan.get("format"),
         "status": status,
-        "unscannable_reason": None if status == "verified" else scan.get("error") or outcome,
+        "unscannable_reason": reason,
         "architectures": names_of_slices,
         "native_apple_silicon": native,
         "universal": True if both else False if all_verified else None,
@@ -93,6 +101,7 @@ def observed(row, run, names):
         "hint_agrees": False if "disagrees" in verdicts else True if "agrees" in verdicts else None,
         "inventory": inventory,
         "script_runtime": scan.get("script_runtime"),
+        **({"evidence_scope": "bootstrapper"} if bootstrapper else {}),
         "scanner_commit": run["scanner_commit_at_start"],
         "scanned_at": attempt.get("scanned_at") or run["updated_at"],
     }

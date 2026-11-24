@@ -18,14 +18,24 @@ Started November 24, 2026 at 12:04 Central from scanner-wasm `5a7e79a`. Stop by 
 | --- | ---: | ---: | ---: | ---: |
 | [Regression](results/edge/regression/scoreboard.md) | 100/100 | 77 → 81 | 8 → 8 | 0 → 1 |
 | [Held-out](results/edge/held-out/scoreboard.md) | 100/100 | 65 → 71 | 8 → 7 | 0 → 2 |
+| Earlier failures | 125/142 | 0 → 15 | 0 → 0 | 0 → 1 |
 
 The regression replay recovered BrowserStack Local, Network Weather, Qt Design Studio, and BackupLoupe as apps. It verified the FabFilter Pro-DS AAX product. All 85 previously verified primary results remained verified. The 84 bundle inventories included two complete inventories and 82 partial ones, with ten inventories identifying at least one x86_64-only file. The transport used 3,531,500,436 read bytes and 6,237 requests across all attempts. [Raw scan facts](results/edge/regression/run.json)
 
 The held-out replay recovered LaunchControl, Prolific PL2303Serial, Ammonite, MailMate beta, tiptoi Manager, Cave Story, and ImageOptim as apps. The scanner verified the FabFilter Timeless AAX product and Amazon Corretto 17's JDK bundle. `btp` returned HTML. Jabra Direct's nested installer reached the scan deadline. Its previous verified result was `Jabra Avaya Integration.app`, an embedded helper. The 75 inventories included seven complete and 68 partial, with six identifying an x86_64-only file. Both 100-artifact cohorts used `11a817b` with the 8/64/256 MiB ladder and a 55-second cooperative per-attempt deadline. [Raw scan facts](results/edge/held-out/run.json)
 
+The additional pinned replay verified 15 app primaries, including the packaged Steam bootstrapper, and the Tal Drum installed product. All 125 completed observations are in the two groups below. Their distinct deadlines and CLI hashes are in the reports. [First 41](results/edge/previously-failing/scoreboard.md) · [Tail replay](results/edge/previously-failing-tail/scoreboard.md)
+
 ## Resume
 
 Use one Cargo build at a time with `-j2`. Keep downloads under `~/.cache/doesitarm-edge/` and delete each artifact after inspection. The pinned URLs, formats, outcomes and target declarations are in `results/climb/{final-regression,final-held-out,full-run}/run.json`. Current evidence and next steps will be added here as cases are investigated.
+
+## Remaining cases
+
+- The latest RStudio attempt still reports `unsupported: APFS decmpfs-compressed file`. It identifies the `RStudio.app` bundle before it reaches the compressed executable.
+- Warp's pinned artifact returned HTTP 404. The SEGGER J-Link origin returned HTML and its declared POST carries license and export-control attestations. The held-out `btp` attempt returned HTML.
+- Open package and app scan limits appear in each scoreboard. The remote byte and time profiles can finish with a primary result and a partial inventory, or stop before the primary. On source failures, the logs retain the actual status and transfer evidence.
+- LibreOffice language packs package a shell launcher and language resources. The HFS path fix locates the declared launcher and leaves its Mach-O slices empty. Package and launcher entries without a verified Mach-O retain their own status.
 
 ## Confirmed packaging evidence
 
@@ -43,6 +53,7 @@ Use one Cargo build at a time with `-j2`. Keep downloads under `~/.cache/doesita
 | Insta360 Link Controller 2.2.5 build 25 | The 772,108,405-byte CPIO payload includes a 417,541,840-byte `Webcam-desktop` Mach-O before the 3,319-byte outer app plist. The original scanner completed this file using a full local source. |
 | Warp | The pinned URL returned HTTP 404 on the original scan and on direct recheck. |
 | Network Weather 1.3.3.119 | The baseline failed on an HTTP 500 range response. The regression replay verified the app under the same strong ETag. This is a successful retry of the pinned representation. |
+| Ableton Live Standard 12.4.16 | The bounded tail replay verified a universal `Contents/MacOS/Live` from the 3,469,442,643-byte DMG using 3,955,471 source bytes. Its optional inventory is partial. |
 | SEGGER J-Link 9.96a | A direct GET returned 27,647 bytes of HTML. The pinned Homebrew POST body explicitly submits `accept_license_agreement=accepted` and `non_emb_ctr=confirmed`. This run used the public GET and left those attestations unsent. |
 
 Apple describes the app bundle's main executable and private code directories. Qt documents `archivegen` as its SDK repository packaging tool. The Zstandard format specifies the decoder window and frame checksum.
@@ -57,7 +68,7 @@ Apple describes the app bundle's main executable and private code directories. Q
 
 Full local scans of the two pinned 2026.2.2.10 HFS+/LZFSE disk images each inventoried 70 Mach-O files. Both `Contents/MacOS/studio` launchers have verified x86_64 and arm64 slices. In the 1,542,370,765-byte Intel artifact, `Contents/jbr/Contents/Home/bin/java` and `lib/server/libjvm.dylib` are x86_64-only, and the bundle-wide result is false. For the 1,524,965,117-byte Arm artifact, all 70 inventoried binaries have Arm slices. These are static binary observations.
 
-[Intel DMG](https://edgedl.me.gvt1.com/android/studio/install/2026.2.2.10/android-studio-rabbit2-patch2-mac.dmg) · [Arm DMG](https://edgedl.me.gvt1.com/android/studio/install/2026.2.2.10/android-studio-rabbit2-patch2-mac_arm.dmg) · [Generated reproduction](fixtures/edge/android-studio/)
+[Intel DMG](https://edgedl.me.gvt1.com/android/studio/install/2026.2.2.10/android-studio-rabbit2-patch2-mac.dmg) · [Arm DMG](https://edgedl.me.gvt1.com/android/studio/install/2026.2.2.10/android-studio-rabbit2-patch2-mac_arm.dmg) · [Intel inspection](results/edge/android-studio/intel.json) · [Arm inspection](results/edge/android-studio/arm64.json) · [Generated reproduction](fixtures/edge/android-studio/)
 
 ## Reproduction workflow
 
@@ -122,5 +133,11 @@ The `8e805c0` build passed 41 Rust tests, Clippy with warnings denied on both na
 The live Corretto result prompted a follow-up for `.jdk` bundles, whose `Contents/Home` directory holds the runtime. The old inventory reported itself complete after reading only the declared `libjli.dylib`. `b8572dc` adds that runtime path, and the generated Corretto fixture fails on `8e805c0` and passes on `b8572dc`. This latest CLI has SHA-256 `bc9aae18c3c66c745ea6eb417322ff926c8611a916372b9728c4001bda3c0501`. The 31 fixture directories cover 29 of the 141 distinct failure tokens, including 69 of the 184 pinned representations. Android Studio is a separate inventory case and the ZIP-link fixture exercises a shared parser case. Origin failures and unresolved layouts still lack a per-app red/green fixture.
 
 On `b8572dc`, all 31 generated checks passed with the release CLI and failed against the pre-edge CLI. The largest generated file was 151,552 bytes. All 41 Rust tests, native and Wasm Clippy checks, 222 native/Wasm parity comparisons, and 14 Worker tests passed. The Wasm role API also classified `Contents/Home/lib/server/libjvm.dylib` as runtime code. The web distribution's cask data asset matched the committed sample.
+
+## Final native local checks
+
+The complete, checksum-matching Steam archive verified the universal bootstrapper and a six-binary inventory. The nested archive explicitly identifies itself as `SteamMacBootstrapper.tar.gz`. The cask export retains those slices and reports its scope as `bootstrapper`, with unknown Apple Silicon compatibility for the installed client.
+
+The complete, checksum-matching Prezi archive verified `Applications/Prezi Video.app/Contents/MacOS/Prezi Video` as universal and completed a 40-binary inventory. The Cursor and Terminal Browser archives each verified the ARM64 runtime referenced by the packaged shell launcher. The primary launcher status is a script in both cases. The two downloaded LibreOffice language packs resolved their named legacy launchers and had empty Mach-O inventories.
 
 Reddit, Stack Exchange, and the Wayback Machine were unavailable from this machine. Research used Apple documentation, upstream project sources, GitHub issues, the Hacker News Algolia API, and direct publisher responses.
