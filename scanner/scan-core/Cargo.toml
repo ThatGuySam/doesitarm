@@ -11,3 +11,4 @@ bzip2 = "0.6"
 lzfse_rust = "0.2"
 lzma-rust2 = { version = "0.25", default-features = false, features = ["std", "xz"] }
 unicode-normalization = "0.1"
+roxmltree = "0.21"

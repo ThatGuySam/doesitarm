@@ -10,6 +10,7 @@ from pathlib import Path
 from struct import pack
 
 from dmg_fixture import dmg_fixture
+from pkg_fixture import pkg_fixture
 
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
@@ -102,3 +103,5 @@ if __name__ == "__main__":
     tar_fixture(ROOT / "app-binary-first.tar.gz", binary_first=True, long_path=True)
 
     dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
+    pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
+    pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)

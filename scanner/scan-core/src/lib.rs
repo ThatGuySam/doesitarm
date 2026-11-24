@@ -2,10 +2,12 @@
 #![forbid(unsafe_code)]
 
 mod bundle;
+mod cpio;
 mod dmg;
 mod hfs;
 mod inflate;
 mod macho;
+mod pkg;
 mod stream_bundle;
 mod tar;
 mod udif_codec;
@@ -76,6 +78,15 @@ pub struct Architecture {
     pub code_signature_present: Option<bool>,
 }
 
+#[derive(Debug, Default, Serialize)]
+pub struct InstallerMetadata {
+    pub title: Option<String>,
+    pub host_architectures: Vec<String>,
+    pub package_id: Option<String>,
+    pub package_version: Option<String>,
+    pub min_macos: Option<String>,
+}
+
 #[derive(Debug, Serialize)]
 pub struct ScanResult {
     pub format: Option<&'static str>,
@@ -88,6 +99,7 @@ pub struct ScanResult {
     pub min_macos: Option<String>,
     pub executable_name: Option<String>,
     pub executable_size: Option<u64>,
+    pub installer: Option<InstallerMetadata>,
     pub bytes_read: u64,
     pub reads: u64,
     pub total_size: u64,
@@ -107,6 +119,7 @@ impl ScanResult {
             min_macos: None,
             executable_name: None,
             executable_size: None,
+            installer: None,
             bytes_read: 0,
             reads: 0,
             total_size,
@@ -185,6 +198,10 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
     if magic.starts_with(b"\x1f\x8b") {
         out.format = Some("tar.gz");
         return tar::scan(input, out).await;
+    }
+    if magic == b"xar!" {
+        out.format = Some("pkg");
+        return pkg::scan(input, out).await;
     }
     if input.size() >= 512 {
         let trailer = input.read_at(input.size() - 512, 512).await?;

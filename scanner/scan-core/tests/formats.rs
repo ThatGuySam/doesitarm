@@ -190,3 +190,36 @@ fn dmg_rejects_segmented_udif() {
     assert!(matches!(result.status, Status::Unsupported));
     assert_eq!(result.reads, 2);
 }
+
+const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
+const PKG_ODC: &[u8] = include_bytes!("../../fixtures/stored-odc.pkg");
+
+#[test]
+fn pkg_reads_installer_metadata_and_gzip_or_stored_cpio() {
+    for data in [PKG, PKG_ODC] {
+        let scanned = run(data, u64::MAX);
+        assert_eq!(scanned.format, Some("pkg"));
+        assert_bundle(&scanned);
+        let meta = scanned.installer.unwrap();
+        assert_eq!(meta.title.as_deref(), Some("Fixture Installer"));
+        assert_eq!(meta.host_architectures, ["x86_64", "arm64"]);
+        assert_eq!(
+            meta.package_id.as_deref(),
+            Some("org.doesitarm.fixture-installer")
+        );
+        assert_eq!(meta.package_version.as_deref(), Some("5"));
+        assert_eq!(meta.min_macos.as_deref(), Some("11.0"));
+    }
+}
+
+#[test]
+fn pkg_returns_installer_metadata_when_payload_budget_runs_out() {
+    let result = run(PKG, 550);
+    assert!(
+        matches!(result.status, Status::BudgetExhausted),
+        "{result:?}"
+    );
+    let info = result.installer.unwrap();
+    assert_eq!(info.host_architectures, ["x86_64", "arm64"]);
+    assert!(result.architectures.is_empty());
+}
