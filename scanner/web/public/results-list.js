@@ -90,6 +90,7 @@ export class ResultsList {
   #batch;
   #batchStatus;
   #discoveries = 0;
+  #artifactListings = new Set();
   #latestFolder;
   #skeleton;
   #tools;
@@ -171,7 +172,7 @@ export class ResultsList {
     const run = {
       stats, mode, profile, started: performance.now(), enumerated: null, firstScan: null, lastScan: null,
       ended: null, canceled: false, appCount: 0, bytes: 0, active: 0, peak: 0, finished: 0,
-      pending: 0, rows: [], children: new Map(), modes: new Set([this.#modeLabel(mode)]),
+      pending: 0, listing: 0, rows: [], children: new Map(), modes: new Set([this.#modeLabel(mode)]),
     };
     const { field, input } = this.#runsByChoice;
     const value = String(this.#runs.length);
@@ -188,8 +189,12 @@ export class ResultsList {
     return `${mode.passive ? 'passive' : 'foreground'} (${mode.limit} workers)`;
   }
 
+  get #busy() {
+    return Boolean(this.#pending.size || this.#discoveries || this.#artifactListings.size);
+  }
+
   beginFolder(stats, mode) {
-    if (!this.#pending.size && !this.#discoveries) this.#newBatch();
+    if (!this.#busy) this.#newBatch();
     const run = this.#newRun(stats, mode, 'local');
     this.#latestFolder = run;
     this.#discoveries += 1;
@@ -201,9 +206,9 @@ export class ResultsList {
 
   finishFolder(run, canceled) {
     run.enumerated = performance.now();
-    run.canceled = canceled;
+    run.canceled ||= canceled;
     run.option.text = run.stats.folder_name || run.stats.method;
-    if (!run.pending) run.ended = run.enumerated;
+    if (!run.pending && !run.listing) run.ended = run.enumerated;
     this.#discoveries -= 1;
     this.#endBatch();
     this.#render();
@@ -212,7 +217,7 @@ export class ResultsList {
   add(jobs, run) {
     if (!jobs.length) return;
     if (!run) {
-      if (!this.#pending.size && !this.#discoveries) this.#newBatch();
+      if (!this.#busy) this.#newBatch();
       if (this.#batch.finished && this.#pending.size) this.#batch.extended = true;
       const remote = jobs.some(({ kind }) => kind === 'url');
       const stats = folderStats(remote ? 'URL' : 'file picker');
@@ -251,7 +256,7 @@ export class ResultsList {
       } else {
         this.#pool.submit(row.id, job, (event) => {
           if (event.type === 'done' && job.artifacts?.length) {
-            this.add(job.artifacts.filter(({ label }) => label !== event.result.executable_path), run);
+            this.#addArtifacts(job.artifacts, event.result.executable_path, run);
           }
           this.#receive(row, run, event);
         });
@@ -262,6 +267,43 @@ export class ResultsList {
     get('batch-readout').hidden = false;
     if (!this.#clock) this.#clock = setInterval(() => this.#tick(), 250);
     this.#requestRefresh();
+  }
+
+  async #addArtifacts(artifacts, executable, run) {
+    const batchSize = 32;
+    if (artifacts.length <= batchSize) {
+      this.add(artifacts.filter(({ label }) => label !== executable), run);
+      return;
+    }
+    const listing = new AbortController();
+    this.#artifactListings.add(listing);
+    run.listing += 1;
+    try {
+      const pause = timeSlice();
+      let batch = [];
+      for (const job of artifacts) {
+        if (listing.signal.aborted) break;
+        if (job.label !== executable) batch.push(job);
+        if (batch.length < batchSize) continue;
+        this.add(batch, run);
+        batch = [];
+        const wait = pause();
+        if (wait) await wait;
+      }
+      if (!listing.signal.aborted) this.add(batch, run);
+    } finally {
+      run.listing -= 1;
+      if (!run.pending && !run.listing && run.enumerated !== null) run.ended = performance.now();
+      this.#artifactListings.delete(listing);
+      this.#endBatch();
+      this.#requestRefresh();
+    }
+  }
+
+  cancelAll() {
+    for (const run of this.#runs) if (run.ended === null) run.canceled = true;
+    for (const listing of this.#artifactListings) listing.abort();
+    this.#pool.cancelAll();
   }
 
   resetEstimates() {
@@ -315,7 +357,7 @@ export class ResultsList {
       this.#pending.delete(row.id);
       run.finished += 1;
       run.pending -= 1;
-      if (!run.pending && run.enumerated !== null) run.ended = now;
+      if (!run.pending && !run.listing && run.enumerated !== null) run.ended = now;
       this.#endBatch();
       this.#searchDirty = true;
     }
@@ -338,7 +380,7 @@ export class ResultsList {
   }
 
   #endBatch() {
-    if (this.#pending.size || this.#discoveries) return;
+    if (this.#busy) return;
     this.#batch.ended = performance.now();
     clearInterval(this.#clock);
     this.#clock = undefined;
@@ -564,7 +606,7 @@ export class ResultsList {
     ];
     setText(this.#summary, summary.join(' · '));
     const cancelAll = get('cancel-all');
-    const scanning = Boolean(this.#pending.size || this.#discoveries);
+    const scanning = this.#busy;
     if (!scanning && document.activeElement === cancelAll) get('results-title').focus({ preventScroll: true });
     cancelAll.hidden = !scanning;
     const batch = this.#batch;
@@ -592,7 +634,7 @@ export class ResultsList {
     get('batch-readout').hidden = !batch.total && !scanning;
     get('empty-results').hidden = Boolean(this.#rowCount || scanning || folder);
     const progress = get('overall-progress');
-    if (this.#discoveries || !batch.total || (!folder && batch.extended && batch.finished < batch.total)) {
+    if (this.#discoveries || this.#artifactListings.size || !batch.total || (!folder && batch.extended && batch.finished < batch.total)) {
       progress.removeAttribute('value');
     }
     else {

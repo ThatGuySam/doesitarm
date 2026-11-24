@@ -64,7 +64,7 @@ navigator.getBattery?.().then((battery) => {
 }).catch(() => {});
 updateMode();
 
-bindLocalInputs({ view, pool, mode: () => mode });
+bindLocalInputs({ view, mode: () => mode });
 
 function publicDownload(raw) {
   const url = new URL(raw);

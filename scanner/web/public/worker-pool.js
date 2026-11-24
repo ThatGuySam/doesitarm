@@ -2,6 +2,8 @@ import { timeSlice } from './folder-walk.js';
 import { ScanQueue } from './scan-queue.js';
 import { emptyResult } from './scan-result.js';
 
+const permissionError = (error) => error?.name === 'NotAllowedError' || error?.name === 'SecurityError';
+
 export class ScanPool {
   #mode;
   #makeWorker;
@@ -140,7 +142,9 @@ export class ScanPool {
         ? 'The browser could not open Info.plist in this app folder.'
         : 'The browser could not open this input.';
       this.#idle(slot);
-      this.#finishError(task, error);
+      const errorClass = permissionError(cause) ? 'permission_denied' :
+        job.kind === 'bundle' ? 'unreadable_info_plist' : 'unreadable_input';
+      this.#finishError(task, error, errorClass);
     }
   }
 
@@ -150,20 +154,27 @@ export class ScanPool {
     try {
       file = await task.job.getExecutable(path);
     } catch (cause) {
-      if (cause.name !== 'NotFoundError') {
+      if (cause?.name !== 'NotFoundError') {
         task.job.recordError?.(cause);
-        errorClass = cause.name === 'NotAllowedError' || cause.name === 'SecurityError'
-          ? 'permission_denied' : 'unreadable_executable';
+        errorClass = permissionError(cause) ? 'permission_denied' : 'unreadable_executable';
       }
     }
     if (slot.task === task) slot.worker.postMessage({ type: 'executable', id: task.id, file, errorClass });
   }
 
-  #finishError(task, error) {
+  #finishError(task, error, errorClass = 'worker_stopped') {
+    const { job, listings } = task;
+    const result = { ...emptyResult('source_error', error, job.file?.size), error_class: errorClass };
+    if (job.kind === 'bundle') {
+      result.format = 'app';
+      result.bundle_path = job.label;
+    }
     task.update({
       type: 'done',
-      result: emptyResult('source_error', error, task.job.file?.size),
+      result,
       source: 'Browser',
+      evidence: job.kind === 'bundle' ? { info_plist_path: job.plistPath ?? null, read_log: [] } : undefined,
+      directoryListings: listings,
     });
   }
 

@@ -39,7 +39,7 @@ async function preferHandle(handle, fallback, signal) {
   }
 }
 
-export function bindLocalInputs({ view, pool, mode }) {
+export function bindLocalInputs({ view, mode }) {
   const get = (id) => document.getElementById(id);
   const files = get('files');
   const folder = get('folder');
@@ -137,7 +137,7 @@ export function bindLocalInputs({ view, pool, mode }) {
 
   get('cancel-all').addEventListener('click', () => {
     for (const controller of active) controller.abort();
-    pool.cancelAll();
+    view.cancelAll();
     notice.textContent = '';
     reading('');
   });
