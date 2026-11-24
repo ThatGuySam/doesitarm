@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Apple Silicon App Test · Does It ARM</title>
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./bigfolder.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -61,6 +62,10 @@
         <p class="drop-hint" aria-hidden="true">Drop to scan</p>
       </div>
       <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
+      <div id="folder-loader" class="folder-loader">
+        <span aria-hidden="true" hidden></span><span aria-hidden="true"></span>
+        <span class="visually-hidden" role="status"></span>
+      </div>
       <p id="input-status" class="error" role="status"></p>
     </section>
 

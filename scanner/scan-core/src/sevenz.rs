@@ -3,7 +3,7 @@ use crate::{
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
-    le32, le64, macho, nested,
+    le32, le64, nested,
 };
 use sevenz_rust2::{Archive, ArchiveEntry, EncoderMethod, Password, SIGNATURE_HEADER_SIZE};
 use std::io::{self, Read, Seek, SeekFrom};
@@ -47,7 +47,7 @@ pub(crate) async fn scan(
             ))?;
         out.executable_path = Some(path.to_owned());
         out.executable_size = Some(archive.files[index].size);
-        return source.macho(index, &mut out.architectures).await;
+        return out.scan_macho(&mut source.open(index)?).await;
     }
     let app = paths
         .clone()
@@ -69,7 +69,7 @@ pub(crate) async fn scan(
                 .into_iter()
                 .take(if work.strict() { 8 } else { usize::MAX })
         {
-            let mut result = ScanResult::new(out.total_size);
+            let mut result = out.subresult();
             result.format = out.format;
             let attempt = match source.open(index) {
                 Ok(mut member) => {
@@ -104,7 +104,7 @@ pub(crate) async fn scan(
     let primary = match paths.clone().find(|(_, path)| *path == main) {
         Some((index, _)) => {
             out.executable_size = Some(archive.files[index].size);
-            source.macho(index, &mut out.architectures).await
+            out.scan_macho(&mut source.open(index)?).await
         }
         None => Err(ScanError::NotFound(
             "declared executable in 7z archive index",
@@ -197,14 +197,6 @@ impl<S: ReadAt> Members<'_, S> {
         let data = open_block(self.input, self.work, self.archive, block, self.data_end)?;
         check_range(data.size(), offset, size)?;
         Ok(Member { data, offset, size })
-    }
-
-    async fn macho(
-        &mut self,
-        index: usize,
-        architectures: &mut Vec<crate::Architecture>,
-    ) -> Result<()> {
-        macho::scan(&mut self.open(index)?, architectures).await
     }
 }
 

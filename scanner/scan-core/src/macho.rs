@@ -1,4 +1,9 @@
-use crate::{Architecture, ReadAt, Result, ScanError, be32, check_range, le32};
+use crate::{
+    Architecture, ReadAt, Result, ScanError, be32, check_range,
+    diagnostic::{Command, ExecutableDiagnostic, Prefix, SliceCommands},
+    le32,
+};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Copy)]
 pub(crate) struct Kind {
@@ -43,15 +48,34 @@ pub(crate) fn kind(bytes: &[u8]) -> Option<Kind> {
     Some(Kind { big, wide, fat })
 }
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut Vec<Architecture>) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    out: &mut Vec<Architecture>,
+    diagnostic: Option<&mut ExecutableDiagnostic>,
+) -> Result<()> {
+    if let Some(diagnostic) = diagnostic {
+        *diagnostic = ExecutableDiagnostic::default();
+        let mut prefixed = Prefix::open(input, diagnostic).await?;
+        inspect(&mut prefixed, out, Some(diagnostic)).await
+    } else {
+        inspect(input, out, None).await
+    }
+}
+
+async fn inspect(
+    input: &mut impl ReadAt,
+    out: &mut Vec<Architecture>,
+    diagnostic: Option<&mut ExecutableDiagnostic>,
+) -> Result<()> {
     let first = input.read_at(0, 8).await?;
-    scan_after_header(input, &first, out).await
+    scan_after_header(input, &first, out, diagnostic).await
 }
 
 pub(crate) async fn scan_after_header(
     input: &mut impl ReadAt,
     first: &[u8],
     out: &mut Vec<Architecture>,
+    mut diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
     let size = input.size();
     let kind = kind(first).ok_or_else(|| {
@@ -66,7 +90,7 @@ pub(crate) async fn scan_after_header(
         }
     })?;
     if !kind.fat {
-        return thin(input, 0, size, first, None, out).await;
+        return thin(input, 0, size, first, None, out, diagnostic).await;
     }
 
     let count = kind.word(first, 4) as usize;
@@ -115,7 +139,16 @@ pub(crate) async fn scan_after_header(
     for index in order {
         let (offset, length) = (out[index].offset, out[index].size);
         let first = input.read_at(offset, 8).await?;
-        thin(input, offset, length, &first, Some(index), out).await?;
+        thin(
+            input,
+            offset,
+            length,
+            &first,
+            Some(index),
+            out,
+            diagnostic.as_deref_mut(),
+        )
+        .await?;
     }
     Ok(())
 }
@@ -151,6 +184,7 @@ async fn thin(
     first: &[u8],
     index: Option<usize>,
     out: &mut Vec<Architecture>,
+    diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
     let kind = kind(first)
         .filter(|k| !k.fat)
@@ -174,6 +208,14 @@ async fn thin(
     };
     arch.header_verified = true;
 
+    let trace = diagnostic.map(|value| {
+        value.load_commands.push(SliceCommands {
+            slice_offset: offset,
+            commands: Vec::new(),
+            truncated: true,
+        });
+        value.load_commands.last_mut().unwrap()
+    });
     let count = kind.word(&rest, 8);
     let length = kind.word(&rest, 12) as usize;
     if length > 1024 * 1024 {
@@ -185,6 +227,7 @@ async fn thin(
     check_range(size, header_size as u64, length as u64)?;
     let commands = input.read_at(offset + header_size as u64, length).await?;
 
+    let mut trace = trace;
     let mut pos = 0;
     let mut signed = false;
     let mut build_min = None;
@@ -197,6 +240,13 @@ async fn thin(
         let len = kind.word(&commands, pos + 4) as usize;
         if !(8..=commands.len() - pos).contains(&len) || !len.is_multiple_of(4) {
             return Err(ScanError::Invalid("invalid Mach-O load command size"));
+        }
+        if let Some(trace) = &mut trace {
+            trace.commands.push(Command {
+                id: cmd,
+                size: len as u32,
+                fields: command_fields(kind, cmd, &commands[pos..pos + len]),
+            });
         }
         match cmd {
             0x1d | 0x24 if len < 16 => return Err(ScanError::Invalid("short Mach-O load command")),
@@ -215,9 +265,96 @@ async fn thin(
     if pos != length {
         return Err(ScanError::Invalid("unused bytes in Mach-O load commands"));
     }
+    if let Some(trace) = trace {
+        trace.truncated = false;
+    }
     arch.min_macos = build_min.or(legacy_min);
     arch.code_signature_present = Some(signed);
     Ok(())
+}
+
+fn command_fields(kind: Kind, cmd: u32, bytes: &[u8]) -> BTreeMap<&'static str, u64> {
+    let (width, names): (usize, &[&str]) = match cmd & 0x7fff_ffff {
+        0x32 => (4, &["platform", "minimum_os", "sdk", "tool_count"]),
+        0x24 | 0x25 | 0x2f | 0x30 => (4, &["minimum_os", "sdk"]),
+        0x1d | 0x1e | 0x26 | 0x29 | 0x2b | 0x2e | 0x33 | 0x34 => (4, &["data_offset", "data_size"]),
+        0x28 => (8, &["entry_offset", "stack_size"]),
+        0x02 => (
+            4,
+            &[
+                "symbol_offset",
+                "symbol_count",
+                "string_offset",
+                "string_size",
+            ],
+        ),
+        0x0c | 0x0d | 0x18 | 0x1f | 0x20 | 0x23 => (
+            4,
+            &[
+                "name_offset",
+                "timestamp",
+                "current_version",
+                "compatibility_version",
+            ],
+        ),
+        0x22 => (
+            4,
+            &[
+                "rebase_offset",
+                "rebase_size",
+                "bind_offset",
+                "bind_size",
+                "weak_bind_offset",
+                "weak_bind_size",
+                "lazy_bind_offset",
+                "lazy_bind_size",
+                "export_offset",
+                "export_size",
+            ],
+        ),
+        0x01 | 0x19 => {
+            let wide = cmd == 0x19;
+            let width = if wide { 8 } else { 4 };
+            let mut fields = BTreeMap::new();
+            for (index, name) in ["vm_address", "vm_size", "file_offset", "file_size"]
+                .into_iter()
+                .enumerate()
+            {
+                let start = 24 + index * width;
+                if start + width <= bytes.len() {
+                    fields.insert(
+                        name,
+                        if wide {
+                            kind.long(bytes, start)
+                        } else {
+                            u64::from(kind.word(bytes, start))
+                        },
+                    );
+                }
+            }
+            let count_at = if wide { 64 } else { 48 };
+            if count_at + 4 <= bytes.len() {
+                fields.insert("section_count", u64::from(kind.word(bytes, count_at)));
+            }
+            return fields;
+        }
+        _ => (4, &[]),
+    };
+    names
+        .iter()
+        .enumerate()
+        .filter_map(|(index, name)| {
+            let at = 8 + index * width;
+            (at + width <= bytes.len()).then(|| {
+                let value = if width == 8 {
+                    kind.long(bytes, at)
+                } else {
+                    u64::from(kind.word(bytes, at))
+                };
+                (*name, value)
+            })
+        })
+        .collect()
 }
 
 fn version(packed: u32) -> String {

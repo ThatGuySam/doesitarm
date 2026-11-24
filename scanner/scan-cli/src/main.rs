@@ -2,6 +2,7 @@
 
 mod http;
 mod local;
+mod local_folder;
 
 use scan_core::{
     Profile, REMOTE_BUDGET_TIERS, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status,
@@ -89,6 +90,9 @@ fn main() -> ExitCode {
         Ok(None) => {
             println!("{USAGE}");
             println!("Local files default to local with no work budget or deadline.");
+            println!(
+                "Local .app directories scan one bundle. Other directories scan recursively; --json emits a JSON array."
+            );
             println!("URL attempts default to remote-cli with 8, 64, and 256 MiB tiers.");
             println!(
                 "Worker defaults: {} bytes requested, {} bytes decoded, {} ms wall time.",
@@ -103,6 +107,18 @@ fn main() -> ExitCode {
             return ExitCode::from(2);
         }
     };
+
+    let path = Path::new(&args.input);
+    if args.limits.profile == Profile::Local && args.target.is_none() && path.is_dir() {
+        return match local_folder::report(path, args.json, args.limits, args.deadline) {
+            Ok(complete) if complete => ExitCode::SUCCESS,
+            Ok(_) => ExitCode::FAILURE,
+            Err(error) => {
+                eprintln!("{error}");
+                ExitCode::FAILURE
+            }
+        };
+    }
 
     let output = run(&args);
     let result = &output.scan;
@@ -288,7 +304,12 @@ fn run(args: &Args) -> Output {
     } else {
         let path = Path::new(&args.input);
         if path.is_dir() {
-            return Output::new(local::scan_app(path, args.limits, target, deadline));
+            return Output::new(failure(
+                ScanError::Unsupported(
+                    "directory input requires the local profile and its own bundle target",
+                ),
+                0,
+            ));
         }
         FileSource::open(path).map(|mut file| {
             let expired = || deadline.is_some_and(Deadline::expired);

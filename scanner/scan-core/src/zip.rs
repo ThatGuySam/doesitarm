@@ -205,6 +205,9 @@ async fn read_main(
                 &resolved,
                 &mut out.architectures,
                 &mut out.script_runtime,
+                out.diagnostic
+                    .as_mut()
+                    .map(|diagnostic| &mut diagnostic.executable),
             )
             .await;
         }
@@ -246,7 +249,7 @@ async fn read_runtime(
         return;
     };
     if let Ok(mut data) = member(input, entry, heap_end, work).await {
-        let _ = macho::scan(&mut data, &mut runtime.architectures).await;
+        let _ = macho::scan(&mut data, &mut runtime.architectures, None).await;
     }
 }
 
@@ -278,7 +281,7 @@ async fn scan_nested(
             .into_iter()
             .take(if work.strict() { 8 } else { usize::MAX })
     {
-        let mut result = ScanResult::new(out.total_size);
+        let mut result = out.subresult();
         result.format = out.format;
         let attempt = scan_nested_member(
             input,

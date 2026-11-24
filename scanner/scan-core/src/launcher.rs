@@ -1,4 +1,8 @@
-use crate::{Architecture, ReadAt, Result, ScanError, bundle, macho};
+use crate::{
+    Architecture, ReadAt, Result, ScanError, bundle,
+    diagnostic::{ExecutableDiagnostic, Prefix},
+    macho,
+};
 use serde::Serialize;
 use std::collections::BTreeMap;
 
@@ -16,6 +20,30 @@ pub(crate) async fn inspect(
     path: &str,
     architectures: &mut Vec<Architecture>,
     runtime: &mut Option<ScriptRuntime>,
+    diagnostic: Option<&mut ExecutableDiagnostic>,
+) -> Result<()> {
+    if let Some(diagnostic) = diagnostic {
+        *diagnostic = ExecutableDiagnostic::default();
+        let mut prefixed = Prefix::open(input, diagnostic).await?;
+        inspect_prefix(
+            &mut prefixed,
+            path,
+            architectures,
+            runtime,
+            Some(diagnostic),
+        )
+        .await
+    } else {
+        inspect_prefix(input, path, architectures, runtime, None).await
+    }
+}
+
+async fn inspect_prefix(
+    input: &mut impl ReadAt,
+    path: &str,
+    architectures: &mut Vec<Architecture>,
+    runtime: &mut Option<ScriptRuntime>,
+    diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
     let prefix = input.read_at(0, input.size().min(8) as usize).await?;
     if prefix.starts_with(b"#!") {
@@ -30,7 +58,7 @@ pub(crate) async fn inspect(
     if prefix.len() < 8 {
         return Err(ScanError::Invalid("short executable header"));
     }
-    macho::scan_after_header(input, &prefix, architectures).await
+    macho::scan_after_header(input, &prefix, architectures, diagnostic).await
 }
 
 fn reference(script: &str, path: &str) -> Option<ScriptRuntime> {

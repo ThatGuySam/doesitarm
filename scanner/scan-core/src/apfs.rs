@@ -3,7 +3,7 @@ use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range,
     decode::DecodeBudget,
     inventory::{self, Allowance},
-    le16, le32, le64, macho, nested, pkg,
+    le16, le32, le64, nested, pkg,
 };
 use std::{
     collections::{HashSet, VecDeque},
@@ -853,13 +853,10 @@ async fn read_executable(
 ) -> Result<()> {
     let data = volume.file(device, item.id).await?;
     out.executable_size = Some(data.size);
-    macho::scan(
-        &mut ApfsFile {
-            data,
-            disk: device.disk,
-        },
-        &mut out.architectures,
-    )
+    out.scan_macho(&mut ApfsFile {
+        data,
+        disk: device.disk,
+    })
     .await
 }
 

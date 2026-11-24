@@ -3,7 +3,7 @@ use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle, check_range,
     decode::DecodeBudget,
     inventory::{self, Allowance},
-    launcher, macho, nested, pkg,
+    launcher, nested, pkg,
 };
 use std::collections::VecDeque;
 use unicode_normalization::UnicodeNormalization;
@@ -546,14 +546,12 @@ pub(crate) async fn scan(
         out.executable_path = Some(path.to_owned());
         let fork = file_fork(item, geometry)?;
         out.executable_size = Some(fork.size);
-        return macho::scan(
-            &mut ForkReader {
+        return out
+            .scan_macho(&mut ForkReader {
                 volume: &mut volume,
                 fork,
-            },
-            &mut out.architectures,
-        )
-        .await;
+            })
+            .await;
     }
     let mut root = None;
     let app = if let Target::Bundle(path) = target {
@@ -707,6 +705,9 @@ async fn read_main<S: ReadAt>(
         &path,
         &mut out.architectures,
         &mut out.script_runtime,
+        out.diagnostic
+            .as_mut()
+            .map(|diagnostic| &mut diagnostic.executable),
     )
     .await
 }

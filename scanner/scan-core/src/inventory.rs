@@ -229,7 +229,7 @@ pub(crate) async fn read(
         return Ok(());
     }
     let mut architectures = Vec::new();
-    let result = macho::scan_after_header(source, &header, &mut architectures).await;
+    let result = macho::scan_after_header(source, &header, &mut architectures, None).await;
     inventory.push(path.to_owned(), role, architectures);
     result
 }

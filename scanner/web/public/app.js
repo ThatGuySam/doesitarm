@@ -1,15 +1,11 @@
 import { inventoryDetails } from './inventory-view.js';
-import { droppedJobs, pickedFolders } from './local-inputs.js';
+import { bindLocalInputs } from './local-inputs.js';
+import { ResultsList } from './results-list.js';
 import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
-import { architectures, get, prettyBytes, ScanView, statuses } from './scan-view.js';
+import { architectures, get, prettyBytes, statuses } from './scan-view.js';
 
-const files = get('files');
-const folder = get('folder');
-const dropZone = get('drop-zone');
 const gentleToggle = get('gentle');
-const notice = get('input-status');
-const discoveries = new Set();
 const divider = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
 const coveragePercent = new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 });
 
@@ -32,7 +28,7 @@ function currentMode() {
 
 let mode = currentMode();
 const pool = new ScanPool(mode);
-const view = new ScanView(pool);
+const view = new ResultsList(pool, () => mode);
 
 function updateMode() {
   const next = currentMode();
@@ -69,79 +65,8 @@ navigator.getBattery?.().then((battery) => {
 }).catch(() => {});
 updateMode();
 
-get('cancel-all').addEventListener('click', () => {
-  discoveries.clear();
-  pool.cancelAll();
-  notice.textContent = '';
-  view.setDiscovering(false);
-});
-
+bindLocalInputs({ view, mode: () => mode });
 get('clear-results').addEventListener('click', () => view.clear());
-get('choose-files').addEventListener('click', () => files.click());
-get('choose-folder').addEventListener('click', () => folder.click());
-files.addEventListener('change', () => {
-  view.add(Array.from(files.files, (file) => ({ kind: 'file', file, label: file.name })));
-  files.value = '';
-});
-folder.addEventListener('change', () => {
-  view.add([...pickedFolders(folder.files)]);
-  folder.value = '';
-});
-
-const hasFiles = (event) => Array.from(event.dataTransfer?.types ?? []).includes('Files');
-let dragDepth = 0;
-dropZone.addEventListener('dragenter', (event) => {
-  if (!hasFiles(event)) return;
-  dragDepth += 1;
-  dropZone.classList.add('dragging');
-});
-dropZone.addEventListener('dragleave', () => {
-  dragDepth = Math.max(0, dragDepth - 1);
-  if (!dragDepth) dropZone.classList.remove('dragging');
-});
-// Any file drag over the page points at the drop zone, so the target is obvious before the pointer reaches it.
-window.addEventListener('dragenter', (event) => {
-  if (hasFiles(event)) document.body.classList.add('drag-active');
-});
-window.addEventListener('dragleave', (event) => {
-  if (!event.relatedTarget) document.body.classList.remove('drag-active');
-});
-window.addEventListener('dragover', (event) => {
-  if (!hasFiles(event)) return;
-  event.preventDefault();
-  event.dataTransfer.dropEffect = dropZone.contains(event.target) ? 'copy' : 'none';
-});
-window.addEventListener('drop', async (event) => {
-  if (!hasFiles(event)) return;
-  event.preventDefault();
-  dragDepth = 0;
-  dropZone.classList.remove('dragging');
-  document.body.classList.remove('drag-active');
-  if (!dropZone.contains(event.target)) return;
-  const discovery = {};
-  discoveries.add(discovery);
-  view.setDiscovering(true);
-  notice.textContent = 'Finding apps and files…';
-  const jobs = [];
-  try {
-    for await (const job of droppedJobs(event.dataTransfer)) {
-      if (!discoveries.has(discovery)) return;
-      jobs.push(job);
-      if (jobs.length % 50 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
-    }
-    if (!discoveries.has(discovery)) return;
-    view.add(jobs);
-    notice.textContent = jobs.length ? '' : 'No files were found in that drop. Some browsers, including Firefox, do not expose dropped folders. Use Choose folder instead.';
-  } catch {
-    if (discoveries.has(discovery)) {
-      view.add(jobs);
-      notice.textContent = 'The browser could not open this drop. Try the file or folder picker.';
-    }
-  } finally {
-    discoveries.delete(discovery);
-    view.setDiscovering(discoveries.size > 0);
-  }
-});
 
 function publicDownload(raw) {
   const url = new URL(raw);

@@ -56,7 +56,7 @@ pub(crate) async fn scan(
             }
             attempts += 1;
         }
-        let mut candidate = ScanResult::new(out.total_size);
+        let mut candidate = out.subresult();
         candidate.format = out.format;
         candidate.nested_artifacts = segment.components.iter().map(ToString::to_string).collect();
         match inspect_xar(
@@ -231,7 +231,7 @@ async fn inspect_xar(
     let mut first_miss = None;
     let installer = out.installer.clone();
     for (parent, member) in payloads.into_iter().take(max_components) {
-        let mut result = ScanResult::new(out.total_size);
+        let mut result = out.subresult();
         result.format = out.format;
         result.nested_artifacts = out.nested_artifacts.clone();
         result.installer.clone_from(&installer);
@@ -364,7 +364,7 @@ async fn scan_payload(
         && bom.expanded <= MAX_BOM
         && budget > 2 * PREVIEW_BYTES + bom.packed + gzip_tail::TAIL_BYTES
     {
-        let mut preview = ScanResult::new(out.total_size);
+        let mut preview = out.subresult();
         let source = Preview::new(Window::new(input, member.offset, member.packed)?);
         let result = inspect_payload(
             source,
@@ -480,7 +480,7 @@ async fn recover_target(
         &expected.path
     };
     let root = bundle::selected_plist(path, selection)?;
-    let mut bundle = ScanResult::new(out.total_size);
+    let mut bundle = out.subresult();
     let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
     bundle.installer = out.installer.take();
     bundle.format = out.format;

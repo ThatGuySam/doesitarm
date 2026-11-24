@@ -61,6 +61,26 @@ pub async fn scan(
         decoded_byte_budget,
         profile,
         expired,
+        false,
+    )
+    .await
+}
+
+/// Inspect an already selected local file and include embedded bundle evidence.
+#[wasm_bindgen]
+pub async fn scan_diagnostic(
+    total_size: BigInt,
+    read_at: Function,
+) -> std::result::Result<String, JsValue> {
+    scan_with_target(
+        total_size,
+        BigInt::from(0u64),
+        read_at,
+        Target::Auto,
+        None,
+        Some("local".into()),
+        None,
+        true,
     )
     .await
 }
@@ -92,10 +112,12 @@ pub async fn scan_target(
         decoded_byte_budget,
         profile,
         None,
+        false,
     )
     .await
 }
 
+#[allow(clippy::too_many_arguments)]
 async fn scan_with_target(
     total_size: BigInt,
     budget: BigInt,
@@ -104,6 +126,7 @@ async fn scan_with_target(
     decoded_byte_budget: Option<BigInt>,
     profile: Option<String>,
     expired: Option<Function>,
+    diagnostics: bool,
 ) -> std::result::Result<String, JsValue> {
     let total_size = u64::try_from(total_size)
         .ok()
@@ -135,7 +158,11 @@ async fn scan_with_target(
             })
     };
     let check = (start.is_some() || expired.is_some()).then_some(&deadline as &dyn Fn() -> bool);
-    let result = scan_core::scan_target_with_deadline(&mut source, limits, target, check).await;
+    let result = if diagnostics {
+        scan_core::scan_target_with_diagnostics(&mut source, limits, target, check).await
+    } else {
+        scan_core::scan_target_with_deadline(&mut source, limits, target, check).await
+    };
     check_result_sizes(&result)?;
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
 }
@@ -210,4 +237,18 @@ pub fn bundle_binary_role(path: &str) -> Option<String> {
 #[wasm_bindgen]
 pub fn bundle_binary_is_macho(header: &[u8]) -> bool {
     scan_core::bundle_binary_is_macho(header)
+}
+
+/// Inspect a local directory bundle and preserve its complete plist for export.
+#[wasm_bindgen]
+pub fn local_bundle_metadata(
+    plist: &[u8],
+    bundle_path: &str,
+    plist_path: &str,
+    nested: bool,
+    role_hint: &str,
+) -> std::result::Result<String, JsValue> {
+    let metadata =
+        scan_core::local_bundle_metadata(plist, bundle_path, plist_path, nested, role_hint);
+    serde_json::to_string(&metadata).map_err(|error| JsValue::from_str(&error.to_string()))
 }

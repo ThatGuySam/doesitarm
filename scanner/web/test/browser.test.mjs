@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, linkSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { linkSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
@@ -10,7 +10,7 @@ import { createScanner } from '../../pkg/worker/scan_wasm_factory.js';
 import { DEFAULT_BUDGET } from '../public/scan-result.js';
 import { startPreview } from '../scripts/serve.mjs';
 import { createHandler } from '../worker/handler.js';
-import { dropPaths, openDisclosure, processMemory, readScanJson, sparseFat } from './browser-helpers.mjs';
+import { dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat } from './browser-helpers.mjs';
 import { cli, dnsResponse, expectedRemote, fixture, rangedResponse } from './helpers.mjs';
 
 const names = [
@@ -31,24 +31,28 @@ plist = Path(sys.argv[1])
 plist.write_bytes(plistlib.dumps(plistlib.loads(plist.read_bytes()), fmt=plistlib.FMT_BINARY))
 `, join(bundle, 'Contents/Info.plist')]);
   }
-  copyFileSync(fixture('thin.macho'), join(bundle, 'Contents', 'MacOS', 'OtherExecutable'));
+  const fat = readFileSync(fixture('fat.macho'));
+  const offset = fat.readUInt32BE(16);
+  const size = fat.readUInt32BE(20);
+  writeFileSync(join(bundle, 'Contents', 'MacOS', 'OtherExecutable'), fat.subarray(offset, offset + size));
   return bundle;
 }
 
-function expectedBundle(bundle, archive) {
+function assertBundle(actual, bundle) {
+  const executable = cli(join(bundle, 'Contents/MacOS/FixtureBinary'));
   const plistSize = statSync(join(bundle, 'Contents/Info.plist')).size;
-  const packed = cli(fixture(archive));
-  const executable = cli(join(bundle, 'Contents/MacOS/FixtureBinary'), DEFAULT_BUDGET - plistSize);
-  return {
-    ...packed,
-    format: 'app',
-    architectures: executable.architectures,
-    bytes_read: plistSize + executable.bytes_read,
-    bytes_requested: plistSize + executable.bytes_requested,
-    decoded_bytes: executable.decoded_bytes,
-    reads: 1 + executable.reads,
-    total_size: plistSize + executable.total_size,
-  };
+  assert.equal(actual.format, 'app');
+  assert.equal(actual.status, 'complete');
+  assert.equal(actual.bundle_path, 'Fixture.app');
+  assert.equal(actual.executable_path, 'Fixture.app/Contents/MacOS/FixtureBinary');
+  assert.equal(actual.executable_resolution, 'declared');
+  assert.deepEqual(actual.architectures, executable.architectures);
+  assert.equal(actual.bytes_read, plistSize + executable.bytes_read);
+  assert.equal(actual.total_size, plistSize + executable.total_size);
+  assert.deepEqual(actual.inventory.x86_64_only, ['Fixture.app/Contents/MacOS/OtherExecutable']);
+  assert.equal(actual.inventory.all_arm64_capable, false);
+  const helper = actual.inventory.binaries.find(({ role }) => role === 'helper');
+  assert.deepEqual(helper.architectures, cli(join(bundle, 'Contents/MacOS/OtherExecutable')).architectures);
 }
 
 function resultCard(page, label) {
@@ -59,7 +63,18 @@ async function scanResult(page, label) {
   return readScanJson(page, resultCard(page, label));
 }
 
+function assertLocalScan(actual, expected, label) {
+  // The browser also reads diagnostic evidence. Compare the scan outcome and
+  // verify that its distinct source coverage stays inside the selected file.
+  for (const field of ['format', 'status', 'architectures', 'bundle_path', 'bundle_id',
+    'version', 'min_macos', 'executable_name', 'executable_size', 'total_size']) {
+    assert.deepEqual(actual[field], expected[field], `${label} · ${field}`);
+  }
+  assert.ok(actual.bytes_read <= actual.total_size && actual.bytes_requested >= actual.bytes_read, label);
+}
+
 test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew comparisons', { timeout: 90_000 }, async (t) => {
+  await requireBrowserHeadroom();
   const scratch = mkdtempSync(join(homedir(), '.cache', 'doesitarm-browser-'));
   t.after(() => rmSync(scratch, { recursive: true, force: true }));
   const directFile = fixture('fat.macho');
@@ -88,7 +103,13 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     return new Promise((resolve) => server.close(resolve));
   });
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/usr/bin/chromium' });
-  t.after(() => browser.close());
+  let memory;
+  t.after(async () => {
+    await memory?.stop();
+    await browser.close();
+    if (memory?.failure) throw memory.failure;
+  });
+  memory = await monitorChromiumMemory(browser);
 
   const context = await browser.newContext({ viewport: { width: 1180, height: 880 } });
   const page = await context.newPage();
@@ -107,7 +128,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
     const chooser = await chooserPromise;
     assert.ok(chooser.isMultiple());
     await chooser.setFiles(names.map(fixture));
-    for (const name of names) assert.deepEqual(await scanResult(page, name), cli(fixture(name)), name);
+    for (const name of names) assertLocalScan(await scanResult(page, name), cli(fixture(name)), name);
     const size = await page.evaluate(() => Math.min(6, Math.max(1, (navigator.hardwareConcurrency || 1) - 2)));
     assert.equal(page.workers().length, size);
     assert.equal(apiCalls.length, 0);
@@ -115,18 +136,31 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
 
   await t.test('folder picker and a Chromium file-system drop scan the declared executable', async () => {
     const xmlBundle = extractBundle(join(scratch, 'xml'));
+    // Exercise the fallback even when Chromium exposes the newer directory picker.
+    await page.evaluate(() => { window.showDirectoryPicker = undefined; });
     const pickerPromise = page.waitForEvent('filechooser');
     await page.getByRole('button', { name: 'Choose folder' }).click();
     const picker = await pickerPromise;
     await picker.setFiles(xmlBundle);
-    assert.deepEqual(await scanResult(page, 'Fixture.app'), expectedBundle(xmlBundle, 'stored.zip'));
+    const picked = resultCard(page, 'Fixture.app');
+    await picked.locator('.result-verdict').getByText('2 binaries, 1 Intel-only').waitFor();
+    assert.match(await picked.locator('.verdict-text').textContent(), /Apple Silicon native/);
+    assert.equal(await picked.locator('.binary-inventory li').count(), 0);
+    assertBundle(await scanResult(page, 'Fixture.app'), xmlBundle);
+    await picked.locator('.binary-inventory summary').click();
+    await picked.locator('.binary-inventory li').filter({ hasText: 'OtherExecutable' }).waitFor();
+    assert.match(await picked.locator('.binary-inventory li').filter({ hasText: 'OtherExecutable' }).textContent(),
+      /Helper.*x86_64.*macOS.*signature/);
 
     const binaryBundle = extractBundle(join(scratch, 'binary'), { binary: true });
+    await page.evaluate(() => { DataTransferItem.prototype.getAsFileSystemHandle = undefined; });
     await dropPaths(page, session, [binaryBundle, fixture('thin.macho')]);
     await page.locator('.result h3').filter({ hasText: /^Fixture\.app$/ }).nth(1).waitFor();
-    assert.deepEqual(await scanResult(page, 'Fixture.app'), expectedBundle(binaryBundle, 'deflated-zip64.zip'));
+    await resultCard(page, 'Fixture.app').locator('.result-verdict').getByText('2 binaries, 1 Intel-only').waitFor();
+    assertBundle(await scanResult(page, 'Fixture.app'), binaryBundle);
     await page.locator('.result h3').filter({ hasText: /^thin\.macho$/ }).nth(1).waitFor();
-    assert.deepEqual(await scanResult(page, 'thin.macho'), cli(fixture('thin.macho')));
+    assertLocalScan(await scanResult(page, 'thin.macho'), cli(fixture('thin.macho')), 'dropped thin.macho');
+    await session.send('Input.cancelDragging').catch(() => {});
     assert.equal(apiCalls.length, 0);
   });
 

@@ -71,26 +71,33 @@ export function readingPhrase(read, size, known = true) {
  * @param {number} elapsedMs batch wall time from the first accepted job to now or the last terminal event.
  */
 export function batchTotals(jobs, elapsedMs) {
-  let scanned = 0;
-  let read = 0;
-  let checked = 0;
-  let unsized = 0;
-  let notChecked = 0;
-  for (const job of jobs) {
-    if (job.status === 'pending' || job.status === 'canceled') continue;
-    if (job.status !== 'complete') {
-      notChecked += 1;
-      continue;
-    }
-    checked += 1;
-    read += Math.max(0, job.read ?? 0);
-    if (Number.isFinite(job.size) && job.size > 0) scanned += job.size;
-    else unsized += 1;
+  const counts = emptyBatchTotals();
+  for (const job of jobs) recordBatchResult(counts, job);
+  return finishBatchTotals(counts, elapsedMs);
+}
+
+export function emptyBatchTotals() {
+  return { checked: 0, scanned: 0, read: 0, unsized: 0, notChecked: 0 };
+}
+
+export function recordBatchResult(totals, { status, size, read }) {
+  if (status === 'pending' || status === 'canceled') return;
+  if (status !== 'complete') {
+    totals.notChecked += 1;
+    return;
   }
+  totals.checked += 1;
+  totals.read += Math.max(0, read ?? 0);
+  if (Number.isFinite(size) && size > 0) totals.scanned += size;
+  else totals.unsized += 1;
+}
+
+export function finishBatchTotals(counts, elapsedMs) {
+  const { checked, unsized, scanned } = counts;
   const seconds = elapsedMs / 1000;
-  // A rate over a partial size set would understate the speed, so it needs every size.
+  // A rate over a partial size set would understate the speed.
   const rate = checked && !unsized && scanned > 0 && seconds > 0 ? scanned / seconds : null;
-  return { checked, scanned, read, unsized, notChecked, rate, elapsedMs };
+  return { ...counts, rate, elapsedMs };
 }
 
 // "7.2 GB scanned at 1.2 GB/s, reading only 38 kB (0.0005%)"

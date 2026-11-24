@@ -1,0 +1,73 @@
+.folder-loader:not(:has(> :first-child:not([hidden]), > button:not([hidden]))) { display: none; }
+
+.folder-loader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 1.5rem;
+}
+
+.folder-loader > :first-child {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: folder-throbber 0.85s linear infinite;
+}
+
+@keyframes folder-throbber {
+  to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folder-loader > :first-child {
+    width: auto;
+    height: auto;
+    border: 0;
+    animation: none;
+  }
+
+  .folder-loader > :first-child::after { content: "•••"; }
+}
+
+.result-tools, .result-pagination, .diagnostic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.55rem 0.8rem;
+  margin-block: 0.5rem;
+}
+
+.result-tools label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.result-tools select {
+  color: inherit;
+  background: var(--panel, Canvas);
+  border: 1px solid currentColor;
+  border-radius: 0.3rem;
+  padding: 0.3rem;
+  font: inherit;
+}
+
+.result-pagination { align-items: center; }
+.result-summary { margin-block: 0.55rem; }
+.diagnostic-summary { flex-basis: 100%; }
+.diagnostic-actions { align-items: center; }
+.result[data-status="queued"] .result-metrics::before,
+.folder-skeleton .result-metrics::before {
+  background: currentColor;
+  border-radius: 0.3rem;
+  content: "";
+  display: inline-block;
+  height: 0.6rem;
+  opacity: 0.2;
+  width: 5rem;
+  margin-inline-end: 0.5rem;
+}
+
+.folder-skeleton .result-metrics:empty { display: inline-block; }

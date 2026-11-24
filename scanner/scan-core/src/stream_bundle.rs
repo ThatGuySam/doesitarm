@@ -2,6 +2,7 @@ use crate::{
     Architecture, BinaryInventory, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult,
     ScriptRuntime, Target, Window, bundle,
     decode::DecodeBudget,
+    diagnostic::ExecutableDiagnostic,
     inventory::{self, Allowance},
     launcher, macho,
 };
@@ -12,12 +13,16 @@ struct Candidate {
     architectures: Vec<Architecture>,
     outcome: Result<()>,
     runtime: Option<ScriptRuntime>,
+    diagnostic: Option<ExecutableDiagnostic>,
 }
 
 impl Candidate {
     fn apply(self, out: &mut ScanResult) -> Result<()> {
         out.executable_size = Some(self.size);
         out.architectures = self.architectures;
+        if let (Some(result), Some(diagnostic)) = (&mut out.diagnostic, self.diagnostic) {
+            result.executable = diagnostic;
+        }
         out.script_runtime = self.runtime;
         self.outcome
     }
@@ -86,6 +91,7 @@ impl<'a> StreamBundle<'a> {
             macho::scan(
                 &mut Window::new(source, offset, size)?,
                 &mut runtime.architectures,
+                None,
             )
             .await?;
             if let Some(relative) = out
@@ -107,7 +113,8 @@ impl<'a> StreamBundle<'a> {
             if self.primary.is_some() || !bundle::matches_path(path, requested) {
                 return Ok(false);
             }
-            let candidate = read_candidate(source, path, offset, size).await?;
+            let candidate =
+                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
             out.executable_path = Some(candidate.path.clone());
             let primary = candidate.apply(out);
             if out.script_runtime.is_some() {
@@ -119,7 +126,8 @@ impl<'a> StreamBundle<'a> {
         }
 
         if self.target.as_deref() == Some(path) && self.primary.is_none() {
-            let candidate = read_candidate(source, path, offset, size).await?;
+            let candidate =
+                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
             self.primary = Some(candidate.apply(out));
             return Ok(false);
         }
@@ -155,7 +163,8 @@ impl<'a> StreamBundle<'a> {
         }
 
         if self.alias.as_deref() == Some(path) && self.primary.is_none() {
-            self.alias_candidate = Some(read_candidate(source, path, offset, size).await?);
+            self.alias_candidate =
+                Some(read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?);
             return Ok(false);
         }
 
@@ -189,7 +198,8 @@ impl<'a> StreamBundle<'a> {
                 self.skipped_prefix = true;
                 return Ok(false);
             }
-            let candidate = read_candidate(source, path, offset, size).await?;
+            let candidate =
+                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
             if !candidate.architectures.is_empty() && out.candidate_executables.len() < 64 {
                 out.candidate_executables.push(ExecutableCandidate {
                     path: path.to_owned(),
@@ -308,14 +318,17 @@ async fn read_candidate(
     path: &str,
     offset: u64,
     size: u64,
+    diagnostic: bool,
 ) -> Result<Candidate> {
     let mut architectures = Vec::new();
     let mut runtime = None;
+    let mut diagnostic = diagnostic.then(ExecutableDiagnostic::default);
     let outcome = launcher::inspect(
         &mut Window::new(source, offset, size)?,
         path,
         &mut architectures,
         &mut runtime,
+        diagnostic.as_mut(),
     )
     .await;
     if let Err(error) = &outcome
@@ -330,5 +343,6 @@ async fn read_candidate(
         architectures,
         outcome,
         runtime,
+        diagnostic,
     })
 }

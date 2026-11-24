@@ -1,10 +1,10 @@
-import init, { bundle_metadata, bundle_binary_is_macho, bundle_binary_role, scan } from './pkg/scan_wasm.js';
+import init, { local_bundle_metadata, scan, scan_diagnostic } from './pkg/scan_wasm.js';
+import { machoEvidence } from './macho-evidence.js';
 import { scanRemote } from './range-scan.js';
-import { emptyResult, MIB, summarizeInventory } from './scan-result.js';
+import { emptyResult, MIB } from './scan-result.js';
 
 let passive = false;
 let executableRequest;
-let inventoryRequest;
 
 function yieldForPassive() {
   if (!passive) return;
@@ -20,10 +20,6 @@ self.addEventListener('message', async ({ data }) => {
   }
   if (data.type === 'executable') {
     if (executableRequest?.id === data.id) executableRequest.resolve(data);
-    return;
-  }
-  if (data.type === 'inventory') {
-    if (inventoryRequest?.id === data.id) inventoryRequest.resolve(data);
     return;
   }
 
@@ -47,13 +43,19 @@ self.addEventListener('message', async ({ data }) => {
   }
 
   let source = 'Browser';
+  const evidence = job.kind === 'url' ? null : { read_log: [] };
   let result;
   try {
     if (job.kind !== 'url' || !job.forceWorker) await init();
     if (job.kind === 'file') {
-      result = await scanFile(job.file, progress);
+      if (job.probe) {
+        evidence.read_log.push({
+          path: job.label, offset: 0, length: 4, purpose: 'folder_magic_probe', outcome: 'ok',
+        });
+      }
+      result = await scanFile(job.file, job.label, progress, evidence);
     } else if (job.kind === 'bundle') {
-      result = await scanBundle(job, progress, id);
+      result = await scanBundle(job, progress, id, evidence);
     } else {
       if (!job.forceWorker) {
         const direct = await scanRemote({
@@ -90,7 +92,7 @@ self.addEventListener('message', async ({ data }) => {
     result = emptyResult(limited ? 'limit_reached' : 'source_error', message, total);
     result.bytes_read = bytes;
   }
-  self.postMessage({ type: 'done', id, result, source, bytes });
+  self.postMessage({ type: 'done', id, result, source, bytes, evidence });
 });
 
 const READ_CHUNK = 4 * MIB;
@@ -100,129 +102,192 @@ const THIN_HEADERS = new Map([
   [0xfeedfacf, 32], [0xcffaedfe, 32],
 ]);
 
-async function scanFile(file, progress) {
+async function capturePrefix(file, path, evidence) {
+  const length = Math.min(file.size, 64);
+  if (!length) {
+    evidence.executable_prefix_hex = '';
+    return false;
+  }
+  const record = { path, offset: 0, length, purpose: 'diagnostic_executable_prefix', outcome: 'error' };
+  evidence.read_log.push(record);
+  try {
+    const waiting = yieldForPassive();
+    if (waiting) await waiting;
+    const bytes = new Uint8Array(await file.slice(0, length).arrayBuffer());
+    if (bytes.length !== length) return false;
+    record.outcome = 'ok';
+    evidence.executable_prefix_hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    return bytes[0] === 0x23 && bytes[1] === 0x21;
+  } catch {
+    return false;
+  }
+}
+
+async function scanFile(file, path, progress, evidence, declared = false) {
   let read = 0;
   let sourceError;
   let thinHeader;
   let planned = null;
-  const result = JSON.parse(await scan(BigInt(file.size), 0n, async (offset, length) => {
+  const macho = machoEvidence();
+  let script = false;
+  const readAt = async (offset, length) => {
     const start = Number(offset);
     const end = start + length;
-    if (!length) return new Uint8Array();
+    const purpose = macho.purpose(start, length);
+    const record = { path, offset: start, length, purpose, outcome: 'error' };
+    evidence.read_log.push(record);
     if (!Number.isSafeInteger(end) || end > file.size) {
       sourceError = 'The scanner requested a range outside the supported file bounds.';
       throw new RangeError(sourceError);
     }
 
-    // A bare thin Mach-O's final source read is the load command table.
-    // Use the range selected by Wasm. Archive and fat Mach-O reads remain open-ended.
+    // Wasm identifies the last source read of a bare thin Mach-O.
     if (start === thinHeader) {
       planned = read + length;
       progress(read, file.size, planned);
     }
     try {
       const chunk = planned === null ? READ_CHUNK : PLANNED_READ_CHUNK;
-      const range = length > chunk ? new Uint8Array(length) : null;
+      let bytes = length > chunk ? new Uint8Array(length) : null;
       for (let position = start; position < end; position += chunk) {
         const waiting = yieldForPassive();
         if (waiting) await waiting;
         const chunkEnd = Math.min(position + chunk, end);
-        const bytes = new Uint8Array(await file.slice(position, chunkEnd).arrayBuffer());
-        if (bytes.byteLength !== chunkEnd - position) throw new Error('Incomplete file range');
-        read += bytes.byteLength;
+        const physical = length > chunk ? {
+          path, offset: position, length: chunkEnd - position, purpose, scope: 'source_chunk', outcome: 'error',
+        } : record;
+        if (physical !== record) evidence.read_log.push(physical);
+        const current = new Uint8Array(await file.slice(position, chunkEnd).arrayBuffer());
+        if (current.byteLength !== chunkEnd - position) throw new Error('Incomplete file range');
+        physical.outcome = 'ok';
+        read += current.byteLength;
         progress(read, file.size, planned);
-        if (!range) {
-          if (start === 0 && length === 4) thinHeader = THIN_HEADERS.get(new DataView(bytes.buffer).getUint32(0));
-          return bytes;
-        }
-        range.set(bytes, position - start);
+        if (length > chunk) bytes.set(current, position - start);
+        else bytes = current;
       }
-      return range;
+      record.outcome = 'ok';
+      if (length) {
+        if (purpose === 'format_magic') {
+          thinHeader = THIN_HEADERS.get(new DataView(bytes.buffer).getUint32(0));
+          script = bytes[0] === 0x23 && bytes[1] === 0x21;
+        }
+        macho.observe(start, bytes, purpose);
+      }
+      return bytes ?? new Uint8Array();
     } catch (error) {
       sourceError = 'The browser could not read this file range. Check that the file is still available.';
       throw error;
     }
-  }, undefined, 'local'));
+  };
+  let magic = !declared && file.size >= 4 ? await readAt(0n, 4) : null;
+  const readSource = (offset, length) => {
+    if (magic && offset === 0n && length === 4) {
+      const cached = magic;
+      magic = null;
+      return cached;
+    }
+    return readAt(offset, length);
+  };
+  // Keep the thin Mach-O read plan exact. Archive diagnostics can use the
+  // core's prefix cache because their progress is indeterminate.
+  const result = JSON.parse(await (declared || macho.recognized
+    ? scan(BigInt(file.size), 0n, readSource, undefined, 'local')
+    : scan_diagnostic(BigInt(file.size), readSource)));
+  const diagnostic = result.diagnostic;
+  delete result.diagnostic;
   if (sourceError) result.error = sourceError;
+  if (declared || result.format === 'macho') script = await capturePrefix(file, path, evidence) || script;
+  if (declared && script) {
+    result.status = 'script';
+    result.error_class = 'executable_is_script';
+    result.error = 'CFBundleExecutable is a script. Its file does not declare a Mach-O architecture.';
+  }
+  if (diagnostic) Object.assign(evidence, diagnostic, { plist_in_container: Boolean(diagnostic.info_plist_path) });
+  else evidence.load_commands = macho.lists.length ? macho.lists : null;
   return result;
 }
 
-async function scanBundle(job, progress, id) {
-  const { plist, label } = job;
-  if (!plist) return emptyResult('not_found', 'The app folder has no readable Contents/Info.plist.');
+async function scanBundle(job, progress, id, evidence) {
+  const { plist, label, plistPath, parentBundlePath, roleHint } = job;
+  const role = roleHint === 'wrapper' ? 'wrapper' : parentBundlePath ? 'nested_app' : 'app';
+  const app = { format: 'app', bundle_path: label, bundle_role: role };
+  if (!plist) {
+    const reason = role === 'wrapper' ? 'This wrapper has a nested app and has no Info.plist of its own.' :
+      'The app folder has no readable Info.plist.';
+    return {
+      ...emptyResult(role === 'wrapper' ? 'no_executable' : 'not_found', reason),
+      ...app,
+      error_class: role === 'wrapper' ? 'wrapper_bundle' : 'missing_info_plist',
+    };
+  }
+  evidence.info_plist_path = plistPath ?? 'Contents/Info.plist';
+  evidence.info_plist_size = plist.size;
   // Match the core's structural plist bound before allocating the buffer.
-  if (plist.size > 2 * MIB) return emptyResult('limit_reached', 'Info.plist exceeds 2 MiB.', plist.size);
+  if (plist.size > 2 * MIB) {
+    return { ...emptyResult('limit_reached', 'Info.plist exceeds 2 MiB.', plist.size), ...app,
+      error_class: 'plist_size_limit' };
+  }
 
   const waiting = yieldForPassive();
   if (waiting) await waiting;
-  const bytes = new Uint8Array(await plist.slice(0, plist.size).arrayBuffer());
+  const record = {
+    path: `${label}/${evidence.info_plist_path}`, offset: 0, length: plist.size, purpose: 'info_plist', outcome: 'error',
+  };
+  evidence.read_log.push(record);
+  const bytes = new Uint8Array(await plist.arrayBuffer());
+  record.outcome = 'ok';
   progress(bytes.byteLength, plist.size);
-  const metadata = JSON.parse(bundle_metadata(bytes, label));
-  if (metadata.error) return metadata;
+  const {
+    result: metadata, bundle_role, error_class, executable_relative_path, executable_resolution,
+    info_plist, info_plist_encoding, info_plist_keys,
+  } = JSON.parse(local_bundle_metadata(bytes, label, evidence.info_plist_path, Boolean(parentBundlePath), roleHint ?? ''));
+  Object.assign(evidence, { info_plist, info_plist_encoding, info_plist_keys });
+  const bundle = { ...metadata, bundle_role, error_class };
+  const fallback = executable_resolution === 'bundle_name_fallback';
+  if (!executable_relative_path || (metadata.error && !fallback)) return bundle;
 
-  const primaryPath = metadata.executable_path.slice(label.length + 1);
-  const { file, path, resolution } = await new Promise((resolve) => {
+  const { file: executable, errorClass, path: resolvedPath, resolution } = await new Promise((resolve) => {
     executableRequest = { id, resolve };
-    self.postMessage({ type: 'executable-needed', id, path: primaryPath });
+    self.postMessage({ type: 'executable-needed', id, path: executable_relative_path });
   });
   executableRequest = undefined;
-  let totalSize = plist.size + (file?.size ?? 0);
-  const primary = file
-    ? await scanFile(file, (read) => progress(plist.size + read, totalSize))
-    : emptyResult('not_found', 'The CFBundleExecutable named in Info.plist could not be opened.');
-
-  const { files, reason } = await new Promise((resolve) => {
-    inventoryRequest = { id, resolve };
-    self.postMessage({ type: 'inventory-needed', id });
-  });
-  inventoryRequest = undefined;
-  const candidates = files
-    .filter(([name, candidate]) => name !== path && candidate.size >= 8)
-    .map(([name, candidate]) => ({ name, candidate, role: bundle_binary_role(name) }))
-    .filter(({ role }) => role);
-  totalSize += candidates.reduce((size, { candidate }) => size + candidate.size, 0);
-
-  const binaries = primary.architectures.length
-    ? [{ path, role: 'main', architectures: primary.architectures }] : [];
-  let incomplete = reason ?? (primary.error === 'unsupported: declared executable is a script' ? null : primary.error);
-  let bytesRead = plist.size + primary.bytes_read;
-  let requested = plist.size + primary.bytes_requested;
-  let reads = metadata.reads + primary.reads;
-  for (const { name, candidate, role } of candidates) {
-    try {
-      const waiting = yieldForPassive();
-      if (waiting) await waiting;
-      const header = new Uint8Array(await candidate.slice(0, 12).arrayBuffer());
-      requested += header.length;
-      reads += 1;
-      bytesRead += header.length;
-      progress(bytesRead, totalSize);
-      if (!bundle_binary_is_macho(header)) continue;
-      const observed = await scanFile(candidate, (read) => progress(bytesRead + read, totalSize));
-      if (observed.architectures.length) binaries.push({ path: name, role, architectures: observed.architectures });
-      incomplete ||= observed.error;
-      bytesRead += observed.bytes_read;
-      requested += observed.bytes_requested;
-      reads += observed.reads;
-    } catch (error) {
-      incomplete ||= error instanceof Error ? error.message : 'A bundle file could not be read.';
-    }
+  if (!executable) {
+    if (fallback && !errorClass) return bundle;
+    return {
+      ...bundle,
+      status: errorClass ? 'source_error' : 'no_executable',
+      error_class: errorClass ?? 'missing_executable_file',
+      error: errorClass ? 'The browser could not read the executable named in Info.plist.' :
+        'The executable named in Info.plist is missing from the selected app.',
+    };
   }
 
+  const path = `${label}/${resolvedPath ?? executable_relative_path}`;
+  const totalSize = plist.size + executable.size;
+  const result = await scanFile(executable, path, (read, size, planned) =>
+    progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned), evidence, true);
+  if (result.format && result.format !== 'macho') {
+    result.status = 'invalid';
+    result.error_class = 'executable_not_macho';
+    result.error = 'CFBundleExecutable names a file that is not a Mach-O executable.';
+    result.architectures = [];
+  }
+  const verified = result.format === 'macho' && result.status === 'complete' &&
+    result.architectures.some(({ header_verified }) => header_verified);
   return {
-    ...metadata,
-    status: primary.status,
-    error: primary.error,
-    architectures: primary.architectures,
-    min_macos: metadata.min_macos ?? primary.min_macos,
-    executable_path: `${label}/${path}`,
-    executable_resolution: resolution,
-    executable_size: file?.size ?? null,
-    inventory: summarizeInventory(binaries, incomplete),
-    bytes_read: bytesRead,
-    bytes_requested: requested,
-    decoded_bytes: primary.decoded_bytes,
-    reads,
+    ...bundle,
+    executable_path: path,
+    executable_resolution: resolution ?? executable_resolution,
+    status: fallback && !verified ? bundle.status : result.status,
+    error: fallback && !verified ? bundle.error : result.error,
+    error_class: fallback && !verified ? bundle.error_class : result.error_class ?? (result.error ? result.status : null),
+    architectures: fallback && !verified ? [] : result.architectures,
+    min_macos: metadata.min_macos ?? result.min_macos,
+    executable_size: executable.size,
+    bytes_read: plist.size + result.bytes_read,
+    bytes_requested: plist.size + result.bytes_requested,
+    decoded_bytes: result.decoded_bytes,
+    reads: metadata.reads + result.reads,
     total_size: totalSize,
   };
 }

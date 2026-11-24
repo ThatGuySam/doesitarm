@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { chromium } from 'playwright-core';
 import { startPreview } from './serve.mjs';
-import { dropPaths, openDisclosure, processMemory, readScanJson, sparseFat, workerHeap } from '../test/browser-helpers.mjs';
+import { dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat, workerHeap } from '../test/browser-helpers.mjs';
 import { fixture } from '../test/helpers.mjs';
 import { appsFolder, heldInputs, mixedInputs, streamInput, timerInput } from '../test/ui-fixtures.mjs';
 
@@ -81,12 +81,14 @@ async function withPage(browser, url, run, { cores, gentle = false, reducedMotio
 }
 
 async function waitForCount(page, count) {
-  await page.waitForFunction((text) => document.getElementById('results-count').textContent === text, count);
+  await page.waitForFunction((text) => document.getElementById('results-count').textContent
+    .replace(/^Found .*? · /, '') === text, count);
 }
 
 function row(page, name) {
   return page.locator('.result').filter({ has: page.getByRole('heading', { name, exact: true }) });
 }
+
 
 function readOverlap(completions) {
   const edges = completions
@@ -137,7 +139,7 @@ async function measure(page, cdp, browserCDP, label, count, limit, load) {
   assert.equal(probe.starts.length, count);
   assert.equal(probe.completions.length, count);
   assert.equal(new Set(probe.completions.map(({ id }) => id)).size, count);
-  assert.equal(await page.locator('.result[data-status="complete"]').count(), count);
+  assert.equal(await page.locator('.result[data-status="complete"]').count(), Math.min(24, count));
   assert.equal(await page.locator('#overall-progress').evaluate((progress) => progress.position), 1);
   assert.match(await page.locator('#batch-metrics').innerText(), /scanned in \S+\s\S+ at \S+\s[kMG]B\/s, reading (only )?\S+\s\S+|checked in \S+\s\S+, sizes unknown, reading \S+\s\S+$/);
 
@@ -183,6 +185,7 @@ async function measure(page, cdp, browserCDP, label, count, limit, load) {
 }
 
 test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 120_000 }, async (t) => {
+  await requireBrowserHeadroom();
   const scratch = mkdtempSync(join(homedir(), '.cache', 'doesitarm-ui-'));
   t.after(() => rmSync(scratch, { recursive: true, force: true }));
   const mixed = mixedInputs(scratch);
@@ -201,7 +204,13 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
     return new Promise((resolve) => server.close(resolve));
   });
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/usr/bin/chromium' });
-  t.after(() => browser.close());
+  let memory;
+  t.after(async () => {
+    await memory?.stop();
+    await browser.close();
+    if (memory?.failure) throw memory.failure;
+  });
+  memory = await monitorChromiumMemory(browser);
   const browserCDP = await browser.newBrowserCDPSession();
   console.log(`Chromium ${browser.version()}`);
 
@@ -232,6 +241,7 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
   await t.test('drops a real folder containing 120 app bundles', async () => {
     await withPage(browser, url, async (page, cdp) => {
       const limit = await page.evaluate(() => Math.min(6, Math.max(1, navigator.hardwareConcurrency - 2)));
+      await page.evaluate(() => { DataTransferItem.prototype.getAsFileSystemHandle = undefined; });
       const probe = await measure(page, cdp, browserCDP, 'folder-drop', 120, limit, () => dropPaths(page, cdp, [folder]));
       assert.equal(new Set(probe.starts.map(({ label }) => label)).size, 120);
       assert.ok(probe.starts.every(({ label }) => /^Apps\/Fixture \d+\.app$/.test(label)));

@@ -1,5 +1,5 @@
 use crate::{Result, ScanError, ScanResult, Target, plist_value};
-use plist::Value;
+use plist::{Dictionary, Value};
 use unicode_normalization::UnicodeNormalization;
 
 pub(crate) const MAX_PLIST: u64 = 2 * 1024 * 1024;
@@ -59,15 +59,39 @@ pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
 }
 
 pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
-    let parsed = plist_value::parse(bytes, ScanError::Invalid("bundle Info.plist"))?;
-    let dict = parsed
-        .as_dictionary()
-        .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;
-    let get = |key| {
-        dict.get(key)
-            .and_then(Value::as_string)
-            .filter(|s| !s.is_empty())
-    };
+    if let Some(diagnostic) = &mut out.diagnostic {
+        diagnostic.plist_source(bundle, bytes);
+    }
+    let raw = bytes.strip_prefix(b"\xef\xbb\xbf").unwrap_or(bytes);
+    let parsed = plist_value::parse(raw, ScanError::Invalid("bundle Info.plist"))?;
+    let resolution = (|| {
+        let dict = parsed
+            .as_dictionary()
+            .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;
+        apply_properties(dict, bundle, out);
+        let executable = string(dict, "CFBundleExecutable")
+            .ok_or(ScanError::NotFound("CFBundleExecutable in Info.plist"))?;
+        out.executable_name = Some(executable.to_owned());
+        let relative = resolve_executable(executable, false)?;
+        Ok(format!("{bundle}/{relative}"))
+    })();
+    if let Some(diagnostic) = &mut out.diagnostic {
+        diagnostic.plist_value(parsed);
+    }
+    if let Ok(path) = &resolution {
+        out.executable_path = Some(path.clone());
+    }
+    resolution
+}
+
+pub(crate) fn string<'a>(dict: &'a Dictionary, key: &str) -> Option<&'a str> {
+    dict.get(key)
+        .and_then(Value::as_string)
+        .filter(|value| !value.is_empty())
+}
+
+pub(crate) fn apply_properties(dict: &Dictionary, bundle: &str, out: &mut ScanResult) {
+    let get = |key| string(dict, key);
     out.bundle_path = Some(bundle.to_owned());
     out.bundle_kind = Some(installed_bundle_kind(bundle).unwrap_or("bundle"));
     out.bundle_id = get("CFBundleIdentifier").map(str::to_owned);
@@ -78,19 +102,24 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
         .or_else(|| get("CFBundleName"))
         .map(str::to_owned);
     out.min_macos = get("LSMinimumSystemVersion").map(str::to_owned);
-    let executable =
-        get("CFBundleExecutable").ok_or(ScanError::NotFound("CFBundleExecutable in Info.plist"))?;
-    out.executable_name = Some(executable.to_owned());
+}
+
+pub(crate) fn resolve_executable(executable: &str, flat: bool) -> Result<String> {
     if executable.starts_with('/') || executable.contains(['\\', '\0']) {
         return Err(ScanError::Unsupported(
             "CFBundleExecutable is not bundle-relative",
         ));
     }
-    let mut components = vec!["Contents", "MacOS"];
+    let mut components = if flat {
+        vec![]
+    } else {
+        vec!["Contents", "MacOS"]
+    };
+    let floor = usize::from(!flat);
     for part in executable.split('/') {
         match part {
             "" | "." => {}
-            ".." if components.len() > 1 => {
+            ".." if components.len() > floor => {
                 components.pop();
             }
             ".." => {
@@ -101,12 +130,10 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
             part => components.push(part),
         }
     }
-    if components.len() < 2 || matches!(executable, "." | "..") || executable.ends_with('/') {
+    if components.len() <= floor || matches!(executable, "." | "..") || executable.ends_with('/') {
         return Err(ScanError::Invalid("CFBundleExecutable path"));
     }
-    let path = format!("{bundle}/{}", components.join("/"));
-    out.executable_path = Some(path.clone());
-    Ok(path)
+    Ok(components.join("/"))
 }
 
 /// Some publishers record the Contents-relative MacOS/file spelling.
