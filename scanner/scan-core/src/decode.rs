@@ -1,7 +1,9 @@
 use crate::{Result, ScanError};
 use std::io::Read;
 
-const EXPANSION_RATIO: u64 = 1024;
+const STREAM_EXPANSION_RATIO: u64 = 1024;
+// Disk images can compress a mostly empty 1 MiB block to 45 bytes with bzip2.
+const CHUNK_EXPANSION_RATIO: u64 = 32 * 1024;
 const STREAM_RATIO_SLACK: u64 = 64 * 1024;
 const MAX_DECODER_STARTS: usize = 512;
 const DECODE_LIMIT: ScanError = ScanError::WorkLimit("decoded-byte budget reached");
@@ -64,15 +66,20 @@ impl DecodeBudget {
 pub(crate) const STEP: usize = 16 * 1024;
 
 pub(crate) fn check_stream_ratio(consumed: u64, expanded: u64) -> Result<()> {
-    check_ratio(consumed, expanded, STREAM_RATIO_SLACK)
+    check_ratio(
+        consumed,
+        expanded,
+        STREAM_EXPANSION_RATIO,
+        STREAM_RATIO_SLACK,
+    )
 }
 
 pub(crate) fn check_chunk_ratio(consumed: u64, expanded: u64) -> Result<()> {
-    check_ratio(consumed, expanded, 0)
+    check_ratio(consumed, expanded, CHUNK_EXPANSION_RATIO, 0)
 }
 
-fn check_ratio(packed: u64, expanded: u64, slack: u64) -> Result<()> {
-    if expanded > packed.saturating_mul(EXPANSION_RATIO).saturating_add(slack) {
+fn check_ratio(packed: u64, expanded: u64, ratio: u64, slack: u64) -> Result<()> {
+    if expanded > packed.saturating_mul(ratio).saturating_add(slack) {
         return Err(RATIO_LIMIT);
     }
     Ok(())
@@ -102,9 +109,9 @@ mod tests {
 
     #[test]
     fn stream_ratio_allows_bounded_lookahead_and_counts_consumed_input() {
-        assert!(check_stream_ratio(1, STREAM_RATIO_SLACK + EXPANSION_RATIO).is_ok());
+        assert!(check_stream_ratio(1, STREAM_RATIO_SLACK + STREAM_EXPANSION_RATIO).is_ok());
         assert!(matches!(
-            check_stream_ratio(1, STREAM_RATIO_SLACK + EXPANSION_RATIO + 1),
+            check_stream_ratio(1, STREAM_RATIO_SLACK + STREAM_EXPANSION_RATIO + 1),
             Err(ScanError::WorkLimit(_))
         ));
     }

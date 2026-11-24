@@ -134,10 +134,26 @@ mod tests {
 
     #[test]
     fn expansion_ratio_rejects_chunks_before_reserving_output() {
-        let mut work = DecodeBudget::new(1025);
+        let expanded = 32 * 1024 + 1;
+        let mut work = DecodeBudget::new(expanded as u64);
         assert!(
-            matches!(decode(BZIP2, b"x", 1025, &mut work), Err(ScanError::WorkLimit(reason)) if reason.contains("ratio"))
+            matches!(decode(BZIP2, b"x", expanded, &mut work), Err(ScanError::WorkLimit(reason)) if reason.contains("ratio"))
         );
         assert_eq!(work.used(), 0);
+    }
+
+    #[test]
+    fn bzip2_accepts_a_highly_compressed_megabyte_within_the_work_budget() {
+        let block = vec![0; 1024 * 1024];
+        let mut encoder = bzip2::write::BzEncoder::new(Vec::new(), bzip2::Compression::best());
+        encoder.write_all(&block).unwrap();
+        let packed = encoder.finish().unwrap();
+        assert!(packed.len() * 1024 < block.len());
+        let mut work = DecodeBudget::new(block.len() as u64);
+        assert_eq!(
+            decode(BZIP2, &packed, block.len(), &mut work).unwrap(),
+            block
+        );
+        assert_eq!(work.used(), block.len() as u64);
     }
 }
