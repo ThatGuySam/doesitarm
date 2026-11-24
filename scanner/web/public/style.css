@@ -10,7 +10,7 @@
   --strong: #f3f4f6;    /* gray-100 */
   --muted: #9ca3af;     /* gray-400: 4.6:1 on --dark, 7.1:1 on --darker */
   --rule: #374151;      /* gray-700, decorative dividers only */
-  --edge: #6b7280;      /* gray-500, control boundaries: 3.2:1 on --darker */
+  --edge: #808897;      /* control and input boundaries: 3.3:1 on --dark, 5.2:1 on --darkest */
   --gold: #ffa766;      /* accent + focus: 6.1:1 on --dark */
   --native: #86efac;    /* green-300: 10.6:1 on --darker */
   --danger: #fca5a5;    /* red-300 */

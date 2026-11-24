@@ -7,7 +7,10 @@
     "serve": "node scripts/serve.mjs",
     "test": "node --test test/worker.test.mjs test/ui.test.mjs test/totals.test.mjs",
     "test:browser": "node --test test/browser.test.mjs",
-    "test:ui": "node scripts/ui-smoke.mjs"
+    "test:ui": "node scripts/ui-smoke.mjs",
+    "test:a11y": "node scripts/a11y-check.mjs",
+    "count": "node scripts/count-elements.mjs",
+    "screenshots": "node scripts/count-elements.mjs --shots screenshots"
   },
   "dependencies": {
     "ipaddr.js": "2.5.0"
