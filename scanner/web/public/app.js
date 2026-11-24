@@ -97,6 +97,13 @@ dropZone.addEventListener('dragleave', () => {
   dragDepth = Math.max(0, dragDepth - 1);
   if (!dragDepth) dropZone.classList.remove('dragging');
 });
+// Any file drag over the page points at the drop zone, so the target is obvious before the pointer reaches it.
+window.addEventListener('dragenter', (event) => {
+  if (hasFiles(event)) document.body.classList.add('drag-active');
+});
+window.addEventListener('dragleave', (event) => {
+  if (!event.relatedTarget) document.body.classList.remove('drag-active');
+});
 window.addEventListener('dragover', (event) => {
   if (!hasFiles(event)) return;
   event.preventDefault();
@@ -107,6 +114,7 @@ window.addEventListener('drop', async (event) => {
   event.preventDefault();
   dragDepth = 0;
   dropZone.classList.remove('dragging');
+  document.body.classList.remove('drag-active');
   if (!dropZone.contains(event.target)) return;
   const discovery = {};
   discoveries.add(discovery);
@@ -121,7 +129,7 @@ window.addEventListener('drop', async (event) => {
     }
     if (!discoveries.has(discovery)) return;
     view.add(jobs);
-    notice.textContent = jobs.length ? '' : 'No files were found. Try choosing the folder directly.';
+    notice.textContent = jobs.length ? '' : 'No files were found in that drop. Some browsers, including Firefox, do not expose dropped folders. Use Choose folder instead.';
   } catch {
     if (discoveries.has(discovery)) {
       view.add(jobs);
@@ -186,6 +194,7 @@ async function loadHomebrew() {
       button.addEventListener('click', () => {
         view.add([{ kind: 'url', url: app.url, label: app.cask, forceWorker: true }]);
         get('results-title').focus();
+        get('results-title').scrollIntoView({ block: 'center' });
       });
       name.append(button);
       row.append(name);

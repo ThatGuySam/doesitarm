@@ -1,5 +1,9 @@
-import assert from 'node:assert/strict';
+import strict from 'node:assert/strict';
 import test from 'node:test';
+
+// Formatting joins numbers and units with a no-break space; compare with plain spaces.
+const plain = (value) => (typeof value === 'string' ? value.replaceAll('\u00a0', ' ') : value);
+const assert = { ...strict, equal: (actual, expected, message) => strict.equal(plain(actual), expected, message) };
 import {
   batchTotals, formatPercent, formatRate, formatSeconds, formatSize, rowPhrase, steadyRate, totalsPhrase,
 } from '../public/scan-totals.js';
@@ -54,6 +58,7 @@ test('batch totals count only complete checks, and the rate uses wall time', () 
     checked: 2, scanned: 6e9, read: 38_000, unsized: 0, notChecked: 2, rate: 2e9, elapsedMs: 3_000,
   });
   assert.equal(totalsPhrase(totals), '6 GB scanned at 2 GB/s, reading only 38 kB (0.00063%)');
+  assert.equal(totalsPhrase(totals, { withTime: true }), '6 GB scanned in 3.0 s at 2 GB/s, reading only 38 kB (0.00063%)');
 });
 
 test('unknown sizes suppress the rate instead of understating it', () => {

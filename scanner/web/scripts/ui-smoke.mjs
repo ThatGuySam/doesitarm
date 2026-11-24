@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { chromium } from 'playwright-core';
 import { startPreview } from './serve.mjs';
-import { dropPaths, processMemory, sparseFat, workerHeap } from '../test/browser-helpers.mjs';
+import { dropPaths, openDisclosure, processMemory, readScanJson, sparseFat, workerHeap } from '../test/browser-helpers.mjs';
 import { fixture } from '../test/helpers.mjs';
 import { appsFolder, heldInputs, mixedInputs, streamInput, timerInput } from '../test/ui-fixtures.mjs';
 
@@ -72,7 +72,7 @@ async function withPage(browser, url, run, { cores, gentle = false, reducedMotio
     await page.goto(url);
     await page.bringToFront();
     await page.getByRole('heading', { name: 'Apple Silicon App Test' }).waitFor();
-    await page.getByRole('button', { name: 'Rescan zed' }).waitFor();
+    await page.locator('#run-date').filter({ hasText: /30 casks/ }).waitFor();
     await run(page, cdp, context);
     assert.deepEqual(errors, []);
   } finally {
@@ -139,7 +139,7 @@ async function measure(page, cdp, browserCDP, label, count, limit, load) {
   assert.equal(new Set(probe.completions.map(({ id }) => id)).size, count);
   assert.equal(await page.locator('.result[data-status="complete"]').count(), count);
   assert.equal(await page.locator('#overall-progress').evaluate((progress) => progress.position), 1);
-  assert.match(await page.locator('#batch-metrics').innerText(), /read · Elapsed \d+:\d\d/);
+  assert.match(await page.locator('#batch-metrics').innerText(), /scanned in \S+\s\S+ at \S+\s[kMG]B\/s, reading only \S+\s\S+ \(|checked in \S+\s\S+, sizes unknown, reading \S+\s\S+$/);
 
   const realOverlap = readOverlap(probe.completions);
   assert.equal(probe.peakActive, Math.min(limit, count));
@@ -241,7 +241,7 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
   await t.test('reads a slice beyond 4 GiB from a sparse file', async () => {
     await withPage(browser, url, async (page, cdp) => {
       await measure(page, cdp, browserCDP, 'sparse-mach-o', 1, 1, () => page.locator('#files').setInputFiles(sparse));
-      const scan = JSON.parse(await row(page, '5 GiB sparse.macho').locator('pre').textContent());
+      const scan = await readScanJson(page, row(page, '5 GiB sparse.macho'));
       assert.equal(scan.total_size, size);
       assert.ok(scan.bytes_read < 1024);
       assert.ok(scan.architectures.some((arch) => arch.offset === offset && arch.header_verified));
@@ -254,7 +254,7 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
     await withPage(browser, url, async (page) => {
       await page.locator('#files').setInputFiles(large);
       await waitForCount(page, '1 of 1 finished');
-      const scan = JSON.parse(await row(page, 'large-output.tar.gz').locator('pre').textContent());
+      const scan = await readScanJson(page, row(page, 'large-output.tar.gz'));
       assert.equal(scan.status, 'complete');
       assert.ok(scan.decoded_bytes > 64 * MiB);
       console.log(`Local archive decoded ${scan.decoded_bytes} bytes from ${scan.bytes_read} unique source bytes`);
@@ -281,6 +281,7 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
       await page.bringToFront();
       await page.waitForFunction(() => document.getElementById('mode-status').textContent.startsWith('Foreground'));
 
+      await openDisclosure(page, '#advanced');
       const toggle = page.getByRole('checkbox', { name: 'Gentle' });
       await toggle.focus();
       await toggle.press('Space');
@@ -301,7 +302,7 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
       await second.close();
 
       await page.reload();
-      assert.ok(await toggle.isChecked());
+      assert.ok(await page.locator('#gentle').isChecked());
       await page.locator('#files').setInputFiles(fixture('thin.macho'));
       await waitForCount(page, '1 of 1 finished');
       assert.equal(await page.locator('.result[data-status="complete"]').count(), 1);
@@ -341,7 +342,9 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
       await timerLabel.filter({ hasText: /^Elapsed 0:06$/ }).waitFor({ state: 'visible' });
       assert.equal(await page.locator('#timer-notice').textContent(), 'Elapsed time is available for timer-thin.macho.');
       await waitForCount(page, '3 of 3 finished');
-      assert.equal(await progress.evaluate((bar) => bar.position), 1);
+      // A finished row drops its progress strip; its last value stays complete.
+      assert.equal(await item.locator('progress').evaluate((bar) => bar.position), 1);
+      assert.ok(await item.locator('progress').isHidden());
       assert.equal(await overall.evaluate((bar) => bar.position), 1);
       const positions = await page.evaluate(() => window.readPositions);
       assert.ok(positions.length > 2 && positions.every((position, i) => !i || position >= positions[i - 1]));

@@ -1,5 +1,7 @@
 // Batch and per-row totals: what was checked, how big it was, how fast, and how little was read.
 // Units are decimal (SI): 1 GB = 10^9 bytes, 1 MB = 10^6 bytes, 1 kB = 10^3 bytes.
+// A no-break space joins each number to its unit so lines never wrap between them.
+const NBSP = '\u00a0';
 
 const KB = 1e3;
 const MB = 1e6;
@@ -17,23 +19,23 @@ function compact(value) {
 export function formatSize(bytes) {
   if (!Number.isFinite(bytes) || bytes < 0) return '—';
   const unit = units.find(([size]) => bytes >= size * 0.9995);
-  return unit ? `${compact(bytes / unit[0])} ${unit[1]}` : `${Math.round(bytes)} B`;
+  return unit ? `${compact(bytes / unit[0])}${NBSP}${unit[1]}` : `${Math.round(bytes)}${NBSP}B`;
 }
 
 // GB/s at or above 1 GB/s, otherwise MB/s (or kB/s for very slow reads).
 export function formatRate(bytesPerSecond) {
   if (!Number.isFinite(bytesPerSecond) || bytesPerSecond <= 0) return null;
-  if (bytesPerSecond >= GB) return `${compact(bytesPerSecond / GB)} GB/s`;
-  if (bytesPerSecond >= MB) return `${compact(bytesPerSecond / MB)} MB/s`;
-  return `${compact(Math.max(bytesPerSecond, 1) / KB)} kB/s`;
+  if (bytesPerSecond >= GB) return `${compact(bytesPerSecond / GB)}${NBSP}GB/s`;
+  if (bytesPerSecond >= MB) return `${compact(bytesPerSecond / MB)}${NBSP}MB/s`;
+  return `${compact(Math.max(bytesPerSecond, 1) / KB)}${NBSP}kB/s`;
 }
 
 export function formatSeconds(milliseconds) {
   if (!Number.isFinite(milliseconds) || milliseconds < 0) return '—';
-  if (milliseconds < 100) return '<0.1 s';
+  if (milliseconds < 100) return `<0.1${NBSP}s`;
   const seconds = milliseconds / 1000;
-  if (seconds < 10) return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(Math.floor(seconds * 10) / 10)} s`;
-  if (seconds < 60) return `${Math.floor(seconds)} s`;
+  if (seconds < 10) return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(Math.floor(seconds * 10) / 10)}${NBSP}s`;
+  if (seconds < 60) return `${Math.floor(seconds)}${NBSP}s`;
   const whole = Math.floor(seconds);
   const hours = Math.floor(whole / 3600);
   const minutes = Math.floor(whole / 60) % 60;
@@ -82,12 +84,13 @@ export function batchTotals(jobs, elapsedMs) {
 }
 
 // "7.2 GB scanned at 1.2 GB/s, reading only 38 kB (0.0005%)"
-export function totalsPhrase({ checked, scanned, read, unsized, rate }) {
+export function totalsPhrase({ checked, scanned, read, unsized, rate, elapsedMs }, { withTime = false } = {}) {
   if (!checked) return null;
   const parts = [];
   if (scanned > 0) {
     let phrase = `${formatSize(scanned)} scanned`;
     if (unsized) phrase += ` across ${checked - unsized} of ${checked} with known sizes`;
+    if (withTime) phrase += ` in ${formatSeconds(elapsedMs)}`;
     const speed = formatRate(rate);
     if (speed) phrase += ` at ${speed}`;
     parts.push(phrase);
@@ -95,7 +98,7 @@ export function totalsPhrase({ checked, scanned, read, unsized, rate }) {
     const share = unsized ? null : formatPercent(read, scanned);
     parts.push(`reading only ${formatSize(read)}${share ? ` (${share})` : ''}`);
   } else {
-    parts.push(`${checked} checked, sizes unknown`);
+    parts.push(`${checked} checked${withTime ? ` in ${formatSeconds(elapsedMs)}` : ''}, sizes unknown`);
     parts.push(`reading ${formatSize(read)}`);
   }
   return parts.join(', ');

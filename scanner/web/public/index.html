@@ -3,133 +3,176 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Does It ARM · App Scanner</title>
+  <meta name="color-scheme" content="dark">
+  <title>Apple Silicon App Test · Does It ARM</title>
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
-  <header class="masthead">
-    <div class="wrap masthead-inner">
-      <a class="wordmark" href="./">Does It ARM<span>?</span></a>
-      <nav aria-label="Scanner sections">
-        <a href="#scan">Scan</a>
-        <a href="#homebrew">Homebrew run</a>
-      </nav>
-    </div>
+  <a class="skip-link" href="#main">Skip to the scanner</a>
+  <header class="navbar">
+    <a class="logo" href="https://doesitarm.com/" aria-label="Does It ARM home"><span aria-hidden="true">🦾</span></a>
+    <nav aria-label="Does It ARM">
+      <a href="https://doesitarm.com/kind/homebrew"><span aria-hidden="true">🍺</span> Homebrew</a>
+      <a href="./" aria-current="page"><span aria-hidden="true">🧪</span> App Test</a>
+    </nav>
   </header>
-  <main class="wrap">
-    <section id="scan" aria-labelledby="scan-title">
+
+  <main id="main">
+    <section id="scan" class="hero" aria-labelledby="scan-title">
       <h1 id="scan-title">Apple Silicon App Test</h1>
-      <p class="intro">Find out which architectures a Mac app ships and which macOS version its main executable requires.</p>
-      <div class="input-grid">
-        <div id="drop-zone" class="drop-zone">
-          <h2>Scan local files</h2>
-          <p>Drop DMG, ZIP, PKG, tar.gz, Mach-O files or folders. Local files stay in your browser.</p>
-          <div class="actions">
-            <button type="button" id="choose-files">Select Apps</button>
-            <button type="button" id="choose-folder" class="secondary">Choose folder</button>
-          </div>
-          <input id="files" type="file" multiple hidden>
-          <input id="folder" type="file" webkitdirectory multiple hidden>
+      <p class="subtitle">Check whether your Mac apps run natively on Apple&nbsp;silicon.</p>
+
+      <div id="drop-zone" class="drop-zone">
+        <button type="button" id="choose-files" class="select-apps">Select Apps</button>
+        <p class="helper">Drop Mac apps, folders, or DMG, ZIP, PKG, tar.gz and Mach-O files here. Local files stay in this browser.</p>
+        <div class="more-actions">
+          <button type="button" id="choose-folder" class="text-button">Choose folder</button>
+          <details id="advanced" class="inline-details">
+            <summary>Advanced</summary>
+            <div class="panel">
+              <form id="url-form" class="url-form" novalidate>
+                <label for="scan-url">Public HTTPS download URL</label>
+                <p id="url-hint" class="hint">The scanner tries the URL in your browser. If the browser cannot read the needed ranges, Cloudflare receives the URL and checks it there.</p>
+                <div class="url-row">
+                  <input id="scan-url" type="url" placeholder="https://example.com/App.dmg" required
+                    aria-describedby="url-hint url-error" autocomplete="off" spellcheck="false">
+                  <button type="submit" class="quiet-button">Scan URL</button>
+                </div>
+                <p id="url-error" class="error" role="alert"></p>
+              </form>
+              <div class="setting">
+                <label class="check"><input type="checkbox" id="gentle"> Gentle</label>
+                <p class="hint">Scan one app at a time to keep your Mac responsive. <span id="mode-status" role="status"></span></p>
+              </div>
+            </div>
+          </details>
+          <details id="how" class="inline-details">
+            <summary>How it works</summary>
+            <div class="panel prose">
+              <p>The scanner opens each app's main executable and reads its Mach-O headers to see which processor architectures it contains. It reads only the few ranges it needs, so a multi-gigabyte app usually costs a few kilobytes of reading. Local files never leave this browser.</p>
+              <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
+              <p>Dropping a folder needs a browser that exposes folder contents to the page. If Firefox or another browser finds no files in a dropped folder, use <strong>Choose folder</strong>.</p>
+            </div>
+          </details>
         </div>
-        <form id="url-form" class="url-box">
-          <h2><label for="scan-url">Scan a URL</label></h2>
-          <p id="url-hint">Use a public HTTPS download link. Cloudflare scans it if your browser cannot read byte ranges.</p>
-          <input id="scan-url" type="url" placeholder="https://example.com/App.dmg" required
-            aria-describedby="url-hint url-error" autocomplete="off" spellcheck="false">
-          <button type="submit" class="secondary">Scan URL</button>
-          <p id="url-error" class="error" role="alert"></p>
-        </form>
-      </div>
-      <div class="settings">
-        <label class="gentle-toggle"><input type="checkbox" id="gentle"> Gentle</label>
-        <p id="mode-status" class="muted" role="status"></p>
+        <input id="files" type="file" multiple hidden>
+        <input id="folder" type="file" webkitdirectory multiple hidden>
+        <p class="drop-hint" aria-hidden="true">Drop to scan</p>
       </div>
       <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
       <p id="input-status" class="error" role="status"></p>
     </section>
 
-    <section id="results" aria-labelledby="results-title">
-      <div class="section-bar">
-        <h2 id="results-title" tabindex="-1">Results</h2>
-        <button type="button" id="cancel-all" class="secondary cancel-button" hidden>Cancel all</button>
+    <section id="results" aria-labelledby="results-title" hidden>
+      <div class="totals">
+        <h2 id="results-title" class="totals-line" tabindex="-1"><span class="visually-hidden">Results: </span><span id="results-count"></span><span id="batch-metrics"></span></h2>
+        <button type="button" id="cancel-all" class="quiet-button" hidden>Cancel all</button>
       </div>
-      <p id="empty-results" class="muted">Choose files, a folder, or a download URL to start a scan.</p>
-      <div id="batch-progress">
-        <p id="results-count" role="status"></p>
-        <div id="batch-readout" hidden>
-          <progress id="overall-progress" aria-label="Batch progress by scans finished"></progress>
-          <p id="batch-metrics" class="muted"></p>
-        </div>
-      </div>
+      <progress id="overall-progress" aria-label="Batch progress by scans finished"></progress>
+      <p id="batch-notice" class="visually-hidden" role="status"></p>
       <p id="timer-notice" class="visually-hidden" role="status"></p>
       <ul id="scan-results" class="result-list" role="list"></ul>
     </section>
 
-    <section id="homebrew" aria-labelledby="homebrew-title">
-      <div class="section-bar">
-        <h2 id="homebrew-title">Homebrew run</h2>
-        <p id="run-date"></p>
-      </div>
-      <p id="run-status" role="status">Loading the recorded scan results…</p>
-      <p id="run-description" class="muted" hidden>Choose a cask to scan its recorded download URL in the Cloudflare Worker. Publishers may update or remove those URLs.</p>
-      <div id="cask-region" class="table-scroll" role="region" aria-labelledby="cask-caption" tabindex="0" hidden>
-        <table>
-          <caption id="cask-caption" class="visually-hidden">Recorded Homebrew cask scan results</caption>
-          <thead>
-            <tr>
-              <th scope="col">Cask</th>
-              <th scope="col">Format</th>
-              <th scope="col">Status</th>
-              <th scope="col">Architectures</th>
-              <th scope="col">Bundle ID</th>
-              <th scope="col">App version</th>
-              <th scope="col">Min macOS</th>
-              <th scope="col">Bytes read</th>
-              <th scope="col">Time</th>
-            </tr>
-          </thead>
-          <tbody id="cask-results"></tbody>
-        </table>
+    <section class="more" aria-label="Recorded runs and questions">
+      <details id="homebrew" class="section-details">
+        <summary>Recorded Homebrew run <span id="run-date" class="summary-note"></span></summary>
+        <div class="panel">
+          <p id="run-status" role="status">Loading the recorded scan results…</p>
+          <p id="run-description" class="hint" hidden>Choose a cask to scan its recorded download URL in the Cloudflare Worker. Publishers may update or remove those URLs.</p>
+          <div id="cask-region" class="table-scroll" role="region" aria-labelledby="cask-caption" tabindex="0" hidden>
+            <table>
+              <caption id="cask-caption" class="visually-hidden">Recorded Homebrew cask scan results</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Cask</th>
+                  <th scope="col">Format</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Architectures</th>
+                  <th scope="col">Bundle ID</th>
+                  <th scope="col">App version</th>
+                  <th scope="col">Min macOS</th>
+                  <th scope="col">Bytes read</th>
+                  <th scope="col">Time</th>
+                </tr>
+              </thead>
+              <tbody id="cask-results"></tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <div class="faq">
+        <details>
+          <summary>What do the results mean?</summary>
+          <div class="panel prose">
+            <p><strong>✓ Apple Silicon native</strong> means the main executable contains an arm64 slice, so it runs natively on M-series Macs. <strong>Universal</strong> means it also contains an Intel slice.</p>
+            <p><strong>◆ Intel only</strong> means only an x86_64 slice was found. The app may run through Rosetta 2 translation, usually slower and with more battery use.</p>
+            <p>The result describes the main executable only. Plug-ins, helper tools and installers can differ.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Why couldn't an app be checked?</summary>
+          <div class="panel prose">
+            <p><strong>? Unknown</strong> means the scanner stopped before it could verify an architecture: the file was damaged or unsupported, the browser could not read it, or a read limit was reached. Open the row's <strong>Details</strong> for the reason.</p>
+            <p>If a scan never seems to end, try fewer apps at once or scan the app inside the disk image. For folders that drop empty, use <strong>Choose folder</strong>.</p>
+          </div>
+        </details>
+        <details>
+          <summary>How does Rosetta work?</summary>
+          <div class="panel prose">
+            <p>Rosetta 2 translates Intel apps so they can run on Apple silicon. Most Intel apps work, but this scanner cannot tell whether a specific app will run correctly under Rosetta. Apple has said Rosetta will be limited in future macOS releases, so native apps are the safer choice.</p>
+          </div>
+        </details>
       </div>
     </section>
   </main>
+
+  <dialog id="scan-dialog" aria-labelledby="scan-dialog-title">
+    <div class="dialog-head">
+      <h2 id="scan-dialog-title" tabindex="-1">Scan details</h2>
+      <form method="dialog"><button type="submit" class="quiet-button" id="dialog-close">Close</button></form>
+    </div>
+    <dl id="dialog-facts" class="facts"></dl>
+    <p class="dialog-links"><a id="dialog-review" href="https://github.com/ThatGuySam/doesitarm/issues">Request a review</a></p>
+    <details id="dialog-json">
+      <summary>Raw JSON</summary>
+      <pre></pre>
+    </details>
+  </dialog>
+
   <template id="result-card">
-    <li class="result">
+    <li class="result" data-state="queued">
+      <progress class="row-progress" hidden></progress>
       <span class="result-monogram" aria-hidden="true"></span>
       <div class="result-content">
-        <div class="result-heading">
-          <h3 tabindex="-1"></h3>
-          <span class="result-size muted"></span>
-        </div>
-        <div class="result-status">
-          <span class="scan-status">Queued</span>
-          <span class="result-arch"></span>
-          <span class="result-source muted"></span>
+        <div class="result-line">
+          <h3 tabindex="-1"></h3><span class="result-size"></span><span class="result-time"></span><span class="scan-status">Queued</span><span class="result-readout"><span class="result-metrics"></span><span class="result-timer" hidden></span><span class="result-estimate"></span></span>
         </div>
         <span class="result-read-label visually-hidden">Source reads</span>
-        <progress hidden></progress>
-        <div class="result-readout muted">
-          <span class="result-metrics"></span>
-          <span class="result-timer" hidden></span>
-          <span class="result-estimate"></span>
-        </div>
-        <p class="result-error error" hidden></p>
-        <details hidden>
+        <p class="result-verdict" hidden><span class="verdict-icon" aria-hidden="true"></span><span class="verdict-text"></span><span class="result-arch"></span></p>
+        <details class="result-details" hidden>
           <summary>Details</summary>
-          <dl class="result-facts">
-            <div><dt>Architectures</dt><dd data-field="architectures"></dd></div>
-            <div><dt>Bundle ID</dt><dd data-field="bundle_id"></dd></div>
-            <div><dt>App version</dt><dd data-field="version"></dd></div>
-            <div><dt>Min macOS</dt><dd data-field="min_macos"></dd></div>
-          </dl>
-          <details>
-            <summary>Scan details (JSON)</summary>
-            <pre></pre>
-          </details>
+          <div class="panel">
+            <p class="result-speed"></p>
+            <dl class="facts">
+              <div><dt>Architectures</dt><dd data-field="architectures"></dd></div>
+              <div><dt>Bundle ID</dt><dd data-field="bundle_id"></dd></div>
+              <div><dt>App version</dt><dd data-field="version"></dd></div>
+              <div><dt>Min macOS</dt><dd data-field="min_macos"></dd></div>
+              <div><dt>Signing</dt><dd data-field="signing"></dd></div>
+              <div><dt>Format</dt><dd data-field="format"></dd></div>
+              <div><dt>Source</dt><dd data-field="source"></dd></div>
+              <div><dt>Bytes read</dt><dd data-field="bytes_read"></dd></div>
+              <div><dt>Status</dt><dd data-field="status"></dd></div>
+            </dl>
+            <p class="result-error error" hidden></p>
+            <button type="button" class="quiet-button open-dialog">View full scan details</button>
+          </div>
         </details>
       </div>
-      <button type="button" class="secondary cancel-button">Cancel</button>
+      <button type="button" class="quiet-button cancel-button">Cancel</button>
     </li>
   </template>
 </body>

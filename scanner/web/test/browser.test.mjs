@@ -10,7 +10,7 @@ import { createScanner } from '../../pkg/worker/scan_wasm_factory.js';
 import { DEFAULT_BUDGET } from '../public/scan-result.js';
 import { startPreview } from '../scripts/serve.mjs';
 import { createHandler } from '../worker/handler.js';
-import { dropPaths, processMemory, sparseFat } from './browser-helpers.mjs';
+import { dropPaths, openDisclosure, processMemory, readScanJson, sparseFat } from './browser-helpers.mjs';
 import { cli, dnsResponse, expectedRemote, fixture, rangedResponse } from './helpers.mjs';
 
 const names = [
@@ -56,9 +56,7 @@ function resultCard(page, label) {
 }
 
 async function scanResult(page, label) {
-  const card = resultCard(page, label);
-  await card.locator('details').first().waitFor({ state: 'visible' });
-  return JSON.parse(await card.locator('pre').textContent());
+  return readScanJson(page, resultCard(page, label));
 }
 
 test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew comparisons', { timeout: 90_000 }, async (t) => {
@@ -194,12 +192,13 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
       ['cors.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
       ['whole.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
     ]) {
-      await page.getByRole('textbox', { name: 'Scan a URL' }).fill(`https://browser.example.net/${filename}`);
+      await openDisclosure(page, '#advanced');
+      await page.getByRole('textbox', { name: 'Public HTTPS download URL' }).fill(`https://browser.example.net/${filename}`);
       await page.getByRole('button', { name: 'Scan URL' }).click();
       assert.deepEqual(await scanResult(page, filename), result);
     }
 
-    await page.getByRole('textbox', { name: 'Scan a URL' }).fill('https://browser.example.net/resource.dmg');
+    await page.getByRole('textbox', { name: 'Public HTTPS download URL' }).fill('https://browser.example.net/resource.dmg');
     await page.getByRole('button', { name: 'Scan URL' }).click();
     assert.equal((await scanResult(page, 'resource.dmg')).status, 'limit_reached');
     assert.deepEqual(apiCalls, ['cors.dmg', 'whole.dmg', 'resource.dmg'].map((name) => `https://browser.example.net/${name}`));
@@ -208,6 +207,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
   });
 
   await t.test('Homebrew table loads, fits a narrow viewport, and rescans via the Worker', async () => {
+    await openDisclosure(page, '#homebrew');
     await page.getByRole('button', { name: 'Rescan zed', exact: true }).waitFor();
     assert.equal(await page.locator('#cask-results tr').count(), 30);
     await page.setViewportSize({ width: 375, height: 790 });

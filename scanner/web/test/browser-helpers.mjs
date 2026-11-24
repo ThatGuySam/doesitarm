@@ -70,3 +70,22 @@ export async function workerHeap(session, targetId) {
     await session.send('Target.detachFromTarget', { sessionId });
   }
 }
+
+export async function openDisclosure(page, selector) {
+  const details = page.locator(selector);
+  if (!(await details.evaluate((node) => node.open))) await details.locator(':scope > summary').click();
+}
+
+// A finished row keeps its facts in a disclosure and the raw JSON in the shared details dialog.
+export async function readScanJson(page, card) {
+  const details = card.locator('.result-details');
+  await details.waitFor({ state: 'visible' });
+  if (!(await details.evaluate((node) => node.open))) await details.locator(':scope > summary').click();
+  await card.getByRole('button', { name: /^View full scan details/ }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.waitFor();
+  const json = JSON.parse(await dialog.locator('pre').textContent());
+  await page.keyboard.press('Escape');
+  await dialog.waitFor({ state: 'hidden' });
+  return json;
+}
