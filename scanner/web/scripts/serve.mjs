@@ -10,6 +10,7 @@ const source = fileURLToPath(new URL('../public', import.meta.url));
 const sourceAssets = new Map([
   ['/pkg/scan_wasm.js', new URL('../../pkg/scan_wasm.js', import.meta.url)],
   ['/pkg/scan_wasm_bg.wasm', new URL('../../pkg/scan_wasm_bg.wasm', import.meta.url)],
+  ['/scanner-build.json', new URL('../../pkg/scanner-build.json', import.meta.url)],
   ['/homebrew-run-1.json', new URL('../../results/homebrew-run-1.json', import.meta.url)],
 ]);
 const contentTypes = {

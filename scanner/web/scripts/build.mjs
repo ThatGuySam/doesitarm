@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { writeBrowserBuildInfo } from '../../scripts/browser-build-info.mjs';
 
 const scanner = fileURLToPath(new URL('../../', import.meta.url));
 const web = join(scanner, 'web');
@@ -45,3 +46,6 @@ for (const asset of ['scan_wasm.js', 'scan_wasm_bg.wasm']) {
   cpSync(join(scanner, 'pkg', asset), join(dist, 'pkg', asset));
 }
 cpSync(join(scanner, 'results/homebrew-run-1.json'), join(dist, 'homebrew-run-1.json'));
+
+writeBrowserBuildInfo(scanner, join(scanner, 'pkg/scan_wasm_bg.wasm'), join(scanner, 'pkg/scanner-build.json'));
+cpSync(join(scanner, 'pkg/scanner-build.json'), join(dist, 'scanner-build.json'));
