@@ -131,8 +131,12 @@ export class ResultsList {
     this.#tools.append(this.#summary, controls, diagnosticControls(async () => {
       const run = this.#runs[Number(exportRun.input.value)];
       const length = run.rows.length;
+      const cutoff = performance.now();
       const rows = function* () {
-        for (let i = 0; i < length; i += 1) yield run.rows[i];
+        for (let i = 0; i < length; i += 1) {
+          const row = run.rows[i];
+          if (row.ended !== null && row.ended <= cutoff) yield row;
+        }
       };
       // Only settled rows are included. The header records the run snapshot.
       return { header: await runHeader(run, run.finished, this.#longTasks), rows: rows() };

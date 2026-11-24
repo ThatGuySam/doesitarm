@@ -5,7 +5,7 @@ const README = {
   outcome: 'status is the scan outcome and error/error_class describe the failure. format is the detected container. architectures lists slice names, cpu_type, cpu_subtype, offsets and sizes in bytes, header_verified, per-slice minimum macOS and code-signature load-command presence. A signature may be present without being validated. bundle_path, bundle_id, version, name and min_macos describe app metadata. installer, inventory, script_runtime and metadata source/resolution fields may be supplied by the scanner.',
   evidence: 'info_plist is the complete parsed property list when available. Non-JSON plist values are tagged with $plist and value. info_plist_keys are the top-level keys. info_plist_path, info_plist_size and info_plist_encoding describe the source. plist_in_container identifies member-relative paths in an archive. executable_name is CFBundleExecutable; executable_path and executable_size describe its resolution. executable_prefix_hex is up to 64 source bytes. load_commands lists per-slice command ids, sizes and interpreted key fields. directory_listings has Contents and MacOS entries with name, type, size, symlink_target and a truncated marker. candidate_executables and nested_artifacts include paths observed by discovery or the format scanner.',
   reads: 'read_log records attempted reads in order, with the source path, offset, length, purpose and outcome. bytes_read is the scanner’s successful source coverage, bytes_requested is attempted coverage, decoded_bytes is decoder work, reads counts requests, total_size describes the scanned source, and elapsed_ms measures the row between worker start and completion. Diagnostic-only reads are identifiable in read_log.',
-  reproduction: 'Failures supply a relative_path, copy_from_selection and container_member_paths, missing_executable indicator, expected_status and native CLI command. Use scripts/diagnostics-to-fixtures.mjs to make a skeleton. Copy the listed original files for exact reproduction when metadata and the executable prefix are insufficient.',
+  reproduction: 'Failures supply a relative_path, copy_from_selection and container_member_paths, missing_executable indicator, expected_executable_path when known, expected_status and native CLI command. Use scripts/diagnostics-to-fixtures.mjs to make a skeleton. Copy the listed original files for exact reproduction when metadata and the executable prefix are insufficient.',
   privacy: 'This is generated locally. The username option redacts /Users/<name>/ in JSON text. The only source payloads are parsed Info.plist values and the executable prefix. The browser omits inode and symlink information that the selected API does not expose. null means unavailable or inapplicable.',
 };
 
@@ -61,6 +61,8 @@ self.onmessage = ({ data }) => {
           first = false;
         }
       }
+    } else if (data.checkpoint) {
+      self.postMessage({ ready: true });
     } else if (data.end) {
       if (!ndjson) append('\n]}\n');
       flush();

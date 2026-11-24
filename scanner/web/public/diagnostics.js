@@ -30,16 +30,11 @@ function scannerBuild() {
 let build;
 export async function runHeader(run, finished, longTasks) {
   build ??= scannerBuild();
-  const { commit, version, wasm_sha256, working_tree_dirty } = await build;
   const now = performance.now();
   const end = run.ended ?? now;
   const scanMs = duration(run.ended === null && run.active ? now : run.lastScan, run.firstScan);
-  return {
+  const header = {
     schema_version: 1,
-    scanner_git_commit: commit ?? null,
-    scanner_version: version ?? null,
-    scanner_working_tree_dirty: working_tree_dirty ?? null,
-    wasm_sha256: wasm_sha256 ?? null,
     profile: run.profile,
     scheduling_mode: run.mode.passive ? 'passive' : 'foreground',
     scheduling_modes: [...run.modes],
@@ -49,6 +44,8 @@ export async function runHeader(run, finished, longTasks) {
     device_memory_gib: navigator.deviceMemory ?? null,
     started_at: new Date(performance.timeOrigin + run.started).toISOString(),
     ...run.stats,
+    skipped_entries: { ...run.stats.skipped_entries },
+    skip_examples: [...(run.stats.skip_examples ?? [])],
     app_bundles: run.appCount,
     enumeration_ms: duration(run.enumerated, run.started),
     scan_ms: scanMs,
@@ -58,6 +55,14 @@ export async function runHeader(run, finished, longTasks) {
     long_tasks: longTasks(run.started, end),
     canceled: Boolean(run.canceled),
   };
+  const { commit, version, wasm_sha256, working_tree_dirty } = await build;
+  return {
+    scanner_git_commit: commit ?? null,
+    scanner_version: version ?? null,
+    scanner_working_tree_dirty: working_tree_dirty ?? null,
+    wasm_sha256: wasm_sha256 ?? null,
+    ...header,
+  };
 }
 
 export function resultRecord(row, full) {
@@ -65,13 +70,14 @@ export function resultRecord(row, full) {
   const displayPath = row.label;
   const parent = row.parentBundlePath;
   const record = {
+    ...result,
     id: row.id,
     display_path: displayPath,
     parent_bundle_path: parent,
     bundle_role: result.bundle_role ?? (row.kind === 'bundle' ? (parent ? 'nested_app' : 'app') : null),
     source: row.source,
-    ...result,
     executable_path: result.executable_path ?? (result.format === 'macho' ? displayPath : null),
+    executable_size: result.executable_size ?? (result.format === 'macho' ? result.total_size : null),
     error_class: result.error_class ?? (result.error ? result.status : null),
     elapsed_ms: duration(row.ended, row.started),
     info_plist_keys: evidence?.info_plist_keys ?? null,
@@ -79,8 +85,10 @@ export function resultRecord(row, full) {
   if (!full) return record;
   const plistPath = evidence?.info_plist_path ?? null;
   const executablePath = record.executable_path;
+  const existingExecutable = record.executable_size !== null || record.error_class === 'unreadable_executable' ||
+    record.error_class === 'permission_denied';
   const copy = row.kind === 'bundle'
-    ? [plistPath && `${displayPath}/${plistPath}`, executablePath].filter(Boolean)
+    ? [plistPath && `${displayPath}/${plistPath}`, existingExecutable && executablePath].filter(Boolean)
     : [displayPath];
   const embedded = evidence?.plist_in_container ? [plistPath, executablePath].filter(Boolean) : [];
   const candidates = result.candidate_executables ?? (row.relativeCandidates ?? []).map((candidate) => {
@@ -107,11 +115,12 @@ export function resultRecord(row, full) {
     inventory: result.inventory ?? (row.kind === 'bundle' ? observedInventory(row) : null),
     nested_artifacts: result.nested_artifacts ?? row.nestedArtifacts ?? [],
     read_log: evidence?.read_log ?? null,
-    reproduction: result.status === 'complete' ? null : {
+    reproduction: ['complete', 'canceled'].includes(result.status) ? null : {
       relative_path: displayPath,
       copy_from_selection: copy,
       container_member_paths: embedded,
       missing_executable: result.status === 'no_executable',
+      expected_executable_path: executablePath,
       expected_status: result.status,
       command: ['scan-cli', 'scan', displayPath, '--profile', 'local', '--json'],
     },
@@ -129,9 +138,11 @@ function button(id, text) {
 
 export async function makeExport(header, rows, kind, redact) {
   const worker = new Worker(new URL('./diagnostics-worker.js', import.meta.url), { type: 'module' });
+  let acknowledge;
   const finished = new Promise((resolve, reject) => {
     worker.onmessage = ({ data }) => {
       if (data.error) reject(new Error(data.error));
+      else if (data.ready) acknowledge?.();
       else resolve(data.blob);
     };
     worker.onerror = () => reject(new Error('The diagnostics worker stopped.'));
@@ -142,13 +153,24 @@ export async function makeExport(header, rows, kind, redact) {
   try {
     const pause = timeSlice();
     const records = [];
+    let sent = 0;
     const send = () => {
-      if (records.length) worker.postMessage({ records: records.splice(0) });
+      if (!records.length) return;
+      worker.postMessage({ records: records.splice(0) });
+      sent += 1;
     };
     for (const row of rows) {
       if (row.result && (kind !== 'failures' || !['complete', 'canceled'].includes(row.result.status))) {
         records.push(resultRecord(row, kind !== 'results' && kind !== 'copy'));
         if (records.length >= 16) send();
+      }
+      if (sent >= 8) {
+        // Bound the structured-clone queue independently of export size.
+        const ready = new Promise((resolve) => { acknowledge = resolve; });
+        worker.postMessage({ checkpoint: true });
+        await Promise.race([ready, finished]);
+        acknowledge = undefined;
+        sent = 0;
       }
       const wait = pause();
       if (wait) {
