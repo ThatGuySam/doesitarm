@@ -92,8 +92,13 @@ fn object(bytes: &[u8], types: &[u16]) -> Result<()> {
     }
     let mut low = 0;
     let mut high = 0;
-    for word in bytes[8..].chunks_exact(4).chain(bytes[..8].chunks_exact(4)) {
-        low += le32(word, 0) as u64;
+    for word in bytes[8..]
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .chain(bytes[..8].as_chunks::<4>().0)
+    {
+        low += u32::from_le_bytes(*word) as u64;
         high += low;
     }
     if low % MOD != 0 || high % MOD != 0 {
@@ -445,7 +450,11 @@ impl Volume {
                 let len = le64(value, 0);
                 let block = le64(value, 8);
                 let offset = le64(key, 8);
-                if len == 0 || len >> 56 != 0 || len % block_size != 0 || offset % block_size != 0 {
+                if len == 0
+                    || len >> 56 != 0
+                    || !len.is_multiple_of(block_size)
+                    || !offset.is_multiple_of(block_size)
+                {
                     return Err(BAD_RECORD);
                 }
                 let end = offset.checked_add(len).ok_or(BAD_RECORD)?;
@@ -495,7 +504,7 @@ fn inode(bytes: &[u8]) -> Result<(u64, u64)> {
     let xfields_end = 96 + count * 4;
     let fields = bytes.get(96..xfields_end).ok_or(BAD_RECORD)?;
     let mut offset = xfields_end;
-    for field in fields.chunks_exact(4) {
+    for field in fields.as_chunks::<4>().0 {
         let len = le16(field, 2) as usize;
         let data = bytes.get(offset..offset + len).ok_or(BAD_RECORD)?;
         if field[0] == 8 {
@@ -593,8 +602,10 @@ pub(crate) async fn scan(disk: &mut impl ReadAt, out: &mut ScanResult) -> Result
         return Err(BAD_OBJECT);
     }
     let ids: Vec<_> = checkpoint[184..184 + 8 * systems]
-        .chunks_exact(8)
-        .map(|bytes| le64(bytes, 0))
+        .as_chunks::<8>()
+        .0
+        .iter()
+        .map(|bytes| u64::from_le_bytes(*bytes))
         .filter(|id| *id != 0)
         .collect();
     if ids.len() > 8 {

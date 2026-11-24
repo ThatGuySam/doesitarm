@@ -39,7 +39,7 @@ impl Fork {
     }
 
     fn append(&mut self, bytes: &[u8], blocks: u32) -> Result<()> {
-        for record in bytes.chunks_exact(8) {
+        for record in bytes.as_chunks::<8>().0 {
             let start = be32(record, 0);
             let count = be32(record, 4);
             if count == 0 {
@@ -277,7 +277,9 @@ impl<'a> Node<'a> {
     }
 }
 
-fn extent_record(record: &[u8]) -> Result<((u32, u8, u32), &[u8])> {
+type ExtentKey = (u32, u8, u32);
+
+fn extent_record(record: &[u8]) -> Result<(ExtentKey, &[u8])> {
     if record.len() < 12 || be16(record, 0) != 10 {
         return Err(INVALID_NODE);
     }
@@ -401,7 +403,12 @@ impl Catalog {
                 if data.len() < 12 {
                     return Err(INVALID_NODE);
                 }
-                let utf16: Vec<_> = name.chunks_exact(2).map(|pair| be16(pair, 0)).collect();
+                let utf16: Vec<_> = name
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
+                    .map(|pair| u16::from_be_bytes(*pair))
+                    .collect();
                 let Ok(name) = String::from_utf16(&utf16) else {
                     continue;
                 };

@@ -171,7 +171,7 @@ async fn thin(
         }
         let cmd = kind.word(&commands, pos);
         let len = kind.word(&commands, pos + 4) as usize;
-        if !(8..=commands.len() - pos).contains(&len) || len % 4 != 0 {
+        if !(8..=commands.len() - pos).contains(&len) || !len.is_multiple_of(4) {
             return Err(ScanError::Invalid("invalid Mach-O load command size"));
         }
         match cmd {

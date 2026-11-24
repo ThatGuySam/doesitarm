@@ -129,7 +129,7 @@ fn parse_index(
         if descriptions > (data.len() - 204) / 40 {
             return Err(ScanError::Invalid("truncated UDIF run table"));
         }
-        for entry in data[204..].chunks_exact(40).take(descriptions) {
+        for entry in data[204..].as_chunks::<40>().0.iter().take(descriptions) {
             let kind = be32(entry, 0);
             if kind == 0xffff_ffff {
                 break;
