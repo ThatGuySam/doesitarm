@@ -1,5 +1,6 @@
 const MAX_LISTING = 64;
 const SLICE_MS = 8;
+const PROBE_BATCH = 64;
 const BUNDLE = /\.app$/i;
 const ARCHIVE = /\.(?:dmg|zip|pkg|tar(?:\.(?:gz|xz|bz2))?|tgz)$/i;
 const MAGIC = new Set([
@@ -38,7 +39,7 @@ function skippedError(stats, error, path) {
 
 function bundleAt(label, parent, open) {
   return {
-    label, parent, open, plist: null, plistPath: null, entries: new Map(),
+    label, parent, open, plist: null, plistPath: null, openPlist: null, entries: new Map(),
     contents: { entries: [], truncated: false },
     macos: { entries: [], truncated: false },
     hasResources: false, nestedArtifacts: [], hasExecutableCandidates: false, artifacts: [],
@@ -46,16 +47,18 @@ function bundleAt(label, parent, open) {
 }
 
 function recordListing(bundle, relative, type, file, getFile) {
-  const parts = relative.split('/');
-  const listing = parts[0] === 'Contents' && (parts.length === 2 ? bundle.contents :
-    parts.length === 3 && parts[1] === 'MacOS' ? bundle.macos : null);
+  const contents = 'Contents/';
+  const macos = 'Contents/MacOS/';
+  if (!relative.startsWith(contents)) return;
+  const listing = !relative.includes('/', contents.length) ? bundle.contents :
+    relative.startsWith(macos) && !relative.includes('/', macos.length) ? bundle.macos : null;
   if (!listing) return;
   if (listing.entries.length >= MAX_LISTING) {
     listing.truncated = true;
     return;
   }
   listing.entries.push({
-    name: parts.at(-1), type, size: file?.size ?? null, symlink_target: null, getFile,
+    name: relative.slice(relative.lastIndexOf('/') + 1), type, size: file?.size ?? null, symlink_target: null, getFile,
   });
 }
 
@@ -69,12 +72,13 @@ function bundleEntry(bundle, relative, type, file = null, getFile) {
     if (bundle.plistPath !== 'Contents/Info.plist') {
       bundle.plistPath = relative;
       bundle.plist = file;
+      bundle.openPlist = getFile;
     }
     return;
   }
   if (relative.startsWith('Contents/MacOS/')) bundle.hasExecutableCandidates = true;
   if (file && (relative.startsWith('Contents/MacOS/') ||
-      relative.split('/').length <= (relative.startsWith('Contents/') ? 2 : 1))) {
+      !relative.includes('/', relative.startsWith('Contents/') ? 'Contents/'.length : 0))) {
     bundle.entries.set(relative, file);
   }
 }
@@ -82,7 +86,7 @@ function bundleEntry(bundle, relative, type, file = null, getFile) {
 function bundleJob(bundle, stats) {
   const { label, parent, entries, open, plistPath } = bundle;
   const base = label.length + 1;
-  const wrapper = bundle.nestedArtifacts.some((path) => path.slice(base).startsWith('Wrapper/'));
+  const wrapper = bundle.nestedArtifacts.some((path) => BUNDLE.test(path) && path.slice(base).startsWith('Wrapper/'));
   const resources = bundle.hasResources && !bundle.hasExecutableCandidates && !bundle.nestedArtifacts.length;
   return {
     kind: 'bundle', label, size: bundle.plist?.size, parentBundlePath: parent,
@@ -109,7 +113,7 @@ function bundleJob(bundle, stats) {
       return { contents, macos };
     },
     async getPlist() {
-      return bundle.plist ?? (plistPath ? open(plistPath.split('/')) : null);
+      return bundle.plist ?? await bundle.openPlist?.() ?? null;
     },
     async getExecutable(relative) {
       const file = entries.get(relative) ?? (open ? await open(relative.split('/')) : null);
@@ -125,7 +129,7 @@ export function fileJob(file, label = file.name, parentBundlePath = null, probe 
 }
 
 const worthProbing = (name) => !name.startsWith('._') && name !== '.DS_Store';
-const bundleCode = (relative) => relative.startsWith('Contents/MacOS/') || !relative.includes('/');
+const bundlePlist = (relative) => relative === 'Contents/Info.plist' || relative === 'Info.plist';
 
 function discoveryCallbacks({ stats, onJob, onProgress, signal }) {
   const pause = timeSlice();
@@ -151,30 +155,34 @@ class Probes {
   #files = [];
   #flow;
   #stats;
-  #retainCandidates;
+  #retainScripts;
 
-  constructor(flow, stats, retainCandidates = false) {
+  constructor(flow, stats, retainScripts = false) {
     this.#flow = flow;
     this.#stats = stats;
-    this.#retainCandidates = retainCandidates;
+    this.#retainScripts = retainScripts;
   }
 
   add(getFile, path, parent) {
     this.#files.push({ getFile, path, parent });
-    if (this.#files.length >= 32) return this.drain();
+    if (this.#files.length >= PROBE_BATCH) return this.drain();
   }
 
-  async drain() {
+  drain() {
+    if (this.#files.length) return this.#readBatch();
+  }
+
+  async #readBatch() {
     const batch = this.#files.splice(0);
     const jobs = await Promise.all(batch.map(async ({ getFile, path, parent }) => {
       try {
         const file = await getFile();
-        if (file.size < 4) return;
+        if (!file || file.size < 4) return;
         const magic = await file.slice(0, 4).arrayBuffer();
         if (magic.byteLength !== 4) return;
         const header = new DataView(magic);
         if (MAGIC.has(header.getUint32(0))) return { file, path, parent, executable: true };
-        if (parent && this.#retainCandidates && header.getUint16(0) === 0x2321) {
+        if (parent && this.#retainScripts && header.getUint16(0) === 0x2321) {
           return { file, path, parent, executable: false };
         }
       } catch (error) {
@@ -185,10 +193,10 @@ class Probes {
     for (const hit of jobs) {
       if (!hit) continue;
       const { file, path, parent, executable } = hit;
-      if (parent && this.#retainCandidates) parent.entries.set(path.slice(parent.label.length + 1), file);
+      if (parent) parent.entries.set(path.slice(parent.label.length + 1), file);
       if (!executable) continue;
       const job = fileJob(file, path, parent?.label, true);
-      if (parent && this.#retainCandidates) parent.artifacts.push(job);
+      if (parent) parent.artifacts.push(job);
       else this.#flow.job(job);
     }
   }
@@ -210,7 +218,7 @@ export async function walkFileList(files, options) {
     const dir = split < 0 ? '' : path.slice(0, split);
     const name = path.slice(split + 1);
     stats.files_seen += 1;
-    if (i === 0) stats.folder_name = path.split('/', 1)[0];
+    if (i === 0 && split >= 0) stats.folder_name = path.split('/', 1)[0];
 
     if (dir !== previous) {
       previous = dir;
@@ -243,7 +251,7 @@ export async function walkFileList(files, options) {
     if (ARCHIVE.test(name)) {
       parent?.nestedArtifacts.push(path);
       flow.job(fileJob(file, path, parent?.label));
-    } else if ((!parent || (!bundleCode(relative) && relative !== 'Contents/Info.plist')) && file.size >= 4 && worthProbing(name)) {
+    } else if (!bundlePlist(relative) && file.size >= 4 && worthProbing(name)) {
       const wait = probes.add(() => file, path, parent);
       if (wait) await wait;
     }
@@ -260,6 +268,14 @@ export async function walkFileList(files, options) {
 
 function entryFile(entry) {
   return new Promise((resolve, reject) => entry.file(resolve, reject));
+}
+
+async function entryProbe(entry) {
+  if (typeof entry.getMetadata === 'function') {
+    const metadata = await new Promise((resolve, reject) => entry.getMetadata(resolve, reject)).catch(() => null);
+    if (metadata?.size < 4) return null;
+  }
+  return entryFile(entry);
 }
 
 function entryChild(entry, name, method) {
@@ -289,6 +305,7 @@ const adapters = {
     isDirectory: (entry) => entry.isDirectory,
     children: entryChildren,
     getFile: entryFile,
+    getProbe: entryProbe,
     async open(entry, parts) {
       for (const part of parts.slice(0, -1)) entry = await entryChild(entry, part, 'getDirectory');
       return entryFile(await entryChild(entry, parts.at(-1), 'getFile'));
@@ -299,6 +316,7 @@ const adapters = {
 export async function walkDirectory(root, method, options) {
   const { stats } = options;
   const adapter = adapters[method];
+  const getProbe = adapter.getProbe ?? adapter.getFile;
   const flow = discoveryCallbacks(options);
   const probes = new Probes(flow, stats);
   const stack = [];
@@ -318,8 +336,8 @@ export async function walkDirectory(root, method, options) {
         } catch (error) {
           skippedError(stats, error, path);
         }
-      } else if ((!parent || (!bundleCode(relative) && relative !== 'Contents/Info.plist')) && worthProbing(entry.name)) {
-        const wait = probes.add(() => adapter.getFile(entry), path, parent);
+      } else if (!bundlePlist(relative) && worthProbing(entry.name)) {
+        const wait = probes.add(() => getProbe(entry), path, parent);
         if (wait) await wait;
       }
       return;
@@ -370,7 +388,11 @@ export async function walkDirectory(root, method, options) {
         await visit(child, `${top.path}/${child.name}`, top.parent, false);
       } else {
         stack.pop();
-        if (top.bundle) flow.job(bundleJob(top.bundle, stats));
+        if (top.bundle) {
+          const wait = probes.drain();
+          if (wait) await wait;
+          flow.job(bundleJob(top.bundle, stats));
+        }
       }
       await flow.pause();
     }

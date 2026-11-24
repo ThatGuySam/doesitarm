@@ -6,14 +6,14 @@ function captureDrop(transfer) {
   const sources = [];
   for (const item of transfer.items ?? []) {
     if (item.kind !== 'file') continue;
-    const entry = item.getAsEntry?.() ?? item.webkitGetAsEntry?.();
-    const file = entry?.isDirectory ? null : item.getAsFile();
     let handle;
     try {
       handle = item.getAsFileSystemHandle?.().catch(() => null);
     } catch {
       // Some contexts expose the method without granting access to the handle.
     }
+    const entry = item.getAsEntry?.() ?? item.webkitGetAsEntry?.();
+    const file = entry?.isDirectory ? null : item.getAsFile();
     sources.push({ handle, entry, file });
   }
   return sources.length ? { sources } : { files: transfer.files };
@@ -48,11 +48,12 @@ export function bindLocalInputs({ view, pool, mode }) {
   const loader = get('folder-loader');
   const [throbber, label, announcement] = loader.children;
   const notice = get('input-status');
+  const directPicker = () => typeof window.showDirectoryPicker === 'function';
   const fallbackChooser = document.createElement('button');
   fallbackChooser.type = 'button';
   fallbackChooser.className = 'secondary';
   fallbackChooser.textContent = 'Use alternate folder picker';
-  fallbackChooser.hidden = true;
+  fallbackChooser.hidden = !(directPicker() && /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform));
   loader.append(fallbackChooser);
   const active = new Set();
   let picker = null;
@@ -76,8 +77,9 @@ export function bindLocalInputs({ view, pool, mode }) {
   }
 
   function openFallback() {
+    if (picker) return;
     picker = {};
-    fallbackChooser.hidden = true;
+    notice.textContent = '';
     folder.click();
   }
 
@@ -144,12 +146,11 @@ export function bindLocalInputs({ view, pool, mode }) {
   chooser.addEventListener('click', () => {
     if (picker) return;
     notice.textContent = '';
-    if (typeof window.showDirectoryPicker !== 'function') {
+    if (!directPicker()) {
       openFallback();
       return;
     }
     picker = {};
-    fallbackChooser.hidden = true;
     void (async () => {
       let handle;
       try {
@@ -173,12 +174,12 @@ export function bindLocalInputs({ view, pool, mode }) {
     files.value = '';
   });
   folder.addEventListener('cancel', finishPicker);
-  folder.addEventListener('change', () => {
+  folder.addEventListener('change', async () => {
     const selection = folder.files;
     finishPicker();
-    folder.value = '';
-    if (selection.length) void discover('webkitdirectory', selection.length,
-      (options) => walkFileList(selection, options));
+    if (selection.length) await discover('webkitdirectory', selection.length, (options) => walkFileList(selection, options));
+    // Clearing the input also empties Chromium's live FileList.
+    if (folder.files === selection) folder.value = '';
   });
 
   const hasFiles = (event) => Array.from(event.dataTransfer?.types ?? []).includes('Files');
@@ -207,7 +208,8 @@ export function bindLocalInputs({ view, pool, mode }) {
     // The drop's data store closes on return. Only native entry promises and
     // explicit files captured above are used after that point.
     if (!sources) {
-      view.add(Array.from(dropped, (file) => fileJob(file)));
+      const selection = Array.from(dropped);
+      if (selection.length) void discover('DataTransfer.files', selection.length, (options) => walkFileList(selection, options));
       return;
     }
     void discover('drop', 0, async (options) => {
