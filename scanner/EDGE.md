@@ -12,6 +12,14 @@ Started November 24, 2026 at 12:04 Central from scanner-wasm `5a7e79a`. Stop by 
 
 [Prior campaign](CLIMB.md) · [Merge and first-tier replay](MERGE.md)
 
+## Live replay
+
+| Pinned cohort | Checked | Apps before → after | Standalone executables before → after | Installed products before → after |
+| --- | ---: | ---: | ---: | ---: |
+| [Regression](results/edge/regression/scoreboard.md) | 100/100 | 77 → 81 | 8 → 8 | 0 → 1 |
+
+The regression replay recovered BrowserStack Local, Network Weather, Qt Design Studio, and BackupLoupe as apps. It verified the FabFilter Pro-DS AAX product. All 85 previously verified primary results remained verified. The 84 bundle inventories included two complete inventories and 82 partial ones, with ten inventories identifying at least one x86_64-only file. The transport used 3,531,500,436 read bytes and 6,237 requests across all attempts. [Raw scan facts](results/edge/regression/run.json)
+
 ## Resume
 
 Use one Cargo build at a time with `-j2`. Keep downloads under `~/.cache/doesitarm-edge/` and delete each artifact after inspection. The pinned URLs, formats, outcomes and target declarations are in `results/climb/{final-regression,final-held-out,full-run}/run.json`. Current evidence and next steps will be added here as cases are investigated.
@@ -57,7 +65,7 @@ The canonical export was initialized from the three recorded CLIMB reports. It c
 
 - `139a852` adds archive and directory inventories, bounded decoders and readers, package install-location handling, static launcher references, transport restart, and generated cases. The 41 Rust tests passed. All 21 generated edge checks passed with the release CLI and failed with the pre-edge CLI. The largest fixture was 151,552 bytes.
 - `f18f984` adds the browser disclosure, folder handling, and the cask export. Six Python runner tests passed, and the JavaScript modules parsed in Node.
-- The pinned campaign CLI SHA-256 is `c565059a8658421d895a99cdcf9e9740e10cd6aeab04b6284cb203da12998fb6`.
+- The initial seven-artifact pilot used CLI SHA-256 `c565059a8658421d895a99cdcf9e9740e10cd6aeab04b6284cb203da12998fb6`.
 
 The bzip2 manual confirms that concatenated streams are valid, and the XZ manual describes how larger dictionaries increase decode memory. A Homebrew publisher can package a lightweight launcher separately from its runtime, as illustrated by DigiDNA's WebStorm report. The HN discussion describes the throughput motive for multicore bzip2 tools. MailMate's producer was identified only by its file structure.
 
