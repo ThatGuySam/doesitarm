@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Does It ARM · App Scanner</title>
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./bigfolder.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -46,6 +47,10 @@
         <p id="mode-status" class="muted" role="status"></p>
       </div>
       <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
+      <div id="folder-loader" class="folder-loader">
+        <span aria-hidden="true" hidden></span><span aria-hidden="true"></span>
+        <span class="visually-hidden" role="status"></span>
+      </div>
       <p id="input-status" class="error" role="status"></p>
     </section>
 

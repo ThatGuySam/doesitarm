@@ -1,122 +1,220 @@
-const isApp = (name) => /\.app$/i.test(name);
+import { fileJob, folderStats, skipped, walkDirectory, walkFileList, yieldToPage } from './folder-walk.js';
 
-function fromFile(file, label = file.name) {
-  return { kind: 'file', label, file };
-}
+const number = new Intl.NumberFormat();
 
-function bundleJob(label, open) {
-  return {
-    kind: 'bundle',
-    label,
-    getPlist: () => open(['Contents', 'Info.plist']),
-    getExecutable: (name) => open(['Contents', 'MacOS', name]),
-  };
-}
-
-export function* pickedFolders(files) {
-  const bundles = new Map();
-  for (const file of files) {
-    const path = file.webkitRelativePath || file.name;
-    const parts = path.split('/');
-    const position = parts.slice(0, -1).findIndex(isApp);
-    if (position < 0) {
-      yield fromFile(file, path);
-      continue;
-    }
-    const bundle = parts.slice(0, position + 1).join('/');
-    if (!bundles.has(bundle)) bundles.set(bundle, { entries: new Map(), size: 0 });
-    const info = bundles.get(bundle);
-    info.size += file.size;
-    const relative = parts.slice(position + 1);
-    if (relative.join('/') === 'Contents/Info.plist' ||
-        (relative.length === 3 && relative[0] === 'Contents' && relative[1] === 'MacOS')) {
-      info.entries.set(relative.join('/'), file);
-    }
-  }
-
-  for (const [label, { entries, size }] of bundles) {
-    const job = bundleJob(label, (parts) => {
-      const path = parts.join('/');
-      const file = entries.get(path);
-      if (!file) throw new Error(`The selected app has no readable ${path}.`);
-      return file;
-    });
-    yield { ...job, size };
-  }
-}
-
-const entryFile = (entry) => new Promise((resolve, reject) => entry.file(resolve, reject));
-const entryChild = (entry, name, method) => new Promise((resolve, reject) => {
-  entry[method](name, {}, resolve, reject);
-});
-
-async function readEntryPath(directory, parts) {
-  let entry = directory;
-  for (const part of parts.slice(0, -1)) entry = await entryChild(entry, part, 'getDirectory');
-  return entryFile(await entryChild(entry, parts.at(-1), 'getFile'));
-}
-
-async function* walkEntry(entry, path = entry.name) {
-  if (entry.isFile) {
-    yield fromFile(await entryFile(entry), path);
-  } else if (entry.isDirectory && isApp(entry.name)) {
-    yield bundleJob(path, (parts) => readEntryPath(entry, parts));
-  } else if (entry.isDirectory) {
-    const reader = entry.createReader();
-    while (true) {
-      const children = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
-      if (!children.length) break;
-      for (const child of children) yield* walkEntry(child, `${path}/${child.name}`);
-    }
-  }
-}
-
-async function readHandlePath(directory, parts) {
-  let handle = directory;
-  for (const part of parts.slice(0, -1)) handle = await handle.getDirectoryHandle(part);
-  return (await handle.getFileHandle(parts.at(-1))).getFile();
-}
-
-async function* walkHandle(handle, path = handle.name) {
-  if (handle.kind === 'file') {
-    yield fromFile(await handle.getFile(), path);
-  } else if (isApp(handle.name)) {
-    yield bundleJob(path, (parts) => readHandlePath(handle, parts));
-  } else {
-    for await (const child of handle.values()) yield* walkHandle(child, `${path}/${child.name}`);
-  }
-}
-
-export async function* droppedJobs(transfer) {
-  // Capture entries and handles before the drop event's protected data store closes.
-  const files = Array.from(transfer.files);
-  const items = Array.from(transfer.items ?? []).filter((item) => item.kind === 'file');
-  const sources = items.map((item) => {
+function captureDrop(transfer) {
+  const sources = [];
+  for (const item of transfer.items ?? []) {
+    if (item.kind !== 'file') continue;
     const entry = item.getAsEntry?.() ?? item.webkitGetAsEntry?.();
-    const file = item.getAsFile();
-    const handle = entry ? null : item.getAsFileSystemHandle?.().catch(() => null);
-    return { entry, file, handle };
+    const file = entry?.isDirectory ? null : item.getAsFile();
+    let handle;
+    try {
+      handle = item.getAsFileSystemHandle?.().catch(() => null);
+    } catch {
+      // Some contexts expose the method without granting access to the handle.
+    }
+    sources.push({ handle, entry, file });
+  }
+  return sources.length ? { sources } : { files: transfer.files };
+}
+
+async function preferHandle(handle, fallback, signal) {
+  if (!handle) return null;
+  let timer;
+  let abort;
+  try {
+    return await Promise.race([
+      handle,
+      new Promise((resolve) => {
+        abort = () => resolve(null);
+        signal.addEventListener('abort', abort, { once: true });
+        // Some Chromium drop transports leave handle acquisition pending.
+        timer = setTimeout(() => resolve(null), fallback ? 750 : 2_000);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+    signal.removeEventListener('abort', abort);
+  }
+}
+
+export function bindLocalInputs({ view, pool, mode }) {
+  const get = (id) => document.getElementById(id);
+  const files = get('files');
+  const folder = get('folder');
+  const chooser = get('choose-folder');
+  const dropZone = get('drop-zone');
+  const loader = get('folder-loader');
+  const [throbber, label, announcement] = loader.children;
+  const notice = get('input-status');
+  const active = new Set();
+  let picker = null;
+  let preferFallback = false;
+
+  function reading(text) {
+    if (label.textContent !== text) label.textContent = text;
+    throbber.hidden = !text;
+    const phase = text.startsWith('Preparing') ? 'Preparing selected files…' : text ? 'Reading folder…' : '';
+    if (announcement.textContent !== phase) announcement.textContent = phase;
+  }
+
+  function restoredFocus() {
+    if (picker && document.visibilityState === 'visible') reading('Reading folder…');
+  }
+  window.addEventListener('focus', restoredFocus);
+  document.addEventListener('visibilitychange', restoredFocus);
+
+  function finishPicker() {
+    picker = null;
+    if (!active.size) reading('');
+  }
+
+  async function discover(method, total, walk, folderName = null) {
+    const controller = new AbortController();
+    const discovered = new Set();
+    const stats = folderStats(method);
+    stats.folder_name = folderName;
+    const run = view.beginFolder(stats, mode());
+    const jobs = [];
+    const flush = () => {
+      if (jobs.length) view.add(jobs.splice(0), run);
+    };
+    active.add(controller);
+    notice.textContent = '';
+    reading(total ? `Preparing ${number.format(total)} files…` : 'Reading folder…');
+    try {
+      // Let the loader paint before touching a native FileList.
+      await yieldToPage();
+      controller.signal.throwIfAborted();
+      await walk({
+        stats,
+        signal: controller.signal,
+        onProgress() {
+          const seen = number.format(stats.files_seen);
+          reading(total ? `Preparing ${number.format(total)} files… ${seen} checked` :
+            `Reading folder… ${seen} files found`);
+          flush();
+        },
+        onJob(job) {
+          if (discovered.has(job.label)) {
+            skipped(stats, 'duplicate_path', job.label);
+            return;
+          }
+          discovered.add(job.label);
+          if (job.kind === 'bundle') run.appCount += 1;
+          jobs.push(job);
+          if (jobs.length >= 32) flush();
+        },
+      });
+      flush();
+      if (!discovered.size) notice.textContent = 'No apps, Mach-O files, or supported archives were found.';
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        flush();
+        notice.textContent = 'The browser could not finish reading this selection.';
+        skipped(stats, `enumeration_error:${error?.name ?? 'Error'}`, stats.folder_name);
+      }
+    } finally {
+      active.delete(controller);
+      view.finishFolder(run, controller.signal.aborted);
+      if (!active.size && !picker) reading('');
+    }
+  }
+
+  get('cancel-all').addEventListener('click', () => {
+    for (const controller of active) controller.abort();
+    pool.cancelAll();
+    notice.textContent = '';
+    reading('');
+  });
+  get('choose-files').addEventListener('click', () => files.click());
+  chooser.addEventListener('click', () => {
+    if (picker) return;
+    notice.textContent = '';
+    picker = {};
+    if (typeof window.showDirectoryPicker !== 'function' || preferFallback) {
+      folder.click();
+      return;
+    }
+    void (async () => {
+      let handle;
+      try {
+        handle = await window.showDirectoryPicker({ mode: 'read' });
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          preferFallback = true;
+          notice.textContent = 'The browser blocked direct folder access. Choose folder again to use the file picker.';
+        }
+      } finally {
+        finishPicker();
+      }
+      if (handle) await discover('showDirectoryPicker', 0,
+        (options) => walkDirectory(handle, 'handle', options), handle.name);
+    })();
   });
 
-  if (!sources.length) {
-    for (const file of files) yield fromFile(file);
-    return;
-  }
-  for (const { entry, file, handle } of sources) {
-    try {
-      if (entry) {
-        yield* walkEntry(entry);
-        continue;
-      }
-      const resolved = await handle;
-      if (resolved) yield* walkHandle(resolved);
-      else if (file) yield fromFile(file);
-    } catch {
-      yield {
-        kind: 'error',
-        label: entry?.name ?? file?.name ?? 'Dropped item',
-        error: 'The browser could not read this item. Try choosing it with a file or folder picker.',
-      };
+  files.addEventListener('change', () => {
+    view.add(Array.from(files.files, (file) => fileJob(file)));
+    files.value = '';
+  });
+  folder.addEventListener('cancel', finishPicker);
+  folder.addEventListener('change', () => {
+    const selection = folder.files;
+    finishPicker();
+    folder.value = '';
+    if (selection.length) void discover('webkitdirectory', selection.length,
+      (options) => walkFileList(selection, options));
+  });
+
+  const hasFiles = (event) => Array.from(event.dataTransfer?.types ?? []).includes('Files');
+  let dragDepth = 0;
+  dropZone.addEventListener('dragenter', (event) => {
+    if (!hasFiles(event)) return;
+    dragDepth += 1;
+    dropZone.classList.add('dragging');
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (!dragDepth) dropZone.classList.remove('dragging');
+  });
+  window.addEventListener('dragover', (event) => {
+    if (!hasFiles(event)) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = dropZone.contains(event.target) ? 'copy' : 'none';
+  });
+  window.addEventListener('drop', (event) => {
+    if (!hasFiles(event)) return;
+    event.preventDefault();
+    dragDepth = 0;
+    dropZone.classList.remove('dragging');
+    if (!dropZone.contains(event.target)) return;
+    const { sources, files: dropped } = captureDrop(event.dataTransfer);
+    // The drop's data store closes on return. Only native entry promises and
+    // explicit files captured above are used after that point.
+    if (!sources) {
+      view.add(Array.from(dropped, (file) => fileJob(file)));
+      return;
     }
-  }
+    void discover('drop', 0, async (options) => {
+      const methods = new Set();
+      for (const { handle, entry, file } of sources) {
+        options.signal.throwIfAborted();
+        const resolved = await preferHandle(handle, entry ?? file, options.signal);
+        options.signal.throwIfAborted();
+        if (resolved) {
+          methods.add('getAsFileSystemHandle');
+          await walkDirectory(resolved, 'handle', options);
+        } else if (entry) {
+          methods.add('webkitGetAsEntry');
+          await walkDirectory(entry, 'entry', options);
+        } else if (file) {
+          methods.add('DataTransfer.files');
+          options.stats.files_seen += 1;
+          options.onJob(fileJob(file));
+        }
+        options.stats.method = [...methods].join(', ') || 'drop';
+      }
+    });
+  });
 }
