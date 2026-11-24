@@ -249,6 +249,13 @@ try {
     ['terminal-browser', 'terminal-browser/bin/terminal-browser'],
     ['steam'],
     ['tiptoi-manager'],
+    ['prezi-video'],
+    ['libreoffice-language-pack'],
+    ['empoche'],
+    ['gingko'],
+    ['hydrus-network'],
+    ['linked-zip'],
+    ['ti-smartview-ce-for-the-ti-84-plus-family'],
   ]) {
     const file = resolve(edgeDirectory, token);
     const generated = spawnSync(resolve(fixtures, 'edge', token, 'fixture.sh'), [file], { encoding: 'utf8' });
