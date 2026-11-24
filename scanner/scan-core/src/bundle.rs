@@ -1,6 +1,5 @@
-use crate::{Result, ScanError, ScanResult};
+use crate::{Result, ScanError, ScanResult, plist_value};
 use plist::Value;
-use std::io::Cursor;
 
 pub(crate) const MAX_PLIST: u64 = 2 * 1024 * 1024;
 const INFO: &str = "/Contents/Info.plist";
@@ -25,8 +24,7 @@ pub(crate) fn plist_bundle(path: &str) -> Option<&str> {
 }
 
 pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
-    let parsed = Value::from_reader(Cursor::new(bytes))
-        .map_err(|_| ScanError::Invalid("bundle Info.plist"))?;
+    let parsed = plist_value::parse(bytes, ScanError::Invalid("bundle Info.plist"))?;
     let dict = parsed
         .as_dictionary()
         .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;

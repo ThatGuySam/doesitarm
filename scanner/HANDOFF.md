@@ -1,6 +1,6 @@
 # Scanner handoff
 
-Branch `scanner-wasm`. Work began November 23, 2026 at 23:42 Central. The workspace, fixtures, adapters, and benchmark are under `scanner/`.
+The workspace, fixtures, adapters, and benchmark are under `scanner/`. The original implementation was developed on `scanner-wasm`. The subsequent resource limits and QA results are recorded in the hardening report. [Hardening](HARDENING.md)
 
 ## Implemented and verified
 
@@ -12,7 +12,9 @@ Branch `scanner-wasm`. Work began November 23, 2026 at 23:42 Central. The worksp
 | DMG / UDIF | Reads the `koly` trailer, the `blkx` plist, and the touched chunks. Handles zero, raw, ignore, ADC, zlib, bzip2, LZFSE, and XZ-framed ULMO/LZMA. HFS+ and HFSX use the catalog and both inline and overflow extents. Ordinary APFS uses checksummed container checkpoints, container and volume object maps, directory records, and file extents. |
 | Flat PKG / XAR | Uses the zlib TOC to locate Distribution, PackageInfo, and a Payload. Handles gzip and raw ODC/newc CPIO plus PBZX with raw and XZ blocks. Can skip PBZX blocks between known CPIO positions. Installer metadata and executables observed before the plist can survive budget exhaustion. |
 
-`scan-core` makes no filesystem or network calls. Its async `ReadAt` accepts unsigned 64-bit offsets. Native file and HTTPS reads complete synchronously in the CLI. The Wasm adapter awaits the host callback, which can return a byte array immediately or after async I/O. The meter counts host requests and accepted bytes. A read that would exceed the budget stops before calling the host. The thin Mach-O parser visits fat slices in physical order so the same logic works over seekable and forward-only sources.
+`scan-core` makes no filesystem or network calls. Its async `ReadAt` accepts unsigned 64-bit offsets. Native file and HTTPS reads complete synchronously in the CLI. Wasm accepts source sizes through `2^53 − 1` and calls `readAt(offset: bigint, length: number)`. The callback can return a `Uint8Array` immediately or after async I/O. The scanner checks the requested-byte budget before calling the host and reports unique accepted bytes and total requested bytes separately. The thin Mach-O parser visits fat slices in physical order so the same logic works over seekable and forward-only sources.
+
+The CLI defaults to 64 MiB each for requested bytes and decoded output. Use `--budget` and `--decoded-budget` to change them independently. The benchmark uses an 8 MiB request budget. Wasm takes a required request budget and an optional fourth BigInt argument for decoded bytes, defaulting to 64 MiB.
 
 ## Verification and reproduction
 
@@ -22,13 +24,14 @@ Use Rust 1.99.1 and Node 26.13.0. The following commands run from `scanner/`.
 export PATH="$HOME/.cargo/bin:$HOME/.local/share/mise/installs/node/latest/bin:$PATH"
 cargo test --locked -j2
 cargo clippy --locked -j2 --all-targets -- -D warnings
+cargo clippy --locked -j2 -p scan-wasm --target wasm32-unknown-unknown -- -D warnings
 cargo build --locked -j2 -p scan-cli
 cargo build --locked -j2 -p scan-wasm --release --target wasm32-unknown-unknown
 wasm-bindgen --target web --out-dir pkg target/wasm32-unknown-unknown/release/scan_wasm.wasm
 node scripts/verify-wasm.mjs
 ```
 
-The glue generator must match `wasm-bindgen` 0.2.130. Install it with `cargo install wasm-bindgen-cli --version 0.2.130 --locked -j2`. This worktree's installation is also available at `target/tools/bin/wasm-bindgen`. `pkg/` contains generated browser-target glue and Wasm. The core and codec dependencies compiled for `wasm32-unknown-unknown`. The TLS dependency is native-only. Browser integration was outside this run.
+The glue generator must match `wasm-bindgen` 0.2.130. Install it with `cargo install wasm-bindgen-cli --version 0.2.130 --locked -j2`. The build generates `pkg/scan_wasm.js` and `pkg/scan_wasm_bg.wasm`. `pkg/` is gitignored. Regenerate it from your checkout before running parity checks. The core and codec dependencies build for `wasm32-unknown-unknown`. The TLS dependency is native-only.
 
 Reproduce the cask scan using the live API. The JSON records the catalog hash, scanner commit, binary hash, cask URLs and versions, and the accepted strong ETag when provided.
 
@@ -36,21 +39,29 @@ Reproduce the cask scan using the live API. The JSON records the catalog hash, s
 mkdir -p target
 curl -fsSL --max-time 90 --max-filesize 25000000 \
   https://formulae.brew.sh/api/cask.json -o target/homebrew-cask.json
-python3 scripts/homebrew-run.py target/homebrew-cask.json
+python3 scripts/homebrew-run.py target/homebrew-cask.json --output target/homebrew-results
 ```
 
 - [Per-cask results and evidence](results/homebrew-run-1.json)
 - [Measured scan summary](results/homebrew-run-1.md)
 
-## Measured results
+## Original benchmark at `1744123`
 
-- Rust passed 21 tests. Node passed 72 native/Wasm JSON comparisons across 12 fixtures, three budgets, and both host callback modes. It also checked rejected and short callback results. The generated Wasm binary was 1,141,651 bytes.
-- The final run scanned 30 casks from 28 original hosts. It completed 6 of 9 ZIPs, 10 of 11 DMGs, 4 of 5 tarballs, and 1 of 5 PKGs. Seven scans reached the 8 MiB budget and preserved partial evidence. Warp returned HTTP 404 during discovery and Kunkun returned HTTP 200 to its range probe.
-- The final run accepted 90,273,187 artifact bytes across 365 reported range requests. The catalog response used another 19,541,738 bytes. Including the earlier 30-item pilot, accepted bytes from the two corpus passes and the catalog totaled 175,655,096. Additional format-specific probes used bounded ranges. Counts measure accepted bodies and exclude HTTP headers and transport overhead.
-- Rider’s HFS+ DMG needed 1,229,298 bytes of 2,286,054,263 (0.054%). Zed’s APFS DMG needed 905,357 of 88,779,557 (1.020%). Microsoft AutoUpdate’s flat PKG needed 4,464,480 of 4,521,461 (98.740%), and the Phoenix tarball reached 3,997,848 of 3,997,849. The installer and tar examples show how member order can erase most range savings.
+- The run scanned 30 casks from 28 original hosts. It completed 6 of 9 ZIPs, 10 of 11 DMGs, 4 of 5 tarballs, and 1 of 5 PKGs. Seven scans reached the 8 MiB budget and preserved partial evidence. Warp returned HTTP 404 during discovery and Kunkun returned HTTP 200 to its range probe.
+- The scanner accepted 90,273,187 artifact bytes across 365 reported range requests. That version included repeated ranges in `bytes_read`. The catalog response used another 19,541,738 bytes. These figures cover accepted bodies and exclude HTTP headers and transport overhead.
 - Fifteen explicit Homebrew hint comparisons were consistent with the observed architectures. Two could not be evaluated. Three ZIPs reached the budget with both fat-table architectures already identified. Four PKGs supplied provisional binaries before the declared executable could be confirmed from its plist.
 
 ## Limits and next steps
+
+| Parser | Limits |
+| --- | --- |
+| Mach-O | 128 fat slices and 1 MiB of load commands per slice. `LC_BUILD_VERSION` contributes a minimum only for macOS. |
+| ZIP | 16 MiB and 150,000 entries in the central directory. Up to 64 KiB of archive comment. Supports stored and DEFLATE members. Encrypted members and executable symlinks are unsupported. |
+| tar and CPIO | 250,000 entries, 64 KiB tar extensions or CPIO names, and 64 early executable candidates. tar.gz uses one gzip member. Tar links and sparse members are unsupported. |
+| PKG and PBZX | 8 MiB XAR TOC, 2 MiB per installer metadata file, and 120,000 XML nodes. Oversized or unsupported metadata is skipped. PBZX supports up to 4,096 raw or XZ chunks, at most 32 MiB expanded per chunk. |
+| UDIF | Last 512 bytes hold the trailer. Indexes have an 8 MiB limit, with at most 128 `blkx` tables and 131,072 run descriptions. Compressed chunks have a 16 MiB packed and expanded limit. The XZ decoder has a 32 MiB dictionary and overhead cap. |
+| HFS+ and APFS | HFS+ limits a fork to 4,096 extents, a catalog lookup to 256 leaves, and a tree descent to 32 levels. APFS supports up to eight volumes, 128 checkpoint slots, 4–64 KiB blocks, and 256 nodes and 4,096 matching records per filesystem lookup. |
+| CLI HTTPS | The one-byte discovery probe counts toward the request budget. Each request has a 15-second timeout and follows up to eight redirects. |
 
 - Main executable architecture describes one binary. For app-wide compatibility, sample required runtimes, helpers, and framework binaries separately. Installer `hostArchitectures` describes installer policy. Add macOS reference checks with `lipo`, `vtool`, and `plutil` for pinned artifacts. Code-signature observations cover the load command.
 - ZIP selects the shallowest matching bundle. Sequential archives select the first outer app plist and retain bounded early binary evidence. Disk images select a root-level app. Multiple apps, nested installers, and installer scripts that generate or fetch an app need separate traversal and reporting.

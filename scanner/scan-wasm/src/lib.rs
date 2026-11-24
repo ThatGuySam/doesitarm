@@ -1,10 +1,12 @@
 #![forbid(unsafe_code)]
 #![cfg(target_arch = "wasm32")]
 
-use js_sys::{Function, Promise, Uint8Array};
-use scan_core::{ReadAt, Result, ScanError};
+use js_sys::{BigInt, Function, Promise, RangeError, Uint8Array};
+use scan_core::{ReadAt, Result, ScanError, ScanLimits, ScanResult};
 use wasm_bindgen::{JsCast, prelude::*};
 use wasm_bindgen_futures::JsFuture;
+
+const MAX_SAFE_INTEGER: u64 = (1 << 53) - 1;
 
 struct JsSource {
     total_size: u64,
@@ -38,19 +40,68 @@ impl ReadAt for JsSource {
 }
 
 /// `read_at(offset: bigint, length: number)` can return a Uint8Array
-/// immediately or resolve one asynchronously. The result is a JSON string.
+/// immediately or resolve one asynchronously. Sizes must fit in a JS safe
+/// integer. Budgets are unsigned BigInts. The result is a JSON string.
 #[wasm_bindgen]
 pub async fn scan(
-    total_size: u64,
-    budget: u64,
+    total_size: BigInt,
+    budget: BigInt,
     read_at: Function,
+    decoded_byte_budget: Option<BigInt>,
 ) -> std::result::Result<String, JsValue> {
+    let total_size = u64::try_from(total_size)
+        .ok()
+        .filter(|&size| size <= MAX_SAFE_INTEGER)
+        .ok_or_else(|| RangeError::new("total size must be between 0 and 2^53 - 1"))?;
+    let mut limits = ScanLimits::new(parse_budget(budget)?);
+    if let Some(decoded) = decoded_byte_budget {
+        limits.decoded_byte_budget = parse_budget(decoded)?;
+    }
     let mut source = JsSource {
         total_size,
         read_at,
     };
-    let result = scan_core::scan(&mut source, budget).await;
+    let result = scan_core::scan_with_limits(&mut source, limits).await;
+    check_result_sizes(&result)?;
     serde_json::to_string(&result).map_err(|error| JsValue::from_str(&error.to_string()))
+}
+
+fn parse_budget(value: BigInt) -> std::result::Result<u64, JsValue> {
+    u64::try_from(value)
+        .map_err(|_| RangeError::new("budgets must be unsigned 64-bit BigInts").into())
+}
+
+fn check_result_sizes(result: &ScanResult) -> std::result::Result<(), JsValue> {
+    // Sizes inside an archive can exceed its physical source size.
+    let counts = [
+        result.total_size,
+        result.bytes_read,
+        result.bytes_requested,
+        result.decoded_bytes,
+        result.reads,
+    ];
+    let sizes = counts.into_iter().chain(result.executable_size).chain(
+        result
+            .candidate_executables
+            .iter()
+            .map(|candidate| candidate.size),
+    );
+    let architectures = result.architectures.iter().chain(
+        result
+            .candidate_executables
+            .iter()
+            .flat_map(|candidate| &candidate.architectures),
+    );
+    if sizes
+        .chain(architectures.flat_map(|arch| [arch.offset, arch.size]))
+        .any(|size| size > MAX_SAFE_INTEGER)
+    {
+        return Err(RangeError::new(
+            "embedded file size or offset exceeds the JS safe integer range",
+        )
+        .into());
+    }
+    Ok(())
 }
 
 /// Parse an XML or binary Info.plist using the archive scanner's metadata rules.

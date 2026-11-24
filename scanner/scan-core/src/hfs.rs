@@ -6,6 +6,7 @@ use unicode_normalization::UnicodeNormalization;
 const ROOT_ID: u32 = 2;
 const EXTENTS_ID: u32 = 3;
 const CATALOG_ID: u32 = 4;
+const MAX_EXTENTS: usize = 4096;
 const INVALID_NODE: ScanError = ScanError::Invalid("HFS B-tree node");
 
 #[derive(Clone, Copy)]
@@ -44,6 +45,9 @@ impl Fork {
             let count = be32(record, 4);
             if count == 0 {
                 break;
+            }
+            if self.extents.len() == MAX_EXTENTS {
+                return Err(ScanError::Limit("HFS fork exceeds 4096 extents"));
             }
             if start >= blocks
                 || count > blocks - start
@@ -143,7 +147,7 @@ impl<S: ReadAt> Volume<'_, S> {
             return Ok(Vec::new());
         }
         while offset + len as u64 > fork.known_blocks as u64 * self.geometry.block_size {
-            if fork.extents.len() >= 4096 {
+            if fork.extents.len() == MAX_EXTENTS {
                 return Err(ScanError::Limit("HFS fork exceeds 4096 extents"));
             }
             let before = fork.known_blocks;

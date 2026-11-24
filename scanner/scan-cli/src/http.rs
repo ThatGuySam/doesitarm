@@ -1,13 +1,13 @@
 use super::{Output, failure, ready, source_error};
-use scan_core::{ReadAt, Result, ScanError, scan as scan_core};
+use scan_core::{ReadAt, Result, ScanError, ScanLimits, scan_with_limits};
 use std::{io::Read, time::Duration};
 use ureq::{
     Agent, ResponseExt,
     http::{HeaderValue, Uri, header},
 };
 
-pub(crate) fn scan(url: &str, budget: u64) -> Output {
-    if budget == 0 {
+pub(crate) fn scan(url: &str, mut limits: ScanLimits) -> Output {
+    if limits.byte_budget == 0 {
         return Output {
             scan: failure(ScanError::Budget, 0),
             source_etag: None,
@@ -32,8 +32,10 @@ pub(crate) fn scan(url: &str, budget: u64) -> Output {
     let (probe, _) = match get(&agent, &uri, 0, 1, None) {
         Ok(response) => response,
         Err(error) => {
+            let mut scan = failure(error, 1);
+            scan.bytes_requested = 1;
             return Output {
-                scan: failure(error, 1),
+                scan,
                 source_etag: None,
             };
         }
@@ -48,12 +50,17 @@ pub(crate) fn scan(url: &str, budget: u64) -> Output {
         representation: probe,
     };
     let size = source.size();
-    // Keep at least one byte outside the retrieval budget for any remote
-    // artifact with more than one byte. The one-byte probe discovers size.
-    let remaining = budget.min(size.saturating_sub(1)).saturating_sub(1);
-    let mut result = ready(scan_core(&mut source, remaining));
+    // The probe counts against the budget. For remote files larger than one
+    // byte, keep the sum of requested lengths below the representation size.
+    limits.byte_budget = limits
+        .byte_budget
+        .min(size.saturating_sub(1))
+        .saturating_sub(1);
+    let mut result = ready(scan_with_limits(&mut source, limits));
     result.reads += 1;
-    result.bytes_read += 1;
+    result.bytes_requested += 1;
+    // A successful core read of the magic already covers the probe at zero.
+    result.bytes_read = result.bytes_read.max(1);
     Output {
         scan: result,
         source_etag,

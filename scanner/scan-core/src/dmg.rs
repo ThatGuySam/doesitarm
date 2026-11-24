@@ -1,14 +1,17 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, apfs, be16, be32, be64, check_range, hfs, le32,
-    le64,
+    ReadAt, Result, ScanError, ScanResult, Window, apfs, be16, be32, be64, check_range,
+    decode::DecodeBudget,
+    hfs, le32, le64, plist_value,
     udif_codec::{self, IGNORE, RAW, ZERO},
 };
 use plist::Value;
-use std::{collections::VecDeque, io::Cursor, ops::Range};
+use std::{collections::VecDeque, ops::Range};
 
 const SECTOR: u64 = 512;
 const MAX_RUN: u64 = 16 * 1024 * 1024;
 const MAX_INDEX: u64 = 8 * 1024 * 1024;
+const MAX_IMAGE_RUN_READS: usize = 8192;
+const MAX_RUN_DESCRIPTIONS: usize = 128 * 1024;
 
 #[derive(Clone)]
 struct Run {
@@ -18,7 +21,8 @@ struct Run {
 }
 
 struct Partition {
-    name: String,
+    hfs_hint: bool,
+    apfs_hint: bool,
     disk: Range<u64>,
 }
 
@@ -27,10 +31,13 @@ struct Image<'a, S> {
     size: u64,
     runs: Vec<Run>,
     cache: VecDeque<(usize, Vec<u8>)>,
+    work: &'a mut DecodeBudget,
+    run_reads: usize,
 }
 
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
+    work: &mut DecodeBudget,
     trailer: &[u8],
     out: &mut ScanResult,
 ) -> Result<()> {
@@ -66,6 +73,8 @@ pub(crate) async fn scan(
         size,
         runs,
         cache: VecDeque::new(),
+        work,
+        run_reads: 0,
     };
     let (partition, fs) = find_filesystem(&mut image, &partitions).await?;
     let mut volume = Window::new(&mut image, partition.start, partition.end - partition.start)?;
@@ -86,8 +95,7 @@ fn parse_index(
     disk_size: u64,
     data_fork: Range<u64>,
 ) -> Result<(Vec<Run>, Vec<Partition>)> {
-    let value =
-        Value::from_reader(Cursor::new(xml)).map_err(|_| ScanError::Invalid("UDIF plist"))?;
+    let value = plist_value::parse(xml, ScanError::Invalid("UDIF plist"))?;
     let tables = value
         .as_dictionary()
         .and_then(|d| d.get("resource-fork"))
@@ -100,6 +108,7 @@ fn parse_index(
     }
     let mut runs = Vec::new();
     let mut partitions = Vec::new();
+    let mut descriptions_left = MAX_RUN_DESCRIPTIONS;
     for table in tables {
         let dict = table
             .as_dictionary()
@@ -120,7 +129,8 @@ fn parse_index(
         check_range(disk_size, base, size)?;
         if size != 0 {
             partitions.push(Partition {
-                name: name.to_owned(),
+                hfs_hint: name.contains("Apple_HFS"),
+                apfs_hint: name.contains("Apple_APFS"),
                 disk: base..base + size,
             });
         }
@@ -129,6 +139,9 @@ fn parse_index(
         if descriptions > (data.len() - 204) / 40 {
             return Err(ScanError::Invalid("truncated UDIF run table"));
         }
+        descriptions_left = descriptions_left
+            .checked_sub(descriptions)
+            .ok_or(ScanError::Limit("UDIF exceeds 131072 run descriptions"))?;
         for entry in data[204..].as_chunks::<40>().0.iter().take(descriptions) {
             let kind = be32(entry, 0);
             if kind == 0xffff_ffff {
@@ -169,6 +182,15 @@ fn parse_index(
     {
         return Err(ScanError::Unsupported("empty or overlapping UDIF chunks"));
     }
+    let mut stored: Vec<_> = runs
+        .iter()
+        .map(|run| &run.stored)
+        .filter(|range| !range.is_empty())
+        .collect();
+    stored.sort_unstable_by_key(|range| range.start);
+    if stored.windows(2).any(|pair| pair[0].end > pair[1].start) {
+        return Err(ScanError::Invalid("overlapping UDIF stored ranges"));
+    }
     Ok((runs, partitions))
 }
 
@@ -181,6 +203,10 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
         check_range(self.size, offset, len as u64)?;
         let mut bytes = Vec::with_capacity(len);
         while bytes.len() < len {
+            if self.run_reads == MAX_IMAGE_RUN_READS {
+                return Err(ScanError::WorkLimit("too many UDIF run reads"));
+            }
+            self.run_reads += 1;
             let index = self.runs.partition_point(|run| run.disk.end <= offset);
             let run = self
                 .runs
@@ -190,7 +216,10 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
             let count = (run.disk.end - offset).min((len - bytes.len()) as u64) as usize;
             let within = offset - run.disk.start;
             match run.kind {
-                ZERO | IGNORE => bytes.resize(bytes.len() + count, 0),
+                ZERO | IGNORE => {
+                    self.work.charge(count as u64)?;
+                    bytes.resize(bytes.len() + count, 0);
+                }
                 RAW => bytes.extend(
                     self.source
                         .read_at(run.stored.start + within, count)
@@ -206,16 +235,23 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
                         if packed > MAX_RUN || expanded > MAX_RUN {
                             return Err(ScanError::Limit("UDIF compressed chunk exceeds 16 MiB"));
                         }
+                        self.work.check_chunk(packed, expanded)?;
+                        // Release the old chunk before allocating the decoder and output.
+                        if self.cache.len() == 2 {
+                            self.cache.pop_back();
+                        }
                         let input = self
                             .source
                             .read_at(run.stored.start, packed as usize)
                             .await?;
-                        (index, udif_codec::decode(kind, &input, expanded as usize)?)
+                        (
+                            index,
+                            udif_codec::decode(kind, &input, expanded as usize, self.work)?,
+                        )
                     };
                     let within = within as usize;
                     bytes.extend_from_slice(&entry.1[within..within + count]);
                     self.cache.push_front(entry);
-                    self.cache.truncate(2);
                 }
             }
             offset += count as u64;
@@ -233,28 +269,19 @@ async fn find_filesystem(
     disk: &mut impl ReadAt,
     partitions: &[Partition],
 ) -> Result<(Range<u64>, Filesystem)> {
-    for part in partitions
-        .iter()
-        .filter(|part| part.name.contains("Apple_HFS"))
-    {
+    for part in partitions.iter().filter(|part| part.hfs_hint) {
         if hfs_signature(disk, &part.disk).await? {
             return Ok((part.disk.clone(), Filesystem::Hfs));
         }
     }
-    for part in partitions
-        .iter()
-        .filter(|part| part.name.contains("Apple_APFS"))
-    {
+    for part in partitions.iter().filter(|part| part.apfs_hint) {
         if disk.read_at(part.disk.start + 32, 4).await? == b"NXSB" {
             return Ok((part.disk.clone(), Filesystem::Apfs));
         }
     }
     // When blkx names offer no usable hint, try partition-only images and
     // the APM/GPT on a whole-disk image.
-    for part in partitions
-        .iter()
-        .filter(|part| !part.name.contains("Apple_HFS"))
-    {
+    for part in partitions.iter().filter(|part| !part.hfs_hint) {
         if part.disk.end - part.disk.start < 1536 {
             continue;
         }
@@ -357,4 +384,51 @@ async fn partition_map(disk: &mut impl ReadAt) -> Result<Option<(Range<u64>, Fil
         }
     }
     Ok(None)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn every_udif_codec_reserves_a_chunk_before_decoding() {
+        let image = include_bytes!("../../fixtures/hfsx.dmg");
+        let trailer_at = image.len() - 512;
+        let trailer = &image[trailer_at..];
+        let index = be64(trailer, 216) as usize;
+        let fork = be64(trailer, 24);
+        let (runs, _) = parse_index(
+            &image[index..trailer_at],
+            sectors(be64(trailer, 492)).unwrap(),
+            fork..fork + be64(trailer, 32),
+        )
+        .unwrap();
+        for kind in [
+            udif_codec::ADC,
+            udif_codec::ZLIB,
+            udif_codec::BZIP2,
+            udif_codec::LZFSE,
+            udif_codec::LZMA,
+        ] {
+            let run = runs.iter().find(|run| run.kind == kind).unwrap();
+            let packed = &image[run.stored.start as usize..run.stored.end as usize];
+            let expanded = (run.disk.end - run.disk.start) as usize;
+
+            let mut short = DecodeBudget::new(expanded as u64 - 1);
+            assert!(matches!(
+                udif_codec::decode(kind, packed, expanded, &mut short),
+                Err(ScanError::WorkLimit(_))
+            ));
+            assert_eq!(short.used(), 0);
+
+            let mut exact = DecodeBudget::new(expanded as u64);
+            assert_eq!(
+                udif_codec::decode(kind, packed, expanded, &mut exact)
+                    .unwrap()
+                    .len(),
+                expanded
+            );
+            assert_eq!(exact.used(), expanded as u64);
+        }
+    }
 }

@@ -88,7 +88,10 @@ impl StreamBundle {
                     architectures: architectures.clone(),
                 });
             }
-            if let Err(error @ (ScanError::Budget | ScanError::Source(_))) = outcome {
+            if let Err(
+                error @ (ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_)),
+            ) = outcome
+            {
                 return Err(error);
             }
             self.candidates.push(Candidate {

@@ -109,7 +109,7 @@ def scan_one(cli, format_, cask):
         "cli_exit_code": code,
         "scan": scan,
     }
-    print(f"{cask['token']}: {scan['status']} ({scan.get('bytes_read', '?')} bytes)", flush=True)
+    print(f"{cask['token']} — {scan['status']} ({scan.get('bytes_read', '?')} unique bytes)", flush=True)
     return row
 
 
@@ -123,9 +123,10 @@ def summary(report):
         f"Started {report['started_at']}. The sample contains {groups} across "
         f"{totals['hosts']} download hosts. {statuses}.",
         "",
-        f"The catalog used {report['catalog']['bytes']:,} bytes. The CLI accepted "
-        f"{totals['accepted_artifact_bytes']:,} artifact bytes across "
-        f"{totals['attempted_reads_with_reported_counts']:,} reported range requests, "
+        f"The catalog used {report['catalog']['bytes']:,} bytes. The CLI read "
+        f"{totals['unique_artifact_bytes']:,} unique artifact bytes and requested "
+        f"{totals['requested_artifact_bytes']:,} bytes across "
+        f"{totals['attempted_reads_with_reported_counts']:,} attempted range requests, "
         f"including discovery probes. The per-artifact budget was {BUDGET:,} bytes and the "
         f"combined catalog plus artifact body budget was {report['body_budget_maximum']:,} bytes.",
         "",
@@ -139,8 +140,8 @@ def summary(report):
         "Gifski had no cask entry in this snapshot. "
         "The ZIP and DMG labels for redirect endpoints come from their expected download types.",
         "",
-        "| Cask | Detected format (or expected) | Result | Main architecture | Bytes read / size | Cask comparison | Error |",
-        "| --- | --- | --- | --- | ---: | --- | --- |",
+        "| Cask | Detected format (or expected) | Result | Main architecture | Unique bytes / size | Requested bytes | Cask comparison | Error |",
+        "| --- | --- | --- | --- | ---: | ---: | --- | --- |",
     ]
     for row in report["apps"]:
         result = row["scan"]
@@ -172,7 +173,9 @@ def summary(report):
         ) or "No explicit hint"
         cells = [
             row["cask"], result.get("format") or f"({row['expected_format']})",
-            result["status"].replace("_", " "), arch, volume, compares, result.get("error") or "—",
+            result["status"].replace("_", " "), arch, volume,
+            f"{result['bytes_requested']:,}" if "bytes_requested" in result else "unknown",
+            compares, result.get("error") or "—",
         ]
         lines.append("| " + " | ".join(cell.replace("|", "\\|").replace("\n", " ") for cell in cells) + " |")
     return "\n".join(lines) + "\n"
@@ -182,7 +185,7 @@ def main():
     arg_parser = argparse.ArgumentParser(description=__doc__)
     arg_parser.add_argument("catalog", type=Path, help="local response from the Homebrew cask.json endpoint")
     arg_parser.add_argument("--cli", type=Path, default=ROOT / "target/debug/scan-cli")
-    arg_parser.add_argument("--output", type=Path, default=ROOT / "results")
+    arg_parser.add_argument("--output", type=Path, default=ROOT / "target" / "homebrew-results")
     args = arg_parser.parse_args()
     cli = args.cli.resolve()
     catalog = args.catalog.read_bytes()
@@ -222,7 +225,8 @@ def main():
             "statuses": dict(Counter(scan["status"] for scan in scans)),
             "sample_formats": {format_: len(tokens) for format_, tokens in SELECTION.items()},
             "hosts": len({row["host"] for row in rows}),
-            "accepted_artifact_bytes": sum(scan.get("bytes_read", 0) for scan in scans),
+            "unique_artifact_bytes": sum(scan.get("bytes_read", 0) for scan in scans),
+            "requested_artifact_bytes": sum(scan.get("bytes_requested", 0) for scan in scans),
             "attempted_reads_with_reported_counts": sum(scan.get("reads", 0) for scan in scans),
             "casks_with_unknown_counts": sum("bytes_read" not in scan for scan in scans),
         },

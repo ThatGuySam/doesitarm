@@ -1,6 +1,6 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Window, bundle, check_range, inflate::Inflate, le16,
-    le32, le64, macho,
+    ReadAt, Result, ScanError, ScanResult, Window, bundle, check_range, decode::DecodeBudget,
+    inflate::Inflate, le16, le32, le64, macho,
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
@@ -21,7 +21,11 @@ struct Entry {
     flags: u16,
 }
 
-pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
+pub(crate) async fn scan(
+    input: &mut impl ReadAt,
+    work: &mut DecodeBudget,
+    out: &mut ScanResult,
+) -> Result<()> {
     let directory = read_directory(input).await?;
     check_range(directory.end_record, directory.offset, directory.size)?;
     if directory.size > MAX_DIRECTORY {
@@ -52,7 +56,7 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         let mut data = data;
         data.read_at(0, entry.expanded as usize).await?
     } else {
-        Inflate::new(data, entry.expanded)
+        Inflate::new(data, entry.expanded, work)?
             .read_at(0, entry.expanded as usize)
             .await?
     };
@@ -70,7 +74,7 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         macho::scan(&mut { data }, &mut out.architectures).await
     } else {
         macho::scan(
-            &mut Inflate::new(data, executable.expanded),
+            &mut Inflate::new(data, executable.expanded, work)?,
             &mut out.architectures,
         )
         .await
