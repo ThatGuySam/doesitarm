@@ -1,10 +1,16 @@
 function role(path) {
-  if (path.includes('Sparkle.framework/') || path.startsWith('Contents/Updater/')) return 'updater';
-  if (path.includes('/LoginItems/')) return 'login_item';
-  if (path.startsWith('Contents/XPCServices/') || path.includes('.xpc/')) return 'xpc_service';
-  if (path.startsWith('Contents/Frameworks/')) return path.includes('.framework/') ? 'framework' : 'library';
-  if (/^Contents\/Plug[Ii]ns\//.test(path)) return 'plugin';
-  if (path.startsWith('Contents/Resources/')) return 'resource';
+  const inside = path.replace(/^Contents\//, '');
+  const [top] = inside.split('/', 1);
+  if (inside.includes('Sparkle.framework/') || ['Updater', 'Sparkle'].includes(top)) return 'updater';
+  if (top === 'XPCServices' || inside.includes('.xpc/')) return 'xpc_service';
+  if (top === 'LoginItems' || inside.includes('/LoginItems/')) return 'login_item';
+  if (/(?:^|\/)(?:LaunchServices|LaunchDaemons|LaunchAgents)\//.test(inside)) return 'launch_helper';
+  if (/\.app\//i.test(inside)) return 'nested_app';
+  if (top === 'Frameworks') return inside.includes('.framework/') ? 'framework' : 'library';
+  if (top === 'PlugIns' || top === 'Plugins') return 'plugin';
+  if (top === 'Resources') return 'resource';
+  if (top === 'SharedSupport') return 'shared_support';
+  if (['runtime', 'Java', 'Home', 'jbr', 'jre', 'jdk'].includes(top) || top.endsWith('.jdk')) return 'runtime';
   return 'helper';
 }
 
@@ -23,7 +29,7 @@ export function observedInventory(row) {
         !(binary.format === 'macho' || child.kind === 'bundle')) continue;
     binaries.push({
       path,
-      role: child.kind === 'bundle' ? 'nested_app' : role(child.label.slice(row.label.length + 1)),
+      role: role(path.slice(row.label.length + 1)),
       architectures: binary.architectures,
     });
   }

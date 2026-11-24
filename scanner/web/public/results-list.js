@@ -74,7 +74,7 @@ async function sortRows(rows, compare, pause) {
 export class ResultsList {
   #pool;
   #mode;
-  #rows = [];
+  #rowCount = 0;
   #runs = [];
   #runsByChoice;
   #pending = new Map();
@@ -236,14 +236,13 @@ export class ResultsList {
     };
     for (const job of jobs) {
       const row = {
-        id: this.#rows.length + 1, label: job.label, kind: job.kind,
+        id: ++this.#rowCount, label: job.label, kind: job.kind,
         parentBundlePath: job.parentBundlePath ?? null, size: job.file?.size ?? job.size,
         directoryListings: job.directoryListings, relativeCandidates: job.relativeCandidates,
         nestedArtifacts: job.nestedArtifacts, bytes: 0, planned: null,
         children: job.kind === 'bundle' ? children(job.label) : undefined,
-        started: null, ended: null, status: 'queued', samples: [],
+        started: null, ended: null, status: 'queued', samples: null,
       };
-      this.#rows.push(row);
       run.rows.push(row);
       if (row.parentBundlePath) children(row.parentBundlePath).push(row);
       this.#pending.set(row.id, row);
@@ -281,6 +280,7 @@ export class ResultsList {
     if (event.type === 'start') {
       row.started = now;
       row.status = 'scanning';
+      row.samples = [];
       this.#searchDirty = true;
       run.firstScan ??= now;
       this.#active.add(row);
@@ -506,7 +506,7 @@ export class ResultsList {
   }
 
   #renderPage(now = performance.now()) {
-    const total = this.#matched?.length ?? this.#rows.length;
+    const total = this.#matched?.length ?? this.#rowCount;
     const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
     this.#page = Math.max(0, Math.min(this.#page, pages - 1));
     const start = this.#page * PAGE_SIZE;
@@ -518,8 +518,8 @@ export class ResultsList {
       card.el.remove();
       this.#rendered.delete(id);
     }
-    this.#tools.hidden = !this.#rows.length;
-    if (this.#discoveries && !this.#rows.length) {
+    this.#tools.hidden = !this.#rowCount;
+    if (this.#discoveries && !this.#rowCount) {
       if (!this.#skeleton) {
         const el = get('result-card').content.firstElementChild.cloneNode(true);
         el.classList.add('folder-skeleton');
@@ -547,7 +547,7 @@ export class ResultsList {
     this.#dirty.clear();
 
     const { nav, previous, caption, next } = this.#nav;
-    nav.hidden = pages === 1 && Boolean(rows.length || !this.#rows.length);
+    nav.hidden = pages === 1 && Boolean(rows.length || !this.#rowCount);
     previous.disabled = this.#page === 0;
     next.disabled = this.#page >= pages - 1;
     setText(caption, rows.length ? `${number.format(start + 1)}–${number.format(start + rows.length)} of ${number.format(total)}` :
@@ -590,7 +590,7 @@ export class ResultsList {
     setText(this.#batchStatus, batch.total && !scanning ? `Scan finished with ${number.format(batch.total)} results.` :
       scanning && folder?.enumerated != null ? `${number.format(folder.appCount)} apps found. Scanning.` : '');
     get('batch-readout').hidden = !batch.total && !scanning;
-    get('empty-results').hidden = Boolean(this.#rows.length || scanning || folder);
+    get('empty-results').hidden = Boolean(this.#rowCount || scanning || folder);
     const progress = get('overall-progress');
     if (this.#discoveries || !batch.total || (!folder && batch.extended && batch.finished < batch.total)) {
       progress.removeAttribute('value');

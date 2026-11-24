@@ -7,7 +7,7 @@ const duration = (end, start) => start === null || end === null ? null : Math.ma
 export function watchLongTasks() {
   const entries = [];
   let observer;
-  if (globalThis.PerformanceObserver?.supportedEntryTypes.includes('longtask')) {
+  if (globalThis.PerformanceObserver?.supportedEntryTypes?.includes('longtask')) {
     observer = new PerformanceObserver((list) => {
       for (const { startTime, duration } of list.getEntries()) entries.push({ startTime, duration });
     });
@@ -16,7 +16,7 @@ export function watchLongTasks() {
   return (start, end) => {
     if (!observer) return null;
     for (const { startTime, duration } of observer.takeRecords()) entries.push({ startTime, duration });
-    return entries.filter(({ startTime }) => startTime >= start && startTime <= end)
+    return entries.filter(({ startTime, duration }) => startTime + duration >= start && startTime <= end)
       .map(({ startTime, duration }) => ({ offset_ms: startTime - start, duration_ms: duration }));
   };
 }
