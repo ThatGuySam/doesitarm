@@ -230,8 +230,15 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
         return zip::scan(input, out).await;
     }
     if magic.starts_with(b"\x1f\x8b") {
-        out.format = Some("tar.gz");
-        return tar::scan(input, out).await;
+        return compressed_tar(input, out, "tar.gz", inflate::Codec::Gzip).await;
+    }
+    if magic == b"0707" && input.size() >= 6 {
+        let mut cpio_magic = magic.clone();
+        cpio_magic.extend(input.read_at(4, 2).await?);
+        if cpio::recognized(&cpio_magic) {
+            out.format = Some("cpio");
+            return cpio::scan(input, out).await;
+        }
     }
     if magic == b"xar!" {
         out.format = Some("pkg");
@@ -244,7 +251,38 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
             return dmg::scan(input, &trailer, out).await;
         }
     }
+    // UDIF stores compressed runs from byte zero. Its koly footer takes
+    // precedence over a bzip2 or XZ prefix from the first run.
+    if magic.starts_with(b"BZh") {
+        return compressed_tar(input, out, "tar.bz2", inflate::Codec::Bzip2).await;
+    }
+    if magic == b"\xfd7zX" && input.size() >= 6 && input.read_at(4, 2).await? == b"Z\0" {
+        return compressed_tar(input, out, "tar.xz", inflate::Codec::Xz).await;
+    }
+    if input.size() >= 512 {
+        let header = input.read_at(0, 512).await?;
+        if tar::is_header(&header) {
+            out.format = Some("tar");
+            return tar::scan(input, out).await;
+        }
+    }
     Err(ScanError::Unsupported("unrecognized file format"))
+}
+
+async fn compressed_tar(
+    input: &mut impl ReadAt,
+    out: &mut ScanResult,
+    format: &'static str,
+    codec: inflate::Codec,
+) -> Result<()> {
+    out.format = Some(format);
+    let size = input.size();
+    let source = Window::new(input, 0, size)?;
+    tar::scan(
+        &mut inflate::Forward::new(source, inflate::STREAM_OUTPUT_LIMIT, codec),
+        out,
+    )
+    .await
 }
 
 struct Metered<'a, S> {

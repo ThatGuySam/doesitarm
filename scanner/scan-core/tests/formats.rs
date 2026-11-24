@@ -110,6 +110,18 @@ fn stored_zip_seeks_to_bundle_executable() {
 }
 
 #[test]
+fn zip_supports_bzip2_and_zip_framed_lzma_members() {
+    for artifact in [
+        include_bytes!("../../fixtures/bzip2.zip").as_slice(),
+        include_bytes!("../../fixtures/lzma.zip").as_slice(),
+    ] {
+        let result = run(artifact, 64 * 1024);
+        assert_eq!(result.format, Some("zip"));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
 fn zip64_with_comment_reads_binary_plist_and_deflated_executable() {
     let result = run(ZIP64, ZIP64.len() as u64 - 1);
     assert_eq!(result.format, Some("zip"));
@@ -129,6 +141,25 @@ fn zip_budget_preserves_bundle_fields_before_executable() {
 
 const TAR: &[u8] = include_bytes!("../../fixtures/app.tar.gz");
 const TAR_REVERSED: &[u8] = include_bytes!("../../fixtures/app-binary-first.tar.gz");
+
+#[test]
+fn tar_walks_plain_bzip2_and_xz_headers() {
+    for (format, artifact) in [
+        ("tar", include_bytes!("../../fixtures/app.tar").as_slice()),
+        (
+            "tar.bz2",
+            include_bytes!("../../fixtures/app.tar.bz2").as_slice(),
+        ),
+        (
+            "tar.xz",
+            include_bytes!("../../fixtures/app.tar.xz").as_slice(),
+        ),
+    ] {
+        let result = run(artifact, 8 * 1024);
+        assert_eq!(result.format, Some(format));
+        assert_bundle(&result);
+    }
+}
 
 #[test]
 fn pkg_recovers_bom_checked_late_plist_and_scans_the_named_binary() {
@@ -204,6 +235,16 @@ fn dmg_uses_hfsx_catalog_and_overflow_extents_across_udif_codecs() {
     assert_eq!(result.architectures[1].name, "arm64e");
     assert!(result.architectures.iter().all(|arch| arch.header_verified));
     assert!(result.bytes_read < result.total_size / 4);
+}
+
+#[test]
+fn dmg_footer_wins_over_first_bzip2_chunk_magic() {
+    let image = include_bytes!("../../fixtures/bzip2-prefix.dmg");
+    assert!(image.starts_with(b"BZh"));
+    let result = run(image, 1024 * 1024);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.format, Some("dmg"));
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
 }
 
 #[test]

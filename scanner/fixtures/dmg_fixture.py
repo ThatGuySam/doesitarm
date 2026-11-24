@@ -115,11 +115,12 @@ def dmg_fixture(path, metadata, executable):
     write_udif(path, volume, chunks, "Apple_HFSX")
 
 
-def write_udif(path, volume, chunks, name):
+def write_udif(path, volume, chunks, name, *, with_preamble=True):
     sectors = len(volume) // SECTOR
     assert sum(count for _, count, _ in chunks) == sectors
-    preamble = b"Test data fork at a nonzero file offset.\n"
-    body = bytearray(b"\0" * 16)  # Nonzero table-relative data offset.
+    preamble = b"Test data fork at a nonzero file offset.\n" if with_preamble else b""
+    data_offset = 16 if with_preamble else 0
+    body = bytearray(data_offset)
     mish = bytearray(204)
     pack_into(">4sIQQQ", mish, 0, b"mish", 1, 0, sectors, len(body))
     pack_into(">I", mish, 200, len(chunks) + 1)
@@ -127,7 +128,7 @@ def write_udif(path, volume, chunks, name):
     for kind, count, compress in chunks:
         data = volume[sector * SECTOR:(sector + count) * SECTOR]
         packed = compress(data)
-        mish.extend(pack(">IIQQQQ", kind, 0, sector, count, len(body) - 16, len(packed)))
+        mish.extend(pack(">IIQQQQ", kind, 0, sector, count, len(body) - data_offset, len(packed)))
         body.extend(packed)
         sector += count
     mish.extend(pack(">IIQQQQ", 0xFFFFFFFF, 0, sector, 0, 0, 0))

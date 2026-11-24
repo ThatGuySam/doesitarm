@@ -1,7 +1,9 @@
 use crate::pbzx::Pbzx;
 use crate::{
     InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Window, be16, be64, bom, bundle,
-    check_range, cpio, gzip_tail, inflate::Inflate, stream_bundle::StreamBundle,
+    check_range, cpio, gzip_tail,
+    inflate::{Codec, Forward, STREAM_OUTPUT_LIMIT},
+    stream_bundle::StreamBundle,
 };
 use flate2::read::ZlibDecoder;
 use roxmltree::{Document, Node, ParsingOptions};
@@ -111,8 +113,8 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
         return Err(ScanError::Invalid("short PKG Payload"));
     }
     let magic = input.read_at(member.offset, 6).await?;
-    let kind = if magic.starts_with(b"\x1f\x8b") {
-        Payload::Gzip
+    let kind = if let Some(codec) = Codec::from_magic(&magic) {
+        Payload::Compressed(codec)
     } else if magic.starts_with(b"pbzx") {
         Payload::Pbzx
     } else if cpio::recognized(&magic) {
@@ -123,7 +125,7 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
 
     let mut target = StreamBundle::default();
     let budget = input.remaining_budget();
-    if matches!(kind, Payload::Gzip | Payload::Pbzx)
+    if matches!(kind, Payload::Compressed(Codec::Gzip) | Payload::Pbzx)
         && member.packed > budget
         && let Some((_, bom)) = boms.iter().find(|(container, _)| *container == parent)
         && bom.packed <= MAX_BOM
@@ -156,7 +158,7 @@ pub(crate) async fn scan(input: &mut impl ReadAt, out: &mut ScanResult) -> Resul
 #[derive(Clone, Copy)]
 enum Payload {
     Cpio,
-    Gzip,
+    Compressed(Codec),
     Pbzx,
 }
 
@@ -168,7 +170,14 @@ async fn inspect_payload(
 ) -> Result<()> {
     match kind {
         Payload::Cpio => cpio::scan(&mut source, out).await,
-        Payload::Gzip => cpio::scan_with(&mut Inflate::gzip(source), target, out).await,
+        Payload::Compressed(codec) => {
+            cpio::scan_with(
+                &mut Forward::new(source, STREAM_OUTPUT_LIMIT, codec),
+                target,
+                out,
+            )
+            .await
+        }
         Payload::Pbzx => cpio::scan_with(&mut Pbzx::open(source).await?, target, out).await,
     }
 }
@@ -184,7 +193,7 @@ async fn recover_target(
     let expected = bom::late_plist(&bom)?;
     let mut source = Window::new(input, payload.offset, payload.packed).ok()?;
     let (bytes, evidence) = match kind {
-        Payload::Gzip => {
+        Payload::Compressed(Codec::Gzip) => {
             let span = source.size().min(gzip_tail::TAIL_BYTES);
             let tail = source
                 .read_at(source.size() - span, span as usize)
@@ -200,7 +209,7 @@ async fn recover_target(
             let (_, bytes) = cpio::tail_plist(&tail, start, &expected)?;
             (bytes.to_vec(), "bom_verified_pbzx_cpio_tail")
         }
-        Payload::Cpio => return None,
+        Payload::Cpio | Payload::Compressed(_) => return None,
     };
     let root = bundle::outer_plist(&expected.path)?;
     let mut bundle = ScanResult::new(out.total_size);

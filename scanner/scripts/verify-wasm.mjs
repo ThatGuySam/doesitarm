@@ -15,7 +15,7 @@ await init({ module_or_path: await readFile(resolve(pkg, 'scan_wasm_bg.wasm')) }
 const fixtures = resolve(root, 'fixtures');
 let comparisons = 0;
 for (const name of (await readdir(fixtures)).sort()) {
-  if (!/\.(macho|zip|tar\.gz|dmg|pkg)$/.test(name)) continue;
+  if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|pkg)$/.test(name)) continue;
   const file = resolve(fixtures, name);
   const size = (await stat(file, { bigint: true })).size;
   const fd = openSync(file, 'r');
