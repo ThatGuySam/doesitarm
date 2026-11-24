@@ -125,3 +125,40 @@ fn zip_budget_preserves_bundle_fields_before_executable() {
     assert_eq!(result.executable_name, full.executable_name);
     assert!(result.bytes_read <= full.bytes_read - 48);
 }
+
+const TAR: &[u8] = include_bytes!("../../fixtures/app.tar.gz");
+const TAR_REVERSED: &[u8] = include_bytes!("../../fixtures/app-binary-first.tar.gz");
+
+#[test]
+fn tar_stops_after_plist_and_exact_executable() {
+    let result = run(TAR, u64::MAX);
+    assert_eq!(result.format, Some("tar.gz"));
+    assert_bundle(&result);
+    assert!(result.total_size > result.bytes_read);
+    assert_eq!(result.reads, 2);
+}
+
+#[test]
+fn tar_reuses_earlier_executable_evidence_after_pax_path_and_plist() {
+    let result = run(TAR_REVERSED, 2048);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert!(
+        result
+            .bundle_path
+            .as_deref()
+            .unwrap()
+            .ends_with("/Fixture.app")
+    );
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.architectures.len(), 2);
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.bytes_read <= 2048);
+}
+
+#[test]
+fn tar_reports_budget_exhaustion_if_compressed_prefix_is_too_short() {
+    let result = run(TAR, 80);
+    assert!(matches!(result.status, Status::BudgetExhausted));
+    assert_eq!(result.bytes_read, 80);
+    assert_eq!(result.format, Some("tar.gz"));
+}

@@ -17,9 +17,17 @@ pub(crate) struct Inflate<S> {
 
 impl<S: ReadAt> Inflate<S> {
     pub(crate) fn new(source: S, size: u64) -> Self {
+        Self::with_decoder(source, size, Decompress::new(false))
+    }
+
+    pub(crate) fn gzip(source: S) -> Self {
+        Self::with_decoder(source, STREAM_OUTPUT_LIMIT, Decompress::new_gzip(15))
+    }
+
+    fn with_decoder(source: S, size: u64, decoder: Decompress) -> Self {
         Self {
             source,
-            decoder: Decompress::new(false),
+            decoder,
             input: Vec::new(),
             input_start: 0,
             size,
@@ -73,7 +81,7 @@ impl<S: ReadAt> Inflate<S> {
             }
             let unconsumed = &self.input[index..];
             let len = (remaining - unconsumed.len() as u64)
-                .min(INPUT_CHUNK.saturating_sub(unconsumed.len() as u64))
+                .min(chunk_size(before_in).saturating_sub(unconsumed.len() as u64))
                 .min(self.source.remaining_budget());
             if len == 0 {
                 return Err(if self.source.remaining_budget() == 0 {
@@ -108,5 +116,15 @@ impl<S: ReadAt> ReadAt for Inflate<S> {
         let mut data = vec![0; len];
         self.fill(&mut data).await?;
         Ok(data)
+    }
+}
+
+fn chunk_size(position: u64) -> u64 {
+    if position < INPUT_CHUNK {
+        INPUT_CHUNK
+    } else if position < 1024 * 1024 {
+        4 * INPUT_CHUNK
+    } else {
+        16 * INPUT_CHUNK
     }
 }

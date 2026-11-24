@@ -5,5 +5,5 @@ edition.workspace = true
 
 [dependencies]
 serde.workspace = true
-flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 plist = "1"

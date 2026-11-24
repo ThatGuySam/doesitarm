@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Generate small, deterministic macOS archive fixtures without Apple tools."""
+import gzip
+import io
 import plistlib
+import random
+import tarfile
 import zipfile
 from pathlib import Path
 from struct import pack
@@ -69,6 +73,21 @@ def zip_fixture(path, method, *, zip64=False, binary_plist=False):
         zipfile.ZIP64_LIMIT = previous
 
 
+def tar_fixture(path, *, binary_first=False, long_path=False):
+    prefix = (("nested-" * 16) + "/") if long_path else ""
+    binary = (prefix + EXECUTABLE, fat())
+    info = (prefix + INFO, plistlib.dumps(METADATA))
+    files = [binary, info] if binary_first else [info, binary]
+    files.insert(1, (prefix + BUNDLE + "/Contents/MacOS/not-the-main", thin(INTEL, 3)))
+    files.append(("unread-tail", random.Random(55).randbytes(90_000)))
+    with open(path, "wb") as disk, gzip.GzipFile(filename="", fileobj=disk, mode="wb", mtime=0) as gz:
+        with tarfile.open(fileobj=gz, mode="w", format=tarfile.PAX_FORMAT) as archive:
+            for name, data in files:
+                entry = tarfile.TarInfo(name)
+                entry.size = len(data)
+                archive.addfile(entry, io.BytesIO(data))
+
+
 if __name__ == "__main__":
     (ROOT / "thin.macho").write_bytes(thin())
     (ROOT / "fat.macho").write_bytes(fat())
@@ -76,3 +95,6 @@ if __name__ == "__main__":
 
     zip_fixture(ROOT / "stored.zip", zipfile.ZIP_STORED)
     zip_fixture(ROOT / "deflated-zip64.zip", zipfile.ZIP_DEFLATED, zip64=True, binary_plist=True)
+
+    tar_fixture(ROOT / "app.tar.gz")
+    tar_fixture(ROOT / "app-binary-first.tar.gz", binary_first=True, long_path=True)

@@ -4,6 +4,8 @@
 mod bundle;
 mod inflate;
 mod macho;
+mod stream_bundle;
+mod tar;
 mod zip;
 
 use serde::Serialize;
@@ -176,6 +178,10 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
     ) {
         out.format = Some("zip");
         return zip::scan(input, out).await;
+    }
+    if magic.starts_with(b"\x1f\x8b") {
+        out.format = Some("tar.gz");
+        return tar::scan(input, out).await;
     }
     Err(ScanError::Unsupported("unrecognized file format"))
 }
