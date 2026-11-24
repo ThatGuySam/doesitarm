@@ -40,9 +40,13 @@ Linux headless Chromium 155.0.8059.84 opened a real directory dragged through CD
 
 Peak JavaScript heap is the sampled page renderer heap. RSS sums Chromium processes and can count shared pages more than once. CDP's peak DOM count includes detached nodes. Both the largest rung and the smallest rung ended with 1,326 connected elements and 24 mounted result cards. The 300,000-file run recorded tasks of 51 and 61 ms. The 500,000-file run recorded tasks of 64 and 109 ms. These two rungs missed the under-50-ms target. Before the metadata preflight, 100,000-file drop discovery took 50.38 s end to end and the 300,000-file run disconnected.
 
+A separate 500,000-file diagnostic trace again matched 3,315/3,315, including strict parent and role comparisons. Tracing raised the elapsed scan time to 88.52 s and peak RSS to 1,969 MiB. One 53 ms task used 22.1 ms of renderer CPU and included a minor V8 collection. A 105 ms task used 9.5 ms of renderer CPU and included an 80 ms layout interval that consumed 3.7 ms of that CPU time. The trace buffer filled after 32.3 s, before the third reported task at 52.2 s. The two captured tasks establish a difference between elapsed task time and active renderer time. They do not identify the cause of the third task. The compact observer report is `/tmp/bigfolder-500k-traced.json`.
+
 From `scanner/web/`, run `node test/bigfolder-benchmark.mjs --route drop-entry --output /tmp/bigfolder-drop.json` to repeat the full ladder. `--files` selects a comma-separated subset. The `picker` route submits a directory to the real `webkitdirectory` input via CDP, and `--no-symlinks` removes fixtures that the native picker may treat differently across platforms. The `file-list` route injects an indexed input into the same `change` handler. Its empty fillers expose file metadata and its nonempty entries provide real File objects. This isolates post-change work from native picker construction and Chromium's repeated rebuilding of the DataTransfer FileList. The 500,000-entry indexed trial matched 3,315/3,315 in 11.38 s at 1,330 MiB RSS with one 87 ms task. [Chromium DataTransfer implementation](https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/third_party/blink/renderer/core/clipboard/data_transfer.cc#462)
 
 The serial browser suite used real OPFS handles for both the read-only directory picker and the preferred drop-handle branch. It simulated the picker and handle delivery because headless Linux has no macOS permissions UI. The 50,000-result paging test mounted 24 cards and held at 995 connected elements across filtering, sorting, paging and scrolling. It observed no tasks of 50 ms or more.
+
+Verification passed with 50 Rust tests, 190 native/Wasm comparisons, 25 Node tests, nine serial browser tests and ten offline UI smoke tests. The UI smoke test caught a change to the thin Mach-O read plan during the diagnostics refactor. The worker now reuses the format probe and preserves exact determinate progress and ETA for those files.
 
 ## AgentSessions 3.8.2
 
@@ -81,3 +85,7 @@ Start with Download diagnostics, which collects the local run and both outcomes 
 - `5cc1b26` separates sibling Mach-O rows from the main launcher and prevents an archive from lending its architecture to a local app.
 - `3d4b2f6` fixes the live FileList lifetime and moves short-file discovery to asynchronous metadata when available.
 - `b018329` checks the time slice after each native FileList entry.
+- `d847b0b` supplies the real directory-drop fixture generator, scale ladder and memory guard.
+- `eb0b73f` preserves exact thin Mach-O progress while collecting diagnostic evidence.
+- `2756e21` verifies folder inputs, paginated results, local diagnostics and native fixture replay.
+- `1e23001` isolates after-change discovery from browser-native FileList construction.
