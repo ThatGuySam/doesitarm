@@ -369,6 +369,8 @@ def attempt(cli, entry_, budget, timeout, cli_options, target=None, deadline=Non
         raise DeadlineReached
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=min(timeout, remaining), check=False)
+        if result.returncode == 2:
+            raise ValueError(f"Scanner rejected the scan options: {result.stderr.strip()[:300]}")
         try:
             scan = json.loads(result.stdout)
             if scan.get("error"):

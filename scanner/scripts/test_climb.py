@@ -66,6 +66,13 @@ class ScoreboardTests(unittest.TestCase):
             self.assertEqual(climb.attempts_for(args, entry, None), [nested_budget, completed])
         self.assertEqual([call.args[2] for call in attempt.call_args_list], [8, 64])
 
+    def test_invalid_scanner_flags_abort_the_run(self):
+        entry = {"url": "https://example.invalid/artifact"}
+        rejected = subprocess.CompletedProcess(["scan"], 2, "", "Unknown or repeated flag")
+        with patch.object(climb.subprocess, "run", return_value=rejected):
+            with self.assertRaisesRegex(ValueError, "Scanner rejected the scan options"):
+                climb.attempt("fake-cli", entry, 1024, 30, ["--invalid"])
+
 
 if __name__ == "__main__":
     unittest.main()
