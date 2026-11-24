@@ -1,5 +1,5 @@
 [workspace]
-members = ["scan-core", "scan-cli"]
+members = ["scan-core", "scan-cli", "scan-wasm"]
 resolver = "3"
 
 [workspace.package]

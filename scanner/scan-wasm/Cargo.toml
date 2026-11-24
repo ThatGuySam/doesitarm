@@ -1,0 +1,14 @@
+[package]
+name = "scan-wasm"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+scan-core = { path = "../scan-core" }
+serde_json.workspace = true
+wasm-bindgen = "=0.2.130"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
