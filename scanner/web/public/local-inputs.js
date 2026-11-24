@@ -48,9 +48,14 @@ export function bindLocalInputs({ view, pool, mode }) {
   const loader = get('folder-loader');
   const [throbber, label, announcement] = loader.children;
   const notice = get('input-status');
+  const fallbackChooser = document.createElement('button');
+  fallbackChooser.type = 'button';
+  fallbackChooser.className = 'secondary';
+  fallbackChooser.textContent = 'Use alternate folder picker';
+  fallbackChooser.hidden = true;
+  loader.append(fallbackChooser);
   const active = new Set();
   let picker = null;
-  let preferFallback = false;
 
   function reading(text) {
     if (label.textContent !== text) label.textContent = text;
@@ -68,6 +73,12 @@ export function bindLocalInputs({ view, pool, mode }) {
   function finishPicker() {
     picker = null;
     if (!active.size) reading('');
+  }
+
+  function openFallback() {
+    picker = {};
+    fallbackChooser.hidden = true;
+    folder.click();
   }
 
   async function discover(method, total, walk, folderName = null) {
@@ -129,22 +140,25 @@ export function bindLocalInputs({ view, pool, mode }) {
     reading('');
   });
   get('choose-files').addEventListener('click', () => files.click());
+  fallbackChooser.addEventListener('click', openFallback);
   chooser.addEventListener('click', () => {
     if (picker) return;
     notice.textContent = '';
-    picker = {};
-    if (typeof window.showDirectoryPicker !== 'function' || preferFallback) {
-      folder.click();
+    if (typeof window.showDirectoryPicker !== 'function') {
+      openFallback();
       return;
     }
+    picker = {};
+    fallbackChooser.hidden = true;
     void (async () => {
       let handle;
       try {
         handle = await window.showDirectoryPicker({ mode: 'read' });
       } catch (error) {
+        // The API uses AbortError for both dismissal and a protected directory.
+        fallbackChooser.hidden = false;
         if (error.name !== 'AbortError') {
-          preferFallback = true;
-          notice.textContent = 'The browser blocked direct folder access. Choose folder again to use the file picker.';
+          notice.textContent = 'The browser could not open the folder directly.';
         }
       } finally {
         finishPicker();
