@@ -48,6 +48,62 @@ function architectures(scan) {
     header_verified ? name : `${name} (slice unverified)`).join(', ') || '—';
 }
 
+const binaryRoles = {
+  main: 'Main executable',
+  helper: 'Helper',
+  framework: 'Framework',
+  library: 'Library',
+  plugin: 'Plug-in',
+  xpc_service: 'XPC service',
+  login_item: 'Login item',
+  launch_helper: 'Launch helper',
+  nested_app: 'Nested app',
+  resource: 'Resource executable',
+  shared_support: 'Shared support',
+  runtime: 'Runtime',
+  updater: 'Updater',
+};
+
+function inventoryDetails(inventory, label) {
+  if (!inventory) return null;
+  const details = document.createElement('details');
+  const summary = document.createElement('summary');
+  const count = inventory.binaries.length;
+  summary.textContent = `${count} ${count === 1 ? 'binary' : 'binaries'} · ${inventory.complete ? 'Complete' : 'Partial'}`;
+  summary.setAttribute('aria-label', `${label} binary inventory, ${summary.textContent}`);
+  details.append(summary);
+
+  function render() {
+    if (!details.open) return;
+    details.removeEventListener('toggle', render);
+    const overview = document.createElement('p');
+    const arm = inventory.all_arm64_capable === true ? 'All observed binaries support arm64.' :
+      inventory.all_arm64_capable === false ? 'Some binaries lack an arm64 slice.' :
+        'App-wide arm64 coverage is unknown.';
+    const intel = inventory.x86_64_only.length ? ` ${inventory.x86_64_only.length} x86_64-only.` : '';
+    overview.textContent = [arm + intel, inventory.incomplete_reason].filter(Boolean).join(' ');
+    details.append(overview);
+    if (!count) return;
+    const list = document.createElement('ul');
+    for (const binary of inventory.binaries) {
+      const item = document.createElement('li');
+      const path = document.createElement('code');
+      path.textContent = binary.path;
+      const slices = binary.architectures.map((slice) => {
+        const signature = slice.code_signature_present === true ? 'signature present' :
+          slice.code_signature_present === false ? 'no signature' : 'signature unknown';
+        const macos = slice.min_macos ? `macOS ${slice.min_macos}+` : 'minimum macOS unknown';
+        return `${slice.name}${slice.header_verified ? '' : ' (unverified)'} · ${macos} · ${signature}`;
+      });
+      item.append(path, ` — ${binaryRoles[binary.role] ?? binary.role}. ${slices.join(' / ')}`);
+      list.append(item);
+    }
+    details.append(list);
+  }
+  details.addEventListener('toggle', render);
+  return details;
+}
+
 function newScan(job) {
   const id = ++submitted;
   reportCount();
@@ -101,6 +157,8 @@ function newScan(job) {
         errorLabel.textContent = result.error;
         errorLabel.hidden = false;
       }
+      const inventory = inventoryDetails(result.inventory, job.label);
+      if (inventory) details.before(inventory);
       details.querySelector('pre').textContent = JSON.stringify(result, null, 2);
       details.hidden = false;
       finished += 1;
@@ -228,6 +286,9 @@ async function loadHomebrew() {
         cell.textContent = value ?? '—';
         row.append(cell);
       }
+      const inventory = document.createElement('td');
+      inventory.append(inventoryDetails(scan.inventory, app.cask) ?? '—');
+      row.append(inventory);
       rows.append(row);
     }
     body.append(rows);

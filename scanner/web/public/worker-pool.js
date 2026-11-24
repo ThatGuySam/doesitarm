@@ -41,7 +41,9 @@ export class ScanPool {
       const task = slot.task;
       if (!task || data.id !== task.id) return;
       if (data.type === 'executable-needed') {
-        void this.#sendExecutable(slot, task, data.name);
+        void this.#sendExecutable(slot, task, data.path);
+      } else if (data.type === 'inventory-needed') {
+        void this.#sendInventory(slot, task);
       } else {
         task.update(data);
         if (data.type === 'done') this.#idle(slot);
@@ -73,14 +75,33 @@ export class ScanPool {
     }
   }
 
-  async #sendExecutable(slot, task, name) {
+  async #sendExecutable(slot, task, path) {
     let file;
+    let resolution;
     try {
-      file = await task.job.getExecutable(name);
+      file = await task.job.getExecutable(path);
     } catch {
-      // The worker returns the parsed metadata alongside its missing-file result.
+      if (path.startsWith('Contents/MacOS/MacOS/')) {
+        const alias = path.replace('Contents/MacOS/MacOS/', 'Contents/MacOS/');
+        try {
+          file = await task.job.getExecutable(alias);
+          path = alias;
+          resolution = 'contents_relative';
+        } catch {}
+      }
     }
-    if (slot.task === task) slot.worker.postMessage({ type: 'executable', file });
+    if (slot.task === task) slot.worker.postMessage({ type: 'executable', path, file, resolution });
+  }
+
+  async #sendInventory(slot, task) {
+    const files = [];
+    let reason;
+    try {
+      for await (const entry of task.job.getBundleFiles()) files.push(entry);
+    } catch {
+      reason = 'The browser could not enumerate every selected file.';
+    }
+    if (slot.task === task) slot.worker.postMessage({ type: 'inventory', files, reason });
   }
 
   #finishError(task, error) {
