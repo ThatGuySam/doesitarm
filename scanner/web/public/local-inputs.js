@@ -57,6 +57,7 @@ export function bindLocalInputs({ view, mode }) {
   loader.append(fallbackChooser);
   const active = new Set();
   let picker = null;
+  let folderSelection = null;
 
   function reading(text) {
     if (label.textContent !== text) label.textContent = text;
@@ -80,11 +81,11 @@ export function bindLocalInputs({ view, mode }) {
     if (picker) return;
     picker = {};
     notice.textContent = '';
+    reading('Reading folder…');
     folder.click();
   }
 
-  async function discover(method, total, walk, folderName = null) {
-    const controller = new AbortController();
+  async function discover(method, total, walk, folderName = null, controller = new AbortController()) {
     const discovered = new Set();
     const stats = folderStats(method);
     stats.folder_name = folderName;
@@ -151,6 +152,7 @@ export function bindLocalInputs({ view, mode }) {
       return;
     }
     picker = {};
+    reading('Reading folder…');
     void (async () => {
       let handle;
       try {
@@ -176,10 +178,17 @@ export function bindLocalInputs({ view, mode }) {
   folder.addEventListener('cancel', finishPicker);
   folder.addEventListener('change', async () => {
     const selection = folder.files;
+    folderSelection?.abort();
+    const controller = new AbortController();
+    folderSelection = controller;
     finishPicker();
-    if (selection.length) await discover('webkitdirectory', selection.length, (options) => walkFileList(selection, options));
+    if (selection.length) await discover('webkitdirectory', selection.length,
+      (options) => walkFileList(selection, options), null, controller);
     // Clearing the input also empties Chromium's live FileList.
-    if (folder.files === selection) folder.value = '';
+    if (folderSelection === controller) {
+      if (folder.files === selection) folder.value = '';
+      folderSelection = null;
+    }
   });
 
   const hasFiles = (event) => Array.from(event.dataTransfer?.types ?? []).includes('Files');
