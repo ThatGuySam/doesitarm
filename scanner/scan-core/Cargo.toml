@@ -7,3 +7,7 @@ edition.workspace = true
 serde.workspace = true
 flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 plist = "1"
+bzip2 = "0.6"
+lzfse_rust = "0.2"
+lzma-rust2 = { version = "0.25", default-features = false, features = ["std", "xz"] }
+unicode-normalization = "0.1"

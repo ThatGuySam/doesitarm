@@ -162,3 +162,31 @@ fn tar_reports_budget_exhaustion_if_compressed_prefix_is_too_short() {
     assert_eq!(result.bytes_read, 80);
     assert_eq!(result.format, Some("tar.gz"));
 }
+
+const DMG: &[u8] = include_bytes!("../../fixtures/hfsx.dmg");
+
+#[test]
+fn dmg_uses_hfsx_catalog_and_overflow_extents_across_udif_codecs() {
+    let result = run(DMG, u64::MAX);
+    assert_eq!(result.format, Some("dmg"));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.executable_name.as_deref(), Some("FixtureBinary"));
+    assert_eq!(result.executable_size, Some(4096 + 48));
+    assert_eq!(result.architectures[0].offset, 4096);
+    assert_eq!(result.architectures[0].name, "x86_64");
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    assert!(result.bytes_read < result.total_size / 4);
+}
+
+#[test]
+fn dmg_rejects_segmented_udif() {
+    let mut data = DMG.to_vec();
+    let segment_count = data.len() - 512 + 60;
+    data[segment_count + 3] = 2;
+    let result = run(&data, u64::MAX);
+    assert_eq!(result.format, Some("dmg"));
+    assert!(matches!(result.status, Status::Unsupported));
+    assert_eq!(result.reads, 2);
+}

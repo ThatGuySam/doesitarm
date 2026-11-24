@@ -2,10 +2,13 @@
 #![forbid(unsafe_code)]
 
 mod bundle;
+mod dmg;
+mod hfs;
 mod inflate;
 mod macho;
 mod stream_bundle;
 mod tar;
+mod udif_codec;
 mod zip;
 
 use serde::Serialize;
@@ -183,6 +186,13 @@ async fn inspect(input: &mut impl ReadAt, out: &mut ScanResult) -> Result<()> {
         out.format = Some("tar.gz");
         return tar::scan(input, out).await;
     }
+    if input.size() >= 512 {
+        let trailer = input.read_at(input.size() - 512, 512).await?;
+        if trailer.starts_with(b"koly") {
+            out.format = Some("dmg");
+            return dmg::scan(input, &trailer, out).await;
+        }
+    }
     Err(ScanError::Unsupported("unrecognized file format"))
 }
 
@@ -278,4 +288,12 @@ impl<S: ReadAt> ReadAt for Window<'_, S> {
         check_range(self.size, offset, len as u64)?;
         self.source.read_at(self.offset + offset, len).await
     }
+}
+
+fn be16(b: &[u8], i: usize) -> u16 {
+    u16::from_be_bytes(b[i..i + 2].try_into().unwrap())
+}
+
+fn be64(b: &[u8], i: usize) -> u64 {
+    u64::from_be_bytes(b[i..i + 8].try_into().unwrap())
 }

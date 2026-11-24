@@ -9,6 +9,8 @@ import zipfile
 from pathlib import Path
 from struct import pack
 
+from dmg_fixture import dmg_fixture
+
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
 INTEL = 0x01000007
@@ -25,17 +27,17 @@ def thin(cpu=ARM, subtype=2, *, legacy=False, big=False):
                 1 if legacy else 2, len(commands), 0, 0) + commands
 
 
-def fat(wide=False):
+def fat(wide=False, intel_offset=1024):
     # Keep Intel first in the index, and ARM first on disk.
     arm = thin()
     intel = thin(INTEL, 3, legacy=True, big=True)
     header = pack(">2I", 0xCAFEBABF if wide else 0xCAFEBABE, 2)
-    for cpu, sub, offset, data in [(INTEL, 3, 1024, intel), (ARM, 2, 512, arm)]:
+    for cpu, sub, offset, data in [(INTEL, 3, intel_offset, intel), (ARM, 2, 512, arm)]:
         if wide:
             header += pack(">IIQQII", cpu, sub, offset, len(data), 0, 0)
         else:
             header += pack(">IIIII", cpu, sub, offset, len(data), 0)
-    return (header.ljust(512, b"\0") + arm).ljust(1024, b"\0") + intel
+    return (header.ljust(512, b"\0") + arm).ljust(intel_offset, b"\0") + intel
 
 
 BUNDLE = "Fixture.app"
@@ -98,3 +100,5 @@ if __name__ == "__main__":
 
     tar_fixture(ROOT / "app.tar.gz")
     tar_fixture(ROOT / "app-binary-first.tar.gz", binary_first=True, long_path=True)
+
+    dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
