@@ -17,3 +17,5 @@ Jumper verified both launcher slices over ranges at the 8 MiB tier. Next inspect
 Sparse APM/HFSX and encrypted signature regressions passed. Runs are offline apart from the separately paced ledger campaign, whose durable status summary belongs in `FIX-CONTAINERS.md`. The current scratch ledger records are under `~/.cache/doesitarm-fix-containers/rerun-ledger/attempts.jsonl`. The generated cases use no external archive, login, or network in tests.
 
 AMPPS now resolves the visible wrapper and verifies its x86_64 primary. The checksum-matching 62,998,351-byte image was removed. ChronoSync's 102,704,658-byte image has an application installer and an independent removal package. Its installer declares a helper under Library and the public app under Applications. Reproduce this with `install-remove.dmg` before changing selection.
+
+Contents-relative plug-in payloads now use a recognized PackageInfo installation root. TDR Nova's pinned range rerun verified both AAX slices on the same ETag. The current native workspace tests passed all 40 format tests before adding the independent ChronoSync regression.

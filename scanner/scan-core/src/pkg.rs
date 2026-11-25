@@ -344,13 +344,12 @@ async fn scan_payload(
         .and_then(|meta| meta.install_location.as_deref())
         .and_then(bundle_mount)
         .map(str::to_owned);
-    let selected_product = if mount.is_none() && matches!(selection, Target::Auto) {
-        install
-            .and_then(|meta| product_bundle(&meta.payload_bundles))
-            .map(str::to_owned)
-    } else {
-        None
-    };
+    let selected_product = match (selection, mount.as_deref()) {
+        (Target::Auto, Some(root)) if !root.ends_with(".app") => Some(root),
+        (Target::Auto, None) => install.and_then(|meta| product_bundle(&meta.payload_bundles)),
+        _ => None,
+    }
+    .map(str::to_owned);
     let selection = selected_product
         .as_deref()
         .map_or(selection, Target::Bundle);
@@ -541,7 +540,7 @@ fn product_bundle(bundles: &[String]) -> Option<&str> {
 
 fn bundle_mount(install_location: &str) -> Option<&str> {
     let path = install_location.strip_prefix('/')?.trim_end_matches('/');
-    bundle::archive_path(path).filter(|path| path.ends_with(".app"))
+    bundle::archive_path(path).filter(|path| bundle::installed_bundle_kind(path).is_some())
 }
 
 async fn read_metadata(

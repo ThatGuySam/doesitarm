@@ -6,6 +6,7 @@ import io
 import plistlib
 import random
 import tarfile
+import tempfile
 import zipfile
 import zlib
 from pathlib import Path
@@ -151,6 +152,19 @@ if __name__ == "__main__":
                   <bundle path="./Contents/Plugins/Nested.kext"/>
                 </bundle></bundle-version>
               </pkg-info>'''.encode())
+    mounted_payload = cpio([
+        ("Contents/MacOS/FixtureBinary", fat()),
+        ("Contents/Info.plist", plistlib.dumps(METADATA)),
+    ], odc=True)
+    with tempfile.TemporaryDirectory() as temp:
+        package = Path(temp) / "Fixture.pkg"
+        write_xar(package, gzip.compress(mounted_payload, mtime=0), package_info=b'''
+          <pkg-info identifier="org.doesitarm.fixture.aax" install-location="/Library/Application Support/Avid/Audio/Plug-Ins/Fixture.aaxplugin">
+            <bundle path="./Contents/__Pace_Eden.bundle"/>
+          </pkg-info>
+        ''')
+        with zipfile.ZipFile(ROOT / "mounted-plugin.zip", "w", zipfile.ZIP_STORED) as archive:
+            archive.writestr(zipfile.ZipInfo(package.name), package.read_bytes())
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
     apfs_fixture(ROOT / "apfs-lzvn.dmg", METADATA, fat(intel_offset=65_536), compressed=True)
     iso_dmg_fixture(ROOT / "rock-ridge.dmg", METADATA, fat())

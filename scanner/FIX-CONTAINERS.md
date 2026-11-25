@@ -95,3 +95,9 @@ These live `ledger rerun` results use the ledger driver at `2d02b4d` with the pa
 `hfs_auto_finds_an_app_in_the_single_visible_root_directory` uses a 2,176-byte HFSX DMG. Before the fix it reported `not found: app or package at the HFS volume root` after 2,123 bytes. The corrected result verifies both generated slice headers from `Suite/Fixture.app` after the same bytes. The existing root app and package selection retain priority. The fallback requires one visible root folder and one immediate visible app.
 
 The AMPPS kit confirms the visible `AMPPS` directory and the `Applications` link at the volume root. Inspecting the checksum-matching full image found `AMPPS/Ampps.app` and a duplicate under `.Trashes/501/AMPPS/`. The explicit visible path verified in the old scanner at 109,005 bytes. The revised default route reaches the same path and verifies its x86_64 launcher at 109,005 bytes. Its optional inventory is partial. SHA-256 `77b1107c02b7ca33cefa785432867f9706ac3eeaa3ab3723c8b63a1f30cfb28c`.
+
+## Products mounted at PackageInfo's install location
+
+`pkg_mounts_contents_relative_payload_in_the_declared_plugin` uses a 1,294-byte ZIP containing a flat XAR. The payload stores `Contents/Info.plist` and `Contents/MacOS/FixtureBinary` and PackageInfo supplies the absolute `.aaxplugin` destination. The old parser read 1,294 bytes and returned `not found: app Info.plist in sequential archive`. The corrected scan verifies both synthetic slice headers after the same bytes in all three profiles.
+
+The pinned TDR Nova ZIP was the same 27,043,108-byte representation with ETag `"19ca524-65d9f06a5b093"`. Attempt `a795f153f3da9e24ae28b37df068c8ae1d6b8f3cb0fb9c1a80c9e230035a6437` read every byte and returned a nested-container failure. The corrected scan read the same number of bytes and verified both x86_64 and arm64 in `Library/Application Support/Avid/Audio/Plug-Ins/TDR Nova.aaxplugin/Contents/MacOS/TDR Nova` inside `TDR Nova.pkg`.

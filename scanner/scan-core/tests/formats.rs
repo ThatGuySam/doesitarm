@@ -574,6 +574,27 @@ fn pkg_auto_selects_the_product_in_packageinfo_bundle_version() {
 }
 
 #[test]
+fn pkg_mounts_contents_relative_payload_in_the_declared_plugin() {
+    let zip = include_bytes!("../../fixtures/mounted-plugin.zip");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(zip),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("zip"));
+        assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+        assert_eq!(result.bundle_kind, Some("audio_plugin"));
+        assert_eq!(
+            result.bundle_path.as_deref(),
+            Some("Library/Application Support/Avid/Audio/Plug-Ins/Fixture.aaxplugin")
+        );
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
 fn pkg_returns_installer_metadata_when_payload_budget_runs_out() {
     let result = run(PKG, 550);
     assert!(
