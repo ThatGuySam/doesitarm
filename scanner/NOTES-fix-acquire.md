@@ -14,4 +14,4 @@ Source of truth for historical attempts is `~/Code/doesitarm-data/scan-ledger/`.
 - Completed 15 native CLI replays and seven source-tools runs. One native scan and one single-input source run overlapped on distinct hosts. The GitHub cohorts used source-tools' global and per-host limits.
 - Final live findings and commands are in `FIX-ACQUIRE.md` and `results/acquire/{native,source}-replays.jsonl`. All 42 GitHub-hosted cases obtained artifact bytes and 37 fully verified.
 - Jabra and BetterTouchTool reached the byte and time limits respectively after fetching installer data. The archived outputs preserve that partial evidence. Warp's pinned URLs remain dead and its vendor replacement exhausted a bounded stream scan. SEGGER and SAP require the publisher's attestation or license flow.
-- Final Rust suite, Node unit suite, generated edge fixtures, campaign unit suite, formatting and Clippy passed. The work is in local commits on `scanner-fix-acquire`.
+- Final Rust suite, Node unit suite, generated edge fixtures, campaign unit suite, source-tools replay smoke test, formatting and Clippy passed. The work is in local commits on `scanner-fix-acquire`.

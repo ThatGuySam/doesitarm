@@ -106,6 +106,6 @@ The historic records include DNS lookup failures and a connection reset. They do
 
 ## Verification
 
-The final workspace passed 81 Rust tests, 40 Node tests, 31 generated edge checks and six campaign tests. Formatting and Clippy passed. The Worker tests exercise the integrated Wasm and simulated origin responses. The committed replay fixtures are all under 2 MB.
+The final workspace passed 81 Rust tests, 40 Node tests, 31 generated edge checks and six campaign tests. Formatting and Clippy passed. The offline source-tools smoke test discarded the ineffective patch and kept the patch that passed both tests and replay. The Worker tests exercise the integrated Wasm and simulated origin responses. The committed replay fixtures are all under 2 MB.
 
 Live results are retained separately from the historical snapshot. The CLI runs used the ledger's exact pinned URLs where available, a one-second governor in source-tools, and 200 ms between native range starts. The vendor alternatives were scanned as separate URLs. Temporary stream spools were removed by the CLI at the end of each attempt.
