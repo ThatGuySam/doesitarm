@@ -151,3 +151,27 @@ The live Azure range rerun verified the same Jabra version at 8,229,507 source b
 | Mac App Store handoffs | 0 installer bytes | 0 installer bytes from public listing metadata | Store handoff. Scan an authorized installed copy locally. The listing can identify the product and acquisition channel. [Pages resolver handoffs](PAGES.md) |
 
 The probes used public GETs. The supported follow-up for an artifact the user acquires through the publisher's flow is `scan-cli scan FILE --profile local --json`.
+
+## Offline ledger kits
+
+All 11 sparse kits were replayed against the combined ScanCore with the ledger transport adapter, using the original targets and recorded bytes. In three cases the updated parser asked for a range that the original failure never captured. Those kits establish the coverage boundary. The exact pinned live replays supply the additional evidence when the origin serves it.
+
+| Kit | Original bytes | Combined bytes | Outcome and decision |
+| --- | ---: | ---: | --- |
+| AMPPS | 16,775 | — | The kit lacks 4,096 bytes at offset 2,331,648. Use the live or saved pin for the new folder traversal. |
+| SQLCipher Nightly | 247,268 | — | The kit lacks 922,844 bytes at offset 17,364. Retain a matching full nightly artifact for repeat verification. |
+| Dropzone | 1 | 1 | Preserved the historical representation-size failure. The acquisition fixture replays the new corroborating range with a stable representation. |
+| Hancom Word | 4 | 4 | Reproduced the unsupported HTML container. Use the publisher distribution route above. |
+| JProfiler | 4 | 4 | Preserved the 8 MiB stream budget failure. Use the higher tier. |
+| Kotlin LSP | 177,707 | 177,707 | Observed the declared shell entry, with zero native slice claims. |
+| Rolisteam | 1,575,240 | 1,575,240 | Verified the x86_64 launcher and macOS 10.9 minimum. Retain version 1.9.3 as publisher evidence where needed. |
+| SEGGER J-Link | 27,647 | 27,647 | Reproduced the HTML response. Use the eligible vendor consent flow. |
+| Send to Kindle | 0 | 0 | Reproduced HTTP 403. Use the official Mac download flow. |
+| Warp | 0 | 0 | Reproduced HTTP 404. Use the current stable selector above. |
+| XAMPP | 40,001 | — | The kit lacks 83,472 bytes at offset 0. The updated ISO reader needs the pinned live or saved image. |
+
+## Verification
+
+The offline workspace passed 133 Rust tests, 63 Node tests, eight Python tests, 31 generated EDGE fixtures and the 200-row Pages corpus. Both standard and 80 MiB-capped Worker Wasm builds passed 501 native/Wasm comparisons each. The new regression fixtures are all below 2 MB. The largest is 734,581 bytes.
+
+Formatting and strict Clippy passed for ScanCore, Source-tools and the standalone scanner Wasm. Strict workspace Clippy on Rust 1.99.1 reports 12 style warnings in Pages resolver code that matches `scanner-pages` byte for byte. The full native and Pages Wasm Clippy runs passed with the two existing style lints exempted.
