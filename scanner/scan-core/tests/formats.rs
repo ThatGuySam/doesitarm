@@ -558,6 +558,22 @@ fn hfs_selects_the_declared_app_across_install_and_remove_packages() {
     }
 }
 
+#[test]
+fn hfs_finds_a_declared_executable_inside_the_package() {
+    let image = include_bytes!("../../fixtures/nested-pkg.dmg");
+    let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+    let result = ready(scan_target(
+        &mut Memory(image),
+        8192,
+        Target::Executable(path),
+    ));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.executable_path.as_deref(), Some(path));
+    assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
 const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
 const PKG_ODC: &[u8] = include_bytes!("../../fixtures/stored-odc.pkg");
 

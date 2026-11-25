@@ -542,7 +542,17 @@ pub(crate) async fn scan(
     };
     let mut catalog = Catalog::load(&mut volume, catalog).await?;
     if let Target::Executable(path) = target {
-        let item = catalog.find_path(&mut volume, ROOT_ID, path, true).await?;
+        let item = match catalog.find_path(&mut volume, ROOT_ID, path, true).await {
+            Ok(item) => item,
+            Err(missing @ ScanError::NotFound(_)) => {
+                let root = catalog.children(&mut volume, ROOT_ID).await?;
+                if root.iter().any(visible_package) {
+                    return read_package(&mut volume, &mut catalog, root, work, target, out).await;
+                }
+                return Err(missing);
+            }
+            Err(error) => return Err(error),
+        };
         out.executable_path = Some(path.to_owned());
         let fork = file_fork(item, geometry)?;
         out.executable_size = Some(fork.size);
@@ -574,9 +584,7 @@ pub(crate) async fn scan(
     };
     if app.is_none()
         && let Some(items) = root.as_deref()
-        && !items
-            .iter()
-            .any(|item| !item.name.starts_with('.') && pkg::package_name(&item.name))
+        && !items.iter().any(visible_package)
     {
         let mut folders = items.iter().filter(|item| {
             item.file.is_none()
@@ -750,9 +758,7 @@ async fn read_package<S: ReadAt>(
     out: &mut ScanResult,
 ) -> Result<()> {
     const MAX_ROOT_PACKAGES: usize = 4;
-    let mut choices = root
-        .into_iter()
-        .filter(|item| !item.name.starts_with('.') && pkg::package_name(&item.name));
+    let mut choices = root.into_iter().filter(visible_package);
     let first = choices
         .next()
         .ok_or(ScanError::NotFound("app or package at the HFS volume root"))?;
@@ -790,6 +796,10 @@ async fn read_package<S: ReadAt>(
     }
     *out = verified.ok_or(ambiguous)?;
     Ok(())
+}
+
+fn visible_package(item: &Item) -> bool {
+    !item.name.starts_with('.') && pkg::package_name(&item.name)
 }
 
 async fn read_package_item<S: ReadAt>(

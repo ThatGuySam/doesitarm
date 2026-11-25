@@ -139,3 +139,11 @@ The earlier CodeQL tier record `92bc984eecf3` reached its declared `codeql/codeq
 The same-origin XAMPP kit stops at `Kit lacks coverage for offset 0, length 83472` with the improved parser. The older sparse capture contains the footer and index. The live `61963fc8af08` read supplies the newly requested block. AMPPS likewise has new reads after root traversal.
 
 Both pinned jamovi installer URLs returned HTTP 302 followed by identical HTML at the time of inspection. The x64 attempt `4e4f61400d19` and arm64 attempt `1699edf20919` each read 1,026 bytes before rejecting the purported DMG. The two full HTML responses shared SHA-256 `bf5944797cb121480627611556a12025decdc70c438a57605b5a7f6aeb0506ee`. The publisher’s current download page is the legitimate discovery route. [jamovi downloads](https://www.jamovi.org/download.html)
+
+## Explicit executable targets inside nested HFS packages
+
+`hfs_finds_a_declared_executable_inside_the_package` reproduced `not found: bundle path in HFS catalog` even though the target exists in `Fixture.pkg`. The same generated image now verifies both headers under the selected path after 2,691 bytes. A direct filesystem match still takes precedence. If the HFS catalog lacks that path, the selector can inspect visible root packages.
+
+The MySQL Shell 8.0.29 DMG contains a single flat PKG with `PackageInfo` install location `/usr/local`. Its BOM identifies `./mysql-shell-8.0.29-macos12-arm64/bin/mysqlsh` as a regular 36,335,104-byte member. An explicit `--binary-path 'mysql-shell-8.0.29-macos12-arm64/bin/mysqlsh'` first failed at 964,642 bytes. The corrected scan verified its arm64 header after 4,623,388 bytes. The original app auto-selection attempt `143e9db8c9fb` remains separate. The downloaded image matched the 44,517,756-byte representation and had SHA-256 `7095eaa8c67a8952101e0e6173645ac4377b1c06df5e8f87ceddea418d79b5a6`.
+
+The live 256 MiB CodeQL check `9c6671d2cc04cd0f6eb8a96ae1066d679643667ddb242edfdebe91b2ce25bd66` confirmed the historical shell entry point after 62,893,053 bytes. This resolves tar.zst recognition and preserves the observed script outcome.

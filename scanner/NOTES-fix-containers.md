@@ -21,3 +21,5 @@ AMPPS now resolves the visible wrapper and verifies its x86_64 primary. The chec
 Contents-relative plug-in payloads now use a recognized PackageInfo installation root. TDR Nova's pinned range rerun verified both AAX slices on the same ETag. The current native workspace tests passed all 40 format tests before adding the independent ChronoSync regression.
 
 ChronoSync's paired-package fix verified the unique application under Applications and both main slices. The native workspace passed 60 Rust tests with the ChronoSync change. The remaining focused case is MySQL Shell's explicit binary path through a nested flat PKG, which is recorded in the installer BOM. Then complete the native, Wasm, and ledger verification on the final parser.
+
+MySQL Shell verifies the BOM-named arm64 executable at 4,623,388 bytes after the HFS nested target fix. ChronoSync and MySQL Shell full images have been removed. The native workspace passed all 61 Rust tests. Finish the final ledger reruns and Wasm parity checks, then capture the remaining budget classifications and confirm a clean worktree.
