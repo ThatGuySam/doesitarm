@@ -8,9 +8,10 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(HERE.parent))
-from generate import fat, thin
+from generate import INTEL, fat, thin
 from dmg_fixture import hfs_tree, write_udif
 from apfs_fixture import apfs_fixture
+from pkg_fixture import cpio, write_xar
 
 from edge.generate import app, tar
 
@@ -114,3 +115,25 @@ zip_fixture("wrapper-with-own-launcher.zip", {
     f"{inner}/Info.plist": (HERE.parent / "bigfolder/wrapper-nested-flat/Info.plist").read_bytes(),
     f"{inner}/Inner": thin(),
 })
+
+
+jdk = "Library/Java/JavaVirtualMachines/microsoft-11.jdk"
+jdk_info = f"./{jdk}/Contents/Info.plist"
+jdk_link = f"./{jdk}/Contents/MacOS/libjli.dylib"
+jdk_library = f"./{jdk}/Contents/Home/lib/jli/libjli.dylib"
+prod_info = f'<pkg-info identifier="com.example.jdk" version="11.0.33.1" install-location="/"><bundle path="{jdk}"/></pkg-info>'.encode()
+jdk_plist = plistlib.dumps({
+    "CFBundleIdentifier": "com.example.jdk",
+    "CFBundleExecutable": "libjli.dylib",
+    "CFBundleVersion": "11.0.33.1",
+})
+jdk_binary = bytearray(thin(INTEL, 3, legacy=True))
+jdk_binary[12:16] = (6).to_bytes(4, "little")
+for filename, order, link_target in [
+    ("jdk-link-before-plist.pkg", [jdk_library, jdk_link, jdk_info], b"../Home/lib/jli/libjli.dylib"),
+    ("jdk-link-after-plist.pkg", [jdk_info, jdk_library, jdk_link], b"../Home/lib/jli/libjli.dylib"),
+    ("jdk-link-escaping.pkg", [jdk_info, jdk_library, jdk_link], b"../../../../../unrelated"),
+]:
+    values = {jdk_library: jdk_binary, jdk_info: jdk_plist, jdk_link: link_target}
+    archive = cpio([(path, values[path]) for path in order], odc=False, modes={jdk_link: 0o120777})
+    write_xar(HERE / filename, gzip.compress(archive, mtime=0), package_info=prod_info)

@@ -23,3 +23,4 @@
 - Two more ZIP regressions now cover a launchable parent with a wrapped child and a resource bundle with code in an uncommon directory. All ten ZIP-filtered format tests pass.
 - All 46 Rust format tests passed after standalone ZIP and tar selection. The cask runner also distinguishes an automatically found executable from missing bundle metadata.
 - The pinned Microsoft OpenJDK 11 installer downloaded once and matched SHA-256 `236d943c6b78ff7a78d3ffd1a840c2a8f1cd04d97ddeb40791e007c554b97686`. Both the archive and temporary payload were removed. Its CPIO has `Contents/Home/lib/jli/libjli.dylib`, then a relative link at `Contents/MacOS/libjli.dylib`, then Info.plist. The verbose listing is in the task cache.
+- All 48 Rust format tests pass after resolving the observed CPIO JDK launcher link. Kept the negative escaping-link regression. The fixture generator now accepts CPIO member modes.

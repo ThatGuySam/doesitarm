@@ -1038,3 +1038,42 @@ fn zip_outer_app_with_its_own_launcher_keeps_the_wrapped_app_as_nested_code() {
         }));
     }
 }
+
+#[test]
+fn jdk_installer_verifies_the_named_library_behind_a_recorded_cpio_link() {
+    let fixtures: &[&[u8]] = &[
+        include_bytes!("../../fixtures/bundles/jdk-link-before-plist.pkg"),
+        include_bytes!("../../fixtures/bundles/jdk-link-after-plist.pkg"),
+    ];
+    let root = "Library/Java/JavaVirtualMachines/microsoft-11.jdk";
+    for input in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.bundle_path.as_deref(), Some(root));
+            assert_eq!(result.bundle_kind, Some("runtime"));
+            assert_eq!(result.executable_name.as_deref(), Some("libjli.dylib"));
+            assert_eq!(
+                result.executable_path,
+                Some(format!("{root}/Contents/Home/lib/jli/libjli.dylib"))
+            );
+            assert_eq!(result.executable_resolution, Some("archive_symlink"));
+            assert_eq!(result.architectures[0].name, "x86_64");
+            assert!(result.architectures[0].header_verified);
+        }
+    }
+}
+
+#[test]
+fn jdk_installer_does_not_promote_an_escaping_cpio_link() {
+    let input = include_bytes!("../../fixtures/bundles/jdk-link-escaping.pkg");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.architectures.is_empty());
+}
