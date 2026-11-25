@@ -386,6 +386,22 @@ fn dmg_footer_wins_over_first_bzip2_chunk_magic() {
 }
 
 #[test]
+fn dmg_with_zero_footer_sector_count_uses_block_map_geometry() {
+    let mut image = include_bytes!("../../fixtures/bzip2-prefix.dmg").to_vec();
+    let footer = image.len() - 512;
+    image[footer + 492..footer + 500].fill(0);
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(&image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
 fn dmg_rejects_segmented_udif() {
     let mut data = DMG.to_vec();
     let segment_count = data.len() - 512 + 60;

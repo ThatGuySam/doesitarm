@@ -13,7 +13,7 @@ The [EDGE inspection](EDGE.md) and [CLIMB reports](CLIMB.md) retain earlier sour
 
 | App / fixture | Pinned evidence and diagnosis | Bytes read before | Bytes read after | Verification |
 | --- | --- | ---: | ---: | --- |
-| XAMPP 8.2.4-0 | `c2ccaced609094ef14aa5f0eca86b7d50259af034c2655546b7ff48e8c732347`, `kits/xampp-invalid_container`. Footer sector count is zero. The `mish` table declares 308,704 sectors and the recorded stored runs fit the data fork. | 40,001 | — | Pending generated regression and rerun. |
+| XAMPP 8.2.4-0 | `c2ccaced609094ef14aa5f0eca86b7d50259af034c2655546b7ff48e8c732347`, `kits/xampp-invalid_container`. Footer sector count is zero. The `mish` table declares 308,704 sectors and the stored runs fit the data fork. The first decoded run contains an ISO 9660 primary descriptor and Rock Ridge names for the app and its `Info.plist`. | 40,001 | — | Zero-sector geometry fixed below. ISO filesystem scan and pinned rerun pending. |
 | RStudio 2026.11.0-203 | `6903eecd23b8f5d24b110dd1efe30d67cb89d9f693040cc8686f696b040ae1af`. The bundle is discovered and the executable's APFS compressed inode is rejected. | 2,400,004 | — | Pending attribute inspection and fixture. |
 | JProfiler 16.3.1 | `1780ef0454f6db335dd1dca5667a43fcc9ac0c59e2e5d0e87dcad0e7562ec31e`, `kits/jprofiler-budget_hit`. The stream fallback cannot reach the UDIF footer under 8 MiB. Ledger attempt `40126cb60eaa` previously verified at the 256 MiB tier. The captured 4 bytes count completed parser reads. | 4 | 212,551,284 at 256 MiB | Historical tier recovery. |
 | Soothe2 1.3.3 | `b968ad35df98f9d17d55eb3c3c73de34fe66ddee9edc1241733cb4f1a5812d64`. Four plug-in formats in different components. The explicit VST3 path already verifies locally. | 268,173,277 | — | Pending automatic component selection investigation. |
@@ -31,3 +31,7 @@ The [EDGE inspection](EDGE.md) and [CLIMB reports](CLIMB.md) retain earlier sour
 - Qt Design Studio's solid 7z verified in `e479832a4b53` at 2,519,947 bytes. A full local scan recorded 652 Mach-O files. CodeQL's tar.zst reached its declared shell script in `92bc984eecf3` at 62,893,053 bytes.
 - LaunchControl and ImageOptim still have historical XZ-stream errors at 66,055 bytes. EDGE identified their 64 MiB LZMA2 dictionaries and added native dictionary support. LaunchControl previously verified at 5,510,472 bytes in `97cd69474566`.
 - The existing generated UDIF fixture exercises bzip2, ADC, LZFSE and other codecs. EDGE already has a raw GPT/HFSX fixture. Sparse image, encrypted image, APM, and segmented-image coverage is tracked separately from those recoveries.
+
+## Zero-sector UDIF footer
+
+`dmg_with_zero_footer_sector_count_uses_block_map_geometry` zeroes the sector count in the 66,444-byte generated bzip2-prefixed disk image. The same regression went from `invalid data: range outside its container` after 1,383 bytes to a verified bundle after 4,963 bytes. Local, remote CLI, and Worker profiles all pass. The nonzero footer still bounds the declared partition ranges. The existing segmentation test also passes. [Upstream UDIF structure](https://github.com/foxlet/dmg2img/blob/master/dmg2img.h)
