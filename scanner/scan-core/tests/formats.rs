@@ -487,6 +487,42 @@ fn dmg_rejects_segmented_udif() {
     assert_eq!(result.reads, 2);
 }
 
+#[test]
+fn identifies_encrypted_apple_disk_images_by_header_or_trailer() {
+    let mut modern = [0; 4096];
+    modern[..12].copy_from_slice(b"encrcdsa\0\0\0\x02");
+    let mut legacy = [0; 4096];
+    legacy[4088..].copy_from_slice(b"cdsaencr");
+    for image in [&modern, &legacy] {
+        let result = run(image, 8192);
+        assert_eq!(result.format, Some("dmg"));
+        assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+        assert_eq!(
+            result.error.as_deref(),
+            Some("unsupported: encrypted Apple disk image")
+        );
+        assert!(result.architectures.is_empty());
+    }
+}
+
+#[test]
+fn sparse_image_seeks_hfs_through_unordered_bands_and_an_apple_partition_map() {
+    let image = include_bytes!("../../fixtures/apm.sparseimage");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("dmg"));
+        assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+        assert_eq!(result.executable_size, Some(4144));
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        assert!(result.bytes_read < result.total_size / 2);
+    }
+}
+
 const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
 const PKG_ODC: &[u8] = include_bytes!("../../fixtures/stored-odc.pkg");
 

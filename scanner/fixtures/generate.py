@@ -11,7 +11,7 @@ from pathlib import Path
 from struct import pack
 
 from apfs_fixture import apfs_fixture
-from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, write_udif
+from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, sparse_apm_fixture, write_udif
 from iso_fixture import iso_dmg_fixture
 from pkg_fixture import cpio, late_bom_fixture, pkg_fixture, write_xar
 
@@ -128,6 +128,7 @@ if __name__ == "__main__":
     zip_fixture(ROOT / "lzma.zip", zipfile.ZIP_LZMA, binary_plist=True)
 
     dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
+    sparse_apm_fixture(ROOT / "apm.sparseimage", METADATA, fat(intel_offset=4096))
     volume = hfs_volume(METADATA, fat(intel_offset=4096))
     write_udif(ROOT / "bzip2-prefix.dmg", volume, [
         (0x80000006, 1, bz2.compress),

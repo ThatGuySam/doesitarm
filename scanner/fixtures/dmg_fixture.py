@@ -115,6 +115,31 @@ def dmg_fixture(path, metadata, executable):
     write_udif(path, volume, chunks, "Apple_HFSX")
 
 
+def sparse_apm_fixture(path, metadata, executable):
+    apm_block = 2048
+    filesystem = hfs_volume(metadata, executable)
+    disk = bytearray(4 * apm_block) + filesystem
+    pack_into(">2sHI", disk, 0, b"ER", apm_block, len(disk) // apm_block)
+
+    def partition(index, start, length, name, kind):
+        at = index * apm_block
+        pack_into(">2sHIII32s32sII", disk, at, b"PM", 0, 2, start, length,
+                  name, kind, 0, length)
+
+    partition(1, 1, 2, b"Partition Map", b"Apple_partition_map")
+    partition(2, 4, len(filesystem) // apm_block, b"Fixture", b"Apple_HFS")
+    band = 4096
+    header = bytearray(4096)
+    pack_into(">4sIIII", header, 0, b"sprs", 3, band // SECTOR, 1, len(disk) // SECTOR)
+    bands = [(index + 1, disk[offset:offset + band])
+             for index, offset in enumerate(range(0, len(disk), band))
+             if any(disk[offset:offset + band])]
+    # The physical band order need not match the logical disk order.
+    for index, (logical, _) in enumerate(reversed(bands)):
+        pack_into(">I", header, 64 + index * 4, logical)
+    path.write_bytes(header + b"".join(data for _, data in reversed(bands)))
+
+
 def write_udif(path, volume, chunks, name, *, with_preamble=True):
     sectors = len(volume) // SECTOR
     assert sum(count for _, count, _ in chunks) == sectors
