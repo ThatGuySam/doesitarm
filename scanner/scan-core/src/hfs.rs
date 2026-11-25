@@ -613,6 +613,13 @@ pub(crate) async fn scan(
     let relative = &path[app_path.len() + "/Contents/".len()..];
     let primary = read_main(&mut volume, &mut catalog, contents.id, relative, out).await;
     let primary = bundle::confirm_executable(out, primary);
+    if primary.is_ok()
+        && out.name.is_none()
+        && let Some(name) = development_name(&mut volume, &mut catalog, contents.id, &plist).await
+    {
+        out.name = Some(name);
+        out.bundle_metadata_source = Some("info_plist_with_development_region_strings");
+    }
     let inspected_path = out
         .executable_path
         .as_deref()
@@ -687,6 +694,26 @@ pub(crate) async fn scan(
     }
     out.inventory = Some(inventory);
     primary
+}
+
+async fn development_name(
+    volume: &mut Volume<'_, impl ReadAt>,
+    catalog: &mut Catalog,
+    contents: u32,
+    info: &[u8],
+) -> Option<String> {
+    let path = bundle::localized::development_path(info)?;
+    let item = catalog
+        .find_path(volume, contents, &path, true)
+        .await
+        .ok()?;
+    let mut fork = file_fork(item, volume.geometry).ok()?;
+    if fork.size > bundle::localized::MAX_STRINGS {
+        return None;
+    }
+    let size = fork.size as usize;
+    let bytes = volume.read_fork(&mut fork, 0, size).await.ok()?;
+    bundle::localized::name(&bytes)
 }
 
 // A product image may have one enclosing folder with several apps beside

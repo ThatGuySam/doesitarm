@@ -15,3 +15,7 @@ Unity Android support finished at 1,738,756,155 source bytes without finding an 
 Krisp's normal app component is empty. Its declared postinstall Scripts CPIO contains an actual nested XAR with the arm64 app. A 1,869-byte fixture reproduced the missing plist before the code change and now passes in all three profiles. The release-mode full outer-package reruns are in progress. The scan uses package data directly and never runs installer code.
 
 The package parser now shares its code across direct and replayed readers, keeping compilation and Wasm code generation from duplicating the whole parser for each nested reader type. The offline core suite passes after that change. A targeted native build is finishing the byte-count replay against the preserved outer installer.
+
+The full Krisp outer installer verified arm64 locally after 267,032,977 unique bytes and 1,068,167,867 requested bytes. The 256 MiB control found the nested path and exhausted its request limit before architecture verification. Both temporary PKGs were removed. LaTeXiT 1.15.0's exact public DMG downloaded over verified HTTPS. Its embedded name is in the development-region InfoPlist.strings, while the base plist and both Mach-O slices lack minimum-system declarations.
+
+The localized HFS name fixture failed as expected, then passed in all three profiles. The new optional lookup follows the plist's development region. The vendor minimum remains a distinct source. The pinned LaTeXiT red/green local-file comparisons are queued in the native build session.

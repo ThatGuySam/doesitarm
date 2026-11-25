@@ -2,6 +2,8 @@ use crate::{Result, ScanError, ScanResult, Target, plist_value};
 use plist::{Dictionary, Value};
 use unicode_normalization::UnicodeNormalization;
 
+pub(crate) mod localized;
+
 pub(crate) const MAX_PLIST: u64 = 2 * 1024 * 1024;
 const INFO: &str = "/Contents/Info.plist";
 

@@ -134,6 +134,19 @@ if __name__ == "__main__":
     wrapped = hfs_volume(METADATA, fat(intel_offset=4096), wrapper="Suite")
     write_udif(ROOT / "wrapped-hfs.dmg", wrapped, [(0x80000005, len(wrapped) // 512, zlib.compress)],
                "Apple_HFSX")
+    localized = hfs_tree({
+        INFO: plistlib.dumps({
+            "CFBundleExecutable": "FixtureBinary",
+            "CFBundleDevelopmentRegion": "English",
+            "CFBundleVersion": "1.15.0",
+        }),
+        EXECUTABLE: pack(">7I", 0xFEEDFACE, 18, 0, 2, 0, 0, 0),
+        "Fixture.app/Contents/Resources/English.lproj/InfoPlist.strings":
+            b"\xff\xfe" + ('/* CFBundleName = "Commented out"; */\n'
+                               'CFBundleName = "Localized Fixture";\n').encode("utf-16le"),
+    })
+    write_udif(ROOT / "localized-name.dmg", localized,
+               [(0x80000005, len(localized) // 512, zlib.compress)], "Apple_HFS")
     volume = hfs_volume(METADATA, fat(intel_offset=4096))
     write_udif(ROOT / "bzip2-prefix.dmg", volume, [
         (0x80000006, 1, bz2.compress),

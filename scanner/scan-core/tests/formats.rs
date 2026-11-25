@@ -421,6 +421,23 @@ fn tar_reports_budget_exhaustion_if_compressed_prefix_is_too_short() {
 const DMG: &[u8] = include_bytes!("../../fixtures/hfsx.dmg");
 
 #[test]
+fn hfs_uses_the_embedded_name_from_development_region_strings() {
+    let image = include_bytes!("../../fixtures/localized-name.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.name.as_deref(), Some("Localized Fixture"));
+        assert_eq!(result.version.as_deref(), Some("1.15.0"));
+        assert_eq!(result.min_macos, None);
+        assert_eq!(result.architectures[0].name, "ppc");
+        assert!(result.architectures[0].header_verified);
+    }
+}
+
+#[test]
 fn dmg_uses_hfsx_catalog_and_overflow_extents_across_udif_codecs() {
     let result = run(DMG, u64::MAX);
     assert_eq!(result.format, Some("dmg"));
