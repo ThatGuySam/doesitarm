@@ -44,6 +44,87 @@ fn describe(record: &Record) -> String {
     format!("`{}` (`{}`)", cell(&record.token), record.ledger_id)
 }
 
+struct Change<'a> {
+    before: &'a Record,
+    after: &'a Record,
+    label: &'a str,
+}
+
+type ScanKey<'a> = (&'a str, &'a str, Option<&'a str>, String);
+type RunKey<'a> = (&'a str, usize);
+
+fn outcome(record: &Record) -> &str {
+    record.failure_class.as_deref().unwrap_or(&record.status)
+}
+
+fn changes(rows: &[Record]) -> Vec<Change<'_>> {
+    let by_id: BTreeMap<_, _> = rows
+        .iter()
+        .map(|row| (row.ledger_id.as_str(), row))
+        .collect();
+    let mut observed = Vec::new();
+    let mut runs = BTreeMap::<ScanKey<'_>, BTreeMap<RunKey<'_>, &Record>>::new();
+    for row in rows {
+        if let Some(previous_id) = &row.previous_id {
+            if let Some(&before) = by_id.get(previous_id.as_str())
+                && let Some(label) = row.change.as_deref().filter(|label| *label != "same")
+            {
+                observed.push(Change {
+                    before,
+                    after: row,
+                    label,
+                });
+            }
+            continue;
+        }
+        let Some(url) = row.original_url.as_deref() else {
+            continue;
+        };
+        if row.scanned_at.is_none() || row.result.is_none() {
+            continue;
+        }
+        let target = row
+            .settings
+            .target
+            .as_ref()
+            .map(serde_json::Value::to_string)
+            .unwrap_or_default();
+        let case = (
+            row.source.as_str(),
+            url,
+            row.settings.profile.as_deref(),
+            target,
+        );
+        let run = row
+            .provenance
+            .first()
+            .map_or((row.ledger_id.as_str(), 0), |origin| {
+                (origin.imported_from.as_str(), origin.original_line)
+            });
+        let final_attempt = runs.entry(case).or_default().entry(run).or_insert(row);
+        if final_attempt.order() < row.order() {
+            *final_attempt = row;
+        }
+    }
+    for run in runs.into_values() {
+        let mut attempts: Vec<_> = run.into_values().collect();
+        attempts.sort_by(|a, b| a.order().cmp(&b.order()));
+        for pair in attempts.windows(2) {
+            let [before, after] = [pair[0], pair[1]];
+            let label = classify::compare(before, after);
+            if label != "same" {
+                observed.push(Change {
+                    before,
+                    after,
+                    label,
+                });
+            }
+        }
+    }
+    observed.sort_by(|a, b| a.after.order().cmp(&b.after.order()));
+    observed
+}
+
 pub(super) fn write(store: &Store, scanner: &Path) -> Result<()> {
     let rows = store.records()?;
     let latest = latest(&rows);
@@ -118,75 +199,14 @@ pub(super) fn write(store: &Store, scanner: &Path) -> Result<()> {
         writeln!(doc, "\n- **{}** — {}", cell(class), examples.join(", ")).unwrap();
     }
     doc.push_str("\n## Changed outcomes\n\n| App and attempt | Previous outcome | New outcome | Change |\n| --- | --- | --- | --- |\n");
-    let by_id: BTreeMap<_, _> = rows
-        .iter()
-        .map(|row| (row.ledger_id.as_str(), row))
-        .collect();
-    let mut observed = BTreeSet::new();
-    let mut grouped = BTreeMap::<_, Vec<&Record>>::new();
-    for row in &rows {
-        let Some(url) = &row.original_url else {
-            continue;
-        };
-        let Some(date) = &row.scanned_at else {
-            continue;
-        };
-        if row.previous_id.is_none() && row.result.is_some() && row.evidence["stage"].is_null() {
-            let target = row
-                .settings
-                .target
-                .as_ref()
-                .map(serde_json::Value::to_string)
-                .unwrap_or_default();
-            grouped.entry((url, target)).or_default().push(row);
-        }
-        if let Some(before) = row
-            .previous_id
-            .as_ref()
-            .and_then(|id| by_id.get(id.as_str()))
-            && let Some(change) = row.change.as_deref().filter(|c| *c != "same")
-        {
-            observed.insert((
-                date,
-                before.ledger_id.as_str(),
-                row.ledger_id.as_str(),
-                change,
-            ));
-        }
-    }
-    for attempts in grouped.values_mut() {
-        attempts.sort_by(|a, b| a.order().cmp(&b.order()));
-        for pair in attempts.windows(2) {
-            let (before, after) = (pair[0], pair[1]);
-            let same_run = before
-                .provenance
-                .first()
-                .zip(after.provenance.first())
-                .is_some_and(|(a, b)| {
-                    a.imported_from == b.imported_from && a.original_line == b.original_line
-                });
-            if !same_run && before.scanner_commit != after.scanner_commit {
-                let change = classify::compare(before, after);
-                if change != "same" {
-                    observed.insert((
-                        after.scanned_at.as_ref().unwrap(),
-                        before.ledger_id.as_str(),
-                        after.ledger_id.as_str(),
-                        change,
-                    ));
-                }
-            }
-        }
-    }
-    for (_, before, after, change) in observed.into_iter().rev() {
-        let (before, after) = (by_id[before], by_id[after]);
+    for change in changes(&rows).into_iter().rev() {
         writeln!(
             doc,
             "| {} | {} | {} | {} |",
-            describe(after),
-            cell(&before.status),
-            cell(&after.status),
-            change
+            describe(change.after),
+            cell(outcome(change.before)),
+            cell(outcome(change.after)),
+            change.label,
         )
         .unwrap();
     }
@@ -227,4 +247,54 @@ pub(super) fn write(store: &Store, scanner: &Path) -> Result<()> {
         rows.len()
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ledger::store::Origin;
+    use serde_json::json;
+
+    #[test]
+    fn reports_a_same_build_change_using_the_last_tier_in_each_run() {
+        let row = |id: &str, run: &str, scanned_at: &str, status: &str, tier: u32| Record {
+            ledger_id: id.into(),
+            original_url: Some("https://example.invalid/artifact".into()),
+            scanner_commit: Some("same_scanner".into()),
+            scanned_at: Some(scanned_at.into()),
+            stage_order: tier,
+            status: status.into(),
+            failure_class: (status != "verified").then(|| status.into()),
+            result: Some(json!({"status":status})),
+            provenance: vec![Origin {
+                imported_from: run.into(),
+                original_line: 1,
+                locator: None,
+                original_sha256: id.into(),
+            }],
+            ..Record::default()
+        };
+        let records = [
+            row(
+                "first",
+                "first.json",
+                "2026-11-24T01:00:00Z",
+                "host_200_to_range",
+                0,
+            ),
+            row(
+                "low",
+                "second.json",
+                "2026-11-24T02:00:00Z",
+                "budget_hit",
+                0,
+            ),
+            row("high", "second.json", "2026-11-24T02:00:00Z", "verified", 1),
+        ];
+        let changes = changes(&records);
+        assert_eq!(changes.len(), 1);
+        assert_eq!(changes[0].before.ledger_id, "first");
+        assert_eq!(changes[0].after.ledger_id, "high");
+        assert_eq!(changes[0].label, "fixed");
+    }
 }

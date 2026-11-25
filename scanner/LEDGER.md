@@ -33,6 +33,8 @@ For a local-profile attempt, pass `--input FILE` with the original archive to ca
 
 Path usernames and known credential-bearing URL query values are scrubbed recursively. A SHA-256 placeholder preserves correlation between matching credential values. Original URLs with replaced credentials need a fresh authorized URL from the original catalog or update feed. Kits keep exact bytes and refuse captures when a recognizable home path or credential appears in their recorded ranges. Recheck rights and metadata on separately supplied local artifacts before using them as raw fixtures.
 
+The report compares the last observed tier from each recorded run for the same source, URL, profile, and target. Explicit reruns also retain their original attempt link.
+
 ## Access and acquisition
 
 - HTTP 404 preserves the pinned URL and response. A replacement URL from Homebrew or the vendor is a new representation.
