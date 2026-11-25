@@ -1,0 +1,315 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1387" viewBox="0 0 1000 1387" role="img" aria-labelledby="title description">
+  <title id="title">Scanner WebAssembly size</title>
+  <desc id="description">The left pie shows raw file bytes by Wasm section. The right pie shows code bytes by function owner. The legends give exact bytes and percent of each pie.</desc>
+  <style>
+    text { font: 14px system-ui, sans-serif; fill: #182c37 }
+    .headline { font-size: 25px; font-weight: 700 }
+    .heading { font-size: 17px; font-weight: 650 }
+    .value { fill: #405460; font-variant-numeric: tabular-nums }
+  </style>
+  <rect width="100%" height="100%" fill="#f8faf9"/>
+  <text class="headline" x="45" y="45">Scanner WebAssembly size</text>
+  <text class="value" x="45" y="72">24,493,375 B raw · 2,557,711 B gzip · 1,128,636 B Brotli</text>
+  <text class="heading" x="45" y="115">File sections</text>
+  <text class="heading" x="525" y="115">Code by function owner</text>
+  <path fill="#205E78" d="M 245 210 L 245 122 A 88 88 0 1 1 159.72480638292328 188.27118609840662 Z"><title>Code · 19,342,638 B</title></path>
+<path fill="#DA753B" d="M 245 210 L 159.72480638292328 188.27118609840662 A 88 88 0 0 1 238.53443977301376 122.23784112186384 Z"><title>Custom: name · 4,864,066 B</title></path>
+<path fill="#359380" d="M 245 210 L 238.53443977301376 122.23784112186384 A 88 88 0 0 1 244.60479340736492 122.00088743771823 Z"><title>Data · 269,164 B</title></path>
+<path fill="#9865AA" d="M 245 210 L 244.60479340736492 122.00088743771823 A 88 88 0 0 1 244.8984609107905 122.00005858062539 Z"><title>Functions · 13,009 B</title></path>
+<path fill="#D4A32F" d="M 245 210 L 244.8984609107905 122.00005858062539 A 88 88 0 0 1 244.9385528146514 122.00002145316505 Z"><title>Imports · 1,776 B</title></path>
+<path fill="#6B83BD" d="M 245 210 L 244.9385528146514 122.00002145316505 A 88 88 0 0 1 244.95981778287734 122.0000091739242 Z"><title>Exports · 942 B</title></path>
+<path fill="#B85767" d="M 245 210 L 244.95981778287734 122.0000091739242 A 88 88 0 0 1 244.9771096802703 122.00000297708378 Z"><title>Types · 766 B</title></path>
+<path fill="#8A9750" d="M 245 210 L 244.9771096802703 122.00000297708378 A 88 88 0 0 1 244.99282137894662 122.00000029279886 Z"><title>Elements · 696 B</title></path>
+<path fill="#9B6B42" d="M 245 210 L 244.99282137894662 122.00000029279886 A 88 88 0 0 1 244.99623009522986 122.00000008075104 Z"><title>Custom: target_features · 151 B</title></path>
+<path fill="#477679" d="M 245 210 L 244.99623009522986 122.00000008075104 A 88 88 0 0 1 244.99880356315634 122.0000000081333 Z"><title>Custom: producers · 114 B</title></path>
+<path fill="#A391AE" d="M 245 210 L 244.99880356315634 122.0000000081333 A 88 88 0 0 1 244.9994130687181 122.00000000195732 Z"><title>Globals · 27 B</title></path>
+<path fill="#B46749" d="M 245 210 L 244.9994130687181 122.00000000195732 A 88 88 0 0 1 244.99970653435895 122.00000000048932 Z"><title>Tables · 13 B</title></path>
+<path fill="#205E78" d="M 245 210 L 244.99970653435895 122.00000000048932 A 88 88 0 0 1 244.99988712859948 122.00000000007239 Z"><title>Wasm header · 8 B</title></path>
+<path fill="#DA753B" d="M 245 210 L 244.99988712859948 122.00000000007239 A 88 88 0 0 1 244.99999999999983 122 Z"><title>Memory · 5 B</title></path>
+  <path fill="#205E78" d="M 725 210 L 725 122 A 88 88 0 0 1 812.9884528084883 211.42554283289647 Z"><title>scan-core::macho · 4,885,531 B</title></path>
+<path fill="#DA753B" d="M 725 210 L 812.9884528084883 211.42554283289647 A 88 88 0 0 1 739.6519825684326 296.7716509397761 Z"><title>scan-core::pkg · 4,270,824 B</title></path>
+<path fill="#359380" d="M 725 210 L 739.6519825684326 296.7716509397761 A 88 88 0 0 1 651.8620100138791 258.93704548488876 Z"><title>Rust core/alloc/std · 3,535,279 B</title></path>
+<path fill="#9865AA" d="M 725 210 L 651.8620100138791 258.93704548488876 A 88 88 0 0 1 638.2292321034312 195.34278885190713 Z"><title>scan-core::stream_bundle · 2,330,494 B</title></path>
+<path fill="#D4A32F" d="M 725 210 L 638.2292321034312 195.34278885190713 A 88 88 0 0 1 644.7028795150151 173.99482756853095 Z"><title>scan-core::apfs · 782,496 B</title></path>
+<path fill="#6B83BD" d="M 725 210 L 644.7028795150151 173.99482756853095 A 88 88 0 0 1 654.5436378367838 157.27523323213552 Z"><title>scan-core::hfs · 680,069 B</title></path>
+<path fill="#B85767" d="M 725 210 L 654.5436378367838 157.27523323213552 A 88 88 0 0 1 666.021889487939 144.6885731251635 Z"><title>scan-core::diagnostic · 596,847 B</title></path>
+<path fill="#8A9750" d="M 725 210 L 666.021889487939 144.6885731251635 A 88 88 0 0 1 674.4144180018935 137.99236919664105 Z"><title>scan-core::cpio · 375,827 B</title></path>
+<path fill="#9B6B42" d="M 725 210 L 674.4144180018935 137.99236919664105 A 88 88 0 0 1 682.0649279875387 133.184769796057 Z"><title>scan-core::inflate · 316,231 B</title></path>
+<path fill="#477679" d="M 725 210 L 682.0649279875387 133.184769796057 A 88 88 0 0 1 689.8380167013668 129.3300865842374 Z"><title>scan-core::pbzx · 303,646 B</title></path>
+<path fill="#A391AE" d="M 725 210 L 689.8380167013668 129.3300865842374 A 88 88 0 0 1 697.5499352360838 126.39082619438936 Z"><title>scan-core::nested · 288,820 B</title></path>
+<path fill="#B46749" d="M 725 210 L 697.5499352360838 126.39082619438936 A 88 88 0 0 1 702.7696408418502 124.85417725043895 Z"><title>scan-core::(root) · 190,378 B</title></path>
+<path fill="#205E78" d="M 725 210 L 702.7696408418502 124.85417725043895 A 88 88 0 0 1 706.0806894155457 124.05781194890977 Z"><title>lzma-rust2 · 119,140 B</title></path>
+<path fill="#DA753B" d="M 725 210 L 706.0806894155457 124.05781194890977 A 88 88 0 0 1 708.1728378708194 123.62380759330573 Z"><title>scan-core::zip · 74,749 B</title></path>
+<path fill="#359380" d="M 725 210 L 708.1728378708194 123.62380759330573 A 88 88 0 0 1 709.7669184243688 123.32847511604423 Z"><title>sevenz-rust2 · 56,715 B</title></path>
+<path fill="#9865AA" d="M 725 210 L 709.7669184243688 123.32847511604423 A 88 88 0 0 1 711.2955160884188 123.07366842712612 Z"><title>Unclassified symbols · 54,213 B</title></path>
+<path fill="#D4A32F" d="M 725 210 L 711.2955160884188 123.07366842712612 A 88 88 0 0 1 712.674570100794 122.86743560642921 Z"><title>roxmltree · 48,780 B</title></path>
+<path fill="#6B83BD" d="M 725 210 L 712.674570100794 122.86743560642921 A 88 88 0 0 1 713.9689953923311 122.69411854092769 Z"><title>scan-core::tar · 45,687 B</title></path>
+<path fill="#B85767" d="M 725 210 L 713.9689953923311 122.69411854092769 A 88 88 0 0 1 715.2226679693216 122.54484704511763 Z"><title>scan-core::dmg · 44,167 B</title></path>
+<path fill="#8A9750" d="M 725 210 L 715.2226679693216 122.54484704511763 A 88 88 0 0 1 716.3141761073485 122.42970558856247 Z"><title>scan-core::inventory · 38,396 B</title></path>
+<path fill="#9B6B42" d="M 725 210 L 716.3141761073485 122.42970558856247 A 88 88 0 0 1 717.3879546774735 122.32984107458341 Z"><title>scan-core::sevenz · 37,726 B</title></path>
+<path fill="#477679" d="M 725 210 L 717.3879546774735 122.32984107458341 A 88 88 0 0 1 718.4059216239245 122.24740385395897 Z"><title>plist · 35,728 B</title></path>
+<path fill="#A391AE" d="M 725 210 L 718.4059216239245 122.24740385395897 A 88 88 0 0 1 719.2602648211675 122.18738450497631 Z"><title>libbz2-rs-sys · 29,961 B</title></path>
+<path fill="#B46749" d="M 725 210 L 719.2602648211675 122.18738450497631 A 88 88 0 0 1 720.0617229104612 122.13866937391094 Z"><title>ruzstd · 28,089 B</title></path>
+<path fill="#205E78" d="M 725 210 L 720.0617229104612 122.13866937391094 A 88 88 0 0 1 720.7646266990545 122.10198174587985 Z"><title>zlib-rs · 24,623 B</title></path>
+<path fill="#DA753B" d="M 725 210 L 720.7646266990545 122.10198174587985 A 88 88 0 0 1 721.2477384269962 122.08003336506684 Z"><title>lzfse-rust · 16,918 B</title></path>
+<path fill="#359380" d="M 725 210 L 721.2477384269962 122.08003336506684 A 88 88 0 0 1 721.60462019384 122.06552782911629 Z"><title>serde-json · 12,495 B</title></path>
+<path fill="#9865AA" d="M 725 210 L 721.60462019384 122.06552782911629 A 88 88 0 0 1 721.9573297582506 122.05261710659053 Z"><title>js-sys · 12,347 B</title></path>
+<path fill="#D4A32F" d="M 725 210 L 721.9573297582506 122.05261710659053 A 88 88 0 0 1 722.2778018507837 122.04211441129111 Z"><title>time · 11,217 B</title></path>
+<path fill="#6B83BD" d="M 725 210 L 722.2778018507837 122.04211441129111 A 88 88 0 0 1 722.5154438921828 122.03508096435768 Z"><title>sha2 · 8,317 B</title></path>
+<path fill="#B85767" d="M 725 210 L 722.5154438921828 122.03508096435768 A 88 88 0 0 1 722.7328721433908 122.02920864695041 Z"><title>scan-core::bundle · 7,609 B</title></path>
+<path fill="#8A9750" d="M 725 210 L 722.7328721433908 122.02920864695041 A 88 88 0 0 1 722.9452559752813 122.02399175347358 Z"><title>scan-core::decode · 7,432 B</title></path>
+<path fill="#9B6B42" d="M 725 210 L 722.9452559752813 122.02399175347358 A 88 88 0 0 1 723.1569658795457 122.01930197349624 Z"><title>dlmalloc · 7,408 B</title></path>
+<path fill="#477679" d="M 725 210 L 723.1569658795457 122.01930197349624 A 88 88 0 0 1 723.3660570365631 122.01517045312735 Z"><title>scan-core::local_bundle · 7,316 B</title></path>
+<path fill="#A391AE" d="M 725 210 L 723.3660570365631 122.01517045312735 A 88 88 0 0 1 723.5636103781311 122.0117235942527 Z"><title>scan-wasm · 6,912 B</title></path>
+<path fill="#B46749" d="M 725 210 L 723.5636103781311 122.0117235942527 A 88 88 0 0 1 723.7509955151398 122.0088641521386 Z"><title>unicode-normalization · 6,556 B</title></path>
+<path fill="#205E78" d="M 725 210 L 723.7509955151398 122.0088641521386 A 88 88 0 0 1 723.9166914814701 122.00666819210856 Z"><title>hashbrown · 5,797 B</title></path>
+<path fill="#DA753B" d="M 725 210 L 723.9166914814701 122.00666819210856 A 88 88 0 0 1 724.0676991185404 122.00493868934218 Z"><title>scan-core::launcher · 5,283 B</title></path>
+<path fill="#359380" d="M 725 210 L 724.0676991185404 122.00493868934218 A 88 88 0 0 1 724.1802063338519 122.00381861498225 Z"><title>base64 · 3,936 B</title></path>
+<path fill="#9865AA" d="M 725 210 L 724.1802063338519 122.00381861498225 A 88 88 0 0 1 724.2894276555577 122.00286887094947 Z"><title>scan-core::bom · 3,821 B</title></path>
+<path fill="#D4A32F" d="M 725 210 L 724.2894276555577 122.00286887094947 A 88 88 0 0 1 724.3959916764115 122.00207289972657 Z"><title>wasm-bindgen · 3,728 B</title></path>
+<path fill="#6B83BD" d="M 725 210 L 724.3959916764115 122.00207289972657 A 88 88 0 0 1 724.4829472087413 122.00151901077467 Z"><title>scan-core::udif_codec · 3,042 B</title></path>
+<path fill="#B85767" d="M 725 210 L 724.4829472087413 122.00151901077467 A 88 88 0 0 1 724.5532094810605 122.00113422189928 Z"><title>scan-core::plist_value · 2,458 B</title></path>
+<path fill="#8A9750" d="M 725 210 L 724.5532094810605 122.00113422189928 A 88 88 0 0 1 724.6167544921717 122.00083453304384 Z"><title>scan-core::gzip_tail · 2,223 B</title></path>
+<path fill="#9B6B42" d="M 725 210 L 724.6167544921717 122.00083453304384 A 88 88 0 0 1 724.6684653587141 122.00062452050226 Z"><title>zmij · 1,809 B</title></path>
+<path fill="#477679" d="M 725 210 L 724.6684653587141 122.00062452050226 A 88 88 0 0 1 724.7198904854976 122.00044580419804 Z"><title>bzip2 · 1,799 B</title></path>
+<path fill="#A391AE" d="M 725 210 L 724.7198904854976 122.00044580419804 A 88 88 0 0 1 724.7629973365739 122.0003191497973 Z"><title>flate2 · 1,508 B</title></path>
+<path fill="#B46749" d="M 725 210 L 724.7629973365739 122.0003191497973 A 88 88 0 0 1 724.8058183895286 122.00021424172583 Z"><title>crc32fast · 1,498 B</title></path>
+<path fill="#205E78" d="M 725 210 L 724.8058183895286 122.00021424172583 A 88 88 0 0 1 724.8479820213594 122.00013130388109 Z"><title>indexmap · 1,475 B</title></path>
+<path fill="#DA753B" d="M 725 210 L 724.8479820213594 122.00013130388109 A 88 88 0 0 1 724.8841427236032 122.00007626655858 Z"><title>--rustc · 1,265 B</title></path>
+<path fill="#359380" d="M 725 210 L 724.8841427236032 122.00007626655858 A 88 88 0 0 1 724.9168160075244 122.00003931578495 Z"><title>tinyvec · 1,143 B</title></path>
+<path fill="#9865AA" d="M 725 210 L 724.9168160075244 122.00003931578495 A 88 88 0 0 1 724.9464020620355 122.00001632238192 Z"><title>compiler-builtins · 1,035 B</title></path>
+<path fill="#D4A32F" d="M 725 210 L 724.9464020620355 122.00001632238192 A 88 88 0 0 1 724.9636391576713 122.00000751199381 Z"><title>memchr · 603 B</title></path>
+<path fill="#6B83BD" d="M 725 210 L 724.9636391576713 122.00000751199381 A 88 88 0 0 1 724.9807904979982 122.00000209661916 Z"><title>twox-hash · 600 B</title></path>
+<path fill="#B85767" d="M 725 210 L 724.9807904979982 122.00000209661916 A 88 88 0 0 1 724.9936254181893 122.00000023088235 Z"><title>itoa · 449 B</title></path>
+<path fill="#8A9750" d="M 725 210 L 724.9936254181893 122.00000023088235 A 88 88 0 0 1 724.999799901019 122.00000000022749 Z"><title>wasm-bindgen glue · 216 B</title></path>
+<path fill="#9B6B42" d="M 725 210 L 724.999799901019 122.00000000022749 A 88 88 0 0 1 724.9999999999998 122 Z"><title>Code section header · 7 B</title></path>
+  <rect x="45" y="314" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="64" y="325">Code</text>
+  <text class="value" x="470" y="325" text-anchor="end">19,342,638 B · 78.97%</text>
+<rect x="45" y="336" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="64" y="347">Custom: name</text>
+  <text class="value" x="470" y="347" text-anchor="end">4,864,066 B · 19.86%</text>
+<rect x="45" y="358" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="64" y="369">Data</text>
+  <text class="value" x="470" y="369" text-anchor="end">269,164 B · 1.10%</text>
+<rect x="45" y="380" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="64" y="391">Functions</text>
+  <text class="value" x="470" y="391" text-anchor="end">13,009 B · 0.05%</text>
+<rect x="45" y="402" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="64" y="413">Imports</text>
+  <text class="value" x="470" y="413" text-anchor="end">1,776 B · 0.01%</text>
+<rect x="45" y="424" width="11" height="11" rx="2" fill="#6B83BD"/>
+  <text x="64" y="435">Exports</text>
+  <text class="value" x="470" y="435" text-anchor="end">942 B · 0.00%</text>
+<rect x="45" y="446" width="11" height="11" rx="2" fill="#B85767"/>
+  <text x="64" y="457">Types</text>
+  <text class="value" x="470" y="457" text-anchor="end">766 B · 0.00%</text>
+<rect x="45" y="468" width="11" height="11" rx="2" fill="#8A9750"/>
+  <text x="64" y="479">Elements</text>
+  <text class="value" x="470" y="479" text-anchor="end">696 B · 0.00%</text>
+<rect x="45" y="490" width="11" height="11" rx="2" fill="#9B6B42"/>
+  <text x="64" y="501">Custom: target_features</text>
+  <text class="value" x="470" y="501" text-anchor="end">151 B · 0.00%</text>
+<rect x="45" y="512" width="11" height="11" rx="2" fill="#477679"/>
+  <text x="64" y="523">Custom: producers</text>
+  <text class="value" x="470" y="523" text-anchor="end">114 B · 0.00%</text>
+<rect x="45" y="534" width="11" height="11" rx="2" fill="#A391AE"/>
+  <text x="64" y="545">Globals</text>
+  <text class="value" x="470" y="545" text-anchor="end">27 B · 0.00%</text>
+<rect x="45" y="556" width="11" height="11" rx="2" fill="#B46749"/>
+  <text x="64" y="567">Tables</text>
+  <text class="value" x="470" y="567" text-anchor="end">13 B · 0.00%</text>
+<rect x="45" y="578" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="64" y="589">Wasm header</text>
+  <text class="value" x="470" y="589" text-anchor="end">8 B · 0.00%</text>
+<rect x="45" y="600" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="64" y="611">Memory</text>
+  <text class="value" x="470" y="611" text-anchor="end">5 B · 0.00%</text>
+  <rect x="525" y="314" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="544" y="325">scan-core::macho</text>
+  <text class="value" x="950" y="325" text-anchor="end">4,885,531 B · 25.26%</text>
+<rect x="525" y="336" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="544" y="347">scan-core::pkg</text>
+  <text class="value" x="950" y="347" text-anchor="end">4,270,824 B · 22.08%</text>
+<rect x="525" y="358" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="544" y="369">Rust core/alloc/std</text>
+  <text class="value" x="950" y="369" text-anchor="end">3,535,279 B · 18.28%</text>
+<rect x="525" y="380" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="544" y="391">scan-core::stream_bundle</text>
+  <text class="value" x="950" y="391" text-anchor="end">2,330,494 B · 12.05%</text>
+<rect x="525" y="402" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="544" y="413">scan-core::apfs</text>
+  <text class="value" x="950" y="413" text-anchor="end">782,496 B · 4.05%</text>
+  <text class="heading" x="45" y="669">All code owners</text>
+  <rect x="45" y="681" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="64" y="692">scan-core::macho</text>
+  <text class="value" x="470" y="692" text-anchor="end">4,885,531 B · 25.26%</text>
+<rect x="45" y="703" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="64" y="714">scan-core::pkg</text>
+  <text class="value" x="470" y="714" text-anchor="end">4,270,824 B · 22.08%</text>
+<rect x="45" y="725" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="64" y="736">Rust core/alloc/std</text>
+  <text class="value" x="470" y="736" text-anchor="end">3,535,279 B · 18.28%</text>
+<rect x="45" y="747" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="64" y="758">scan-core::stream_bundle</text>
+  <text class="value" x="470" y="758" text-anchor="end">2,330,494 B · 12.05%</text>
+<rect x="45" y="769" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="64" y="780">scan-core::apfs</text>
+  <text class="value" x="470" y="780" text-anchor="end">782,496 B · 4.05%</text>
+<rect x="45" y="791" width="11" height="11" rx="2" fill="#6B83BD"/>
+  <text x="64" y="802">scan-core::hfs</text>
+  <text class="value" x="470" y="802" text-anchor="end">680,069 B · 3.52%</text>
+<rect x="45" y="813" width="11" height="11" rx="2" fill="#B85767"/>
+  <text x="64" y="824">scan-core::diagnostic</text>
+  <text class="value" x="470" y="824" text-anchor="end">596,847 B · 3.09%</text>
+<rect x="45" y="835" width="11" height="11" rx="2" fill="#8A9750"/>
+  <text x="64" y="846">scan-core::cpio</text>
+  <text class="value" x="470" y="846" text-anchor="end">375,827 B · 1.94%</text>
+<rect x="45" y="857" width="11" height="11" rx="2" fill="#9B6B42"/>
+  <text x="64" y="868">scan-core::inflate</text>
+  <text class="value" x="470" y="868" text-anchor="end">316,231 B · 1.63%</text>
+<rect x="45" y="879" width="11" height="11" rx="2" fill="#477679"/>
+  <text x="64" y="890">scan-core::pbzx</text>
+  <text class="value" x="470" y="890" text-anchor="end">303,646 B · 1.57%</text>
+<rect x="45" y="901" width="11" height="11" rx="2" fill="#A391AE"/>
+  <text x="64" y="912">scan-core::nested</text>
+  <text class="value" x="470" y="912" text-anchor="end">288,820 B · 1.49%</text>
+<rect x="45" y="923" width="11" height="11" rx="2" fill="#B46749"/>
+  <text x="64" y="934">scan-core::(root)</text>
+  <text class="value" x="470" y="934" text-anchor="end">190,378 B · 0.98%</text>
+<rect x="45" y="945" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="64" y="956">lzma-rust2</text>
+  <text class="value" x="470" y="956" text-anchor="end">119,140 B · 0.62%</text>
+<rect x="45" y="967" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="64" y="978">scan-core::zip</text>
+  <text class="value" x="470" y="978" text-anchor="end">74,749 B · 0.39%</text>
+<rect x="45" y="989" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="64" y="1000">sevenz-rust2</text>
+  <text class="value" x="470" y="1000" text-anchor="end">56,715 B · 0.29%</text>
+<rect x="45" y="1011" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="64" y="1022">Unclassified symbols</text>
+  <text class="value" x="470" y="1022" text-anchor="end">54,213 B · 0.28%</text>
+<rect x="45" y="1033" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="64" y="1044">roxmltree</text>
+  <text class="value" x="470" y="1044" text-anchor="end">48,780 B · 0.25%</text>
+<rect x="45" y="1055" width="11" height="11" rx="2" fill="#6B83BD"/>
+  <text x="64" y="1066">scan-core::tar</text>
+  <text class="value" x="470" y="1066" text-anchor="end">45,687 B · 0.24%</text>
+<rect x="45" y="1077" width="11" height="11" rx="2" fill="#B85767"/>
+  <text x="64" y="1088">scan-core::dmg</text>
+  <text class="value" x="470" y="1088" text-anchor="end">44,167 B · 0.23%</text>
+<rect x="45" y="1099" width="11" height="11" rx="2" fill="#8A9750"/>
+  <text x="64" y="1110">scan-core::inventory</text>
+  <text class="value" x="470" y="1110" text-anchor="end">38,396 B · 0.20%</text>
+<rect x="45" y="1121" width="11" height="11" rx="2" fill="#9B6B42"/>
+  <text x="64" y="1132">scan-core::sevenz</text>
+  <text class="value" x="470" y="1132" text-anchor="end">37,726 B · 0.20%</text>
+<rect x="45" y="1143" width="11" height="11" rx="2" fill="#477679"/>
+  <text x="64" y="1154">plist</text>
+  <text class="value" x="470" y="1154" text-anchor="end">35,728 B · 0.18%</text>
+<rect x="45" y="1165" width="11" height="11" rx="2" fill="#A391AE"/>
+  <text x="64" y="1176">libbz2-rs-sys</text>
+  <text class="value" x="470" y="1176" text-anchor="end">29,961 B · 0.15%</text>
+<rect x="45" y="1187" width="11" height="11" rx="2" fill="#B46749"/>
+  <text x="64" y="1198">ruzstd</text>
+  <text class="value" x="470" y="1198" text-anchor="end">28,089 B · 0.15%</text>
+<rect x="45" y="1209" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="64" y="1220">zlib-rs</text>
+  <text class="value" x="470" y="1220" text-anchor="end">24,623 B · 0.13%</text>
+<rect x="45" y="1231" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="64" y="1242">lzfse-rust</text>
+  <text class="value" x="470" y="1242" text-anchor="end">16,918 B · 0.09%</text>
+<rect x="45" y="1253" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="64" y="1264">serde-json</text>
+  <text class="value" x="470" y="1264" text-anchor="end">12,495 B · 0.06%</text>
+<rect x="45" y="1275" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="64" y="1286">js-sys</text>
+  <text class="value" x="470" y="1286" text-anchor="end">12,347 B · 0.06%</text>
+<rect x="45" y="1297" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="64" y="1308">time</text>
+  <text class="value" x="470" y="1308" text-anchor="end">11,217 B · 0.06%</text>
+<rect x="525" y="681" width="11" height="11" rx="2" fill="#6B83BD"/>
+  <text x="544" y="692">sha2</text>
+  <text class="value" x="950" y="692" text-anchor="end">8,317 B · 0.04%</text>
+<rect x="525" y="703" width="11" height="11" rx="2" fill="#B85767"/>
+  <text x="544" y="714">scan-core::bundle</text>
+  <text class="value" x="950" y="714" text-anchor="end">7,609 B · 0.04%</text>
+<rect x="525" y="725" width="11" height="11" rx="2" fill="#8A9750"/>
+  <text x="544" y="736">scan-core::decode</text>
+  <text class="value" x="950" y="736" text-anchor="end">7,432 B · 0.04%</text>
+<rect x="525" y="747" width="11" height="11" rx="2" fill="#9B6B42"/>
+  <text x="544" y="758">dlmalloc</text>
+  <text class="value" x="950" y="758" text-anchor="end">7,408 B · 0.04%</text>
+<rect x="525" y="769" width="11" height="11" rx="2" fill="#477679"/>
+  <text x="544" y="780">scan-core::local_bundle</text>
+  <text class="value" x="950" y="780" text-anchor="end">7,316 B · 0.04%</text>
+<rect x="525" y="791" width="11" height="11" rx="2" fill="#A391AE"/>
+  <text x="544" y="802">scan-wasm</text>
+  <text class="value" x="950" y="802" text-anchor="end">6,912 B · 0.04%</text>
+<rect x="525" y="813" width="11" height="11" rx="2" fill="#B46749"/>
+  <text x="544" y="824">unicode-normalization</text>
+  <text class="value" x="950" y="824" text-anchor="end">6,556 B · 0.03%</text>
+<rect x="525" y="835" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="544" y="846">hashbrown</text>
+  <text class="value" x="950" y="846" text-anchor="end">5,797 B · 0.03%</text>
+<rect x="525" y="857" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="544" y="868">scan-core::launcher</text>
+  <text class="value" x="950" y="868" text-anchor="end">5,283 B · 0.03%</text>
+<rect x="525" y="879" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="544" y="890">base64</text>
+  <text class="value" x="950" y="890" text-anchor="end">3,936 B · 0.02%</text>
+<rect x="525" y="901" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="544" y="912">scan-core::bom</text>
+  <text class="value" x="950" y="912" text-anchor="end">3,821 B · 0.02%</text>
+<rect x="525" y="923" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="544" y="934">wasm-bindgen</text>
+  <text class="value" x="950" y="934" text-anchor="end">3,728 B · 0.02%</text>
+<rect x="525" y="945" width="11" height="11" rx="2" fill="#6B83BD"/>
+  <text x="544" y="956">scan-core::udif_codec</text>
+  <text class="value" x="950" y="956" text-anchor="end">3,042 B · 0.02%</text>
+<rect x="525" y="967" width="11" height="11" rx="2" fill="#B85767"/>
+  <text x="544" y="978">scan-core::plist_value</text>
+  <text class="value" x="950" y="978" text-anchor="end">2,458 B · 0.01%</text>
+<rect x="525" y="989" width="11" height="11" rx="2" fill="#8A9750"/>
+  <text x="544" y="1000">scan-core::gzip_tail</text>
+  <text class="value" x="950" y="1000" text-anchor="end">2,223 B · 0.01%</text>
+<rect x="525" y="1011" width="11" height="11" rx="2" fill="#9B6B42"/>
+  <text x="544" y="1022">zmij</text>
+  <text class="value" x="950" y="1022" text-anchor="end">1,809 B · 0.01%</text>
+<rect x="525" y="1033" width="11" height="11" rx="2" fill="#477679"/>
+  <text x="544" y="1044">bzip2</text>
+  <text class="value" x="950" y="1044" text-anchor="end">1,799 B · 0.01%</text>
+<rect x="525" y="1055" width="11" height="11" rx="2" fill="#A391AE"/>
+  <text x="544" y="1066">flate2</text>
+  <text class="value" x="950" y="1066" text-anchor="end">1,508 B · 0.01%</text>
+<rect x="525" y="1077" width="11" height="11" rx="2" fill="#B46749"/>
+  <text x="544" y="1088">crc32fast</text>
+  <text class="value" x="950" y="1088" text-anchor="end">1,498 B · 0.01%</text>
+<rect x="525" y="1099" width="11" height="11" rx="2" fill="#205E78"/>
+  <text x="544" y="1110">indexmap</text>
+  <text class="value" x="950" y="1110" text-anchor="end">1,475 B · 0.01%</text>
+<rect x="525" y="1121" width="11" height="11" rx="2" fill="#DA753B"/>
+  <text x="544" y="1132">--rustc</text>
+  <text class="value" x="950" y="1132" text-anchor="end">1,265 B · 0.01%</text>
+<rect x="525" y="1143" width="11" height="11" rx="2" fill="#359380"/>
+  <text x="544" y="1154">tinyvec</text>
+  <text class="value" x="950" y="1154" text-anchor="end">1,143 B · 0.01%</text>
+<rect x="525" y="1165" width="11" height="11" rx="2" fill="#9865AA"/>
+  <text x="544" y="1176">compiler-builtins</text>
+  <text class="value" x="950" y="1176" text-anchor="end">1,035 B · 0.01%</text>
+<rect x="525" y="1187" width="11" height="11" rx="2" fill="#D4A32F"/>
+  <text x="544" y="1198">memchr</text>
+  <text class="value" x="950" y="1198" text-anchor="end">603 B · 0.00%</text>
+<rect x="525" y="1209" width="11" height="11" rx="2" fill="#6B83BD"/>
+  <text x="544" y="1220">twox-hash</text>
+  <text class="value" x="950" y="1220" text-anchor="end">600 B · 0.00%</text>
+<rect x="525" y="1231" width="11" height="11" rx="2" fill="#B85767"/>
+  <text x="544" y="1242">itoa</text>
+  <text class="value" x="950" y="1242" text-anchor="end">449 B · 0.00%</text>
+<rect x="525" y="1253" width="11" height="11" rx="2" fill="#8A9750"/>
+  <text x="544" y="1264">wasm-bindgen glue</text>
+  <text class="value" x="950" y="1264" text-anchor="end">216 B · 0.00%</text>
+<rect x="525" y="1275" width="11" height="11" rx="2" fill="#9B6B42"/>
+  <text x="544" y="1286">Code section header</text>
+  <text class="value" x="950" y="1286" text-anchor="end">7 B · 0.00%</text>
+</svg>

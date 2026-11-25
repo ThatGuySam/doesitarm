@@ -1,0 +1,383 @@
+{
+  "sha256": "e4c304d8e3fb9cf2cdbb664583d250398d2667d0f9cc515a5cbbe879e6ae5df8",
+  "sizes": {
+    "raw": 24493375,
+    "gzip": 2557711,
+    "brotli": 1128636
+  },
+  "sections": [
+    {
+      "name": "Code",
+      "bytes": 19342638,
+      "payloadBytes": 19342633
+    },
+    {
+      "name": "Custom: name",
+      "bytes": 4864066,
+      "payloadBytes": 4864061
+    },
+    {
+      "name": "Data",
+      "bytes": 269164,
+      "payloadBytes": 269160
+    },
+    {
+      "name": "Functions",
+      "bytes": 13009,
+      "payloadBytes": 13006
+    },
+    {
+      "name": "Imports",
+      "bytes": 1776,
+      "payloadBytes": 1773
+    },
+    {
+      "name": "Exports",
+      "bytes": 942,
+      "payloadBytes": 939
+    },
+    {
+      "name": "Types",
+      "bytes": 766,
+      "payloadBytes": 763
+    },
+    {
+      "name": "Elements",
+      "bytes": 696,
+      "payloadBytes": 693
+    },
+    {
+      "name": "Custom: target_features",
+      "bytes": 151,
+      "payloadBytes": 148
+    },
+    {
+      "name": "Custom: producers",
+      "bytes": 114,
+      "payloadBytes": 112
+    },
+    {
+      "name": "Globals",
+      "bytes": 27,
+      "payloadBytes": 25
+    },
+    {
+      "name": "Tables",
+      "bytes": 13,
+      "payloadBytes": 11
+    },
+    {
+      "name": "Wasm header",
+      "bytes": 8,
+      "payloadBytes": 8
+    },
+    {
+      "name": "Memory",
+      "bytes": 5,
+      "payloadBytes": 3
+    }
+  ],
+  "code": {
+    "functions": 13004,
+    "importedFunctions": 31,
+    "bytes": 19342638,
+    "functionBodyBytes": 19317390,
+    "owners": [
+      {
+        "name": "scan-core::macho",
+        "bytes": 4885531,
+        "functions": 1465
+      },
+      {
+        "name": "scan-core::pkg",
+        "bytes": 4270824,
+        "functions": 306
+      },
+      {
+        "name": "Rust core/alloc/std",
+        "bytes": 3535279,
+        "functions": 7911
+      },
+      {
+        "name": "scan-core::stream_bundle",
+        "bytes": 2330494,
+        "functions": 482
+      },
+      {
+        "name": "scan-core::apfs",
+        "bytes": 782496,
+        "functions": 183
+      },
+      {
+        "name": "scan-core::hfs",
+        "bytes": 680069,
+        "functions": 121
+      },
+      {
+        "name": "scan-core::diagnostic",
+        "bytes": 596847,
+        "functions": 685
+      },
+      {
+        "name": "scan-core::cpio",
+        "bytes": 375827,
+        "functions": 35
+      },
+      {
+        "name": "scan-core::inflate",
+        "bytes": 316231,
+        "functions": 289
+      },
+      {
+        "name": "scan-core::pbzx",
+        "bytes": 303646,
+        "functions": 184
+      },
+      {
+        "name": "scan-core::nested",
+        "bytes": 288820,
+        "functions": 13
+      },
+      {
+        "name": "scan-core::(root)",
+        "bytes": 190378,
+        "functions": 186
+      },
+      {
+        "name": "lzma-rust2",
+        "bytes": 119140,
+        "functions": 117
+      },
+      {
+        "name": "scan-core::zip",
+        "bytes": 74749,
+        "functions": 27
+      },
+      {
+        "name": "sevenz-rust2",
+        "bytes": 56715,
+        "functions": 62
+      },
+      {
+        "name": "Unclassified symbols",
+        "bytes": 54213,
+        "functions": 187
+      },
+      {
+        "name": "roxmltree",
+        "bytes": 48780,
+        "functions": 49
+      },
+      {
+        "name": "scan-core::tar",
+        "bytes": 45687,
+        "functions": 20
+      },
+      {
+        "name": "scan-core::dmg",
+        "bytes": 44167,
+        "functions": 30
+      },
+      {
+        "name": "scan-core::inventory",
+        "bytes": 38396,
+        "functions": 188
+      },
+      {
+        "name": "scan-core::sevenz",
+        "bytes": 37726,
+        "functions": 14
+      },
+      {
+        "name": "plist",
+        "bytes": 35728,
+        "functions": 47
+      },
+      {
+        "name": "libbz2-rs-sys",
+        "bytes": 29961,
+        "functions": 11
+      },
+      {
+        "name": "ruzstd",
+        "bytes": 28089,
+        "functions": 35
+      },
+      {
+        "name": "zlib-rs",
+        "bytes": 24623,
+        "functions": 20
+      },
+      {
+        "name": "lzfse-rust",
+        "bytes": 16918,
+        "functions": 36
+      },
+      {
+        "name": "serde-json",
+        "bytes": 12495,
+        "functions": 29
+      },
+      {
+        "name": "js-sys",
+        "bytes": 12347,
+        "functions": 64
+      },
+      {
+        "name": "time",
+        "bytes": 11217,
+        "functions": 7
+      },
+      {
+        "name": "sha2",
+        "bytes": 8317,
+        "functions": 1
+      },
+      {
+        "name": "scan-core::bundle",
+        "bytes": 7609,
+        "functions": 12
+      },
+      {
+        "name": "scan-core::decode",
+        "bytes": 7432,
+        "functions": 12
+      },
+      {
+        "name": "dlmalloc",
+        "bytes": 7408,
+        "functions": 7
+      },
+      {
+        "name": "scan-core::local_bundle",
+        "bytes": 7316,
+        "functions": 3
+      },
+      {
+        "name": "scan-wasm",
+        "bytes": 6912,
+        "functions": 8
+      },
+      {
+        "name": "unicode-normalization",
+        "bytes": 6556,
+        "functions": 9
+      },
+      {
+        "name": "hashbrown",
+        "bytes": 5797,
+        "functions": 10
+      },
+      {
+        "name": "scan-core::launcher",
+        "bytes": 5283,
+        "functions": 3
+      },
+      {
+        "name": "base64",
+        "bytes": 3936,
+        "functions": 2
+      },
+      {
+        "name": "scan-core::bom",
+        "bytes": 3821,
+        "functions": 7
+      },
+      {
+        "name": "wasm-bindgen",
+        "bytes": 3728,
+        "functions": 64
+      },
+      {
+        "name": "scan-core::udif_codec",
+        "bytes": 3042,
+        "functions": 3
+      },
+      {
+        "name": "scan-core::plist_value",
+        "bytes": 2458,
+        "functions": 2
+      },
+      {
+        "name": "scan-core::gzip_tail",
+        "bytes": 2223,
+        "functions": 2
+      },
+      {
+        "name": "zmij",
+        "bytes": 1809,
+        "functions": 1
+      },
+      {
+        "name": "bzip2",
+        "bytes": 1799,
+        "functions": 13
+      },
+      {
+        "name": "flate2",
+        "bytes": 1508,
+        "functions": 10
+      },
+      {
+        "name": "crc32fast",
+        "bytes": 1498,
+        "functions": 2
+      },
+      {
+        "name": "indexmap",
+        "bytes": 1475,
+        "functions": 2
+      },
+      {
+        "name": "--rustc",
+        "bytes": 1265,
+        "functions": 14
+      },
+      {
+        "name": "tinyvec",
+        "bytes": 1143,
+        "functions": 3
+      },
+      {
+        "name": "compiler-builtins",
+        "bytes": 1035,
+        "functions": 1
+      },
+      {
+        "name": "memchr",
+        "bytes": 603,
+        "functions": 1
+      },
+      {
+        "name": "twox-hash",
+        "bytes": 600,
+        "functions": 1
+      },
+      {
+        "name": "itoa",
+        "bytes": 449,
+        "functions": 2
+      },
+      {
+        "name": "wasm-bindgen glue",
+        "bytes": 216,
+        "functions": 6
+      },
+      {
+        "name": "Code section header",
+        "bytes": 7,
+        "functions": 0
+      }
+    ],
+    "inspectPayloadSymbols": {
+      "entries": 184,
+      "bodyBytes": 3198876,
+      "directEntries": 92,
+      "directBodyBytes": 3169248
+    },
+    "inspectSymbols": {
+      "entries": 2,
+      "bodyBytes": 90126
+    }
+  }
+}
