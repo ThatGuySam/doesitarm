@@ -36,3 +36,4 @@
 - Targeted payload inspections verified the Temurin Java CLI and universal SSHFS binary. The NVS source confirms a shell entry with separate sourced setup. libndi's catalog has no checksum and the publisher image's observed hash is in the report.
 - Exact local targets verified .NET 8's x86_64 host and Enclave's x86_64 executable. The NDI range scan verified both slices of `libndi.dylib`. Krisp's checksum-matching app component CPIO only contains its root directory. Its separate Scripts member remains uninspected.
 - All captured publisher archives and extracted payloads were removed. Raw result JSON and member listings are under `~/.cache/doesitarm-fix-bundles/`. The final validation logs are in `target/fix-bundles-verification-final/`.
+- Final verification passed with 68 Rust tests, 399 native/Wasm comparisons, 39 Node tests, 8 Python tests and 31 EDGE fixtures. Both Wasm artifacts built. The report lists open evidence and companion-branch fixes.

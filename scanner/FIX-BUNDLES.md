@@ -71,3 +71,10 @@ The small targeted regression previously reread the source locally and left the 
 
 
 The after-fix scan of the same archive, with the remote-cli profile and a one-pass byte budget, verified the exact arm64 Node member and macOS 13.5. It requested 159,449,092 bytes. The primary remains the shell launcher and has an empty Mach-O slice list. The temporary archive was removed after verification.
+
+## Final verification
+
+- 68 Rust workspace tests passed. Formatting and warning-free Clippy passed on native and Wasm targets.
+- The browser and capped Worker Wasm artifacts built. 399 native/Wasm JSON comparisons passed, including the targeted Cursor regression at the exact one-pass budget.
+- 39 offline Node tests, 8 Python runner tests, and 31 generated EDGE fixtures passed. The largest new fixture is 132,451 bytes.
+- The offline checks used Node and the native CLI on Omarchy. The raw validation logs are in `target/fix-bundles-verification-final/`.
