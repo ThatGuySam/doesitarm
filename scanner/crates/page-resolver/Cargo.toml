@@ -1,0 +1,17 @@
+[package]
+name = "page-resolver"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+html5gum = { version = "=0.8.4", default-features = false }
+percent-encoding = "2"
+quick-xml = "0.42"
+regex = { version = "1", default-features = false, features = ["std", "perf", "unicode-perl"] }
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "0.10"
+url = { version = "2", features = ["serde"] }
+
+[dev-dependencies]
+flate2 = "1"

@@ -3,6 +3,7 @@
 mod http;
 mod local;
 mod local_folder;
+mod page;
 
 use scan_core::{
     Profile, REMOTE_BUDGET_TIERS, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status,
@@ -85,10 +86,14 @@ impl Output {
 }
 
 fn main() -> ExitCode {
+    if std::env::args_os().nth(1).as_deref() == Some(std::ffi::OsStr::new("resolve")) {
+        return page::command(std::env::args_os().skip(2));
+    }
     let args = match args() {
         Ok(Some(args)) => args,
         Ok(None) => {
             println!("{USAGE}");
+            println!("{}", page::USAGE);
             println!("Local files default to local with no work budget or deadline.");
             println!(
                 "Local .app directories scan one bundle. Other directories scan recursively; --json emits a JSON array."

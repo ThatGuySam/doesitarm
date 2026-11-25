@@ -4,8 +4,10 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+page-resolver = { path = "../crates/page-resolver" }
 scan-core = { path = "../scan-core" }
 serde.workspace = true
 serde_json.workspace = true
 tempfile = "3"
 ureq = { version = "3", default-features = false, features = ["rustls"] }
+url = "2"
