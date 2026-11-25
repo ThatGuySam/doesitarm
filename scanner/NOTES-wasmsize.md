@@ -16,3 +16,5 @@ Worktree `scanner-wasmsize`, base `scanner-pages` at `12b3b2c`.
 - Start from the unmodified symbol data and check each change independently. Keep the native CLI at the standard release profile. A candidate with changed results or a different read schedule needs investigation before it can go into a commit.
 
 - Step 1 verified the original SHA-256 and completed all 909 normalized comparisons with zero differences. The next checkpoint applies the selected Wasm-only Cargo profile and strips shipped names.
+
+- Step 2 selected opt-level z, fat LTO, one codegen unit, and panic abort. The shipped browser package is 6,633,612 B raw, 961,908 B gzip, and 611,119 B Brotli, with zero real-app or fixture differences. The raw-size target still needs reader erasure.

@@ -3,6 +3,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stringifyRedacted } from '../public/path-privacy.js';
+import { withoutWasmNames } from '../../scripts/wasm-sections.mjs';
 import { writeBrowserBuildInfo } from '../../scripts/browser-build-info.mjs';
 
 const scanner = fileURLToPath(new URL('../../', import.meta.url));
@@ -16,17 +17,31 @@ function run(command, args) {
   if (status !== 0) process.exit(status ?? 1);
 }
 
-const wasm = 'target/wasm32-unknown-unknown/release/scan_wasm.wasm';
+const wasmProfile = 'wasm-release';
+const wasm = `target/wasm32-unknown-unknown/${wasmProfile}/scan_wasm.wasm`;
+
+function packageWasm(outDir, variant) {
+  run(bindgen, ['--target', 'web', '--out-dir', outDir, wasm]);
+  const filename = 'scan_wasm_bg.wasm';
+  const shipped = join(scanner, outDir, filename);
+  const symbols = join(scanner, 'target', 'wasm-symbols', variant);
+  mkdirSync(symbols, { recursive: true });
+  const named = readFileSync(shipped);
+  writeFileSync(join(symbols, filename), named);
+  writeFileSync(shipped, withoutWasmNames(named));
+}
+
 const workerOnly = process.argv.includes('--worker-only');
 if (!workerOnly) {
-  run('cargo', ['build', '--locked', '-j2', '-p', 'scan-wasm', '--release', '--target', 'wasm32-unknown-unknown']);
-  run(bindgen, ['--target', 'web', '--out-dir', 'pkg', wasm]);
+  run('cargo', ['build', '--locked', '-j2', '-p', 'scan-wasm', '--profile', wasmProfile,
+    '--target', 'wasm32-unknown-unknown']);
+  packageWasm('pkg', 'browser');
 }
 
 // Leave headroom for the Worker isolate's JS heap and HTTP buffers.
-run('cargo', ['rustc', '--locked', '-j2', '-p', 'scan-wasm', '--release',
+run('cargo', ['rustc', '--locked', '-j2', '-p', 'scan-wasm', '--profile', wasmProfile,
   '--target', 'wasm32-unknown-unknown', '--features', 'page-resolution', '--', '-C', 'link-arg=--max-memory=83886080']);
-run(bindgen, ['--target', 'web', '--out-dir', 'pkg/worker', wasm]);
+packageWasm('pkg/worker', 'worker');
 
 // wasm-bindgen's web glue normally caches one instance per module. Give each
 // factory invocation its own Wasm exports, JS handles, and memory views so
