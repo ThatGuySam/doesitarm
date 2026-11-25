@@ -840,3 +840,65 @@ fn zip_wrapper_resolves_the_flat_inner_application_and_its_own_inventory() {
         Some("Outer.app/Wrapper/Inner.app/Info.plist")
     );
 }
+
+#[test]
+fn zip_resource_only_bundle_reports_no_executable() {
+    let input = include_bytes!("../../fixtures/bundles/resources-only.zip");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::NoExecutable), "{result:?}");
+        assert_eq!(result.bundle_kind, Some("resource_only"));
+        assert!(result.architectures.is_empty());
+        assert!(result.inventory.unwrap().complete);
+    }
+}
+
+#[test]
+fn zip_product_selection_skips_resource_bundle_in_front_of_app_or_installer() {
+    let inputs: &[(&[u8], &str)] = &[
+        (
+            include_bytes!("../../fixtures/bundles/resources-and-app.zip"),
+            "Z Tool.app",
+        ),
+        (
+            include_bytes!("../../fixtures/bundles/resources-and-installer.zip"),
+            "Fixture.app",
+        ),
+    ];
+    for (input, expected) in inputs {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(matches!(result.status, Status::Complete), "{result:?}");
+            assert_eq!(result.bundle_path.as_deref(), Some(*expected));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn zip_product_selection_requests_a_target_for_independent_apps() {
+    let input = include_bytes!("../../fixtures/bundles/independent-apps.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.error.unwrap().contains("multi-app"));
+    assert_eq!(
+        result.candidate_bundle_paths,
+        ["A Utility.app", "Z Tool.app"]
+    );
+    assert!(result.architectures.is_empty());
+
+    let selected = ready(scan_target(
+        &mut Memory(input),
+        u64::MAX,
+        Target::Bundle("Z Tool.app"),
+    ));
+    assert!(matches!(selected.status, Status::Complete), "{selected:?}");
+    assert_eq!(selected.bundle_path.as_deref(), Some("Z Tool.app"));
+}

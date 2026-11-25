@@ -1,5 +1,5 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
+    ReadAt, Result, ScanError, ScanResult, Status, Target, Window, bundle, check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
@@ -23,6 +23,14 @@ struct Entry {
     method: u16,
     flags: u16,
     mode: u16,
+}
+
+#[derive(Clone, Copy)]
+struct App<'a> {
+    info: &'a Entry,
+    name: &'a str,
+    wrapper: Option<&'a str>,
+    flat: bool,
 }
 
 impl Entry {
@@ -103,44 +111,133 @@ async fn scan_directory(
         return primary;
     }
 
-    let paths = entries
+    let mut apps: Vec<_> = entries
         .iter()
         .filter(|entry| !entry.is_symlink())
-        .filter_map(|entry| Some((entry, bundle::archive_path(&entry.path)?)));
-    let app = paths
-        .clone()
-        .filter_map(|(entry, path)| Some((entry, bundle::selected_plist(path, target)?, path)))
-        .min_by_key(|(_, name, _)| (name.matches('/').count(), *name));
-    let (entry, name, wrapper, flat) = if let Some((entry, name, path)) = app {
-        let wrapper = bundle::wrapped_plist(path, target).map(|(_, wrapper, _)| wrapper);
-        (entry, name, wrapper, false)
-    } else {
-        let mut wrapped = paths.filter_map(|(entry, path)| {
-            let (name, wrapper, flat) = bundle::wrapped_plist(path, target)?;
-            Some((entry, name, wrapper, flat))
-        });
-        let Some(mut choice) = wrapped.next() else {
-            return scan_nested(input, &entries, directory.offset, work, target, out).await;
-        };
-        for candidate in wrapped {
-            if candidate.1 != choice.1 {
-                return Err(ScanError::Unsupported(
-                    "multiple wrapped apps in ZIP archive",
-                ));
+        .filter_map(|info| {
+            let path = bundle::archive_path(&info.path)?;
+            if let Some((name, wrapper, flat)) = bundle::wrapped_plist(path, target) {
+                return Some(App {
+                    info,
+                    name,
+                    wrapper: Some(wrapper),
+                    flat,
+                });
             }
-            if !candidate.3 {
-                choice = candidate;
+            let name = bundle::selected_plist(path, target)?;
+            Some(App {
+                info,
+                name,
+                wrapper: None,
+                flat: false,
+            })
+        })
+        .collect();
+    apps.sort_by_key(|app| (app.name.matches('/').count(), app.name, app.flat));
+    apps.dedup_by_key(|app| app.name);
+    if apps.is_empty() {
+        return scan_nested(input, &entries, directory.offset, work, target, out).await;
+    }
+    let limit = if work.strict() {
+        8
+    } else if work.local() {
+        usize::MAX
+    } else {
+        32
+    };
+    if apps.len() > limit {
+        out.candidate_bundle_paths
+            .extend(apps.iter().take(limit).map(|app| app.name.to_owned()));
+        return Err(ScanError::Limit(
+            "too many ZIP app plists to select a product",
+        ));
+    }
+
+    let mut selected: Option<(App<'_>, ScanResult, Result<()>)> = None;
+    let mut first_failure = None;
+    for app in apps {
+        work.check_deadline()?;
+        let mut result = out.subresult();
+        result.format = out.format;
+        let primary = read_app(input, &entries, directory.offset, work, app, &mut result).await;
+        match primary {
+            Ok(()) | Err(ScanError::Unsupported("declared executable is a script")) => {
+                if let Some((previous, _, _)) = selected {
+                    out.candidate_bundle_paths =
+                        vec![previous.name.to_owned(), app.name.to_owned()];
+                    return Err(ScanError::Unsupported(
+                        "multi-app ZIP archive; select a bundle path",
+                    ));
+                }
+                selected = Some((app, result, primary));
+            }
+            Err(ref error) if inventory::stop(error) || matches!(error, ScanError::Limit(_)) => {
+                *out = result;
+                return primary;
+            }
+            Err(_) if first_failure.is_none() => first_failure = Some((app, result, primary)),
+            Err(_) => (),
+        }
+    }
+    let (app, mut result, primary) = if let Some(selected) = selected {
+        selected
+    } else {
+        if matches!(target, Target::Auto) {
+            let mut installed = out.subresult();
+            installed.format = out.format;
+            let nested = scan_nested(
+                input,
+                &entries,
+                directory.offset,
+                work,
+                target,
+                &mut installed,
+            )
+            .await;
+            if nested.is_ok() || nested.as_ref().is_err_and(inventory::stop) {
+                *out = installed;
+                return nested;
             }
         }
-        (choice.0, choice.1, Some(choice.2), choice.3)
+        // The nonempty app list always leaves a verified result or a first failure.
+        first_failure.unwrap()
     };
+    read_runtime(input, &entries, directory.offset, work, &mut result).await;
+    let primary = read_inventory(
+        input,
+        &entries,
+        directory.offset,
+        work,
+        app,
+        &mut result,
+        primary,
+    )
+    .await;
+    *out = result;
+    primary
+}
+
+async fn read_app(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    app: App<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let App {
+        info: entry,
+        name,
+        wrapper,
+        flat,
+    } = app;
     out.bundle_path = Some(name.to_owned());
     out.wrapper_path = wrapper.map(str::to_owned);
 
     if entry.expanded > bundle::MAX_PLIST {
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
     }
-    let plist = member(input, entry, directory.offset, work)
+    let plist = member(input, entry, heap_end, work)
         .await?
         .read_at(0, entry.expanded as usize)
         .await?;
@@ -163,20 +260,36 @@ async fn scan_directory(
         path = alias;
     }
 
-    let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
-    let primary = bundle::confirm_executable(out, primary);
-    read_runtime(input, &entries, directory.offset, work, out).await;
+    let primary = read_main(input, entries, heap_end, work, &path, out).await;
+    bundle::confirm_executable(out, primary)
+}
+
+async fn read_inventory(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    app: App<'_>,
+    out: &mut ScanResult,
+    primary: Result<()>,
+) -> Result<()> {
+    let declared_resource = matches!(
+        primary,
+        Err(ScanError::NotFound(bundle::RESOURCE_NO_EXECUTABLE))
+    );
     let mut inventory = crate::BinaryInventory::default();
-    inventory.record_primary(&primary);
+    if !declared_resource {
+        inventory.record_primary(&primary);
+    }
     let mut allowance = Allowance::new(input, work);
-    for entry in &entries {
+    for entry in entries {
         let Some(relative) = bundle::archive_path(&entry.path)
             .filter(|candidate| Some(*candidate) != out.executable_path.as_deref())
-            .and_then(|candidate| inventory::relative(candidate, name))
+            .and_then(|candidate| inventory::relative(candidate, app.name))
         else {
             continue;
         };
-        let role = if flat {
+        let role = if app.flat {
             inventory::flat_role(relative)
         } else {
             inventory::role(relative)
@@ -184,14 +297,20 @@ async fn scan_directory(
         let Some(role) = role else {
             continue;
         };
-        if relative.ends_with('/') || entry.expanded < 8 || entry.is_symlink() {
+        if entry.is_symlink() {
+            if declared_resource {
+                inventory.partial("unresolved link in resource bundle");
+            }
+            continue;
+        }
+        if relative.ends_with('/') || entry.expanded < 8 {
             continue;
         }
         if let Err(error) = allowance.step(input, work) {
             inventory.partial(error.to_string());
             break;
         }
-        let observed = match member(input, entry, directory.offset, work).await {
+        let observed = match member(input, entry, heap_end, work).await {
             Ok(mut data) => inventory::read(&mut data, relative, role, &mut inventory).await,
             Err(error) => Err(error),
         };
@@ -203,7 +322,14 @@ async fn scan_directory(
             }
         }
     }
+    let resource_only = declared_resource && inventory.complete && inventory.binaries.is_empty();
     out.inventory = Some(inventory);
+    if resource_only {
+        out.status = Status::NoExecutable;
+        out.bundle_kind = Some("resource_only");
+        out.error = Some("This resource bundle declares no executable.".into());
+        return Ok(());
+    }
     primary
 }
 

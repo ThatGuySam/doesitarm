@@ -84,6 +84,7 @@ pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
 }
 
 pub(crate) const NAME_FALLBACK: &str = "bundle_name_fallback";
+pub(crate) const RESOURCE_NO_EXECUTABLE: &str = "CFBundleExecutable in resource bundle";
 const MISSING_EXECUTABLE: ScanError = ScanError::NotFound("CFBundleExecutable in Info.plist");
 
 pub(crate) fn apply_plist(
@@ -120,6 +121,8 @@ fn apply_plist_at(
         let relative = if let Some(executable) = string(dict, "CFBundleExecutable") {
             out.executable_name = Some(executable.to_owned());
             resolve_executable(executable, flat)?
+        } else if allow_fallback && string(dict, "CFBundlePackageType") == Some("BNDL") {
+            return Err(ScanError::NotFound(RESOURCE_NO_EXECUTABLE));
         } else if allow_fallback {
             let path = same_stem_executable(dict, bundle, flat).ok_or(MISSING_EXECUTABLE)?;
             out.executable_resolution = Some(NAME_FALLBACK);

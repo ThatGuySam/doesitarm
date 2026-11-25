@@ -12,7 +12,7 @@ from generate import fat, thin
 from dmg_fixture import hfs_tree, write_udif
 from apfs_fixture import apfs_fixture
 
-from edge.generate import tar
+from edge.generate import app, tar
 
 
 def zip_fixture(name, files):
@@ -57,3 +57,19 @@ zip_fixture("wrapped-flat.zip", {
     f"{inner}/Inner": thin(),
     f"{inner}/Frameworks/Sidecar.framework/Sidecar": thin(),
 })
+
+resources = {
+    "A Assets.app/Contents/Info.plist": plistlib.dumps({
+        "CFBundleIdentifier": "com.example.assets",
+        "CFBundlePackageType": "BNDL",
+    }),
+    "A Assets.app/Contents/Resources/en.lproj/Localizable.strings": b'"label" = "Fixture";',
+}
+tool = app("Z Tool.app")
+zip_fixture("resources-only.zip", resources)
+zip_fixture("resources-and-app.zip", {**resources, **tool})
+zip_fixture("resources-and-installer.zip", {
+    **resources,
+    "Installer.pkg": (HERE.parent / "gzip-newc.pkg").read_bytes(),
+})
+zip_fixture("independent-apps.zip", {**app("A Utility.app"), **tool})

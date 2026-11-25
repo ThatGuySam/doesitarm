@@ -217,6 +217,8 @@ pub struct ScanResult {
     pub nested_artifacts: Vec<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub candidate_bundle_paths: Vec<String>,
     pub installer: Option<InstallerMetadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub inventory: Option<BinaryInventory>,
@@ -255,6 +257,7 @@ impl ScanResult {
             bundle_metadata_source: None,
             nested_artifacts: Vec::new(),
             candidate_executables: Vec::new(),
+            candidate_bundle_paths: Vec::new(),
             installer: None,
             inventory: None,
             script_runtime: None,
