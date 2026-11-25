@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
-import { readFile, readdir, stat } from 'node:fs/promises';
-import { homedir } from 'node:os';
+import { mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import { homedir, tmpdir } from 'node:os';
 import { basename, join, resolve, sep } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
@@ -30,8 +30,13 @@ async api(request) {
   return new Response(await readFile(path));
 } });
 
-const launch = engine === 'chromium' ? { executablePath: '/usr/bin/chromium' } : {};
-let browserServer;
+const scratch = await mkdtemp(join(tmpdir(), 'scanner-ffcrash-'));
+const executable = engine === 'chromium' ? '/usr/bin/chromium' : playwright.firefox.executablePath();
+const pidFile = join(scratch, 'pid');
+const wrapper = join(scratch, 'browser');
+const quote = (value) => `'${value.replaceAll("'", "'\\''")}'`;
+await writeFile(wrapper, `#!/bin/sh\nprintf '%s\\n' "$$" > ${quote(pidFile)}\nexec ${quote(executable)} "$@"\n`, { mode: 0o700 });
+let browser;
 let timer;
 let guard;
 const started = performance.now();
@@ -66,15 +71,16 @@ function sample(pid) {
   if (!guard && ((available && available < 2560) || row.total > 2500)) {
     guard = new Error(`Memory ceiling reached during ${phase} (${Math.round(available)} MiB free, ${Math.round(row.total)} MiB RSS)`);
     clearInterval(timer);
-    void browserServer.kill();
+    void browser.close().catch(() => {});
   }
 }
 
 try {
-  browserServer = await playwright[engine].launchServer({ ...launch, headless: true });
-  const pid = browserServer.process().pid;
+  // A remote Playwright connection uploads the whole directory from Node.
+  // Launch locally so setInputFiles passes only the disk directory path.
+  browser = await playwright[engine].launch({ executablePath: wrapper, headless: true });
+  const pid = Number(await readFile(pidFile, 'utf8'));
   timer = setInterval(() => sample(pid), 50);
-  const browser = await playwright[engine].connect(browserServer.wsEndpoint());
   const page = await browser.newPage({ acceptDownloads: true });
   page.on('crash', () => console.log(JSON.stringify({ crash: phase, ms: stamp() })));
   page.on('pageerror', (error) => console.log(JSON.stringify({ error: error.message, ms: stamp() })));
@@ -205,6 +211,7 @@ try {
 } finally {
   clearInterval(timer);
   console.log(JSON.stringify({ engine, route, peak_RSS_MiB: samples }));
-  await browserServer?.close().catch(() => {});
+  await browser?.close().catch(() => {});
+  await rm(scratch, { recursive: true, force: true });
   server.close();
 }

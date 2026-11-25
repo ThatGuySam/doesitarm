@@ -1,6 +1,6 @@
 import { redactPath } from './path-privacy.js';
 import { diagnosticControls, runHeader, watchLongTasks } from './diagnostics.js';
-import { folderStats, timeSlice } from './folder-walk.js';
+import { folderStats, skipped, timeSlice } from './folder-walk.js';
 import { formatDuration, estimateBatch, estimateRemaining, recordSample } from './scan-progress.js';
 import { emptyResult } from './scan-result.js';
 import { get, ScanCards, statuses } from './scan-view.js';
@@ -8,6 +8,7 @@ import { observedInventory } from './bundle-inventory.js';
 import { emptyBatchTotals, finishBatchTotals, formatSeconds, recordBatchResult, steadyRate, totalsPhrase } from './scan-totals.js';
 
 const PAGE_SIZE = 24;
+const FOLDER_QUEUE_LIMIT = 32;
 const number = new Intl.NumberFormat();
 const byName = new Intl.Collator(undefined, { sensitivity: 'base', numeric: true });
 const labels = { ...statuses, no_executable: 'No executable', script: 'Script', canceled: 'Canceled', queued: 'Queued', scanning: 'Scanning' };
@@ -82,6 +83,7 @@ export class ResultsList {
   #runs = [];
   #runsByChoice;
   #pending = new Map();
+  #queueProgress = new EventTarget();
   #active = new Set();
   #statusCounts = new Map();
   #archCounts = new Map();
@@ -206,9 +208,10 @@ export class ResultsList {
     return Boolean(this.#pending.size || this.#discoveries || this.#artifactListings.size);
   }
 
-  beginFolder(stats, mode) {
+  beginFolder(stats, mode, { resultLimit = Infinity } = {}) {
     if (!this.#busy) this.#newBatch();
     const run = this.#newRun(stats, mode, 'local');
+    run.resultLimit = resultLimit;
     this.#latestFolder = run;
     this.#discoveries += 1;
     get('results').hidden = false;
@@ -236,6 +239,13 @@ export class ResultsList {
       stats.files_seen = remote ? 0 : jobs.length;
       run = this.#newRun(stats, this.#mode(), remote ? 'browser local or remote worker' : 'local');
       run.enumerated = run.started;
+    }
+    const capacity = (run.resultLimit ?? Infinity) - run.rows.length;
+    if (jobs.length > capacity) {
+      run.stats.partial = true;
+      for (const job of jobs.slice(capacity)) skipped(run.stats, 'folder_result_limit', job.label);
+      jobs = jobs.slice(0, capacity);
+      if (!jobs.length) return;
     }
     const batch = this.#batch;
     if (!batch.total) get('batch-notice').textContent = `Scanning ${jobs.length} ${jobs.length === 1 ? 'item' : 'items'}.`;
@@ -285,31 +295,25 @@ export class ResultsList {
   }
 
   async #addArtifacts(artifacts, executable, run) {
-    const batchSize = 32;
-    if (artifacts.length <= batchSize) {
-      this.add(artifacts.filter(({ label }) => label !== executable), run);
-      return;
-    }
     const listing = new AbortController();
     this.#artifactListings.add(listing);
     run.listing += 1;
+    const batchSize = 16;
     try {
-      const pause = timeSlice();
-      let batch = [];
-      for (const job of artifacts) {
+      for (let start = 0; start < artifacts.length; start += batchSize) {
+        const batch = artifacts.slice(start, start + batchSize).filter(({ label }) => label !== executable);
+        if (!batch.length) continue;
+        await this.waitForCapacity(batch.length, listing.signal);
         if (listing.signal.aborted) break;
-        if (job.label !== executable) batch.push(job);
-        if (batch.length < batchSize) continue;
         this.add(batch, run);
-        batch = [];
-        const wait = pause();
-        if (wait) await wait;
       }
-      if (!listing.signal.aborted) this.add(batch, run);
+    } catch (error) {
+      if (!listing.signal.aborted) throw error;
     } finally {
       run.listing -= 1;
       if (!run.pending && !run.listing && run.enumerated !== null) run.ended = performance.now();
       this.#artifactListings.delete(listing);
+      this.#queueProgress.dispatchEvent(new Event('settled'));
       this.#endBatch();
       this.#requestRefresh();
     }
@@ -373,6 +377,7 @@ export class ResultsList {
       if (row.status === 'canceled') this.#batch.canceled += 1;
       this.#batch.finished += 1;
       this.#pending.delete(row.id);
+      this.#queueProgress.dispatchEvent(new Event('settled'));
       run.finished += 1;
       run.pending -= 1;
       if (!run.pending && !run.listing && run.enumerated !== null) run.ended = now;
@@ -414,6 +419,22 @@ export class ResultsList {
       row.planned = planned;
     }
     if (planned !== null && now !== undefined) row.samples = recordSample(row.samples, now, row.bytes);
+  }
+
+  async waitForCapacity(count, signal, discovery = false) {
+    while (this.#pending.size + count > FOLDER_QUEUE_LIMIT || (discovery && this.#artifactListings.size >= 2)) {
+      await new Promise((resolve) => {
+        const wake = () => {
+          this.#queueProgress.removeEventListener('settled', wake);
+          signal.removeEventListener('abort', wake);
+          resolve();
+        };
+        this.#queueProgress.addEventListener('settled', wake, { once: true });
+        signal.addEventListener('abort', wake, { once: true });
+        if (signal.aborted) wake();
+      });
+      signal.throwIfAborted();
+    }
   }
 
   #endBatch() {
@@ -638,6 +659,7 @@ export class ResultsList {
     if (folder?.enumerated != null && folder.appCount) {
       counts.push(`Found ${number.format(folder.appCount)} apps in ${number.format(folder.stats.files_seen)} files`);
     }
+    if (folder?.stats.partial) counts.push('Partial folder scan');
     const queued = this.#pending.size - this.#active.size;
     if (batch.total) {
       counts.push(`${number.format(batch.finished)} of ${number.format(batch.total)} finished`);

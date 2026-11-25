@@ -124,7 +124,8 @@ export class ScanPool {
     const { id, job, update } = task;
     update({ type: 'start' });
     try {
-      const { kind, label, file, url, forceWorker, probe, parentBundlePath, plistPath, roleHint } = job;
+      const { kind, label, url, forceWorker, probe, parentBundlePath, plistPath, roleHint } = job;
+      const file = job.file ?? await job.openFile?.();
       const [plist, listings] = kind === 'bundle'
         ? await Promise.all([job.getPlist(), job.getDirectoryListings?.()])
         : [];
@@ -177,7 +178,7 @@ export class ScanPool {
 
   #finishError(task, error, errorClass = 'worker_stopped') {
     const { job, listings } = task;
-    const result = { ...emptyResult('source_error', error, job.file?.size), error_class: errorClass };
+    const result = { ...emptyResult('source_error', error, job.file?.size ?? job.size), error_class: errorClass };
     if (job.kind === 'bundle') {
       result.format = 'app';
       result.bundle_path = job.label;

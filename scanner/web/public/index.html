@@ -53,12 +53,11 @@
             <div class="panel prose">
               <p>The scanner opens each app's main executable and reads its Mach-O headers to see which processor architectures it contains. It reads only the few ranges it needs, so a multi-gigabyte app usually costs a few kilobytes of reading. Local files never leave this browser.</p>
               <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
-              <p>Dropping a folder needs a browser that exposes folder contents to the page. If Firefox or another browser finds no files in a dropped folder, use <strong>Choose folder</strong>.</p>
+              <p>If your browser cannot open a folder with <strong>Choose folder</strong>, drag the folder or individual <code>.app</code> bundles into the scanner.</p>
             </div>
           </details>
         </div>
         <input id="files" type="file" multiple hidden>
-        <input id="folder" type="file" webkitdirectory multiple hidden>
         <p class="drop-hint" aria-hidden="true">Drop to scan</p>
       </div>
       <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
@@ -123,7 +122,7 @@
           <summary>Why couldn't an app be checked?</summary>
           <div class="panel prose">
             <p><strong>? Unknown</strong> means the scanner stopped before it could verify an architecture: the file was damaged or unsupported, the browser could not read it, or a read limit was reached. Open the row's <strong>Details</strong> for the reason.</p>
-            <p>If a scan never seems to end, try fewer apps at once or scan the app inside the disk image. For folders that drop empty, use <strong>Choose folder</strong>.</p>
+            <p>If a scan never seems to end, try fewer apps at once or scan the app inside the disk image. For folders that drop empty, try smaller subfolders or select an app archive.</p>
           </div>
         </details>
         <details>

@@ -1,12 +1,15 @@
 const MAX_LISTING = 64;
 const SLICE_MS = 8;
 const PROBE_BATCH = 64;
+const MAX_BUNDLE_ARTIFACTS = 1024;
 const BUNDLE = /\.app$/i;
 const ARCHIVE = /\.(?:dmg|zip|pkg|tar(?:\.(?:gz|xz|bz2))?|tgz)$/i;
 const MAGIC = new Set([
   0xfeedface, 0xcefaedfe, 0xfeedfacf, 0xcffaedfe,
   0xcafebabe, 0xbebafeca, 0xcafebabf, 0xbfbafeca,
 ]);
+
+export class FolderLimitError extends Error {}
 
 export const yieldToPage = () => globalThis.scheduler?.yield?.() ??
   new Promise((resolve) => setTimeout(resolve, 0));
@@ -116,7 +119,9 @@ function bundleJob(bundle, stats) {
       return bundle.plist ?? await bundle.openPlist?.() ?? null;
     },
     async getExecutable(relative) {
-      const file = entries.get(relative) ?? (open ? await open(relative.split('/')) : null);
+      const candidate = entries.get(relative);
+      const file = typeof candidate === 'function' ? await candidate() : candidate ??
+        (open ? await open(relative.split('/')) : null);
       if (!file) return null;
       return file;
     },
@@ -138,7 +143,7 @@ function discoveryCallbacks({ stats, onJob, onProgress, signal }) {
     const now = performance.now();
     if (now >= nextUpdate) {
       nextUpdate = now + 90;
-      onProgress?.(stats);
+      return onProgress?.(stats);
     }
   }
   return {
@@ -148,11 +153,21 @@ function discoveryCallbacks({ stats, onJob, onProgress, signal }) {
       const waiting = pause();
       if (waiting) return waiting.then(() => {
         signal?.throwIfAborted();
-        progress();
+        return progress();
       });
-      progress();
+      return progress();
     },
   };
+}
+
+function rememberArtifact(bundle, job, stats) {
+  if (bundle.artifacts.length >= MAX_BUNDLE_ARTIFACTS) {
+    stats.partial = true;
+    skipped(stats, 'bundle_artifact_limit', job.label);
+  } else {
+    bundle.artifacts.push(job);
+    if (job.openFile) bundle.entries.set(job.label.slice(bundle.label.length + 1), job.openFile);
+  }
 }
 
 class Probes {
@@ -167,8 +182,8 @@ class Probes {
     this.#retainScripts = retainScripts;
   }
 
-  add(getFile, path, parent) {
-    this.#files.push({ getFile, path, parent });
+  add(getFile, path, parent, { lazy = false, probe = true, getSize } = {}) {
+    this.#files.push({ getFile, path, parent, lazy, probe, getSize });
     if (this.#files.length >= PROBE_BATCH) return this.drain();
   }
 
@@ -178,16 +193,25 @@ class Probes {
 
   async #readBatch() {
     const batch = this.#files.splice(0);
-    const jobs = await Promise.all(batch.map(async ({ getFile, path, parent }) => {
+    const jobs = await Promise.all(batch.map(async ({ getFile, path, parent, lazy, probe, getSize }) => {
       try {
-        const file = await getFile();
-        if (!file || file.size < 4) return;
+        const knownSize = await getSize?.();
+        const needsFile = knownSize == null || (probe && knownSize >= 4);
+        const file = needsFile ? await getFile() : null;
+        const size = file?.size ?? knownSize;
+        if (lazy && parent && size != null) parent.size = (parent.size ?? 0) + size;
+        if (!probe || !file || size < 4) return;
         const magic = await file.slice(0, 4).arrayBuffer();
         if (magic.byteLength !== 4) return;
         const header = new DataView(magic);
-        if (MAGIC.has(header.getUint32(0))) return { file, path, parent, executable: true };
+        if (MAGIC.has(header.getUint32(0))) {
+          const job = lazy
+            ? { kind: 'file', openFile: getFile, size, label: path, parentBundlePath: parent?.label, probe: true }
+            : fileJob(file, path, parent?.label, true);
+          return { job, parent, file: lazy ? null : file, path };
+        }
         if (parent && this.#retainScripts && header.getUint16(0) === 0x2321) {
-          return { file, path, parent, executable: false };
+          return { file, path, parent };
         }
       } catch (error) {
         skippedError(this.#stats, error, path);
@@ -196,12 +220,14 @@ class Probes {
     this.#flow.check();
     for (const hit of jobs) {
       if (!hit) continue;
-      const { file, path, parent, executable } = hit;
-      if (parent) parent.entries.set(path.slice(parent.label.length + 1), file);
-      if (!executable) continue;
-      const job = fileJob(file, path, parent?.label, true);
-      if (parent) parent.artifacts.push(job);
-      else this.#flow.job(job);
+      const { file, path, parent, job } = hit;
+      if (parent && file) parent.entries.set(path.slice(parent.label.length + 1), file);
+      if (!job) continue;
+      if (parent) rememberArtifact(parent, job, this.#stats);
+      else {
+        const wait = this.#flow.job(job);
+        if (wait) await wait;
+      }
     }
   }
 }
@@ -259,7 +285,8 @@ export async function walkFileList(files, options) {
     }
     if (ARCHIVE.test(name)) {
       parent?.nestedArtifacts.push(path);
-      flow.job(fileJob(file, path, parent?.label));
+      const wait = flow.job(fileJob(file, path, parent?.label));
+      if (wait) await wait;
     } else if (!bundlePlist(relative) && size >= 4 && worthProbing(name)) {
       const wait = probes.add(() => file, path, parent);
       if (wait) await wait;
@@ -272,7 +299,8 @@ export async function walkFileList(files, options) {
   await probes.drain();
   for (const bundle of bundles.values()) {
     flow.check();
-    flow.job(bundleJob(bundle, stats));
+    const queued = flow.job(bundleJob(bundle, stats));
+    if (queued) await queued;
     const wait = flow.pause();
     if (wait) await wait;
   }
@@ -280,14 +308,6 @@ export async function walkFileList(files, options) {
 
 function entryFile(entry) {
   return new Promise((resolve, reject) => entry.file(resolve, reject));
-}
-
-async function entryProbe(entry) {
-  if (typeof entry.getMetadata === 'function') {
-    const metadata = await new Promise((resolve, reject) => entry.getMetadata(resolve, reject)).catch(() => null);
-    if (metadata?.size < 4) return null;
-  }
-  return entryFile(entry);
 }
 
 function entryChild(entry, name, method) {
@@ -317,7 +337,11 @@ const adapters = {
     isDirectory: (entry) => entry.isDirectory,
     children: entryChildren,
     getFile: entryFile,
-    getProbe: entryProbe,
+    getSize(entry) {
+      if (typeof entry.getMetadata !== 'function') return undefined;
+      return new Promise((resolve, reject) => entry.getMetadata(resolve, reject))
+        .then((metadata) => metadata.size, () => undefined);
+    },
     async open(entry, parts) {
       for (const part of parts.slice(0, -1)) entry = await entryChild(entry, part, 'getDirectory');
       return entryFile(await entryChild(entry, parts.at(-1), 'getFile'));
@@ -328,7 +352,6 @@ const adapters = {
 export async function walkDirectory(root, method, options) {
   const { stats } = options;
   const adapter = adapters[method];
-  const getProbe = adapter.getProbe ?? adapter.getFile;
   const flow = discoveryCallbacks(options);
   const probes = new Probes(flow, stats);
   const stack = [];
@@ -341,15 +364,25 @@ export async function walkDirectory(root, method, options) {
       directory ? undefined : () => adapter.getFile(entry));
     if (!directory) {
       stats.files_seen += 1;
+      const openFile = () => adapter.getFile(entry);
       if (direct || ARCHIVE.test(entry.name)) {
+        let size;
         try {
-          flow.job(fileJob(await adapter.getFile(entry), path, parent?.label));
-          parent?.nestedArtifacts.push(path);
+          size = (await openFile()).size;
         } catch (error) {
           skippedError(stats, error, path);
+          return;
         }
-      } else if (!bundlePlist(relative) && worthProbing(entry.name)) {
-        const wait = probes.add(() => getProbe(entry), path, parent);
+        if (parent) {
+          parent.size = (parent.size ?? 0) + size;
+          parent.nestedArtifacts.push(path);
+        }
+        const wait = flow.job({ kind: 'file', openFile, size, label: path, parentBundlePath: parent?.label });
+        if (wait) await wait;
+      } else if (parent || worthProbing(entry.name)) {
+        const probe = !bundlePlist(relative) && worthProbing(entry.name);
+        const getSize = adapter.getSize && (() => adapter.getSize(entry));
+        const wait = probes.add(openFile, path, parent, { lazy: true, probe, getSize });
         if (wait) await wait;
       }
       return;
@@ -403,7 +436,8 @@ export async function walkDirectory(root, method, options) {
         if (top.bundle) {
           const wait = probes.drain();
           if (wait) await wait;
-          flow.job(bundleJob(top.bundle, stats));
+          const queued = flow.job(bundleJob(top.bundle, stats));
+          if (queued) await queued;
         }
       }
       const wait = flow.pause();

@@ -43,8 +43,10 @@ test('legacy directory entries only open snapshots for possible binaries', async
   assert.deepEqual(app.artifacts.map(({ label }) => label), [
     'Applications/Suite.app/Contents/MacOS/Suite', 'Applications/Suite.app/Contents/MacOS/Helper',
   ]);
-  assert.equal((await app.getExecutable('Contents/MacOS/Suite')).size, thin.length);
   assert.deepEqual(opened, ['Suite', 'Helper']);
+  assert.ok(app.artifacts.every((job) => !job.file && typeof job.openFile === 'function'));
+  assert.equal((await app.getExecutable('Contents/MacOS/Suite')).size, thin.length);
+  assert.deepEqual(opened, ['Suite', 'Helper', 'Suite']);
   assert.equal(await (await app.getPlist()).text(), 'metadata');
 });
 

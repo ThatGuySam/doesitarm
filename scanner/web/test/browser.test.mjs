@@ -137,12 +137,9 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
 
   await t.test('folder picker and a Chromium file-system drop scan the declared executable', async () => {
     const xmlBundle = extractBundle(join(scratch, 'xml'));
-    // Exercise the fallback even when Chromium exposes the newer directory picker.
-    await page.evaluate(() => { window.showDirectoryPicker = undefined; });
-    const pickerPromise = page.waitForEvent('filechooser');
-    await page.getByRole('button', { name: 'Choose folder' }).click();
-    const picker = await pickerPromise;
-    await picker.setFiles(xmlBundle);
+    await page.evaluate(() => { DataTransferItem.prototype.getAsFileSystemHandle = undefined; });
+    await dropPaths(page, session, [xmlBundle]);
+    await session.send('Input.cancelDragging').catch(() => {});
     const picked = resultCard(page, 'Fixture.app');
     await picked.locator('.result-verdict').getByText('2 binaries, 1 Intel-only').waitFor();
     assert.match(await picked.locator('.verdict-text').textContent(), /Apple Silicon native/);

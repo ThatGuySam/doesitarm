@@ -60,11 +60,7 @@ test('read-only folder picker scans real OPFS handles and exports all local evid
       };
     });
     await page.getByRole('button', { name: 'Choose folder' }).click();
-    await page.getByRole('button', { name: 'Use alternate folder picker' }).waitFor();
-    const fallback = page.waitForEvent('filechooser');
-    await page.getByRole('button', { name: 'Use alternate folder picker' }).click();
-    await fallback;
-    await page.locator('#folder').dispatchEvent('cancel');
+    await page.locator('#input-status').getByText(/Drag your folder here/).waitFor();
     await page.getByRole('button', { name: 'Choose folder' }).click();
     assert.equal(await page.evaluate(() => window.observedPickerMode), 'read');
     await page.evaluate(() => window.dispatchEvent(new Event('focus')));
