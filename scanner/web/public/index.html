@@ -29,7 +29,7 @@
           <summary>Scan files from this device</summary>
           <div class="device-picker">
             <button type="button" id="choose-files" class="select-apps">Select Apps</button>
-            <p class="helper"><span class="drag-copy">Drop Mac apps, folders, or DMG, ZIP, PKG, tar.gz and Mach-O files here. </span>Local files stay in this browser.</p>
+            <p class="helper"><span class="drag-copy">Drop Mac or Windows apps, folders, archives, or installers here. </span>Local files stay in this browser.</p>
             <button type="button" id="choose-folder" class="text-button">Choose folder</button>
           </div>
         </details>
@@ -57,7 +57,7 @@
           <details id="how" class="inline-details">
             <summary>How it works</summary>
             <div id="scan-help" class="panel prose">
-              <p>The scanner opens each app's main executable and reads its Mach-O headers to see which processor architectures it contains. It reads only the few ranges it needs, so a multi-gigabyte app usually costs a few kilobytes of reading. Local files never leave this browser.</p>
+              <p>The scanner reads executable headers and package metadata to identify processor architecture. It reads only the ranges it needs, even for large downloads. Local files never leave this browser.</p>
               <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
               <p>Dropping a folder needs a browser that exposes folder contents to the page. If Firefox or another browser finds no files in a dropped folder, use <strong>Choose folder</strong>.</p>
             </div>

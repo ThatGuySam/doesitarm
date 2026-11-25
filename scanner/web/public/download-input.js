@@ -2,9 +2,9 @@ import { redactPath } from './path-privacy.js';
 
 const get = (id) => document.getElementById(id);
 const PREFERENCE = 'scanner-entry';
-const DIRECT = /\.(?:dmg|pkg|zip|tar\.gz|tgz|macho)$/i;
+const DIRECT = /\.(?:dmg|pkg|zip|tar\.gz|tgz|macho|exe|dll|msi|msix|appx|msixbundle|appxbundle|7z|cab)$/i;
 const ARCHITECTURE = { arm64: 'Apple Silicon (arm64)', universal: 'Universal', x86_64: 'Intel (x86_64)', unknown: 'CPU unspecified' };
-const OS = { macos: 'macOS', other: 'Other OS', unknown: 'OS unspecified' };
+const OS = { macos: 'macOS', windows: 'Windows', other: 'Other OS', unknown: 'OS unspecified' };
 const MESSAGES = {
   app_store: 'This app is distributed through the Mac App Store. Open its listing to install it on a Mac.',
   vendor_action: 'The publisher requires a step before the download. Open its page to sign in, accept the terms or complete the download, then scan the file from your device.',
@@ -155,7 +155,8 @@ export function bindDownloadInput({ view, remember }) {
     phase.classList.toggle('is-loading', loading);
   }
 
-  function scan(candidate, id, resolvedDownload) {
+  function scan(candidate, id, discovered) {
+    const resolvedDownload = discovered && candidate.os !== 'windows';
     const arch = candidate.arch && candidate.arch !== 'unknown' ? ` (${candidate.arch})` : '';
     status(resolvedDownload ? `Scanning macOS download${arch}…` : 'Scanning download…', true);
     view.add([{

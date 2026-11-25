@@ -11,13 +11,17 @@ const FEED_TYPES = new Set(['text/yaml', 'application/yaml', 'application/x-yaml
 const FILE_TYPES = new Set([
   'application/x-apple-diskimage', 'application/x-newton-compatible-pkg', 'application/vnd.apple.installer+xml',
   'application/x-xar', 'application/zip', 'application/x-zip-compressed', 'application/gzip', 'application/x-gzip',
-  'application/x-tar', 'application/x-gtar', 'application/x-bzip2', 'application/x-mach-binary',
+  'application/x-7z-compressed', 'application/x-tar', 'application/x-gtar', 'application/x-bzip2', 'application/x-mach-binary',
 ]);
 const BINARY_TYPES = new Set(['application/octet-stream', 'application/download', 'application/force-download',
   'application/x-download', 'binary/octet-stream', 'multipart/form-data', 'application/x-iso9660-image']);
-const FILE_SUFFIX = /\.(?:dmg|pkg|zip|tar\.gz|tgz|macho)$/i;
+const FILE_SUFFIX = /\.(?:dmg|pkg|zip|tar\.gz|tgz|macho|7z)$/i;
+const WINDOWS_SUFFIX = /\.(?:exe|dll|msi|msix|appx|msixbundle|appxbundle|cab)$/i;
+const WINDOWS_TYPES = new Set(['application/vnd.microsoft.portable-executable',
+  'application/x-msdownload', 'application/x-msi', 'application/msix', 'application/appx',
+  'application/msixbundle', 'application/appxbundle', 'application/vnd.ms-cab-compressed']);
 const MAC_BINARY = /[._-](?:darwin|macos)[._-](?:arm64|aarch64|x86[_-]64|x64|amd64|universal)$/i;
-const OTHER_SUFFIX = /\.(?:exe|msi|msix|rpm|deb|appimage|apk|dmg\.sig|zip\.sig|asc|sha256|torrent)$/i;
+const OTHER_SUFFIX = /\.(?:rpm|deb|appimage|apk|dmg\.sig|zip\.sig|asc|sha256|torrent)$/i;
 const ACTIONS = 3;
 const ROOT_LIMIT = 2 * 1024 * 1024;
 const FOLLOW_LIMIT = 512 * 1024;
@@ -44,18 +48,24 @@ function filename(url, headers) {
 function artifactType(response, url, name) {
   const mime = contentType(response.headers);
   if (!identityEncoding(response.headers) || OTHER_SUFFIX.test(name) || OTHER_SUFFIX.test(urlPath(url))) return false;
-  return FILE_TYPES.has(mime) || (BINARY_TYPES.has(mime) && (FILE_SUFFIX.test(name) || FILE_SUFFIX.test(urlPath(url)) || MAC_BINARY.test(name)));
+  return WINDOWS_TYPES.has(mime) || FILE_TYPES.has(mime) || (BINARY_TYPES.has(mime) &&
+    (FILE_SUFFIX.test(name) || FILE_SUFFIX.test(urlPath(url)) || windowsFile(response, url, name) || MAC_BINARY.test(name)));
 }
 
-function representation(response, url, budget) {
+function windowsFile(response, url, name) {
+  return WINDOWS_SUFFIX.test(name) || WINDOWS_SUFFIX.test(urlPath(url)) || WINDOWS_TYPES.has(contentType(response.headers));
+}
+
+function representation(response, url, budget, direct = false) {
   const name = filename(url, response.headers);
   if (response.status !== 206 || !artifactType(response, url, name)) return null;
   const range = /^bytes (\d+)-(\d+)\/(\d+)$/i.exec(response.headers.get('Content-Range') ?? '');
   const size = range && Number(range[3]);
   if (!Number.isSafeInteger(size) || size < 2 || size <= Number(range[2]) ||
       !Number.isSafeInteger(Number(range[1])) || Number(range[1]) > Number(range[2])) return null;
-  if (size > budget) return { tooLarge: true };
-  return { size, name, bounded: Number(range[1]) === 0 && Number(range[2]) === 0 };
+  const windows = windowsFile(response, url, name);
+  if (size > budget && !(direct && windows)) return { tooLarge: true };
+  return { size, name, windows, bounded: Number(range[1]) === 0 && Number(range[2]) === 0 };
 }
 
 function allowedDocument(url, mime, entry) {
@@ -77,7 +87,7 @@ function display(candidate, found, source) {
     arch: candidate.arch,
     score: candidate.score ?? 0,
     reasons: candidate.reasons ?? ['submitted_url'],
-    os: candidate.os === 'unknown' && /\.(?:dmg|pkg)$/i.test(found.name) ? 'macos' : candidate.os,
+    os: found.windows ? 'windows' : candidate.os === 'unknown' && /\.(?:dmg|pkg)$/i.test(found.name) ? 'macos' : candidate.os,
     kind: candidate.kind,
     evidence: {
       ...candidate.evidence,
@@ -186,7 +196,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
 
   async function inspect(get, requested, { root = false, entry, source, level = 0, budget, signal, adapters }) {
     const api = METADATA.has(entry?.kind);
-    const fileHint = FILE_SUFFIX.test(urlPath(requested)) || ARTIFACTS.has(entry?.kind);
+    const fileHint = FILE_SUFFIX.test(urlPath(requested)) || WINDOWS_SUFFIX.test(urlPath(requested)) || ARTIFACTS.has(entry?.kind);
     const mayParse = root || (level === 1 && (api || entry?.kind === 'redirect' || requested.hostname === 'handbrake.fr'));
     const key = !fileHint && !requested.search ? await digest(requested.href) : null;
     const indexed = cacheIndex.get(key);
@@ -203,7 +213,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
       return { url, resolution: cached.resolution, hash: cached.hash };
     }
 
-    const verified = representation(response, url, budget);
+    const verified = representation(response, url, budget, root);
     if (verified?.tooLarge) {
       discard(response);
       return { url, tooLarge: true };
@@ -216,9 +226,9 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
     if (root && response.status === 200 && artifactType(response, url, filename(url, response.headers))) {
       discard(response);
       const declared = response.headers.get('Content-Length');
-      if (/^\d+$/.test(declared ?? '') && Number(declared) > budget) return { url, tooLarge: true };
+      if (/^\d+$/.test(declared ?? '') && Number(declared) > budget && !windowsFile(response, url, filename(url, response.headers))) return { url, tooLarge: true };
       const probe = await get(url, { range: 'bytes=0-0' });
-      const checked = representation(probe.response, probe.url, budget);
+      const checked = representation(probe.response, probe.url, budget, true);
       if (checked?.bounded && (await readBounded(probe.response, 1, signal)).length === 1) {
         return { url: probe.url, file: checked };
       }

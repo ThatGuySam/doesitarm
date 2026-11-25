@@ -437,3 +437,28 @@ test('deployment declares CPU and subrequest limits alongside the anonymous budg
   assert.match(config, /^\[limits\]\ncpu_ms = 5000\nsubrequests = 36$/m);
   assert.match(config, /^\[vars\]\nSCAN_MAX_BUDGET = "8388608"$/m);
 });
+
+test('scans Windows PE through the same guarded ranges and budget', async () => {
+  const path = fixture('windows/arm64.exe');
+  const payload = readFileSync(path);
+  const visits = [];
+  const file = 'https://downloads.example.net/fixture.exe';
+  const handle = createHandler({
+    createScan,
+    outbound: withDNS((url, options) => {
+      assert.equal(url.href, file);
+      const range = new Headers(options.headers).get('Range');
+      assert.ok(range);
+      visits.push(range);
+      return Promise.resolve(rangedResponse(range, payload));
+    }),
+  });
+  const response = await handle(request(file), env);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), expectedRemote(path, DEFAULT_BUDGET));
+  assert.ok(visits.length > 1);
+  const limited = await handle(request(file, 65), env);
+  const partial = await limited.json();
+  assert.equal(partial.status, 'budget_exhausted');
+  assert.ok(partial.bytes_requested <= 65);
+});

@@ -4,7 +4,7 @@ Branch `scanner-winscan` is based on `scanner-pages` at `12b3b2c`. Work locally.
 
 - [x] PE, Arm hybrid metadata, CLR, version resources, and fixture generator.
 - [x] Installer and archive formats.
-- [ ] Windows result UI and conservative Mac listing lookup.
+- [x] Windows result UI and conservative Mac listing lookup.
 - [ ] Range-only public download corpus and source documentation.
 - [ ] Native, wasm, and Node test verification.
 

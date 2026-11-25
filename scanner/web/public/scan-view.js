@@ -1,3 +1,4 @@
+import { lookupMac, windowsArchitectures, windowsVerdict } from './windows-result.js';
 import { redactPath, stringifyRedacted } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { formatDuration } from './scan-progress.js';
@@ -35,6 +36,7 @@ const TIMER_THRESHOLD = 5_000;
 export const prettyBytes = formatSize;
 
 export function architectures(scan) {
+  if (scan.windows) return windowsArchitectures(scan.windows).join(', ');
   return scan.architectures.map(({ name, header_verified }) =>
     header_verified ? name : `${name} (slice unverified)`).join(', ');
 }
@@ -43,6 +45,7 @@ export function architectures(scan) {
 const isIntel = (name) => ['x86_64', 'x86_64h', 'i386'].includes(name);
 
 export function verdict(result) {
+  if (result.windows) return windowsVerdict(result.windows);
   if (result.status !== 'complete') {
     return { tone: 'unknown', icon: '?', text: `Unknown — ${reasons[result.status] ?? result.status}` };
   }
@@ -163,12 +166,16 @@ export class ScanCards {
     line.querySelector('.verdict-text').textContent = redactPath(text);
     const arch = architectures(result);
     const badges = line.querySelector('.result-arch');
-    badges.replaceChildren(...result.architectures.map(({ name }) => {
-      const badge = document.createElement('code');
-      badge.textContent = name;
-      return badge;
-    }));
     line.hidden = false;
+    if (result.windows) {
+      this.#showMacLookup(badges, result.windows);
+    } else {
+      badges.replaceChildren(...result.architectures.map(({ name }) => {
+        const badge = document.createElement('code');
+        badge.textContent = name;
+        return badge;
+      }));
+    }
 
     const details = card.el.querySelector('.result-details');
     const values = {
@@ -180,7 +187,16 @@ export class ScanCards {
       status: statuses[result.status] ?? result.status,
     };
     for (const field of details.querySelectorAll('dd')) {
-      field.textContent = redactPath(values[field.dataset.field]) || '—';
+      const key = field.dataset.field;
+      const windowsKey = { bundle_id: 'publisher', min_macos: 'installer_kind', signing: 'bootstrapper_architecture' }[key];
+      if (result.windows && windowsKey) {
+        field.previousElementSibling.textContent = {
+          publisher: 'Publisher', installer_kind: 'Installer type', bootstrapper_architecture: 'Setup program architecture',
+        }[windowsKey];
+        field.textContent = redactPath(result.windows[windowsKey]) || '—';
+      } else {
+        field.textContent = redactPath(values[key]) || '—';
+      }
     }
     details.querySelector('.result-speed').textContent = result.status === 'complete'
       ? rowPhrase({ size: row.size, read: row.bytes, elapsedMs: elapsed })
@@ -191,6 +207,22 @@ export class ScanCards {
       error.hidden = false;
     }
     details.hidden = false;
+  }
+
+  #showMacLookup(status, windows) {
+    status.classList.add('hint');
+    status.setAttribute('role', 'status');
+    status.textContent = ' · Looking for the Mac version…';
+    void lookupMac(windows).then((candidate) => {
+      if (!candidate) {
+        status.textContent = ' · No matching Mac listing found.';
+        return;
+      }
+      const link = document.createElement('a');
+      link.href = candidate.url;
+      link.textContent = candidate.title;
+      status.replaceChildren(' · Possible Mac version · ', link, ` · Apple Silicon ${candidate.status}. Is this the same app?`);
+    }).catch(() => { status.textContent = ' · The Mac app list is unavailable.'; });
   }
 
   #inventoryField(row) {
@@ -245,7 +277,14 @@ export class ScanCards {
       ['Bytes decoded', `${(result.decoded_bytes ?? 0).toLocaleString()} B`],
       ['Executable', [result.executable_name, result.executable_size ? formatSize(result.executable_size) : null].filter(Boolean).join(' · ') || '—'],
       ['Architectures', architectures(result) || '—'],
-      ['Min macOS', result.min_macos || '—'],
+      ...(result.windows ? [
+        ['Product', result.windows.product_name || '—'],
+        ['Publisher', result.windows.publisher || '—'],
+        ['Installer type', result.windows.installer_kind || '—'],
+        ['Setup program architecture', result.windows.bootstrapper_architecture || '—'],
+        ['Main architecture', result.windows.main_architecture || 'Unknown'],
+        ['Architecture evidence', result.windows.architecture_source || '—'],
+      ] : [['Min macOS', result.min_macos || '—']]),
     ];
     if (result.error) facts.push(['Error', result.error]);
     const list = get('dialog-facts');
