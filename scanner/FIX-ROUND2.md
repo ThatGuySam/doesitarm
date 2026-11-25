@@ -152,6 +152,72 @@ The live Azure range rerun verified the same Jabra version at 8,229,507 source b
 
 The probes used public GETs. The supported follow-up for an artifact the user acquires through the publisher's flow is `scan-cli scan FILE --profile local --json`.
 
+## Combined-branch acquisition replays
+
+The native comparisons reuse the earlier pinned URLs, exact targets and scan options. Jabra Direct, BetterTouchTool, Warp, SEGGER, SAP and Send to Kindle have their paired observations above. [Earlier native measurements](results/acquire/native-replays.jsonl)
+
+| Native acquisition replay | Previous read | Combined read | Combined outcome | Decision |
+| --- | ---: | ---: | --- | --- |
+| Dropzone 4 | 4,234,263 | 4,234,263 | Verified x86_64, arm64 | Use the pinned Dropzone 4 bundle. |
+| Network Weather | 30,311,927 | 30,311,927 | Verified x86_64, arm64 | The retry fixture covers HTTP 500. Compare the current origin response separately. |
+| Mozilla Firefox 147.0 | 3,007,301 | 3,007,301 | Verified x86_64, arm64 | Use absolute ranges after probing size. |
+| Scrub Utility 1.3 | 747,154 | 747,154 | Verified x86_64, arm64 | Use the pinned named app. |
+| TechSmith Capture pin | 0 | 0 | source: range 0-0: HTTP 404 Not Found (expected 206) | Retired URL. Use the vendor’s current product download if applicable. |
+| CircuitJS1 old pin | 0 | 0 | source: range 0-0: HTTP 404 Not Found (expected 206) | Retired URL. Use the separate publisher packages below. |
+| CircuitJS1 vendor Arm | 896,851 | 896,851 | Verified arm64 | Use the Arm-specific 5.0.6ts image. |
+| CircuitJS1 vendor Intel | 1,119,595 | 1,119,595 | Verified x86_64 | Use the Intel-specific 5.0.6ts image. |
+
+The 44 Source-tools observations include the 32 pinned GitHub cases, 10 Sparkle cases and two alias replays. All 37 previously verified results reproduced their byte counts and verified slices. The combined run verified 42 of 44. Each used the same 8 MiB tier. The combined candidate deadline was 85 seconds, up from 75 seconds in the earlier cohort, so the deadline recoveries include that extra time. The bytes in the table exclude separate discovery traffic. [Earlier connector measurements and inputs](results/acquire/source-replays.jsonl)
+
+| Connector case | Previous read | Combined read | Combined outcome |
+| --- | ---: | ---: | --- |
+| wBlock | 2,914,380 | 2,914,380 | Verified arm64, x86_64 |
+| ClashMac | 3,966,561 | 3,966,561 | Verified arm64, x86_64 |
+| DigUp | 2,710,063 | 2,710,063 | Verified arm64 |
+| floral-notepaper | 941,112 | 941,112 | Verified arm64 |
+| KeyCluCask | 3,536,787 | 3,536,787 | Verified arm64, x86_64 |
+| AlDente-Battery_Care_and_Monitoring | 3,879,981 | 3,879,981 | Verified arm64, x86_64 |
+| VoiceInk | 3,438,361 | 3,438,361 | Verified arm64, x86_64 |
+| SteamTools | 2,230,848 | 2,230,848 | Verified arm64 |
+| openspot-music-app | 1,592,962 | 1,592,962 | Verified arm64 |
+| CodeEdit | 3,949,656 | 3,949,656 | Verified arm64, x86_64 |
+| reminders-menubar | 2,562,257 | 2,562,257 | Verified arm64, x86_64 |
+| ApolloShell | 3,261,358 | 3,261,358 | Verified arm64, x86_64 |
+| mitori | 1,164,223 | 1,164,223 | Verified arm64, x86_64 |
+| zigzag | 3,522,306 | 3,522,306 | Verified arm64, x86_64 |
+| ChatALL | 1,274,939 | 1,274,939 | Verified arm64 |
+| open-science | 1,348,085 | 1,348,085 | Verified arm64 |
+| Pearcleaner | 2,960,612 | 2,960,612 | Verified arm64, x86_64 |
+| Sentinel | 1,882,621 | 1,882,621 | Verified arm64, x86_64 |
+| Lunar | 3,246,088 | 3,246,088 | Verified arm64, x86_64 |
+| antares | 2,927,201 | 2,927,201 | Verified x86_64 |
+| ardia | 5,822,120 | 5,822,120 | Verified arm64 |
+| open-dronelog | 1,458,990 | 1,458,990 | Verified arm64 |
+| BongoCat | 4,118,614 | 4,118,614 | Verified arm64 |
+| cardinal | 2,520,612 | 2,520,612 | Verified arm64, x86_64 |
+| CotEditor | 3,094,902 | 3,094,902 | Verified arm64, x86_64 |
+| Crest | 3,989,298 | 3,989,298 | Verified arm64, x86_64 |
+| ImageGlass | 3,162,792 | 3,162,792 | Verified arm64 |
+| electron-screen-recorder | 2,221,000 | 2,221,000 | Verified x86_64 |
+| mlx-serve | 8,388,608 | 8,388,608 | unscannable · budget hit |
+| inboxer | 688,123 | 688,123 | Verified x86_64 |
+| Mole | 3,314,849 | 3,314,849 | unscannable · unsupported container:tar.gz |
+| snug | 1,918,094 | 1,918,094 | Verified arm64, x86_64 |
+| cove (Sparkle) | 2,781,743 | 2,781,743 | Verified arm64 |
+| ApolloShell (Sparkle) | 3,261,358 | 3,261,358 | Verified arm64, x86_64 |
+| ardia (Sparkle) | 1,029 | 1,358,543 | Verified arm64 · Representation changed |
+| ping-island (Sparkle) | 0 | 3,854,939 | Verified arm64, x86_64 |
+| WaifuX (Sparkle) | 3,837,027 | 3,837,027 | Verified arm64, x86_64 |
+| Clipline (Sparkle) | 3,672,317 | 3,672,317 | Verified arm64, x86_64 |
+| SiliconScope (Sparkle) | 2,563,763 | 2,563,763 | Verified arm64 |
+| AltTab (Sparkle) | 2,253,285 | 2,353,387 | Verified arm64, x86_64 |
+| Transmission (Sparkle) | 3,278,455 | 3,278,455 | Verified arm64, x86_64 |
+| davit (Sparkle) | 169,089 | 199,697 | Verified arm64 |
+| ardia (alias replay) | 1,247,021 | 1,607,682 | Verified arm64 |
+| ping-island (alias replay) | 3,854,939 | 3,854,939 | Verified arm64, x86_64 |
+
+The verified connector rows need no catalog action. Select a higher byte tier for mlx-serve. Mole's tarball exposes multiple standalone executables, so choose the archived target to represent the product. Ardia's GitHub DMG and Sparkle ZIP are separate representations of 0.2.48. The new probe saw the 182,924,830-byte ZIP with the `Ardia-0.2.48.zip` filename. Ping Island's authorized GitHub alias supplied `PingIsland-0.33.0.dmg`, and Cove's resolved asset supplied `Cove.dmg`. The offline Content-Disposition fixtures also passed.
+
 ## Offline ledger kits
 
 All 11 sparse kits were replayed against the combined ScanCore with the ledger transport adapter, using the original targets and recorded bytes. In three cases the updated parser asked for a range that the original failure never captured. Those kits establish the coverage boundary. The exact pinned live replays supply the additional evidence when the origin serves it.
