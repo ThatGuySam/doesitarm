@@ -554,7 +554,7 @@ pub(crate) async fn scan(
             .await;
     }
     let mut root = None;
-    let app = if let Target::Bundle(path) = target {
+    let mut app = if let Target::Bundle(path) = target {
         match catalog.find_path(&mut volume, ROOT_ID, path, false).await {
             Ok(item) => Some((item.id, path.trim_start_matches("./").to_owned())),
             Err(ScanError::NotFound(_)) => None,
@@ -572,6 +572,35 @@ pub(crate) async fn scan(
         root = Some(items);
         app
     };
+    if app.is_none()
+        && let Some(items) = root.as_deref()
+        && !items
+            .iter()
+            .any(|item| !item.name.starts_with('.') && pkg::package_name(&item.name))
+    {
+        let mut folders = items.iter().filter(|item| {
+            item.file.is_none()
+                && !item.name.starts_with('.')
+                && !item.name.contains('/')
+                && bundle::archive_path(&item.name).is_some()
+        });
+        if let Some(folder) = folders.next().filter(|_| folders.next().is_none()) {
+            let mut contained = catalog
+                .children(&mut volume, folder.id)
+                .await?
+                .into_iter()
+                .filter(|item| {
+                    item.file.is_none()
+                        && item.name.ends_with(".app")
+                        && !item.name.starts_with('.')
+                        && !item.name.contains('/')
+                        && bundle::archive_path(&item.name).is_some()
+                });
+            if let Some(item) = contained.next().filter(|_| contained.next().is_none()) {
+                app = Some((item.id, format!("{}/{}", folder.name, item.name)));
+            }
+        }
+    }
     let Some((app, app_path)) = app else {
         let items = match root {
             Some(items) => items,

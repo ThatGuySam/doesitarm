@@ -7,6 +7,7 @@ import plistlib
 import random
 import tarfile
 import zipfile
+import zlib
 from pathlib import Path
 from struct import pack
 
@@ -129,6 +130,9 @@ if __name__ == "__main__":
 
     dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
     sparse_apm_fixture(ROOT / "apm.sparseimage", METADATA, fat(intel_offset=4096))
+    wrapped = hfs_volume(METADATA, fat(intel_offset=4096), wrapper="Suite")
+    write_udif(ROOT / "wrapped-hfs.dmg", wrapped, [(0x80000005, len(wrapped) // 512, zlib.compress)],
+               "Apple_HFSX")
     volume = hfs_volume(METADATA, fat(intel_offset=4096))
     write_udif(ROOT / "bzip2-prefix.dmg", volume, [
         (0x80000006, 1, bz2.compress),

@@ -55,7 +55,7 @@ def data_at(volume, block, data):
     volume[start:start + len(data)] = data
 
 
-def hfs_volume(metadata, executable):
+def hfs_volume(metadata, executable, *, wrapper=None):
     volume = bytearray(VOLUME_SECTORS * SECTOR)
     header = bytearray(SECTOR)
     header[:4] = b"HX\0\5"
@@ -72,18 +72,25 @@ def hfs_volume(metadata, executable):
     for index, (block, _) in enumerate([*initial, remainder]):
         data_at(volume, block, executable[index * SECTOR:(index + 1) * SECTOR])
 
-    folder_app = key(2, "Fixture.app")
+    folder_app = key(2 if wrapper is None else 30, "Fixture.app")
     folder_contents = key(16, "Contents")
     info_file = key(17, "Info.plist")
     folder_macos = key(17, "MacOS")
     exec_file = key(19, "FixtureBinary")
-    data_at(volume, 5, tree_header(1, 5, 2, 4, 5, 2))
-    data_at(volume, 6, node(0, [name + pack(">I", index) for index, name in
-                                enumerate([folder_app, info_file, exec_file], 2)], height=2))
-    data_at(volume, 7, node(-1, [folder_app + folder(16), folder_contents + folder(17)], next_node=3))
-    data_at(volume, 8, node(-1, [info_file + file(18, fork(len(info), 1, [(13, 1)])),
-                                folder_macos + folder(19)], next_node=4, prev_node=2))
-    data_at(volume, 9, node(-1, [exec_file + file(20, fork(len(executable), 9, initial))], prev_node=3))
+    first = [(folder_app, folder(16)), (folder_contents, folder(17))]
+    middle = [(info_file, file(18, fork(len(info), 1, [(13, 1)]))), (folder_macos, folder(19))]
+    last = [(exec_file, file(20, fork(len(executable), 9, initial)))]
+    if wrapper is not None:
+        first = [(key(2, ".Trashes"), folder(40)), (key(2, wrapper), folder(30)), first[1]]
+        last.append((folder_app, folder(16)))
+    leaves = [first, middle, last]
+    data_at(volume, 5, tree_header(1, sum(map(len, leaves)), 2, 4, 5, 2))
+    data_at(volume, 6, node(0, [leaf[0][0] + pack(">I", index)
+                                for index, leaf in enumerate(leaves, 2)], height=2))
+    for index, leaf in enumerate(leaves, 2):
+        data_at(volume, 5 + index, node(-1, [name + value for name, value in leaf],
+                                       next_node=index + 1 if index < 4 else 0,
+                                       prev_node=index - 1 if index > 2 else 0))
     data_at(volume, 10, tree_header(1, 1, 1, 1, 2, 1))
     overflow_key = pack(">HBBII", 10, 0, 0, 20, 8)
     overflow_value = pack(">II", *remainder).ljust(64, b"\0")

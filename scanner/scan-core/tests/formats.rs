@@ -523,6 +523,22 @@ fn sparse_image_seeks_hfs_through_unordered_bands_and_an_apple_partition_map() {
     }
 }
 
+#[test]
+fn hfs_auto_finds_an_app_in_the_single_visible_root_directory() {
+    let image = include_bytes!("../../fixtures/wrapped-hfs.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_path.as_deref(), Some("Suite/Fixture.app"));
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
 const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
 const PKG_ODC: &[u8] = include_bytes!("../../fixtures/stored-odc.pkg");
 
