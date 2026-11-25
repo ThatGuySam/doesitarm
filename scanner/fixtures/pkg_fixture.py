@@ -53,7 +53,7 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, p
     write_xar(path, payload)
 
 
-def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO, package_info_bzip2=False):
+def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO, package_info_bzip2=False, scripts=None):
     root = Element("xar")
     toc = SubElement(root, "toc")
     package = SubElement(toc, "file", id="1")
@@ -68,6 +68,8 @@ def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, pack
         members.append((package, "Bom", bom, True))
     if payload is not None:
         members.append((package, "Payload", payload, False))
+    if scripts is not None:
+        members.append((package, "Scripts", scripts, False))
     if nested is not None:
         members.append((toc, "Component.pkg", nested, False))
     for index, (parent, name, data, compressed) in enumerate(members, 2):

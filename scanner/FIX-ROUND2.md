@@ -48,3 +48,11 @@ XAR range probes identified gzip payloads. The local passes used checksum-matchi
 | Unity Android Support `e6407a899153` | 268,173,301 | 1,738,756,155 | Editor support package. The local scan finds no app plist. Select a specific deployed tool if its architecture matters. |
 
 Other tar.gz attempts that failed at smaller tiers include Cursor CLI, LiClipse, JDK Mission Control and DeepL. Their recorded verified outcomes used 175,371,496, 163,643,392, 107,416,900 and 95,854,238 bytes respectively, all below the maximum tier. Historical transfer-only failures such as Cap's HTTP 429 require a successful origin response before measuring an archive prefix. Cursor's one-pass combined replay is covered in the regression table.
+
+## Krisp 3.20.5
+
+The checksum-matched 267,366,929-byte XAR puts the user app in `krisp-app.uli.pkg/Scripts`. That gzip CPIO member contains `postinstall` and `Krisp_app_3.20.5_arm64.pkg`. The script selects the nested package for the platform installer. Static extraction and an independent local scan verified `Applications/krisp.app/Contents/MacOS/krisp` as arm64 after reading 267,686,801 bytes of the inner XAR.
+
+The ledger's stream attempt `88f489f7671c` read 267,364,498 bytes and reported no app plist. The combined baseline on a local file read 9,867 bytes and returned the same error. The regular Payload contains only directory and framing records. The new fallback inspects a declared postinstall component's gzip CPIO after a payload yields no bundle. It requires a single regular root-level PKG and records its path as nested evidence. It uses the same package parser and shares the scan's work and source limits. Backward XAR reads can replay the outer inflater without materializing the full nested archive in memory.
+
+`pkg_verifies_the_single_app_package_stored_with_postinstall` uses a 1,869-byte generated fixture. It failed after 681 unique bytes with `not found: app Info.plist in sequential archive` and passes on all three profiles after the change.

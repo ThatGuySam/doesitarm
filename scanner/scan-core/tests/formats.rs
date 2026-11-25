@@ -644,6 +644,25 @@ fn pkg_mounts_contents_relative_payload_in_the_declared_plugin() {
 }
 
 #[test]
+fn pkg_verifies_the_single_app_package_stored_with_postinstall() {
+    let artifact = include_bytes!("../../fixtures/pkg-in-scripts.pkg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(artifact),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(
+            result.nested_artifacts,
+            ["Fixture.pkg/Scripts/Application.pkg"]
+        );
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
 fn pkg_returns_installer_metadata_when_payload_budget_runs_out() {
     let result = run(PKG, 550);
     assert!(

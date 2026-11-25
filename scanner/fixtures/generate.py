@@ -141,6 +141,13 @@ if __name__ == "__main__":
     ], "Apple_HFS", with_preamble=False)
     pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
+    scripts = cpio([
+        ("./postinstall", b'#!/bin/sh\n/usr/sbin/installer -pkg "./Application.pkg" -target /\n'),
+        ("./Application.pkg", (ROOT / "gzip-newc.pkg").read_bytes()),
+    ], odc=True)
+    write_xar(ROOT / "pkg-in-scripts.pkg", cpio([], odc=True),
+              package_info=b'<pkg-info><scripts><postinstall file="./postinstall"/></scripts></pkg-info>',
+              scripts=gzip.compress(scripts, mtime=0))
     plugin = "Library/Audio/Plug-Ins/VST3/Fixture.vst3"
     plugin_payload = cpio([
         (f"{plugin}/Contents/MacOS/FixtureBinary", fat()),
