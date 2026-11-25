@@ -191,6 +191,10 @@ if __name__ == "__main__":
         packages = hfs_tree({p.name: p.read_bytes() for p in (install, remove)})
         write_udif(ROOT / "install-remove.dmg", packages, [(0x80000005, len(packages) // 512, zlib.compress)],
                    "Apple_HFS")
+        competing = hfs_tree({install.name: install.read_bytes(),
+                              "Other.pkg": (ROOT / "gzip-newc.pkg").read_bytes()})
+        write_udif(ROOT / "competing-packages.dmg", competing,
+                   [(0x80000005, len(competing) // 512, zlib.compress)], "Apple_HFS")
     write_xar(ROOT / "remote-component.xar", distribution=b"""
         <installer-gui-script><title>Remote fixture</title>
           <pkg-ref id="remote">https://example.invalid/component.pkg</pkg-ref>

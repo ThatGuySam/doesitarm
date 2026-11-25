@@ -195,3 +195,10 @@ This table covers the 27 latest budget failures in the initial ledger snapshot. 
 Of the 26 exact-tier reruns, 18 still reached the read budget, five reached their deadline, and three reached a nested PKG and then hit their deadline. The 27th case is MPP Viewer, verified at a higher tier through the publisher’s release API.
 
 The HTTP 200 range probes for Baretorrent and JProfiler made their footer reads sequential under the recorded 8 MiB tier. MAMP’s stream scanned the XAR header and index, then hit the 256 MiB cap trying to reach metadata at offset 714,272,766. Monotype used its entire 268,435,456-byte request allowance while reading 254,380,473 unique bytes and revisiting earlier ranges of `MTFInstaller.pkg`. Excire Search spent its tier reading sequential data from the compressed nested `ExcireSearch-5.0.6-x64.dmg`. These outcomes are unresolved at the recorded limits.
+
+## Final offline verification
+
+- 62 Rust tests passed across the workspace. The new failing-before regressions use generated data below 2 MB and perform no network I/O. The competing-package fixture also checks that two verified alternatives preserve ambiguity and expose zero architecture claims.
+- Native and wasm32 Clippy passed with warnings denied. Both the standard Wasm package and the Worker package with its 80 MiB memory ceiling built offline.
+- 288 native/Wasm comparisons passed. The comparisons cover synchronous and asynchronous reads, physical byte accounting, sparse images, ambiguous packages, and explicit binary targets inside HFS packages.
+- The 36 offline Node tests, six Python runner tests, and 31 generated EDGE fixture checks passed. Browser automation was outside the requested verification environment.

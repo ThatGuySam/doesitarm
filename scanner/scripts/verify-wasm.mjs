@@ -67,7 +67,7 @@ assert.match(help.stdout, /Worker defaults: 8388608 bytes requested, 67108864 by
 const fixtures = resolve(root, 'fixtures');
 let comparisons = 0;
 for (const name of (await readdir(fixtures)).sort()) {
-  if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|pkg)$/.test(name)) continue;
+  if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|sparseimage|pkg)$/.test(name)) continue;
   const file = resolve(fixtures, name);
   const size = (await stat(file, { bigint: true })).size;
   const fd = openSync(file, 'r');
@@ -98,7 +98,14 @@ for (const name of (await readdir(fixtures)).sort()) {
       assert.ifError(native.error);
       assert.ok([0, 1].includes(native.status), native.stderr);
       const expected = JSON.parse(native.stdout);
-      if (budget === 64 * 1024 * 1024) assert.equal(expected.status, 'complete', name);
+      if (budget === 64 * 1024 * 1024) {
+        if (name === 'competing-packages.dmg') {
+          assert.equal(expected.status, 'unsupported', name);
+          assert.equal(expected.error, 'unsupported: multiple nested PKGs in HFS volume', name);
+        } else {
+          assert.equal(expected.status, 'complete', name);
+        }
+      }
       if (name === 'late-bom.pkg' && budget === 600 * 1024) {
         assert.equal(expected.status, 'complete', name);
         assert.equal(expected.bundle_metadata_source, 'bom_verified_gzip_cpio_tail');
@@ -126,7 +133,7 @@ for (const name of (await readdir(fixtures)).sort()) {
         comparisons++;
       }
     }
-    if (name === 'stored.zip' || name === 'apfs.dmg') {
+    if (['stored.zip', 'apfs.dmg', 'nested-pkg.dmg'].includes(name)) {
       for (const { kind, option, path } of [
         { kind: 'bundle', option: '--bundle-path', path: 'Fixture.app' },
         { kind: 'executable', option: '--binary-path', path: 'Fixture.app/Contents/MacOS/FixtureBinary' },

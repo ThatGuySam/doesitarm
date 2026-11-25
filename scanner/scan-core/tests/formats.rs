@@ -559,6 +559,20 @@ fn hfs_selects_the_declared_app_across_install_and_remove_packages() {
 }
 
 #[test]
+fn hfs_preserves_ambiguity_when_two_packages_contain_apps() {
+    let image = include_bytes!("../../fixtures/competing-packages.dmg");
+    let result = run(image, 8192);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert_eq!(
+        result.error.as_deref(),
+        Some("unsupported: multiple nested PKGs in HFS volume")
+    );
+    assert_eq!(result.nested_artifacts, ["Install.pkg", "Other.pkg"]);
+    assert!(result.bundle_path.is_none());
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
 fn hfs_finds_a_declared_executable_inside_the_package() {
     let image = include_bytes!("../../fixtures/nested-pkg.dmg");
     let path = "Fixture.app/Contents/MacOS/FixtureBinary";
