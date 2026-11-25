@@ -48,3 +48,7 @@ Eleven classes were verified against current observations and independently repl
 - Container and budget work can start with XAMPP’s invalid DMG range, the JProfiler stream budget kit, and the AMPPS HFS image kit.
 - Bundle work can start with the SQLCipher Nightly missing executable key and Rolisteam missing metadata kits. Kotlin LSP retains the declared script outcome.
 - Acquisition work can start with Dropzone's representation-size mismatch. Warp and Send to Kindle preserve their pinned HTTP rejections. SEGGER J-Link preserves the HTML response before any license attestation.
+
+## Final continuation checkpoint
+
+On November 24, the first batch completed 400 artifacts and the second completed 250. The pinned Homebrew run advanced from 676 to 1,326 of 7,570. Position 1,327 is `workbuddy-ai`. The report covers 3,909 attempts, 1,402 app tokens, 1,606 artifact URLs, and 1,782 failure records. The data directory includes 11 verified sparse replay kits and occupies 25.8 MB.
