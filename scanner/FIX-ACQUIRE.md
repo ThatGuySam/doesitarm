@@ -45,3 +45,14 @@ Historical source tasks with a pinned artifact previously went straight to the w
 | Content-Disposition on an extensionless URL | The probe omitted the filename. | The probe retains a safe basename. The fixtures cover UTF-8 `filename*` precedence, path stripping, and a quoted filename containing a semicolon. The name is advisory and byte inspection still determines the format. [RFC 6266](https://www.rfc-editor.org/rfc/rfc6266.html#section-4.3) |
 
 The BetterTouchTool replay uses a generated four-byte window. The historical source-tools attempt captured a dropped 4,194,304-byte response for bytes 29,649,623–33,843,926 at the 64 MiB scan tier. The fixture models the same partial-body failure and counts every byte actually received.
+
+## Native HTTP fixtures
+
+| Fixture | Before | After |
+| --- | --- | --- |
+| Dropzone text probe | The one-byte response advertised 67 bytes. The following ZIP range failed with `representation size changed`. | A text/plain probe in a native remote scan is corroborated with a fresh four-byte range before using the size. Both probes count toward the budget. The fixture reuses the recorded response shape and a generated 2,255-byte ZIP. |
+| Interrupted whole response | The scan stopped with `Peer disconnected`. | With streaming enabled, a partially received response can resume at the next missing byte. A strong ETag and a matching length, final URL and exact 206 are required. The spool remains bounded by the scan budget. |
+| Changed whole-response fallback | A replacement response was allowed to supply the scanner result after range discovery. | The fallback rejects a different final URL or an explicitly changed length or validator before consuming its body. |
+| Transient HTTP 500 | The first 500 aborted the scan. | The native remote scan retries that same range once after a delay when the response supplies no Retry-After and the scan deadline allows it. |
+
+`cargo test --workspace --offline --locked -j2` passed 77 tests, including the local and Worker profile checks. The new HTTP wire fixtures use in-memory responses.
