@@ -1,6 +1,7 @@
 import ipaddr from 'ipaddr.js';
 import { discard, RangeFailure } from '../public/range-scan.js';
 
+const USER_AGENT = 'DoesItARM-Scanner/0.1';
 const MAX_SUBREQUESTS = 36;
 const MAX_REDIRECTS = 6;
 const REDIRECTS = new Set([301, 302, 303, 307, 308]);
@@ -62,7 +63,7 @@ async function dnsAddresses(host, type, subrequest) {
 export function createEgress({ target, ownHost, outbound, signal }) {
   let url = target;
   let requests = 0;
-  let redirects = 0;
+  let pinned = false;
   const checked = new Set();
 
   function subrequest(url, options) {
@@ -76,11 +77,10 @@ export function createEgress({ target, ownHost, outbound, signal }) {
 
   async function checkDNS(host) {
     if (checked.has(host)) return;
-    const answers = await Promise.all([
-      dnsAddresses(host, 'A', subrequest),
-      dnsAddresses(host, 'AAAA', subrequest),
-    ]);
-    const addresses = answers.flat();
+    const addresses = [
+      ...await dnsAddresses(host, 'A', subrequest),
+      ...await dnsAddresses(host, 'AAAA', subrequest),
+    ];
     if (!addresses.length) throw new RangeFailure('The download hostname has no public DNS addresses.');
     if (addresses.some((address) => !isPublicAddress(address))) {
       throw blocked('The download hostname resolves to a private or reserved address.');
@@ -89,23 +89,31 @@ export function createEgress({ target, ownHost, outbound, signal }) {
   }
 
   return async (range, etag) => {
-    const headers = new Headers({ Range: range, 'Accept-Encoding': 'identity' });
+    const headers = new Headers({ Range: range, 'Accept-Encoding': 'identity', 'User-Agent': USER_AGENT });
     if (etag) headers.set('If-Match', etag);
+    const visited = new Set();
     while (true) {
+      if (visited.has(url.href)) {
+        throw new RangeFailure('The download origin returned a redirect loop.', 'limit_reached', 503);
+      }
+      visited.add(url.href);
       await checkDNS(url.hostname);
       const response = await subrequest(url, { headers, cache: 'no-store' });
       if (signal.aborted) {
         discard(response);
         signal.throwIfAborted();
       }
-      if (response.status === 206) return response;
+      if (response.status === 206) {
+        pinned = true;
+        return response;
+      }
       if (!REDIRECTS.has(response.status)) {
         discard(response);
         throw new RangeFailure('The download origin did not provide a usable byte range.');
       }
       discard(response);
-      redirects += 1;
-      if (redirects > MAX_REDIRECTS) {
+      if (pinned) throw new RangeFailure('The download origin changed during the scan.');
+      if (visited.size > MAX_REDIRECTS) {
         throw new RangeFailure('Scan reached the six-redirect limit.', 'limit_reached', 503);
       }
       url = validateTarget(response.headers.get('Location'), ownHost, url);

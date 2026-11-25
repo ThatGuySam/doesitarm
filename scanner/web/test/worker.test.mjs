@@ -92,6 +92,53 @@ test('follows HTTPS redirects, validates each DNS destination, and returns CLI-e
   assert.deepEqual(dns, ['downloads.example.net', 'downloads.example.net', 'cdn.example.net', 'cdn.example.net']);
 });
 
+test('sets a scanner User-Agent for a range origin that requires one', async () => {
+  const handle = createHandler({
+    createScan,
+    outbound: withDNS(async (_url, { headers }) => {
+      if (!headers.get('User-Agent')) return new Response(null, { status: 403 });
+      assert.equal(headers.get('User-Agent'), 'DoesItARM-Scanner/0.1');
+      return rangedResponse(headers.get('Range'), bytes);
+    }),
+  });
+  assert.equal((await handle(request(), env)).status, 200);
+});
+
+test('rejects a redirect to a different representation after discovery', async () => {
+  const fetched = [];
+  const handle = createHandler({
+    createScan,
+    outbound: withDNS(async (url, { headers }) => {
+      fetched.push(url.pathname);
+      const range = headers.get('Range');
+      if (url.pathname === '/test' && range !== 'bytes=0-0') {
+        return new Response(null, { status: 302, headers: { Location: '/replacement' } });
+      }
+      return rangedResponse(range, bytes);
+    }),
+  });
+  const response = await handle(request(), env);
+  assert.equal(response.status, 502);
+  assert.match((await response.json()).error, /origin changed/i);
+  assert.deepEqual(fetched, ['/test', '/test']);
+});
+
+test('stops a circular redirect before requesting the same URL again', async () => {
+  const fetched = [];
+  const handle = createHandler({
+    createScan,
+    outbound: withDNS(async (url) => {
+      fetched.push(url.pathname);
+      const location = url.pathname === '/test' ? '/other' : '/test#ignored';
+      return new Response(null, { status: 302, headers: { Location: location } });
+    }),
+  });
+  const response = await handle(request(), env);
+  assert.equal(response.status, 503);
+  assert.match((await response.json()).error, /redirect loop/i);
+  assert.deepEqual(fetched, ['/test', '/other']);
+});
+
 test('Worker JSON masks home paths in metadata and binary inventory', async () => {
   const handle = createHandler({
     createScan: () => async () => JSON.stringify({
@@ -200,7 +247,7 @@ test('caps redirects, total subrequests and wall time', async () => {
     createScan,
     outbound: withDNS(async () => {
       redirects += 1;
-      return new Response(null, { status: 301, headers: { Location: '/redirect' } });
+      return new Response(null, { status: 301, headers: { Location: `/redirect-${redirects}` } });
     }),
   });
   const looped = await loop(request(), env);

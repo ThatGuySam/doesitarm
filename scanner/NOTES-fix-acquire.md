@@ -8,3 +8,4 @@ Source of truth for historical attempts is `~/Code/doesitarm-data/scan-ledger/`.
 
 - Merge compile fix `9838a12` maps the integrated core's script and missing executable statuses in source-tools.
 - GitHub resolver fixtures passed with the original dependency versions. Live wBlock passed. Remaining live runs are under `~/.cache/doesitarm-fix-acquire/github-rest` and `sparkle-github`.
+- Worker egress has red/green fixtures for User-Agent, post-probe redirect, and loops. All 39 Node tests passed using the integrated Worker Wasm and this worktree's native CLI.

@@ -18,3 +18,7 @@ Pinned releases now resolve through the tag API and select the uploaded asset by
 Before the fix, the pinned asset fixture resolved no API URL and the appcast fixture returned `robots_disallowed`. Both pass via `cargo test --offline --locked -j2 -p source-tools`.
 
 The first live rerun used `sources run --connector github-releases --scan-ranges --max-tier 8`. wBlock 3.2.3 returned HTTP 206 at the release CDN with a total size of 38,560,397 bytes. The scan read 2,914,380 bytes and verified arm64 and x86_64. The remaining GitHub-hosted cases are running against their pinned URLs.
+
+## Worker origin handling
+
+Three offline HTTP fixtures cover the Worker egress path. With no explicit scanner User-Agent the header-gated origin returned 403, reported as 502 by the Worker. A post-probe redirect previously returned 200 with scan results from the replacement path. A two-URL loop previously used all seven origin requests. The Worker now identifies itself, pins the URL that served the first 206, and detects repeated URLs before requesting them again. A/AAAA lookups run sequentially through the same resolver. The Worker still cancels HTTP 200 bodies and honors its six-redirect and 36-subrequest limits. `npm --prefix web test` passed 39 tests. These fixtures use synthetic origins and the Worker was exercised in Node.
