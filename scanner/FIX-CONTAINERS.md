@@ -107,3 +107,35 @@ The pinned TDR Nova ZIP was the same 27,043,108-byte representation with ETag `"
 `hfs_selects_the_declared_app_across_install_and_remove_packages` uses a 3,461-byte generated DMG. It originally failed after 3,408 bytes with `unsupported: multiple nested PKGs in HFS volume`. The corrected result reads the same 3,408 bytes and verifies both synthetic headers from the app under `Applications`, even though a helper appears first in the payload. A multiple-PKG image must have one verified result and no competing bundle or executable evidence. Scans are bounded to four root packages and retain ambiguity if more than one package verifies or if another package cannot be evaluated.
 
 The observed ChronoSync image is 102,704,658 bytes with SHA-256 `686c6452debc28da75b49b25268d6d9d50e876d80714c045c679453852f3b7bc`. `Install.pkg` declares `./Library/Application Support/ChronoSync/ChronoAgentLocal.app` and `./Applications/ChronoSync.app`. `Remove.pkg` has an 80-byte payload and declares no bundle. The 256 MiB remote CLI profile verified `Applications/ChronoSync.app/Contents/MacOS/ChronoSync` from the local artifact after 90,101,604 bytes. The optional inventory was partial.
+
+## Nested-container and inherited-format reruns
+
+The next table covers every latest nested-container failure in the 18:37 Central ledger snapshot plus five historical format and budget attempts. The driver and parser are the same checkpoint as the preceding ledger table. Later parser fixes for named cases are recorded separately. Resolve an abbreviated ID against the original or scratch ledger with `jq -r --arg prefix PREFIX 'select(.ledger_id | startswith($prefix)) | .ledger_id' attempts.jsonl`.
+
+| App | Before ID | Rerun ID | Bytes before | Bytes after | Result |
+| --- | --- | --- | ---: | ---: | --- |
+| astah-professional | `91b43c312065` | `470e78c66a56` | 158,895,764 | 134,376,084 | Deadline inside the installer. The named app remained unresolved. |
+| chef-workstation | `a09cde871542` | `dd15e450cb22` | 220,105,673 | 130,717,194 | Package declares `/opt/chef-workstation`. Deadline before a declared entry point verified. |
+| chronosync | `1fe8f1b23fe2` | `776d882bc9ef` | 284,798 | 284,798 | Multiple root packages on this checkpoint. The later paired-package fix verified ChronoSync as recorded above. |
+| dingtalk | `a4bff78ef332` | `87f7fc046b9b` | 63,486,042 | 39,252,966 | Deadline after discovering the nested package. |
+| font-sf-georgian | `fd0f70b20c5e` | `0c4a25206747` | 249,833 | 249,833 | Apple font installer `com.apple.pkg.SFGeorgianFonts` declares no app. |
+| font-sf-hebrew | `9b6dae8e3560` | `9ad910fe4a2d` | 205,623 | 205,623 | Apple font installer `com.apple.pkg.SFHebrewFonts` declares no app. |
+| mysql-shell | `143e9db8c9fb` | `26094c8cd322` | 44,494,175 | 29,087,124 | Apple app auto-selection reached a deadline. The CLI product path is recorded in the package BOM. |
+| ripx | `09a67a03f4c6` | `5ffa61cad4ae` | 183,438,257 | 57,685,715 | Deadline inside the nested installer. |
+| tableau | `ac1f9ad9d409` | `b418853b2767` | 171,087,478 | 56,539,316 | Deadline after the nested installer was found. |
+| tdr-nova | `a795f153f3da` | `4aac4523edde` | 27,043,108 | 27,043,108 | Missing app plist on this checkpoint. The later install-location fix verified the AAX plug-in as recorded above. |
+| vagrant | `dabaca1bbc2b` | `511f36e13135` | 56,157,030 | 56,157,030 | Flat PKG `com.vagrant.vagrant` yielded no app plist. Inspect a named packaged executable or script. |
+| valhalla-space-modulator | `1649bfe34642` | `2a4db8b2d308` | 8,878,132 | 2,283,141 | Verified the PackageInfo-declared AAX product. |
+| virtualbox@beta | `00308342c678` | `d72e02eb402b` | 2,320,542 | 21,615,398 | Deadline during the nested package scan. |
+| zulu@17 | `30f782c8bad7` | `b74ad8ba4b90` | 192,098,522 | 51,557,253 | Deadline during the nested package scan. |
+| fabfilter-pro-ds | `964eaceb16c7` | `dbe9a338e76f` | 8,385,550 | 7,347,312 | Verified the AAX product inside the nested PKG. |
+| qt-design-studio | `3f63879dfd7b` | `911ccdeed63d` | 1,029 | 2,519,947 | Verified the named app in the solid 7z repository component. |
+| codeql-bundle | `c4dda37c2b62` | `c66897eb63c6` | 1,029 | 8,388,603 | Recognized tar.zst. The 8 MiB tier exhausted. See the recorded 256 MiB script outcome below. |
+| imageoptim | `d509cd177516` | `af6f5b0b4037` | 66,055 | 3,858,908 | Verified the app with the native XZ dictionary limit. |
+| jprofiler | `1780ef0454f6` | `da653ae111ca` | 4 | 4 | HTTPS range probe returned HTTP 200. The old kit and new run both stopped before the footer at 8 MiB. |
+
+The earlier CodeQL tier record `92bc984eecf3` reached its declared `codeql/codeql` shell script after 62,893,053 bytes at 256 MiB. Supported tar.zst framing makes that script observable. Package or feed architecture hints do not establish the architecture of the declared script or an eventual runtime.
+
+The same-origin XAMPP kit stops at `Kit lacks coverage for offset 0, length 83472` with the improved parser. The older sparse capture contains the footer and index. The live `61963fc8af08` read supplies the newly requested block. AMPPS likewise has new reads after root traversal.
+
+Both pinned jamovi installer URLs returned HTTP 302 followed by identical HTML at the time of inspection. The x64 attempt `4e4f61400d19` and arm64 attempt `1699edf20919` each read 1,026 bytes before rejecting the purported DMG. The two full HTML responses shared SHA-256 `bf5944797cb121480627611556a12025decdc70c438a57605b5a7f6aeb0506ee`. The publisher’s current download page is the legitimate discovery route. [jamovi downloads](https://www.jamovi.org/download.html)
