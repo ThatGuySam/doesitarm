@@ -751,3 +751,41 @@ fn disk_images_resolve_a_contents_relative_executable_after_the_declared_lookup(
         }
     }
 }
+
+#[test]
+fn reads_encrypted_macho_headers_without_reading_encrypted_code() {
+    let words: [u32; 20] = [
+        0xfeedfacf, 0x0100000c, 0, 2, 2, 48, 0, 0, // Mach-O header
+        0x32, 24, 2, 0x00110000, 0, 0, // iOS build version
+        0x2c, 24, 4096, 64, 1, 0, // encryption info
+    ];
+    let mut data: Vec<u8> = words.into_iter().flat_map(u32::to_le_bytes).collect();
+    data.resize(4160, 0xa5);
+    let result = ready(scan_core::scan_target_with_diagnostics(
+        &mut Memory(&data),
+        ScanLimits::for_profile(Profile::Local),
+        Target::Auto,
+        None,
+    ));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.architectures[0].name, "arm64");
+    assert!(result.architectures[0].header_verified);
+    assert!(result.architectures[0].min_macos.is_none());
+    assert_eq!(result.bytes_read, 80, "the opaque code must remain unread");
+    let diagnostic = result.diagnostic.unwrap();
+    let encryption = &diagnostic.executable.load_commands[0].commands[1];
+    assert_eq!(encryption.fields.get("encryption_id"), Some(&1));
+    assert_eq!(encryption.fields.get("encrypted_offset"), Some(&4096));
+    assert_eq!(result.architectures[0].encrypted, Some(true));
+
+    // A zero id is an unencrypted placeholder even when the command exists.
+    data[72..76].copy_from_slice(&0u32.to_le_bytes());
+    let clear = run(&data, u64::MAX);
+    assert_eq!(clear.architectures[0].encrypted, Some(false));
+
+    data[72..76].copy_from_slice(&1u32.to_le_bytes());
+    data.truncate(4159);
+    let truncated = run(&data, u64::MAX);
+    assert!(matches!(truncated.status, Status::Invalid), "{truncated:?}");
+    assert_eq!(truncated.architectures[0].encrypted, None);
+}

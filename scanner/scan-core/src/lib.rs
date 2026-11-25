@@ -163,6 +163,8 @@ pub struct Architecture {
     pub header_verified: bool,
     pub min_macos: Option<String>,
     pub code_signature_present: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub encrypted: Option<bool>,
 }
 
 #[derive(Debug, Serialize)]

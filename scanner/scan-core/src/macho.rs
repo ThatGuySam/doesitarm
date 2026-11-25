@@ -174,6 +174,7 @@ fn architecture(cpu_type: u32, cpu_subtype: u32, offset: u64, size: u64) -> Arch
         header_verified: false,
         min_macos: None,
         code_signature_present: None,
+        encrypted: None,
     }
 }
 
@@ -230,6 +231,7 @@ async fn thin(
     let mut trace = trace;
     let mut pos = 0;
     let mut signed = false;
+    let mut encrypted = None;
     let mut build_min = None;
     let mut legacy_min = None;
     for _ in 0..count {
@@ -250,6 +252,19 @@ async fn thin(
         }
         match cmd {
             0x1d | 0x24 if len < 16 => return Err(ScanError::Invalid("short Mach-O load command")),
+            0x21 | 0x2c => {
+                let required = if cmd == 0x21 { 20 } else { 24 };
+                if len < required {
+                    return Err(ScanError::Invalid("short Mach-O encryption command"));
+                }
+                let cryptoff = kind.word(&commands, pos + 8);
+                let cryptsize = kind.word(&commands, pos + 12);
+                let cryptid = kind.word(&commands, pos + 16);
+                if cryptid != 0 {
+                    check_range(size, u64::from(cryptoff), u64::from(cryptsize))?;
+                }
+                encrypted = Some(encrypted.unwrap_or(false) || cryptid != 0);
+            }
             0x32 if len < 24 => {
                 return Err(ScanError::Invalid("short Mach-O build version command"));
             }
@@ -270,6 +285,7 @@ async fn thin(
     }
     arch.min_macos = build_min.or(legacy_min);
     arch.code_signature_present = Some(signed);
+    arch.encrypted = encrypted;
     Ok(())
 }
 
@@ -278,6 +294,7 @@ fn command_fields(kind: Kind, cmd: u32, bytes: &[u8]) -> BTreeMap<&'static str, 
         0x32 => (4, &["platform", "minimum_os", "sdk", "tool_count"]),
         0x24 | 0x25 | 0x2f | 0x30 => (4, &["minimum_os", "sdk"]),
         0x1d | 0x1e | 0x26 | 0x29 | 0x2b | 0x2e | 0x33 | 0x34 => (4, &["data_offset", "data_size"]),
+        0x21 | 0x2c => (4, &["encrypted_offset", "encrypted_size", "encryption_id"]),
         0x28 => (8, &["entry_offset", "stack_size"]),
         0x02 => (
             4,
