@@ -1,4 +1,6 @@
-use super::{Connector, ConnectorId, Context, asset_priority, candidate_from, join_public};
+use super::{
+    Connector, ConnectorId, Context, asset_priority, candidate_from, join_public, metadata_base,
+};
 use crate::{Candidate, Failure, Seed, file_name, format_guess, public_url};
 use roxmltree::{Document, Node};
 use serde::Deserialize;
@@ -29,7 +31,7 @@ impl Connector for Sparkle {
         let url = public_url(&seed.url)?;
         let response = context.metadata(url.as_str(), false)?;
         let mut observed = seed.clone();
-        let response = if response.body.starts_with(b"bplist00")
+        let (feed_url, response) = if response.body.starts_with(b"bplist00")
             || response.body.windows(6).take(512).any(|w| w == b"<plist")
         {
             let info: Info = plist::from_bytes(&response.body).map_err(|_| {
@@ -40,13 +42,19 @@ impl Connector for Sparkle {
             if observed.name.is_empty() {
                 observed.name = info.name.unwrap_or_default();
             }
-            let feed = join_public(&response.url, &info.feed_url)?;
-            context.metadata(feed.as_str(), false)?
+            let feed = join_public(metadata_base(&url, &response), &info.feed_url)?;
+            let response = context.metadata(feed.as_str(), false)?;
+            (feed, response)
         } else {
-            response
+            (url.clone(), response)
         };
-        self.parse(seed, &observed, &response.url, &response.body)
-            .map_err(|e| e.with_http(response.evidence(&url)))
+        self.parse(
+            seed,
+            &observed,
+            metadata_base(&feed_url, &response),
+            &response.body,
+        )
+        .map_err(|e| e.with_http(response.evidence(&url)))
     }
 }
 

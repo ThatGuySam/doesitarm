@@ -104,24 +104,31 @@ fn public_repo_api(context: &mut Context<'_>, owner: &str, repo: &str) -> Result
     Ok(api)
 }
 
-pub(super) fn pinned_asset(url: &Url, context: &mut Context<'_>) -> Result<Option<Url>, Failure> {
+pub(super) fn pinned_release_parts(url: &Url) -> Option<(&str, &str, &str, &str)> {
     if url.scheme() != "https" || url.host_str() != Some("github.com") || url.query().is_some() {
-        return Ok(None);
+        return None;
     }
-    let parts: Vec<_> = url.path().trim_start_matches('/').split('/').collect();
-    let [owner, repo, "releases", "download", suffix @ .., name] = parts.as_slice() else {
+    let mut path = url.path().trim_start_matches('/').splitn(5, '/');
+    let owner = path.next()?;
+    let repo = path.next()?;
+    if path.next()? != "releases" || path.next()? != "download" {
+        return None;
+    }
+    let (tag, name) = path.next()?.rsplit_once('/')?;
+    (!tag.is_empty() && !name.is_empty()).then_some((owner, repo, tag, name))
+}
+
+pub(super) fn pinned_asset(url: &Url, context: &mut Context<'_>) -> Result<Option<Url>, Failure> {
+    let Some((owner, repo, tag, name)) = pinned_release_parts(url) else {
         return Ok(None);
     };
-    if suffix.is_empty() || name.is_empty() {
-        return Ok(None);
-    }
     let decode = |part: &str| {
         percent_decode_str(part)
             .decode_utf8()
             .map(|value| value.into_owned())
             .map_err(|_| Github.parse_error("release path is not UTF-8"))
     };
-    let tag = decode(&suffix.join("/"))?;
+    let tag = decode(tag)?;
     let name = decode(name)?;
     let api = public_repo_api(context, owner, repo)?;
     let mut endpoint = public_url(&format!("{api}/releases/tags"))?;
@@ -268,7 +275,9 @@ mod tests {
                 return Ok(Response {
                     url: request.url,
                     status: 200,
-                    body: include_bytes!("../../tests/fixtures/sparkle-appcast.xml").to_vec(),
+                    body: include_str!("../../tests/fixtures/sparkle-appcast.xml")
+                        .replace("files/Viewer.zip", "Viewer-darwin-x64.zip")
+                        .into_bytes(),
                     headers: Default::default(),
                     received: 0,
                     too_large: false,
@@ -379,7 +388,13 @@ mod tests {
             .connector()
             .discover_one(&seed, &mut Context::new(&fixture, None))
             .unwrap();
-        assert!(!candidates.is_empty());
+        let [candidate] = candidates.as_slice() else {
+            panic!("expected one stable macOS enclosure");
+        };
+        assert_eq!(
+            candidate.url,
+            "https://github.com/example/Viewer/releases/download/v2.1/Viewer-darwin-x64.zip"
+        );
     }
 
     #[test]

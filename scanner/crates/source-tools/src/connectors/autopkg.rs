@@ -1,6 +1,6 @@
 use super::{
-    Connector, ConnectorId, Context, candidate_from, github::Github, join_public, sparkle::Sparkle,
-    yaml,
+    Connector, ConnectorId, Context, candidate_from, github::Github, join_public, metadata_base,
+    sparkle::Sparkle, yaml,
 };
 use crate::{Candidate, Failure, Seed, public_url};
 use plist::Value;
@@ -36,14 +36,14 @@ impl Connector for AutoPkg {
                 self,
                 seed,
                 mapped,
-                join_public(&response.url, &link)?.as_str(),
+                join_public(metadata_base(&target, &response), &link)?.as_str(),
             )?]);
         }
         let candidates = if let Some(feed) = descriptors
             .feed
             .and_then(|link| expand(&link, &descriptors.input))
         {
-            mapped.url = join_public(&response.url, &feed)?.into();
+            mapped.url = join_public(metadata_base(&target, &response), &feed)?.into();
             Sparkle.discover_one(&mapped, context)?
         } else if let Some(repo) = descriptors
             .repo

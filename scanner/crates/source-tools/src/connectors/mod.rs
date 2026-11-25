@@ -370,6 +370,16 @@ fn candidate_from(
     Ok(candidate)
 }
 
+fn metadata_base<'a>(requested: &'a Url, response: &'a Response) -> &'a Url {
+    // Release storage URLs address one object by ID. Relative references in a
+    // release asset belong to the publisher's URL alongside its sibling assets.
+    if github::pinned_release_parts(requested).is_some() {
+        requested
+    } else {
+        &response.url
+    }
+}
+
 fn join_public(base: &Url, value: &str) -> Result<Url, Failure> {
     let url = base
         .join(value)

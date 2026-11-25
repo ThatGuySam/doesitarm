@@ -1,4 +1,4 @@
-use super::{Connector, ConnectorId, Context, candidate_from, join_public};
+use super::{Connector, ConnectorId, Context, candidate_from, join_public, metadata_base};
 use crate::{Candidate, Failure, Seed, file_name, http::is_github_asset, public_url};
 use serde::Deserialize;
 use std::collections::BTreeMap;
@@ -32,7 +32,7 @@ impl Connector for Tauri {
     ) -> Result<Vec<Candidate>, Failure> {
         let target = public_url(&seed.url)?;
         let response = context.metadata(target.as_str(), false)?;
-        self.parse(seed, &response.url, &response.body)
+        self.parse(seed, metadata_base(&target, &response), &response.body)
             .map_err(|error| error.with_http(response.evidence(&target)))
     }
 

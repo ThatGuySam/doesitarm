@@ -358,12 +358,11 @@ fn read_task(path: &Path) -> AnyResult<Task> {
 fn replay_sample(replay: &Replay, transport: &dyn Transport) -> Result<String, Failure> {
     let connector = replay.connector.connector();
     let mut context = Context::new(transport, None);
-    if let Some(url) = &replay.artifact {
+    let candidates = if let Some(url) = &replay.artifact {
         let mut candidate = connector.direct(&replay.seed, url)?;
         candidate.download_url = replay.download_url.clone();
-        return repro_candidate(&candidate, replay, transport);
-    }
-    let candidates = if replay.seed.direct {
+        vec![candidate]
+    } else if replay.seed.direct {
         vec![connector.direct(&replay.seed, &replay.seed.url)?]
     } else {
         connector.discover_one(&replay.seed, &mut context)?
@@ -431,4 +430,40 @@ pub fn verify_baseline(path: &Path, sample: usize, fixture: &Path) -> AnyResult<
         verify.expected_class, verify.observed_class
     )
     .into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{Seed, artifact::ScanOptions, connectors::ConnectorId};
+
+    #[test]
+    fn historical_github_artifact_replay_uses_the_release_asset_api() {
+        let url = "https://github.com/example/Viewer/releases/download/v2.1/Viewer-universal.dmg";
+        let release = include_str!("../tests/fixtures/github-release.json");
+        let wire = serde_json::json!({
+            "responses": [
+                {"url": "https://api.github.com/repos/example/Viewer/releases/tags/v2.1",
+                    "mode": "metadata", "status": 200, "body_text": release},
+                {"url": "https://api.github.com/repos/example/Viewer/releases/assets/42",
+                    "mode": "bytes=0-0", "status": 206, "body_hex": "78",
+                    "headers": {"content-range": "bytes 0-0/12345"}}
+            ]
+        });
+        let scratch = tempfile::NamedTempFile::new().unwrap();
+        serde_json::to_writer(scratch.as_file(), &wire).unwrap();
+        let fixture = Fixture::open(scratch.path()).unwrap();
+        let replay = Replay {
+            connector: ConnectorId::GithubReleases,
+            seed: Seed::default(),
+            artifact: Some(url.into()),
+            download_url: None,
+            options: ScanOptions::default(),
+        };
+        assert!(
+            replay_sample(&replay, &fixture)
+                .unwrap()
+                .contains("validated")
+        );
+    }
 }
