@@ -281,7 +281,11 @@ def category(entry_, scan, target=None):
     status = scan["status"]
     error = (scan.get("error") or "").lower()
     if status == "complete":
-        if target and target[0] == "executable":
+        discovered_executable = (
+            target is None and not entry_["declared_apps"]
+            and not scan.get("bundle_path") and scan.get("executable_path")
+        )
+        if (target and target[0] == "executable") or discovered_executable:
             if scan.get("executable_path") and scan.get("architectures") and all(
                 arch["header_verified"] for arch in scan["architectures"]
             ):
@@ -292,9 +296,11 @@ def category(entry_, scan, target=None):
             return "multi_app"
         def path_parts(path):
             return unicodedata.normalize("NFC", path).casefold().removeprefix("./").split("/")
-        actual = path_parts(scan.get("bundle_path") or "")
-        if declared and actual[-len(path_parts(declared[0])):] != path_parts(declared[0]):
-            return "executable_not_found"
+        if declared:
+            expected = path_parts(declared[0])
+            paths = (scan.get("bundle_path"), scan.get("wrapper_path"))
+            if not any(path_parts(path)[-len(expected):] == expected for path in paths if path):
+                return "executable_not_found"
         if not scan.get("architectures") or not all(a["header_verified"] for a in scan["architectures"]):
             return "executable_not_found"
         if not scan.get("bundle_id") or not scan.get("version") or not scan.get("min_macos"):
@@ -319,6 +325,8 @@ def category(entry_, scan, target=None):
             return "html_response"
     if "multi-app" in error:
         return "multi_app"
+    if "multiple standalone executables" in error:
+        return "multi_executable"
     if "encrypted or sealed" in error:
         return "encrypted_or_sealed"
     if "encrypted" in error or "password" in error:

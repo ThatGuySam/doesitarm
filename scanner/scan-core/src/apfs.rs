@@ -913,12 +913,32 @@ async fn read_app(
     }
     let len = data.size as usize;
     let plist = ApfsFile::new(device, data).read_at(0, len).await?;
-    let path = bundle::apply_plist(&plist, app_path, out)?;
+    let path = bundle::apply_plist(&plist, app_path, out, true)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
-    let primary = match volume.find_path(device, contents.id, relative, FILE).await {
+    let item = match volume.find_path(device, contents.id, relative, FILE).await {
+        Err(error @ ScanError::NotFound(_)) => match bundle::contents_relative_executable(relative)
+        {
+            Some(alias) => match volume.find_path(device, contents.id, alias, FILE).await {
+                Ok(item) => {
+                    out.executable_path = Some(format!("{app_path}/Contents/{alias}"));
+                    out.executable_resolution = Some("contents_relative");
+                    Ok(item)
+                }
+                Err(error) => Err(error),
+            },
+            None => Err(error),
+        },
+        result => result,
+    };
+    let primary = match item {
         Ok(item) => read_executable(device, volume, item, out).await,
         Err(error) => Err(error),
     };
+    let primary = bundle::confirm_executable(out, primary);
+    let inspected_path = out
+        .executable_path
+        .as_deref()
+        .and_then(|path| inventory::relative(path, app_path));
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
     let work = device.work;
@@ -953,7 +973,7 @@ async fn read_app(
                 pending.push((item.id, path));
                 continue;
             }
-            if item.kind != FILE || path.strip_prefix("Contents/") == Some(relative) {
+            if item.kind != FILE || Some(path.as_str()) == inspected_path {
                 continue;
             }
             if let Err(error) = allowance.step(device.disk, work) {

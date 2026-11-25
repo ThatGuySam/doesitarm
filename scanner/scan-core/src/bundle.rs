@@ -46,6 +46,31 @@ pub(crate) fn selected_plist<'a>(path: &'a str, target: Target<'_>) -> Option<&'
     }
 }
 
+pub(crate) fn wrapped_plist<'a>(
+    path: &'a str,
+    target: Target<'_>,
+) -> Option<(&'a str, &'a str, bool)> {
+    let (root, flat) = match plist_bundle(path) {
+        Some(root) => (root, false),
+        None => (path.strip_suffix("/Info.plist")?, true),
+    };
+    let (wrapper, inner) = root.rsplit_once("/Wrapper/")?;
+    if !wrapper.ends_with(".app")
+        || !outer_app(wrapper)
+        || inner.contains('/')
+        || !inner.ends_with(".app")
+    {
+        return None;
+    }
+    match target {
+        Target::Auto => Some((root, wrapper, flat)),
+        Target::Bundle(asked) if matches_path(root, asked) || matches_path(wrapper, asked) => {
+            Some((root, wrapper, flat))
+        }
+        _ => None,
+    }
+}
+
 pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
     let Some(requested) = archive_path(requested) else {
         return false;
@@ -58,10 +83,34 @@ pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
     })
 }
 
-pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
+pub(crate) const NAME_FALLBACK: &str = "bundle_name_fallback";
+pub(crate) const RESOURCE_NO_EXECUTABLE: &str = "CFBundleExecutable in resource bundle";
+const MISSING_EXECUTABLE: ScanError = ScanError::NotFound("CFBundleExecutable in Info.plist");
+
+pub(crate) fn apply_plist(
+    bytes: &[u8],
+    bundle: &str,
+    out: &mut ScanResult,
+    allow_fallback: bool,
+) -> Result<String> {
+    apply_plist_at(bytes, bundle, "Contents/Info.plist", out, allow_fallback)
+}
+
+pub(crate) fn apply_flat_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
+    apply_plist_at(bytes, bundle, "Info.plist", out, true)
+}
+
+fn apply_plist_at(
+    bytes: &[u8],
+    bundle: &str,
+    plist: &str,
+    out: &mut ScanResult,
+    allow_fallback: bool,
+) -> Result<String> {
     if let Some(diagnostic) = &mut out.diagnostic {
-        diagnostic.plist_source(bundle, bytes);
+        diagnostic.plist_source(bundle, plist, bytes);
     }
+    let flat = plist == "Info.plist";
     let raw = bytes.strip_prefix(b"\xef\xbb\xbf").unwrap_or(bytes);
     let parsed = plist_value::parse(raw, ScanError::Invalid("bundle Info.plist"))?;
     let resolution = (|| {
@@ -69,10 +118,18 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
             .as_dictionary()
             .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;
         apply_properties(dict, bundle, out);
-        let executable = string(dict, "CFBundleExecutable")
-            .ok_or(ScanError::NotFound("CFBundleExecutable in Info.plist"))?;
-        out.executable_name = Some(executable.to_owned());
-        let relative = resolve_executable(executable, false)?;
+        let relative = if let Some(executable) = string(dict, "CFBundleExecutable") {
+            out.executable_name = Some(executable.to_owned());
+            resolve_executable(executable, flat)?
+        } else if allow_fallback && string(dict, "CFBundlePackageType") == Some("BNDL") {
+            return Err(ScanError::NotFound(RESOURCE_NO_EXECUTABLE));
+        } else if allow_fallback {
+            let path = same_stem_executable(dict, bundle, flat).ok_or(MISSING_EXECUTABLE)?;
+            out.executable_resolution = Some(NAME_FALLBACK);
+            path
+        } else {
+            return Err(MISSING_EXECUTABLE);
+        };
         Ok(format!("{bundle}/{relative}"))
     })();
     if let Some(diagnostic) = &mut out.diagnostic {
@@ -82,6 +139,46 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
         out.executable_path = Some(path.clone());
     }
     resolution
+}
+
+pub(crate) fn same_stem_executable(dict: &Dictionary, bundle: &str, flat: bool) -> Option<String> {
+    if !matches!(string(dict, "CFBundlePackageType"), None | Some("APPL")) {
+        return None;
+    }
+    let (stem, suffix) = bundle.rsplit('/').next()?.rsplit_once('.')?;
+    if !suffix.eq_ignore_ascii_case("app") || stem.is_empty() || matches!(stem, "." | "..") {
+        return None;
+    }
+    resolve_executable(stem, flat).ok()
+}
+
+// A guessed path earns a main result only after its Mach-O headers verify.
+pub(crate) fn confirm_executable(out: &mut ScanResult, primary: Result<()>) -> Result<()> {
+    if out.executable_resolution != Some(NAME_FALLBACK) {
+        return primary;
+    }
+    if primary.is_ok()
+        && !out.architectures.is_empty()
+        && out.architectures.iter().all(|arch| arch.header_verified)
+    {
+        return Ok(());
+    }
+    out.executable_resolution = None;
+    out.executable_path = None;
+    out.executable_size = None;
+    out.architectures.clear();
+    out.script_runtime = None;
+    match primary {
+        Ok(())
+        | Err(ScanError::NotFound(_))
+        | Err(ScanError::Invalid("executable is not Mach-O" | "short executable header"))
+        | Err(ScanError::Unsupported(
+            "declared executable is a script"
+            | "declared executable has DOS/PE magic"
+            | "declared executable is ELF",
+        )) => Err(MISSING_EXECUTABLE),
+        other => other,
+    }
 }
 
 pub(crate) fn string<'a>(dict: &'a Dictionary, key: &str) -> Option<&'a str> {
@@ -139,10 +236,14 @@ pub(crate) fn resolve_executable(executable: &str, flat: bool) -> Result<String>
 /// Some publishers record the Contents-relative MacOS/file spelling.
 /// Prefer the normal MacOS-relative lookup when both entries exist.
 pub(crate) fn contents_relative_alias(path: &str, root: &str) -> Option<String> {
-    let leaf = path
-        .strip_prefix(root)?
-        .strip_prefix("/Contents/MacOS/MacOS/")?;
-    Some(format!("{root}/Contents/MacOS/{leaf}"))
+    let relative = path.strip_prefix(root)?.strip_prefix("/Contents/")?;
+    let alias = contents_relative_executable(relative)?;
+    Some(format!("{root}/Contents/{alias}"))
+}
+
+pub(crate) fn contents_relative_executable(relative: &str) -> Option<&str> {
+    let path = relative.strip_prefix("MacOS/")?;
+    path.starts_with("MacOS/").then_some(path)
 }
 
 /// Normalize a reference entirely inside the artifact.

@@ -100,7 +100,7 @@ pub(crate) async fn scan(
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
     }
     let plist = source.open(info)?.read_at(0, info_size as usize).await?;
-    let main = bundle::apply_plist(&plist, root, out)?;
+    let main = bundle::apply_plist(&plist, root, out, true)?;
     let primary = match paths.clone().find(|(_, path)| *path == main) {
         Some((index, _)) => {
             out.executable_size = Some(archive.files[index].size);
@@ -110,6 +110,7 @@ pub(crate) async fn scan(
             "declared executable in 7z archive index",
         )),
     };
+    let primary = bundle::confirm_executable(out, primary);
     let mut inventory = BinaryInventory::default();
     // In a solid block, open one stream for the entire block during
     // enumeration so later files don't repeatedly decode its prefix.

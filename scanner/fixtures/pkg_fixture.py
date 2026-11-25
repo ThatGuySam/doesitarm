@@ -14,18 +14,19 @@ DIST = b"""<installer-gui-script><title>Fixture Installer</title>
 INFO = b'<pkg-info identifier="org.doesitarm.fixture-installer" version="5"/>'
 
 
-def cpio(files, *, odc):
+def cpio(files, *, odc, modes=None):
     output = bytearray()
     for index, (name, data) in enumerate([*files, ("TRAILER!!!", b"")], 1):
+        mode = (modes or {}).get(name, 0o100755)
         name = name.encode() + b"\0"
         if odc:
             header = "070707" + "".join(
-                f"{field:06o}" for field in [0, index, 0o100755, 0, 0, 1, 0]
+                f"{field:06o}" for field in [0, index, mode, 0, 0, 1, 0]
             ) + f"{0:011o}{len(name):06o}{len(data):011o}"
         else:
             header = "070701" + "".join(
                 f"{field:08x}" for field in [
-                    index, 0o100755, 0, 0, 1, 0, len(data), 0, 0, 0, 0, len(name), 0
+                    index, mode, 0, 0, 1, 0, len(data), 0, 0, 0, 0, len(name), 0
                 ]
             )
         output.extend(header.encode())

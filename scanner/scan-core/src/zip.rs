@@ -1,5 +1,5 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
+    ReadAt, Result, ScanError, ScanResult, Status, Target, Window, bundle, check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
@@ -27,6 +27,14 @@ struct Entry {
     method: u16,
     flags: u16,
     mode: u16,
+}
+
+#[derive(Clone, Copy)]
+struct App<'a> {
+    info: &'a Entry,
+    name: &'a str,
+    wrapper: Option<&'a str>,
+    flat: bool,
 }
 
 impl Entry {
@@ -107,29 +115,147 @@ async fn scan_directory(
         return primary;
     }
 
-    let app = entries
+    let mut apps: Vec<_> = entries
         .iter()
-        .filter_map(|entry| {
-            if entry.is_symlink() {
-                return None;
+        .filter(|entry| !entry.is_symlink())
+        .filter_map(|info| {
+            let path = bundle::archive_path(&info.path)?;
+            if let Some((name, wrapper, flat)) = bundle::wrapped_plist(path, target) {
+                return Some(App {
+                    info,
+                    name,
+                    wrapper: Some(wrapper),
+                    flat,
+                });
             }
-            let path = bundle::archive_path(&entry.path)?;
-            Some((entry, bundle::selected_plist(path, target)?))
+            let name = bundle::selected_plist(path, target)?;
+            Some(App {
+                info,
+                name,
+                wrapper: None,
+                flat: false,
+            })
         })
-        .min_by_key(|(_, name)| (name.matches('/').count(), *name));
-    let Some((entry, name)) = app else {
-        return scan_nested(input, &entries, directory.offset, work, target, out).await;
+        .collect();
+    apps.sort_by_key(|app| (app.name.matches('/').count(), app.name, app.flat));
+    apps.dedup_by_key(|app| app.name);
+    if apps.is_empty() {
+        return scan_without_app(input, &entries, directory.offset, work, target, out).await;
+    }
+    let limit = if work.strict() {
+        8
+    } else if work.local() {
+        usize::MAX
+    } else {
+        32
     };
+    if apps.len() > limit {
+        out.candidate_bundle_paths
+            .extend(apps.iter().take(limit).map(|app| app.name.to_owned()));
+        return Err(ScanError::Limit(
+            "too many ZIP app plists to select a product",
+        ));
+    }
+
+    let mut selected: Option<(App<'_>, ScanResult, Result<()>)> = None;
+    let mut first_failure = None;
+    for app in apps {
+        if let Some((parent, _, _)) = &selected
+            && app.wrapper == Some(parent.name)
+        {
+            continue;
+        }
+        work.check_deadline()?;
+        let mut result = out.subresult();
+        result.format = out.format;
+        let primary = read_app(input, &entries, directory.offset, work, app, &mut result).await;
+        match primary {
+            Ok(()) | Err(ScanError::Unsupported("declared executable is a script")) => {
+                if let Some((previous, _, _)) = selected {
+                    out.candidate_bundle_paths =
+                        vec![previous.name.to_owned(), app.name.to_owned()];
+                    return Err(ScanError::Unsupported(
+                        "multi-app ZIP archive; select a bundle path",
+                    ));
+                }
+                selected = Some((app, result, primary));
+            }
+            Err(ref error) if inventory::stop(error) || matches!(error, ScanError::Limit(_)) => {
+                *out = result;
+                return primary;
+            }
+            Err(_) if first_failure.is_none() => first_failure = Some((app, result, primary)),
+            Err(_) => (),
+        }
+    }
+    let (app, mut result, primary) = if let Some(selected) = selected {
+        selected
+    } else {
+        if matches!(target, Target::Auto) {
+            let mut installed = out.subresult();
+            installed.format = out.format;
+            let nested = scan_nested(
+                input,
+                &entries,
+                directory.offset,
+                work,
+                target,
+                &mut installed,
+            )
+            .await;
+            if nested.is_ok() || nested.as_ref().is_err_and(inventory::stop) {
+                *out = installed;
+                return nested;
+            }
+        }
+        // The nonempty app list always leaves a verified result or a first failure.
+        first_failure.unwrap()
+    };
+    read_runtime(input, &entries, directory.offset, work, &mut result).await;
+    let primary = read_inventory(
+        input,
+        &entries,
+        directory.offset,
+        work,
+        app,
+        &mut result,
+        primary,
+    )
+    .await;
+    *out = result;
+    primary
+}
+
+async fn read_app(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    app: App<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let App {
+        info: entry,
+        name,
+        wrapper,
+        flat,
+    } = app;
     out.bundle_path = Some(name.to_owned());
+    out.wrapper_path = wrapper.map(str::to_owned);
 
     if entry.expanded > bundle::MAX_PLIST {
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
     }
-    let plist = member(input, entry, directory.offset, work)
+    let plist = member(input, entry, heap_end, work)
         .await?
         .read_at(0, entry.expanded as usize)
         .await?;
-    let mut path = bundle::apply_plist(&plist, name, out)?;
+    let primary_path = if flat {
+        bundle::apply_flat_plist(&plist, name, out)
+    } else {
+        bundle::apply_plist(&plist, name, out, true)
+    };
+    let mut path = primary_path?;
     if !entries
         .iter()
         .any(|entry| bundle::archive_path(&entry.path) == Some(&path))
@@ -143,29 +269,64 @@ async fn scan_directory(
         path = alias;
     }
 
-    let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
-    read_runtime(input, &entries, directory.offset, work, out).await;
+    let primary = read_main(input, entries, heap_end, work, &path, out).await;
+    bundle::confirm_executable(out, primary)
+}
+
+async fn read_inventory(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    app: App<'_>,
+    out: &mut ScanResult,
+    primary: Result<()>,
+) -> Result<()> {
+    let declared_resource = matches!(
+        primary,
+        Err(ScanError::NotFound(bundle::RESOURCE_NO_EXECUTABLE))
+    );
     let mut inventory = crate::BinaryInventory::default();
-    inventory.record_primary(&primary);
+    if !declared_resource {
+        inventory.record_primary(&primary);
+    }
     let mut allowance = Allowance::new(input, work);
-    for entry in &entries {
+    for entry in entries {
         let Some(relative) = bundle::archive_path(&entry.path)
             .filter(|candidate| Some(*candidate) != out.executable_path.as_deref())
-            .and_then(|candidate| inventory::relative(candidate, name))
+            .and_then(|candidate| inventory::relative(candidate, app.name))
         else {
             continue;
         };
-        let Some(role) = inventory::role(relative) else {
+        let role = if app.flat {
+            inventory::flat_role(relative)
+        } else {
+            inventory::role(relative)
+        };
+        let nested = relative
+            .strip_prefix("Wrapper/")
+            .and_then(|path| path.split_once('/'))
+            .is_some_and(|(child, _)| child.ends_with(".app"));
+        let Some(role) = role
+            .or(nested.then_some("nested_app"))
+            .or(declared_resource.then_some("resource"))
+        else {
             continue;
         };
-        if relative.ends_with('/') || entry.expanded < 8 || entry.is_symlink() {
+        if entry.is_symlink() {
+            if declared_resource {
+                inventory.partial("unresolved link in resource bundle");
+            }
+            continue;
+        }
+        if relative.ends_with('/') || entry.expanded < 8 {
             continue;
         }
         if let Err(error) = allowance.step(input, work) {
             inventory.partial(error.to_string());
             break;
         }
-        let observed = match member(input, entry, directory.offset, work).await {
+        let observed = match member(input, entry, heap_end, work).await {
             Ok(mut data) => inventory::read(&mut data, relative, role, &mut inventory).await,
             Err(error) => Err(error),
         };
@@ -177,7 +338,14 @@ async fn scan_directory(
             }
         }
     }
+    let resource_only = declared_resource && inventory.complete && inventory.binaries.is_empty();
     out.inventory = Some(inventory);
+    if resource_only {
+        out.status = Status::NoExecutable;
+        out.bundle_kind = Some("resource_only");
+        out.error = Some("This resource bundle declares no executable.".into());
+        return Ok(());
+    }
     primary
 }
 
@@ -200,7 +368,9 @@ async fn read_main(
         let mut data = member(input, executable, heap_end, work).await?;
         if !executable.is_symlink() {
             if resolved != path {
-                out.executable_resolution = Some("archive_symlink");
+                if out.executable_resolution != Some(bundle::NAME_FALLBACK) {
+                    out.executable_resolution = Some("archive_symlink");
+                }
                 out.executable_path = Some(resolved.clone());
             }
             out.executable_size = Some(executable.expanded);
@@ -255,6 +425,42 @@ async fn read_runtime(
     if let Ok(mut data) = member(input, entry, heap_end, work).await {
         let _ = macho::scan(&mut data, &mut runtime.architectures, None).await;
     }
+}
+
+async fn scan_without_app(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let nested = scan_nested(input, entries, heap_end, work, target, out).await;
+    let missing = match nested {
+        Err(error @ ScanError::NotFound("app Info.plist in ZIP central directory"))
+            if matches!(target, Target::Auto) =>
+        {
+            error
+        }
+        result => return result,
+    };
+    let mut standalone = launcher::Standalone::default();
+    for entry in entries {
+        if entry.mode & 0o170000 != 0o100000 || entry.mode & 0o111 == 0 || entry.expanded < 8 {
+            continue;
+        }
+        let Some(path) = launcher::standalone_path(&entry.path) else {
+            continue;
+        };
+        if !standalone.allow(work) {
+            break;
+        }
+        let mut data = member(input, entry, heap_end, work).await?;
+        standalone
+            .inspect(&mut data, path, out.diagnostic.is_some())
+            .await?;
+    }
+    standalone.finish(out, missing)
 }
 
 async fn scan_nested(

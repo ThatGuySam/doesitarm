@@ -109,7 +109,10 @@ impl BinaryInventory {
 }
 
 pub fn role(relative: &str) -> Option<&'static str> {
-    let inside = relative.strip_prefix("Contents/")?;
+    flat_role(relative.strip_prefix("Contents/")?)
+}
+
+pub(crate) fn flat_role(inside: &str) -> Option<&'static str> {
     let (top, _) = inside.split_once('/').unwrap_or((inside, ""));
     if !matches!(
         top,

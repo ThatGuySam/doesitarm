@@ -65,6 +65,7 @@ pub(crate) async fn scan_with(
     mut bundle: StreamBundle<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
+    bundle.enable_cpio_links();
     let traversal = scan_entries(input, work, &mut bundle, out).await;
     bundle.finish(traversal, out)
 }
@@ -103,11 +104,7 @@ async fn scan_entries(
                 0o100000 if bundle.file(input, work, path, start, size, out).await? => {
                     return Ok(());
                 }
-                0o120000 if bundle.is_executable_path(path) => {
-                    return Err(ScanError::Unsupported(
-                        "declared CPIO executable is a symlink",
-                    ));
-                }
+                0o120000 => bundle.cpio_link(input, path, start, size, out).await?,
                 _ => (),
             }
         }

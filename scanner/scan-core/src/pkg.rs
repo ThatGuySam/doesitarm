@@ -283,7 +283,14 @@ pub(crate) async fn scan_legacy(
     if is_cpio {
         return cpio::scan_with(&mut source, work, StreamBundle::new(target), out).await;
     }
-    crate::tar::scan(&mut source, work, target, out).await
+    crate::tar::scan(
+        &mut source,
+        work,
+        target,
+        out,
+        crate::tar::PriorRuntime::Ignore,
+    )
+    .await
 }
 
 struct Replay<S> {
@@ -480,7 +487,7 @@ async fn recover_target(
     };
     let root = bundle::selected_plist(path, selection)?;
     let mut bundle = out.subresult();
-    let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
+    let target = bundle::apply_plist(&bytes, root, &mut bundle, true).ok()?;
     bundle.installer = out.installer.take();
     bundle.format = out.format;
     bundle.nested_artifacts = std::mem::take(&mut out.nested_artifacts);

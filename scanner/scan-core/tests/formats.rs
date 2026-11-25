@@ -917,3 +917,441 @@ fn local_diagnostics_preserve_embedded_plists_executable_prefixes_and_commands()
         );
     }
 }
+
+#[test]
+fn archives_verify_a_same_stem_macho_when_the_app_plist_has_no_executable_key() {
+    let fixtures: &[&[u8]] = &[
+        include_bytes!("../../fixtures/bundles/missing-key.zip"),
+        include_bytes!("../../fixtures/bundles/missing-key.tar.gz"),
+        include_bytes!("../../fixtures/bundles/missing-key.dmg"),
+    ];
+    for input in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.version.as_deref(), Some("3.8.2"));
+            assert_eq!(
+                result.executable_path.as_deref(),
+                Some("AgentSessions.app/Contents/MacOS/AgentSessions")
+            );
+            assert_eq!(result.executable_resolution, Some("bundle_name_fallback"));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn a_same_stem_script_does_not_verify_an_undeclared_main() {
+    let input = include_bytes!("../../fixtures/bundles/missing-key-helper.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::NotFound), "{result:?}");
+    assert!(result.architectures.is_empty());
+    assert!(result.executable_resolution.is_none());
+    assert!(
+        result
+            .inventory
+            .unwrap()
+            .binaries
+            .iter()
+            .any(|entry| entry.path == "Contents/MacOS/Helper"),
+        "observed helper still belongs in the inventory"
+    );
+}
+
+#[test]
+fn disk_images_resolve_a_contents_relative_executable_after_the_declared_lookup() {
+    let fixtures: &[(&[u8], &str)] = &[
+        (
+            include_bytes!("../../fixtures/bundles/contents-relative-hfs.dmg"),
+            "Sci-Hub EVA.app/Contents/MacOS/Sci-Hub EVA",
+        ),
+        (
+            include_bytes!("../../fixtures/bundles/contents-relative-apfs.dmg"),
+            "Fixture.app/Contents/MacOS/FixtureBinary",
+        ),
+    ];
+    for (input, path) in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.executable_path.as_deref(), Some(*path));
+            assert_eq!(result.executable_resolution, Some("contents_relative"));
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+            let inventory = result.inventory.unwrap();
+            assert_eq!(inventory.binaries.len(), 1);
+            assert_eq!(inventory.binaries[0].role, "main");
+        }
+    }
+}
+
+#[test]
+fn reads_encrypted_macho_headers_without_reading_encrypted_code() {
+    let words: [u32; 20] = [
+        0xfeedfacf, 0x0100000c, 0, 2, 2, 48, 0, 0, // Mach-O header
+        0x32, 24, 2, 0x00110000, 0, 0, // iOS build version
+        0x2c, 24, 4096, 64, 1, 0, // encryption info
+    ];
+    let mut data: Vec<u8> = words.into_iter().flat_map(u32::to_le_bytes).collect();
+    data.resize(4160, 0xa5);
+    let result = ready(scan_core::scan_target_with_diagnostics(
+        &mut Memory(&data),
+        ScanLimits::for_profile(Profile::Local),
+        Target::Auto,
+        None,
+    ));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.architectures[0].name, "arm64");
+    assert!(result.architectures[0].header_verified);
+    assert!(result.architectures[0].min_macos.is_none());
+    assert_eq!(result.bytes_read, 80, "the opaque code must remain unread");
+    let diagnostic = result.diagnostic.unwrap();
+    let encryption = &diagnostic.executable.load_commands[0].commands[1];
+    assert_eq!(encryption.fields.get("encryption_id"), Some(&1));
+    assert_eq!(encryption.fields.get("encrypted_offset"), Some(&4096));
+    assert_eq!(result.architectures[0].encrypted, Some(true));
+
+    // A zero id is an unencrypted placeholder even when the command exists.
+    data[72..76].copy_from_slice(&0u32.to_le_bytes());
+    let clear = run(&data, u64::MAX);
+    assert_eq!(clear.architectures[0].encrypted, Some(false));
+
+    data[72..76].copy_from_slice(&1u32.to_le_bytes());
+    data.truncate(4159);
+    let truncated = run(&data, u64::MAX);
+    assert!(matches!(truncated.status, Status::Invalid), "{truncated:?}");
+    assert_eq!(truncated.architectures[0].encrypted, None);
+}
+
+#[test]
+fn zip_wrapper_resolves_the_flat_inner_application_and_its_own_inventory() {
+    let input = include_bytes!("../../fixtures/bundles/wrapped-flat.zip");
+    for target in [
+        Target::Auto,
+        Target::Bundle("Outer.app"),
+        Target::Bundle("Inner.app"),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_core::scan_target_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+                target,
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(
+                result.bundle_path.as_deref(),
+                Some("Outer.app/Wrapper/Inner.app")
+            );
+            assert_eq!(result.bundle_kind, Some("app"));
+            assert_eq!(result.wrapper_path.as_deref(), Some("Outer.app"));
+            assert_eq!(
+                result.executable_path.as_deref(),
+                Some("Outer.app/Wrapper/Inner.app/Inner")
+            );
+            let inventory = result.inventory.unwrap();
+            assert!(
+                inventory
+                    .binaries
+                    .iter()
+                    .any(|entry| entry.role == "framework")
+            );
+            assert!(inventory.binaries.iter().any(|entry| entry.role == "main"));
+        }
+    }
+
+    let local = ready(scan_core::scan_target_with_diagnostics(
+        &mut Memory(input),
+        ScanLimits::for_profile(Profile::Local),
+        Target::Auto,
+        None,
+    ));
+    assert_eq!(
+        local.diagnostic.unwrap().info_plist_path.as_deref(),
+        Some("Outer.app/Wrapper/Inner.app/Info.plist")
+    );
+}
+
+#[test]
+fn zip_resource_only_bundle_reports_no_executable() {
+    let input = include_bytes!("../../fixtures/bundles/resources-only.zip");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::NoExecutable), "{result:?}");
+        assert_eq!(result.bundle_kind, Some("resource_only"));
+        assert!(result.architectures.is_empty());
+        assert!(result.inventory.unwrap().complete);
+    }
+}
+
+#[test]
+fn zip_product_selection_skips_resource_bundle_in_front_of_app_or_installer() {
+    let inputs: &[(&[u8], &str)] = &[
+        (
+            include_bytes!("../../fixtures/bundles/resources-and-app.zip"),
+            "Z Tool.app",
+        ),
+        (
+            include_bytes!("../../fixtures/bundles/resources-and-installer.zip"),
+            "Fixture.app",
+        ),
+    ];
+    for (input, expected) in inputs {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(matches!(result.status, Status::Complete), "{result:?}");
+            assert_eq!(result.bundle_path.as_deref(), Some(*expected));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn zip_product_selection_requests_a_target_for_independent_apps() {
+    let input = include_bytes!("../../fixtures/bundles/independent-apps.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.error.unwrap().contains("multi-app"));
+    assert_eq!(
+        result.candidate_bundle_paths,
+        ["A Utility.app", "Z Tool.app"]
+    );
+    assert!(result.architectures.is_empty());
+
+    let selected = ready(scan_target(
+        &mut Memory(input),
+        u64::MAX,
+        Target::Bundle("Z Tool.app"),
+    ));
+    assert!(matches!(selected.status, Status::Complete), "{selected:?}");
+    assert_eq!(selected.bundle_path.as_deref(), Some("Z Tool.app"));
+}
+
+#[test]
+fn hfs_suite_finds_the_product_named_by_its_enclosing_directory() {
+    let input = include_bytes!("../../fixtures/bundles/hfs-suite.dmg");
+    let path = "NetLogo 7.0.4/NetLogo 7.0.4.app";
+    for target in [
+        Target::Auto,
+        Target::Bundle(path),
+        Target::Bundle("NetLogo 7.0.4.app"),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_core::scan_target_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+                target,
+            ));
+            assert!(matches!(result.status, Status::Complete), "{result:?}");
+            assert_eq!(result.bundle_path.as_deref(), Some(path));
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn hfs_suite_with_no_primary_product_preserves_its_candidates() {
+    let input = include_bytes!("../../fixtures/bundles/hfs-suite-ambiguous.dmg");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.error.unwrap().contains("multi-app"));
+    assert_eq!(
+        result.candidate_bundle_paths,
+        [
+            "NetLogo 7.0.4/BehaviorSearch 7.0.4.app",
+            "NetLogo 7.0.4/HubNet Client 7.0.4.app",
+        ]
+    );
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn cli_only_archives_verify_the_unique_regular_macho_executable() {
+    for input in [
+        include_bytes!("../../fixtures/bundles/cli-only.zip").as_slice(),
+        include_bytes!("../../fixtures/bundles/cli-only.tar.gz").as_slice(),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.executable_path.as_deref(), Some("Widget/bin/widget"));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn cli_only_script_keeps_its_packaged_runtime_separate_from_primary_architectures() {
+    let input = include_bytes!("../../fixtures/bundles/cli-script-runtime.tar.gz");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(
+            matches!(result.status, Status::Unsupported),
+            "{profile:?}: {result:?}"
+        );
+        assert_eq!(
+            result.executable_path.as_deref(),
+            Some("dist-package/cursor-agent")
+        );
+        assert!(result.architectures.is_empty());
+        let runtime = result.script_runtime.unwrap();
+        assert_eq!(runtime.path, "dist-package/node");
+        assert!(runtime.architectures[0].header_verified);
+    }
+}
+
+#[test]
+fn cli_only_archives_request_a_target_when_several_executables_verify() {
+    let input = include_bytes!("../../fixtures/bundles/cli-ambiguous.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(
+        result
+            .error
+            .unwrap()
+            .contains("multiple standalone executables")
+    );
+    assert!(result.architectures.is_empty());
+    assert_eq!(
+        result
+            .candidate_executables
+            .iter()
+            .map(|entry| entry.path.as_str())
+            .collect::<Vec<_>>(),
+        ["bin/first", "bin/second"]
+    );
+}
+
+#[test]
+fn zip_resource_category_checks_for_code_in_nonstandard_paths() {
+    let input = include_bytes!("../../fixtures/bundles/resources-with-binary.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::NotFound), "{result:?}");
+    assert_ne!(result.bundle_kind, Some("resource_only"));
+    assert!(result.architectures.is_empty());
+    assert_eq!(
+        result.inventory.unwrap().binaries[0].path,
+        "Contents/Unexpected/tool"
+    );
+}
+
+#[test]
+fn zip_outer_app_with_its_own_launcher_keeps_the_wrapped_app_as_nested_code() {
+    let input = include_bytes!("../../fixtures/bundles/wrapper-with-own-launcher.zip");
+    for target in [Target::Auto, Target::Bundle("Outer.app")] {
+        let result = ready(scan_target(&mut Memory(input), u64::MAX, target));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_path.as_deref(), Some("Outer.app"));
+        assert_eq!(
+            result.executable_path.as_deref(),
+            Some("Outer.app/Contents/MacOS/Outer")
+        );
+        assert!(result.wrapper_path.is_none());
+        assert!(result.inventory.unwrap().binaries.iter().any(|entry| {
+            entry.path == "Wrapper/Inner.app/Inner" && entry.role == "nested_app"
+        }));
+    }
+}
+
+#[test]
+fn jdk_installer_verifies_the_named_library_behind_a_recorded_cpio_link() {
+    let fixtures: &[&[u8]] = &[
+        include_bytes!("../../fixtures/bundles/jdk-link-before-plist.pkg"),
+        include_bytes!("../../fixtures/bundles/jdk-link-after-plist.pkg"),
+    ];
+    let root = "Library/Java/JavaVirtualMachines/microsoft-11.jdk";
+    for input in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.bundle_path.as_deref(), Some(root));
+            assert_eq!(result.bundle_kind, Some("runtime"));
+            assert_eq!(result.executable_name.as_deref(), Some("libjli.dylib"));
+            assert_eq!(
+                result.executable_path,
+                Some(format!("{root}/Contents/Home/lib/jli/libjli.dylib"))
+            );
+            assert_eq!(result.executable_resolution, Some("archive_symlink"));
+            assert_eq!(result.architectures[0].name, "x86_64");
+            assert!(result.architectures[0].header_verified);
+        }
+    }
+}
+
+#[test]
+fn jdk_installer_does_not_promote_an_escaping_cpio_link() {
+    let input = include_bytes!("../../fixtures/bundles/jdk-link-escaping.pkg");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn targeted_tar_script_verifies_an_earlier_runtime_with_one_source_pass() {
+    let input = include_bytes!("../../fixtures/bundles/cli-script-runtime.tar.gz");
+    let target = Target::Executable("dist-package/cursor-agent");
+    let one_pass = input.len() as u64 + 4;
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let mut limits = ScanLimits::for_profile(profile);
+        limits.byte_budget = one_pass;
+        let result = ready(scan_core::scan_target_with_limits(
+            &mut Memory(input),
+            limits,
+            target,
+        ));
+        assert!(
+            matches!(result.status, Status::Unsupported),
+            "{profile:?}: {result:?}"
+        );
+        assert!(result.architectures.is_empty());
+        let runtime = result.script_runtime.unwrap();
+        assert_eq!(runtime.path, "dist-package/node");
+        assert_eq!(
+            runtime.architectures.len(),
+            1,
+            "{profile:?} missed the earlier runtime"
+        );
+        assert!(runtime.architectures[0].header_verified);
+        assert!(
+            result.bytes_requested <= one_pass,
+            "{profile:?} reread the source"
+        );
+    }
+}

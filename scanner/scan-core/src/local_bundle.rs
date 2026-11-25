@@ -108,25 +108,12 @@ pub fn local_bundle_metadata(
                 "Info.plist has no nonempty CFBundleExecutable.",
             ),
         };
-        let package = bundle::string(dict, "CFBundlePackageType");
-        if class == "missing_executable_key" && matches!(package, None | Some("APPL")) {
-            // Finder/app code identity can use the bundle stem. This is only
-            // an exact path candidate. The host still has to verify its bytes.
-            let leaf = bundle_path.rsplit('/').next().unwrap_or_default();
-            if let Some((stem, suffix)) = leaf.rsplit_once('.')
-                && suffix.eq_ignore_ascii_case("app")
-                && !stem.is_empty()
-                && !stem.contains(['/', '\\', '\0'])
-                && !matches!(stem, "." | "..")
-            {
-                let relative = if plist_path == "Info.plist" {
-                    stem.to_owned()
-                } else {
-                    format!("Contents/MacOS/{stem}")
-                };
-                metadata.executable_relative_path = Some(relative);
-                metadata.executable_resolution = Some("bundle_name_fallback");
-            }
+        if class == "missing_executable_key"
+            && let Some(relative) =
+                bundle::same_stem_executable(dict, bundle_path, plist_path == "Info.plist")
+        {
+            metadata.executable_relative_path = Some(relative);
+            metadata.executable_resolution = Some(bundle::NAME_FALLBACK);
         }
         metadata.error_class = Some(class);
         result.error = Some(reason.into());
