@@ -105,7 +105,7 @@ async fn inspect_xar(
 ) -> Result<()> {
     let (start, size) = (segment.offset, segment.size);
     check_range(size, 0, 28)?;
-    let head = input.read_at(start, 28).await?;
+    let head = input.read_at_for(start, 28, "xar_header").await?;
     if &head[..4] != b"xar!" {
         return Err(ScanError::Unsupported("nested PKG is not flat XAR"));
     }
@@ -121,7 +121,9 @@ async fn inspect_xar(
     check_range(size, header_size, packed)?;
     let heap = header_size + packed;
     work.check_chunk(packed, expanded)?;
-    let toc = input.read_at(start + header_size, packed as usize).await?;
+    let toc = input
+        .read_at_for(start + header_size, packed as usize, "xar_toc")
+        .await?;
     work.start_chunk(expanded)?;
     let toc = decode::zlib(&toc, expanded as usize, TOC_ERROR, work)?;
     let doc = parse_xml(&toc).map_err(|_| TOC_ERROR)?;
@@ -328,7 +330,9 @@ async fn scan_payload(
     if member.packed < 6 {
         return Err(ScanError::Invalid("short PKG Payload"));
     }
-    let magic = input.read_at(member.offset, 6).await?;
+    let magic = input
+        .read_at_for(member.offset, 6, "pkg_payload_probe")
+        .await?;
     let kind = if let Some(codec) = Codec::from_magic(&magic) {
         Payload::Compressed(codec)
     } else if magic.starts_with(b"pbzx") {
@@ -457,7 +461,7 @@ async fn recover_target(
         Payload::Compressed(Codec::Gzip) => {
             let span = source.size().min(gzip_tail::TAIL_BYTES);
             let tail = source
-                .read_at(source.size() - span, span as usize)
+                .read_at_for(source.size() - span, span as usize, "gzip_tail_index")
                 .await
                 .ok()?;
             (
@@ -645,7 +649,9 @@ async fn read_small_member(
     if compressed {
         work.check_chunk(member.packed, member.expanded)?;
     }
-    let data = input.read_at(member.offset, member.packed as usize).await?;
+    let data = input
+        .read_at_for(member.offset, member.packed as usize, "xar_member")
+        .await?;
     if compressed {
         work.start_chunk(member.expanded)?;
     }

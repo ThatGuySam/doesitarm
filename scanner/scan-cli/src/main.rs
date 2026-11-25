@@ -1,13 +1,15 @@
 #![forbid(unsafe_code)]
 
+mod blocking;
 mod http;
+mod ledger;
 mod local;
 mod local_folder;
 mod page;
 
 use scan_core::{
     Profile, REMOTE_BUDGET_TIERS, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status,
-    Target, WORKER_WALL_TIME_MS, scan_target_with_deadline,
+    Target, WORKER_WALL_TIME_MS,
 };
 use serde::Serialize;
 use std::{
@@ -89,11 +91,15 @@ fn main() -> ExitCode {
     if std::env::args_os().nth(1).as_deref() == Some(std::ffi::OsStr::new("resolve")) {
         return page::command(std::env::args_os().skip(2));
     }
+    if std::env::args_os().nth(1).as_deref() == Some(std::ffi::OsStr::new("ledger")) {
+        return ledger::cli();
+    }
     let args = match args() {
         Ok(Some(args)) => args,
         Ok(None) => {
             println!("{USAGE}");
             println!("{}", page::USAGE);
+            println!("Use scan-cli ledger --help for scan history, reports, and offline replay.");
             println!("Local files default to local with no work budget or deadline.");
             println!(
                 "Local .app directories scan one bundle. Other directories scan recursively; --json emits a JSON array."
@@ -318,12 +324,13 @@ fn run(args: &Args) -> Output {
         }
         FileSource::open(path).map(|mut file| {
             let expired = || deadline.is_some_and(Deadline::expired);
-            ready(scan_target_with_deadline(
+            blocking::scan(
                 &mut file,
                 args.limits,
                 target,
                 deadline.map(|_| &expired as &dyn Fn() -> bool),
-            ))
+                false,
+            )
         })
     };
     Output::new(result.unwrap_or_else(|error| failure(error, 0)))

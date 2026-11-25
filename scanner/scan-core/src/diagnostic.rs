@@ -1,11 +1,14 @@
 use crate::{ReadAt, Result, ScanError, ScanResult, local_bundle::serialize_plist, macho};
 use plist::Value;
 use serde::Serialize;
+use sha2::{Digest, Sha256};
 use std::{collections::BTreeMap, fmt::Write};
 
 #[derive(Debug, Default, Serialize)]
 pub struct ScanDiagnostic {
     pub info_plist_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub info_plist_sha256: Option<String>,
     pub info_plist_size: Option<usize>,
     pub info_plist_encoding: Option<&'static str>,
     pub info_plist_keys: Vec<String>,
@@ -16,7 +19,21 @@ pub struct ScanDiagnostic {
 }
 
 impl ScanDiagnostic {
+    pub(crate) fn fingerprints() -> Self {
+        Self {
+            executable: ExecutableDiagnostic {
+                fingerprints_only: true,
+                ..ExecutableDiagnostic::default()
+            },
+            ..Self::default()
+        }
+    }
+
     pub(crate) fn plist_source(&mut self, bundle: &str, bytes: &[u8]) {
+        if self.executable.fingerprints_only {
+            self.info_plist_sha256 = Some(digest(&[bytes]));
+            return;
+        }
         self.info_plist_path = Some(format!("{bundle}/Contents/Info.plist"));
         self.info_plist_size = Some(bytes.len());
         self.info_plist_encoding = Some(plist_encoding(bytes));
@@ -25,6 +42,9 @@ impl ScanDiagnostic {
     }
 
     pub(crate) fn plist_value(&mut self, value: Value) {
+        if self.executable.fingerprints_only {
+            return;
+        }
         if let Some(dict) = value.as_dictionary() {
             self.info_plist_keys = dict.keys().cloned().collect();
         }
@@ -45,10 +65,20 @@ pub(crate) fn plist_encoding(bytes: &[u8]) -> &'static str {
 #[derive(Debug, Default, Serialize)]
 pub struct ExecutableDiagnostic {
     pub executable_prefix_hex: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub main_executable_header_sha256: Option<String>,
+    #[serde(skip)]
+    pub(crate) fingerprints_only: bool,
     pub load_commands: Vec<SliceCommands>,
 }
 
 impl ExecutableDiagnostic {
+    pub(crate) fn header(&mut self, first: &[u8], rest: &[u8]) {
+        if self.fingerprints_only {
+            self.main_executable_header_sha256 = Some(digest(&[first, rest]));
+        }
+    }
+
     pub(crate) fn prefix(&mut self, bytes: &[u8]) {
         let mut hex = String::with_capacity(bytes.len() * 2);
         for byte in bytes {
@@ -75,7 +105,13 @@ pub struct Command {
 impl ScanResult {
     pub(crate) fn subresult(&self) -> Self {
         let mut result = Self::new(self.total_size);
-        result.diagnostic = self.diagnostic.as_ref().map(|_| ScanDiagnostic::default());
+        result.diagnostic = self.diagnostic.as_ref().map(|evidence| {
+            if evidence.executable.fingerprints_only {
+                ScanDiagnostic::fingerprints()
+            } else {
+                ScanDiagnostic::default()
+            }
+        });
         result
     }
 
@@ -140,4 +176,16 @@ impl<S: ReadAt> ReadAt for Prefix<'_, S> {
             ))
         }
     }
+}
+
+fn digest(parts: &[&[u8]]) -> String {
+    let mut hash = Sha256::new();
+    for part in parts {
+        hash.update(part);
+    }
+    let mut hex = String::with_capacity(64);
+    for byte in hash.finalize() {
+        write!(hex, "{byte:02x}").unwrap();
+    }
+    hex
 }

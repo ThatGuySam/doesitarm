@@ -351,7 +351,9 @@ impl<S: ReadAt> ReadAt for Member<'_, S> {
 }
 
 async fn read_index(input: &mut impl ReadAt, work: &DecodeBudget<'_>) -> Result<(Archive, u64)> {
-    let start = input.read_at(0, SIGNATURE_HEADER_SIZE as usize).await?;
+    let start = input
+        .read_at_for(0, SIGNATURE_HEADER_SIZE as usize, "seven_zip_signature")
+        .await?;
     if start[..6] != *b"7z\xbc\xaf\x27\x1c"
         || le32(&start, 8) == 0 && start[12..].iter().all(|byte| *byte == 0)
     {
@@ -364,7 +366,9 @@ async fn read_index(input: &mut impl ReadAt, work: &DecodeBudget<'_>) -> Result<
     if size > MAX_HEADER {
         return Err(ScanError::Limit("7z next header exceeds 8 MiB"));
     }
-    let header = input.read_at(header_at, size as usize).await?;
+    let header = input
+        .read_at_for(header_at, size as usize, "seven_zip_header")
+        .await?;
     let mut parts = vec![(0, start), (header_at, header)];
     let mut data_end = header_at;
     if let Some((offset, packed)) = encoded_header(&parts[1].1)? {
@@ -375,7 +379,12 @@ async fn read_index(input: &mut impl ReadAt, work: &DecodeBudget<'_>) -> Result<
         // The index parser bounds its expanded allocation separately. Charge
         // its upper bound before invoking the synchronous decoder.
         work.start_chunk(INDEX_DECODER_MEMORY)?;
-        parts.push((offset, input.read_at(offset, packed as usize).await?));
+        parts.push((
+            offset,
+            input
+                .read_at_for(offset, packed as usize, "seven_zip_packed_header")
+                .await?,
+        ));
         data_end = offset;
     }
     let mut reader = Index {

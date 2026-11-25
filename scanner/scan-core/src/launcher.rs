@@ -23,6 +23,9 @@ pub(crate) async fn inspect(
     diagnostic: Option<&mut ExecutableDiagnostic>,
 ) -> Result<()> {
     if let Some(diagnostic) = diagnostic {
+        if diagnostic.fingerprints_only {
+            return inspect_prefix(input, path, architectures, runtime, Some(diagnostic)).await;
+        }
         *diagnostic = ExecutableDiagnostic::default();
         let mut prefixed = Prefix::open(input, diagnostic).await?;
         inspect_prefix(

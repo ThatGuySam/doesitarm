@@ -78,12 +78,16 @@ async fn scan_entries(
     let mut offset = 0;
     for _ in 0..work.archive_entry_limit() {
         bundle.check_traversal(input, work)?;
-        let mut header = input.read_at(offset, 76).await?;
+        let mut header = input.read_at_for(offset, 76, "cpio_member_header").await?;
         let encoding = Encoding::from_magic(&header[..6])
             .ok_or(ScanError::Unsupported("CPIO payload encoding"))?;
         let head_size = encoding.head_size();
         if head_size > header.len() {
-            header.extend(input.read_at(offset + 76, head_size - 76).await?);
+            header.extend(
+                input
+                    .read_at_for(offset + 76, head_size - 76, "cpio_member_header")
+                    .await?,
+            );
         }
         let (mode, name_size, size) = encoding.fields(&header[6..])?;
         if !(1..=65536).contains(&name_size) {
@@ -91,7 +95,9 @@ async fn scan_entries(
         }
         let name_at = offset + head_size as u64;
         check_range(input.size(), name_at, name_size)?;
-        let bytes = input.read_at(name_at, name_size as usize).await?;
+        let bytes = input
+            .read_at_for(name_at, name_size as usize, "cpio_member_name")
+            .await?;
         let name = bytes.strip_suffix(b"\0").ok_or(INVALID)?;
         if name == b"TRAILER!!!" {
             return Ok(());

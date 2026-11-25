@@ -672,3 +672,40 @@ fn local_diagnostics_preserve_embedded_plists_executable_prefixes_and_commands()
         );
     }
 }
+
+#[test]
+fn fingerprints_use_existing_reads_and_hash_raw_bundle_metadata() {
+    let input = include_bytes!("../../fixtures/stored.zip");
+    let limits = ScanLimits::for_profile(Profile::RemoteCli);
+    let old = ready(scan_core::scan_target_with_limits(
+        &mut Memory(input),
+        limits,
+        Target::Auto,
+    ));
+    let new = ready(scan_core::scan_target_with_fingerprints(
+        &mut Memory(input),
+        limits,
+        Target::Auto,
+        None,
+    ));
+
+    assert!(matches!(new.status, Status::Complete));
+    assert_eq!(
+        (new.bytes_read, new.bytes_requested, new.reads),
+        (old.bytes_read, old.bytes_requested, old.reads)
+    );
+    let diagnostic = new.diagnostic.unwrap();
+    assert_eq!(
+        diagnostic.info_plist_sha256.as_deref(),
+        Some("b4f09f59afe8b01acc17d299dfdf8bc09f53754feb60b435afb21faf139ed22e")
+    );
+    assert_eq!(
+        diagnostic
+            .executable
+            .main_executable_header_sha256
+            .as_deref(),
+        Some("62c82087b61262ea024ddb376c3cc90186c6ffe925a89cf7a6053a932bcfd9cc")
+    );
+    assert!(diagnostic.info_plist.is_none());
+    assert!(diagnostic.executable.load_commands.is_empty());
+}

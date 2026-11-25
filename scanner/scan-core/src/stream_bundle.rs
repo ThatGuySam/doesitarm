@@ -2,7 +2,7 @@ use crate::{
     Architecture, BinaryInventory, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult,
     ScriptRuntime, Target, Window, bundle,
     decode::DecodeBudget,
-    diagnostic::ExecutableDiagnostic,
+    diagnostic::{ExecutableDiagnostic, ScanDiagnostic},
     inventory::{self, Allowance},
     launcher, macho,
 };
@@ -114,7 +114,7 @@ impl<'a> StreamBundle<'a> {
                 return Ok(false);
             }
             let candidate =
-                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
+                read_candidate(source, path, offset, size, out.diagnostic.as_ref()).await?;
             out.executable_path = Some(candidate.path.clone());
             let primary = candidate.apply(out);
             if out.script_runtime.is_some() {
@@ -127,7 +127,7 @@ impl<'a> StreamBundle<'a> {
 
         if self.target.as_deref() == Some(path) && self.primary.is_none() {
             let candidate =
-                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
+                read_candidate(source, path, offset, size, out.diagnostic.as_ref()).await?;
             self.primary = Some(candidate.apply(out));
             return Ok(false);
         }
@@ -139,7 +139,9 @@ impl<'a> StreamBundle<'a> {
             if size > bundle::MAX_PLIST {
                 return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
             }
-            let plist = source.read_at(offset, size as usize).await?;
+            let plist = source
+                .read_at_for(offset, size as usize, "bundle_info_plist")
+                .await?;
             let target = bundle::apply_plist(&plist, root, out)?;
             out.candidate_executables.clear();
             self.alias = bundle::contents_relative_alias(&target, root);
@@ -164,7 +166,7 @@ impl<'a> StreamBundle<'a> {
 
         if self.alias.as_deref() == Some(path) && self.primary.is_none() {
             self.alias_candidate =
-                Some(read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?);
+                Some(read_candidate(source, path, offset, size, out.diagnostic.as_ref()).await?);
             return Ok(false);
         }
 
@@ -199,7 +201,7 @@ impl<'a> StreamBundle<'a> {
                 return Ok(false);
             }
             let candidate =
-                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
+                read_candidate(source, path, offset, size, out.diagnostic.as_ref()).await?;
             if !candidate.architectures.is_empty() && out.candidate_executables.len() < 64 {
                 out.candidate_executables.push(ExecutableCandidate {
                     path: path.to_owned(),
@@ -318,11 +320,14 @@ async fn read_candidate(
     path: &str,
     offset: u64,
     size: u64,
-    diagnostic: bool,
+    diagnostic: Option<&ScanDiagnostic>,
 ) -> Result<Candidate> {
     let mut architectures = Vec::new();
     let mut runtime = None;
-    let mut diagnostic = diagnostic.then(ExecutableDiagnostic::default);
+    let mut diagnostic = diagnostic.map(|evidence| ExecutableDiagnostic {
+        fingerprints_only: evidence.executable.fingerprints_only,
+        ..ExecutableDiagnostic::default()
+    });
     let outcome = launcher::inspect(
         &mut Window::new(source, offset, size)?,
         path,

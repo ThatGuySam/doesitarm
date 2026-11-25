@@ -1,7 +1,8 @@
-use super::{Deadline, Output, failure, ready, source_error};
-use scan_core::{
-    Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Target, scan_target_with_deadline,
-};
+#[cfg(test)]
+use super::ready;
+use super::{Deadline, Output, blocking, failure, source_error};
+use crate::ledger::capture::{self, Capture, HttpEvidence, Phase};
+use scan_core::{Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Target};
 use std::{
     fs::File,
     io::{Read, Seek, SeekFrom, Write},
@@ -21,14 +22,26 @@ pub(crate) struct Options {
     pub(crate) allow_stream: bool,
     pub(crate) allow_http: bool,
     pub(crate) delay: Duration,
+    pub(crate) spool_dir: Option<std::path::PathBuf>,
 }
 
 pub(crate) fn scan(
+    url: &str,
+    limits: ScanLimits,
+    target: Target<'_>,
+    options: &Options,
+    deadline: Option<Deadline>,
+) -> Output {
+    scan_with_capture(url, limits, target, options, deadline, None)
+}
+
+pub(crate) fn scan_with_capture(
     url: &str,
     mut limits: ScanLimits,
     target: Target<'_>,
     options: &Options,
     deadline: Option<Deadline>,
+    mut capture: Option<&mut Capture>,
 ) -> Output {
     if deadline.is_some_and(Deadline::expired) {
         return Output::new(failure(DEADLINE, 0));
@@ -40,6 +53,7 @@ pub(crate) fn scan(
         .http_status_as_error(false)
         .https_only(!options.allow_http)
         .max_redirects(8)
+        .save_redirect_history(capture.is_some())
         .timeout_global(Some(REQUEST_TIMEOUT))
         .build();
     let agent = Agent::new_with_config(config);
@@ -50,16 +64,32 @@ pub(crate) fn scan(
     let now = Instant::now();
     let response = match request(&agent, &uri, 0, 1, None, deadline) {
         Ok(response) => response,
-        Err(error) => return probe_failure(error),
+        Err(error) => {
+            if let Some(trace) = capture {
+                trace.probe_error(&error);
+            }
+            return probe_failure(error);
+        }
     };
-    if response.status().as_u16() == 200 && options.allow_stream {
-        return scan_stream(response, limits, target, deadline);
+    if let Some(trace) = capture.as_deref_mut() {
+        trace.probe_response(&response);
     }
-    let (probe, _) = match accept_range(response, 0, 1, None) {
+    if response.status().as_u16() == 200 && options.allow_stream {
+        return scan_stream(response, limits, target, deadline, options, capture);
+    }
+    let (probe, magic) = match accept_range(response, 0, 1, None) {
         Ok(response) => response,
         Err(_) if deadline.is_some_and(Deadline::expired) => return probe_failure(DEADLINE),
-        Err(error) => return probe_failure(error),
+        Err(error) => {
+            if let Some(trace) = capture {
+                trace.probe_error(&error);
+            }
+            return probe_failure(error);
+        }
     };
+    if let Some(trace) = capture.as_deref_mut() {
+        trace.prefix(0, &magic);
+    }
     let source_etag = etag_text(probe.etag.as_ref());
     let mut source = HttpSource {
         agent,
@@ -68,6 +98,8 @@ pub(crate) fn scan(
         last_request: now,
         deadline,
         ignored_range: None,
+        observe: capture.is_some(),
+        last_response: None,
     };
     let budget = if limits.profile == Profile::Worker {
         limits.byte_budget.min(source.size().saturating_sub(1))
@@ -75,7 +107,17 @@ pub(crate) fn scan(
         limits.byte_budget
     };
     limits.byte_budget = budget.saturating_sub(1);
-    let mut result = scan_core(&mut source, limits, target, deadline);
+    let mut phase = Phase {
+        transport: "range".into(),
+        source_etag: source_etag.clone(),
+        ..Phase::default()
+    };
+    let mut result = if let Some(trace) = capture.as_deref_mut() {
+        capture::core(&mut source, limits, target, deadline, trace, &mut phase)
+    } else {
+        scan_core(&mut source, limits, target, deadline)
+    };
+    phase.response = source.last_response.take();
     result.reads += 1;
     result.bytes_requested += 1;
     // A successful core read of the magic already covers the probe at zero.
@@ -87,17 +129,41 @@ pub(crate) fn scan(
         limits.byte_budget = budget.saturating_sub(result.bytes_requested);
         if limits.byte_budget == 0 {
             result.set_error(ScanError::Budget);
+            phase.fallback_budget_exhausted = true;
         } else {
-            let mut restarted = scan_stream(response, limits, target, deadline);
+            if let Some(trace) = capture.as_deref_mut() {
+                phase.restarted = true;
+                trace.phases.push(phase);
+            }
+            let mut restarted = scan_stream(response, limits, target, deadline, options, capture);
             restarted.scan.bytes_requested += result.bytes_requested;
             restarted.scan.reads += result.reads;
             return restarted;
         }
     }
+    if let Some(trace) = capture {
+        trace.phases.push(phase);
+    }
     Output {
         source_etag,
         source_transport: Some("range"),
         ..Output::new(result)
+    }
+}
+
+pub(crate) fn replay_probe(probe: &HttpEvidence) -> capture::ReplayResult<Output> {
+    let mut response = Response::builder().status(probe.status);
+    for (name, value) in &probe.headers {
+        response = response.header(name, value);
+    }
+    // No body is needed for rejection by status. Header validation of a
+    // successful 206 would require the original probe body and response URI.
+    if probe.status == 206 {
+        return Err("HTTP 206 probe requires bytes or a parser phase".into());
+    }
+    match accept_range(response.body(Body::builder().data(b""))?, 0, 1, None) {
+        Err(error) => Ok(probe_failure(error)),
+        Ok(_) => Err("Recorded HTTP probe was accepted".into()),
     }
 }
 
@@ -114,12 +180,13 @@ fn scan_core(
     deadline: Option<Deadline>,
 ) -> ScanResult {
     let expired = || deadline.is_some_and(Deadline::expired);
-    ready(scan_target_with_deadline(
+    blocking::scan(
         source,
         limits,
         target,
         deadline.map(|_| &expired as &dyn Fn() -> bool),
-    ))
+        false,
+    )
 }
 
 fn scan_stream(
@@ -127,6 +194,8 @@ fn scan_stream(
     mut limits: ScanLimits,
     target: Target<'_>,
     deadline: Option<Deadline>,
+    options: &Options,
+    mut capture: Option<&mut Capture>,
 ) -> Output {
     let source_etag = etag_text(
         response
@@ -139,31 +208,55 @@ fn scan_stream(
         .get(header::CONTENT_TYPE)
         .and_then(|value| value.to_str().ok())
         .map(|value| value.chars().take(128).collect());
-    let result = match StreamSource::open(response, limits.byte_budget) {
-        Ok(mut source) => {
-            let mut result = match source.discover_size() {
-                Ok(()) => {
-                    // The spool meters physical transfer. Reads served from it
-                    // can revisit cached bytes without a second network charge.
-                    limits.byte_budget = u64::MAX;
-                    scan_core(&mut source, limits, target, deadline)
-                }
-                Err(error) => {
-                    let mut result = ScanResult::new(source.size());
-                    result.set_error(error);
-                    result
-                }
-            };
-            if deadline.is_some_and(Deadline::expired) {
-                result.set_error(DEADLINE);
-            }
-            result.reads = 1;
-            result.bytes_read = source.received;
-            result.bytes_requested = source.received;
-            result
-        }
-        Err(error) => failure(error, 1),
+    let mut phase = Phase {
+        transport: "stream".into(),
+        source_etag: source_etag.clone(),
+        source_content_type: source_content_type.clone(),
+        response: capture
+            .as_ref()
+            .map(|_| HttpEvidence::from_response(&response)),
+        ..Phase::default()
     };
+    let result =
+        match StreamSource::open_in(response, limits.byte_budget, options.spool_dir.as_deref()) {
+            Ok(mut source) => {
+                let mut result = match source.discover_size() {
+                    Ok(()) => {
+                        // The spool meters physical transfer. Reads served from it
+                        // can revisit cached bytes without a second network charge.
+                        limits.byte_budget = u64::MAX;
+                        if let Some(trace) = capture.as_deref_mut() {
+                            capture::core(&mut source, limits, target, deadline, trace, &mut phase)
+                        } else {
+                            scan_core(&mut source, limits, target, deadline)
+                        }
+                    }
+                    Err(error) => {
+                        phase.size = source.size();
+                        phase.early_error = Some((&error).into());
+                        let mut result = ScanResult::new(source.size());
+                        result.set_error(error);
+                        result
+                    }
+                };
+                if deadline.is_some_and(Deadline::expired) {
+                    phase.stream_deadline = true;
+                    result.set_error(DEADLINE);
+                }
+                phase.source_bytes = Some(source.received);
+                result.reads = 1;
+                result.bytes_read = source.received;
+                result.bytes_requested = source.received;
+                result
+            }
+            Err(error) => {
+                phase.early_error = Some((&error).into());
+                failure(error, 1)
+            }
+        };
+    if let Some(trace) = capture {
+        trace.phases.push(phase);
+    }
     Output {
         source_etag,
         source_transport: Some("stream"),
@@ -187,7 +280,16 @@ struct StreamSource {
 }
 
 impl StreamSource {
+    #[cfg(test)]
     fn open(response: Response<Body>, budget: u64) -> Result<Self> {
+        Self::open_in(response, budget, None)
+    }
+
+    fn open_in(
+        response: Response<Body>,
+        budget: u64,
+        spool_dir: Option<&std::path::Path>,
+    ) -> Result<Self> {
         require_identity(response.headers(), "stream")?;
         let size = response
             .headers()
@@ -213,7 +315,9 @@ impl StreamSource {
         }
         Ok(Self {
             body: response.into_body().into_reader(),
-            spool: tempfile::tempfile().map_err(source_error)?,
+            spool: spool_dir
+                .map_or_else(tempfile::tempfile, tempfile::tempfile_in)
+                .map_err(source_error)?,
             size,
             received: 0,
             budget,
@@ -293,6 +397,8 @@ struct HttpSource {
     last_request: Instant,
     deadline: Option<Deadline>,
     ignored_range: Option<Response<Body>>,
+    observe: bool,
+    last_response: Option<HttpEvidence>,
 }
 
 impl ReadAt for HttpSource {
@@ -315,6 +421,9 @@ impl ReadAt for HttpSource {
             Some(&self.representation),
             self.deadline,
         )?;
+        if self.observe {
+            self.last_response = Some(HttpEvidence::from_response(&response));
+        }
         if response.status().as_u16() == 200 {
             self.ignored_range = Some(response);
             return Err(source_error(format!(
@@ -572,6 +681,8 @@ mod tests {
             whole_response(artifact, Some(artifact.len() as u64)),
             ScanLimits::new(68 * 1024),
             Target::Auto,
+            None,
+            &Options::default(),
             None,
         );
         assert!(matches!(result.scan.status, scan_core::Status::Complete));
