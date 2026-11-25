@@ -1,0 +1,7 @@
+{"tag_name":"v2.1","draft":false,"prerelease":false,"assets":[
+  {"state":"uploaded","name":"Viewer-darwin-x64.zip","size":7521,"browser_download_url":"https://github.com/example/Viewer/releases/download/v2.1/Viewer-darwin-x64.zip"},
+  {"id":42,"state":"uploaded","name":"Viewer-universal.dmg","size":12345,"browser_download_url":"https://github.com/example/Viewer/releases/download/v2.1/Viewer-universal.dmg"},
+  {"state":"uploaded","name":"Viewer-windows.zip","size":5201,"browser_download_url":"https://github.com/example/Viewer/releases/download/v2.1/Viewer-windows.zip"},
+  {"state":"uploaded","name":"Viewer-macos-dSYMs.zip","size":869,"browser_download_url":"https://github.com/example/Viewer/releases/download/v2.1/Viewer-macos-dSYMs.zip"},
+  {"state":"new","name":"Viewer-unstaged.dmg","size":0,"browser_download_url":"https://github.com/example/Viewer/releases/download/v2.1/Viewer-unstaged.dmg"}
+]}

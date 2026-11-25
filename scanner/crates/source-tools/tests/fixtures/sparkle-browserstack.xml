@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>BrowserStackLocal</title>
+    <item>
+      <title>3.7.8</title>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure url="https://www.browserstack.com/local-testing/downloads/native-app/BrowserStackLocal.tar.gz" sparkle:version="3.7.8" sparkle:shortVersionString="3.7.8" length="23813038" type="application/octet-stream" />
+    </item>
+  </channel>
+</rss>

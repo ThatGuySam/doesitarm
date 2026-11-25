@@ -1,0 +1,8 @@
+{"responses":[
+  {"url":"https://downloads.example.org/moved.dmg","mode":"bytes=0-0","final_url":"https://cdn.example.org/moved.dmg","status":404,"headers":{"content-type":"text/plain","content-length":"17"},"body_text":"release moved"},
+  {"url":"https://downloads.example.org/page","mode":"bytes=0-0","status":200,"headers":{"content-type":"text/html","content-length":"32"},"body_text":"<!doctype html><title>Download"},
+  {"url":"https://downloads.example.org/ignore.zip","mode":"bytes=0-0","status":200,"headers":{"content-type":"application/zip","content-length":"311"}},
+  {"url":"https://downloads.example.org/head-only.zip","mode":"bytes=0-0","status":405,"headers":{"allow":"HEAD"}},
+  {"url":"https://downloads.example.org/head-only.zip","mode":"head","status":200,"headers":{"content-type":"application/zip","content-length":"700","accept-ranges":"none"}},
+  {"url":"https://downloads.example.org/post-only.zip","mode":"bytes=0-0","status":405,"headers":{"allow":"POST"}}
+]}
