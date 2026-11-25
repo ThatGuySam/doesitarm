@@ -31,14 +31,15 @@ pub(crate) fn name(bytes: &[u8]) -> Option<String> {
 
     let text = match bytes {
         [a, b, body @ ..] if matches!((*a, *b), (0xfe, 0xff) | (0xff, 0xfe)) => {
-            if !body.len().is_multiple_of(2) {
+            let (pairs, remainder) = body.as_chunks::<2>();
+            if !remainder.is_empty() {
                 return None;
             }
-            let units = body.chunks_exact(2).map(|pair| {
+            let units = pairs.iter().map(|&pair| {
                 if *a == 0xfe {
-                    u16::from_be_bytes([pair[0], pair[1]])
+                    u16::from_be_bytes(pair)
                 } else {
-                    u16::from_le_bytes([pair[0], pair[1]])
+                    u16::from_le_bytes(pair)
                 }
             });
             Cow::Owned(

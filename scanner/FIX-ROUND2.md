@@ -47,7 +47,41 @@ XAR range probes identified gzip payloads. The local passes used checksum-matchi
 | Unity iOS Support `5784919ee40a` | 268,173,301 | 874,894,250 | Editor support package. The local scan finds no app plist. Select a specific deployed tool if its architecture matters. |
 | Unity Android Support `e6407a899153` | 268,173,301 | 1,738,756,155 | Editor support package. The local scan finds no app plist. Select a specific deployed tool if its architecture matters. |
 
-Other tar.gz attempts that failed at smaller tiers include Cursor CLI, LiClipse, JDK Mission Control and DeepL. Their recorded verified outcomes used 175,371,496, 163,643,392, 107,416,900 and 95,854,238 bytes respectively, all below the maximum tier. Historical transfer-only failures such as Cap's HTTP 429 require a successful origin response before measuring an archive prefix. Cursor's one-pass combined replay is covered in the regression table.
+### Lower-tier gzip records
+
+The ledger already has higher-tier or targeted observations for these smaller gzip artifacts. Counts below are historical source observations for the same URL, using each row's stated target. A targeted byte count can be lower than the earlier automatic scan. The kit and live replay sections record the round-two observations separately.
+
+| Gzip artifact | Before attempt and bytes | Later ledger attempt and bytes | Status and decision |
+| --- | --- | --- | --- |
+| Arm Performance Libraries | `9dab0b6af9cf` · 67,108,864 | `6cb8dee5e252` · 194,086,631 | Full archive reached. Select a packaged library or tool and give its installed path. |
+| AtomCode | `065a050c7b0a` · 8,388,608 | `c5655dfc1d93` · 65,541 | The standalone `atomcode` verified. Use an executable target. |
+| Azure CLI | `8f01f48c23eb` · 8,388,603 | `eb45df3daf97` · 47,511,472 | The declared `libexec/bin/az` is a script. Select the packaged interpreter if its architecture matters. |
+| BrowserStack Local | `4b48ea3e55a6` · 8,388,608 | `db12ab02e6f5` · 23,813,038 | The app verified at a higher tier. Included in the combined replay. |
+| CodeLite | `2f1760bf6b96` · 8,388,603 | `0cbf816df887` · 25,921,204 | Full archive reached. The executable named by the bundle still needs resolution. |
+| Codex Monitor | `5c3dc4653a44` · 8,388,608 | `25e735b67724` · 22,893,892 | The app verified within 64 MiB. |
+| Confluent CLI | `2ceaeada71a5` · 8,388,608 | `472f3e9e033c` · 851,973 | The standalone `confluent/confluent` verified. Use an executable target. |
+| Copilot CLI | `eec1b32e1748` · 67,108,864 | `8340fde1c60b` · 65,541 | The standalone `copilot` verified. Use an executable target. |
+| Cursor CLI | `c51d5a09a33b` · 67,108,864 | `6da28a5a5863` · 175,371,496 | The script's packaged Node runtime verified. Included in the combined replay. |
+| DeepL | `fe4c9d1fe1da` · 67,108,859 | `98eeeb32e784` · 95,854,238 | The app verified within 256 MiB. |
+| Devin CLI | `9fb06423adc0` · 67,108,864 | `2fa942a76eca` · 65,541 | The standalone `bin/devin` verified. Use an executable target. |
+| Google Cloud CLI | `4e0bf69a4828` · 8,388,608 | `b2f7c5f9d88c` · 54,888,762 | Archive reached. Select the launcher or a proven packaged runtime. |
+| Jamie | `1f75c135308c` · 8,388,608 | `d4dd87e349db` · 31,851,858 | The app verified within 64 MiB. |
+| JDK Mission Control | `727bc60aa2fa` · 67,108,864 | `ab3298fdf6c1` · 107,416,900 | The app verified within 256 MiB. |
+| LiClipse Intel | `c25048805382` · 67,108,859 | `30c5be2cf13f` · 163,643,392 | The Intel app verified within 256 MiB. |
+| LiClipse Arm | `4dcb3b616075` · 67,108,864 | `ee9ae20ef215` · 163,643,392 | The Arm app verified within 256 MiB. |
+| Liquibase Community | `6a755d250e31` · 8,388,608 | `f7ca18582e29` · 8,773,415 | The named launcher is a script. A separately selected Java runtime needs its own evidence. |
+| Liquibase Secure | `9c5637e3672d` · 8,388,608 | `a3849b1fe226` · 327,685 | Exact targeting identifies the script directly. A separately selected Java runtime needs its own evidence. |
+| mitmproxy | `c8ba2840027a` · 8,388,608 | `2268a4060bcc` · 42,008,581 | The exact `mitmweb` binary verified. Choose the CLI member acceptable for the catalog. |
+| MuMuPlayer | `0b600c002d7a` · 8,388,608 | `431fc10d80c4` · 16,842,752 | The app verified at larger budget in the recorded pin. |
+| OCLint | `edcd3fdaa854` · 8,388,603 | `33f4e8504313` · 12,648,448 | The observed compilation-database entry is a script. Choose a proven native OCLint member for architecture. |
+| Ollama binary | `627797667654` · 67,108,864 | `123f84dcc0b4` · 16,842,757 | The exact `ollama` verified. Use an executable target. |
+| Perforce Server | `fa2406556652` · 8,388,608 | `b9f82cdfa764` · 21,037,061 | The exact `p4p` verified. Choose the server tool that should represent the tarball. |
+| Serviio | `d02fcb18a963` · 8,388,608 | `8ad21d0f8578` · unrecorded byte count | The later deadline supplies no verified app. Check the packaged launcher locally. |
+| Spotify Soloist | `c0c7b9f347a5` · 8,388,608 | `5d11ffd37166` · 65,541 | The exact `soloist` verified. The publisher URL is mutable. |
+| Terminal Browser Arm | `242323a2a91e` · 67,108,864 | `0c14845dbebb` · 143,837,820 | The script's exact packaged runtime verified locally. |
+| Terminal Browser Intel | `244b171dad3f` · 67,108,864 | `eb35c780719f` · 152,096,752 | The launcher script was verified as such. A native runtime requires its own evidence. |
+| Vercel CLI | `8e3eea2e2b6e` · 8,388,608 | `961d89673605` · 65,541 | The npm binary `package/bin/vercel` verified. Use the exact executable target. |
+| Warp Agent CLI | `3deba2a349c9` · 67,108,864 | `77b433163875` · 86,543,179 | The exact archived `warp-tui-stable` verified. The Warp desktop DMG below uses a separate download route. |
 
 ## Krisp 3.20.5
 
@@ -65,6 +99,8 @@ Ledger attempt `35d1bb3e1265` recorded 232,059 source bytes and a missing displa
 
 The HFS reader fills the missing name from the base plist's declared development-region strings table after the primary verifies. Existing names retain precedence. The optional metadata read respects the existing source and deadline limits. The 2,247-byte `hfs_uses_the_embedded_name_from_development_region_strings` fixture failed with `None` instead of `Localized Fixture` and now passes in all three profiles. It also verifies that the minimum remains unknown. [Apple string resources](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingResources/Strings/Strings.html)
 
+The pinned after-scan recovered `LaTeXiT` in both native profiles with the same source-byte counts as the before-scan, 1,901,642 for capped remote-cli on the file and 3,826,804 for local. Both headers still verify and `min_macos` remains empty. The name is fixed. Sam can decide whether to cite the vendor's 10.4 minimum separately in the catalog.
+
 ## Warp
 
 | Route | Historical bytes read | Combined rerun | Status and decision |
@@ -73,8 +109,6 @@ The HFS reader fills the missing name from the base plist's declared development
 | Official stable DMG selector | 268,435,456 at the maximum tier | 268,435,456 remote, 5,940,177 local parser bytes after a 343,072,502-byte download | Needs a local file. The public current artifact verifies x86_64 and arm64 locally. Choose local download or ask the origin to provide ranges. |
 
 Warp's macOS download goes through `https://app.warp.dev/download?package=dmg`. It redirects to `releases.warp.dev/stable/v0.2026.11.18.08.17.stable_05/Warp.dmg`. The direct artifact returned HTTP 200 to both `bytes=0-0` and `bytes=-512`, with a weak ETag and without Content-Range or Content-Length. The UDIF `koly` footer is at byte 343,071,990. Sequential acquisition needs all 343,072,502 bytes to discover the length and read the footer. The observed SHA-256 starts `56c7caf4137c41ad`. This is a separate vendor artifact from either dead brew URL. [Warp downloads](https://www.warp.dev/download) · [Warp update documentation](https://docs.warp.dev/support-and-community/troubleshooting-and-support/updating-warp)
-
-The pinned after-scan recovered `LaTeXiT` in both native profiles with the same source-byte counts as the before-scan, 1,901,642 for capped remote-cli on the file and 3,826,804 for local. Both headers still verify and `min_macos` remains empty. The name is fixed. Sam can decide whether to cite the vendor's 10.4 minimum separately in the catalog.
 
 ## BetterTouchTool 6.1169
 
@@ -101,6 +135,7 @@ The exact-binary route also failed because APFS skipped its package fallback aft
 | Automatic, 64 MiB | 66,949,764 | 33,810,514 | Fixed. Verifies the app plist and both headers. Optional inventory remains incomplete. |
 | Automatic, 8 MiB | 8,229,507 in ledger `90c29410db80` | 8,229,508 | Fixed. Verifies the app and both headers at the default tier with BOM-checked metadata. |
 | Exact executable, 8 MiB | 49,114 | 228,054 | Fixed. Verifies x86_64 and arm64 at the exact installed path. Use this mode when the launcher alone answers the question. |
+| Automatic, Worker defaults | No matching file-backed control | 387,154 | Reached the decoded-work limit while reading the APFS image. Use native remote-cli for this artifact. |
 | Automatic baseline, 256 MiB | 267,203,025 | Use the verified 8 MiB result | The larger read is unnecessary for the primary. A separate inventory pass may still need extra budget. |
 
 The live Azure range rerun verified the same Jabra version at 8,229,507 source bytes in automatic mode and 228,054 for the exact launcher. Both are real x86_64 and arm64 Mach-O headers.

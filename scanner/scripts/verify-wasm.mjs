@@ -100,7 +100,8 @@ for (const name of [...await readdir(fixtures), ...bundleFixtures].sort()) {
       return destination.subarray(0, bytesRead);
     };
     const budgets = [[0], [52], [64 * 1024 * 1024], [8192, 0]];
-    if (name === 'late-bom.pkg') budgets.push([600 * 1024]);
+    const usesBomTail = ['late-bom.pkg', 'late-bom-reordered.pkg'].includes(name);
+    if (usesBomTail) budgets.push([600 * 1024]);
     for (const [budget, decoded] of budgets) {
       const args = ['scan', file, '--profile', 'worker', '--budget', String(budget), '--json'];
       if (decoded !== undefined) args.push('--decoded-budget', String(decoded));
@@ -116,7 +117,7 @@ for (const name of [...await readdir(fixtures), ...bundleFixtures].sort()) {
           assert.equal(expected.error, 'unsupported: multiple nested PKGs in HFS volume', name);
         }
       }
-      if (name === 'late-bom.pkg' && budget === 600 * 1024) {
+      if (usesBomTail && budget === 600 * 1024) {
         assert.equal(expected.status, 'complete', name);
         assert.equal(expected.bundle_metadata_source, 'bom_verified_gzip_cpio_tail');
       }
@@ -143,7 +144,7 @@ for (const name of [...await readdir(fixtures), ...bundleFixtures].sort()) {
         comparisons++;
       }
     }
-    if (['stored.zip', 'apfs.dmg', 'nested-pkg.dmg'].includes(name)) {
+    if (['stored.zip', 'apfs.dmg', 'nested-pkg.dmg', 'apfs-nested-pkg.dmg'].includes(name)) {
       for (const { kind, option, path } of [
         { kind: 'bundle', option: '--bundle-path', path: 'Fixture.app' },
         { kind: 'executable', option: '--binary-path', path: 'Fixture.app/Contents/MacOS/FixtureBinary' },
