@@ -23,6 +23,34 @@ impl ReadAt for Memory<'_> {
     }
 }
 
+struct Sparse<'a> {
+    size: u64,
+    spans: Vec<(u64, &'a [u8])>,
+}
+
+impl ReadAt for Sparse<'_> {
+    fn size(&self) -> u64 {
+        self.size
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        let end = offset + len as u64;
+        if end > self.size {
+            return Err(ScanError::Invalid("sparse fixture range"));
+        }
+        let mut bytes = vec![0; len];
+        for (start, data) in &self.spans {
+            let first = (*start).max(offset);
+            let last = (*start + data.len() as u64).min(end);
+            if first < last {
+                bytes[(first - offset) as usize..(last - offset) as usize]
+                    .copy_from_slice(&data[(first - start) as usize..(last - start) as usize]);
+            }
+        }
+        Ok(bytes)
+    }
+}
+
 fn ready<T>(f: impl Future<Output = T>) -> T {
     match pin!(f).poll(&mut Context::from_waker(Waker::noop())) {
         Poll::Ready(value) => value,
@@ -135,6 +163,38 @@ fn refuses_out_of_bounds_fat_slice() {
 
 const ZIP: &[u8] = include_bytes!("../../fixtures/stored.zip");
 const ZIP64: &[u8] = include_bytes!("../../fixtures/deflated-zip64.zip");
+
+#[test]
+fn zip_recovers_a_wrapped_directory_and_individual_member_offsets() {
+    const WRAP: u64 = 1 << 32;
+    let number = |bytes: &[u8]| u32::from_le_bytes(bytes.try_into().unwrap()) as usize;
+    let short = |bytes: &[u8]| u16::from_le_bytes(bytes.try_into().unwrap()) as usize;
+    let end = ZIP.len() - 22;
+    let directory = number(&ZIP[end + 16..end + 20]);
+    let name = b"Fixture.app/Contents/Info.plist";
+    let record = ZIP[directory..end]
+        .windows(46 + name.len())
+        .find(|bytes| bytes.starts_with(b"PK\x01\x02") && &bytes[46..] == name)
+        .unwrap();
+    let plist_at = number(&record[42..46]);
+    let local = &ZIP[plist_at..];
+    let plist_end =
+        plist_at + 30 + short(&local[26..28]) + short(&local[28..30]) + number(&record[20..24]);
+    // Leave the launcher below 4 GiB. Only the plist and directory wrap.
+    let mut source = Sparse {
+        size: WRAP + ZIP.len() as u64,
+        spans: vec![
+            (0, &ZIP[..plist_at]),
+            (plist_end as u64, &ZIP[plist_end..directory]),
+            (WRAP + plist_at as u64, &ZIP[plist_at..plist_end]),
+            (WRAP + directory as u64, &ZIP[directory..]),
+        ],
+    };
+    let result = ready(scan(&mut source, 16 * 1024));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_bundle(&result);
+    assert!(result.bytes_read < 2048);
+}
 
 fn assert_bundle(result: &ScanResult) {
     assert!(matches!(result.status, Status::Complete), "{result:?}");

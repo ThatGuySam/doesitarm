@@ -11,3 +11,5 @@ The zero-sector UDIF fix passed the workspace tests. The XAMPP kit proves the ol
 APFS type 8 passed the workspace suite and the full pinned RStudio replay verified both architectures. Next reproduce the Soothe2 PackageInfo layout, Rock Ridge boot image, and Jumper's 32-bit ZIP rollover. The interim XAMPP full transfer timed out after 21,184,235 bytes and was removed. Use a bounded range rerun for XAMPP and Jumper.
 
 The Soothe2 PackageInfo fix passed the targeted package tests and recovered the real VST3 in 63,813,324 bytes. The full Soothe2, RStudio, and Insta360 downloads were removed after validation. The Insta360 BOM and exact DEFLATE block inspection explain the remaining 256 MiB limitation. The Rock Ridge fix verified XAMPP's installer metadata and recovered its script entry point under the same ETag. All 36 format tests passed.
+
+Jumper verified both launcher slices over ranges at the 8 MiB tier. Next inspect the remaining budget and nested-container rows and verify DMG variants. The scanner source branch still starts at the integrated `scanner-preview` baseline, with the ledger driver kept in a scratch overlay for reruns.
