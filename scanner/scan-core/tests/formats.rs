@@ -672,3 +672,85 @@ fn local_diagnostics_preserve_embedded_plists_executable_prefixes_and_commands()
         );
     }
 }
+
+macro_rules! windows_fixture {
+    ($name:literal) => {
+        &include_bytes!(concat!("../../fixtures/windows/", $name))[..]
+    };
+}
+
+#[test]
+fn windows_pe_reports_architecture_and_hybrid_evidence_in_every_profile() {
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        for (bytes, arch) in [
+            (windows_fixture!("arm64.exe"), "arm64"),
+            (windows_fixture!("x64.exe"), "x64"),
+            (windows_fixture!("x86.exe"), "x86"),
+            (windows_fixture!("arm64ec.exe"), "arm64ec"),
+            (windows_fixture!("arm64x-v1.dll"), "arm64x"),
+            (windows_fixture!("arm64x-v2.dll"), "arm64x"),
+            (windows_fixture!("other-relocation.dll"), "arm64"),
+        ] {
+            let result = ready(scan_with_limits(
+                &mut Memory(bytes),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{:?}",
+                result.error
+            );
+            assert_eq!(result.platform, scan_core::Platform::Windows);
+            assert_eq!(result.format, Some("pe"));
+            assert!(result.architectures.is_empty());
+            assert!(result.bytes_read < result.total_size);
+            let windows = result.windows.unwrap();
+            assert_eq!(windows.architectures, [arch]);
+            assert_eq!(windows.main_architecture, Some(arch));
+            assert_eq!(windows.native_arm64, matches!(arch, "arm64" | "arm64x"));
+            assert_eq!(windows.arm64ec, matches!(arch, "arm64ec" | "arm64x"));
+            assert_eq!(windows.arm64x, arch == "arm64x");
+            assert_eq!(windows.emulated_only, matches!(arch, "x86" | "x64"));
+            assert_eq!(windows.subsystem, Some(2));
+        }
+    }
+}
+
+#[test]
+fn windows_pe_version_resource_and_privacy() {
+    let windows = run(windows_fixture!("arm64.exe"), 4096).windows.unwrap();
+    assert_eq!(windows.product_name.as_deref(), Some("Fixture Product"));
+    assert_eq!(windows.publisher.as_deref(), Some("Fixture Publisher"));
+    assert_eq!(windows.version.as_deref(), Some("1.2.3"));
+    let windows = run(windows_fixture!("redacted.exe"), 4096).windows.unwrap();
+    assert_eq!(windows.product_name, None);
+    assert_eq!(windows.publisher, None);
+}
+
+#[test]
+fn windows_pe_managed_flags_distinguish_anycpu_required_and_preferred() {
+    for (bytes, arch, required, preferred) in [
+        (windows_fixture!("anycpu.exe"), "anycpu", false, false),
+        (windows_fixture!("required32.exe"), "x86", true, false),
+        (windows_fixture!("preferred32.exe"), "anycpu", false, true),
+    ] {
+        let windows = run(bytes, 4096).windows.unwrap();
+        assert_eq!(windows.main_architecture, Some(arch));
+        let dotnet = windows.dotnet.unwrap();
+        assert!(dotnet.il_only);
+        assert_eq!(dotnet.any_cpu, arch == "anycpu");
+        assert_eq!(dotnet.requires_32bit, required);
+        assert_eq!(dotnet.prefers_32bit, preferred);
+    }
+}
+
+#[test]
+fn windows_requires_valid_pe_and_keeps_worker_budget() {
+    let result = run(windows_fixture!("invalid-mz.exe"), 4096);
+    assert!(matches!(result.status, Status::Invalid));
+    assert_eq!(result.platform, scan_core::Platform::Unknown);
+    let result = run(windows_fixture!("arm64.exe"), 180);
+    assert!(matches!(result.status, Status::BudgetExhausted));
+    assert!(result.bytes_requested <= 180);
+    assert_eq!(run(THIN, 4096).platform, scan_core::Platform::Macos);
+}
