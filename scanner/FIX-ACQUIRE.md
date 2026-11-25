@@ -24,7 +24,7 @@ Pinned releases now resolve through the tag API and select the uploaded asset by
 
 Before the fix, the pinned asset fixture resolved no API URL and the appcast fixture returned `robots_disallowed`. Both pass via `cargo test --offline --locked -j2 -p source-tools`.
 
-The first live rerun used `sources run --connector github-releases --scan-ranges --max-tier 8`. wBlock 3.2.3 returned HTTP 206 at the release CDN with a total size of 38,560,397 bytes. The scan read 2,914,380 bytes and verified arm64 and x86_64. The remaining GitHub-hosted cases are running against their pinned URLs.
+The first live rerun used `sources run --connector github-releases --scan-ranges --max-tier 8`. wBlock 3.2.3 returned HTTP 206 at the release CDN with a total size of 38,560,397 bytes. The scan read 2,914,380 bytes and verified arm64 and x86_64. The cohort results appear under Live CLI results.
 
 ## Worker origin handling
 
@@ -62,3 +62,50 @@ The BetterTouchTool replay uses a generated four-byte window. The historical sou
 All 32 GitHub connector retries received HTTP 206. Thirty verified architecture and metadata. `mlx-serve` reached the 8 MiB byte limit and Mole reached a missing plist. Both cleared acquisition.
 
 Two Sparkle reruns exposed additional cases. Ardia's old owner path redirected the binary request to a numeric GitHub API path, which previously lost the binary Accept header and supplied ranged JSON. Ping Island's appcast points to a `releases/latest/download` alias. Four offline tests reproduced the wrong endpoint, missed alias, unrecognized numeric route, and JSON mistaken for archive bytes. The resolver now honors the canonical asset URL returned by the release API, recognizes the numeric route, and resolves a latest alias by the exact filename in the current release. GitHub API JSON is classified as metadata even if it carries HTTP 206.
+
+## Publisher routes for blocked or stale URLs
+
+These are routes from the publisher. Each replacement has its own URL and version. The pinned observations stay in the ledger snapshot.
+
+| App | Publisher evidence |
+| --- | --- |
+| Warp | The vendor's stable selector `https://app.warp.dev/download?package=dmg` returned HTTP 302 to `https://releases.warp.dev/stable/v0.2026.11.18.08.17.stable_05/Warp.dmg`. The two pinned Homebrew routes remain separate observations. [Warp downloads](https://www.warp.dev/download) · [Warp update service](https://docs.warp.dev/support-and-community/troubleshooting-and-support/updating-warp) |
+| SAP BTP CLI | The macOS download remains subject to SAP's developer license. The held-out scan got HTML and the cask declares a consent cookie. An eligible user can obtain the artifact through the SAP download flow and scan the saved file locally. [SAP downloads](https://tools.hana.ondemand.com/#cloud-btpcli) |
+| Send to Kindle | Amazon publishes a Mac download flow and describes its terms. The old S3 package has separate rejection records. [Amazon's Mac instructions](https://digprjsurvey.amazon.com/csad/help/node/TCUBEdEkbIhK07ysFu) |
+| TechSmith Capture | TechSmith retired its desktop release. The pinned 404 remains an upstream outcome for that artifact. [End-of-support notice](https://support.techsmith.com/hc/en-us/articles/35674291844749-TechSmith-Capture-End-of-Support) |
+| CircuitJS1 | The vendor lists separate 5.0.6ts macOS Arm and Intel DMGs. [Official offline downloads](https://www.falstad.com/circuit/offline/) |
+| Avast Secure Browser | Avast publishes separate Intel and Apple silicon download choices. [Avast installation guide](https://support.avast.com/en-ph/article/install-secure-browser) |
+| KLayout | The publisher announced current 0.30.13 macOS DMGs. [KLayout release announcements](https://www.klayout.org/) |
+| LogMeIn Hamachi | The publisher offers distinct downloads for macOS up to 15.3.2 and for 15.4 and later. [Hamachi downloads](https://vpn.net/?lang=en) |
+| RoaringApps | The publisher maintains a Mac download page. The availability of the pinned ZIP is tracked by its ledger record. [RoaringApps for Mac](https://roaringapps.com/mac-app) |
+
+The 14 non-GitHub `robots_disallowed` URLs retain those publisher decisions. A publisher-provided public download, or an artifact the user obtained through the publisher's authorized flow, is a separate scan input. The historical records include the exact excluded feed URLs.
+
+## Live CLI results
+
+[Native replays](results/acquire/native-replays.jsonl) holds each URL, command, time and JSON result. [Source-tools replays](results/acquire/source-replays.jsonl) holds the original input records, run options, summaries, app outcomes, and HTTP failure evidence. The native binary SHA-256 was `a8da30658d9a6caf0889c2d8f41283fb30728f41f78f1ba6597b0562ce376579`. The final source-tools binary was built at `ae7bb12` with SHA-256 `0d1a10957fe9f662ca7ad8989da6674e0621c9a8d31793aff17cd29f33c49b7d`. The first GitHub runs used the verified resolver compiled before its local commit, so those records retain the earlier embedded revision.
+
+| Case | Live result |
+| --- | --- |
+| Dropzone 4 | **Fixed.** The pinned URL produced the 65,224,750-byte ZIP. The CLI read 4,234,263 unique bytes and verified arm64 and x86_64 for `com.aptonic.Dropzone4` 4.80.77. |
+| Network Weather | **Passed.** The prior HTTP 500 is covered by the offline retry fixture. The live PKG completed, with 30,311,927 bytes read and both Mach-O headers verified. The live run did not surface a 500. |
+| Jabra Direct | **Range acquisition passed.** The pinned DMG provided validated ranges totaling 66,949,763 unique bytes. The scan recorded installer `com.jabra.directonline` 8.4.30601 and reached its 64 MiB budget before verifying the application executable. The earlier interrupted full download did not recur on the range path. |
+| BetterTouchTool | **Truncation recovery passed offline.** The live ZIP returned HTTP 206 and delivered 47,961,563 bytes across the 8 and 64 MiB tiers. The scanner retained partial arm64 and x86_64 evidence before the 120-second deadline. The earlier response-body error did not recur. |
+| Warp | **Pinned URLs still return 404.** The vendor selector and direct replacement returned whole streams without a usable size. They delivered 64 MiB and 256 MiB respectively before their budgets ran out. Architecture remains unverified. |
+| GitHub and Sparkle | **42 routes reached artifact bytes.** The 32 GitHub connector and 10 Sparkle cases produced 37 fully verified results. `mlx-serve` hit its byte budget, Mole lacked a plist, and AltTab, davit and Ardia reached scan deadlines. Ardia's fixed route delivered a 182,924,830-byte ZIP and partial arm64 evidence. Ping Island verified arm64 and x86_64 for 0.33.0 through its latest alias. |
+| SEGGER J-Link 9.96a | **Needs attestation.** The live GET returned HTTP 200 with HTML. `sources` reported `needs_attestation` after the 512-byte evidence read. |
+| Scrub Utility | **Passed.** The pinned ZIP now honors ranges and the CLI verified the named app. The offline 200 fixtures cover native streaming and the Worker's early rejection of whole bodies. |
+| Mozilla Firefox 147.0 | **Passed with absolute ranges.** The scanner read 3,007,301 bytes of a 145,832,893-byte DMG and verified both architectures. The prior suffix-range report needs no scanner fallback because the scanner probes size and uses absolute offsets. |
+| Content-Disposition | **Passed.** Live release assets retained filenames including `Cove.dmg`, `Ardia-0.2.48.zip` and `PingIsland-0.33.0.dmg`. The UTF-8 and quoted forms passed offline. |
+| SAP BTP CLI | **Needs vendor consent.** The pinned arm64 route delivered 446,594 bytes of HTML. Use the licensed vendor flow for the actual archive. |
+| Send to Kindle | **Still unavailable through the pinned URL.** The live response was HTTP 403. Earlier 404 and 403 attempts remain in the ledger. |
+| TechSmith Capture | **Retired artifact.** The pinned URL still returned HTTP 404. |
+| CircuitJS1 | **Publisher replacement available.** The old URL returned 404. Both versioned 5.0.6ts DMGs were scanned, and their respective Arm and Intel Mach-O headers verified. |
+
+The historic records include DNS lookup failures and a connection reset. They do not establish a TLS or HTTP/2 defect. The live public HTTPS checks above retain their observed outcomes. The scanner kept its TLS validation and existing HTTPS redirect policy.
+
+## Verification
+
+The final workspace passed 81 Rust tests, 40 Node tests, 31 generated edge checks and six campaign tests. Formatting and Clippy passed. The Worker tests exercise the integrated Wasm and simulated origin responses. The committed replay fixtures are all under 2 MB.
+
+Live results are retained separately from the historical snapshot. The CLI runs used the ledger's exact pinned URLs where available, a one-second governor in source-tools, and 200 ms between native range starts. The vendor alternatives were scanned as separate URLs. Temporary stream spools were removed by the CLI at the end of each attempt.
