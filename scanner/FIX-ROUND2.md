@@ -218,6 +218,62 @@ The 44 Source-tools observations include the 32 pinned GitHub cases, 10 Sparkle 
 
 The verified connector rows need no catalog action. Select a higher byte tier for mlx-serve. Mole's tarball exposes multiple standalone executables, so choose the archived target to represent the product. Ardia's GitHub DMG and Sparkle ZIP are separate representations of 0.2.48. The new probe saw the 182,924,830-byte ZIP with the `Ardia-0.2.48.zip` filename. Ping Island's authorized GitHub alias supplied `PingIsland-0.33.0.dmg`, and Cove's resolved asset supplied `Cove.dmg`. The offline Content-Disposition fixtures also passed.
 
+## Combined-branch container and bundle replays
+
+The native passes use ledger URLs and the target paths from the three fix reports. Range scans use the recorded applicable byte tier and a 115-second candidate deadline. ChronoSync and .NET SDK use the checksum-matched files, and the AgentSessions DMG matches its published SHA-256. The table lists prior fixed outcomes where the earlier report supplied a count. A dash means that comparison count was unavailable. [Container baseline](FIX-CONTAINERS.md) · [Bundle baseline](FIX-BUNDLES.md)
+
+| Ledger case | Earlier fixed replay | Combined read | Combined outcome | Decision |
+| --- | ---: | ---: | --- | --- |
+| XAMPP 8.2.4-0 | 1,153,811 | 1,153,811 | Script entry point | The InstallBuilder entry is a script. Any verified Mach-O slices belong to the package helpers. |
+| RStudio 2026.11.0-203 | 3,288,237 | 3,288,237 | Verified x86_64, arm64 | Use the main launcher. Optional inventory has a separate resource-fork constraint. |
+| RStudio 2026.11.0-203, Worker | 2,402,270 | 2,402,270 | Verified x86_64, arm64 | Keep the existing Worker meter. The main launcher is the verification target. |
+| Soothe2 1.3.3 | 63,813,324 | 63,813,324 | Verified x86_64, arm64 | Use the PackageInfo-selected VST3 at 64 MiB. |
+| JProfiler 16.3.1 | 212,551,284 | 212,551,284 | Verified x86_64, arm64 | Use the 256 MiB tier for this whole-stream origin. |
+| MPP Viewer Mac 0.1.3 | 85,458,251 | 85,458,251 | Verified arm64 | Use the 256 MiB tier for the exact public release. |
+| ChronoSync | 90,101,604 | 92,171,847 | Verified x86_64, arm64 | Use the file-backed profile and the declared app. |
+| Jumper build 3660 | 8,388,607 | 8,388,607 | Verified x86_64, arm64 | Use range mode on the ZIP32 rollover pin. |
+| AMPPS 4.4 | 109,005 | 109,005 | Verified x86_64 | Use the visible AMPPS/Ampps.app in automatic mode. |
+| TDR Nova | 27,043,108 | 27,043,108 | Verified x86_64, arm64 | Use the declared AAX install location. |
+| MySQL Shell 8.0.29 | 4,623,388 | 4,623,388 | Verified arm64 | Use the exact installed bin/mysqlsh. |
+| FabFilter Pro-DS | 7,347,312 | 7,347,312 | Verified x86_64, arm64 | Target the nested AAX plug-in. |
+| FabFilter Timeless | 5,114,734 | 5,114,734 | Verified x86_64, arm64 | Target the nested AAX plug-in. |
+| LaunchControl 2.13.1 | 5,510,472 | 5,510,472 | Verified x86_64, arm64 | Use the native profile for the 64 MiB XZ dictionary. |
+| ImageOptim 1.9.3 | 3,858,908 | 3,858,908 | Verified x86_64, arm64 | Use the native profile for the 64 MiB XZ dictionary. |
+| Qt Design Studio | 2,519,947 | 2,519,947 | Verified arm64 | Use the named app inside the solid 7z component. |
+| CodeQL bundle 2.27.5 | 62,893,053 | 62,893,053 | Script entry point | The declared codeql/codeql is a script. A separate runtime needs its own target. |
+| Valhalla Space Modulator | 2,283,141 | 2,283,141 | Verified x86_64, arm64 | Use the PackageInfo-declared AAX product. |
+| NetLogo 7.0.4 | 2,710,522 | 2,710,522 | Verified arm64 | Use the folder-matching NetLogo app. |
+| SQLCipher Nightly 3.13.99 | 3,720,905 | 3,720,905 | Verified x86_64, arm64 | Prefer a retained 2026-11-23 artifact if the nightly pin has rotated. |
+| Sci-Hub EVA 6.5.1 | 2,248,947 | 2,248,947 | Verified arm64 | Use the Contents-relative launcher described in the bundle. |
+| Microsoft OpenJDK 11.0.33.1 | 191,502,806 | 191,502,806 | Verified x86_64 | Verify the declared libjli link target within the JDK. |
+| BrowserStack Local 3.7.8 | 23,813,038 | 23,813,038 | Verified x86_64 | Use the regular Mach-O under Contents/MacOS even though its filename ends in .app. |
+| ChemDoodle 12.12.1 | 2,549,620 | 2,549,620 | Verified x86_64 | Use the app in the product folder. |
+| SketchUp 2027 | 3,742,811 | 3,742,811 | Verified arm64 | Select SketchUp or LayOut explicitly. |
+| Psi 1.4 | 835,366 | 1,610,216 | Verified x86_64 | Use the literal psi.app spelling. |
+| Tag Editor 2.0.5 | 2,308,650 | 2,308,650 | Verified x86_64, arm64 | Change the catalog target to Tag Editor 2.app. |
+| Ecamm Live | 15,120,681 | 15,120,681 | Verified x86_64, arm64 | Match the catalog version to the archive's embedded 4.6.2. |
+| Flutter 3.50.1 Dart | 3,434,885 | 3,434,885 | Verified arm64 | The exact archived Dart binary has separate evidence from the shell bootstrap. |
+| fx-cast Bridge 0.3.0 | 67,245 | 67,245 | Verified x86_64 | Use the Native Messaging executable path. |
+| Folding@home beta 8.5.6 | 4,268,002 | 4,268,002 | Verified x86_64, arm64 | Use the installed fah-client. |
+| StarNet2 2.6.2 | 70,901 | 70,901 | Verified arm64 | Use the installed starnet2 executable. |
+| Orka VM Tools 4.0.0 | 70,758 | 70,758 | Verified arm64 | Use the installed orka-vm-tools executable. |
+| Eclipse Temurin 26.0.2.1+1 | 334,045 | 334,045 | Verified x86_64 | Use the exact installed Java CLI. |
+| SSHFS 3.7.5 | — | 2,168,016 | Verified x86_64, arm64 | Use the installed usr/local/bin/sshfs. |
+| Microsoft .NET SDK 8.0.428 | 214,277,043 | 214,277,043 | Verified x86_64 | Use the exact standalone dotnet host. |
+| Enclave 2026.6.3 | 71,713 | 71,713 | Verified x86_64 | Use the exact installed executable. |
+| NDI Redistributable | 4,265,114 | 4,265,114 | Verified x86_64, arm64 | Use the exact libndi.dylib in the runtime PKG. |
+| Cursor CLI | 159,449,092 | 159,449,088 | Script entry point with verified arm64 runtime | Keep the shell launcher separate from the verified static Node runtime. |
+| Suunto DM5 | — | 2,959,169 | Script entry point | The observed script and helper inventory are separate. Select a runtime with executable evidence. |
+| NVS 1.7.1 | 480 | 518,704 | Script entry point | The target is a shell launcher. An installed Node version needs a separate scan. |
+| OpenZFS Monterey 2.4.1 | — | 20,461,999 | Verified x86_64, arm64e | Preserve the installer minimum independently of the kext minimum. |
+| OpenZFS Ventura 2.4.1 | — | 21,207,115 | Verified x86_64, arm64e | Preserve the installer minimum independently of the kext minimum. |
+| AgentSessions 3.8.2 | — | 1,765,831 | Verified x86_64, arm64 | Use the conventional launcher path in the checksum-matched DMG. |
+| Android Studio Intel UI replay | 12,558,206 | 12,558,206 | Apple Silicon native launcher (Universal) | The recorded app launcher's headline is universal. The observed Java runtime remains Intel-only. |
+
+XAMPP reached the declared InstallBuilder script and again found three independent Mach-O helpers. Cursor's 159,449,088 unique source bytes correspond to 159,449,093 requested bytes, including the live discovery read. The earlier Cursor number is a request total. NVS's earlier 480 bytes were the raw shell entry from the vendor tag, while the current count is for reaching it through the full tarball.
+
+ChronoSync and Psi verified the same primary slices with higher measured reads than the earlier fixed scans. For ChronoSync the exact image digest matches and the current inventory is partial. The SQLCipher nightly pin still serves the older 20261123 representation, even though its sparse kit lacks the added range. The Android Studio row reruns the UI classification against the recorded real scan JSON. The packaged encrypted Mach-O, wrapped app, ambiguous multi-app, legacy architecture, and resource-only classifications were exercised by their offline fixtures. Verification of a real FairPlay executable still needs an authorized installed copy.
+
 ## Offline ledger kits
 
 All 11 sparse kits were replayed against the combined ScanCore with the ledger transport adapter, using the original targets and recorded bytes. In three cases the updated parser asked for a range that the original failure never captured. Those kits establish the coverage boundary. The exact pinned live replays supply the additional evidence when the origin serves it.
