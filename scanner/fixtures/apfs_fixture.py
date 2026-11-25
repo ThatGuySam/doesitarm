@@ -137,7 +137,7 @@ def lzvn_block(data):
     return bytes(output)
 
 
-def apfs_fixture(path, metadata, executable, *, checkpoint_slots=3, compressed=False):
+def apfs_fixture(path, metadata, executable, *, checkpoint_slots=3, compressed=False, package=None):
     volume = bytearray(BLOCK * BLOCKS)
 
     def put(address, data):
@@ -159,35 +159,41 @@ def apfs_fixture(path, metadata, executable, *, checkpoint_slots=3, compressed=F
     put(10, tree_node(10, [mapped(2000, 12, 11), mapped(2001, 12, 12),
                            mapped(2002, 12, 13)], root=True, fixed=True))
 
-    plist = plistlib.dumps(metadata, fmt=plistlib.FMT_BINARY)
-    first = [name_record(2, "Fixture.app", 16, 4), name_record(16, "Contents", 17, 4)]
-    second = [
-        name_record(17, "Info.plist", 18, 8), name_record(17, "MacOS", 19, 4),
-        inode(18, 30, len(plist)), name_record(19, "FixtureBinary", 20, 8),
-        inode(20, 31, len(executable), compressed=compressed),
-    ]
-    if compressed:
-        chunk_size = 64 * 1024
-        assert chunk_size < len(executable) < 2 * chunk_size
-        packed = lzvn_block(executable[:chunk_size])
-        literal = b"\x06" + executable[chunk_size:]
-        fork = pack("<III", 12, 12 + len(packed), 12 + len(packed) + len(literal)) + packed + literal
-        assert len(fork) < BLOCK
-        attr = pack("<4sIQ", b"fpmc", 8, len(executable))
-        stream = pack("<6Q", 32, len(fork), BLOCK, 0, len(fork), 0)
-        second.extend([xattr(20, b"com.apple.ResourceFork", 1, stream),
-                       xattr(20, b"com.apple.decmpfs", 2, attr), extent(30, 0, 14),
-                       extent(32, 0, 16)])
-        put(16, fork)
+    if package is not None:
+        assert len(package) <= BLOCK
+        first = [name_record(2, "Fixture.pkg", 16, 8)]
+        second = [inode(16, 30, len(package)), extent(30, 0, 14)]
+        put(14, package)
     else:
-        second.extend([extent(30, 0, 14), extent(31, 0, 16), extent(31, BLOCK, 18)])
-        put(16, executable[:BLOCK])
-        put(18, executable[BLOCK:])
+        plist = plistlib.dumps(metadata, fmt=plistlib.FMT_BINARY)
+        first = [name_record(2, "Fixture.app", 16, 4), name_record(16, "Contents", 17, 4)]
+        second = [
+            name_record(17, "Info.plist", 18, 8), name_record(17, "MacOS", 19, 4),
+            inode(18, 30, len(plist)), name_record(19, "FixtureBinary", 20, 8),
+            inode(20, 31, len(executable), compressed=compressed),
+        ]
+        if compressed:
+            chunk_size = 64 * 1024
+            assert chunk_size < len(executable) < 2 * chunk_size
+            packed = lzvn_block(executable[:chunk_size])
+            literal = b"\x06" + executable[chunk_size:]
+            fork = pack("<III", 12, 12 + len(packed), 12 + len(packed) + len(literal)) + packed + literal
+            assert len(fork) < BLOCK
+            attr = pack("<4sIQ", b"fpmc", 8, len(executable))
+            stream = pack("<6Q", 32, len(fork), BLOCK, 0, len(fork), 0)
+            second.extend([xattr(20, b"com.apple.ResourceFork", 1, stream),
+                           xattr(20, b"com.apple.decmpfs", 2, attr), extent(30, 0, 14),
+                           extent(32, 0, 16)])
+            put(16, fork)
+        else:
+            second.extend([extent(30, 0, 14), extent(31, 0, 16), extent(31, BLOCK, 18)])
+            put(16, executable[:BLOCK])
+            put(18, executable[BLOCK:])
+        put(14, plist)
     put(11, tree_node(2000, [(first[0][0], pack("<Q", 2001)), (second[0][0], pack("<Q", 2002))],
                       root=True, level=1))
     put(12, tree_node(2001, first))
     put(13, tree_node(2002, second))
-    put(14, plist)
 
     chunks = [(0x80000005, 14 * 8, zlib.compress), (1, (BLOCKS - 14) * 8, bytes)]
     if checkpoint_slots != 3:

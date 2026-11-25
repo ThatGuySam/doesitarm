@@ -83,3 +83,22 @@ The pinned 109,704,115-byte ZIP has ETag `"6b03ff00-689f3b3"`. The launcher's DE
 Two fixed costs were independent of the compressed prefix. ZIP asked the origin separately for each local header and its contiguous filename. The offline 1,189-byte ZIP64 fixture failed its eight-request assertion with ten reads. The updated scanner validates both fields in one read. Source-tools could also replace a verified primary with a candidate timeout when optional inventory ran out of time. `completed_primary_survives_a_deadline_during_optional_inventory` failed with `candidate deadline reached` before the status fix. The completed result now survives a post-primary deadline. Cancellation and representation failures remain visible.
 
 The 120-second Source-tools baseline reproduced the false timeout after both verified headers, at 47,968,038 aggregate transfer bytes over 105 requests through the 8 and 64 MiB tiers. The 16-second Source-tools control reached only x86_64 and 1,647,136 bytes under its per-host pacing. That earlier deadline remains a genuine incomplete scan. The native route has a separate request cadence.
+
+On the same saved ZIP and 64 MiB profile the result stayed complete and the source request count fell from 175 to 125. Both scans read 39,677,396 unique bytes. The combined 16-second live run verified both headers after 39,656,349 bytes over 81 requests, with optional inventory still partial. A complete framework inventory may need a longer run. The recorded acquisition failure `6036e71620d9` stopped after 42,213,633 transferred bytes and is separately covered by the earlier range-resume fixture.
+
+## Jabra Direct 8.4.30601
+
+The 270,448,755-byte DMG (observed SHA-256 `f3a97ae47a367bb9fc0397650d3cffc572734b8cb6e368023bc74751cb5e26a1`) contains a 268,879,410-byte XAR inside APFS. The main component's single gzip member is 267,078,015 bytes. Its app launcher is CPIO record 5, at decoded byte 27,258. The app plist is record 929, at byte 700,435,322, and declares that exact launcher. The previous 64 MiB attempt `2eebddb5d3e6` read 66,949,763 bytes and stopped with both slices only as executable candidates. The matching file-backed control read 66,949,764. At 256 MiB the baseline verified the declared application after 267,203,025 bytes. The earlier ledger success `b99ce296a8f8` refers to the separate Avaya Integration helper.
+
+The BOM records the app plist as ID 701 of 931, although the plist is near the CPIO trailer. Replaying from an actual DEFLATE block 24,213 compressed bytes from the end yielded identical record, plist and tail bytes with both missing-window seeds. The 64 KiB tail scan can use those bytes. The old heuristic vetoed the BOM entry because its ID was more than 32 from the end. The scanner now uses the BOM to establish the name, size and checksum and uses the CPIO suffix to establish position. Two independent dictionary seeds still have to agree. The 734,581-byte `pkg_uses_bom_identity_when_cpio_and_bom_orders_differ` fixture reproduced budget exhaustion after 352,246 unique bytes.
+
+The exact-binary route also failed because APFS skipped its package fallback after an executable-path miss. The 75,751-byte `apfs_finds_a_declared_executable_inside_the_package` fixture reproduced that error at 1,970 bytes. APFS now checks for the requested installed file across the volumes before using the visible root package. Existing per-volume ambiguity checks apply to that fallback.
+
+| Jabra scan | Before | After | Result and decision |
+| --- | ---: | ---: | --- |
+| Automatic, 64 MiB | 66,949,764 | 33,810,514 | Fixed. Verifies the app plist and both headers. Optional inventory remains incomplete. |
+| Automatic, 8 MiB | 8,229,507 in ledger `90c29410db80` | 8,229,508 | Fixed. Verifies the app and both headers at the default tier with BOM-checked metadata. |
+| Exact executable, 8 MiB | 49,114 | 228,054 | Fixed. Verifies x86_64 and arm64 at the exact installed path. Use this mode when the launcher alone answers the question. |
+| Automatic baseline, 256 MiB | 267,203,025 | Use the verified 8 MiB result | The larger read is unnecessary for the primary. A separate inventory pass may still need extra budget. |
+
+The BetterTouchTool Source-tools after-run completed with verified status at 48,045,170 aggregate bytes over 99 requests. The matching old 120-second run reported a timeout at 47,968,038 bytes over 105 requests.

@@ -186,10 +186,14 @@ if __name__ == "__main__":
         with zipfile.ZipFile(ROOT / "mounted-plugin.zip", "w", zipfile.ZIP_STORED) as archive:
             archive.writestr(zipfile.ZipInfo(package.name), package.read_bytes())
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
+    apfs_fixture(ROOT / "apfs-nested-pkg.dmg", METADATA, fat(),
+                 package=(ROOT / "gzip-newc.pkg").read_bytes())
     apfs_fixture(ROOT / "apfs-lzvn.dmg", METADATA, fat(intel_offset=65_536), compressed=True)
     iso_dmg_fixture(ROOT / "rock-ridge.dmg", METADATA, fat())
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)
     late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())
+    late_bom_fixture(ROOT / "late-bom-reordered.pkg", INFO, EXECUTABLE, METADATA,
+                     fat(), reordered_bom=True)
 
     pkg_dmg_fixture(ROOT / "nested-pkg.dmg", (ROOT / "gzip-newc.pkg").read_bytes())
     with tempfile.TemporaryDirectory() as temp:

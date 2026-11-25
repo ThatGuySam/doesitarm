@@ -143,10 +143,11 @@ def encode_bom(records):
     return output
 
 
-def late_bom_fixture(path, info_path, bin_path, metadata, executable):
+def late_bom_fixture(path, info_path, bin_path, metadata, executable, *, reordered_bom=False):
     plist = plistlib.dumps(metadata)
     filler = b"F" * (710 * 1024)
-    prefix = cpio([(bin_path, executable), ("unrelated", filler)], odc=True)
+    extra = [(f"unrelated-{i}", b"side") for i in range(40)] if reordered_bom else []
+    prefix = cpio([(bin_path, executable), ("unrelated", filler), *extra], odc=True)
     end = cpio([(info_path, plist)], odc=True)
     trailer_len = len(cpio([], odc=True))
     encoder = zlib.compressobj(0, zlib.DEFLATED, 31)
@@ -164,6 +165,7 @@ def late_bom_fixture(path, info_path, bin_path, metadata, executable):
         (binary, 4, executable),
         ("unrelated", 1, filler),
         (info, 3, plist),
+        *((name, 1, data) for name, data in extra),
     ])
     write_xar(path, payload, bom)
 

@@ -819,6 +819,7 @@ pub(crate) async fn scan(
     }
 
     let mut unsupported = None;
+    let mut volumes_without_executable = Vec::new();
     for id in ids {
         let address = map.get(&mut device, id).await?;
         let volume = match Volume::load(&mut device, address).await {
@@ -835,7 +836,10 @@ pub(crate) async fn scan(
                 .await
             {
                 Ok(item) => item,
-                Err(ScanError::NotFound(_)) => continue,
+                Err(ScanError::NotFound(_)) => {
+                    volumes_without_executable.push(volume);
+                    continue;
+                }
                 Err(error) => return Err(error),
             };
             out.executable_path = Some(path.to_owned());
@@ -874,18 +878,14 @@ pub(crate) async fn scan(
             return read_app(&mut device, &volume, app.id, &app.name, out).await;
         }
 
-        let mut packages = root.into_iter().filter(|entry| {
-            matches!(entry.kind, FILE | DIRECTORY)
-                && !entry.name.starts_with('.')
-                && pkg::package_name(&entry.name)
-        });
-        if let Some(entry) = packages.next() {
-            if let Some(other) = packages.next() {
-                out.nested_artifacts.extend([entry.name, other.name]);
-                return Err(ScanError::Unsupported(
-                    "multiple nested PKGs in APFS volume",
-                ));
-            }
+        if let Some(entry) = root_package(root, out)? {
+            return read_package(&mut device, &volume, entry, work, target, out).await;
+        }
+    }
+    // Search installed paths on every volume before opening a package.
+    for volume in volumes_without_executable {
+        let root = volume.children(&mut device, ROOT_DIRECTORY).await?;
+        if let Some(entry) = root_package(root, out)? {
             return read_package(&mut device, &volume, entry, work, target, out).await;
         }
     }
@@ -895,6 +895,23 @@ pub(crate) async fn scan(
         Target::Executable(_) => "declared executable in APFS volume",
     };
     Err(unsupported.unwrap_or(ScanError::NotFound(missing)))
+}
+
+fn root_package(root: Vec<Entry>, out: &mut ScanResult) -> Result<Option<Entry>> {
+    let mut packages = root.into_iter().filter(|entry| {
+        matches!(entry.kind, FILE | DIRECTORY)
+            && !entry.name.starts_with('.')
+            && pkg::package_name(&entry.name)
+    });
+    let first = packages.next();
+    if let (Some(first), Some(other)) = (&first, packages.next()) {
+        out.nested_artifacts
+            .extend([first.name.clone(), other.name]);
+        return Err(ScanError::Unsupported(
+            "multiple nested PKGs in APFS volume",
+        ));
+    }
+    Ok(first)
 }
 
 async fn read_app(

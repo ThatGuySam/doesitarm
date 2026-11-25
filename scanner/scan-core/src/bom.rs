@@ -145,8 +145,8 @@ fn resolve(records: &BTreeMap<u32, Record<'_>>, mut id: u32) -> Option<String> {
     None
 }
 
-/// A BOM can verify detached file bytes and indicate where to look. Near-final
-/// path IDs are only a hint. The CPIO parser must independently confirm the path.
+/// A BOM can identify detached file bytes. Its path IDs do not establish
+/// archive order. The CPIO parser must independently confirm the tail record.
 pub(crate) fn late_plist(bytes: &[u8], selected: impl Fn(&str) -> bool) -> Option<Plist> {
     if bytes.get(..8)? != b"BOMStore" || number(bytes, 8)? != 1 {
         return None;
@@ -160,7 +160,6 @@ pub(crate) fn late_plist(bytes: &[u8], selected: impl Fn(&str) -> bool) -> Optio
     };
     let tree = bom.block(variable(region(bytes, bytes, 24)?, b"Paths")?)?;
     let records = bom.paths(tree)?;
-    let last_id = *records.last_key_value()?.0;
     let mut found = None;
     for (&id, record) in &records {
         if record.name != "Info.plist" || record.metadata[0] != 1 {
@@ -171,7 +170,7 @@ pub(crate) fn late_plist(bytes: &[u8], selected: impl Fn(&str) -> bool) -> Optio
             continue;
         };
         let size = be32(record.metadata, 18) as usize;
-        if found.is_some() || last_id - id > 32 || size == 0 || size as u64 > bundle::MAX_PLIST {
+        if found.is_some() || size == 0 || size as u64 > bundle::MAX_PLIST {
             return None;
         }
         found = Some(Plist {

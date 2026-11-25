@@ -1,6 +1,6 @@
 use scan_core::{
     Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, Target, scan, scan_target,
-    scan_target_with_deadline, scan_with_limits,
+    scan_target_with_deadline, scan_target_with_limits, scan_with_limits,
 };
 use std::{
     future::Future,
@@ -394,6 +394,17 @@ fn pkg_recovers_bom_checked_late_plist_and_scans_the_named_binary() {
 }
 
 #[test]
+fn pkg_uses_bom_identity_when_cpio_and_bom_orders_differ() {
+    let artifact = include_bytes!("../../fixtures/late-bom-reordered.pkg");
+    let result = run(artifact, 600 * 1024);
+    assert_bundle(&result);
+    assert_eq!(
+        result.bundle_metadata_source,
+        Some("bom_verified_gzip_cpio_tail")
+    );
+}
+
+#[test]
 fn tar_keeps_the_main_when_inventory_reaches_the_byte_budget() {
     let result = run(TAR, 68 * 1024);
     assert_eq!(result.format, Some("tar.gz"));
@@ -613,6 +624,24 @@ fn hfs_finds_a_declared_executable_inside_the_package() {
     assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
     assert_eq!(result.architectures.len(), 2);
     assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
+#[test]
+fn apfs_finds_a_declared_executable_inside_the_package() {
+    let image = include_bytes!("../../fixtures/apfs-nested-pkg.dmg");
+    let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_target_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+            Target::Executable(path),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.executable_path.as_deref(), Some(path));
+        assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
 }
 
 const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
