@@ -65,6 +65,31 @@ assert.match(help.stdout, /URL attempts default to remote-cli with 8, 64, and 25
 assert.match(help.stdout, /Worker defaults: 8388608 bytes requested, 67108864 bytes decoded/);
 
 const fixtures = resolve(root, 'fixtures');
+
+const intel = spawnSync(cli, ['scan', resolve(fixtures, 'windows/x64.exe')], { encoding: 'utf8' });
+assert.ifError(intel.error);
+assert.equal(intel.status, 0, intel.stderr);
+assert.match(intel.stdout, /Windows · x64 \(emulated on Windows on Arm\)/);
+const setup = spawnSync(cli, ['scan', resolve(fixtures, 'windows/nsis.exe')], { encoding: 'utf8' });
+assert.ifError(setup.error);
+assert.equal(setup.status, 0, setup.stderr);
+assert.match(setup.stdout, /unknown, installer payload not inspectable/);
+
+for (const name of await readdir(resolve(fixtures, 'windows'))) {
+  const file = resolve(fixtures, 'windows', name);
+  const data = await readFile(file);
+  for (const profile of ['local', 'remote-cli', 'worker']) {
+    const budget = '1048576';
+    const native = spawnSync(cli, ['scan', file, '--profile', profile, '--budget', budget, '--json'], { encoding: 'utf8' });
+    assert.ifError(native.error);
+    assert.ok([0, 1].includes(native.status), native.stderr);
+    const result = JSON.parse(await scan(BigInt(data.length), BigInt(budget),
+      (offset, size) => data.subarray(Number(offset), Number(offset) + size), undefined, profile));
+    assert.deepEqual(result, JSON.parse(native.stdout), `${name}, ${profile}`);
+  }
+}
+console.log('Windows fixtures match native results in local, remote-cli, and worker profiles.');
+
 let comparisons = 0;
 for (const name of (await readdir(fixtures)).sort()) {
   if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|pkg)$/.test(name)) continue;

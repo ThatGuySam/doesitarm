@@ -6,7 +6,7 @@ Branch `scanner-winscan` is based on `scanner-pages` at `12b3b2c`. Work locally.
 - [x] Installer and archive formats.
 - [x] Windows result UI and conservative Mac listing lookup.
 - [x] Range-only public download corpus and source documentation.
-- [ ] Native, wasm, and Node test verification.
+- [x] Native, Wasm, and Node test verification.
 
 ## Current checkpoint
 
@@ -16,3 +16,10 @@ Branch `scanner-winscan` is based on `scanner-pages` at `12b3b2c`. Work locally.
 - Microsoft symbol-server `ntdll.dll` and `KernelBase.dll` expose real ARM64X evidence. Steinberg publishes ARM64EC installer ZIPs with an MSI payload. Publisher evidence and scanned launcher evidence are distinct.
 - The ARM64EC installer ZIP pass found x64 setup programs next to opaque MSI payloads. The scanner now preserves the observed wrapper architecture and leaves main-product architecture unknown. The native workspace suite covers this case.
 - The evidence table is in [WINDOWS.md](WINDOWS.md). The range pass recorded 74 cases, with 69 usable range responses and 67 completed scans. The affected archives were rerun after the launcher fix.
+
+## Verification
+
+- `cargo test --locked -j2 --workspace` passed 76 tests.
+- `node scripts/verify-wasm.mjs` matched native CLI JSON for all 33 Windows fixtures in all three profiles and passed the existing macOS parity checks.
+- Worker Wasm matched the native CLI on all 33 fixtures under the Worker profile. `npm --prefix web test` passed 62 headless Node tests, including guarded Windows ranges and the same-origin Mac lookup.
+- There is a public ARM64X byte-level check in the corpus. Standalone ARM64EC detection has fixture coverage. The public ARM64EC installer ZIPs provide publisher evidence and measured wrapper evidence because their MSI payloads are opaque.
