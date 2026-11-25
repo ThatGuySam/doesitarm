@@ -402,6 +402,21 @@ fn dmg_with_zero_footer_sector_count_uses_block_map_geometry() {
 }
 
 #[test]
+fn dmg_verifies_the_bundle_named_by_rock_ridge_records() {
+    let image = include_bytes!("../../fixtures/rock-ridge.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("dmg"));
+        assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
 fn dmg_rejects_segmented_udif() {
     let mut data = DMG.to_vec();
     let segment_count = data.len() - 512 + 60;

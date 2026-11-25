@@ -12,6 +12,7 @@ from struct import pack
 
 from apfs_fixture import apfs_fixture
 from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, write_udif
+from iso_fixture import iso_dmg_fixture
 from pkg_fixture import cpio, late_bom_fixture, pkg_fixture, write_xar
 
 ROOT = Path(__file__).resolve().parent
@@ -147,6 +148,7 @@ if __name__ == "__main__":
               </pkg-info>'''.encode())
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
     apfs_fixture(ROOT / "apfs-lzvn.dmg", METADATA, fat(intel_offset=65_536), compressed=True)
+    iso_dmg_fixture(ROOT / "rock-ridge.dmg", METADATA, fat())
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)
     late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())
 

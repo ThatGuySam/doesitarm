@@ -12,6 +12,7 @@ mod gzip_tail;
 mod hfs;
 mod inflate;
 mod inventory;
+mod iso9660;
 mod launcher;
 mod local_bundle;
 mod macho;

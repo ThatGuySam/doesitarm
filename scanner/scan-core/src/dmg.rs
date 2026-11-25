@@ -1,7 +1,7 @@
 use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, Window, apfs, be16, be32, be64, check_range,
     decode::DecodeBudget,
-    hfs, le32, le64, plist_value,
+    hfs, iso9660, le32, le64, plist_value,
     udif_codec::{self, IGNORE, RAW, ZERO},
 };
 use plist::Value;
@@ -93,6 +93,7 @@ pub(crate) async fn scan(
     match fs {
         Filesystem::Hfs => hfs::scan(&mut volume, work, target, out).await,
         Filesystem::Apfs => apfs::scan(&mut volume, work, target, out).await,
+        Filesystem::Iso9660 => iso9660::scan(&mut volume, work, target, out).await,
     }
 }
 
@@ -124,6 +125,7 @@ pub(crate) async fn scan_raw(
     match filesystem {
         Filesystem::Hfs => hfs::scan(&mut volume, work, target, out).await?,
         Filesystem::Apfs => apfs::scan(&mut volume, work, target, out).await?,
+        Filesystem::Iso9660 => iso9660::scan(&mut volume, work, target, out).await?,
     }
     Ok(true)
 }
@@ -319,6 +321,7 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
 enum Filesystem {
     Hfs,
     Apfs,
+    Iso9660,
 }
 
 async fn find_filesystem(
@@ -348,8 +351,14 @@ async fn find_filesystem(
             return Ok((part.disk.clone(), Filesystem::Apfs));
         }
     }
-    partition_map(disk).await?.ok_or(ScanError::Unsupported(
-        "no HFS+ or APFS filesystem in UDIF image",
+    if let Some(filesystem) = partition_map(disk).await? {
+        return Ok(filesystem);
+    }
+    if iso9660::probe(disk).await? {
+        return Ok((0..disk.size(), Filesystem::Iso9660));
+    }
+    Err(ScanError::Unsupported(
+        "no HFS+, APFS, or ISO 9660 filesystem in UDIF image",
     ))
 }
 
