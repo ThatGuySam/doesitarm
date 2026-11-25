@@ -23,6 +23,34 @@ impl ReadAt for Memory<'_> {
     }
 }
 
+struct Sparse<'a> {
+    size: u64,
+    spans: Vec<(u64, &'a [u8])>,
+}
+
+impl ReadAt for Sparse<'_> {
+    fn size(&self) -> u64 {
+        self.size
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        let end = offset + len as u64;
+        if end > self.size {
+            return Err(ScanError::Invalid("sparse fixture range"));
+        }
+        let mut bytes = vec![0; len];
+        for (start, data) in &self.spans {
+            let first = (*start).max(offset);
+            let last = (*start + data.len() as u64).min(end);
+            if first < last {
+                bytes[(first - offset) as usize..(last - offset) as usize]
+                    .copy_from_slice(&data[(first - start) as usize..(last - start) as usize]);
+            }
+        }
+        Ok(bytes)
+    }
+}
+
 fn ready<T>(f: impl Future<Output = T>) -> T {
     match pin!(f).poll(&mut Context::from_waker(Waker::noop())) {
         Poll::Ready(value) => value,
@@ -135,6 +163,38 @@ fn refuses_out_of_bounds_fat_slice() {
 
 const ZIP: &[u8] = include_bytes!("../../fixtures/stored.zip");
 const ZIP64: &[u8] = include_bytes!("../../fixtures/deflated-zip64.zip");
+
+#[test]
+fn zip_recovers_a_wrapped_directory_and_individual_member_offsets() {
+    const WRAP: u64 = 1 << 32;
+    let number = |bytes: &[u8]| u32::from_le_bytes(bytes.try_into().unwrap()) as usize;
+    let short = |bytes: &[u8]| u16::from_le_bytes(bytes.try_into().unwrap()) as usize;
+    let end = ZIP.len() - 22;
+    let directory = number(&ZIP[end + 16..end + 20]);
+    let name = b"Fixture.app/Contents/Info.plist";
+    let record = ZIP[directory..end]
+        .windows(46 + name.len())
+        .find(|bytes| bytes.starts_with(b"PK\x01\x02") && &bytes[46..] == name)
+        .unwrap();
+    let plist_at = number(&record[42..46]);
+    let local = &ZIP[plist_at..];
+    let plist_end =
+        plist_at + 30 + short(&local[26..28]) + short(&local[28..30]) + number(&record[20..24]);
+    // Leave the launcher below 4 GiB. Only the plist and directory wrap.
+    let mut source = Sparse {
+        size: WRAP + ZIP.len() as u64,
+        spans: vec![
+            (0, &ZIP[..plist_at]),
+            (plist_end as u64, &ZIP[plist_end..directory]),
+            (WRAP + plist_at as u64, &ZIP[plist_at..plist_end]),
+            (WRAP + directory as u64, &ZIP[directory..]),
+        ],
+    };
+    let result = ready(scan(&mut source, 16 * 1024));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_bundle(&result);
+    assert!(result.bytes_read < 2048);
+}
 
 fn assert_bundle(result: &ScanResult) {
     assert!(matches!(result.status, Status::Complete), "{result:?}");
@@ -386,6 +446,37 @@ fn dmg_footer_wins_over_first_bzip2_chunk_magic() {
 }
 
 #[test]
+fn dmg_with_zero_footer_sector_count_uses_block_map_geometry() {
+    let mut image = include_bytes!("../../fixtures/bzip2-prefix.dmg").to_vec();
+    let footer = image.len() - 512;
+    image[footer + 492..footer + 500].fill(0);
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(&image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn dmg_verifies_the_bundle_named_by_rock_ridge_records() {
+    let image = include_bytes!("../../fixtures/rock-ridge.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("dmg"));
+        assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
 fn dmg_rejects_segmented_udif() {
     let mut data = DMG.to_vec();
     let segment_count = data.len() - 512 + 60;
@@ -394,6 +485,107 @@ fn dmg_rejects_segmented_udif() {
     assert_eq!(result.format, Some("dmg"));
     assert!(matches!(result.status, Status::Unsupported));
     assert_eq!(result.reads, 2);
+}
+
+#[test]
+fn identifies_encrypted_apple_disk_images_by_header_or_trailer() {
+    let mut modern = [0; 4096];
+    modern[..12].copy_from_slice(b"encrcdsa\0\0\0\x02");
+    let mut legacy = [0; 4096];
+    legacy[4088..].copy_from_slice(b"cdsaencr");
+    for image in [&modern, &legacy] {
+        let result = run(image, 8192);
+        assert_eq!(result.format, Some("dmg"));
+        assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+        assert_eq!(
+            result.error.as_deref(),
+            Some("unsupported: encrypted Apple disk image")
+        );
+        assert!(result.architectures.is_empty());
+    }
+}
+
+#[test]
+fn sparse_image_seeks_hfs_through_unordered_bands_and_an_apple_partition_map() {
+    let image = include_bytes!("../../fixtures/apm.sparseimage");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("dmg"));
+        assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+        assert_eq!(result.executable_size, Some(4144));
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        assert!(result.bytes_read < result.total_size / 2);
+    }
+}
+
+#[test]
+fn hfs_auto_finds_an_app_in_the_single_visible_root_directory() {
+    let image = include_bytes!("../../fixtures/wrapped-hfs.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_path.as_deref(), Some("Suite/Fixture.app"));
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn hfs_selects_the_declared_app_across_install_and_remove_packages() {
+    let image = include_bytes!("../../fixtures/install-remove.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(
+            result.bundle_path.as_deref(),
+            Some("Applications/Fixture.app")
+        );
+        assert_eq!(result.nested_artifacts, ["Install.pkg"]);
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn hfs_preserves_ambiguity_when_two_packages_contain_apps() {
+    let image = include_bytes!("../../fixtures/competing-packages.dmg");
+    let result = run(image, 8192);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert_eq!(
+        result.error.as_deref(),
+        Some("unsupported: multiple nested PKGs in HFS volume")
+    );
+    assert_eq!(result.nested_artifacts, ["Install.pkg", "Other.pkg"]);
+    assert!(result.bundle_path.is_none());
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn hfs_finds_a_declared_executable_inside_the_package() {
+    let image = include_bytes!("../../fixtures/nested-pkg.dmg");
+    let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+    let result = ready(scan_target(
+        &mut Memory(image),
+        8192,
+        Target::Executable(path),
+    ));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.executable_path.as_deref(), Some(path));
+    assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
 }
 
 const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
@@ -414,6 +606,40 @@ fn pkg_reads_installer_metadata_and_gzip_or_stored_cpio() {
         );
         assert_eq!(meta.package_version.as_deref(), Some("5"));
         assert_eq!(meta.min_macos.as_deref(), Some("11.0"));
+    }
+}
+
+#[test]
+fn pkg_auto_selects_the_product_in_packageinfo_bundle_version() {
+    let package = include_bytes!("../../fixtures/product-bundle-version.pkg");
+    let result = run(package, 8192);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    let path = "Library/Audio/Plug-Ins/VST3/Fixture.vst3";
+    assert_eq!(result.bundle_kind, Some("audio_plugin"));
+    assert_eq!(result.bundle_path.as_deref(), Some(path));
+    assert_eq!(result.installer.unwrap().payload_bundles, [path]);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
+#[test]
+fn pkg_mounts_contents_relative_payload_in_the_declared_plugin() {
+    let zip = include_bytes!("../../fixtures/mounted-plugin.zip");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(zip),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("zip"));
+        assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+        assert_eq!(result.bundle_kind, Some("audio_plugin"));
+        assert_eq!(
+            result.bundle_path.as_deref(),
+            Some("Library/Application Support/Avid/Audio/Plug-Ins/Fixture.aaxplugin")
+        );
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
     }
 }
 
@@ -442,6 +668,25 @@ fn apfs_dmg_uses_latest_checkpoint_and_seeks_through_file_extents() {
     assert_eq!(result.architectures[1].name, "arm64e");
     assert!(result.architectures.iter().all(|arch| arch.header_verified));
     assert!(result.bytes_read < result.total_size / 10);
+}
+
+#[test]
+fn apfs_dmg_verifies_macho_slices_in_lzvn_resource_fork_chunks() {
+    let image = include_bytes!("../../fixtures/apfs-lzvn.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.executable_size, Some(65_536 + 48));
+        assert_eq!(result.architectures[0].offset, 65_536);
+        assert_eq!(result.architectures[0].name, "x86_64");
+        assert_eq!(result.architectures[1].name, "arm64e");
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        assert!(result.bytes_read < result.total_size / 10);
+    }
 }
 
 const PBZX: &[u8] = include_bytes!("../../fixtures/pbzx.pkg");

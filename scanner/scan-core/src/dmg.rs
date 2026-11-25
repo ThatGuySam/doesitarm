@@ -1,7 +1,7 @@
 use crate::{
     ReadAt, Result, ScanError, ScanResult, Target, Window, apfs, be16, be32, be64, check_range,
     decode::DecodeBudget,
-    hfs, le32, le64, plist_value,
+    hfs, iso9660, le32, le64, plist_value,
     udif_codec::{self, IGNORE, RAW, ZERO},
 };
 use plist::Value;
@@ -64,10 +64,21 @@ pub(crate) async fn scan(
         return Err(ScanError::Limit("UDIF index exceeds 8 MiB"));
     }
 
-    let size = sectors(be64(trailer, 492))?;
+    let footer_size = sectors(be64(trailer, 492))?;
     let (runs, partitions) = {
         let xml = input.read_at(xml_at, xml_len as usize).await?;
-        parse_index(&xml, size, fork_at..fork_at + fork_len)?
+        parse_index(&xml, footer_size, fork_at..fork_at + fork_len)?
+    };
+    // Some single-segment images report zero sectors in koly. Their mish
+    // tables still carry the virtual disk extents.
+    let size = if footer_size == 0 {
+        partitions
+            .iter()
+            .map(|part| part.disk.end)
+            .max()
+            .unwrap_or(0)
+    } else {
+        footer_size
     };
     let mut image = Image {
         source: input,
@@ -82,6 +93,7 @@ pub(crate) async fn scan(
     match fs {
         Filesystem::Hfs => hfs::scan(&mut volume, work, target, out).await,
         Filesystem::Apfs => apfs::scan(&mut volume, work, target, out).await,
+        Filesystem::Iso9660 => iso9660::scan(&mut volume, work, target, out).await,
     }
 }
 
@@ -113,6 +125,7 @@ pub(crate) async fn scan_raw(
     match filesystem {
         Filesystem::Hfs => hfs::scan(&mut volume, work, target, out).await?,
         Filesystem::Apfs => apfs::scan(&mut volume, work, target, out).await?,
+        Filesystem::Iso9660 => iso9660::scan(&mut volume, work, target, out).await?,
     }
     Ok(true)
 }
@@ -125,7 +138,7 @@ fn sectors(sectors: u64) -> Result<u64> {
 
 fn parse_index(
     xml: &[u8],
-    disk_size: u64,
+    footer_size: u64,
     data_fork: Range<u64>,
 ) -> Result<(Vec<Run>, Vec<Partition>)> {
     let value = plist_value::parse(xml, ScanError::Invalid("UDIF plist"))?;
@@ -142,6 +155,11 @@ fn parse_index(
     let mut runs = Vec::new();
     let mut partitions = Vec::new();
     let mut descriptions_left = MAX_RUN_DESCRIPTIONS;
+    let disk_limit = if footer_size == 0 {
+        u64::MAX
+    } else {
+        footer_size
+    };
     for table in tables {
         let dict = table
             .as_dictionary()
@@ -159,7 +177,7 @@ fn parse_index(
         }
         let base = sectors(be64(data, 8))?;
         let size = sectors(be64(data, 16))?;
-        check_range(disk_size, base, size)?;
+        check_range(disk_limit, base, size)?;
         if size != 0 {
             partitions.push(Partition {
                 hfs_hint: name.contains("Apple_HFS"),
@@ -303,6 +321,7 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
 enum Filesystem {
     Hfs,
     Apfs,
+    Iso9660,
 }
 
 async fn find_filesystem(
@@ -332,8 +351,14 @@ async fn find_filesystem(
             return Ok((part.disk.clone(), Filesystem::Apfs));
         }
     }
-    partition_map(disk).await?.ok_or(ScanError::Unsupported(
-        "no HFS+ or APFS filesystem in UDIF image",
+    if let Some(filesystem) = partition_map(disk).await? {
+        return Ok(filesystem);
+    }
+    if iso9660::probe(disk).await? {
+        return Ok((0..disk.size(), Filesystem::Iso9660));
+    }
+    Err(ScanError::Unsupported(
+        "no HFS+, APFS, or ISO 9660 filesystem in UDIF image",
     ))
 }
 

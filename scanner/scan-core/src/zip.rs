@@ -7,19 +7,23 @@ use crate::{
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
+const ZIP32_WRAP: u64 = 1 << 32;
 
 struct Directory {
     offset: u64,
     size: u64,
     count: u64,
     end_record: u64,
+    wrapped_offsets: bool,
 }
 
 struct Entry {
     path: String,
     offset: u64,
+    wrapped_offset: Option<u64>,
     packed: u64,
     expanded: u64,
+    crc32: u32,
     method: u16,
     flags: u16,
     mode: u16,
@@ -86,7 +90,7 @@ async fn scan_directory(
     let records = input
         .read_at(directory.offset, directory.size as usize)
         .await?;
-    let entries = read_entries(&records, directory.count)?;
+    let entries = read_entries(&records, &directory)?;
 
     if let Target::Executable(requested) = target {
         let executable = entries
@@ -431,11 +435,21 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
         || length == u32::MAX
         || offset == u32::MAX;
     if !zip64 {
+        let offset = u64::from(offset);
+        let size = u64::from(length);
+        // Some ZIP32 writers roll over at 4 GiB instead of emitting ZIP64.
+        // Recover only when the unwrapped directory ends exactly at the EOCD.
+        let wrapped_offsets = offset + ZIP32_WRAP + size == eocd_offset;
         return Ok(Directory {
-            offset: offset as u64,
-            size: length as u64,
+            offset: if wrapped_offsets {
+                offset + ZIP32_WRAP
+            } else {
+                offset
+            },
+            size,
             count: count as u64,
             end_record: eocd_offset,
+            wrapped_offsets,
         });
     }
 
@@ -467,6 +481,7 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
         size: le64(&record, 40),
         count: le64(&record, 32),
         end_record: record_at,
+        wrapped_offsets: false,
     })
 }
 
@@ -498,7 +513,8 @@ fn appended_end_record(tail: &[u8], tail_at: u64) -> Option<usize> {
     })
 }
 
-fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
+fn read_entries(mut bytes: &[u8], directory: &Directory) -> Result<Vec<Entry>> {
+    let count = directory.count;
     if count > (bytes.len() / 46) as u64 {
         return Err(ScanError::Invalid("ZIP central directory entry count"));
     }
@@ -530,6 +546,10 @@ fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
             let mut expanded = le32(bytes, 24) as u64;
             let mut packed = le32(bytes, 20) as u64;
             let mut offset = le32(bytes, 42) as u64;
+            let wrapped_offset = (directory.wrapped_offsets
+                && offset != u32::MAX as u64
+                && offset + ZIP32_WRAP < directory.offset)
+                .then_some(offset + ZIP32_WRAP);
             let mut disk = le16(bytes, 34) as u32;
             if [expanded, packed, offset].contains(&(u32::MAX as u64)) || disk == u16::MAX as u32 {
                 let mut ext = zip64_extra(extra)?;
@@ -555,8 +575,10 @@ fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
             entries.push(Entry {
                 path: path.to_owned(),
                 offset,
+                wrapped_offset,
                 packed,
                 expanded,
+                crc32: le32(bytes, 16),
                 method,
                 flags,
                 mode: if bytes[5] == 3 { le16(bytes, 40) } else { 0 },
@@ -602,27 +624,13 @@ async fn member<'a, S: ReadAt>(
         return Err(ScanError::Invalid("ZIP stored member lengths differ"));
     }
 
-    check_range(heap_end, entry.offset, 30)?;
-    let header = input.read_at(entry.offset, 30).await?;
-    let name_len = le16(&header, 26) as usize;
-    if &header[..4] != b"PK\x03\x04"
-        || le16(&header, 8) != entry.method
-        || le16(&header, 6) != entry.flags
-        || name_len != entry.path.len()
-    {
-        return Err(ScanError::Invalid(
-            "ZIP local header differs from directory",
-        ));
-    }
-
-    let name_at = entry.offset + 30;
-    let extra_len = le16(&header, 28) as u64;
-    check_range(heap_end, name_at, name_len as u64 + extra_len)?;
-    let offset = name_at + name_len as u64 + extra_len;
-    check_range(heap_end, offset, entry.packed)?;
-    if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
-        return Err(ScanError::Invalid("ZIP local name differs from directory"));
-    }
+    let direct = local_data_offset(input, entry, heap_end, entry.offset).await;
+    let offset = match (direct, entry.wrapped_offset) {
+        (Err(ScanError::Invalid(_)), Some(wrapped)) => {
+            local_data_offset(input, entry, heap_end, wrapped).await?
+        }
+        (result, _) => result?,
+    };
     if matches!(codec, Some(Codec::Lzma)) {
         const ZIP_LZMA_HEADER: u64 = 9;
         check_range(entry.packed, 0, ZIP_LZMA_HEADER)?;
@@ -650,6 +658,38 @@ async fn member<'a, S: ReadAt>(
         Some(codec) => Member::Compressed(Forward::new(source, entry.expanded, codec, work)?),
         None => Member::Stored(source),
     })
+}
+
+async fn local_data_offset(
+    input: &mut impl ReadAt,
+    entry: &Entry,
+    heap_end: u64,
+    header_at: u64,
+) -> Result<u64> {
+    check_range(heap_end, header_at, 30)?;
+    let header = input.read_at(header_at, 30).await?;
+    let name_len = le16(&header, 26) as usize;
+    if &header[..4] != b"PK\x03\x04"
+        || le16(&header, 8) != entry.method
+        || le16(&header, 6) != entry.flags
+        || name_len != entry.path.len()
+        || (entry.wrapped_offset.is_some()
+            && entry.flags & 8 == 0
+            && le32(&header, 14) != entry.crc32)
+    {
+        return Err(ScanError::Invalid(
+            "ZIP local header differs from directory",
+        ));
+    }
+    let name_at = header_at + 30;
+    let extra_len = le16(&header, 28) as u64;
+    check_range(heap_end, name_at, name_len as u64 + extra_len)?;
+    let offset = name_at + name_len as u64 + extra_len;
+    check_range(heap_end, offset, entry.packed)?;
+    if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
+        return Err(ScanError::Invalid("ZIP local name differs from directory"));
+    }
+    Ok(offset)
 }
 
 enum Member<'a, S> {

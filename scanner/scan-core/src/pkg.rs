@@ -344,13 +344,12 @@ async fn scan_payload(
         .and_then(|meta| meta.install_location.as_deref())
         .and_then(bundle_mount)
         .map(str::to_owned);
-    let selected_product = if mount.is_none() && matches!(selection, Target::Auto) {
-        install
-            .and_then(|meta| product_bundle(&meta.payload_bundles))
-            .map(str::to_owned)
-    } else {
-        None
-    };
+    let selected_product = match (selection, mount.as_deref()) {
+        (Target::Auto, Some(root)) if !root.ends_with(".app") => Some(root),
+        (Target::Auto, None) => install.and_then(|meta| product_bundle(&meta.payload_bundles)),
+        _ => None,
+    }
+    .map(str::to_owned);
     let selection = selected_product
         .as_deref()
         .map_or(selection, Target::Bundle);
@@ -523,6 +522,13 @@ impl<S: ReadAt> ReadAt for Preview<S> {
 }
 
 fn product_bundle(bundles: &[String]) -> Option<&str> {
+    let mut applications = bundles.iter().filter(|path| {
+        path.strip_prefix("Applications/")
+            .is_some_and(|name| name.ends_with(".app") && !name.contains('/'))
+    });
+    if let Some(app) = applications.next() {
+        return applications.next().is_none().then_some(app);
+    }
     if bundles
         .iter()
         .any(|path| bundle::installed_bundle_kind(path) == Some("app"))
@@ -541,7 +547,7 @@ fn product_bundle(bundles: &[String]) -> Option<&str> {
 
 fn bundle_mount(install_location: &str) -> Option<&str> {
     let path = install_location.strip_prefix('/')?.trim_end_matches('/');
-    bundle::archive_path(path).filter(|path| path.ends_with(".app"))
+    bundle::archive_path(path).filter(|path| bundle::installed_bundle_kind(path).is_some())
 }
 
 async fn read_metadata(
@@ -611,6 +617,11 @@ async fn read_metadata(
             .map(str::to_owned);
         meta.payload_bundles = root
             .children()
+            .chain(
+                named_child(root, "bundle-version")
+                    .into_iter()
+                    .flat_map(|version| version.children()),
+            )
             .filter(|node| node.has_tag_name("bundle"))
             .filter_map(|node| bundle::archive_path(node.attribute("path")?))
             .filter(|path| path.len() <= 4096)

@@ -542,7 +542,17 @@ pub(crate) async fn scan(
     };
     let mut catalog = Catalog::load(&mut volume, catalog).await?;
     if let Target::Executable(path) = target {
-        let item = catalog.find_path(&mut volume, ROOT_ID, path, true).await?;
+        let item = match catalog.find_path(&mut volume, ROOT_ID, path, true).await {
+            Ok(item) => item,
+            Err(missing @ ScanError::NotFound(_)) => {
+                let root = catalog.children(&mut volume, ROOT_ID).await?;
+                if root.iter().any(visible_package) {
+                    return read_package(&mut volume, &mut catalog, root, work, target, out).await;
+                }
+                return Err(missing);
+            }
+            Err(error) => return Err(error),
+        };
         out.executable_path = Some(path.to_owned());
         let fork = file_fork(item, geometry)?;
         out.executable_size = Some(fork.size);
@@ -554,7 +564,7 @@ pub(crate) async fn scan(
             .await;
     }
     let mut root = None;
-    let app = if let Target::Bundle(path) = target {
+    let mut app = if let Target::Bundle(path) = target {
         match catalog.find_path(&mut volume, ROOT_ID, path, false).await {
             Ok(item) => Some((item.id, path.trim_start_matches("./").to_owned())),
             Err(ScanError::NotFound(_)) => None,
@@ -572,6 +582,33 @@ pub(crate) async fn scan(
         root = Some(items);
         app
     };
+    if app.is_none()
+        && let Some(items) = root.as_deref()
+        && !items.iter().any(visible_package)
+    {
+        let mut folders = items.iter().filter(|item| {
+            item.file.is_none()
+                && !item.name.starts_with('.')
+                && !item.name.contains('/')
+                && bundle::archive_path(&item.name).is_some()
+        });
+        if let Some(folder) = folders.next().filter(|_| folders.next().is_none()) {
+            let mut contained = catalog
+                .children(&mut volume, folder.id)
+                .await?
+                .into_iter()
+                .filter(|item| {
+                    item.file.is_none()
+                        && item.name.ends_with(".app")
+                        && !item.name.starts_with('.')
+                        && !item.name.contains('/')
+                        && bundle::archive_path(&item.name).is_some()
+                });
+            if let Some(item) = contained.next().filter(|_| contained.next().is_none()) {
+                app = Some((item.id, format!("{}/{}", folder.name, item.name)));
+            }
+        }
+    }
     let Some((app, app_path)) = app else {
         let items = match root {
             Some(items) => items,
@@ -720,16 +757,59 @@ async fn read_package<S: ReadAt>(
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
-    let mut choices = root
-        .into_iter()
-        .filter(|item| !item.name.starts_with('.') && pkg::package_name(&item.name));
-    let item = choices
+    const MAX_ROOT_PACKAGES: usize = 4;
+    let mut choices = root.into_iter().filter(visible_package);
+    let first = choices
         .next()
         .ok_or(ScanError::NotFound("app or package at the HFS volume root"))?;
-    if let Some(other) = choices.next() {
-        out.nested_artifacts.extend([item.name, other.name]);
-        return Err(ScanError::Unsupported("multiple nested PKGs in HFS volume"));
+    let Some(second) = choices.next() else {
+        return read_package_item(volume, catalog, first, work, target, out).await;
+    };
+    let ambiguous = ScanError::Unsupported("multiple nested PKGs in HFS volume");
+    let mut candidates = vec![first, second];
+    candidates.extend(choices.take(MAX_ROOT_PACKAGES - 1));
+    let parents = out.nested_artifacts.clone();
+    out.nested_artifacts
+        .extend(candidates.iter().map(|item| item.name.clone()));
+    if candidates.len() > MAX_ROOT_PACKAGES {
+        return Err(ambiguous);
     }
+
+    let mut verified = None;
+    for item in candidates {
+        let mut candidate = out.subresult();
+        candidate.format = out.format;
+        candidate.nested_artifacts.clone_from(&parents);
+        match read_package_item(volume, catalog, item, work, target, &mut candidate).await {
+            Ok(()) if verified.is_none() => verified = Some(candidate),
+            Err(ScanError::NotFound(_))
+                if candidate.bundle_path.is_none()
+                    && candidate.executable_path.is_none()
+                    && candidate.candidate_executables.is_empty() => {}
+            Err(error @ (ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_))) => {
+                candidate.nested_artifacts.clone_from(&out.nested_artifacts);
+                *out = candidate;
+                return Err(error);
+            }
+            _ => return Err(ambiguous),
+        }
+    }
+    *out = verified.ok_or(ambiguous)?;
+    Ok(())
+}
+
+fn visible_package(item: &Item) -> bool {
+    !item.name.starts_with('.') && pkg::package_name(&item.name)
+}
+
+async fn read_package_item<S: ReadAt>(
+    volume: &mut Volume<'_, S>,
+    catalog: &mut Catalog,
+    item: Item,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let (item, name, kind) = if item.file.is_some() {
         let name = item.name.clone();
         (item, name, nested::Kind::Package)

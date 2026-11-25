@@ -12,6 +12,7 @@ mod gzip_tail;
 mod hfs;
 mod inflate;
 mod inventory;
+mod iso9660;
 mod launcher;
 mod local_bundle;
 mod macho;
@@ -20,6 +21,7 @@ mod pbzx;
 mod pkg;
 mod plist_value;
 mod sevenz;
+mod sparse_dmg;
 mod stream_bundle;
 mod tar;
 mod udif_codec;
@@ -446,6 +448,14 @@ async fn inspect(
         out.executable_size = Some(input.size());
         return Err(ScanError::Unsupported("declared executable is a script"));
     }
+    if magic == b"encr" && input.size() >= 512 && input.read_at(4, 4).await? == b"cdsa" {
+        out.format = Some("dmg");
+        return Err(ScanError::Unsupported("encrypted Apple disk image"));
+    }
+    if magic == b"sprs" {
+        out.format = Some("dmg");
+        return sparse_dmg::scan(input, work, target, out).await;
+    }
     if matches!(
         magic.as_slice(),
         b"PK\x03\x04" | b"PK\x05\x06" | b"PK\x07\x08"
@@ -478,6 +488,10 @@ async fn inspect(
         if trailer.starts_with(b"koly") {
             out.format = Some("dmg");
             return dmg::scan(input, work, &trailer, target, out).await;
+        }
+        if trailer.ends_with(b"cdsaencr") {
+            out.format = Some("dmg");
+            return Err(ScanError::Unsupported("encrypted Apple disk image"));
         }
     }
     // UDIF stores compressed runs from byte zero. Its koly footer takes
