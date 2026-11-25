@@ -69,6 +69,13 @@ pub(super) fn endpoint(url: &Url) -> Option<String> {
         "codeberg.org" => Some(format!(
             "https://{host}/api/v1/repos/{owner}/{repo}/releases?limit=1"
         )),
+        "gitea.com"
+            if *owner == "gitea"
+                && *repo == "gitea"
+                && matches!(tail, [] | ["releases"] | ["releases", "latest"]) =>
+        {
+            Some("https://api.github.com/repos/go-gitea/gitea/releases/latest".into())
+        }
         "gitea.com" => Some(format!(
             "https://{host}/api/v1/repos/{owner}/{repo}/releases/latest"
         )),

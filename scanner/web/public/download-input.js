@@ -102,8 +102,9 @@ function sources(candidates) {
   for (const candidate of candidates) {
     const item = document.createElement('li');
     const evidence = document.createElement('p');
-    const { page, selector, text } = candidate.evidence ?? {};
-    const where = [page, selector, text].filter(Boolean).join(' · ');
+    const { page, path, selector, text } = candidate.evidence ?? {};
+    const location = page && `${page}${path && path !== '/' ? path : ''}`;
+    const where = [location, selector, text].filter(Boolean).join(' · ');
     evidence.textContent = where ? `Found at ${where}` : 'Pasted URL';
     item.append(publicLink(candidate.url, labelOf(candidate)), evidence);
     if (candidate.kind === 'installer_stub') {

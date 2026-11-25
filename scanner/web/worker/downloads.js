@@ -82,6 +82,7 @@ function display(candidate, found, source) {
     evidence: {
       ...candidate.evidence,
       page: source.hostname,
+      path: cleanLabel(source.pathname, 200),
       selector: cleanLabel(candidate.evidence.selector),
       text: cleanLabel(candidate.evidence.text),
     },
@@ -94,8 +95,12 @@ function outcome(decision, reason, candidates = []) {
 
 function declaredDocument(source, target) {
   if (source.hostname.replace(/^www\./, '') === target.hostname.replace(/^www\./, '')) return true;
-  return source.hostname === 'desktop.github.com' && target.hostname === 'github.com' &&
-    target.pathname === '/apps/desktop' && !target.search;
+  if (target.search) return false;
+  if (source.hostname === 'desktop.github.com') {
+    return target.hostname === 'github.com' && target.pathname === '/apps/desktop';
+  }
+  return source.hostname === 'www.pgadmin.org' && source.pathname === '/download/pgadmin-4-macos/' &&
+    target.hostname === 'www.postgresql.org' && /^\/ftp\/pgadmin\/pgadmin4\/v\d+(?:\.\d+)+\/macos\/$/.test(target.pathname);
 }
 
 function preferredMetadata(candidate) {
@@ -125,10 +130,14 @@ function readCandidates(state, level, tasks) {
   }
 }
 
+function storeListing(resolution, os) {
+  return resolution.candidates.find((candidate) => candidate.kind === 'app_store' && candidate.os === os);
+}
+
 function handoff(resolution, pasted) {
-  const store = resolution.candidates.find((candidate) => candidate.kind === 'app_store');
   const result = outcome('gated', resolution.reason);
   if (resolution.reason === 'app_store') {
+    const store = storeListing(resolution, 'macos') ?? storeListing(resolution, 'unknown');
     const url = store ? new URL(store.url) : pasted;
     if (url) result.handoff = { url: url.href, host: url.hostname };
   }
@@ -305,7 +314,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
     if (root.rateLimited) return outcome('none', 'host_rate_limit');
     if (root.tooLarge) return outcome('none', 'artifact_too_large');
     if (!root.resolution) return outcome('none', 'unsupported_response');
-    if (root.resolution.decision === 'gated') return handoff(root.resolution);
+    if (root.resolution.decision === 'gated') return handoff(root.resolution, root.url);
     if (root.resolution.reason === 'too_many_hosts') {
       await ledger(root, target, 'none', 'too_many_hosts', 0);
       return outcome('none', 'too_many_hosts');
@@ -319,6 +328,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
     let blocked = false;
     let rateLimited = false;
     let ambiguous = root.resolution.decision === 'ambiguous';
+    let storeHandoff;
     readCandidates(root, 0, pending);
     while (pending.length && reached < ACTIONS) {
       signal.throwIfAborted();
@@ -339,6 +349,9 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
           if (!ambiguous && candidate.arch === 'unknown') break;
         } else if (found.resolution?.decision === 'gated') {
           blocked = true;
+          if (!storeHandoff && found.resolution.reason === 'app_store') {
+            storeHandoff = handoff(found.resolution, found.url);
+          }
         } else if (found.resolution && level < 2) {
           followedDocument = true;
           ambiguous ||= found.resolution.decision === 'ambiguous';
@@ -361,6 +374,10 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
       const reason = decision === 'ambiguous' ? 'multiple_downloads' : 'verified_range';
       if (decision === 'ambiguous') await ledger(root, target, decision, reason, reached);
       return outcome(decision, reason, confirmed);
+    }
+    if (!tooLarge) {
+      if (storeHandoff) return storeHandoff;
+      if (storeListing(root.resolution, 'macos')) return handoff({ ...root.resolution, reason: 'app_store' });
     }
     const reason = tooLarge ? 'artifact_too_large' : rateLimited ? 'host_rate_limit' : blocked ? 'vendor_action'
       : root.resolution.reason === 'document_limit' ? 'document_limit' : 'no_public_download';

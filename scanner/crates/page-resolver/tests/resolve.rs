@@ -377,3 +377,89 @@ fn uses_the_exact_jetbrains_product_requested() {
             .any(|candidate| candidate.url.path().ends_with("toolbox.dmg"))
     );
 }
+
+#[test]
+fn ranks_custom_button_links_and_scoped_publisher_shortcodes() {
+    let page = public_url(
+        "https://www.native-instruments.com/pages/native-access",
+        None,
+    )
+    .unwrap();
+    let body = br#"
+        <p>[cta label=&quot;Download Mac Intel&quot; link=&quot;https://assets.native-instruments.com/downloads/Native-Access_2_Mac_Intel.dmg&quot;]
+        [cta label=&quot;Download Apple Silicon&quot; link=&quot;https://assets.native-instruments.com/downloads/Native-Access_2_Mac_M1.dmg&quot;]
+        [cta label=&quot;Download Apple Silicon&quot; link=&quot;https://elsewhere.example.org/downloads/Native-Access_2_Mac_M1.dmg&quot;]</p>
+        <blz-button href="/standalone/universal.pkg" label="macOS Download">Try again</blz-button>
+    "#;
+    let resolution = resolve(document(&page, body, "text/html"), None);
+    assert_eq!(resolution.candidates.len(), 3);
+    assert_eq!(resolution.candidates[0].arch, Arch::Arm64);
+    assert!(
+        resolution
+            .candidates
+            .iter()
+            .any(|candidate| candidate.evidence.selector == "blz-button[href]")
+    );
+    let other = public_url("https://elsewhere.example.org/pages/native-access", None).unwrap();
+    assert_eq!(
+        resolve(document(&other, body, "text/html"), None)
+            .candidates
+            .len(),
+        1
+    );
+}
+
+#[test]
+fn follows_the_published_gitea_release_project() {
+    let official = public_url("https://gitea.com/gitea/gitea/releases", None).unwrap();
+    let self_hosted = public_url("https://gitea.com/example/project/releases", None).unwrap();
+    for (page, endpoint) in [
+        (
+            official,
+            "https://api.github.com/repos/go-gitea/gitea/releases/latest",
+        ),
+        (
+            self_hosted,
+            "https://gitea.com/api/v1/repos/example/project/releases/latest",
+        ),
+    ] {
+        let resolution = resolve(document(&page, b"", "text/html"), None);
+        assert_eq!(resolution.candidates[0].url.as_str(), endpoint);
+    }
+}
+
+#[test]
+fn selects_the_chrome_stable_browser_and_ignores_alternate_products() {
+    let page = public_url(
+        "https://googlechromelabs.github.io/chrome-for-testing/",
+        None,
+    )
+    .unwrap();
+    let endpoint = public_url("https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json", None).unwrap();
+    let metadata = br#"{"channels":{"Stable":{"downloads":{
+        "chrome":[
+            {"platform":"mac-arm64","url":"https://storage.googleapis.com/chrome-for-testing-public/158/mac-arm64/chrome-mac-arm64.zip"},
+            {"platform":"mac-x64","url":"https://elsewhere.example.org/chrome-for-testing-public/158/mac-x64/chrome-mac-x64.zip"}
+        ],
+        "chromedriver":[{"platform":"mac-arm64","url":"https://storage.googleapis.com/chrome-for-testing-public/158/mac-arm64/chromedriver-mac-arm64.zip"}]
+    }}}}"#;
+    let resolution = resolve(
+        document(&page, b"", "text/html"),
+        Some(document(&endpoint, metadata, "application/json")),
+    );
+    assert_eq!(resolution.decision, Decision::Resolved);
+    assert_eq!(
+        resolution
+            .candidates
+            .iter()
+            .filter(|candidate| candidate.is_artifact())
+            .count(),
+        1
+    );
+    assert!(
+        resolution.candidates[0]
+            .url
+            .path()
+            .ends_with("/chrome-mac-arm64.zip")
+    );
+}

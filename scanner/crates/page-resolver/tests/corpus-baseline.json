@@ -45,8 +45,11 @@
     "rangedWithinBudget": false
   },
   "sol/intellij": {
-    "outcome": "unresolved",
-    "urls": [],
+    "outcome": "correct",
+    "urls": [
+      "aaf835388b590b5035f134578d368e8b3bc01970aaf3ea1f8ab7ced9fb04ce14",
+      "760c3ab09d5468561d0b8aadf32d2be9f0c619d36a5766c0b39ce809e1ba8797"
+    ],
     "rangedWithinBudget": false
   },
   "sol/android-studio": {
@@ -200,7 +203,7 @@
     "rangedWithinBudget": false
   },
   "sol/sequel-ace": {
-    "outcome": "unresolved",
+    "outcome": "gated",
     "urls": [],
     "rangedWithinBudget": false
   },
@@ -225,8 +228,11 @@
     "rangedWithinBudget": false
   },
   "sol/pgadmin": {
-    "outcome": "unresolved",
-    "urls": [],
+    "outcome": "correct",
+    "urls": [
+      "928ebe5d678673eb16e7c353d294f8ffe88606d2383c4b2f933e1aeeed878b07",
+      "2b8af2a9669d475ba346b451574fbe694607493e291a60a331608b991c8c1c09"
+    ],
     "rangedWithinBudget": false
   },
   "sol/postman": {
@@ -270,7 +276,7 @@
     "rangedWithinBudget": false
   },
   "sol/wireguard": {
-    "outcome": "unresolved",
+    "outcome": "gated",
     "urls": [],
     "rangedWithinBudget": false
   },
@@ -360,8 +366,11 @@
     "rangedWithinBudget": false
   },
   "sol/chrome-for-testing": {
-    "outcome": "unresolved",
-    "urls": [],
+    "outcome": "correct",
+    "urls": [
+      "13c561ef6e90786511d4e9ece4f60e3455338f520aa194767598f4ee86215e7f",
+      "550c9592ae612bb4388b8a933122f60130fdb71dcaa26c492f4bf810fbb67fc7"
+    ],
     "rangedWithinBudget": false
   },
   "sol/softpedia-openscad": {
@@ -480,8 +489,10 @@
     "rangedWithinBudget": false
   },
   "sol/gitea-releases": {
-    "outcome": "unresolved",
-    "urls": [],
+    "outcome": "correct",
+    "urls": [
+      "66e94fd4faf1bf71b1597af4110922a52ddfe6af63519edd7d1e219298fa3d2e"
+    ],
     "rangedWithinBudget": false
   },
   "sol/support-bitbucket": {
@@ -771,7 +782,7 @@
     "rangedWithinBudget": false
   },
   "astra/wireguard": {
-    "outcome": "unresolved",
+    "outcome": "gated",
     "urls": [],
     "rangedWithinBudget": false
   },
@@ -1020,14 +1031,19 @@
     "rangedWithinBudget": false
   },
   "astra/nativeaccess": {
-    "outcome": "unresolved",
-    "urls": [],
+    "outcome": "ambiguous",
+    "urls": [
+      "e7d30e9f7b2bced4c4fe84b8c8ed185768b54c22a7f7e8be951bb12285449efb",
+      "39f72416551f754f953b69efdc9b182e463c84d59726d5ce5a1df3b19478f692"
+    ],
     "rangedWithinBudget": false
   },
   "astra/battle": {
-    "outcome": "unresolved",
-    "urls": [],
-    "rangedWithinBudget": false
+    "outcome": "correct",
+    "urls": [
+      "9b6f4a43ffc25d65aa4bab6a005474933fd2fb7af471934d12243a4b1aa866ff"
+    ],
+    "rangedWithinBudget": true
   },
   "astra/github-desktop": {
     "outcome": "correct",

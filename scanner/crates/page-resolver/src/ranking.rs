@@ -101,6 +101,17 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
         .unwrap_or(Arch::Unknown);
 
     if let Some(kind @ (Kind::AppStore | Kind::Gated | Kind::Feed | Kind::ReleaseApi)) = hint.kind {
+        let store_platform = if kind == Kind::AppStore {
+            url.query_pairs()
+                .find(|(name, _)| name == "mt")
+                .and_then(|(_, value)| match value.as_ref() {
+                    "12" => Some(Os::Macos),
+                    "8" => Some(Os::Other),
+                    _ => None,
+                })
+        } else {
+            None
+        };
         return Some(Candidate {
             url,
             position: 0,
@@ -117,13 +128,13 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
                 _ => "public_release_api",
             }],
             arch,
-            os: if wrong_os {
+            os: store_platform.unwrap_or(if wrong_os {
                 Os::Other
             } else if mac {
                 Os::Macos
             } else {
                 Os::Unknown
-            },
+            }),
             kind,
             evidence: hint.evidence,
         });

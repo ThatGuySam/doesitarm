@@ -19,7 +19,7 @@ const artifacts = ['arm64', 'universal', 'x86_64'].map((arch) => ({
   arch, os: 'macos', kind: 'direct_file', filename: `Tool-${arch}.dmg`,
   url: `https://cdn.example.net/Tool-${arch}.dmg`,
   host: 'cdn.example.net',
-  evidence: { page: 'publisher.example.net', selector: 'a[href]', text: 'Download for Mac' },
+  evidence: { page: 'publisher.example.net', path: '/app', selector: 'a[href]', text: 'Download for Mac' },
 }));
 
 test('device-aware entry and phase changes in a real Chromium page', { timeout: 60_000 }, async (t) => {
@@ -108,7 +108,7 @@ test('device-aware entry and phase changes in a real Chromium page', { timeout: 
       await page.getByText('Found 3 possible downloads', { exact: true }).waitFor();
       assert.deepEqual(fetched, [['/api/resolve', publisher + '/app']]);
       await page.getByText('Download sources', { exact: true }).click();
-      await page.getByText('Found at publisher.example.net · a[href] · Download for Mac', { exact: true }).first().waitFor();
+      await page.getByText('Found at publisher.example.net/app · a[href] · Download for Mac', { exact: true }).first().waitFor();
       const picker = page.getByLabel('Choose a macOS download');
       assert.equal(await picker.locator('option').count(), 4);
       await picker.selectOption('0');

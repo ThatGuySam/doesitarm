@@ -246,12 +246,16 @@ pub fn parse(context: &mut Context<'_>, bytes: &[u8], adapters_enabled: bool) {
                         script.text.clear();
                         script.skip = true;
                     }
-                } else if let Some(frame) = frames
-                    .iter_mut()
-                    .rev()
-                    .find(|f| f.heading || !f.hints.is_empty())
-                {
-                    if frame.text.len() < 400 {
+                } else {
+                    if adapters_enabled {
+                        adapters::visible_cta(context, &text);
+                    }
+                    if let Some(frame) = frames
+                        .iter_mut()
+                        .rev()
+                        .find(|f| f.heading || !f.hints.is_empty())
+                        .filter(|frame| frame.text.len() < 400)
+                    {
                         frame.text.push_str(&short(text.trim(), 180));
                         frame.text.push(' ');
                     }
@@ -378,8 +382,9 @@ fn process_tag(
             }
         }
     } else {
-        let control =
-            matches!(name, "a" | "button" | "input" | "option") || get("role") == Some("button");
+        let control = matches!(name, "a" | "button" | "input" | "option")
+            || name.ends_with("-button")
+            || get("role") == Some("button");
         for (key, value) in &tag.attributes {
             let key = key.as_str();
             let Ok(value) = str::from_utf8(value) else {
@@ -412,6 +417,7 @@ fn process_tag(
                 };
                 let label = [
                     get("aria-label"),
+                    get("label"),
                     get("title"),
                     get("download"),
                     get("data-platform"),
@@ -550,7 +556,7 @@ fn finish_frame(
         }
         hint.evidence.text = short(&label, 160);
         if adapters_enabled && frame.name == "a" {
-            adapters::forge_link(context, &hint.raw, &hint.evidence.text);
+            adapters::publisher_link(context, &hint.raw, &hint.evidence.text);
         }
         context.hint(hint);
     }

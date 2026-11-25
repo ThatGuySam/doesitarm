@@ -154,6 +154,8 @@ test('accepts only bounded file responses and re-probes before a scan', async ()
   const { decision, candidates } = await found.json();
   assert.equal(decision, 'resolved');
   assert.equal(candidates[0].arch, 'arm64');
+  assert.equal(candidates[0].evidence.page, 'downloads.example.net');
+  assert.equal(candidates[0].evidence.path, '/product');
   assert.equal(candidates[0].evidence.selector, 'a[href]');
   assert.equal(found.headers.get('Cache-Control'), 'no-store');
   const response = await handle(request(candidates[0].url, '/api/scan-download'), env);
@@ -242,6 +244,27 @@ test('revalidates a small public parsed response by URL and ETag', async () => {
   const second = await (await handle(request(), env)).json();
   assert.deepEqual(first, second);
   assert.equal(origins, 2);
+});
+
+test('hands off the Mac App Store listing after an unconfirmed release route', async () => {
+  const mobile = 'https://itunes.apple.com/us/app/tool/id111?mt=8';
+  const desktop = 'https://itunes.apple.com/us/app/tool/id222?mt=12';
+  const release = 'https://api.github.com/repos/acme/tool/releases/latest';
+  const visits = [];
+  const handle = handler((url) => {
+    visits.push(url.href);
+    if (url.href === target) {
+      return html('<a href="' + mobile + '">App Store</a><a href="' + desktop +
+        '">App Store</a><a href="https://github.com/acme/tool/releases">GitHub releases</a>');
+    }
+    assert.equal(url.href, release);
+    return new Response(null, { status: 404 });
+  });
+  const result = await (await handle(request(), env)).json();
+  assert.deepEqual(visits, [target, release]);
+  assert.equal(result.decision, 'gated');
+  assert.equal(result.reason, 'app_store');
+  assert.deepEqual(result.handoff, { url: desktop, host: 'itunes.apple.com' });
 });
 
 test('honors anonymous forge API rate limits across requests', async () => {

@@ -17,12 +17,17 @@ pub fn forge_fragment(context: &mut Context<'_>, raw: &str) {
     forges::fragment(context, raw);
 }
 
-pub fn forge_link(context: &mut Context<'_>, raw: &str, label: &str) {
+pub fn publisher_link(context: &mut Context<'_>, raw: &str, label: &str) {
     forges::linked_release(context, raw, label);
+    catalogs::linked_document(context, raw);
 }
 
 pub fn declared_script(context: &mut Context<'_>, url: &str) {
     catalogs::declared_script(context, url);
+}
+
+pub fn visible_cta(context: &mut Context<'_>, text: &str) {
+    catalogs::visible_cta(context, text);
 }
 
 pub fn feed_hint(context: &mut Context<'_>, raw: &str, selector: &str, mime: &str) {
