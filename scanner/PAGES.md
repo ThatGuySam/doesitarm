@@ -61,3 +61,9 @@ The CLI treats results as ranked hints and prints JSON. Its optional metadata fi
 | MIME and length deception | Positive file MIME/suffix evidence, exact 206 probe, full-size cap and repeated scan checks | `accepts only bounded file responses and re-probes before a scan`, `rejects HTML, suspicious formats and unbounded files` |
 | Interactive consent, credentials and script execution | GET-only egress, inert parsing, no forwarded credentials and vendor handoff for gates | `retains_public_trials_and_skips_download_post_forms`, `respects_store_and_consent_and_accepts_public_share_actions` |
 | Display of untrusted source content | JSON-only transport. The browser uses text nodes and validates evidence links as HTTPS. | `candidate-link display validates HTTPS again`, Chromium page phases and handoffs |
+
+## Browser behavior
+
+Mac users start with Select Apps. Windows, Android, iPhone and iPadOS start with the URL form and a collapsed device picker. The browser recognizes touch-enabled Safari with a Macintosh identifier as iPadOS. A choice of input method persists locally. The drag hint stays hidden on touch.
+
+A page lookup announces reading, the number of file responses found and the selected scan. When multiple downloads remain ambiguous, a picker shows the names, architecture labels and hosts. The source disclosure gives the link and the control or metadata field that supplied it. Gated pages and the Mac App Store offer the corresponding handoff.

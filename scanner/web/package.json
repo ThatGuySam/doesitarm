@@ -5,8 +5,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "serve": "node scripts/serve.mjs",
-    "test": "node --test test/worker.test.mjs test/ui.test.mjs test/totals.test.mjs test/folder-walk.test.mjs test/path-privacy.test.mjs",
-    "test:browser": "node --test --test-concurrency=1 test/browser.test.mjs test/bigfolder-*.test.mjs",
+    "test": "node --test test/worker.test.mjs test/ui.test.mjs test/totals.test.mjs test/folder-walk.test.mjs test/path-privacy.test.mjs test/page-worker.test.mjs test/device-entry.test.mjs",
+    "test:browser": "node --test --test-concurrency=1 test/browser.test.mjs test/bigfolder-*.test.mjs test/pages.browser.test.mjs",
     "test:ui": "node scripts/ui-smoke.mjs",
     "test:a11y": "node scripts/a11y-check.mjs",
     "count": "node scripts/count-elements.mjs",

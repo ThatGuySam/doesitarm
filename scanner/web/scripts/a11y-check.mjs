@@ -1,3 +1,4 @@
+import { emulateMac } from '../test/browser-helpers.mjs';
 // Headless accessibility basics for the scanner page: keyboard order, names, target sizes,
 // disclosure keys, dialog focus handling, 390 px reflow and colour contrast of the tokens.
 //   node scripts/a11y-check.mjs
@@ -34,6 +35,7 @@ const check = (name, ok, detail = '') => {
 };
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
+  await emulateMac(context);
   await context.route((target) => target.origin !== url, (route) => route.abort());
   const page = await context.newPage();
   await page.goto(url);

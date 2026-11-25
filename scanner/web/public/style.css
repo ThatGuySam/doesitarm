@@ -175,7 +175,7 @@ button { cursor: pointer; }
 .prose p + p { margin-block-start: .6rem; }
 .hint { color: var(--muted); font-size: .75rem; }
 
-.url-form { display: grid; gap: .35rem; }
+.url-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: .35rem; }
 .url-form label { font-weight: 600; }
 .url-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-start: .2rem; }
 input[type="url"] {
@@ -401,3 +401,39 @@ pre { overflow: auto; max-block-size: 22rem; margin: .5rem 0 0; padding: .7rem; 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
 }
+
+.device-picker { display: grid; justify-items: center; gap: .8rem; }
+.device-files > summary { min-block-size: 1.6rem; cursor: pointer; font-size: .8rem; }
+.drop-zone[data-entry="files"] .device-files > summary,
+.drop-zone[data-entry="url"] #advanced > summary { display: none; }
+.drop-zone[data-entry="url"] { padding-block: .4rem 1rem; }
+.drop-zone[data-entry="url"] #advanced { inline-size: min(100%, 34rem); }
+.drop-zone[data-entry="url"] .select-apps { font-size: 1.1rem; }
+.drop-zone[data-entry="url"] .device-files[open] > summary { margin-block-end: .8rem; }
+.touch-input .drag-copy, body.touch-input .drop-hint { display: none; }
+
+.url-phase { color: var(--text); font-size: .8rem; }
+.url-phase:empty, #download-options:empty { display: none; }
+.url-phase.is-loading::before {
+  content: '';
+  display: inline-block;
+  inline-size: .75rem;
+  block-size: .75rem;
+  margin-inline-end: .4rem;
+  border: .12rem solid var(--edge);
+  border-inline-end-color: var(--gold);
+  border-radius: 50%;
+  animation: download-spin .75s linear infinite;
+}
+@keyframes download-spin { to { transform: rotate(1turn); } }
+@media (prefers-reduced-motion: reduce) {
+  .url-phase.is-loading::before { animation: none; }
+}
+#download-options { margin-block-start: .6rem; font-size: .75rem; overflow-wrap: anywhere; }
+.download-sources summary { cursor: pointer; min-block-size: 1.6rem; }
+.download-sources ul { margin-block: .3rem 0; padding-inline-start: 1.15rem; }
+.download-sources li + li { margin-block-start: .5rem; }
+.download-sources p { color: var(--muted); }
+.candidate-picker { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; gap: .4rem; margin-block-end: .6rem; }
+.candidate-picker label, .candidate-picker select { min-inline-size: 0; max-inline-size: 100%; }
+.candidate-picker select { display: block; margin-block-start: .2rem; }

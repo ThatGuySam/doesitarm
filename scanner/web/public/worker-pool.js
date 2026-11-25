@@ -124,7 +124,7 @@ export class ScanPool {
     const { id, job, update } = task;
     update({ type: 'start' });
     try {
-      const { kind, label, file, url, forceWorker, probe, parentBundlePath, plistPath, roleHint } = job;
+      const { kind, label, file, url, forceWorker, resolvedDownload, probe, parentBundlePath, plistPath, roleHint } = job;
       const [plist, listings] = kind === 'bundle'
         ? await Promise.all([job.getPlist(), job.getDirectoryListings?.()])
         : [];
@@ -132,7 +132,7 @@ export class ScanPool {
       task.listings = listings;
       slot.worker.postMessage({
         id,
-        job: { kind, label, file, url, forceWorker, plist, probe, parentBundlePath, plistPath, roleHint },
+        job: { kind, label, file, url, forceWorker, resolvedDownload, plist, probe, parentBundlePath, plistPath, roleHint },
         passive: this.#mode.passive,
       });
     } catch (cause) {

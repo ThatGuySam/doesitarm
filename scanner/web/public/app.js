@@ -1,11 +1,13 @@
 import { redactPath } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
+import { bindDownloadInput, configureScannerEntry } from './download-input.js';
 import { bindLocalInputs } from './local-inputs.js';
 import { ResultsList } from './results-list.js';
 import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
 import { architectures, get, prettyBytes, statuses } from './scan-view.js';
 
+const entry = configureScannerEntry();
 const gentleToggle = get('gentle');
 const divider = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
 const coveragePercent = new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 });
@@ -69,32 +71,7 @@ updateMode();
 bindLocalInputs({ view, mode: () => mode });
 get('clear-results').addEventListener('click', () => view.clear());
 
-function publicDownload(raw) {
-  const url = new URL(raw);
-  if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '80')) {
-    throw new TypeError('Use a public HTTPS download URL without credentials.');
-  }
-  url.hash = '';
-  return url;
-}
-
-get('url-form').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const input = get('scan-url');
-  const error = get('url-error');
-  error.textContent = '';
-  input.removeAttribute('aria-invalid');
-  try {
-    const url = publicDownload(input.value);
-    if (redactPath(input.value) !== input.value) input.value = '';
-    const path = redactPath(url.pathname).split('/').filter(Boolean).at(-1);
-    view.add([{ kind: 'url', url: url.href, label: path || url.hostname }]);
-  } catch {
-    error.textContent = 'Enter a public HTTPS download URL without credentials.';
-    input.setAttribute('aria-invalid', 'true');
-    input.focus();
-  }
-});
+bindDownloadInput({ view, remember: entry.remember });
 
 function recordedCoverage(bytes, size) {
   if (!size) return `${prettyBytes(bytes)} read`;

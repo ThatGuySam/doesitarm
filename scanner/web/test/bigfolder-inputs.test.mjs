@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { chromium } from 'playwright-core';
 import { startPreview } from '../scripts/serve.mjs';
-import { monitorChromiumMemory, requireBrowserHeadroom } from './browser-helpers.mjs';
+import { emulateMac, monitorChromiumMemory, requireBrowserHeadroom } from './browser-helpers.mjs';
 
 async function fixturePicker(executable) {
   const root = await navigator.storage.getDirectory();
@@ -44,6 +44,7 @@ test('read-only folder picker scans real OPFS handles and exports all local evid
     browser = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/usr/bin/chromium' });
     monitor = await monitorChromiumMemory(browser);
     const page = await browser.newPage({ reducedMotion: 'reduce' });
+    await emulateMac(page.context());
     page.setDefaultTimeout(8000);
     const errors = [];
     const requests = [];

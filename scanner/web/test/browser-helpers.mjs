@@ -140,3 +140,16 @@ export async function readScanJson(page, card) {
   await dialog.waitFor({ state: 'hidden' });
   return json;
 }
+
+
+// These suites exercise the Mac file-picker layout. Device-specific layouts
+// are covered separately with explicit Windows, Android, iPhone and iPad profiles.
+export async function emulateMac(context) {
+  await context.addInitScript(() => {
+    Object.defineProperties(navigator, {
+      userAgentData: { value: { platform: 'macOS' } },
+      platform: { value: 'MacIntel' },
+      maxTouchPoints: { value: 0 },
+    });
+  });
+}

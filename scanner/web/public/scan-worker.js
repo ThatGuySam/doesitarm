@@ -81,7 +81,7 @@ self.addEventListener('message', async ({ data }) => {
       if (!result) {
         source = 'Cloudflare Worker';
         self.postMessage({ type: 'remote', id, bytes });
-        result = await requestWorker(job.url);
+        result = await requestWorker(job.url, job.resolvedDownload);
         bytes += result.bytes_read;
       }
     }
@@ -297,11 +297,19 @@ async function scanBundle(job, progress, id, evidence) {
   };
 }
 
-async function requestWorker(url) {
-  const endpoint = new URL('/api/scan', self.location.origin);
-  endpoint.searchParams.set('url', url);
+async function requestWorker(url, resolvedDownload) {
+  const endpoint = new URL(resolvedDownload ? '/api/scan-download' : '/api/scan', self.location.origin);
+  const headers = { 'X-Scan-Client': 'browser' };
+  const options = { headers, cache: 'no-store', credentials: 'omit' };
+  if (resolvedDownload) {
+    options.method = 'POST';
+    options.body = JSON.stringify({ url });
+    headers['Content-Type'] = 'application/json';
+  } else {
+    endpoint.searchParams.set('url', url);
+  }
   try {
-    const response = await fetch(endpoint, { headers: { 'X-Scan-Client': 'browser' }, cache: 'no-store' });
+    const response = await fetch(endpoint, options);
     if (response.headers.get('Content-Type')?.includes('application/json')) {
       const result = await response.json();
       if (typeof result.status === 'string' && Array.isArray(result.architectures)) return result;

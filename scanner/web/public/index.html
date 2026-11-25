@@ -25,32 +25,38 @@
       <p class="subtitle">Check whether your Mac apps run natively on Apple&nbsp;silicon.</p>
 
       <div id="drop-zone" class="drop-zone">
-        <button type="button" id="choose-files" class="select-apps">Select Apps</button>
-        <p class="helper">Drop Mac apps, folders, or DMG, ZIP, PKG, tar.gz and Mach-O files here. Local files stay in this browser.</p>
-        <div class="more-actions">
-          <button type="button" id="choose-folder" class="text-button">Choose folder</button>
+        <details id="device-files" class="device-files" open>
+          <summary>Scan files from this device</summary>
+          <div class="device-picker">
+            <button type="button" id="choose-files" class="select-apps">Select Apps</button>
+            <p class="helper"><span class="drag-copy">Drop Mac apps, folders, or DMG, ZIP, PKG, tar.gz and Mach-O files here. </span>Local files stay in this browser.</p>
+            <button type="button" id="choose-folder" class="text-button">Choose folder</button>
+          </div>
+        </details>
+        <div id="scan-options" class="more-actions">
           <details id="advanced" class="inline-details">
             <summary>Advanced</summary>
             <div class="panel">
               <form id="url-form" class="url-form" novalidate>
-                <label for="scan-url">Public HTTPS download URL</label>
-                <p id="url-hint" class="hint">The scanner tries the URL in your browser. If the browser cannot read the needed ranges, Cloudflare receives the URL and checks it there.</p>
+                <label for="scan-url">Paste a download link or the app's download page</label>
                 <div class="url-row">
-                  <input id="scan-url" type="url" placeholder="https://example.com/App.dmg" required
-                    aria-describedby="url-hint url-error" autocomplete="off" spellcheck="false">
+                  <input id="scan-url" type="url" placeholder="https://…" required
+                    aria-describedby="url-error" autocomplete="off" spellcheck="false">
                   <button type="submit" class="quiet-button">Scan URL</button>
                 </div>
                 <p id="url-error" class="error" role="alert"></p>
+                <p id="url-phase" class="url-phase" role="status" tabindex="-1"></p>
               </form>
-              <div class="setting">
+              <div id="download-options"></div>
+              <div id="scan-settings" class="setting">
                 <label class="check"><input type="checkbox" id="gentle"> Gentle</label>
-                <p class="hint">Scan one app at a time to keep your Mac responsive. <span id="mode-status" role="status"></span></p>
+                <p class="hint">Scan one app at a time to keep this device responsive. <span id="mode-status" role="status"></span></p>
               </div>
             </div>
           </details>
           <details id="how" class="inline-details">
             <summary>How it works</summary>
-            <div class="panel prose">
+            <div id="scan-help" class="panel prose">
               <p>The scanner opens each app's main executable and reads its Mach-O headers to see which processor architectures it contains. It reads only the few ranges it needs, so a multi-gigabyte app usually costs a few kilobytes of reading. Local files never leave this browser.</p>
               <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
               <p>Dropping a folder needs a browser that exposes folder contents to the page. If Firefox or another browser finds no files in a dropped folder, use <strong>Choose folder</strong>.</p>
