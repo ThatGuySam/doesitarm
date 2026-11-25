@@ -193,14 +193,22 @@ fi
 
 compare diff --cached --binary --no-renames --no-ext-diff --no-textconv "$revision" >"$scratch/change.patch"
 git -C "$scratch/verify" apply -- "$scratch/change.patch"
-if ! sandbox "$scratch/verify" "$scratch/verify.log" /usr/bin/bash -c '
-    set -e
+verification=0
+sandbox "$scratch/verify" "$scratch/verify.log" /usr/bin/bash -c '
     cd scanner
-    cargo test --offline --locked -j2 -p page-resolver
-    node web/scripts/build.mjs --worker-only
-    node web/scripts/replay-pages.mjs --verify --target "$1"
-' page-heal "$case_id"; then
-    echo 'Discarded the patch because the native tests, corpus, target replay or sandbox failed.' >&2
+    cargo test --offline --locked -j2 -p page-resolver || exit 71
+    node web/scripts/build.mjs --worker-only || exit 72
+    node web/scripts/replay-pages.mjs --verify --target "$1" || exit 73
+' page-heal "$case_id" || verification=$?
+if (( verification != 0 )); then
+    case $verification in
+        71) stage='native resolver tests' ;;
+        72) stage='Worker build' ;;
+        73) stage='corpus or target replay' ;;
+        *) stage='sandbox or time limit' ;;
+    esac
+    echo "Discarded the patch after the $stage step failed." >&2
+    tail -n 24 "$scratch/verify.log" >&2
     exit 1
 fi
 
