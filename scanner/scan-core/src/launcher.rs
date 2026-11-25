@@ -1,10 +1,11 @@
 use crate::{
-    Architecture, ReadAt, Result, ScanError, bundle,
+    Architecture, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, bundle,
+    decode::DecodeBudget,
     diagnostic::{ExecutableDiagnostic, Prefix},
-    macho,
+    inventory, macho,
 };
 use serde::Serialize;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 const MAX_SCRIPT: u64 = 16 * 1024;
 
@@ -13,6 +14,197 @@ pub struct ScriptRuntime {
     pub path: String,
     pub evidence: &'static str,
     pub architectures: Vec<Architecture>,
+}
+
+pub(crate) struct Candidate {
+    pub path: String,
+    pub size: u64,
+    pub architectures: Vec<Architecture>,
+    pub outcome: Result<()>,
+    runtime: Option<ScriptRuntime>,
+    diagnostic: Option<ExecutableDiagnostic>,
+}
+
+impl Candidate {
+    pub(crate) fn apply(self, out: &mut ScanResult) -> Result<()> {
+        out.executable_size = Some(self.size);
+        out.architectures = self.architectures;
+        if let (Some(result), Some(diagnostic)) = (&mut out.diagnostic, self.diagnostic) {
+            result.executable = diagnostic;
+        }
+        out.script_runtime = self.runtime;
+        self.outcome
+    }
+
+    fn is_executable(&self) -> bool {
+        self.outcome.is_ok()
+            && !self.architectures.is_empty()
+            && self
+                .architectures
+                .iter()
+                .all(|arch| arch.header_verified && arch.file_type == Some(macho::MH_EXECUTE))
+    }
+}
+
+pub(crate) async fn observe(
+    input: &mut impl ReadAt,
+    path: &str,
+    diagnostic: bool,
+) -> Result<Candidate> {
+    let mut architectures = Vec::new();
+    let mut runtime = None;
+    let mut diagnostic = diagnostic.then(ExecutableDiagnostic::default);
+    let outcome = inspect(
+        input,
+        path,
+        &mut architectures,
+        &mut runtime,
+        diagnostic.as_mut(),
+    )
+    .await;
+    if let Err(error) = &outcome
+        && inventory::stop(error)
+        && architectures.is_empty()
+    {
+        return Err(error.clone());
+    }
+    Ok(Candidate {
+        path: path.to_owned(),
+        size: input.size(),
+        architectures,
+        outcome,
+        runtime,
+        diagnostic,
+    })
+}
+
+// A root executable, a single enclosing directory, or that directory's bin/.
+// Deep helpers and bundle internals need a declared target.
+pub(crate) fn standalone_path(path: &str) -> Option<&str> {
+    let path = bundle::archive_path(path)?;
+    if path
+        .split('/')
+        .any(|part| part.is_empty() || part.starts_with('.'))
+    {
+        return None;
+    }
+    let mut parts = path.rsplit('/');
+    parts.next()?;
+    let parent = parts.next();
+    let product = parts.next();
+    if parts.next().is_some() || product.is_some() && parent != Some("bin") {
+        return None;
+    }
+    let allowed = |directory: &str| {
+        !matches!(
+            directory,
+            "Contents" | "Resources" | "Frameworks" | "PlugIns" | "lib" | "runtime"
+        ) && bundle::installed_bundle_kind(directory).is_none()
+            && ![".framework", ".appex", ".xpc", ".bundle", ".pkg"]
+                .iter()
+                .any(|suffix| directory.ends_with(suffix))
+    };
+    (parent.is_none_or(allowed) && product.is_none_or(allowed)).then_some(path)
+}
+
+#[derive(Default)]
+pub(crate) struct Standalone {
+    candidates: Vec<Candidate>,
+    probes: usize,
+    limited: bool,
+}
+
+impl Standalone {
+    pub(crate) fn allow(&mut self, work: &DecodeBudget<'_>) -> bool {
+        let limit = if work.strict() {
+            8
+        } else if work.local() {
+            128
+        } else {
+            32
+        };
+        if self.probes == limit {
+            self.limited = true;
+            return false;
+        }
+        self.probes += 1;
+        true
+    }
+
+    pub(crate) async fn inspect(
+        &mut self,
+        input: &mut impl ReadAt,
+        path: &str,
+        diagnostic: bool,
+    ) -> Result<()> {
+        let candidate = observe(input, path, diagnostic).await?;
+        if let Err(error) = &candidate.outcome
+            && inventory::stop(error)
+        {
+            return Err(error.clone());
+        }
+        if candidate.is_executable()
+            || matches!(
+                candidate.outcome,
+                Err(ScanError::Unsupported("declared executable is a script"))
+            )
+        {
+            self.candidates.push(candidate);
+        }
+        Ok(())
+    }
+
+    pub(crate) fn finish(mut self, out: &mut ScanResult, missing: ScanError) -> Result<()> {
+        if self.limited {
+            return Err(ScanError::Limit(
+                "too many standalone executable candidates",
+            ));
+        }
+        // A verified binary named by a packaged script is runtime evidence.
+        // It does not supply that script's own architecture.
+        let mut referenced = BTreeSet::new();
+        for index in 0..self.candidates.len() {
+            if let Some(runtime) = self.candidates[index].runtime.as_ref()
+                && let Some(binary) = self
+                    .candidates
+                    .iter()
+                    .find(|entry| entry.path == runtime.path && entry.is_executable())
+            {
+                referenced.insert(binary.path.clone());
+                let architectures = binary.architectures.clone();
+                self.candidates[index]
+                    .runtime
+                    .as_mut()
+                    .unwrap()
+                    .architectures = architectures;
+            }
+        }
+        self.candidates
+            .retain(|candidate| !referenced.contains(&candidate.path));
+        match self.candidates.len() {
+            0 => Err(missing),
+            1 => {
+                let candidate = self.candidates.pop().unwrap();
+                out.executable_path = Some(candidate.path.clone());
+                candidate.apply(out)
+            }
+            _ => {
+                self.candidates.sort_by(|a, b| a.path.cmp(&b.path));
+                out.candidate_executables = self
+                    .candidates
+                    .into_iter()
+                    .map(|candidate| ExecutableCandidate {
+                        path: candidate.path,
+                        size: candidate.size,
+                        architectures: candidate.architectures,
+                    })
+                    .collect();
+                Err(ScanError::Unsupported(
+                    "multiple standalone executables; select a binary path",
+                ))
+            }
+        }
+    }
 }
 
 pub(crate) async fn inspect(

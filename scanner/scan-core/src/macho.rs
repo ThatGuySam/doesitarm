@@ -5,6 +5,8 @@ use crate::{
 };
 use std::collections::BTreeMap;
 
+pub(crate) const MH_EXECUTE: u32 = 2;
+
 #[derive(Clone, Copy)]
 pub(crate) struct Kind {
     big: bool,
@@ -172,6 +174,7 @@ fn architecture(cpu_type: u32, cpu_subtype: u32, offset: u64, size: u64) -> Arch
         offset,
         size,
         header_verified: false,
+        file_type: None,
         min_macos: None,
         code_signature_present: None,
         encrypted: None,
@@ -208,6 +211,7 @@ async fn thin(
         out.last_mut().unwrap()
     };
     arch.header_verified = true;
+    arch.file_type = Some(kind.word(&rest, 4));
 
     let trace = diagnostic.map(|value| {
         value.load_commands.push(SliceCommands {

@@ -942,6 +942,73 @@ fn hfs_suite_with_no_primary_product_preserves_its_candidates() {
 }
 
 #[test]
+fn cli_only_archives_verify_the_unique_regular_macho_executable() {
+    for input in [
+        include_bytes!("../../fixtures/bundles/cli-only.zip").as_slice(),
+        include_bytes!("../../fixtures/bundles/cli-only.tar.gz").as_slice(),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.executable_path.as_deref(), Some("Widget/bin/widget"));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn cli_only_script_keeps_its_packaged_runtime_separate_from_primary_architectures() {
+    let input = include_bytes!("../../fixtures/bundles/cli-script-runtime.tar.gz");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(
+            matches!(result.status, Status::Unsupported),
+            "{profile:?}: {result:?}"
+        );
+        assert_eq!(
+            result.executable_path.as_deref(),
+            Some("dist-package/cursor-agent")
+        );
+        assert!(result.architectures.is_empty());
+        let runtime = result.script_runtime.unwrap();
+        assert_eq!(runtime.path, "dist-package/node");
+        assert!(runtime.architectures[0].header_verified);
+    }
+}
+
+#[test]
+fn cli_only_archives_request_a_target_when_several_executables_verify() {
+    let input = include_bytes!("../../fixtures/bundles/cli-ambiguous.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(
+        result
+            .error
+            .unwrap()
+            .contains("multiple standalone executables")
+    );
+    assert!(result.architectures.is_empty());
+    assert_eq!(
+        result
+            .candidate_executables
+            .iter()
+            .map(|entry| entry.path.as_str())
+            .collect::<Vec<_>>(),
+        ["bin/first", "bin/second"]
+    );
+}
+
+#[test]
 fn zip_resource_category_checks_for_code_in_nonstandard_paths() {
     let input = include_bytes!("../../fixtures/bundles/resources-with-binary.zip");
     let result = run(input, u64::MAX);

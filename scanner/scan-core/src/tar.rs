@@ -54,8 +54,22 @@ async fn scan_entries(
                 let path = next_path.take().or_else(|| header_path(&header));
                 if let Some(path) = path {
                     match kind {
-                        b'0' | 0 if bundle.file(input, work, &path, start, size, out).await? => {
-                            return Ok(());
+                        b'0' | 0 => {
+                            if bundle.file(input, work, &path, start, size, out).await? {
+                                return Ok(());
+                            }
+                            if number(&header[100..108]).is_ok_and(|mode| mode & 0o111 != 0) {
+                                bundle
+                                    .standalone_file(
+                                        input,
+                                        work,
+                                        &path,
+                                        start,
+                                        size,
+                                        out.diagnostic.is_some(),
+                                    )
+                                    .await?;
+                            }
                         }
                         b'1' | b'2' if bundle.is_executable_path(&path) => {
                             return Err(ScanError::Unsupported(

@@ -136,7 +136,7 @@ async fn scan_directory(
     apps.sort_by_key(|app| (app.name.matches('/').count(), app.name, app.flat));
     apps.dedup_by_key(|app| app.name);
     if apps.is_empty() {
-        return scan_nested(input, &entries, directory.offset, work, target, out).await;
+        return scan_without_app(input, &entries, directory.offset, work, target, out).await;
     }
     let limit = if work.strict() {
         8
@@ -421,6 +421,42 @@ async fn read_runtime(
     if let Ok(mut data) = member(input, entry, heap_end, work).await {
         let _ = macho::scan(&mut data, &mut runtime.architectures, None).await;
     }
+}
+
+async fn scan_without_app(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let nested = scan_nested(input, entries, heap_end, work, target, out).await;
+    let missing = match nested {
+        Err(error @ ScanError::NotFound("app Info.plist in ZIP central directory"))
+            if matches!(target, Target::Auto) =>
+        {
+            error
+        }
+        result => return result,
+    };
+    let mut standalone = launcher::Standalone::default();
+    for entry in entries {
+        if entry.mode & 0o170000 != 0o100000 || entry.mode & 0o111 == 0 || entry.expanded < 8 {
+            continue;
+        }
+        let Some(path) = launcher::standalone_path(&entry.path) else {
+            continue;
+        };
+        if !standalone.allow(work) {
+            break;
+        }
+        let mut data = member(input, entry, heap_end, work).await?;
+        standalone
+            .inspect(&mut data, path, out.diagnostic.is_some())
+            .await?;
+    }
+    standalone.finish(out, missing)
 }
 
 async fn scan_nested(

@@ -15,10 +15,14 @@ from apfs_fixture import apfs_fixture
 from edge.generate import app, tar
 
 
-def zip_fixture(name, files):
+def zip_fixture(name, files, *, executable=()):
     with zipfile.ZipFile(HERE / name, "w") as archive:
         for path, data in files.items():
-            archive.writestr(zipfile.ZipInfo(path), data)
+            entry = zipfile.ZipInfo(path)
+            if path in executable:
+                entry.create_system = 3
+                entry.external_attr = 0o100755 << 16
+            archive.writestr(entry, data)
 
 
 root = "AgentSessions.app"
@@ -81,6 +85,25 @@ for name, programs in [
 ]:
     volume = hfs_tree({path: data for product in programs for path, data in app(product).items()})
     write_udif(HERE / name, volume, [(1, len(volume) // 512, bytes)], "Apple_HFS")
+
+
+cli_files = {
+    "Widget/bin/widget": fat(),
+    "Widget/bin/libfixture.dylib": thin()[:12] + (6).to_bytes(4, "little") + thin()[16:],
+    "Widget/README.txt": b"Archive documentation",
+}
+zip_fixture("cli-only.zip", cli_files, executable=cli_files)
+(HERE / "cli-only.tar.gz").write_bytes(gzip.compress(tar(cli_files), mtime=0))
+cursor_files = {
+    "dist-package/node": thin(),
+    "dist-package/cursor-agent": (
+        b'#!/usr/bin/env bash\nSCRIPT_DIR="$(dirname "$(realpath "$0")")"\n'
+        b'NODE_BIN="$SCRIPT_DIR/node"\nexec -a "$0" "$NODE_BIN" "$SCRIPT_DIR/index.js" "$@"\n'
+    ),
+}
+(HERE / "cli-script-runtime.tar.gz").write_bytes(gzip.compress(tar(cursor_files), mtime=0))
+cli_pair = {"bin/first": thin(), "bin/second": fat()}
+zip_fixture("cli-ambiguous.zip", cli_pair, executable=cli_pair)
 
 zip_fixture("resources-with-binary.zip", {
     **resources,

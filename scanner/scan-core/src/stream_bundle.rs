@@ -1,32 +1,11 @@
 use crate::{
-    Architecture, BinaryInventory, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult,
-    ScriptRuntime, Target, Window, bundle,
+    BinaryInventory, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, Target, Window,
+    bundle,
     decode::DecodeBudget,
-    diagnostic::ExecutableDiagnostic,
     inventory::{self, Allowance},
-    launcher, macho,
+    launcher::{self, Candidate, Standalone},
+    macho,
 };
-
-struct Candidate {
-    path: String,
-    size: u64,
-    architectures: Vec<Architecture>,
-    outcome: Result<()>,
-    runtime: Option<ScriptRuntime>,
-    diagnostic: Option<ExecutableDiagnostic>,
-}
-
-impl Candidate {
-    fn apply(self, out: &mut ScanResult) -> Result<()> {
-        out.executable_size = Some(self.size);
-        out.architectures = self.architectures;
-        if let (Some(result), Some(diagnostic)) = (&mut out.diagnostic, self.diagnostic) {
-            result.executable = diagnostic;
-        }
-        out.script_runtime = self.runtime;
-        self.outcome
-    }
-}
 
 /// When the executable precedes its plist, retain observations for plausible
 /// main executable paths until CFBundleExecutable confirms which one to use.
@@ -43,6 +22,7 @@ pub(crate) struct StreamBundle<'a> {
     inventory: Option<BinaryInventory>,
     allowance: Option<Allowance>,
     skipped_prefix: bool,
+    standalone: Standalone,
 }
 
 impl<'a> StreamBundle<'a> {
@@ -136,6 +116,7 @@ impl<'a> StreamBundle<'a> {
             && let Some(root) = bundle::selected_plist(path, self.selection)
         {
             out.bundle_path = Some(root.to_owned());
+            self.standalone = Standalone::default();
             if size > bundle::MAX_PLIST {
                 return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
             }
@@ -231,6 +212,27 @@ impl<'a> StreamBundle<'a> {
         Ok(false)
     }
 
+    pub(crate) async fn standalone_file(
+        &mut self,
+        source: &mut impl ReadAt,
+        work: &DecodeBudget<'_>,
+        path: &str,
+        offset: u64,
+        size: u64,
+        diagnostic: bool,
+    ) -> Result<()> {
+        if self.target.is_none()
+            && matches!(self.selection, Target::Auto)
+            && size >= 8
+            && let Some(path) = launcher::standalone_path(path)
+            && self.standalone.allow(work)
+        {
+            let data = &mut Window::new(source, offset, size)?;
+            self.standalone.inspect(data, path, diagnostic).await?;
+        }
+        Ok(())
+    }
+
     /// Enforce a limit on post-primary traversal even when it only skips
     /// non-bundle members in a sequential stream.
     pub(crate) fn check_traversal(
@@ -247,6 +249,10 @@ impl<'a> StreamBundle<'a> {
     }
 
     pub(crate) fn finish(mut self, traversal: Result<()>, out: &mut ScanResult) -> Result<()> {
+        if self.target.is_none() && matches!(self.selection, Target::Auto) && traversal.is_ok() {
+            let missing = self.missing();
+            return self.standalone.finish(out, missing);
+        }
         if self.primary.is_none()
             && traversal.is_ok()
             && let Some(candidate) = self.alias_candidate.take()
@@ -321,29 +327,5 @@ async fn read_candidate(
     size: u64,
     diagnostic: bool,
 ) -> Result<Candidate> {
-    let mut architectures = Vec::new();
-    let mut runtime = None;
-    let mut diagnostic = diagnostic.then(ExecutableDiagnostic::default);
-    let outcome = launcher::inspect(
-        &mut Window::new(source, offset, size)?,
-        path,
-        &mut architectures,
-        &mut runtime,
-        diagnostic.as_mut(),
-    )
-    .await;
-    if let Err(error) = &outcome
-        && inventory::stop(error)
-        && architectures.is_empty()
-    {
-        return Err(error.clone());
-    }
-    Ok(Candidate {
-        path: path.to_owned(),
-        size,
-        architectures,
-        outcome,
-        runtime,
-        diagnostic,
-    })
+    launcher::observe(&mut Window::new(source, offset, size)?, path, diagnostic).await
 }

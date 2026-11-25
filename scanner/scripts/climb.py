@@ -281,7 +281,11 @@ def category(entry_, scan, target=None):
     status = scan["status"]
     error = (scan.get("error") or "").lower()
     if status == "complete":
-        if target and target[0] == "executable":
+        discovered_executable = (
+            target is None and not entry_["declared_apps"]
+            and not scan.get("bundle_path") and scan.get("executable_path")
+        )
+        if (target and target[0] == "executable") or discovered_executable:
             if scan.get("executable_path") and scan.get("architectures") and all(
                 arch["header_verified"] for arch in scan["architectures"]
             ):
@@ -321,6 +325,8 @@ def category(entry_, scan, target=None):
             return "html_response"
     if "multi-app" in error:
         return "multi_app"
+    if "multiple standalone executables" in error:
+        return "multi_executable"
     if "encrypted or sealed" in error:
         return "encrypted_or_sealed"
     if "encrypted" in error or "password" in error:

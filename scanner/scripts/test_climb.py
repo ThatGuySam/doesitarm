@@ -39,6 +39,19 @@ class ScoreboardTests(unittest.TestCase):
         self.assertEqual(verdicts("verified"), ["agrees", "disagrees"])
         self.assertEqual(verdicts("budget_hit"), ["inconclusive", "inconclusive"])
 
+    def test_cli_only_products_do_not_require_bundle_metadata(self):
+        entry = {"declared_apps": []}
+        scan = {
+            "status": "complete",
+            "executable_path": "Toolkit/bin/tool",
+            "architectures": [{"name": "arm64", "header_verified": True}],
+            "min_macos": "13.0",
+        }
+        self.assertEqual(climb.category(entry, scan), "verified_executable")
+        scan["status"] = "unsupported"
+        scan["error"] = "unsupported: multiple standalone executables; select a binary path"
+        self.assertEqual(climb.category(entry, scan), "multi_executable")
+
     def test_wrapped_app_matches_its_declared_outer_path(self):
         entry = {"declared_apps": ["Outer.app"]}
         scan = {

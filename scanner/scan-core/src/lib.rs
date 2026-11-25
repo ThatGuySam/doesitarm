@@ -161,6 +161,8 @@ pub struct Architecture {
     pub offset: u64,
     pub size: u64,
     pub header_verified: bool,
+    #[serde(skip)]
+    pub file_type: Option<u32>,
     pub min_macos: Option<String>,
     pub code_signature_present: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
