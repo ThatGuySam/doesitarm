@@ -19,3 +19,5 @@ Sparse APM/HFSX and encrypted signature regressions passed. Runs are offline apa
 AMPPS now resolves the visible wrapper and verifies its x86_64 primary. The checksum-matching 62,998,351-byte image was removed. ChronoSync's 102,704,658-byte image has an application installer and an independent removal package. Its installer declares a helper under Library and the public app under Applications. Reproduce this with `install-remove.dmg` before changing selection.
 
 Contents-relative plug-in payloads now use a recognized PackageInfo installation root. TDR Nova's pinned range rerun verified both AAX slices on the same ETag. The current native workspace tests passed all 40 format tests before adding the independent ChronoSync regression.
+
+ChronoSync's paired-package fix verified the unique application under Applications and both main slices. The native workspace passed 60 Rust tests with the ChronoSync change. The remaining focused case is MySQL Shell's explicit binary path through a nested flat PKG, which is recorded in the installer BOM. Then complete the native, Wasm, and ledger verification on the final parser.

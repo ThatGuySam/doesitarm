@@ -749,16 +749,57 @@ async fn read_package<S: ReadAt>(
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
+    const MAX_ROOT_PACKAGES: usize = 4;
     let mut choices = root
         .into_iter()
         .filter(|item| !item.name.starts_with('.') && pkg::package_name(&item.name));
-    let item = choices
+    let first = choices
         .next()
         .ok_or(ScanError::NotFound("app or package at the HFS volume root"))?;
-    if let Some(other) = choices.next() {
-        out.nested_artifacts.extend([item.name, other.name]);
-        return Err(ScanError::Unsupported("multiple nested PKGs in HFS volume"));
+    let Some(second) = choices.next() else {
+        return read_package_item(volume, catalog, first, work, target, out).await;
+    };
+    let ambiguous = ScanError::Unsupported("multiple nested PKGs in HFS volume");
+    let mut candidates = vec![first, second];
+    candidates.extend(choices.take(MAX_ROOT_PACKAGES - 1));
+    let parents = out.nested_artifacts.clone();
+    out.nested_artifacts
+        .extend(candidates.iter().map(|item| item.name.clone()));
+    if candidates.len() > MAX_ROOT_PACKAGES {
+        return Err(ambiguous);
     }
+
+    let mut verified = None;
+    for item in candidates {
+        let mut candidate = out.subresult();
+        candidate.format = out.format;
+        candidate.nested_artifacts.clone_from(&parents);
+        match read_package_item(volume, catalog, item, work, target, &mut candidate).await {
+            Ok(()) if verified.is_none() => verified = Some(candidate),
+            Err(ScanError::NotFound(_))
+                if candidate.bundle_path.is_none()
+                    && candidate.executable_path.is_none()
+                    && candidate.candidate_executables.is_empty() => {}
+            Err(error @ (ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_))) => {
+                candidate.nested_artifacts.clone_from(&out.nested_artifacts);
+                *out = candidate;
+                return Err(error);
+            }
+            _ => return Err(ambiguous),
+        }
+    }
+    *out = verified.ok_or(ambiguous)?;
+    Ok(())
+}
+
+async fn read_package_item<S: ReadAt>(
+    volume: &mut Volume<'_, S>,
+    catalog: &mut Catalog,
+    item: Item,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let (item, name, kind) = if item.file.is_some() {
         let name = item.name.clone();
         (item, name, nested::Kind::Package)

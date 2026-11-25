@@ -522,6 +522,13 @@ impl<S: ReadAt> ReadAt for Preview<S> {
 }
 
 fn product_bundle(bundles: &[String]) -> Option<&str> {
+    let mut applications = bundles.iter().filter(|path| {
+        path.strip_prefix("Applications/")
+            .is_some_and(|name| name.ends_with(".app") && !name.contains('/'))
+    });
+    if let Some(app) = applications.next() {
+        return applications.next().is_none().then_some(app);
+    }
     if bundles
         .iter()
         .any(|path| bundle::installed_bundle_kind(path) == Some("app"))

@@ -13,7 +13,7 @@ from pathlib import Path
 from struct import pack
 
 from apfs_fixture import apfs_fixture
-from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, sparse_apm_fixture, write_udif
+from dmg_fixture import dmg_fixture, hfs_tree, hfs_volume, pkg_dmg_fixture, sparse_apm_fixture, write_udif
 from iso_fixture import iso_dmg_fixture
 from pkg_fixture import cpio, late_bom_fixture, pkg_fixture, write_xar
 
@@ -172,6 +172,25 @@ if __name__ == "__main__":
     late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())
 
     pkg_dmg_fixture(ROOT / "nested-pkg.dmg", (ROOT / "gzip-newc.pkg").read_bytes())
+    with tempfile.TemporaryDirectory() as temp:
+        install = Path(temp) / "Install.pkg"
+        remove = Path(temp) / "Remove.pkg"
+        helper = "Library/Application Support/Fixture/Helper.app"
+        workspace = cpio([
+            (f"{helper}/Contents/Info.plist", plistlib.dumps(METADATA)),
+            (f"{helper}/Contents/MacOS/FixtureBinary", thin(INTEL, 3, legacy=True)),
+            ("Applications/" + INFO, plistlib.dumps(METADATA)),
+            ("Applications/" + EXECUTABLE, fat()),
+        ], odc=True)
+        write_xar(install, gzip.compress(workspace, mtime=0), package_info=f'''
+          <pkg-info identifier="org.doesitarm.fixture.install" install-location="/">
+            <bundle-version><bundle path="./{helper}"/><bundle path="./Applications/{BUNDLE}"/></bundle-version>
+          </pkg-info>
+        '''.encode())
+        write_xar(remove, gzip.compress(cpio([], odc=True), mtime=0))
+        packages = hfs_tree({p.name: p.read_bytes() for p in (install, remove)})
+        write_udif(ROOT / "install-remove.dmg", packages, [(0x80000005, len(packages) // 512, zlib.compress)],
+                   "Apple_HFS")
     write_xar(ROOT / "remote-component.xar", distribution=b"""
         <installer-gui-script><title>Remote fixture</title>
           <pkg-ref id="remote">https://example.invalid/component.pkg</pkg-ref>

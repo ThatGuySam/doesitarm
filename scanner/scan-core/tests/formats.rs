@@ -539,6 +539,25 @@ fn hfs_auto_finds_an_app_in_the_single_visible_root_directory() {
     }
 }
 
+#[test]
+fn hfs_selects_the_declared_app_across_install_and_remove_packages() {
+    let image = include_bytes!("../../fixtures/install-remove.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(
+            result.bundle_path.as_deref(),
+            Some("Applications/Fixture.app")
+        );
+        assert_eq!(result.nested_artifacts, ["Install.pkg"]);
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
 const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
 const PKG_ODC: &[u8] = include_bytes!("../../fixtures/stored-odc.pkg");
 
