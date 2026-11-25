@@ -327,6 +327,16 @@ fn zip64_with_comment_reads_binary_plist_and_deflated_executable() {
 }
 
 #[test]
+fn zip_reads_each_local_header_and_filename_in_one_request() {
+    let result = ready(scan_with_limits(
+        &mut Memory(ZIP64),
+        ScanLimits::for_profile(Profile::RemoteCli),
+    ));
+    assert_bundle(&result);
+    assert!(result.reads <= 8, "{} source reads", result.reads);
+}
+
+#[test]
 fn zip_budget_preserves_bundle_fields_before_executable() {
     let full = run(ZIP, u64::MAX);
     let result = run(ZIP, full.bytes_requested - 48);

@@ -872,27 +872,31 @@ async fn local_data_offset(
     heap_end: u64,
     header_at: u64,
 ) -> Result<u64> {
-    check_range(heap_end, header_at, 30)?;
-    let header = input.read_at(header_at, 30).await?;
-    let name_len = le16(&header, 26) as usize;
+    // The directory already fixes the expected name length. Fetch the
+    // adjacent header and name together and check both before using the offset.
+    let local_len = 30 + entry.path.len();
+    check_range(heap_end, header_at, local_len as u64)?;
+    let local = input.read_at(header_at, local_len).await?;
+    let (header, name) = local.split_at(30);
+    let name_len = le16(header, 26) as usize;
     if &header[..4] != b"PK\x03\x04"
-        || le16(&header, 8) != entry.method
-        || le16(&header, 6) != entry.flags
+        || le16(header, 8) != entry.method
+        || le16(header, 6) != entry.flags
         || name_len != entry.path.len()
         || (entry.wrapped_offset.is_some()
             && entry.flags & 8 == 0
-            && le32(&header, 14) != entry.crc32)
+            && le32(header, 14) != entry.crc32)
     {
         return Err(ScanError::Invalid(
             "ZIP local header differs from directory",
         ));
     }
-    let name_at = header_at + 30;
-    let extra_len = le16(&header, 28) as u64;
-    check_range(heap_end, name_at, name_len as u64 + extra_len)?;
-    let offset = name_at + name_len as u64 + extra_len;
+    let extra_at = header_at + local_len as u64;
+    let extra_len = le16(header, 28) as u64;
+    check_range(heap_end, extra_at, extra_len)?;
+    let offset = extra_at + extra_len;
     check_range(heap_end, offset, entry.packed)?;
-    if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
+    if name != entry.path.as_bytes() {
         return Err(ScanError::Invalid("ZIP local name differs from directory"));
     }
     Ok(offset)

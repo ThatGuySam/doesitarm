@@ -21,3 +21,9 @@ The full Krisp outer installer verified arm64 locally after 267,032,977 unique b
 The localized HFS name fixture failed as expected, then passed in all three profiles. The new optional lookup follows the plist's development region. The vendor minimum remains a distinct source. The pinned LaTeXiT red/green local-file comparisons are queued in the native build session.
 
 Both Warp Homebrew pins still return 404. The public stable selector resolves to a 343,072,502-byte DMG whose origin ignores both absolute and suffix ranges. The full artifact was downloaded once and removed after the local scanner verified both headers using 5,940,177 source bytes. The 256 MiB stream control still exhausts its transfer budget before the UDIF footer. Next is BetterTouchTool's deadline.
+
+The pinned LaTeXiT replay recovered the embedded name at 1,901,642 capped or 3,826,804 local bytes, unchanged from the matching controls. Architecture and unknown minimum were preserved. The old DMG was removed. BetterTouchTool's pinned archive yields both primary headers before the native 16-second deadline, with optional inventory still running when the timer expires.
+
+BetterTouchTool's late arm64 slice needs 36,214,826 compressed bytes to reach its header. The 16-second native control verified both headers and stopped during optional inventory. Two offline tests reproduced ten ZIP reads where eight suffice and a Source-tools timeout replacing a verified primary. The changes are in place and the combined workspace suite is running.
+
+All 131 workspace Rust tests passed with both BetterTouchTool regressions. The Source-tools 120-second control independently reproduced its false timeout after both headers. The compressed prefix and per-host request pacing explain why its stricter 16-second control reached only the first header.

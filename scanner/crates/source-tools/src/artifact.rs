@@ -154,16 +154,13 @@ pub fn inspect(transport: &dyn Transport, candidate: &Candidate, options: ScanOp
         ));
         let timed_out = Instant::now() >= deadline;
         let transport_failed = source.failure.is_some();
-        let failure = if transport.cancelled() {
-            Some(Failure::new("cancelled", "run interrupted"))
-        } else if timed_out {
-            Some(Failure::new("timeout", "candidate deadline reached"))
-        } else {
-            source
-                .failure
-                .take()
-                .or_else(|| classify(&result, candidate))
-        };
+        let failure = attempt_failure(
+            &result,
+            candidate,
+            source.failure.take(),
+            transport.cancelled(),
+            timed_out,
+        );
         let should_escalate = failure
             .as_ref()
             .is_some_and(|err| err.class == "budget_hit");
@@ -185,6 +182,28 @@ pub fn inspect(transport: &dyn Transport, candidate: &Candidate, options: ScanOp
         }
     }
     outcome
+}
+
+fn attempt_failure(
+    result: &ScanResult,
+    candidate: &Candidate,
+    transport: Option<Failure>,
+    cancelled: bool,
+    timed_out: bool,
+) -> Option<Failure> {
+    if cancelled {
+        Some(Failure::new("cancelled", "run interrupted"))
+    } else if timed_out {
+        if verified(result) {
+            // Core preserves the verified primary and marks interrupted
+            // inventory separately. Keep representation failures visible.
+            transport.filter(|failure| failure.class != "timeout")
+        } else {
+            Some(Failure::new("timeout", "candidate deadline reached"))
+        }
+    } else {
+        transport.or_else(|| classify(result, candidate))
+    }
 }
 
 fn probe(
@@ -563,6 +582,33 @@ fn ready<T>(future: impl Future<Output = T>) -> T {
 mod tests {
     use super::*;
     use std::sync::Mutex;
+
+    #[test]
+    fn completed_primary_survives_a_deadline_during_optional_inventory() {
+        struct File(&'static [u8]);
+        impl ReadAt for File {
+            fn size(&self) -> u64 {
+                self.0.len() as u64
+            }
+
+            async fn read_at(&mut self, offset: u64, len: usize) -> scan_core::Result<Vec<u8>> {
+                Ok(self.0[offset as usize..offset as usize + len].to_vec())
+            }
+        }
+
+        let fixture = include_bytes!("../../../fixtures/deflated-zip64.zip");
+        let result = ready(scan_core::scan(&mut File(fixture), 8192));
+        assert!(verified(&result));
+        let candidate = Candidate::new(
+            "url-list",
+            &crate::Seed::default(),
+            "https://example.com/fixture.zip",
+        )
+        .unwrap();
+        let timeout = Failure::new("timeout", "request deadline reached");
+        let failure = attempt_failure(&result, &candidate, Some(timeout), false, true);
+        assert!(failure.is_none(), "{failure:?}");
+    }
 
     struct PartialRange {
         requests: Mutex<Vec<BodyMode>>,
