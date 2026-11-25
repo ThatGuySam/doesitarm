@@ -438,6 +438,8 @@ fn classify(result: &ScanResult, candidate: &Candidate) -> Option<Failure> {
         {
             "unsupported_container:nar".into()
         }
+        Status::NoExecutable => "executable_not_found".into(),
+        Status::Script => "script_executable".into(),
         Status::BudgetExhausted => "budget_hit".into(),
         Status::LimitReached => "scan_limit".into(),
         Status::Invalid => "invalid_container".into(),

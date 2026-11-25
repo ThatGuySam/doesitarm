@@ -1,0 +1,12 @@
+# Acquisition failures
+
+This report uses the 2026-11-24 scan ledger as the historical record. The ledger keeps the original URL, available HTTP evidence and byte log, source run, scanner revision, profile, budgets, target, and replay command for each attempt. Read `~/Code/doesitarm-data/scan-ledger/attempts.jsonl` by `ledger_id`. The matching `latest.jsonl` is the last attempt by original URL. `scanner-ledger:scanner/LEDGER.md` explains how to read and replay the records.
+
+| Case | Historical evidence and status |
+| --- | --- |
+| GitHub releases and Sparkle | 56 latest URLs have `robots_disallowed`. 42 originate at GitHub (32 GitHub connector assets, 8 Sparkle appcasts, 2 Sparkle enclosures). The other 14 are publisher origins. |
+| Dropzone 4 | Replay attempt `2cd8a1b3d621895df19a76fd9a520b1d65b03a9a6288be554a3b6c7759fb8be7` saw a 67-byte representation followed by a different total for bytes 0–3. |
+| BetterTouchTool | Attempt `6036e71620d955803390312cdbc24cb3978a4a4f2340a6b23f02cbe9e076c024` hit a body read error on a 4 MiB range within the 64 MiB tier. |
+| Jabra Direct | The full-file run in `results/edge/followup/run.json` timed out at 159,383,552 of 270,448,755 bytes. The range run found the nested installer and hit its deadline. |
+| Warp | Attempts `ff05792ced2b31fc0590fc0c617148f837f60203386e5679d634b08028ee5f22` and `dc3dc689cb30baaced123335a25e170719d7ab52c1cd16a080d78bc90f2a75ec` got 404 for two successive pinned Homebrew builds. |
+| SEGGER J-Link | Attempt `89268e29a0d0c0c24f88736789a08d91dbeece212027e4e0db518c9b9cb5889a` observed a 27,647-byte HTML landing page for J-Link 9.96a. The publisher requires license and export-control attestations. |
