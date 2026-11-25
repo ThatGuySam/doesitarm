@@ -7,3 +7,5 @@ Worktree `/home/tiki/Code/doesitarm-scanner-fix-containers-local` is on `scanner
 The format and application evidence is in [FIX-CONTAINERS.md](FIX-CONTAINERS.md). Start with the offline XAMPP replay, then investigate APFS compression and the package budget failures. The full ledger remains under `~/Code/doesitarm-data/scan-ledger/`; the ledger CLI was built separately at `~/.cache/doesitarm-scanner-ledger/target/release/scan-cli`.
 
 The zero-sector UDIF fix passed the workspace tests. The XAMPP kit proves the old error and contains the footer and index only. The first decoded run inspected from the origin shows ISO 9660 with Rock Ridge. RStudio's checksum-matching image confirms `com.apple.decmpfs` type 8 on its primary; capture and packed fork extent metadata are described in the report as the work progresses.
+
+APFS type 8 passed the workspace suite and the full pinned RStudio replay verified both architectures. Next reproduce the Soothe2 PackageInfo layout, Rock Ridge boot image, and Jumper's 32-bit ZIP rollover. The interim XAMPP full transfer timed out after 21,184,235 bytes and was removed. Use a bounded range rerun for XAMPP and Jumper.

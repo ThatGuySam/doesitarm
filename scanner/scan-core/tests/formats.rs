@@ -460,6 +460,25 @@ fn apfs_dmg_uses_latest_checkpoint_and_seeks_through_file_extents() {
     assert!(result.bytes_read < result.total_size / 10);
 }
 
+#[test]
+fn apfs_dmg_verifies_macho_slices_in_lzvn_resource_fork_chunks() {
+    let image = include_bytes!("../../fixtures/apfs-lzvn.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.executable_size, Some(65_536 + 48));
+        assert_eq!(result.architectures[0].offset, 65_536);
+        assert_eq!(result.architectures[0].name, "x86_64");
+        assert_eq!(result.architectures[1].name, "arm64e");
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        assert!(result.bytes_read < result.total_size / 10);
+    }
+}
+
 const PBZX: &[u8] = include_bytes!("../../fixtures/pbzx.pkg");
 
 #[test]
