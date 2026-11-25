@@ -38,6 +38,7 @@ pub(crate) struct StreamBundle<'a> {
     allowance: Option<Allowance>,
     skipped_prefix: bool,
     standalone: Standalone,
+    retain_earlier_runtime: bool,
     jdk: Option<JdkLinks>,
 }
 
@@ -56,6 +57,11 @@ impl<'a> StreamBundle<'a> {
 
     pub(crate) fn with_target(mut self, target: String) -> Self {
         self.target = Some(target);
+        self
+    }
+
+    pub(crate) fn with_earlier_runtime(mut self, enabled: bool) -> Self {
+        self.retain_earlier_runtime = enabled;
         self
     }
 
@@ -203,9 +209,9 @@ impl<'a> StreamBundle<'a> {
                 read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
             out.executable_path = Some(candidate.path.clone());
             let primary = candidate.apply(out);
-            if out.script_runtime.is_some() {
+            if let Some(runtime) = &mut out.script_runtime {
                 self.primary = Some(primary);
-                return Ok(false);
+                return Ok(self.standalone.attach_runtime(runtime));
             }
             primary?;
             return Ok(true);
@@ -351,10 +357,15 @@ impl<'a> StreamBundle<'a> {
         size: u64,
         diagnostic: bool,
     ) -> Result<()> {
-        if self.target.is_none()
-            && matches!(self.selection, Target::Auto)
-            && size >= 8
-            && let Some(path) = launcher::standalone_path(path)
+        let path = match self.selection {
+            Target::Auto if self.target.is_none() => launcher::standalone_path(path),
+            Target::Executable(asked) if self.retain_earlier_runtime && self.primary.is_none() => {
+                launcher::sibling_executable_path(path, asked)
+            }
+            _ => None,
+        };
+        if size >= 8
+            && let Some(path) = path
             && self.standalone.allow(work)
         {
             let data = &mut Window::new(source, offset, size)?;

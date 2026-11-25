@@ -1077,3 +1077,36 @@ fn jdk_installer_does_not_promote_an_escaping_cpio_link() {
     assert!(matches!(result.status, Status::Unsupported), "{result:?}");
     assert!(result.architectures.is_empty());
 }
+
+#[test]
+fn targeted_tar_script_verifies_an_earlier_runtime_with_one_source_pass() {
+    let input = include_bytes!("../../fixtures/bundles/cli-script-runtime.tar.gz");
+    let target = Target::Executable("dist-package/cursor-agent");
+    let one_pass = input.len() as u64 + 4;
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let mut limits = ScanLimits::for_profile(profile);
+        limits.byte_budget = one_pass;
+        let result = ready(scan_core::scan_target_with_limits(
+            &mut Memory(input),
+            limits,
+            target,
+        ));
+        assert!(
+            matches!(result.status, Status::Unsupported),
+            "{profile:?}: {result:?}"
+        );
+        assert!(result.architectures.is_empty());
+        let runtime = result.script_runtime.unwrap();
+        assert_eq!(runtime.path, "dist-package/node");
+        assert_eq!(
+            runtime.architectures.len(),
+            1,
+            "{profile:?} missed the earlier runtime"
+        );
+        assert!(runtime.architectures[0].header_verified);
+        assert!(
+            result.bytes_requested <= one_pass,
+            "{profile:?} reread the source"
+        );
+    }
+}

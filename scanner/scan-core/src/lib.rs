@@ -505,7 +505,7 @@ async fn inspect(
         let header = input.read_at(0, 512).await?;
         if tar::is_header(&header) {
             out.format = Some("tar");
-            return tar::scan(input, work, target, out).await;
+            return tar::scan(input, work, target, out, tar::PriorRuntime::Ignore).await;
         }
         if dmg::scan_raw(input, &header, work, target, out).await? {
             return Ok(());
@@ -532,7 +532,7 @@ async fn compressed_tar(
     let size = input.size();
     let source = Window::new(input, 0, size)?;
     let mut source = inflate::Forward::new(source, work.stream_limit(), codec, work)?;
-    let primary = tar::scan(&mut source, work, target, out).await;
+    let primary = tar::scan(&mut source, work, target, out, tar::PriorRuntime::Retain).await;
     if let Some(runtime) = out.script_runtime.as_mut()
         && runtime.architectures.is_empty()
         && source.remaining_budget() > 64 * 1024

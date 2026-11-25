@@ -283,7 +283,14 @@ pub(crate) async fn scan_legacy(
     if is_cpio {
         return cpio::scan_with(&mut source, work, StreamBundle::new(target), out).await;
     }
-    crate::tar::scan(&mut source, work, target, out).await
+    crate::tar::scan(
+        &mut source,
+        work,
+        target,
+        out,
+        crate::tar::PriorRuntime::Ignore,
+    )
+    .await
 }
 
 struct Replay<S> {

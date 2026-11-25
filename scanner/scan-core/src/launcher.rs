@@ -107,6 +107,23 @@ pub(crate) fn standalone_path(path: &str) -> Option<&str> {
     (parent.is_none_or(allowed) && product.is_none_or(allowed)).then_some(path)
 }
 
+pub(crate) fn sibling_executable_path<'a>(path: &'a str, requested: &str) -> Option<&'a str> {
+    let path = bundle::archive_path(path)?;
+    let (parent, name) = path.rsplit_once('/').unwrap_or(("", path));
+    let requested_parent = bundle::archive_path(requested)?
+        .rsplit_once('/')
+        .map_or("", |(parent, _)| parent);
+    let same_directory = if requested_parent.is_empty() {
+        parent.is_empty()
+    } else {
+        bundle::matches_path(parent, requested_parent)
+    };
+    let library = name
+        .rsplit_once('.')
+        .is_some_and(|(_, suffix)| matches!(suffix, "node" | "dylib" | "so"));
+    (same_directory && !name.is_empty() && !name.starts_with('.') && !library).then_some(path)
+}
+
 #[derive(Default)]
 pub(crate) struct Standalone {
     candidates: Vec<Candidate>,
@@ -154,6 +171,20 @@ impl Standalone {
         Ok(())
     }
 
+    fn verified_executable(&self, path: &str) -> Option<&Candidate> {
+        self.candidates
+            .iter()
+            .find(|candidate| candidate.path == path && candidate.is_executable())
+    }
+
+    pub(crate) fn attach_runtime(&self, runtime: &mut ScriptRuntime) -> bool {
+        let Some(binary) = self.verified_executable(&runtime.path) else {
+            return false;
+        };
+        runtime.architectures = binary.architectures.clone();
+        true
+    }
+
     pub(crate) fn finish(mut self, out: &mut ScanResult, missing: ScanError) -> Result<()> {
         if self.limited {
             return Err(ScanError::Limit(
@@ -165,10 +196,7 @@ impl Standalone {
         let mut referenced = BTreeSet::new();
         for index in 0..self.candidates.len() {
             if let Some(runtime) = self.candidates[index].runtime.as_ref()
-                && let Some(binary) = self
-                    .candidates
-                    .iter()
-                    .find(|entry| entry.path == runtime.path && entry.is_executable())
+                && let Some(binary) = self.verified_executable(&runtime.path)
             {
                 referenced.insert(binary.path.clone());
                 let architectures = binary.architectures.clone();

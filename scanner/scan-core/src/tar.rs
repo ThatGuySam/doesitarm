@@ -6,13 +6,20 @@ use crate::{
 const BLOCK: usize = 512;
 const MAX_METADATA: u64 = 64 * 1024;
 
+pub(crate) enum PriorRuntime {
+    Ignore,
+    Retain,
+}
+
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
     work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
+    prior_runtime: PriorRuntime,
 ) -> Result<()> {
-    let mut bundle = StreamBundle::new(target);
+    let mut bundle = StreamBundle::new(target)
+        .with_earlier_runtime(matches!(prior_runtime, PriorRuntime::Retain));
     let traversal = scan_entries(input, work, &mut bundle, out).await;
     bundle.finish(traversal, out)
 }
@@ -190,7 +197,14 @@ pub(crate) async fn read_runtime(
     runtime: &mut crate::ScriptRuntime,
 ) {
     let mut result = ScanResult::new(input.size());
-    let _ = scan(input, work, Target::Executable(&runtime.path), &mut result).await;
+    let _ = scan(
+        input,
+        work,
+        Target::Executable(&runtime.path),
+        &mut result,
+        PriorRuntime::Ignore,
+    )
+    .await;
     if result.executable_path.as_deref() == Some(&runtime.path) {
         runtime.architectures = result.architectures;
     }
