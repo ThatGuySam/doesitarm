@@ -1,4 +1,4 @@
-use crate::{Context, Kind};
+use crate::{Context, Kind, public_url};
 use serde_json::Value;
 use url::Url;
 
@@ -25,8 +25,13 @@ pub(super) fn endpoint(url: &Url) -> Option<String> {
         {
             return None;
         }
+        let releases = if host == "gitlab.gnome.org" {
+            "releases/permalink/latest"
+        } else {
+            "releases?per_page=1"
+        };
         return Some(format!(
-            "https://{host}/api/v4/projects/{}/releases?per_page=1",
+            "https://{host}/api/v4/projects/{}/{releases}",
             parts[..split].join("%2F")
         ));
     }
@@ -130,11 +135,78 @@ pub(super) fn parse(context: &mut Context<'_>, body: &Value) {
 }
 
 pub(super) fn add(context: &mut Context<'_>) {
-    if let Some(endpoint) = endpoint(context.base) {
+    let declared_vendor_repo = match (
+        context.base.host_str(),
+        context.base.path().trim_end_matches('/'),
+    ) {
+        (Some("www.beekeeperstudio.io"), "/get") => Some("beekeeper-studio/beekeeper-studio"),
+        (Some("starship.rs"), "/guide") => Some("starship/starship"),
+        (Some("brew.sh"), "") => Some("Homebrew/brew"),
+        _ => None,
+    };
+    if let Some(endpoint) = endpoint(context.base).or_else(|| {
+        declared_vendor_repo
+            .map(|repo| format!("https://api.github.com/repos/{repo}/releases/latest"))
+    }) {
         context.add(
             &endpoint,
             "provider",
             "forge releases API",
+            "",
+            Some(Kind::ReleaseApi),
+            false,
+        );
+    }
+}
+
+pub(super) fn fragment(context: &mut Context<'_>, raw: &str) {
+    let Some(url) = public_url(raw, Some(context.base)) else {
+        return;
+    };
+    if context.base.host_str() != Some("github.com") || url.host_str() != context.base.host_str() {
+        return;
+    }
+    let Some((project, tag)) = url.path().split_once("/releases/expanded_assets/") else {
+        return;
+    };
+    let Some((base_project, release)) = context.base.path().split_once("/releases") else {
+        return;
+    };
+    if project != base_project
+        || !segment(tag)
+        || url.query().is_some()
+        || release
+            .strip_prefix("/tag/")
+            .is_some_and(|pinned| pinned != tag)
+    {
+        return;
+    }
+    context.add(
+        url.as_str(),
+        "html",
+        "include-fragment[src]",
+        "Release download assets",
+        Some(Kind::Redirect),
+        false,
+    );
+}
+
+pub(super) fn linked_release(context: &mut Context<'_>, raw: &str, label: &str) {
+    let Some(url) = public_url(raw, Some(context.base)) else {
+        return;
+    };
+    let label = label.to_ascii_lowercase();
+    if url.host_str() != Some("github.com")
+        || !url.path().contains("/releases")
+        || !(label.contains("download") || label.contains("release") || label.contains("github"))
+    {
+        return;
+    }
+    if let Some(endpoint) = endpoint(&url) {
+        context.add(
+            &endpoint,
+            "provider",
+            "linked project release API",
             "",
             Some(Kind::ReleaseApi),
             false,

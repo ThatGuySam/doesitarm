@@ -264,3 +264,90 @@ fn failure_ledger_carries_hashes_and_structural_evidence() {
     );
     assert!(!record.to_string().contains("privacy"));
 }
+
+#[test]
+fn retains_public_trials_and_skips_download_post_forms() {
+    let url = public_url("https://publisher.example.org/product", None).unwrap();
+    let form = r#"<form method="POST" action="/request-download">
+        <input type="email"><a href="/consent-only.dmg">Download for macOS</a>
+    </form>"#;
+    let gated = resolve(document(&url, form.as_bytes(), "text/html"), None);
+    assert_eq!(
+        (gated.decision, gated.reason),
+        (Decision::Gated, "vendor_action")
+    );
+    let trial = format!(r#"{form}<a href="/public-trial.dmg">Download for macOS</a>"#);
+    let resolved = resolve(document(&url, trial.as_bytes(), "text/html"), None);
+    assert_eq!(resolved.decision, Decision::Resolved);
+    assert_eq!(resolved.candidates[0].url.path(), "/public-trial.dmg");
+    assert_eq!(resolved.candidates.len(), 1);
+}
+
+#[test]
+fn bounds_single_tag_attributes_and_keeps_equal_ranks_in_source_order() {
+    let url = public_url("https://publisher.example.org/releases/mac/", None).unwrap();
+    let result = resolve(
+        document(
+            &url,
+            br#"
+        <a href="/tool-11.0.zip">Download</a>
+        <a href="/tool-9.0.zip">Download</a>
+    "#,
+            "text/html",
+        ),
+        None,
+    );
+    assert_eq!(
+        result.candidates.first().unwrap().url.path(),
+        "/tool-11.0.zip"
+    );
+    let html = format!(r#"<a href="{}">Download</a>"#, "x".repeat(100_000));
+    let result = resolve(document(&url, html.as_bytes(), "text/html"), None);
+    assert_eq!(result.decision, Decision::None);
+    assert!(result.candidates.is_empty());
+}
+
+#[test]
+fn preserves_the_release_base_for_github_electron_files() {
+    let url = public_url(
+        "https://github.com/acme/app/releases/latest/download/latest-mac.yml",
+        None,
+    )
+    .unwrap();
+    let body = b"version: 4.5.6\nfiles:\n  - url: app-arm64.dmg\npath: unused.dmg\n";
+    let result = resolve(document(&url, body, "application/yaml"), None);
+    assert_eq!(result.decision, Decision::Resolved);
+    assert_eq!(
+        result.candidates[0].url.as_str(),
+        "https://github.com/acme/app/releases/download/v4.5.6/app-arm64.dmg"
+    );
+}
+
+#[test]
+fn finds_only_a_github_projects_declared_fragment() {
+    let url = public_url("https://github.com/acme/app/releases/tag/v1.2.3", None).unwrap();
+    let result = resolve(
+        document(
+            &url,
+            br#"
+        <include-fragment src="/acme/app/releases/expanded_assets/v1.2.3"></include-fragment>
+        <include-fragment src="/another/repo/releases/expanded_assets/v9"></include-fragment>
+    "#,
+            "text/html",
+        ),
+        None,
+    );
+    assert_eq!(result.decision, Decision::NeedsApi);
+    assert!(
+        result
+            .candidates
+            .iter()
+            .any(|c| c.evidence.selector == "include-fragment[src]")
+    );
+    assert!(
+        !result
+            .candidates
+            .iter()
+            .any(|c| c.url.path().contains("/another/"))
+    );
+}

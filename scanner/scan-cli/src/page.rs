@@ -23,7 +23,7 @@ use ureq::{
 };
 use url::Url;
 
-pub const USAGE: &str = "Usage: scan-cli resolve <page-url> [--html FILE | --metadata FILE --metadata-url URL] [--ledger FILE]";
+pub const USAGE: &str = "Usage: scan-cli resolve <page-url> [--html FILE] [--metadata FILE --metadata-url URL] [--ledger FILE]";
 
 type PageResult<T> = Result<T, Box<dyn std::error::Error>>;
 
@@ -167,8 +167,6 @@ fn fetch_document(
                 | "text/yaml"
                 | "application/yaml"
                 | "application/x-yaml"
-                | "text/javascript"
-                | "application/javascript"
         );
         if status == 200 && !allowed {
             return Err("The URL did not return a supported page or feed.".into());

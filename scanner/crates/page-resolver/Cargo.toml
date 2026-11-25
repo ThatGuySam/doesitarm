@@ -10,8 +10,5 @@ quick-xml = "0.42"
 regex = { version = "1", default-features = false, features = ["std", "perf", "unicode-perl"] }
 serde.workspace = true
 serde_json.workspace = true
-sha2 = "0.10"
+sha2 = "0.11"
 url = { version = "2", features = ["serde"] }
-
-[dev-dependencies]
-flate2 = "1"

@@ -10,6 +10,15 @@ pub fn discover(context: &mut Context<'_>) {
     forges::add(context);
     catalogs::add(context);
     feeds::known(context);
+    distribution::discover(context);
+}
+
+pub fn forge_fragment(context: &mut Context<'_>, raw: &str) {
+    forges::fragment(context, raw);
+}
+
+pub fn forge_link(context: &mut Context<'_>, raw: &str, label: &str) {
+    forges::linked_release(context, raw, label);
 }
 
 pub fn declared_script(context: &mut Context<'_>, url: &str) {
@@ -21,6 +30,9 @@ pub fn feed_hint(context: &mut Context<'_>, raw: &str, selector: &str, mime: &st
         return;
     };
     let path = url.path().to_ascii_lowercase();
+    if path.contains("/blog/") || path.contains("/news/") {
+        return;
+    }
     if !same_site(context.base, &url)
         && !feeds::declared_provider(context.base, &url)
         && !forges::is_api(&url)

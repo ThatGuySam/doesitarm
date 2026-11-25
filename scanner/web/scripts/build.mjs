@@ -17,12 +17,15 @@ function run(command, args) {
 }
 
 const wasm = 'target/wasm32-unknown-unknown/release/scan_wasm.wasm';
-run('cargo', ['build', '--locked', '-j2', '-p', 'scan-wasm', '--release', '--target', 'wasm32-unknown-unknown']);
-run(bindgen, ['--target', 'web', '--out-dir', 'pkg', wasm]);
+const workerOnly = process.argv.includes('--worker-only');
+if (!workerOnly) {
+  run('cargo', ['build', '--locked', '-j2', '-p', 'scan-wasm', '--release', '--target', 'wasm32-unknown-unknown']);
+  run(bindgen, ['--target', 'web', '--out-dir', 'pkg', wasm]);
+}
 
 // Leave headroom for the Worker isolate's JS heap and HTTP buffers.
 run('cargo', ['rustc', '--locked', '-j2', '-p', 'scan-wasm', '--release',
-  '--target', 'wasm32-unknown-unknown', '--', '-C', 'link-arg=--max-memory=83886080']);
+  '--target', 'wasm32-unknown-unknown', '--features', 'page-resolution', '--', '-C', 'link-arg=--max-memory=83886080']);
 run(bindgen, ['--target', 'web', '--out-dir', 'pkg/worker', wasm]);
 
 // wasm-bindgen's web glue normally caches one instance per module. Give each
@@ -33,11 +36,16 @@ const glue = readFileSync(join(workerPkg, 'scan_wasm.js'), 'utf8');
 const exports = glue.replace(/^export (?=(?:async )?function )/gm, '')
   .replace(/^export \{ initSync, __wbg_init as default \};$/m, '');
 if (/^export /m.test(exports) || !/^function initSync\(/m.test(exports) ||
-    !/^function scan\(/m.test(exports)) {
+    !/^function scan\(/m.test(exports) || !/^function resolve_page\(/m.test(exports)) {
   throw new Error('Unexpected wasm-bindgen web glue. Check the Worker instance factory.');
 }
 writeFileSync(join(workerPkg, 'scan_wasm_factory.js'),
-  `export function createScanner(moduleOrBytes) {\n${exports}\ninitSync({ module: moduleOrBytes });\nreturn scan;\n}\n`);
+  `function instantiate(moduleOrBytes) {\n${exports}\ninitSync({ module: moduleOrBytes });\n` +
+  `return { scan, resolvePage: resolve_page, shareTarget: download_share_target };\n}\n` +
+  `export function createScanner(module) { return instantiate(module).scan; }\n` +
+  `export function createResolver(module) { return instantiate(module); }\n`);
+
+if (workerOnly) process.exit(0);
 
 const dist = join(web, 'dist');
 rmSync(dist, { recursive: true, force: true });

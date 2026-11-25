@@ -254,6 +254,7 @@ pub fn local_bundle_metadata(
 }
 
 /// Parse a bounded page or feed and return ranked public URL hints as JSON.
+#[cfg(feature = "page-resolution")]
 #[wasm_bindgen]
 pub fn resolve_page(
     bytes: &[u8],
@@ -275,6 +276,7 @@ pub fn resolve_page(
     serde_json::to_string(&result).map_err(|_| JsValue::from_str("Could not encode page resolution."))
 }
 
+#[cfg(feature = "page-resolution")]
 #[wasm_bindgen]
 pub fn download_share_target(url: &str) -> Option<String> {
     page_resolver::public_url(url, None).as_ref().and_then(page_resolver::direct_target)

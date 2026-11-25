@@ -69,6 +69,8 @@ pub struct Candidate {
     pub os: Os,
     pub kind: Kind,
     pub evidence: Evidence,
+    #[serde(skip)]
+    position: usize,
 }
 
 impl Candidate {
@@ -93,6 +95,7 @@ pub struct PageFeatures {
     pub tokens: usize,
     pub link_hints: usize,
     pub script_blocks: usize,
+    pub download_forms: usize,
     pub candidate_hosts: usize,
     pub limit_hit: bool,
 }
@@ -117,13 +120,29 @@ pub fn public_url(raw: &str, base: Option<&Url>) -> Option<Url> {
         return None;
     }
     // An empty userinfo component disappears when WHATWG URL parsers serialize it.
-    let authority = raw
-        .strip_prefix("//")
-        .or_else(|| raw.split_once("://").map(|(_, tail)| tail));
+    let https = raw
+        .get(..8)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("https://"));
+    let authority = if https {
+        Some(&raw[8..])
+    } else if let Some(relative) = raw.strip_prefix("//") {
+        Some(relative)
+    } else if base.is_none()
+        || raw.split_once(':').is_some_and(|(name, _)| {
+            !name.is_empty()
+                && name
+                    .bytes()
+                    .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'+' | b'-' | b'.'))
+        })
+    {
+        return None;
+    } else {
+        None
+    };
     if authority.is_some_and(|tail| {
         tail.split(['/', '?', '#'])
             .next()
-            .is_some_and(|a| a.contains('@'))
+            .is_some_and(|a| a.is_empty() || a.contains('@'))
     }) {
         return None;
     }
@@ -156,6 +175,10 @@ pub fn public_url(raw: &str, base: Option<&Url>) -> Option<Url> {
             | "onion"
             | "alt"
             | "arpa"
+            | "corp"
+            | "home"
+            | "localdomain"
+            | "intranet"
     ) || !host.split('.').all(|label| {
         !label.is_empty()
             && label.len() <= 63
@@ -222,7 +245,22 @@ impl Context<'_> {
             return;
         }
         let (url, hint) = adapters::distribution::rewrite(url, hint);
-        if let Some(candidate) = ranking::rank(url, hint) {
+        if let Some(mut candidate) = ranking::rank(url, hint) {
+            candidate.position = self.features.link_hints;
+            let silicon_only = self
+                .base
+                .path()
+                .to_ascii_lowercase()
+                .contains("apple-silicon")
+                || candidate
+                    .evidence
+                    .text
+                    .to_ascii_lowercase()
+                    .contains("apple silicon only");
+            if silicon_only && candidate.arch == Arch::X86_64 {
+                candidate.score -= 18;
+                candidate.reasons.push("intel_on_apple_silicon_page");
+            }
             let slot = self
                 .candidates
                 .entry(candidate.url.clone())
@@ -242,7 +280,12 @@ impl Context<'_> {
             .collect();
         self.features.candidate_hosts = hosts.len();
         let mut candidates: Vec<_> = self.candidates.into_values().collect();
-        candidates.sort_by(|a, b| b.score.cmp(&a.score).then_with(|| a.url.cmp(&b.url)));
+        candidates.sort_by(|a, b| {
+            b.score
+                .cmp(&a.score)
+                .then(a.position.cmp(&b.position))
+                .then_with(|| a.url.cmp(&b.url))
+        });
         let eligible: Vec<_> = candidates
             .iter()
             .filter(|c| c.is_artifact() && c.score >= ranking::ELIGIBLE)
@@ -252,7 +295,9 @@ impl Context<'_> {
             matches!(c.kind, Kind::Feed | Kind::ReleaseApi)
                 || (c.kind == Kind::Redirect && c.score >= ranking::FOLLOW)
         });
-        let store_only = candidates.iter().any(|c| c.kind == Kind::AppStore);
+        let store_only = candidates
+            .iter()
+            .any(|c| c.kind == Kind::AppStore && c.os != Os::Other);
         let hosted_gate = candidates.iter().any(|c| c.kind == Kind::Gated);
         let (decision, reason) = if let Some(reason) = self.gate {
             candidates.retain(|c| matches!(c.kind, Kind::AppStore | Kind::Gated));
@@ -276,11 +321,15 @@ impl Context<'_> {
             (Decision::NeedsApi, "follow_up_available")
         } else if store_only {
             (Decision::Gated, "app_store")
-        } else if hosted_gate {
+        } else if hosted_gate || self.features.download_forms > 0 {
             (Decision::Gated, "vendor_action")
         } else {
             (Decision::None, "no_public_download")
         };
+        if decision == Decision::Gated {
+            candidates
+                .retain(|c| matches!(c.kind, Kind::AppStore | Kind::Gated) && c.os != Os::Other);
+        }
         candidates.truncate(MAX_CANDIDATES);
         Resolution {
             decision,
@@ -334,6 +383,12 @@ pub fn resolve_with_adapters(
             | "application/rss+xml"
             | "application/atom+xml"
             | "text/plain"
+            | "text/yaml"
+            | "application/yaml"
+            | "application/x-yaml"
+            | "text/x-yaml"
+            | "text/javascript"
+            | "application/javascript"
     ) {
         if adapters_enabled {
             adapters::metadata(&mut context, bytes, media_type, None);
@@ -348,7 +403,10 @@ pub fn resolve_with_adapters(
         if let Some(header) = document.headers.link.filter(|link| link.len() <= 8192) {
             adapters::header_links(&mut context, header);
         }
-        if let Some(metadata) = metadata.filter(|meta| meta.bytes.len() <= MAX_METADATA_BYTES) {
+        if let Some(metadata) = metadata.filter(|meta| {
+            meta.bytes.len() <= MAX_METADATA_BYTES
+                && meta.headers.status.is_none_or(|status| status == 200)
+        }) {
             // A supplemental response is meaningful only for a declared/derived endpoint.
             if let Some(endpoint) = context
                 .candidates

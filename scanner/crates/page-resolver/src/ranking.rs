@@ -14,7 +14,7 @@ static MAC: LazyLock<Regex> = LazyLock::new(|| {
 });
 static OTHER: LazyLock<Regex> = LazyLock::new(|| {
     regex(
-        r"\b(?:windows|win32|win64|win[ _-](?:x64|arm64)|linux|ubuntu|debian|android|freebsd|ios|appimage)\b",
+        r"\b(?:windows|win32|win64|win(?:dows)?[ _-](?:x64|arm64)|(?:x64|arm64)[ _-]win|linux|ubuntu|debian|android|freebsd|ios|iphone|ipad|ipod|appimage)\b",
     )
 });
 static ACQUIRE: LazyLock<Regex> =
@@ -36,7 +36,7 @@ static STALE: LazyLock<Regex> = LazyLock::new(|| {
 static NON_MAC_FILE: LazyLock<Regex> =
     LazyLock::new(|| regex(r"\.(?:exe|msi|msix|deb|rpm|appimage|apk|nupkg|7z)(?:$|[?&/ ])"));
 static RECOGNIZED: LazyLock<Regex> =
-    LazyLock::new(|| regex(r"\.(?:app\.zip|dmg|pkg|zip|tar\.gz|tgz)$"));
+    LazyLock::new(|| regex(r"\.(?:app\.zip|dmg|pkg|zip|tar\.gz|tgz|macho)$"));
 static ARCH_WORDS: LazyLock<Regex> = LazyLock::new(|| {
     regex(r"arm64|aarch64|apple[ _-]?silicon|x86[_-]64|x64|amd64|intel|universal2?|macos|darwin")
 });
@@ -64,7 +64,19 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
         .trim_end_matches('/')
         .strip_suffix("/download")
         .unwrap_or(&path);
-    let dmg_pkg = download_path.ends_with(".dmg") || download_path.ends_with(".pkg");
+    let named_file = url
+        .query_pairs()
+        .find(|(key, _)| {
+            matches!(
+                key.as_ref(),
+                "filename" | "file" | "name" | "path" | "asset"
+            )
+        })
+        .map(|(_, value)| value.to_ascii_lowercase())
+        .unwrap_or_default();
+    let dmg_pkg = [download_path, named_file.as_str()]
+        .into_iter()
+        .any(|name| name.ends_with(".dmg") || name.ends_with(".pkg"));
     let supported = RECOGNIZED.is_match(download_path);
     let named_archive = ARCH_WORDS.replace_all(download_path, "");
     let mac = hint.mac_context || MAC.is_match(&labels) || dmg_pkg;
@@ -91,10 +103,12 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
     if let Some(kind @ (Kind::AppStore | Kind::Gated | Kind::Feed | Kind::ReleaseApi)) = hint.kind {
         return Some(Candidate {
             url,
-            score: if matches!(kind, Kind::Feed | Kind::ReleaseApi) {
-                43
-            } else {
-                12
+            position: 0,
+            score: match kind {
+                Kind::Feed if hint.mac_context => 46,
+                Kind::ReleaseApi => 45,
+                Kind::Feed => 43,
+                _ => 12,
             },
             reasons: vec![match kind {
                 Kind::AppStore => "app_store_handoff",
@@ -103,12 +117,19 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
                 _ => "public_release_api",
             }],
             arch,
-            os: if mac { Os::Macos } else { Os::Unknown },
+            os: if wrong_os {
+                Os::Other
+            } else if mac {
+                Os::Macos
+            } else {
+                Os::Unknown
+            },
             kind,
             evidence: hint.evidence,
         });
     }
-    if DECOY.is_match(&url_labels)
+    if DECOY.is_match(&path)
+        || DECOY.is_match(&named_file)
         || DECOY.is_match(&text)
         || wrong_os
         || labels.contains("sparkle:deltafrom")
@@ -125,6 +146,7 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
             .kind
             .is_some_and(|kind| matches!(kind, Kind::Redirect | Kind::InstallerStub))
         && !(mac && acquisition)
+        && !dmg_pkg
     {
         return None;
     }
@@ -157,8 +179,11 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
         add(4, "structured_release_asset");
     }
     if hint.kind == Some(Kind::Redirect) {
-        let refresh = hint.evidence.selector == "meta[http-equiv=refresh]";
-        add(if refresh { 23 } else { 11 }, "declared_redirect");
+        let document_edge = matches!(
+            hint.evidence.selector.as_str(),
+            "meta[http-equiv=refresh]" | "include-fragment[src]" | "SourceForge project files"
+        );
+        add(if document_edge { 28 } else { 11 }, "declared_redirect");
     }
     if hint.evidence.source == "script" {
         add(-9, "literal_script_only");
@@ -194,6 +219,9 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
     let kind = if hint.kind == Some(Kind::InstallerStub)
         || text.contains("online installer")
         || text.contains("bootstrapper")
+        || path.contains("online-installer")
+        || path.contains("onlineinstaller")
+        || path.ends_with("-online.dmg")
     {
         Kind::InstallerStub
     } else if supported && !path.ends_with("/download") {
@@ -205,6 +233,7 @@ pub fn rank(url: Url, hint: Hint) -> Option<Candidate> {
         url,
         score,
         reasons,
+        position: 0,
         arch,
         os,
         kind,

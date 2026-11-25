@@ -1,4 +1,4 @@
-use crate::{Hint, Kind};
+use crate::{Context, Hint, Kind};
 use url::Url;
 
 pub(super) fn matches_host(host: &str, domain: &str) -> bool {
@@ -34,6 +34,9 @@ fn is_store(url: &Url) -> bool {
 
 fn storefront(url: &Url) -> bool {
     let host = url.host_str().unwrap_or_default();
+    if host == "mega.nz" && matches!(url.path(), "/MEGAsyncSetup.dmg" | "/MEGAsyncSetupArm64.dmg") {
+        return false;
+    }
     [
         "gumroad.com",
         "fastspring.com",
@@ -61,6 +64,11 @@ pub fn gate(url: &Url, status: Option<u16>) -> Option<&'static str> {
         return Some("access_restricted");
     }
     if storefront(url) {
+        return Some("vendor_action");
+    }
+    if (host == "drive.google.com" && path.starts_with("/file/d/"))
+        || (host == "licenses.cleanshot.com" && path.starts_with("/download/"))
+    {
         return Some("vendor_action");
     }
     // Known publishers expose otherwise plausible artifacts inside their required forms.
@@ -140,4 +148,32 @@ pub fn root_share(url: &Url) -> Option<Url> {
     };
     let (rewritten, _) = rewrite(url.clone(), hint);
     (rewritten != *url).then_some(rewritten)
+}
+
+pub(super) fn discover(context: &mut Context<'_>) {
+    if context.base.host_str() != Some("sourceforge.net") {
+        return;
+    }
+    let Some(project) = context
+        .base
+        .path()
+        .trim_end_matches('/')
+        .strip_prefix("/projects/")
+    else {
+        return;
+    };
+    if !project.is_empty()
+        && project
+            .bytes()
+            .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'_' | b'-'))
+    {
+        context.add(
+            &format!("/projects/{project}/files/"),
+            "provider",
+            "SourceForge project files",
+            "Project downloads",
+            Some(Kind::Redirect),
+            false,
+        );
+    }
 }

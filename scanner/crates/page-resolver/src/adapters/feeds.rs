@@ -101,7 +101,7 @@ pub(super) fn json(context: &mut Context<'_>, body: &Value, declared_mac: bool) 
         {
             if let Some(url) = file["url"].as_str() {
                 context.add(
-                    url,
+                    &release_asset(context.base, url, body["version"].as_str()),
                     "metadata",
                     &format!("$.files[{i}].url"),
                     "macOS update feed",
@@ -142,11 +142,38 @@ pub(super) fn json(context: &mut Context<'_>, body: &Value, declared_mac: bool) 
     false
 }
 
+// GitHub's CDN Location loses the versioned Downloads directory. A version
+// from the selected release manifest can address its relative assets directly.
+fn release_asset(base: &Url, file: &str, version: Option<&str>) -> String {
+    if base.host_str() != Some("github.com")
+        || file.starts_with('.')
+        || file.contains(['/', '?', '#'])
+    {
+        return file.to_owned();
+    }
+    let Some((project, _)) = base.path().split_once("/releases/latest/download/") else {
+        return file.to_owned();
+    };
+    let Some(version) = version.filter(|v| {
+        !v.is_empty()
+            && v.len() < 30
+            && v.split('.')
+                .all(|part| !part.is_empty() && part.bytes().all(|b| b.is_ascii_digit()))
+    }) else {
+        return file.to_owned();
+    };
+    format!("https://github.com{project}/releases/download/v{version}/{file}")
+}
+
 /// Admit only scalar file URLs in the published Electron-builder subset.
 pub(super) fn yaml(context: &mut Context<'_>, bytes: &[u8]) {
     let Ok(body) = std::str::from_utf8(bytes) else {
         return;
     };
+    let version = body.lines().take(64).find_map(|line| {
+        line.strip_prefix("version:")
+            .map(|value| value.trim().trim_matches(['\'', '"']))
+    });
     let mut files = false;
     for (i, line) in body.lines().take(2048).enumerate() {
         if line.trim_end() == "files:" {
@@ -169,7 +196,7 @@ pub(super) fn yaml(context: &mut Context<'_>, bytes: &[u8]) {
                 && !url.contains(char::is_whitespace)
             {
                 context.add(
-                    url,
+                    &release_asset(context.base, url, version),
                     "metadata",
                     &format!("files[].url (line {})", i + 1),
                     "macOS update feed",
@@ -189,7 +216,7 @@ pub(super) fn xml(context: &mut Context<'_>, bytes: &[u8]) {
     for _ in 0..20_000 {
         let event = match reader.read_event() {
             Ok(Event::Eof) => break,
-            Ok(Event::DocType(_) | Event::GeneralRef(_)) | Err(_) => return,
+            Ok(Event::DocType(_)) | Err(_) => return,
             Ok(event) => event,
         };
         match event {
@@ -199,7 +226,7 @@ pub(super) fn xml(context: &mut Context<'_>, bytes: &[u8]) {
                 if stack.len() >= 64 || name.len() > 80 {
                     return;
                 }
-                if name == "item" && found_item {
+                if name == "item" && found_item && !enclosures.is_empty() {
                     break;
                 }
                 if name == "item" {

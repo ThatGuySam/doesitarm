@@ -9,6 +9,7 @@ const CASKS: &[(&str, &str, &str)] = &[
     ("figma.com", "/downloads", "figma"),
     ("dropbox.com", "/install", "dropbox"),
     ("zoom.us", "/download", "zoom"),
+    ("chatgpt.com", "/download", "chatgpt"),
 ];
 
 pub(super) fn add(context: &mut Context<'_>) {
@@ -57,7 +58,9 @@ pub(super) fn add(context: &mut Context<'_>) {
             Some(Kind::ReleaseApi),
             true,
         );
-    } else if host == "www.jetbrains.com" && path == "/toolbox-app/download" {
+    } else if host == "www.jetbrains.com"
+        && matches!(path, "/toolbox-app" | "/toolbox-app/download")
+    {
         context.add("https://data.services.jetbrains.com/products/releases?code=TBA&latest=true&type=release",
             "provider", "JetBrains Toolbox API", "", Some(Kind::ReleaseApi), true);
     } else if host == "code.visualstudio.com" && path.eq_ignore_ascii_case("/download") {
@@ -80,7 +83,7 @@ pub(super) fn add(context: &mut Context<'_>) {
     } else if matches!(host, "kodi.tv" | "www.kodi.tv") && path == "/download/macos" {
         let source: Vec<_> = context.candidates.keys().cloned().collect();
         for url in source {
-            if url.host_str() != Some(host) || !url.path().starts_with("/donate") {
+            if url.host_str() != Some(host) || !url.path().starts_with("/download/thanks/macos") {
                 continue;
             }
             if let Some((_, raw)) = url.query_pairs().find(|(key, _)| key == "url") {
