@@ -87,7 +87,7 @@ These live `ledger rerun` results use the ledger driver at `2d02b4d` with the pa
 ## Sparse, encrypted, and segmented images
 
 - `sparse_image_seeks_hfs_through_unordered_bands_and_an_apple_partition_map` was unsupported at 1,026 bytes. Its 28,672-byte fixture uses a single version-3 band index, reordered populated bands, and unallocated zero bands. The virtual disk contains an Apple Partition Map with 2 KiB partition blocks and an HFSX volume. The new reader verifies both executable headers after 9,726 bytes in the remote CLI profile. Local and Worker profiles also pass the fixture. Multi-index and partial stored-band layouts have explicit unsupported outcomes. [libmodi sparse image format](https://github.com/libyal/libmodi/blob/main/documentation/Mac%20OS%20disk%20image%20types.asciidoc)
-- `identifies_encrypted_apple_disk_images_by_header_or_trailer` tests the modern `encrcdsa` header and legacy `cdsaencr` end marker. Both now report an encrypted disk image with absent architecture evidence. An authorized user can open an encrypted image with its key and scan the mounted content or export an unencrypted copy. [Apple Disk Utility image guide](https://support.apple.com/en-ca/guide/disk-utility/dskutl11888/mac)
+- `identifies_encrypted_apple_disk_images_by_header_or_trailer` tests the modern `encrcdsa` header and legacy `cdsaencr` end marker. Both previously read 1,026 bytes and reported an unrecognized format. The modern header now reports an encrypted image after 8 bytes and the legacy trailer after 516 bytes. Neither probe produces architecture evidence. An authorized user can open an encrypted image with its key and scan the mounted content or export an unencrypted copy. [Apple Disk Utility image guide](https://support.apple.com/en-ca/guide/disk-utility/dskutl11888/mac)
 - The existing segmented UDIF test still reports `unsupported: segmented UDIF image` after probing the footer. A range reader operates on one stable representation. An authorized conversion on macOS requires all the original segments. The existing HFSX fixture already exercises bzip2, ADC and LZFSE; the EDGE fixtures cover raw GPT/HFSX. [Apple hdiutil manual](https://keith.github.io/xcode-man-pages/hdiutil.1.html)
 
 ## A single visible folder on an HFS image
@@ -157,3 +157,41 @@ These results use the ledger driver at `2d02b4d` and the local parser through `0
 | AMPPS | `b9be9d24a16be9cee4fcd801019b2ffef21d2db5afb207ba9f501c33fd4bf634` | 16,775 | 109,005 | verified with range reads |
 | TDR Nova | `7359c3acb64f6129fd8ab0d420f702dbc257338860dd8aaaa8bfe916f83dd038` | 27,043,108 | 27,043,108 | verified plug-in under the same ETag |
 | ChronoSync | `96ce61330d26cdfeb76c11864e740834a9c6d6710fed6eef82cacea663181527` | 284,798 | 34,278,719 | proceeded into the nested packages and reached the recorded 16-second deadline |
+
+## Read-budget reruns
+
+This table covers the 27 latest budget failures in the initial ledger snapshot. Reruns use the original attempt’s selected target and tier. The MPP Viewer observation uses the public release API and a 256 MiB local-file replay under the remote CLI profile. Original records and individual reruns retain transport, artifact identity, exact settings and raw diagnostics in the ledger.
+
+| App | Attempt and rerun | Tier before | Bytes before | Bytes after | Outcome |
+| --- | --- | ---: | ---: | ---: | --- |
+| adobe-acrobat-reader | `6cffc78e5abf` → `a0df72716d36` | 268,435,456 | 268,173,305 | 205,720,003 | nested_container |
+| baretorrent | `c996be9531a4` → `35bd9c6c02e1` | 8,388,608 | 4 | 4 | budget_hit at the recorded tier |
+| bluestacks | `574d57418a63` → `6494adf51b97` | 268,435,456 | 268,173,301 | 88,356,356 | timeout |
+| cardinal | `5476c8168e25` → `a70e5e08efbb` | 268,435,456 | 268,173,295 | 50,405,256 | timeout |
+| chatgptclassic | `f97d37969d02` → `65258fa5b597` | 8,388,608 | 8,388,608 | 8,126,453 | budget_hit at the recorded tier |
+| display-pilot | `61447b21d7c5` → `7433928d2136` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| elecom-mouse-util | `ff2616b5cc38` → `33c67f3354cf` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| excire-search | `2772a6a45796` → `29cb44a0ae76` | 268,435,456 | 268,435,451 | 268,435,451 | budget_hit at the recorded tier |
+| iloklicensemanager | `fd8c419a68d7` → `4ba9513a2dbf` | 8,388,608 | 8,388,608 | 8,388,603 | budget_hit at the recorded tier |
+| jprofiler | `1780ef0454f6` → `2f4a15222c4c` | 8,388,608 | 4 | 4 | budget_hit at the recorded tier |
+| jumpdesktop | `f0237bd1d0da` → `335bbf7438cb` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| loopcloud | `d1fca6774a32` → `ae1fd333bb62` | 8,388,608 | 8,388,608 | 8,126,453 | budget_hit at the recorded tier |
+| mamp | `96167649b183` → `4646adcc1b5d` | 268,435,456 | 426,590 | 426,590 | budget_hit at the recorded tier |
+| microsoft-outlook | `7abb09e2f13b` → `f52f087d3a3e` | 268,435,456 | 268,435,445 | 42,026,946 | timeout |
+| monotype | `37fee8732b60` → `52def181d568` | 268,435,456 | 254,380,473 | 254,380,473 | budget_hit at the recorded tier |
+| mppviewermac | `dd0e2e40e7a9` | 8,388,608 | 8,388,608 | 85,458,251 | verified ARM64 at 256 MiB by public release API replay |
+| napari | `ba8eec249bdf` → `527152edba1a` | 268,435,456 | 268,173,301 | 104,971,147 | timeout |
+| pdfexpert | `ab73a357be0e` → `5a9d2cc13619` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| prezi-video | `5022b72d0dd3` → `3a19545342b4` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| protondrive | `7c9624c86fb2` → `3b301deada0b` | 8,388,608 | 8,388,608 | 8,388,601 | budget_hit at the recorded tier |
+| superwhisper | `45144840d754` → `45f20547840d` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| tableau | `5cf3b8fdd817` → `9ba27715e24c` | 268,435,456 | 267,790,212 | 48,148,184 | nested_container |
+| ti-smartview-ce-for-the-ti-84-plus-family | `5e0c4b2aa712` → `2f42382fc601` | 268,435,456 | 268,173,305 | 197,352,260 | nested_container |
+| tuple | `bbbf92ced838` → `a2ef650ab0d9` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| unity-ios-support-for-editor | `5784919ee40a` → `27da14e92fc8` | 268,435,456 | 268,173,301 | 33,957,924 | timeout |
+| vienna-assistant | `b755ecd583e0` → `82b44acf4efa` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| workspaces | `6c5968e03572` → `a234c4f70c20` | 8,388,608 | 8,388,608 | 8,388,603 | budget_hit at the recorded tier |
+
+Of the 26 exact-tier reruns, 18 still reached the read budget, five reached their deadline, and three reached a nested PKG and then hit their deadline. The 27th case is MPP Viewer, verified at a higher tier through the publisher’s release API.
+
+The HTTP 200 range probes for Baretorrent and JProfiler made their footer reads sequential under the recorded 8 MiB tier. MAMP’s stream scanned the XAR header and index, then hit the 256 MiB cap trying to reach metadata at offset 714,272,766. Monotype used its entire 268,435,456-byte request allowance while reading 254,380,473 unique bytes and revisiting earlier ranges of `MTFInstaller.pkg`. Excire Search spent its tier reading sequential data from the compressed nested `ExcireSearch-5.0.6-x64.dmg`. These outcomes are unresolved at the recorded limits.
