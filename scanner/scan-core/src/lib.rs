@@ -476,6 +476,19 @@ async fn inspect(
         }
         return primary;
     }
+    if magic == b"\xd0\xcf\x11\xe0" && matches!(target, Target::Auto) {
+        let mut windows = Windows::default();
+        let primary = windows::msi(input, &mut windows).await;
+        if windows.installer_kind.is_some() {
+            out.format = Some("msi");
+            windows.set_result(out);
+        }
+        return primary;
+    }
+    if magic == b"MSCF" && matches!(target, Target::Auto) {
+        out.format = Some("cab");
+        return windows::cab::inspect(input, work, out).await;
+    }
     if magic.starts_with(b"#!") {
         out.format = Some("script");
         out.executable_size = Some(input.size());

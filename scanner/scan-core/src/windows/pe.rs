@@ -1,24 +1,59 @@
-use super::{DotNet, Windows, version};
+use super::{DotNet, Windows, installer, version};
 use crate::{ReadAt, Result, ScanError, check_range, le16, le32, le64};
 
 const BAD_PE: ScanError = ScanError::Invalid("PE image header");
+const OUTSIDE_PREFIX: &str = "PE metadata outside the compressed prefix";
+const PREFIX_BYTES: u64 = 16 * 1024;
 
-struct Section {
-    rva: u32,
-    offset: u64,
-    size: u32,
+/// A single decoder pass is enough to read most PE headers. Version and
+/// hybrid metadata that lie deeper in a compressed member remain optional.
+pub(crate) async fn inspect_prefix(input: &mut impl ReadAt, out: &mut Windows) -> Result<()> {
+    let size = input.size();
+    let bytes = input.read_at(0, size.min(PREFIX_BYTES) as usize).await?;
+    let result = inspect(&mut Prefix { size, bytes }, out).await;
+    match result {
+        Err(ScanError::Unsupported(OUTSIDE_PREFIX)) if out.machine.is_some() => Ok(()),
+        other => other,
+    }
 }
 
-struct Image {
+struct Prefix {
+    size: u64,
+    bytes: Vec<u8>,
+}
+
+impl ReadAt for Prefix {
+    fn size(&self) -> u64 {
+        self.size
+    }
+
+    async fn read_at(&mut self, offset: u64, length: usize) -> Result<Vec<u8>> {
+        check_range(self.size, offset, length as u64)?;
+        let end = offset + length as u64;
+        if end > self.bytes.len() as u64 {
+            return Err(ScanError::Unsupported(OUTSIDE_PREFIX));
+        }
+        Ok(self.bytes[offset as usize..end as usize].to_vec())
+    }
+}
+
+pub(super) struct Section {
+    pub(super) name: [u8; 8],
+    rva: u32,
+    pub(super) offset: u64,
+    pub(super) size: u32,
+}
+
+pub(super) struct Image {
     is_64: bool,
     base: u64,
-    headers: u32,
+    pub(super) headers: u32,
     directories: Vec<(u32, u32)>,
-    sections: Vec<Section>,
+    pub(super) sections: Vec<Section>,
 }
 
 impl Image {
-    fn region(&self, rva: u32, len: u32) -> Option<(u64, u32)> {
+    pub(super) fn region(&self, rva: u32, len: u32) -> Option<(u64, u32)> {
         if rva < self.headers && len <= self.headers - rva {
             return Some((rva.into(), self.headers - rva));
         }
@@ -29,7 +64,7 @@ impl Image {
         })
     }
 
-    fn directory(&self, i: usize) -> Option<(u32, u32)> {
+    pub(super) fn directory(&self, i: usize) -> Option<(u32, u32)> {
         self.directories
             .get(i)
             .copied()
@@ -74,6 +109,7 @@ pub(crate) async fn inspect(input: &mut impl ReadAt, out: &mut Windows) -> Resul
     let sections = headers[optional_size..]
         .chunks_exact(40)
         .map(|s| Section {
+            name: s[..8].try_into().unwrap(),
             rva: le32(s, 12),
             size: le32(s, 16),
             offset: le32(s, 20).into(),
@@ -98,6 +134,10 @@ pub(crate) async fn inspect(input: &mut impl ReadAt, out: &mut Windows) -> Resul
         0x0200 => Some("ia64"),
         _ => None,
     };
+    if let Some(arch) = machine_arch {
+        out.observe(arch);
+        out.architecture_source = Some("pe_machine");
+    }
     let dotnet = read_clr(input, &image, machine).await?;
     let hybrid = read_hybrid(input, &image, machine).await?;
     let arch = hybrid.or_else(|| {
@@ -108,11 +148,21 @@ pub(crate) async fn inspect(input: &mut impl ReadAt, out: &mut Windows) -> Resul
         }
     });
     out.dotnet = dotnet;
+    out.architectures.clear();
     out.main_architecture = arch;
     if let Some(arch) = arch {
         out.observe(arch);
     }
-    read_version(input, &image, out).await?;
+    if arch.is_some() {
+        out.architecture_source = Some("pe_headers");
+    }
+    let from_version = match read_version(input, &image, out).await {
+        Err(ScanError::Unsupported(OUTSIDE_PREFIX)) => None,
+        other => other?,
+    };
+    if le16(&coff, 22) & 0x2000 == 0 {
+        installer::identify(input, &image, &dos, out, from_version).await?;
+    }
     Ok(())
 }
 
@@ -237,31 +287,45 @@ async fn has_arm64x_relocations(
         {
             break;
         }
-        if symbol == 6 && fixup_size >= 8 {
-            return Ok(true);
+        if symbol == 6 && fixup_size >= 10 {
+            let block_offset = offset + 8 + u64::from(cursor) + u64::from(header_size);
+            let block = input.read_at(block_offset, 8).await?;
+            let block_size = le32(&block, 4);
+            if (10..=fixup_size).contains(&block_size)
+                && block_size.is_multiple_of(2)
+                && le32(&block, 0).is_multiple_of(4096)
+            {
+                return Ok(true);
+            }
         }
         cursor += header_size + fixup_size;
     }
     Ok(false)
 }
 
-async fn read_version(input: &mut impl ReadAt, image: &Image, out: &mut Windows) -> Result<()> {
+async fn read_version(
+    input: &mut impl ReadAt,
+    image: &Image,
+    out: &mut Windows,
+) -> Result<Option<&'static str>> {
     let Some((rva, size)) = image.directory(2) else {
-        return Ok(());
+        return Ok(None);
     };
     let Some((base, remaining)) = image.region(rva, 16) else {
-        return Ok(());
+        return Ok(None);
     };
     let size = size.min(remaining);
-    let Some((data_rva, data_size)) = version::locate(input, base, size).await? else {
-        return Ok(());
+    let Some((data_rva, data_size)) =
+        version::locate(input, base, size, version::ResourceType::Number(16), None).await?
+    else {
+        return Ok(None);
     };
     if !(6..=65535).contains(&data_size) {
-        return Ok(());
+        return Ok(None);
     }
     if let Some((offset, _)) = image.region(data_rva, data_size) {
         let bytes = input.read_at(offset, data_size as usize).await?;
-        version::apply(&bytes, out);
+        return Ok(version::apply(&bytes, out));
     }
-    Ok(())
+    Ok(None)
 }

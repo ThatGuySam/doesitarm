@@ -754,3 +754,156 @@ fn windows_requires_valid_pe_and_keeps_worker_budget() {
     assert!(result.bytes_requested <= 180);
     assert_eq!(run(THIN, 4096).platform, scan_core::Platform::Macos);
 }
+
+#[test]
+fn windows_installers_do_not_assign_stub_architecture_to_payload() {
+    for (bytes, kind) in [
+        (windows_fixture!("inno.exe"), "inno_setup"),
+        (windows_fixture!("nsis.exe"), "nsis"),
+        (windows_fixture!("burn.exe"), "wix_burn"),
+        (windows_fixture!("squirrel.exe"), "squirrel"),
+        (windows_fixture!("squirrel-resource.exe"), "squirrel"),
+        (windows_fixture!("sfx.exe"), "7z_sfx"),
+        (windows_fixture!("generic-setup.exe"), "exe_installer"),
+    ] {
+        let result = run(bytes, 4096);
+        assert!(
+            matches!(result.status, Status::Complete),
+            "{:?}",
+            result.error
+        );
+        let windows = result.windows.unwrap();
+        assert_eq!(windows.installer_kind, Some(kind));
+        assert_eq!(windows.bootstrapper_architecture, Some("x86"));
+        assert_eq!(windows.main_architecture, None);
+        assert!(windows.architectures.is_empty());
+        assert!(!windows.emulated_only);
+        assert_eq!(
+            windows.payload_status,
+            Some("unknown, installer payload not inspectable")
+        );
+    }
+}
+
+#[test]
+fn windows_msi_reads_ministream_template_and_product_table() {
+    for (bytes, arch) in [
+        (windows_fixture!("arm64.msi"), "arm64"),
+        (windows_fixture!("x86.msi"), "x86"),
+    ] {
+        let result = run(bytes, 8192);
+        assert!(
+            matches!(result.status, Status::Complete),
+            "{:?}",
+            result.error
+        );
+        assert_eq!(result.format, Some("msi"));
+        let windows = result.windows.unwrap();
+        assert_eq!(windows.architectures, [arch]);
+        assert_eq!(windows.main_architecture, None);
+        assert!(!windows.emulated_only);
+        assert_eq!(windows.product_name.as_deref(), Some("Fixture MSI"));
+        assert_eq!(windows.publisher.as_deref(), Some("Fixture Publisher"));
+        assert_eq!(windows.version.as_deref(), Some("1.2.3"));
+    }
+    let rejected = run(windows_fixture!("invalid-msi.cfb"), 8192);
+    assert_eq!(rejected.platform, scan_core::Platform::Unknown);
+    assert!(matches!(rejected.status, Status::Unsupported));
+}
+
+#[test]
+fn windows_appx_manifests_report_application_architectures() {
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let limits = ScanLimits::for_profile(profile);
+        let package = ready(scan_with_limits(
+            &mut Memory(windows_fixture!("fixture.msix")),
+            limits,
+        ));
+        assert!(
+            matches!(package.status, Status::Complete),
+            "{:?}",
+            package.error
+        );
+        let windows = package.windows.unwrap();
+        assert_eq!(windows.architectures, ["arm64"]);
+        assert_eq!(windows.main_architecture, Some("arm64"));
+        assert_eq!(windows.product_name.as_deref(), Some("Fixture MSIX"));
+        assert_eq!(windows.publisher.as_deref(), Some("Fixture Publisher"));
+        assert_eq!(windows.version.as_deref(), Some("1.2.3.4"));
+        let bundle = ready(scan_with_limits(
+            &mut Memory(windows_fixture!("fixture.appxbundle")),
+            limits,
+        ));
+        assert!(
+            matches!(bundle.status, Status::Complete),
+            "{:?}",
+            bundle.error
+        );
+        let windows = bundle.windows.unwrap();
+        assert_eq!(windows.architectures, ["x64", "arm64"]);
+        assert_eq!(windows.main_architecture, None);
+    }
+    let rejected = run(windows_fixture!("bogus.appx"), 8192);
+    assert!(matches!(rejected.status, Status::Invalid));
+}
+
+#[test]
+fn windows_archive_members_verify_pe_and_do_not_guess_main() {
+    for (bytes, container, arch) in [
+        (
+            windows_fixture!("portable.zip"),
+            "zip",
+            &["arm64", "x64"][..],
+        ),
+        (windows_fixture!("portable.7z"), "7z", &["arm64"][..]),
+        (windows_fixture!("stored.cab"), "cab", &["arm64"][..]),
+    ] {
+        let result = run(bytes, 8192);
+        assert!(
+            matches!(result.status, Status::Complete),
+            "{container}: {:?}",
+            result.error
+        );
+        let windows = result.windows.unwrap();
+        assert_eq!(windows.installer_kind, Some(container));
+        assert_eq!(windows.architectures, arch);
+        assert_eq!(windows.main_architecture, Some("arm64"));
+        assert_eq!(windows.product_name.as_deref(), Some("Fixture Product"));
+        assert!(result.executable_path.is_none());
+    }
+    let ambiguous = run(windows_fixture!("ambiguous.zip"), 8192)
+        .windows
+        .unwrap();
+    assert_eq!(ambiguous.architectures, ["arm64", "x64"]);
+    assert_eq!(ambiguous.main_architecture, None);
+    let opaque = run(windows_fixture!("opaque.cab"), 8192).windows.unwrap();
+    assert!(opaque.payload_status.is_some());
+    assert!(opaque.architectures.is_empty());
+}
+
+#[test]
+fn windows_compressed_prefix_leaves_deep_product_and_hybrid_evidence_unknown() {
+    let result = run(windows_fixture!("deep-version.zip"), 8192);
+    assert!(
+        matches!(result.status, Status::Complete),
+        "{:?}",
+        result.error
+    );
+    assert!(result.decoded_bytes < 64 * 1024);
+    let windows = result.windows.unwrap();
+    assert_eq!(windows.main_architecture, Some("arm64"));
+    assert!(windows.product_name.is_none());
+
+    let result = run(windows_fixture!("deep-hybrid.zip"), 8192);
+    assert!(
+        matches!(result.status, Status::Complete),
+        "{:?}",
+        result.error
+    );
+    assert!(result.decoded_bytes < 64 * 1024);
+    let windows = result.windows.unwrap();
+    assert_eq!(windows.architectures, ["x64"]);
+    assert_eq!(windows.main_architecture, None);
+    assert_eq!(windows.architecture_source, Some("archive_pe_machine"));
+    assert!(!windows.emulated_only);
+}
