@@ -672,3 +672,50 @@ fn local_diagnostics_preserve_embedded_plists_executable_prefixes_and_commands()
         );
     }
 }
+
+#[test]
+fn archives_verify_a_same_stem_macho_when_the_app_plist_has_no_executable_key() {
+    let fixtures: &[&[u8]] = &[
+        include_bytes!("../../fixtures/bundles/missing-key.zip"),
+        include_bytes!("../../fixtures/bundles/missing-key.tar.gz"),
+        include_bytes!("../../fixtures/bundles/missing-key.dmg"),
+    ];
+    for input in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.version.as_deref(), Some("3.8.2"));
+            assert_eq!(
+                result.executable_path.as_deref(),
+                Some("AgentSessions.app/Contents/MacOS/AgentSessions")
+            );
+            assert_eq!(result.executable_resolution, Some("bundle_name_fallback"));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn a_same_stem_script_does_not_verify_an_undeclared_main() {
+    let input = include_bytes!("../../fixtures/bundles/missing-key-helper.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::NotFound), "{result:?}");
+    assert!(result.architectures.is_empty());
+    assert!(result.executable_resolution.is_none());
+    assert!(
+        result
+            .inventory
+            .unwrap()
+            .binaries
+            .iter()
+            .any(|entry| entry.path == "Contents/MacOS/Helper"),
+        "observed helper still belongs in the inventory"
+    );
+}

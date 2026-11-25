@@ -591,9 +591,10 @@ pub(crate) async fn scan(
     }
     let info_size = info.size as usize;
     let plist = volume.read_fork(&mut info, 0, info_size).await?;
-    let path = bundle::apply_plist(&plist, &app_path, out)?;
+    let path = bundle::apply_plist(&plist, &app_path, out, true)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
     let primary = read_main(&mut volume, &mut catalog, contents.id, relative, out).await;
+    let primary = bundle::confirm_executable(out, primary);
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
     let mut allowance = Allowance::new(volume.disk, work);
@@ -676,6 +677,9 @@ async fn read_main<S: ReadAt>(
     let (item, chosen) = match catalog.find_path(volume, contents, relative, true).await {
         Ok(item) => (item, relative),
         Err(error @ ScanError::NotFound(_)) => {
+            if out.executable_resolution == Some(bundle::NAME_FALLBACK) {
+                return Err(error);
+            }
             let Some(leaf) = relative
                 .strip_prefix("MacOS/")
                 .filter(|leaf| !leaf.contains('/'))

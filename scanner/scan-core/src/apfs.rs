@@ -771,12 +771,13 @@ async fn read_app(
     }
     .read_at(0, len)
     .await?;
-    let path = bundle::apply_plist(&plist, app_path, out)?;
+    let path = bundle::apply_plist(&plist, app_path, out, true)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
     let primary = match volume.find_path(device, contents.id, relative, FILE).await {
         Ok(item) => read_executable(device, volume, item, out).await,
         Err(error) => Err(error),
     };
+    let primary = bundle::confirm_executable(out, primary);
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
     let work = device.work;

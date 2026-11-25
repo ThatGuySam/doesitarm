@@ -1,0 +1,22 @@
+# Bundle and entry-point fixes
+
+Baseline `scanner-preview` at `bb62a7c`, integrated November 24, 2026. The scan ledger branch was at `d01862b` when work began. This report uses data from its shared ledger and the pinned CLIMB and EDGE runs.
+
+## Verified changes
+
+| Case | Red → green | Evidence |
+| --- | --- | --- |
+| Missing CFBundleExecutable on a conventional app | `archives_verify_a_same_stem_macho_when_the_app_plist_has_no_executable_key` failed with `not found: CFBundleExecutable in Info.plist`. ZIP, gzip tar and HFS now verify the same-stem Mach-O in local, remote-cli and Worker profiles. | Generated fixtures use the recorded AgentSessions 3.8.2 plist fields and synthetic headers. The earlier checksum-matched public DMG separately verified x86_64 and arm64, minimum macOS 14.0, at `AgentSessions.app/Contents/MacOS/AgentSessions`. AgentSessions is a conventional app bundle. See [BIGFOLDER.md](web/BIGFOLDER.md#agentsessions-382). |
+| Same-stem script plus a separate helper | `a_same_stem_script_does_not_verify_an_undeclared_main` failed because the scan stopped before reporting the helper. It now reports the helper in the inventory and leaves the primary unverified. | The script and the Mach-O helper are both in the generated archive. |
+
+Rebuild the small archives with `python3 fixtures/bundles/generate.py`. Run the tests offline from `scanner/` with `cargo test --locked -j2 -p scan-core --test formats same_stem`.
+
+## Recorded replays and existing fixes
+
+| Case | Observed outcome |
+| --- | --- |
+| SQLCipher Nightly 3.13.99 | Replay kit `db-browser-for-sqlcipher@nightly-executable_not_found`, capture `c41e2320ca4a990ed42d51c5c671805d574e7dc8c6286abb5800d53e0a6a5790`, reproduced the missing key. Pending updated replay. |
+| Rolisteam 1.9.3 | Replay kit `rolisteam-metadata_missing`, capture `0cbf5ca9467a76dd367b02321886a5b801a42b3117c55399ab44b57140ed019d`, verified the x86_64 header and 10.9 minimum. The recorded plist supplied the launcher and bundle ID but omitted a display name and version. The pinned vendor filename supplies 1.9.3 as external provenance. |
+| Kotlin LSP 271.2085.0 | Replay kit `kotlin-lsp-script_executable` preserved the declared shell launcher and empty Mach-O slice list. |
+| BrowserStack Local 3.7.8 | EDGE already fixed the sequential Contents-relative executable alias and verified x86_64. Ledger `c1afaa0a6ae90ebf3853fc83629e745e88b8a0dfcac9160023bf89960dd79041` recorded the original no-Mach-O outcome. `db12ab02e6f537587209373dfd5875c27b11edf783b9cbe8dd464ac0c25f7f86` verified the regular Mach-O named `BrowserStackLocal.app` inside `Contents/MacOS`. |
+| Soothe2 1.3.3 and RStudio 2026.11.0-203 | The sibling `scanner-fix-containers` branch already carries red/green fixes and checksum-matched live results. Soothe2 automatically selects the universal VST3 from four plug-in formats. RStudio verifies both slices of the APFS-compressed launcher. Its optional local inventory still records an invalid resource fork on a separate entry. [Container report](../../doesitarm-scanner-fix-containers-local/scanner/FIX-CONTAINERS.md) |

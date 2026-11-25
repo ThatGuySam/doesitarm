@@ -58,7 +58,15 @@ pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
     })
 }
 
-pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
+pub(crate) const NAME_FALLBACK: &str = "bundle_name_fallback";
+const MISSING_EXECUTABLE: ScanError = ScanError::NotFound("CFBundleExecutable in Info.plist");
+
+pub(crate) fn apply_plist(
+    bytes: &[u8],
+    bundle: &str,
+    out: &mut ScanResult,
+    allow_fallback: bool,
+) -> Result<String> {
     if let Some(diagnostic) = &mut out.diagnostic {
         diagnostic.plist_source(bundle, bytes);
     }
@@ -69,10 +77,16 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
             .as_dictionary()
             .ok_or(ScanError::Invalid("Info.plist is not a dictionary"))?;
         apply_properties(dict, bundle, out);
-        let executable = string(dict, "CFBundleExecutable")
-            .ok_or(ScanError::NotFound("CFBundleExecutable in Info.plist"))?;
-        out.executable_name = Some(executable.to_owned());
-        let relative = resolve_executable(executable, false)?;
+        let relative = if let Some(executable) = string(dict, "CFBundleExecutable") {
+            out.executable_name = Some(executable.to_owned());
+            resolve_executable(executable, false)?
+        } else if allow_fallback {
+            let path = same_stem_executable(dict, bundle, false).ok_or(MISSING_EXECUTABLE)?;
+            out.executable_resolution = Some(NAME_FALLBACK);
+            path
+        } else {
+            return Err(MISSING_EXECUTABLE);
+        };
         Ok(format!("{bundle}/{relative}"))
     })();
     if let Some(diagnostic) = &mut out.diagnostic {
@@ -82,6 +96,46 @@ pub(crate) fn apply_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> R
         out.executable_path = Some(path.clone());
     }
     resolution
+}
+
+pub(crate) fn same_stem_executable(dict: &Dictionary, bundle: &str, flat: bool) -> Option<String> {
+    if !matches!(string(dict, "CFBundlePackageType"), None | Some("APPL")) {
+        return None;
+    }
+    let (stem, suffix) = bundle.rsplit('/').next()?.rsplit_once('.')?;
+    if !suffix.eq_ignore_ascii_case("app") || stem.is_empty() || matches!(stem, "." | "..") {
+        return None;
+    }
+    resolve_executable(stem, flat).ok()
+}
+
+// A guessed path earns a main result only after its Mach-O headers verify.
+pub(crate) fn confirm_executable(out: &mut ScanResult, primary: Result<()>) -> Result<()> {
+    if out.executable_resolution != Some(NAME_FALLBACK) {
+        return primary;
+    }
+    if primary.is_ok()
+        && !out.architectures.is_empty()
+        && out.architectures.iter().all(|arch| arch.header_verified)
+    {
+        return Ok(());
+    }
+    out.executable_resolution = None;
+    out.executable_path = None;
+    out.executable_size = None;
+    out.architectures.clear();
+    out.script_runtime = None;
+    match primary {
+        Ok(())
+        | Err(ScanError::NotFound(_))
+        | Err(ScanError::Invalid("executable is not Mach-O" | "short executable header"))
+        | Err(ScanError::Unsupported(
+            "declared executable is a script"
+            | "declared executable has DOS/PE magic"
+            | "declared executable is ELF",
+        )) => Err(MISSING_EXECUTABLE),
+        other => other,
+    }
 }
 
 pub(crate) fn string<'a>(dict: &'a Dictionary, key: &str) -> Option<&'a str> {

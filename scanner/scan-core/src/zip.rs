@@ -125,7 +125,7 @@ async fn scan_directory(
         .await?
         .read_at(0, entry.expanded as usize)
         .await?;
-    let mut path = bundle::apply_plist(&plist, name, out)?;
+    let mut path = bundle::apply_plist(&plist, name, out, true)?;
     if !entries
         .iter()
         .any(|entry| bundle::archive_path(&entry.path) == Some(&path))
@@ -140,6 +140,7 @@ async fn scan_directory(
     }
 
     let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
+    let primary = bundle::confirm_executable(out, primary);
     read_runtime(input, &entries, directory.offset, work, out).await;
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
@@ -196,7 +197,9 @@ async fn read_main(
         let mut data = member(input, executable, heap_end, work).await?;
         if !executable.is_symlink() {
             if resolved != path {
-                out.executable_resolution = Some("archive_symlink");
+                if out.executable_resolution != Some(bundle::NAME_FALLBACK) {
+                    out.executable_resolution = Some("archive_symlink");
+                }
                 out.executable_path = Some(resolved.clone());
             }
             out.executable_size = Some(executable.expanded);

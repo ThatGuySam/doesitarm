@@ -287,7 +287,7 @@ pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
     result.bytes_read = result.total_size;
     result.bytes_requested = result.total_size;
     result.reads = 1;
-    if let Err(error) = bundle::apply_plist(plist, bundle_path, &mut result) {
+    if let Err(error) = bundle::apply_plist(plist, bundle_path, &mut result, false) {
         result.set_error(error);
     }
     result

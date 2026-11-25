@@ -481,7 +481,7 @@ async fn recover_target(
     };
     let root = bundle::selected_plist(path, selection)?;
     let mut bundle = out.subresult();
-    let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
+    let target = bundle::apply_plist(&bytes, root, &mut bundle, true).ok()?;
     bundle.installer = out.installer.take();
     bundle.format = out.format;
     bundle.nested_artifacts = std::mem::take(&mut out.nested_artifacts);

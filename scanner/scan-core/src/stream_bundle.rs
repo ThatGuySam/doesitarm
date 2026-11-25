@@ -140,7 +140,7 @@ impl<'a> StreamBundle<'a> {
                 return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
             }
             let plist = source.read_at(offset, size as usize).await?;
-            let target = bundle::apply_plist(&plist, root, out)?;
+            let target = bundle::apply_plist(&plist, root, out, true)?;
             out.candidate_executables.clear();
             self.alias = bundle::contents_relative_alias(&target, root);
             for candidate in std::mem::take(&mut self.candidates) {
@@ -276,7 +276,7 @@ impl<'a> StreamBundle<'a> {
             }
             out.inventory = Some(inventory);
         }
-        match self.primary {
+        let primary = match self.primary {
             Some(primary) => primary,
             None => traversal.and_then(|()| {
                 if matches!(self.selection, Target::Executable(_)) && out.executable_path.is_some()
@@ -286,7 +286,8 @@ impl<'a> StreamBundle<'a> {
                     Err(self.missing())
                 }
             }),
-        }
+        };
+        bundle::confirm_executable(out, primary)
     }
 
     fn missing(&self) -> ScanError {
