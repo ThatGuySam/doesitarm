@@ -3,6 +3,8 @@ import test from 'node:test';
 import { scanMode } from '../public/scan-mode.js';
 import { estimateBatch, estimateRemaining, formatDuration, recordSample } from '../public/scan-progress.js';
 import { ScanPool } from '../public/worker-pool.js';
+import { verdict } from '../public/scan-view.js';
+import { summarizeInventory } from '../public/scan-result.js';
 
 const foreground = { limit: 3, passive: false };
 const gentle = { limit: 1, passive: true };
@@ -195,4 +197,24 @@ test('batch ETA requires all outstanding scans to be running with usable estimat
   assert.equal(estimateBatch(1, [4000, 7000]), null);
   assert.equal(estimateBatch(0, [4000, null]), null);
   assert.equal(estimateBatch(0, []), null);
+});
+
+test('a universal launcher headline scopes the observed slices to the launcher', () => {
+  const architectures = ['arm64', 'x86_64'].map((name) => ({ name, header_verified: true }));
+  const binaries = [
+    { path: 'Contents/MacOS/Launcher', role: 'main', architectures },
+    { path: 'Contents/jbr/Contents/Home/bin/java', role: 'runtime', architectures: [architectures[1]] },
+  ];
+  const inventory = summarizeInventory(binaries, 'Some components were unavailable');
+  const result = { status: 'complete', bundle_path: 'Fixture.app', architectures, inventory };
+  assert.equal(inventory.has_x86_64_only, true);
+  assert.equal(inventory.all_arm64_capable, false);
+  assert.equal(inventory.binaries.length, 2);
+  assert.equal(verdict(result).text, 'Apple Silicon native launcher (Universal)');
+});
+
+test('legacy i386 and PowerPC slices do not get a Rosetta verdict', () => {
+  const architectures = ['i386', 'ppc'].map((name) => ({ name, header_verified: true }));
+  const result = { status: 'complete', bundle_path: 'LaTeXiT.app', architectures };
+  assert.equal(verdict(result).text, 'Legacy 32-bit Intel and PowerPC');
 });

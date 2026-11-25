@@ -10,3 +10,4 @@
 - LaTeXiT 1.15.0's pinned HTTPS artifact failed TLS during a single bounded download. The ledger already records i386 and PPC, missing name and minimum, and the embedded 1.15.0 version.
 - The first full workspace run passed all 52 Rust tests. The Contents-relative DMG regression failed before the fix at the doubled HFS path and passed for HFS and APFS in all profiles. All 34 format tests passed after that change.
 - `BUNDLE-ATTEMPTS.jsonl.gz` captures 1,103 source attempts (399 token and URL pairs). `BUNDLE-ATTEMPTS.md` accounts for each of the 24 full-climb plist artifacts and groups unclassified outcomes.
+- Two Node verdict regressions failed on the previous headline and passed after the UI change. All 11 offline UI tests pass. The mixed-inventory fixture keeps both binaries. LaTeXiT's legacy i386 and PPC evidence has no Rosetta claim.

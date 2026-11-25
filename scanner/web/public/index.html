@@ -114,9 +114,9 @@
         <details>
           <summary>What do the results mean?</summary>
           <div class="panel prose">
-            <p><strong>✓ Apple Silicon native</strong> means the main executable contains an arm64 slice, so it runs natively on M-series Macs. <strong>Universal</strong> means it also contains an Intel slice.</p>
+            <p><strong>✓ Apple Silicon native</strong> means the main executable has a verified arm64 or arm64e slice. <strong>Universal</strong> means it also has a verified 64-bit Intel slice.</p>
             <p><strong>◆ Intel only</strong> means only an x86_64 slice was found. The app may run through Rosetta 2 translation, usually slower and with more battery use.</p>
-            <p>The result describes the main executable only. Plug-ins, helper tools and installers can differ.</p>
+            <p>The binary inventory shows the slices observed in plug-ins, helper tools and other components.</p>
           </div>
         </details>
         <details>

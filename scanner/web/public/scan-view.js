@@ -48,10 +48,17 @@ export function verdict(result) {
   }
   const names = new Set(result.architectures.filter((arch) => arch.header_verified).map((arch) => arch.name));
   const arm = names.has('arm64') || names.has('arm64e');
-  const intel = [...names].some(isIntel);
-  if (arm && intel) return { tone: 'native', icon: '✓', text: 'Apple Silicon native (Universal)' };
-  if (arm) return { tone: 'native', icon: '✓', text: 'Apple Silicon native' };
-  if (intel) return { tone: 'intel', icon: '◆', text: 'Intel only · may run with Rosetta' };
+  const intel = names.has('x86_64') || names.has('x86_64h');
+  const launcher = result.bundle_path ? ' launcher' : '';
+  if (arm) {
+    const universal = intel ? ' (Universal)' : '';
+    return { tone: 'native', icon: '✓', text: `Apple Silicon native${launcher}${universal}` };
+  }
+  if (intel) return { tone: 'intel', icon: '◆', text: `Intel-only${launcher || ' binary'} · may run with Rosetta` };
+  if (names.has('i386')) {
+    const powerPc = names.has('ppc') || names.has('ppc64') ? ' and PowerPC' : '';
+    return { tone: 'unknown', icon: '?', text: `Legacy 32-bit Intel${powerPc}` };
+  }
   if (!result.architectures.length) return { tone: 'unknown', icon: '?', text: 'Unknown — no Mach-O slices found' };
   return { tone: 'unknown', icon: '?', text: 'Other architecture · not verified for Apple silicon' };
 }
