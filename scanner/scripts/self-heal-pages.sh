@@ -149,7 +149,7 @@ sandbox() {
             /usr/bin/env -i PATH="$toolchain:$(dirname "$node"):/usr/bin" HOME="$state/home" \
             CARGO_HOME="$state/home/.cargo" CARGO_NET_OFFLINE=true CARGO_PROFILE_DEV_DEBUG=0 \
             TMPDIR="$state/tmp" PAGE_CORPUS_DIR="$data" PAGE_REPLAY_KIT="$kit" WASM_BINDGEN="$bindgen" LC_ALL=C \
-            GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null "${agent_env[@]}" "$@"
+            OPENSSL_CONF=/dev/null GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null "${agent_env[@]}" "$@"
     ) </dev/null >"$logfile" 2>&1 &
     running=$!
     wait "$running" || rc=$?
