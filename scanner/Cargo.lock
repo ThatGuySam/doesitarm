@@ -913,6 +913,7 @@ dependencies = [
  "flate2",
  "httpdate",
  "libc",
+ "percent-encoding",
  "plist",
  "roxmltree",
  "scan-core",

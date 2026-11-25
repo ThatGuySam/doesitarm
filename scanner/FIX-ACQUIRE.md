@@ -10,3 +10,11 @@ This report uses the 2026-11-24 scan ledger as the historical record. The ledger
 | Jabra Direct | The full-file run in `results/edge/followup/run.json` timed out at 159,383,552 of 270,448,755 bytes. The range run found the nested installer and hit its deadline. |
 | Warp | Attempts `ff05792ced2b31fc0590fc0c617148f837f60203386e5679d634b08028ee5f22` and `dc3dc689cb30baaced123335a25e170719d7ab52c1cd16a080d78bc90f2a75ec` got 404 for two successive pinned Homebrew builds. |
 | SEGGER J-Link | Attempt `89268e29a0d0c0c24f88736789a08d91dbeece212027e4e0db518c9b9cb5889a` observed a 27,647-byte HTML landing page for J-Link 9.96a. The publisher requires license and export-control attestations. |
+
+## GitHub release downloads
+
+Pinned releases now resolve through the tag API and select the uploaded asset by exact decoded filename. The original URL remains the identity in the result. Sparkle feeds published as release assets use the binary endpoint for the appcast, and enclosures use it for byte-range scans. Metadata requests retain conditional ETag caching and rate-limit backoff. With a configured token, repository visibility is checked before discovery. The CDN receives no API token. [Release API](https://docs.github.com/en/rest/releases/releases#get-a-release-by-tag-name) · [Binary asset API](https://docs.github.com/en/rest/releases/assets#get-a-release-asset) · [GitHub API best practices](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api)
+
+Before the fix, the pinned asset fixture resolved no API URL and the appcast fixture returned `robots_disallowed`. Both pass via `cargo test --offline --locked -j2 -p source-tools`.
+
+The first live rerun used `sources run --connector github-releases --scan-ranges --max-tier 8`. wBlock 3.2.3 returned HTTP 206 at the release CDN with a total size of 38,560,397 bytes. The scan read 2,914,380 bytes and verified arm64 and x86_64. The remaining GitHub-hosted cases are running against their pinned URLs.

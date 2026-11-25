@@ -12,6 +12,7 @@ clap = { version = "4", features = ["derive"] }
 flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 httpdate = "1"
 libc = "0.2"
+percent-encoding = "2"
 plist = "1"
 roxmltree = "0.21"
 sha2 = "0.11"

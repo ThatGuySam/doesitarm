@@ -5,3 +5,6 @@ Started 2026-11-24 at 19:03 CST. Stop by 20:43 CST. The integration marker and b
 Use one offline Cargo job group at a time with `-j2`. Use one live request at a time per host and at most two total. Use `~/.cache/doesitarm-fix-acquire/` for live scratch and remove downloads after use. Keep at least 20 GB available. Commit locally with the requested co-author trailer.
 
 Source of truth for historical attempts is `~/Code/doesitarm-data/scan-ledger/`. Start with pinned GitHub release assets, then range consistency, partial transfers, Worker egress and vendor access cases. See `FIX-ACQUIRE.md` for per-case evidence and reruns as each lands.
+
+- Merge compile fix `9838a12` maps the integrated core's script and missing executable statuses in source-tools.
+- GitHub resolver fixtures passed with the original dependency versions. Live wBlock passed. Remaining live runs are under `~/.cache/doesitarm-fix-acquire/github-rest` and `sparkle-github`.

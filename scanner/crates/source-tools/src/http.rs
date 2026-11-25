@@ -43,6 +43,7 @@ pub struct Request {
     pub url: Url,
     pub mode: BodyMode,
     pub github_api: bool,
+    pub github_asset: bool,
     pub if_none_match: Option<String>,
     pub if_match: Option<String>,
     pub deadline: Option<Instant>,
@@ -54,6 +55,7 @@ impl Request {
             url,
             mode,
             github_api: false,
+            github_asset: false,
             if_none_match: None,
             if_match: None,
             deadline: None,
@@ -474,7 +476,8 @@ impl Http {
             }
         }
         if !request.github_api
-            && matches!(request.mode, BodyMode::Head | BodyMode::Range { .. })
+            && (request.github_asset
+                || matches!(request.mode, BodyMode::Head | BodyMode::Range { .. }))
             && is_github_asset(&request.url)
         {
             wire = wire

@@ -143,9 +143,9 @@ pub trait Connector: Sync {
     fn resolve(
         &self,
         candidate: &Candidate,
-        _: &mut Context<'_>,
+        context: &mut Context<'_>,
     ) -> Result<Vec<Candidate>, Failure> {
-        Ok(vec![candidate.clone()])
+        context.resolve_asset(candidate)
     }
 
     fn direct(&self, seed: &Seed, url: &str) -> Result<Candidate, Failure> {
@@ -175,6 +175,19 @@ impl<'a> Context<'a> {
             cache,
             deadline: Instant::now() + Duration::from_secs(45),
         }
+    }
+
+    pub(super) fn resolve_asset(
+        &mut self,
+        candidate: &Candidate,
+    ) -> Result<Vec<Candidate>, Failure> {
+        let mut candidate = candidate.clone();
+        if candidate.download_url.is_none()
+            && let Some(endpoint) = github::pinned_asset(&public_url(&candidate.url)?, self)?
+        {
+            candidate.download_url = Some(endpoint.into());
+        }
+        Ok(vec![candidate])
     }
 
     pub fn metadata(&mut self, target: &str, github_api: bool) -> Result<Response, Failure> {
@@ -214,7 +227,13 @@ impl<'a> Context<'a> {
             .cache
             .map(|dir| dir.join(format!("{}.json", crate::digest(&key))));
         let cached = path.as_ref().and_then(|p| read_cache(p, limit).ok());
-        let mut request = Request::new(url.clone(), mode);
+        let binary = if !github_api && matches!(mode, BodyMode::Metadata(_)) {
+            github::pinned_asset(&url, self)?
+        } else {
+            None
+        };
+        let mut request = Request::new(binary.clone().unwrap_or_else(|| url.clone()), mode);
+        request.github_asset = binary.is_some();
         request.if_none_match = cached.as_ref().map(|entry| entry.etag.clone());
         request.github_api = github_api;
         request.deadline = Some(self.deadline);

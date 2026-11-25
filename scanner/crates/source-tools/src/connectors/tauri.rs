@@ -43,7 +43,7 @@ impl Connector for Tauri {
     ) -> Result<Vec<Candidate>, Failure> {
         let url = public_url(&candidate.url)?;
         if !is_github_asset(&url) {
-            return Ok(vec![candidate.clone()]);
+            return ctx.resolve_asset(candidate);
         }
         // Public asset descriptors may point to the JSON endpoint instead of the download.
         // Resolve anonymously so an updater can never use the operator's GitHub credentials.
