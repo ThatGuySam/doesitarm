@@ -65,7 +65,9 @@ async function readRange(fetchRange, signal, from, length, previous) {
   }
   const observed = response.headers.get('ETag');
   const strong = observed && /^"[^"]*"$/.test(observed) ? observed : null;
-  if (previous?.etag && strong && previous.etag !== strong) fail('The download ETag changed during the scan.');
+  if (previous?.etag && observed !== null && previous.etag !== observed) {
+    fail('The download ETag changed during the scan.');
+  }
 
   return { size, etag: strong ?? previous?.etag, bytes: await rangeBytes(response, length) };
 }

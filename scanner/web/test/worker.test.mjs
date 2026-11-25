@@ -241,6 +241,19 @@ test('reports representation changes and enforces small and oversized budgets', 
   assert.deepEqual(requestBudgets, [normal, normal, 1023n, 1023n, normal, normal]);
 });
 
+test('rejects a weak ETag advertised during a scan pinned to a strong one', async () => {
+  const handle = createHandler({
+    createScan,
+    outbound: withDNS(async (_url, { headers }) => {
+      const range = headers.get('Range');
+      return rangedResponse(range, bytes, range === 'bytes=0-0' ? {} : { ETag: 'W/"different"' });
+    }),
+  });
+  const response = await handle(request(), env);
+  assert.equal(response.status, 502);
+  assert.match((await response.json()).error, /ETag changed/);
+});
+
 test('caps redirects, total subrequests and wall time', async () => {
   let redirects = 0;
   const loop = createHandler({
