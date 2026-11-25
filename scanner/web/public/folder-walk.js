@@ -2,6 +2,7 @@ const MAX_LISTING = 64;
 const SLICE_MS = 8;
 const PROBE_BATCH = 64;
 const MAX_BUNDLE_ARTIFACTS = 1024;
+const MAX_NESTED_PATHS = 1024;
 const BUNDLE = /\.app$/i;
 const ARCHIVE = /\.(?:dmg|zip|pkg|tar(?:\.(?:gz|xz|bz2))?|tgz)$/i;
 const MAGIC = new Set([
@@ -83,6 +84,15 @@ function bundleEntry(bundle, relative, type, file = null, getFile) {
   if (file && (relative.startsWith('Contents/MacOS/') ||
       !relative.includes('/', relative.startsWith('Contents/') ? 'Contents/'.length : 0))) {
     bundle.entries.set(relative, file);
+  }
+}
+
+function recordNested(bundle, path, stats) {
+  if (!bundle) return;
+  if (bundle.nestedArtifacts.length < MAX_NESTED_PATHS) bundle.nestedArtifacts.push(path);
+  else {
+    stats.partial = true;
+    skipped(stats, 'nested_path_limit', path);
   }
 }
 
@@ -266,7 +276,7 @@ export async function walkFileList(files, options) {
             if (parent) bundleEntry(parent, next.slice(parent.label.length + 1), 'directory');
             if (BUNDLE.test(part)) {
               const bundle = bundleAt(next, parent?.label ?? null, null);
-              parent?.nestedArtifacts.push(next);
+              recordNested(parent, next, stats);
               bundles.set(next, bundle);
               parent = bundle;
             }
@@ -284,7 +294,7 @@ export async function walkFileList(files, options) {
       bundleEntry(parent, relative, 'file', file);
     }
     if (ARCHIVE.test(name)) {
-      parent?.nestedArtifacts.push(path);
+      recordNested(parent, path, stats);
       const wait = flow.job(fileJob(file, path, parent?.label));
       if (wait) await wait;
     } else if (!bundlePlist(relative) && size >= 4 && worthProbing(name)) {
@@ -375,7 +385,7 @@ export async function walkDirectory(root, method, options) {
         }
         if (parent) {
           parent.size = (parent.size ?? 0) + size;
-          parent.nestedArtifacts.push(path);
+          recordNested(parent, path, stats);
         }
         const wait = flow.job({ kind: 'file', openFile, size, label: path, parentBundlePath: parent?.label });
         if (wait) await wait;
@@ -412,7 +422,7 @@ export async function walkDirectory(root, method, options) {
     let bundle = null;
     if (BUNDLE.test(entry.name)) {
       bundle = bundleAt(path, parent?.label ?? null, (parts) => adapter.open(entry, parts));
-      parent?.nestedArtifacts.push(path);
+      recordNested(parent, path, stats);
     }
     stack.push({ entry, path, bundle, parent: bundle ?? parent, cursor: adapter.children(entry) });
   }

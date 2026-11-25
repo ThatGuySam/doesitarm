@@ -49,7 +49,7 @@ self.addEventListener('message', async ({ data }) => {
     if (job.kind !== 'url' || !job.forceWorker) await init();
     if (job.kind === 'file') {
       if (job.probe) {
-        evidence.read_log.push({
+        logRead(evidence, {
           path: job.label, offset: 0, length: 4, purpose: 'folder_magic_probe', outcome: 'ok',
         });
       }
@@ -97,10 +97,16 @@ self.addEventListener('message', async ({ data }) => {
 
 const READ_CHUNK = 4 * MIB;
 const PLANNED_READ_CHUNK = 64 * 1024;
+const MAX_READ_LOG = 1024;
 const THIN_HEADERS = new Map([
   [0xfeedface, 28], [0xcefaedfe, 28],
   [0xfeedfacf, 32], [0xcffaedfe, 32],
 ]);
+
+function logRead(evidence, record) {
+  if (evidence.read_log.length < MAX_READ_LOG) evidence.read_log.push(record);
+  else evidence.read_log_truncated = true;
+}
 
 async function capturePrefix(file, path, evidence, onRead) {
   const length = Math.min(file.size, 64);
@@ -109,7 +115,7 @@ async function capturePrefix(file, path, evidence, onRead) {
     return false;
   }
   const record = { path, offset: 0, length, purpose: 'diagnostic_executable_prefix', outcome: 'error' };
-  evidence.read_log.push(record);
+  logRead(evidence, record);
   try {
     const waiting = yieldForPassive();
     if (waiting) await waiting;
@@ -136,7 +142,7 @@ async function scanFile(file, path, progress, evidence, declared = false) {
     const end = start + length;
     const purpose = macho.purpose(start, length);
     const record = { path, offset: start, length, purpose, outcome: 'error' };
-    evidence.read_log.push(record);
+    logRead(evidence, record);
     if (!Number.isSafeInteger(end) || end > file.size) {
       sourceError = 'The scanner requested a range outside the supported file bounds.';
       throw new RangeError(sourceError);
@@ -157,7 +163,7 @@ async function scanFile(file, path, progress, evidence, declared = false) {
         const physical = length > chunk ? {
           path, offset: position, length: chunkEnd - position, purpose, scope: 'source_chunk', outcome: 'error',
         } : record;
-        if (physical !== record) evidence.read_log.push(physical);
+        if (physical !== record) logRead(evidence, physical);
         const current = new Uint8Array(await file.slice(position, chunkEnd).arrayBuffer());
         if (current.byteLength !== chunkEnd - position) throw new Error('Incomplete file range');
         physical.outcome = 'ok';
@@ -238,7 +244,7 @@ async function scanBundle(job, progress, id, evidence) {
   const record = {
     path: `${label}/${evidence.info_plist_path}`, offset: 0, length: plist.size, purpose: 'info_plist', outcome: 'error',
   };
-  evidence.read_log.push(record);
+  logRead(evidence, record);
   const bytes = new Uint8Array(await plist.arrayBuffer());
   record.outcome = 'ok';
   progress(bytes.byteLength, plist.size);

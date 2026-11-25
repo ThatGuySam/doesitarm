@@ -77,7 +77,7 @@ export function bindLocalInputs({ view, mode }) {
     const discovered = new Set();
     const stats = folderStats(method);
     stats.folder_name = folderName;
-    const run = view.beginFolder(stats, mode(), { resultLimit: MAX_FOLDER_ROWS });
+    const run = view.beginFolder(stats, mode(), { resultLimit: MAX_FOLDER_ROWS, recoverable: true });
     const jobs = [];
     async function flush() {
       if (!jobs.length) return;
@@ -91,7 +91,8 @@ export function bindLocalInputs({ view, mode }) {
     try {
       // Paint the loader before starting filesystem work.
       await yieldToPage();
-      controller.signal.throwIfAborted();
+      await run.ready;
+      signal.throwIfAborted();
       await walk({
         stats,
         signal: controller.signal,

@@ -1,0 +1,4 @@
+{"phase":"scan","ms":49289}
+{"phase":"settled","count":"Found 169 apps in 300,000 files · 338 of 338 finished","notice":"","scan_ms":610251,"hasHandle":false}
+{"exported":338,"rows":{"complete":338},"wasm":"e4c304d8e3fb9cf2cdbb664583d250398d2667d0f9cc515a5cbbe879e6ae5df8","profile":"webkitGetAsEntry","ms":613230}
+{"engine":"firefox","route":"entries","peak_RSS_MiB":{"launch":{"content":132.01953125,"parent":378.98046875,"total":771.23828125},"selection":{"content":253.421875,"parent":478.109375,"total":985.48828125},"scan":{"content":738.63671875,"parent":988.47265625,"total":1941.48046875},"export":{"content":627.1484375,"parent":852.99609375,"total":1599.5625}}}

@@ -1,5 +1,7 @@
 import { redactPath } from './path-privacy.js';
 import { diagnosticControls, runHeader, watchLongTasks } from './diagnostics.js';
+import { FolderJournal } from './folder-journal.js';
+import { showSavedFolders } from './folder-recovery.js';
 import { folderStats, skipped, timeSlice } from './folder-walk.js';
 import { formatDuration, estimateBatch, estimateRemaining, recordSample } from './scan-progress.js';
 import { emptyResult } from './scan-result.js';
@@ -148,18 +150,13 @@ export class ResultsList {
     this.#diagnostics = diagnosticControls(async () => {
       const run = this.#runs[Number(exportRun.input.value)];
       if (!run) return { header: {}, rows: [], count: 0 };
-      const length = run.rows.length;
       const count = run.finished;
       const cutoff = performance.now();
-      const rows = function* () {
-        for (let i = 0; i < length; i += 1) {
-          const row = run.rows[i];
-          if (row.ended !== null && row.ended <= cutoff) yield row;
-        }
-      };
-      // Only settled rows are included. The header records the run snapshot.
-      return { header: await runHeader(run, count, this.#longTasks), rows: rows(), count, cutoff };
+      const length = run.rows.length;
+      const rows = this.#exportRows(run, length, cutoff);
+      return { header: await runHeader(run, count, this.#longTasks), rows, count, cutoff };
     });
+    void showSavedFolders(get('saved-folders')).catch(() => {});
     this.#tools.append(toolSummary, this.#summary, controls, this.#diagnostics.element);
     this.#list.before(this.#tools);
     const previous = navButton('Previous page', () => this.#showPage(this.#page - 1));
@@ -208,10 +205,14 @@ export class ResultsList {
     return Boolean(this.#pending.size || this.#discoveries || this.#artifactListings.size);
   }
 
-  beginFolder(stats, mode, { resultLimit = Infinity } = {}) {
+  beginFolder(stats, mode, { resultLimit = Infinity, recoverable = false } = {}) {
     if (!this.#busy) this.#newBatch();
     const run = this.#newRun(stats, mode, 'local');
     run.resultLimit = resultLimit;
+    if (recoverable) {
+      run.journal = new FolderJournal();
+      run.ready = this.#checkpoint(run, 'in_progress', { create: true });
+    }
     this.#latestFolder = run;
     this.#discoveries += 1;
     get('results').hidden = false;
@@ -223,7 +224,7 @@ export class ResultsList {
     run.enumerated = performance.now();
     run.canceled ||= canceled;
     run.option.text = redactPath(run.stats.folder_name || run.stats.method);
-    if (!run.pending && !run.listing) run.ended = run.enumerated;
+    this.#finishRun(run);
     this.#discoveries -= 1;
     this.#endBatch();
     this.#render();
@@ -311,7 +312,7 @@ export class ResultsList {
       if (!listing.signal.aborted) throw error;
     } finally {
       run.listing -= 1;
-      if (!run.pending && !run.listing && run.enumerated !== null) run.ended = performance.now();
+      this.#finishRun(run);
       this.#artifactListings.delete(listing);
       this.#queueProgress.dispatchEvent(new Event('settled'));
       this.#endBatch();
@@ -366,26 +367,72 @@ export class ResultsList {
       this.#read(row, run, event.bytes ?? row.result.bytes_read, row.planned);
       row.samples = null;
       row.eta = null;
-      count(this.#statusCounts, row.status, 1);
-      for (const arch of row.archNames) {
-        if (!this.#archCounts.has(arch) && ![...this.#filters.arch.options].some((option) => option.value === arch)) {
-          this.#filters.arch.add(new Option(arch, arch));
-        }
-        count(this.#archCounts, arch, 1);
-      }
-      this.#recordTotals(row, run);
-      if (row.status === 'canceled') this.#batch.canceled += 1;
-      this.#batch.finished += 1;
-      this.#pending.delete(row.id);
-      this.#queueProgress.dispatchEvent(new Event('settled'));
-      run.finished += 1;
-      run.pending -= 1;
-      if (!run.pending && !run.listing && run.enumerated !== null) run.ended = now;
-      this.#endBatch();
-      this.#searchDirty = true;
+      if (run.journal) void this.#saveRow(run, row).then(() => this.#finishResult(row, run));
+      else this.#finishResult(row, run);
     }
     if (this.#rendered.has(row.id)) this.#dirty.add(row.id);
     this.#requestRefresh();
+  }
+
+  #finishResult(row, run) {
+    count(this.#statusCounts, row.status, 1);
+    for (const arch of row.archNames) {
+      if (!this.#archCounts.has(arch) && ![...this.#filters.arch.options].some((option) => option.value === arch)) {
+        this.#filters.arch.add(new Option(arch, arch));
+      }
+      count(this.#archCounts, arch, 1);
+    }
+    this.#recordTotals(row, run);
+    if (row.status === 'canceled') this.#batch.canceled += 1;
+    this.#batch.finished += 1;
+    this.#pending.delete(row.id);
+    this.#queueProgress.dispatchEvent(new Event('settled'));
+    row.settled = performance.now();
+    run.finished += 1;
+    run.pending -= 1;
+    this.#finishRun(run);
+    this.#endBatch();
+    this.#searchDirty = true;
+    this.#requestRefresh();
+  }
+
+  #finishRun(run) {
+    if (run.pending || run.listing || run.enumerated === null || run.ended !== null) return;
+    run.ended = performance.now();
+    if (run.journal) void this.#checkpoint(run, run.canceled ? 'canceled' : 'complete');
+  }
+
+  async #checkpoint(run, state, options) {
+    try {
+      const header = await runHeader(run, run.finished + (options?.row ? 1 : 0), this.#longTasks);
+      await run.journal.write(header, state, options);
+      return true;
+    } catch {
+      setText(get('folder-storage-status'), 'The browser could not save some folder results for recovery. Download results before closing this page.');
+      return false;
+    }
+  }
+
+  async #saveRow(run, row) {
+    // Rows remain pending until the transaction commits. Discovery therefore
+    // shares the same backpressure with slow storage as it does with workers.
+    try {
+      const data = run.journal.snapshot(row);
+      row.saved = await this.#checkpoint(run, 'in_progress', { row: { id: row.id, data } });
+      if (!row.saved) row.savedFallback = data;
+      row.evidence = row.directoryListings = row.relativeCandidates = row.nestedArtifacts = undefined;
+    } catch {
+      setText(get('folder-storage-status'), 'The browser could not save some folder results for recovery. Download results before closing this page.');
+    }
+  }
+
+  async *#exportRows(run, length, cutoff) {
+    for (let i = 0; i < length; i += 1) {
+      const row = run.rows[i];
+      if (row.settled == null || row.settled > cutoff) continue;
+      const stored = row.saved ? await run.journal.row(row.id) : row.savedFallback && JSON.parse(row.savedFallback);
+      yield stored ? { ...row, ...stored, label: row.label, parentBundlePath: row.parentBundlePath } : row;
+    }
   }
 
   #recordTotals(row, run) {
