@@ -1,6 +1,6 @@
 # Container and read-budget failures
 
-The canonical records are `~/Code/doesitarm-data/scan-ledger/attempts.jsonl` and `catalog.jsonl`. They retain the app, URL, pinned digest when available, profile, budgets, scanner revision, exact invocation, error, transfer and parser measurements, and source file and row. The ledger includes historical failures followed by later successes. Use the attempt ID when comparing a particular failure rather than the latest app status.
+The canonical records are `~/Code/doesitarm-data/scan-ledger/attempts.jsonl` and `catalog.jsonl`. They retain the app, URL, pinned digest when available, profile, budgets, scanner revision, exact invocation, error, transfer and parser measurements, and source file and row. Tables report the ledger’s `bytes_read` field. Request totals and transport details are available in the same records. The ledger includes historical failures followed by later successes. Use the attempt ID when comparing a particular failure rather than the latest app status.
 
 Extract every attempt in this workstream from the ledger, including failures from earlier tiers and runs:
 
@@ -20,7 +20,7 @@ The [EDGE inspection](EDGE.md) and [CLIMB reports](CLIMB.md) retain earlier sour
 | Aqua Data Studio 26.1.0 | `c8b419addd4931e5f89dabf7718bbdb36f984a7da5b78c2e437094c74cef47e1`. The ordinary gzip tar exposes its plist first, with the launcher about 829 MB into the compressed stream. | 268,435,451 | 835,675,421 in the recorded local scan | The remote cap still prevents reaching the executable. The public pinned tarball verifies x86_64 and i386 locally. |
 | Insta360 Link Controller 2.2.5 build 25 | `1979b4c560baa4a0b20ab3cc47e2e3456bfef7fbf7b36b8a65c13f8eb1c2329e`. The only payload is a single 772,108,405-byte gzip stream. The CPIO puts the 417,541,840-byte executable before the outer plist. | 268,173,301 | 772,116,907 in the recorded local scan | The remote tier verifies both candidate slice headers but cannot confirm the app's declared executable. Local replay on the public pinned installer verifies the app. |
 | MPP Viewer Mac 0.1.3 | `dd0e2e40e7a992ab3211500814b54ff0bbe1b7a37d3dc31959dde3b78446fb8e` exceeded 8 MiB on the 85,522,821-byte PKG. The other recorded attempt (`9a89172d915d`) was blocked by robots.txt. | 8,388,608 | 85,458,251 at 256 MiB | The existing parser verified `MPPViewer.app/Contents/MacOS/MPPViewerMac` as arm64 from the exact public GitHub release asset. At 64 MiB it still exhausted the budget. |
-| ChronoSync | `1fe8f1b23fe209c9c64979eb804b87e1b3246e00513636f195f72c0813d2bc25`. HFS image has `Install.pkg` and `Remove.pkg`. The installer declares both a Library helper and `Applications/ChronoSync.app`. | 284,798 | 90,101,604 at 256 MiB | Fixed at the larger tier. The genuine installer verifies x86_64 and arm64 in ChronoSync’s declared launcher. |
+| ChronoSync | `1fe8f1b23fe209c9c64979eb804b87e1b3246e00513636f195f72c0813d2bc25`. HFS image has `Install.pkg` and `Remove.pkg`. The installer declares both a Library helper and `Applications/ChronoSync.app`. | 284,798 | 90,101,604 at 256 MiB | The full local file verifies x86_64 and arm64 in the declared launcher under the 256 MiB remote CLI profile. The original 16-second live deadline still stops the scan. |
 | Jumper build 3660 | `42c32ea6aae43259893a68b32e84e336fbeae7a0521fc4538a86a88ee4b7a362`. The ZIP32 directory offset rolled over at 4 GiB. The plist member also rolled over. | 6,360,986 | 8,388,607 | Fixed. The pinned range scan matched the 5,003,419,189-byte representation and verified both launcher headers at the 8 MiB tier. |
 | AMPPS 4.4 | `454c6fe92eb3899a0dd56b7475209b2b7ae1a12756edc3b8d6a49a2208f522fd`, `kits/ampps-plist_not_found`. A single visible HFS root directory contains `Ampps.app`. A second copy sits under the hidden `.Trashes` tree. | 16,775 | 109,005 | Fixed on the pinned image. The scanner selects the visible app and verifies the x86_64 main. |
 | Hancom Word 12.30.0.6544 | `b0804cedf5def69f1121cb22e89d791c00313a7c973d0ab95143f2ec143a1575`, `kits/hancom-word-unsupported_container`. The URL redirects to an 82-byte HTML meta-refresh to Hancom's homepage under the same ETag. | 4 | 82-byte origin inspection | Origin has no installer at the pinned URL. Use the publisher distribution channel if it offers an entitled macOS package. |
@@ -142,8 +142,18 @@ Both pinned jamovi installer URLs returned HTTP 302 followed by identical HTML a
 
 ## Explicit executable targets inside nested HFS packages
 
-`hfs_finds_a_declared_executable_inside_the_package` reproduced `not found: bundle path in HFS catalog` even though the target exists in `Fixture.pkg`. The same generated image now verifies both headers under the selected path after 2,691 bytes. A direct filesystem match still takes precedence. If the HFS catalog lacks that path, the selector can inspect visible root packages.
+`hfs_finds_a_declared_executable_inside_the_package` reproduced `not found: bundle path in HFS catalog` even though the target exists in `Fixture.pkg`. The failed synthetic scan read 2,691 bytes. The same generated image now verifies both headers under the selected path after 2,691 bytes. A direct filesystem match still takes precedence. If the HFS catalog lacks that path, the selector can inspect visible root packages.
 
 The MySQL Shell 8.0.29 DMG contains a single flat PKG with `PackageInfo` install location `/usr/local`. Its BOM identifies `./mysql-shell-8.0.29-macos12-arm64/bin/mysqlsh` as a regular 36,335,104-byte member. An explicit `--binary-path 'mysql-shell-8.0.29-macos12-arm64/bin/mysqlsh'` first failed at 964,642 bytes. The corrected scan verified its arm64 header after 4,623,388 bytes. The original app auto-selection attempt `143e9db8c9fb` remains separate. The downloaded image matched the 44,517,756-byte representation and had SHA-256 `7095eaa8c67a8952101e0e6173645ac4377b1c06df5e8f87ceddea418d79b5a6`.
 
 The live 256 MiB CodeQL check `9c6671d2cc04cd0f6eb8a96ae1066d679643667ddb242edfdebe91b2ce25bd66` confirmed the historical shell entry point after 62,893,053 bytes. This resolves tar.zst recognition and preserves the observed script outcome.
+
+## Final targeted ledger reruns
+
+These results use the ledger driver at `2d02b4d` and the local parser through `02aab1d`.
+
+| App | Rerun ID | Previous bytes | Rerun bytes | Observed outcome |
+| --- | --- | ---: | ---: | --- |
+| AMPPS | `b9be9d24a16be9cee4fcd801019b2ffef21d2db5afb207ba9f501c33fd4bf634` | 16,775 | 109,005 | verified with range reads |
+| TDR Nova | `7359c3acb64f6129fd8ab0d420f702dbc257338860dd8aaaa8bfe916f83dd038` | 27,043,108 | 27,043,108 | verified plug-in under the same ETag |
+| ChronoSync | `96ce61330d26cdfeb76c11864e740834a9c6d6710fed6eef82cacea663181527` | 284,798 | 34,278,719 | proceeded into the nested packages and reached the recorded 16-second deadline |
