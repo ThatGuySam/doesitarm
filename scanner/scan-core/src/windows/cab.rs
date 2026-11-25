@@ -1,5 +1,5 @@
 //! Microsoft Cabinet directory and uncompressed CFDATA blocks.
-use super::{ArchiveEvidence, UNKNOWN_PAYLOAD, Windows, pe, pe_extension};
+use super::{ArchiveEvidence, UNKNOWN_PAYLOAD, Windows, pe, pe_extension, resembles_installer};
 use crate::{
     ReadAt, Result, ScanError, ScanResult, Window, check_range, decode::DecodeBudget,
     inventory::Allowance, le16, le32,
@@ -84,6 +84,7 @@ pub(crate) async fn inspect(
     let mut files = records.as_slice();
     let mut allowance = Allowance::new(input, work);
     let mut evidence = ArchiveEvidence::default();
+    let mut has_installer = false;
     for _ in 0..file_count {
         if files.len() < 17 {
             return Err(INVALID);
@@ -97,7 +98,12 @@ pub(crate) async fn inspect(
             .ok_or(INVALID)?;
         let name = &files[16..16 + name_length];
         files = &files[17 + name_length..];
-        let Some(executable) = std::str::from_utf8(name).ok().and_then(pe_extension) else {
+        let name = String::from_utf8_lossy(name);
+        if resembles_installer(&name) {
+            has_installer = true;
+            evidence.partial();
+        }
+        let Some(executable) = pe_extension(&name) else {
             continue;
         };
         if length < 64 {
@@ -137,7 +143,7 @@ pub(crate) async fn inspect(
     if !evidence.finish("cab", out) {
         // A cabinet may contain compressed application binaries or only data.
         // The cabinet index does not declare CPU architecture.
-        if folders.iter().all(|f| f.codec == 0) {
+        if !has_installer && folders.iter().all(|f| f.codec == 0) {
             windows.payload_status = None;
         }
         windows.set_result(out);

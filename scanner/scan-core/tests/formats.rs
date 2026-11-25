@@ -907,3 +907,21 @@ fn windows_compressed_prefix_leaves_deep_product_and_hybrid_evidence_unknown() {
     assert_eq!(windows.architecture_source, Some("archive_pe_machine"));
     assert!(!windows.emulated_only);
 }
+
+#[test]
+fn windows_archive_setup_cannot_stand_in_for_an_opaque_package() {
+    let result = run(windows_fixture!("wrapped-msi.zip"), 8192);
+    assert!(
+        matches!(result.status, Status::Complete),
+        "{:?}",
+        result.error
+    );
+    let windows = result.windows.unwrap();
+    assert_eq!(windows.architectures, ["x64"]);
+    assert_eq!(windows.main_architecture, None);
+    assert!(!windows.emulated_only);
+    assert_eq!(
+        windows.payload_status,
+        Some("unknown, installer payload not inspectable")
+    );
+}

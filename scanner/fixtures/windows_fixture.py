@@ -229,6 +229,9 @@ def packages():
     write("deep-version.zip", zip_file([("app.exe", deep)]))
     hybrid = pe(0x8664, hybrid="ec", section_offset=256 * 1024)
     write("deep-hybrid.zip", zip_file([("app.exe", hybrid)]))
+    write("wrapped-msi.zip", zip_file([
+        ("App/Setup.exe", pe(0x8664)), ("App/Product.msi", msi()),
+    ]))
     write("ambiguous.zip", zip_file([("fixture.exe", binary), ("helper.exe", pe(0x8664))]))
     write("portable.7z", sevenz_file("fixture.exe", binary))
     write("stored.cab", cabinet(binary))

@@ -129,10 +129,16 @@ pub(crate) async fn scan(
 
 async fn scan_windows<'a>(
     source: &mut Members<'_, impl ReadAt>,
-    paths: impl Iterator<Item = (usize, &'a str)>,
+    paths: impl Iterator<Item = (usize, &'a str)> + Clone,
     out: &mut ScanResult,
 ) -> Result<bool> {
     let mut evidence = windows::ArchiveEvidence::default();
+    if paths
+        .clone()
+        .any(|(_, path)| windows::resembles_installer(path))
+    {
+        evidence.partial();
+    }
     let mut allowance = Allowance::new(source.input, source.work);
     let mut interrupted = None;
     for (index, executable) in

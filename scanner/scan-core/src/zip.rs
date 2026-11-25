@@ -225,6 +225,12 @@ async fn scan_windows(
         .collect();
     candidates.sort_by_key(|(entry, executable)| (!executable, entry.path.matches('/').count()));
     let mut evidence = windows::ArchiveEvidence::default();
+    if entries.iter().any(|entry| {
+        !entry.is_symlink()
+            && bundle::archive_path(&entry.path).is_some_and(windows::resembles_installer)
+    }) {
+        evidence.partial();
+    }
     let mut allowance = Allowance::new(input, work);
     let mut interrupted = None;
     for (entry, executable) in candidates {

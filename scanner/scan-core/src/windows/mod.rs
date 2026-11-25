@@ -103,6 +103,35 @@ pub(crate) fn pe_extension(path: &str) -> Option<bool> {
     }
 }
 
+// A portable archive can also carry a setup program and an opaque package.
+// An executable named Setup cannot stand in for that package.
+pub(crate) fn resembles_installer(path: &str) -> bool {
+    let leaf = path.rsplit(['/', '\\']).next().unwrap_or(path);
+    let Some((name, extension)) = leaf.rsplit_once('.') else {
+        return false;
+    };
+    let extension = extension.to_ascii_lowercase();
+    if matches!(
+        extension.as_str(),
+        "msi" | "msix" | "appx" | "msixbundle" | "appxbundle" | "cab"
+    ) {
+        return true;
+    }
+    let name = name.to_ascii_lowercase();
+    extension == "exe"
+        && (name == "setup"
+            || [
+                "-setup",
+                "_setup",
+                " setup",
+                "-installer",
+                "_installer",
+                " installer",
+            ]
+            .iter()
+            .any(|suffix| name.ends_with(suffix)))
+}
+
 #[derive(Default)]
 pub(crate) struct ArchiveEvidence {
     result: Windows,
