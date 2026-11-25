@@ -246,3 +246,17 @@ fn preserves_advisory_filenames_for_extensionless_downloads() {
         );
     }
 }
+
+#[test]
+fn github_json_partial_response_is_not_an_archive() {
+    let fixture = Fixture::open(&fixture_path("acquisition-responses.json")).unwrap();
+    let url = "https://api.github.com/repositories/1274703665/releases/assets/779574227";
+    let candidate = ConnectorId::UrlList
+        .connector()
+        .direct(&Default::default(), url)
+        .unwrap();
+    let result = source_tools::artifact::inspect(&fixture, &candidate, ScanOptions::default());
+    assert_eq!(result.failure.unwrap().class, "github_asset_metadata_only");
+    assert_eq!(result.evidence.unwrap().status, Some(206));
+    assert!(result.result.is_none());
+}

@@ -266,11 +266,10 @@ fn probe(
             "artifact endpoint returned HTML",
         ));
     }
-    if response.status == 200
-        && is_github_asset(original)
+    if is_github_asset(&response.url)
         && response
             .header("content-type")
-            .is_some_and(|kind| kind.contains("json"))
+            .is_some_and(|kind| kind.to_ascii_lowercase().contains("json"))
     {
         outcome.probe.reachable = false;
         return Err(Failure::new(
@@ -361,7 +360,7 @@ impl RangeSource<'_> {
                 response.require_success(self.original)?;
             }
             let evidence = |failure: Failure| failure.with_http(response.evidence(self.original));
-            if is_html(&response) && (200..300).contains(&response.status) {
+            if is_html(&response) {
                 return Err(evidence(Failure::new(
                     "html_landing_page",
                     "artifact became HTML during range reads",

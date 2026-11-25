@@ -56,3 +56,9 @@ The BetterTouchTool replay uses a generated four-byte window. The historical sou
 | Transient HTTP 500 | The first 500 aborted the scan. | The native remote scan retries that same range once after a delay when the response supplies no Retry-After and the scan deadline allows it. |
 
 `cargo test --workspace --offline --locked -j2` passed 77 tests, including the local and Worker profile checks. The new HTTP wire fixtures use in-memory responses.
+
+## GitHub aliases and repository transfers
+
+All 32 GitHub connector retries received HTTP 206. Thirty verified architecture and metadata. `mlx-serve` reached the 8 MiB byte limit and Mole reached a missing plist. Both cleared acquisition.
+
+Two Sparkle reruns exposed additional cases. Ardia's old owner path redirected the binary request to a numeric GitHub API path, which previously lost the binary Accept header and supplied ranged JSON. Ping Island's appcast points to a `releases/latest/download` alias. Four offline tests reproduced the wrong endpoint, missed alias, unrecognized numeric route, and JSON mistaken for archive bytes. The resolver now honors the canonical asset URL returned by the release API, recognizes the numeric route, and resolves a latest alias by the exact filename in the current release. GitHub API JSON is classified as metadata even if it carries HTTP 206.

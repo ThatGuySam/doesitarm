@@ -872,9 +872,14 @@ pub(crate) fn is_github_asset(url: &Url) -> bool {
     {
         return false;
     }
-    matches!(url.path().split('/').collect::<Vec<_>>().as_slice(),
-        ["", "repos", owner, repo, "releases", "assets", id] if !owner.is_empty() && !repo.is_empty() &&
-            !id.is_empty() && id.bytes().all(|b| b.is_ascii_digit()))
+    let numeric = |id: &str| !id.is_empty() && id.bytes().all(|b| b.is_ascii_digit());
+    match url.path().split('/').collect::<Vec<_>>().as_slice() {
+        ["", "repos", owner, repo, "releases", "assets", id] => {
+            !owner.is_empty() && !repo.is_empty() && numeric(id)
+        }
+        ["", "repositories", repo_id, "releases", "assets", id] => numeric(repo_id) && numeric(id),
+        _ => false,
+    }
 }
 
 fn login_path(url: &Url) -> bool {
@@ -973,6 +978,14 @@ fn public_ip(ip: IpAddr) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn recognizes_asset_endpoints_after_a_github_repository_transfer() {
+        let url =
+            public_url("https://api.github.com/repositories/1274703665/releases/assets/779574227")
+                .unwrap();
+        assert!(is_github_asset(&url));
+    }
 
     #[test]
     fn bounds_gzip_metadata_and_accepts_xml_served_as_html() {

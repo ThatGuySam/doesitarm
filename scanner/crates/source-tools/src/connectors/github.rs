@@ -1,5 +1,5 @@
 use super::{Connector, ConnectorId, Context, asset_priority, candidate_from, join_public};
-use crate::{Candidate, Failure, Seed, file_name, format_guess, public_url};
+use crate::{Candidate, Failure, Seed, file_name, format_guess, http::is_github_asset, public_url};
 use percent_encoding::percent_decode_str;
 use serde::Deserialize;
 use url::Url;
@@ -17,10 +17,24 @@ struct Release {
 #[derive(Deserialize)]
 struct Asset {
     id: Option<u64>,
+    url: Option<String>,
     name: String,
     browser_download_url: String,
     size: u64,
     state: String,
+}
+
+impl Asset {
+    fn download_api(&self, repo_api: &str) -> Option<Url> {
+        let id = self.id?;
+        if let Some(url) = self.url.as_deref().and_then(|value| public_url(value).ok())
+            && is_github_asset(&url)
+            && file_name(&url).parse() == Ok(id)
+        {
+            return Some(url);
+        }
+        public_url(&format!("{repo_api}/releases/assets/{id}")).ok()
+    }
 }
 
 impl Connector for Github {
@@ -43,8 +57,7 @@ impl Connector for Github {
         {
             return Err(self.parse_error("expected a github.com owner/repo or release URL"));
         }
-        let parts: Vec<_> = url.path().trim_matches('/').split('/').collect();
-        if matches!(parts.as_slice(), [_, _, "releases", "download", ..]) {
+        if release_download_parts(&url).is_some() {
             if eligible(file_name(&url)) {
                 return Ok(vec![self.direct(seed, url.as_str())?]);
             }
@@ -52,6 +65,7 @@ impl Connector for Github {
                 self.parse_error("asset filename does not identify a compiled macOS release")
             );
         }
+        let parts: Vec<_> = url.path().trim_matches('/').split('/').collect();
         let (owner, repo, tag) = match parts.as_slice() {
             [owner, repo] | [owner, repo, "releases"] | [owner, repo, "releases", "latest"] => {
                 (*owner, *repo, None)
@@ -104,22 +118,38 @@ fn public_repo_api(context: &mut Context<'_>, owner: &str, repo: &str) -> Result
     Ok(api)
 }
 
-pub(super) fn pinned_release_parts(url: &Url) -> Option<(&str, &str, &str, &str)> {
+pub(super) fn release_download_parts(url: &Url) -> Option<(&str, &str, Option<&str>, &str)> {
     if url.scheme() != "https" || url.host_str() != Some("github.com") || url.query().is_some() {
         return None;
     }
     let mut path = url.path().trim_start_matches('/').splitn(5, '/');
     let owner = path.next()?;
     let repo = path.next()?;
-    if path.next()? != "releases" || path.next()? != "download" {
+    if path.next()? != "releases" {
         return None;
     }
-    let (tag, name) = path.next()?.rsplit_once('/')?;
-    (!tag.is_empty() && !name.is_empty()).then_some((owner, repo, tag, name))
+    let (tag, name) = match path.next()? {
+        "download" => {
+            let (tag, name) = path.next()?.rsplit_once('/')?;
+            if tag.is_empty() {
+                return None;
+            }
+            (Some(tag), name)
+        }
+        "latest" => {
+            let name = path.next()?.strip_prefix("download/")?;
+            if name.contains('/') {
+                return None;
+            }
+            (None, name)
+        }
+        _ => return None,
+    };
+    (!name.is_empty()).then_some((owner, repo, tag, name))
 }
 
-pub(super) fn pinned_asset(url: &Url, context: &mut Context<'_>) -> Result<Option<Url>, Failure> {
-    let Some((owner, repo, tag, name)) = pinned_release_parts(url) else {
+pub(super) fn release_asset(url: &Url, context: &mut Context<'_>) -> Result<Option<Url>, Failure> {
+    let Some((owner, repo, tag, name)) = release_download_parts(url) else {
         return Ok(None);
     };
     let decode = |part: &str| {
@@ -128,34 +158,39 @@ pub(super) fn pinned_asset(url: &Url, context: &mut Context<'_>) -> Result<Optio
             .map(|value| value.into_owned())
             .map_err(|_| Github.parse_error("release path is not UTF-8"))
     };
-    let tag = decode(tag)?;
+    let tag = tag.map(decode).transpose()?;
     let name = decode(name)?;
     let api = public_repo_api(context, owner, repo)?;
-    let mut endpoint = public_url(&format!("{api}/releases/tags"))?;
-    endpoint.path_segments_mut().unwrap().push(&tag);
+    let endpoint = if let Some(tag) = &tag {
+        let mut endpoint = public_url(&format!("{api}/releases/tags"))?;
+        endpoint.path_segments_mut().unwrap().push(tag);
+        endpoint
+    } else {
+        public_url(&format!("{api}/releases/latest"))?
+    };
     let response = context.metadata(endpoint.as_str(), true)?;
     let failure =
         |class, message| Failure::new(class, message).with_http(response.evidence(&endpoint));
     let release: Release = serde_json::from_slice(&response.body)
         .map_err(|_| failure("parse_error:github-releases", "invalid GitHub release JSON"))?;
-    if release.draft || release.tag_name != tag {
+    if release.draft || tag.is_some_and(|requested| release.tag_name != requested) {
         return Err(failure(
             "release_mismatch",
-            "API did not return the pinned published release",
+            "API did not return the requested published release",
         ));
     }
-    let id = release
+    release
         .assets
-        .into_iter()
+        .iter()
         .find(|asset| asset.state == "uploaded" && asset.name == name)
-        .and_then(|asset| asset.id)
+        .and_then(|asset| asset.download_api(&api))
+        .map(Some)
         .ok_or_else(|| {
             failure(
                 "release_asset_not_found",
-                "pinned file has no uploaded asset ID",
+                "requested filename has no uploaded asset ID in this release",
             )
-        })?;
-    public_url(&format!("{api}/releases/assets/{id}")).map(Some)
+        })
 }
 
 #[derive(Deserialize)]
@@ -181,6 +216,7 @@ impl Github {
             .sort_by_key(|asset| asset_priority(&asset.name));
         let base = public_url("https://github.com/").expect("valid base");
         let prefix = format!("/{owner}/{repo}/releases/download/").to_ascii_lowercase();
+        let api = format!("https://api.github.com/repos/{owner}/{repo}");
         let mut results = Vec::new();
         for asset in release.assets {
             if asset.state != "uploaded" || !eligible(&asset.name) {
@@ -209,11 +245,7 @@ impl Github {
                 ..seed.clone()
             };
             let mut candidate = candidate_from(self, seed, observed, url.as_str())?;
-            if let Some(id) = asset.id {
-                candidate.download_url = Some(format!(
-                    "https://api.github.com/repos/{owner}/{repo}/releases/assets/{id}"
-                ));
-            }
+            candidate.download_url = asset.download_api(&api).map(Into::into);
             results.push(candidate);
         }
         if results.is_empty() {
@@ -394,6 +426,52 @@ mod tests {
         assert_eq!(
             candidate.url,
             "https://github.com/example/Viewer/releases/download/v2.1/Viewer-darwin-x64.zip"
+        );
+    }
+
+    #[test]
+    fn resolves_latest_download_alias_by_its_exact_filename() {
+        let seed = Seed {
+            url: "https://github.com/example/Viewer/releases/latest/download/Viewer-universal.dmg"
+                .into(),
+            ..Seed::default()
+        };
+        let candidate = Github.direct(&seed, &seed.url).unwrap();
+        let fixture = GitHubFixture {
+            requests: Mutex::default(),
+        };
+        let resolved = Github
+            .resolve(&candidate, &mut Context::new(&fixture, None))
+            .unwrap();
+        assert_eq!(resolved[0].url, seed.url);
+        assert_eq!(
+            resolved[0].download_url.as_deref(),
+            Some("https://api.github.com/repos/example/Viewer/releases/assets/42")
+        );
+        assert_eq!(
+            fixture.requests.into_inner().unwrap()[1].0,
+            "https://api.github.com/repos/example/Viewer/releases/latest"
+        );
+    }
+
+    #[test]
+    fn reads_the_canonical_asset_endpoint_for_a_transferred_repository() {
+        let seed = Seed {
+            url: "https://github.com/old-owner/Viewer/releases/download/v2.1/Viewer-universal.dmg"
+                .into(),
+            ..Seed::default()
+        };
+        let candidate = Github.direct(&seed, &seed.url).unwrap();
+        let fixture = GitHubFixture {
+            requests: Mutex::default(),
+        };
+        let resolved = Github
+            .resolve(&candidate, &mut Context::new(&fixture, None))
+            .unwrap();
+        assert_eq!(resolved[0].url, seed.url);
+        assert_eq!(
+            resolved[0].download_url.as_deref(),
+            Some("https://api.github.com/repos/example/Viewer/releases/assets/42")
         );
     }
 

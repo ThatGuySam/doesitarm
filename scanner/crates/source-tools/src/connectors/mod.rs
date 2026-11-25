@@ -183,7 +183,7 @@ impl<'a> Context<'a> {
     ) -> Result<Vec<Candidate>, Failure> {
         let mut candidate = candidate.clone();
         if candidate.download_url.is_none()
-            && let Some(endpoint) = github::pinned_asset(&public_url(&candidate.url)?, self)?
+            && let Some(endpoint) = github::release_asset(&public_url(&candidate.url)?, self)?
         {
             candidate.download_url = Some(endpoint.into());
         }
@@ -228,7 +228,7 @@ impl<'a> Context<'a> {
             .map(|dir| dir.join(format!("{}.json", crate::digest(&key))));
         let cached = path.as_ref().and_then(|p| read_cache(p, limit).ok());
         let binary = if !github_api && matches!(mode, BodyMode::Metadata(_)) {
-            github::pinned_asset(&url, self)?
+            github::release_asset(&url, self)?
         } else {
             None
         };
@@ -373,7 +373,7 @@ fn candidate_from(
 fn metadata_base<'a>(requested: &'a Url, response: &'a Response) -> &'a Url {
     // Release storage URLs address one object by ID. Relative references in a
     // release asset belong to the publisher's URL alongside its sibling assets.
-    if github::pinned_release_parts(requested).is_some() {
+    if github::release_download_parts(requested).is_some() {
         requested
     } else {
         &response.url
