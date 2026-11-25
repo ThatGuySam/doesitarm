@@ -940,3 +940,34 @@ fn hfs_suite_with_no_primary_product_preserves_its_candidates() {
     );
     assert!(result.architectures.is_empty());
 }
+
+#[test]
+fn zip_resource_category_checks_for_code_in_nonstandard_paths() {
+    let input = include_bytes!("../../fixtures/bundles/resources-with-binary.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::NotFound), "{result:?}");
+    assert_ne!(result.bundle_kind, Some("resource_only"));
+    assert!(result.architectures.is_empty());
+    assert_eq!(
+        result.inventory.unwrap().binaries[0].path,
+        "Contents/Unexpected/tool"
+    );
+}
+
+#[test]
+fn zip_outer_app_with_its_own_launcher_keeps_the_wrapped_app_as_nested_code() {
+    let input = include_bytes!("../../fixtures/bundles/wrapper-with-own-launcher.zip");
+    for target in [Target::Auto, Target::Bundle("Outer.app")] {
+        let result = ready(scan_target(&mut Memory(input), u64::MAX, target));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_path.as_deref(), Some("Outer.app"));
+        assert_eq!(
+            result.executable_path.as_deref(),
+            Some("Outer.app/Contents/MacOS/Outer")
+        );
+        assert!(result.wrapper_path.is_none());
+        assert!(result.inventory.unwrap().binaries.iter().any(|entry| {
+            entry.path == "Wrapper/Inner.app/Inner" && entry.role == "nested_app"
+        }));
+    }
+}

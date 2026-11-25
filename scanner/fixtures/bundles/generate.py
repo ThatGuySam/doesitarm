@@ -81,3 +81,13 @@ for name, programs in [
 ]:
     volume = hfs_tree({path: data for product in programs for path, data in app(product).items()})
     write_udif(HERE / name, volume, [(1, len(volume) // 512, bytes)], "Apple_HFS")
+
+zip_fixture("resources-with-binary.zip", {
+    **resources,
+    "A Assets.app/Contents/Unexpected/tool": thin(),
+})
+zip_fixture("wrapper-with-own-launcher.zip", {
+    **app(wrapper),
+    f"{inner}/Info.plist": (HERE.parent / "bigfolder/wrapper-nested-flat/Info.plist").read_bytes(),
+    f"{inner}/Inner": thin(),
+})

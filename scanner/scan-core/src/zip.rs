@@ -156,6 +156,11 @@ async fn scan_directory(
     let mut selected: Option<(App<'_>, ScanResult, Result<()>)> = None;
     let mut first_failure = None;
     for app in apps {
+        if let Some((parent, _, _)) = &selected
+            && app.wrapper == Some(parent.name)
+        {
+            continue;
+        }
         work.check_deadline()?;
         let mut result = out.subresult();
         result.format = out.format;
@@ -294,7 +299,14 @@ async fn read_inventory(
         } else {
             inventory::role(relative)
         };
-        let Some(role) = role else {
+        let nested = relative
+            .strip_prefix("Wrapper/")
+            .and_then(|path| path.split_once('/'))
+            .is_some_and(|(child, _)| child.ends_with(".app"));
+        let Some(role) = role
+            .or(nested.then_some("nested_app"))
+            .or(declared_resource.then_some("resource"))
+        else {
             continue;
         };
         if entry.is_symlink() {
