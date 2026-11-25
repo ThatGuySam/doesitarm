@@ -46,6 +46,31 @@ pub(crate) fn selected_plist<'a>(path: &'a str, target: Target<'_>) -> Option<&'
     }
 }
 
+pub(crate) fn wrapped_plist<'a>(
+    path: &'a str,
+    target: Target<'_>,
+) -> Option<(&'a str, &'a str, bool)> {
+    let (root, flat) = match plist_bundle(path) {
+        Some(root) => (root, false),
+        None => (path.strip_suffix("/Info.plist")?, true),
+    };
+    let (wrapper, inner) = root.rsplit_once("/Wrapper/")?;
+    if !wrapper.ends_with(".app")
+        || !outer_app(wrapper)
+        || inner.contains('/')
+        || !inner.ends_with(".app")
+    {
+        return None;
+    }
+    match target {
+        Target::Auto => Some((root, wrapper, flat)),
+        Target::Bundle(asked) if matches_path(root, asked) || matches_path(wrapper, asked) => {
+            Some((root, wrapper, flat))
+        }
+        _ => None,
+    }
+}
+
 pub(crate) fn matches_path(actual: &str, requested: &str) -> bool {
     let Some(requested) = archive_path(requested) else {
         return false;
@@ -67,9 +92,24 @@ pub(crate) fn apply_plist(
     out: &mut ScanResult,
     allow_fallback: bool,
 ) -> Result<String> {
+    apply_plist_at(bytes, bundle, "Contents/Info.plist", out, allow_fallback)
+}
+
+pub(crate) fn apply_flat_plist(bytes: &[u8], bundle: &str, out: &mut ScanResult) -> Result<String> {
+    apply_plist_at(bytes, bundle, "Info.plist", out, true)
+}
+
+fn apply_plist_at(
+    bytes: &[u8],
+    bundle: &str,
+    plist: &str,
+    out: &mut ScanResult,
+    allow_fallback: bool,
+) -> Result<String> {
     if let Some(diagnostic) = &mut out.diagnostic {
-        diagnostic.plist_source(bundle, bytes);
+        diagnostic.plist_source(bundle, plist, bytes);
     }
+    let flat = plist == "Info.plist";
     let raw = bytes.strip_prefix(b"\xef\xbb\xbf").unwrap_or(bytes);
     let parsed = plist_value::parse(raw, ScanError::Invalid("bundle Info.plist"))?;
     let resolution = (|| {
@@ -79,9 +119,9 @@ pub(crate) fn apply_plist(
         apply_properties(dict, bundle, out);
         let relative = if let Some(executable) = string(dict, "CFBundleExecutable") {
             out.executable_name = Some(executable.to_owned());
-            resolve_executable(executable, false)?
+            resolve_executable(executable, flat)?
         } else if allow_fallback {
-            let path = same_stem_executable(dict, bundle, false).ok_or(MISSING_EXECUTABLE)?;
+            let path = same_stem_executable(dict, bundle, flat).ok_or(MISSING_EXECUTABLE)?;
             out.executable_resolution = Some(NAME_FALLBACK);
             path
         } else {

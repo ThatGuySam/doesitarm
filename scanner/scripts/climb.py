@@ -292,9 +292,11 @@ def category(entry_, scan, target=None):
             return "multi_app"
         def path_parts(path):
             return unicodedata.normalize("NFC", path).casefold().removeprefix("./").split("/")
-        actual = path_parts(scan.get("bundle_path") or "")
-        if declared and actual[-len(path_parts(declared[0])):] != path_parts(declared[0]):
-            return "executable_not_found"
+        if declared:
+            expected = path_parts(declared[0])
+            paths = (scan.get("bundle_path"), scan.get("wrapper_path"))
+            if not any(path_parts(path)[-len(expected):] == expected for path in paths if path):
+                return "executable_not_found"
         if not scan.get("architectures") or not all(a["header_verified"] for a in scan["architectures"]):
             return "executable_not_found"
         if not scan.get("bundle_id") or not scan.get("version") or not scan.get("min_macos"):

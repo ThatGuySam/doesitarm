@@ -103,20 +103,39 @@ async fn scan_directory(
         return primary;
     }
 
-    let app = entries
+    let paths = entries
         .iter()
-        .filter_map(|entry| {
-            if entry.is_symlink() {
-                return None;
+        .filter(|entry| !entry.is_symlink())
+        .filter_map(|entry| Some((entry, bundle::archive_path(&entry.path)?)));
+    let app = paths
+        .clone()
+        .filter_map(|(entry, path)| Some((entry, bundle::selected_plist(path, target)?, path)))
+        .min_by_key(|(_, name, _)| (name.matches('/').count(), *name));
+    let (entry, name, wrapper, flat) = if let Some((entry, name, path)) = app {
+        let wrapper = bundle::wrapped_plist(path, target).map(|(_, wrapper, _)| wrapper);
+        (entry, name, wrapper, false)
+    } else {
+        let mut wrapped = paths.filter_map(|(entry, path)| {
+            let (name, wrapper, flat) = bundle::wrapped_plist(path, target)?;
+            Some((entry, name, wrapper, flat))
+        });
+        let Some(mut choice) = wrapped.next() else {
+            return scan_nested(input, &entries, directory.offset, work, target, out).await;
+        };
+        for candidate in wrapped {
+            if candidate.1 != choice.1 {
+                return Err(ScanError::Unsupported(
+                    "multiple wrapped apps in ZIP archive",
+                ));
             }
-            let path = bundle::archive_path(&entry.path)?;
-            Some((entry, bundle::selected_plist(path, target)?))
-        })
-        .min_by_key(|(_, name)| (name.matches('/').count(), *name));
-    let Some((entry, name)) = app else {
-        return scan_nested(input, &entries, directory.offset, work, target, out).await;
+            if !candidate.3 {
+                choice = candidate;
+            }
+        }
+        (choice.0, choice.1, Some(choice.2), choice.3)
     };
     out.bundle_path = Some(name.to_owned());
+    out.wrapper_path = wrapper.map(str::to_owned);
 
     if entry.expanded > bundle::MAX_PLIST {
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
@@ -125,7 +144,12 @@ async fn scan_directory(
         .await?
         .read_at(0, entry.expanded as usize)
         .await?;
-    let mut path = bundle::apply_plist(&plist, name, out, true)?;
+    let primary_path = if flat {
+        bundle::apply_flat_plist(&plist, name, out)
+    } else {
+        bundle::apply_plist(&plist, name, out, true)
+    };
+    let mut path = primary_path?;
     if !entries
         .iter()
         .any(|entry| bundle::archive_path(&entry.path) == Some(&path))
@@ -152,7 +176,12 @@ async fn scan_directory(
         else {
             continue;
         };
-        let Some(role) = inventory::role(relative) else {
+        let role = if flat {
+            inventory::flat_role(relative)
+        } else {
+            inventory::role(relative)
+        };
+        let Some(role) = role else {
             continue;
         };
         if relative.ends_with('/') || entry.expanded < 8 || entry.is_symlink() {

@@ -49,3 +49,11 @@ volume = hfs_tree(files)
 write_udif(HERE / "contents-relative-hfs.dmg", volume, [(1, len(volume) // 512, bytes)], "Apple_HFS")
 metadata["CFBundleExecutable"] = "MacOS/FixtureBinary"
 apfs_fixture(HERE / "contents-relative-apfs.dmg", metadata, fat())
+
+wrapper = "Outer.app"
+inner = f"{wrapper}/Wrapper/Inner.app"
+zip_fixture("wrapped-flat.zip", {
+    f"{inner}/Info.plist": (HERE.parent / "bigfolder/wrapper-nested-flat/Info.plist").read_bytes(),
+    f"{inner}/Inner": thin(),
+    f"{inner}/Frameworks/Sidecar.framework/Sidecar": thin(),
+})

@@ -218,3 +218,13 @@ test('legacy i386 and PowerPC slices do not get a Rosetta verdict', () => {
   const result = { status: 'complete', bundle_path: 'LaTeXiT.app', architectures };
   assert.equal(verdict(result).text, 'Legacy 32-bit Intel and PowerPC');
 });
+
+test('the wrapper layout alone does not give a native macOS verdict', () => {
+  const result = {
+    status: 'complete',
+    bundle_path: 'Outer.app/Wrapper/Inner.app',
+    wrapper_path: 'Outer.app',
+    architectures: [{ name: 'arm64', header_verified: true }],
+  };
+  assert.equal(verdict(result).text, 'Wrapped app · Arm launcher');
+});

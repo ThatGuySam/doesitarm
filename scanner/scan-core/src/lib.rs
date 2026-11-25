@@ -199,6 +199,8 @@ pub struct ScanResult {
     pub bundle_path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_kind: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub wrapper_path: Option<String>,
     pub bundle_id: Option<String>,
     pub version: Option<String>,
     pub name: Option<String>,
@@ -241,6 +243,7 @@ impl ScanResult {
             architectures: Vec::new(),
             bundle_path: None,
             bundle_kind: None,
+            wrapper_path: None,
             bundle_id: None,
             version: None,
             name: None,

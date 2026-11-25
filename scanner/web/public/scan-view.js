@@ -50,6 +50,10 @@ export function verdict(result) {
   const arm = names.has('arm64') || names.has('arm64e');
   const intel = names.has('x86_64') || names.has('x86_64h');
   const launcher = result.bundle_path ? ' launcher' : '';
+  if (result.wrapper_path && (arm || intel)) {
+    const slices = arm && intel ? 'Universal' : arm ? 'Arm' : 'Intel';
+    return { tone: 'unknown', icon: '?', text: `Wrapped app · ${slices} launcher` };
+  }
   if (arm) {
     const universal = intel ? ' (Universal)' : '';
     return { tone: 'native', icon: '✓', text: `Apple Silicon native${launcher}${universal}` };

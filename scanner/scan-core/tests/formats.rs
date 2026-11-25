@@ -789,3 +789,54 @@ fn reads_encrypted_macho_headers_without_reading_encrypted_code() {
     assert!(matches!(truncated.status, Status::Invalid), "{truncated:?}");
     assert_eq!(truncated.architectures[0].encrypted, None);
 }
+
+#[test]
+fn zip_wrapper_resolves_the_flat_inner_application_and_its_own_inventory() {
+    let input = include_bytes!("../../fixtures/bundles/wrapped-flat.zip");
+    for target in [
+        Target::Auto,
+        Target::Bundle("Outer.app"),
+        Target::Bundle("Inner.app"),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_core::scan_target_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+                target,
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(
+                result.bundle_path.as_deref(),
+                Some("Outer.app/Wrapper/Inner.app")
+            );
+            assert_eq!(result.bundle_kind, Some("app"));
+            assert_eq!(result.wrapper_path.as_deref(), Some("Outer.app"));
+            assert_eq!(
+                result.executable_path.as_deref(),
+                Some("Outer.app/Wrapper/Inner.app/Inner")
+            );
+            let inventory = result.inventory.unwrap();
+            assert!(
+                inventory
+                    .binaries
+                    .iter()
+                    .any(|entry| entry.role == "framework")
+            );
+            assert!(inventory.binaries.iter().any(|entry| entry.role == "main"));
+        }
+    }
+
+    let local = ready(scan_core::scan_target_with_diagnostics(
+        &mut Memory(input),
+        ScanLimits::for_profile(Profile::Local),
+        Target::Auto,
+        None,
+    ));
+    assert_eq!(
+        local.diagnostic.unwrap().info_plist_path.as_deref(),
+        Some("Outer.app/Wrapper/Inner.app/Info.plist")
+    );
+}
