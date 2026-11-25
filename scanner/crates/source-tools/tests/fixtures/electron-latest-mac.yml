@@ -1,0 +1,11 @@
+version: 2.1.0
+files:
+  - url: 'Viewer-universal.zip'
+    sha512: example
+    size: 112233
+  - url: "https://cdn.example.org/Viewer-x64.dmg"
+    sha512: example
+    size: 223344
+path: Viewer-universal.zip
+sha512: example
+releaseDate: '2026-11-24T13:56:42.536Z'

@@ -1,0 +1,6 @@
+StorePath: /nix/store/00000000000000000000000000000000-example-viewer-2.1
+URL: nar/109pzkz53g3r0b7db5z4vsm5xh5iv12j6zyrpr9d7fci9yiy6ww0.nar.zst
+Compression: zstd
+FileSize: 1871073
+NarSize: 5721880
+References:

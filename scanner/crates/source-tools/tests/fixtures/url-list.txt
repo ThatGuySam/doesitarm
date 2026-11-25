@@ -1,0 +1,2 @@
+https://downloads.example.org/viewer.zip
+{"name":"Viewer","url":"https://downloads.example.org/viewer.dmg","bundle_id_if_known":"example.viewer","version_if_known":"2.1"}

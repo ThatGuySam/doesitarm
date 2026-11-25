@@ -89,7 +89,7 @@ pub(crate) async fn scan(
         .window(iso.disk)?
         .read_at(0, info.size as usize)
         .await?;
-    let executable = bundle::apply_plist(&plist, &path, out)?;
+    let executable = bundle::apply_plist(&plist, &path, out, false)?;
     let relative = &executable[path.len() + 1..];
     let primary = match iso.find_path(&app, relative, false).await {
         Ok(entry) => {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict>
+<key>Input</key><dict>
+<key>NAME</key><string>Viewer</string>
+<key>ORIGIN</key><string>https://cdn.example.org</string>
+</dict>
+<key>Process</key><array><dict>
+<key>Processor</key><string>URLDownloader</string>
+<key>Arguments</key><dict><key>url</key><string>%ORIGIN%/Viewer%20App.dmg</string></dict>
+</dict></array>
+</dict></plist>

@@ -25,6 +25,30 @@ pub(crate) struct Options {
 
 pub(crate) fn scan(
     url: &str,
+    limits: ScanLimits,
+    target: Target<'_>,
+    options: &Options,
+    deadline: Option<Deadline>,
+) -> Output {
+    let config = Agent::config_builder()
+        .http_status_as_error(false)
+        .https_only(!options.allow_http)
+        .max_redirects(8)
+        .timeout_global(Some(REQUEST_TIMEOUT))
+        .build();
+    scan_with_agent(
+        Agent::new_with_config(config),
+        url,
+        limits,
+        target,
+        options,
+        deadline,
+    )
+}
+
+fn scan_with_agent(
+    agent: Agent,
+    url: &str,
     mut limits: ScanLimits,
     target: Target<'_>,
     options: &Options,
@@ -36,37 +60,66 @@ pub(crate) fn scan(
     if limits.byte_budget == 0 {
         return Output::new(failure(ScanError::Budget, 0));
     }
-    let config = Agent::config_builder()
-        .http_status_as_error(false)
-        .https_only(!options.allow_http)
-        .max_redirects(8)
-        .timeout_global(Some(REQUEST_TIMEOUT))
-        .build();
-    let agent = Agent::new_with_config(config);
     let uri = match url.parse::<Uri>() {
         Ok(uri) if uri.host().is_some() && !uri.authority().unwrap().as_str().contains('@') => uri,
         _ => return Output::new(failure(ScanError::Source("invalid HTTP URL".into()), 0)),
     };
-    let now = Instant::now();
-    let response = match request(&agent, &uri, 0, 1, None, deadline) {
+    let mut requests = RangeRequests {
+        agent,
+        delay: options.delay,
+        deadline,
+        last_request: None,
+        retry_used: limits.profile == Profile::Worker,
+        retry_bytes: 0,
+    };
+    let response = match requests.get(&uri, 0, 1, None) {
         Ok(response) => response,
-        Err(error) => return probe_failure(error),
+        Err(error) => return probe_failure(error, 1, 1, &mut requests),
     };
     if response.status().as_u16() == 200 && options.allow_stream {
-        return scan_stream(response, limits, target, deadline);
+        return scan_stream(response, limits, target, deadline, Some(requests));
     }
-    let (probe, _) = match accept_range(response, 0, 1, None) {
+
+    let check_text_probe = limits.profile != Profile::Worker
+        && limits.byte_budget >= 5
+        && response
+            .headers()
+            .get(header::CONTENT_TYPE)
+            .is_some_and(|value| {
+                value
+                    .to_str()
+                    .ok()
+                    .and_then(|value| value.split(';').next())
+                    .is_some_and(|media| media.trim().eq_ignore_ascii_case("text/plain"))
+            });
+    let (mut probe, _) = match accept_range(response, 0, 1, None) {
         Ok(response) => response,
-        Err(_) if deadline.is_some_and(Deadline::expired) => return probe_failure(DEADLINE),
-        Err(error) => return probe_failure(error),
+        Err(error) => return probe_failure(error, 1, 1, &mut requests),
     };
-    let source_etag = etag_text(probe.etag.as_ref());
+    let mut probe_len = 1;
+    let mut probe_reads = 1;
+    let mut probe_cost = 1;
+    if check_text_probe && probe.size >= 4 {
+        // Some intermediaries return a one-byte range of a text response before
+        // redirecting to the installer. Establish the representation from a
+        // fresh range that can contain the complete archive magic.
+        probe_reads += 1;
+        probe_cost += 4;
+        let corroborated = requests
+            .get(&probe.uri, 0, 4, None)
+            .and_then(|reply| accept_range(reply, 0, 4, None));
+        match corroborated {
+            Ok((representation, _)) => {
+                probe = representation;
+                probe_len = 4;
+            }
+            Err(error) => return probe_failure(error, probe_reads, probe_cost, &mut requests),
+        }
+    }
+
     let mut source = HttpSource {
-        agent,
+        requests,
         representation: probe,
-        delay: options.delay,
-        last_request: now,
-        deadline,
         ignored_range: None,
     };
     let budget = if limits.profile == Profile::Worker {
@@ -74,36 +127,45 @@ pub(crate) fn scan(
     } else {
         limits.byte_budget
     };
-    limits.byte_budget = budget.saturating_sub(1);
+    limits.byte_budget = budget.saturating_sub(probe_cost);
     let mut result = scan_core(&mut source, limits, target, deadline);
-    result.reads += 1;
-    result.bytes_requested += 1;
-    // A successful core read of the magic already covers the probe at zero.
-    result.bytes_read = result.bytes_read.max(1);
+    let (extra_reads, extra_requested) = source.requests.take_retry_counts();
+    result.reads += probe_reads + extra_reads;
+    result.bytes_requested += probe_cost + extra_requested;
+    result.bytes_read = result.bytes_read.max(probe_len);
     if options.allow_stream
         && matches!(result.status, scan_core::Status::SourceError)
         && let Some(response) = source.ignored_range.take()
     {
         limits.byte_budget = budget.saturating_sub(result.bytes_requested);
-        if limits.byte_budget == 0 {
+        if let Err(error) = validate_stream_fallback(&response, &source.representation) {
+            result.set_error(error);
+        } else if limits.byte_budget == 0 {
             result.set_error(ScanError::Budget);
         } else {
-            let mut restarted = scan_stream(response, limits, target, deadline);
+            let mut restarted =
+                scan_stream(response, limits, target, deadline, Some(source.requests));
             restarted.scan.bytes_requested += result.bytes_requested;
             restarted.scan.reads += result.reads;
             return restarted;
         }
     }
     Output {
-        source_etag,
+        source_etag: etag_text(source.representation.etag.as_ref()),
         source_transport: Some("range"),
         ..Output::new(result)
     }
 }
 
-fn probe_failure(error: ScanError) -> Output {
-    let mut scan = failure(error, 1);
-    scan.bytes_requested = 1;
+fn probe_failure(error: ScanError, reads: u64, bytes: u64, requests: &mut RangeRequests) -> Output {
+    let error = if requests.deadline.is_some_and(Deadline::expired) {
+        DEADLINE
+    } else {
+        error
+    };
+    let (extra_reads, extra_requested) = requests.take_retry_counts();
+    let mut scan = failure(error, reads + extra_reads);
+    scan.bytes_requested = bytes + extra_requested;
     Output::new(scan)
 }
 
@@ -127,20 +189,36 @@ fn scan_stream(
     mut limits: ScanLimits,
     target: Target<'_>,
     deadline: Option<Deadline>,
+    mut requests: Option<RangeRequests>,
 ) -> Output {
-    let source_etag = etag_text(
-        response
-            .headers()
-            .get(header::ETAG)
-            .filter(|tag| is_strong(tag)),
-    );
+    let etag = response
+        .headers()
+        .get(header::ETAG)
+        .filter(|tag| is_strong(tag))
+        .cloned();
+    let source_etag = etag_text(etag.as_ref());
     let source_content_type = response
         .headers()
         .get(header::CONTENT_TYPE)
         .and_then(|value| value.to_str().ok())
         .map(|value| value.chars().take(128).collect());
+    let resume_uri = requests.as_ref().map(|_| response.get_uri().clone());
     let result = match StreamSource::open(response, limits.byte_budget) {
         Ok(mut source) => {
+            if let (Some(uri), Some(size), Some(etag)) = (resume_uri, source.size, etag)
+                && let Some(requests) = requests.take()
+            {
+                source.resume = Some(StreamResume {
+                    requests,
+                    representation: Representation {
+                        uri,
+                        size,
+                        etag: Some(etag),
+                    },
+                    attempts: 0,
+                    last_offset: 0,
+                });
+            }
             let mut result = match source.discover_size() {
                 Ok(()) => {
                     // The spool meters physical transfer. Reads served from it
@@ -157,9 +235,16 @@ fn scan_stream(
             if deadline.is_some_and(Deadline::expired) {
                 result.set_error(DEADLINE);
             }
-            result.reads = 1;
+            let resume_attempts = source.resume.as_ref().map_or(0, |resume| resume.attempts);
+            let (retry_reads, retry_bytes) = source
+                .resume
+                .as_mut()
+                .map(|resume| &mut resume.requests)
+                .or(requests.as_mut())
+                .map_or((0, 0), RangeRequests::take_retry_counts);
+            result.reads = 1 + resume_attempts + retry_reads;
             result.bytes_read = source.received;
-            result.bytes_requested = source.received;
+            result.bytes_requested = source.received + retry_bytes;
             result
         }
         Err(error) => failure(error, 1),
@@ -184,6 +269,14 @@ struct StreamSource {
     size: Option<u64>,
     received: u64,
     budget: u64,
+    resume: Option<StreamResume>,
+}
+
+struct StreamResume {
+    requests: RangeRequests,
+    representation: Representation,
+    attempts: u64,
+    last_offset: u64,
 }
 
 impl StreamSource {
@@ -217,6 +310,7 @@ impl StreamSource {
             size,
             received: 0,
             budget,
+            resume: None,
         })
     }
 
@@ -243,19 +337,55 @@ impl StreamSource {
         let mut buffer = [0; 32 * 1024];
         while self.received < end {
             let count = (end - self.received).min(buffer.len() as u64) as usize;
-            let read = self.body.read(&mut buffer[..count]).map_err(source_error)?;
-            if read == 0 {
-                if self.size.is_some_and(|size| self.received < size) {
-                    return Err(source_error("stream: body ended before Content-Length"));
+            let read = match self.body.read(&mut buffer[..count]) {
+                Ok(0) if self.size.is_none() => {
+                    self.size = Some(self.received);
+                    break;
                 }
-                self.size = Some(self.received);
-                break;
-            }
+                Ok(0) => {
+                    self.resume_at(source_error("stream: body ended before Content-Length"))?;
+                    continue;
+                }
+                Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                Err(error) => {
+                    self.resume_at(source_error(error))?;
+                    continue;
+                }
+                Ok(read) => read,
+            };
             self.received += read as u64;
             self.spool
                 .write_all(&buffer[..read])
                 .map_err(source_error)?;
         }
+        Ok(())
+    }
+
+    fn resume_at(&mut self, error: ScanError) -> Result<()> {
+        const MAX_RESUMES: u64 = 2;
+        let Some(resume) = &mut self.resume else {
+            return Err(error);
+        };
+        if resume.attempts >= MAX_RESUMES || self.received <= resume.last_offset {
+            return Err(error);
+        }
+        let expected = &resume.representation;
+        let len = usize::try_from(expected.size - self.received)
+            .map_err(|_| source_error("remaining stream range is too large"))?;
+        resume.attempts += 1;
+        resume.last_offset = self.received;
+        let response = resume
+            .requests
+            .get(&expected.uri, self.received, len, Some(expected))?;
+        range_headers(&response, self.received, len, Some(expected))?;
+        if response.get_uri() != &expected.uri
+            || response.headers().get(header::ETAG) != expected.etag.as_ref()
+        {
+            return Err(source_error(
+                "stream resume: representation URL or ETag changed",
+            ));
+        }
+        self.body = response.into_body().into_reader();
         Ok(())
     }
 }
@@ -287,11 +417,8 @@ struct Representation {
 }
 
 struct HttpSource {
-    agent: Agent,
+    requests: RangeRequests,
     representation: Representation,
-    delay: Duration,
-    last_request: Instant,
-    deadline: Option<Deadline>,
     ignored_range: Option<Response<Body>>,
 }
 
@@ -301,19 +428,11 @@ impl ReadAt for HttpSource {
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
-        let delay = self.delay.saturating_sub(self.last_request.elapsed());
-        thread::sleep(
-            self.deadline
-                .map_or(delay, |deadline| delay.min(deadline.remaining())),
-        );
-        self.last_request = Instant::now();
-        let response = request(
-            &self.agent,
+        let response = self.requests.get(
             &self.representation.uri,
             offset,
             len,
             Some(&self.representation),
-            self.deadline,
         )?;
         if response.status().as_u16() == 200 {
             self.ignored_range = Some(response);
@@ -324,7 +443,7 @@ impl ReadAt for HttpSource {
         }
         let (representation, bytes) =
             accept_range(response, offset, len, Some(&self.representation)).map_err(|error| {
-                if self.deadline.is_some_and(Deadline::expired) {
+                if self.requests.deadline.is_some_and(Deadline::expired) {
                     DEADLINE
                 } else {
                     error
@@ -333,6 +452,80 @@ impl ReadAt for HttpSource {
         self.representation = representation;
         Ok(bytes)
     }
+}
+
+struct RangeRequests {
+    agent: Agent,
+    delay: Duration,
+    deadline: Option<Deadline>,
+    last_request: Option<Instant>,
+    retry_used: bool,
+    retry_bytes: u64,
+}
+
+impl RangeRequests {
+    fn get(
+        &mut self,
+        uri: &Uri,
+        offset: u64,
+        len: usize,
+        expected: Option<&Representation>,
+    ) -> Result<Response<Body>> {
+        if let Some(last) = self.last_request {
+            self.wait(self.delay.saturating_sub(last.elapsed()));
+        }
+        self.last_request = Some(Instant::now());
+        let response = request(&self.agent, uri, offset, len, expected, self.deadline)?;
+        let backoff = self.delay.max(Duration::from_millis(250));
+        if response.status().as_u16() != 500
+            || self.retry_used
+            || response.headers().contains_key(header::RETRY_AFTER)
+            || self
+                .deadline
+                .is_some_and(|deadline| deadline.remaining() <= backoff)
+        {
+            return Ok(response);
+        }
+        self.retry_used = true;
+        self.retry_bytes = len as u64;
+        drop(response);
+        self.wait(backoff);
+        self.last_request = Some(Instant::now());
+        request(&self.agent, uri, offset, len, expected, self.deadline)
+    }
+
+    fn wait(&self, duration: Duration) {
+        thread::sleep(
+            self.deadline
+                .map_or(duration, |deadline| duration.min(deadline.remaining())),
+        );
+    }
+
+    fn take_retry_counts(&mut self) -> (u64, u64) {
+        let bytes = std::mem::take(&mut self.retry_bytes);
+        (u64::from(bytes != 0), bytes)
+    }
+}
+
+fn validate_stream_fallback(response: &Response<Body>, expected: &Representation) -> Result<()> {
+    if response.get_uri() != &expected.uri {
+        return Err(source_error("stream fallback: representation URL changed"));
+    }
+    let headers = response.headers();
+    if headers.get(header::CONTENT_LENGTH).is_some_and(|length| {
+        length.to_str().ok().and_then(|text| text.parse().ok()) != Some(expected.size)
+    }) {
+        return Err(source_error("stream fallback: representation size changed"));
+    }
+    if expected
+        .etag
+        .as_ref()
+        .zip(headers.get(header::ETAG))
+        .is_some_and(|(before, after)| before != after)
+    {
+        return Err(source_error("stream fallback: representation ETag changed"));
+    }
+    Ok(())
 }
 
 fn request(
@@ -377,6 +570,31 @@ fn accept_range(
     len: usize,
     expected: Option<&Representation>,
 ) -> Result<(Representation, Vec<u8>)> {
+    let representation = range_headers(&response, offset, len, expected)?;
+    let end = offset + len as u64 - 1;
+    let label = format!("range {offset}-{end}");
+    let mut bytes = Vec::with_capacity(len);
+    response
+        .body_mut()
+        .as_reader()
+        .take(len as u64 + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|error| source_error(format!("{label}: {error}")))?;
+    if bytes.len() != len {
+        return Err(source_error(format!(
+            "{label}: received {} bytes, expected {len}",
+            bytes.len()
+        )));
+    }
+    Ok((representation, bytes))
+}
+
+fn range_headers(
+    response: &Response<Body>,
+    offset: u64,
+    len: usize,
+    expected: Option<&Representation>,
+) -> Result<Representation> {
     let end = offset + len as u64 - 1;
     let label = format!("range {offset}-{end}");
     if response.status().as_u16() != 206 {
@@ -416,31 +634,16 @@ fn accept_range(
         .filter(|value| is_strong(value))
         .cloned();
     let validator = expected.and_then(|value| value.etag.as_ref());
-    if let (Some(before), Some(now)) = (validator, &observed)
+    if let (Some(before), Some(now)) = (validator, headers.get(header::ETAG))
         && before != now
     {
         return Err(source_error(format!("{label}: strong ETag changed")));
     }
-    let representation = Representation {
+    Ok(Representation {
         uri: response.get_uri().clone(),
         size,
         etag: observed.or_else(|| validator.cloned()),
-    };
-
-    let mut bytes = Vec::with_capacity(len);
-    response
-        .body_mut()
-        .as_reader()
-        .take(len as u64 + 1)
-        .read_to_end(&mut bytes)
-        .map_err(|error| source_error(format!("{label}: {error}")))?;
-    if bytes.len() != len {
-        return Err(source_error(format!(
-            "{label}: received {} bytes, expected {len}",
-            bytes.len()
-        )));
-    }
-    Ok((representation, bytes))
+    })
 }
 
 fn require_identity(headers: &ureq::http::HeaderMap, label: &str) -> Result<()> {
@@ -573,6 +776,7 @@ mod tests {
             ScanLimits::new(68 * 1024),
             Target::Auto,
             None,
+            None,
         );
         assert!(matches!(result.scan.status, scan_core::Status::Complete));
         assert_eq!(result.source_transport, Some("stream"));
@@ -601,3 +805,6 @@ mod tests {
         assert_eq!(source.received, 3);
     }
 }
+
+#[cfg(test)]
+mod recorded;
