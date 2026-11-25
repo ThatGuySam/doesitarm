@@ -86,6 +86,8 @@ The 120-second Source-tools baseline reproduced the false timeout after both ver
 
 On the same saved ZIP and 64 MiB profile the result stayed complete and the source request count fell from 175 to 125. Both scans read 39,677,396 unique bytes. The combined 16-second live run verified both headers after 39,656,349 bytes over 81 requests, with optional inventory still partial. A complete framework inventory may need a longer run. The recorded acquisition failure `6036e71620d9` stopped after 42,213,633 transferred bytes and is separately covered by the earlier range-resume fixture.
 
+The BetterTouchTool Source-tools after-run completed with verified status at 48,045,170 aggregate bytes over 99 requests. The matching old 120-second run reported a timeout at 47,968,038 bytes over 105 requests.
+
 ## Jabra Direct 8.4.30601
 
 The 270,448,755-byte DMG (observed SHA-256 `f3a97ae47a367bb9fc0397650d3cffc572734b8cb6e368023bc74751cb5e26a1`) contains a 268,879,410-byte XAR inside APFS. The main component's single gzip member is 267,078,015 bytes. Its app launcher is CPIO record 5, at decoded byte 27,258. The app plist is record 929, at byte 700,435,322, and declares that exact launcher. The previous 64 MiB attempt `2eebddb5d3e6` read 66,949,763 bytes and stopped with both slices only as executable candidates. The matching file-backed control read 66,949,764. At 256 MiB the baseline verified the declared application after 267,203,025 bytes. The earlier ledger success `b99ce296a8f8` refers to the separate Avaya Integration helper.
@@ -101,4 +103,16 @@ The exact-binary route also failed because APFS skipped its package fallback aft
 | Exact executable, 8 MiB | 49,114 | 228,054 | Fixed. Verifies x86_64 and arm64 at the exact installed path. Use this mode when the launcher alone answers the question. |
 | Automatic baseline, 256 MiB | 267,203,025 | Use the verified 8 MiB result | The larger read is unnecessary for the primary. A separate inventory pass may still need extra budget. |
 
-The BetterTouchTool Source-tools after-run completed with verified status at 48,045,170 aggregate bytes over 99 requests. The matching old 120-second run reported a timeout at 47,968,038 bytes over 105 requests.
+The live Azure range rerun verified the same Jabra version at 8,229,507 source bytes in automatic mode and 228,054 for the exact launcher. Both are real x86_64 and arm64 Mach-O headers.
+
+## Access and publisher decisions
+
+| Case | Bytes before | Bytes after | Status and legitimate route |
+| --- | ---: | ---: | --- |
+| SEGGER J-Link 9.96a `89268e29a0d0` | 27,647 HTML | 27,647 HTML, 512 in the probe | Needs attestation. Source-tools reproduced `needs_attestation`. An eligible user can complete the vendor's license and export-control flow and scan the saved package locally. [SEGGER downloads](https://www.segger.com/downloads/jlink/) · [SEGGER terms](https://www.segger.com/products/debug-probes/j-link/tools/terms-of-use/) |
+| SAP BTP CLI 2.116.3 | 446,594 HTML | 446,594 HTML | Needs vendor consent. The response is the SAP Development Tools page with license and export-control material. Use the vendor's Mac download flow and scan the authorized archive. [SAP Development Tools](https://tools.hana.ondemand.com/#cloud-btpcli) |
+| Send to Kindle pinned S3 URL | 0 installer bytes, HTTP 403 | 0 installer bytes, 243-byte AccessDenied XML | Pinned URL unavailable. The denial identifies the old S3 endpoint. Amazon's published Mac download flow is a separate route. [Amazon's Mac instructions](https://digprjsurvey.amazon.com/csad/help/node/TCUBEdEkbIhK07ysFu) |
+| Hancom Word `b0804cedf5de` | 4 parser bytes | 82 HTML | Stale artifact route. The pinned URL still returns a meta-refresh document. Use the vendor's distribution channel for an eligible macOS package. [Hancom](https://www.hancom.com/) |
+| Mac App Store handoffs | 0 installer bytes | 0 installer bytes from public listing metadata | Store handoff. Scan an authorized installed copy locally. The listing can identify the product and acquisition channel. [Pages resolver handoffs](PAGES.md) |
+
+The probes used public GETs. The supported follow-up for an artifact the user acquires through the publisher's flow is `scan-cli scan FILE --profile local --json`.
