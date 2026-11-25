@@ -1,25 +1,20 @@
 {
-  "sha256": "7151a0b1a59f3efe718b7e2ced3f1952de965dea6db8d618d93ee1be6a075a6e",
+  "sha256": "bba117f609ed2156c299cfdb2423b8501c3be6409281a48eb3f5d534fd5f0219",
   "sizes": {
-    "raw": 6633612,
-    "gzip": 961908,
-    "brotli": 611119
+    "raw": 1959784,
+    "gzip": 667433,
+    "brotli": 477706
   },
   "sections": [
     {
       "name": "Code",
-      "bytes": 6386082,
-      "payloadBytes": 6386077
+      "bytes": 1709585,
+      "payloadBytes": 1709581
     },
     {
       "name": "Data",
-      "bytes": 234628,
-      "payloadBytes": 234624
-    },
-    {
-      "name": "Functions",
-      "bytes": 8623,
-      "payloadBytes": 8620
+      "bytes": 244424,
+      "payloadBytes": 244420
     },
     {
       "name": "Imports",
@@ -27,19 +22,24 @@
       "payloadBytes": 1773
     },
     {
+      "name": "Functions",
+      "bytes": 1503,
+      "payloadBytes": 1500
+    },
+    {
       "name": "Exports",
-      "bytes": 934,
-      "payloadBytes": 931
+      "bytes": 942,
+      "payloadBytes": 939
     },
     {
       "name": "Types",
-      "bytes": 731,
-      "payloadBytes": 728
+      "bytes": 628,
+      "payloadBytes": 625
     },
     {
       "name": "Elements",
-      "bytes": 520,
-      "payloadBytes": 517
+      "bytes": 608,
+      "payloadBytes": 605
     },
     {
       "name": "Custom: target_features",
@@ -73,301 +73,296 @@
     }
   ],
   "code": {
-    "functions": 8618,
+    "functions": 1498,
     "importedFunctions": 31,
-    "bytes": 6386082,
-    "functionBodyBytes": 6373657,
+    "bytes": 1709585,
+    "functionBodyBytes": 1706955,
     "owners": [
       {
-        "name": "scan-core::pkg",
-        "bytes": 1738679,
-        "functions": 167
+        "name": "Rust core/alloc/std",
+        "bytes": 410250,
+        "functions": 755
       },
       {
         "name": "scan-core::macho",
-        "bytes": 1535965,
-        "functions": 736
-      },
-      {
-        "name": "scan-core::stream_bundle",
-        "bytes": 798551,
-        "functions": 219
-      },
-      {
-        "name": "Rust core/alloc/std",
-        "bytes": 640350,
-        "functions": 5548
-      },
-      {
-        "name": "scan-core::apfs",
-        "bytes": 294672,
-        "functions": 98
-      },
-      {
-        "name": "scan-core::hfs",
-        "bytes": 247804,
-        "functions": 81
-      },
-      {
-        "name": "scan-core::diagnostic",
-        "bytes": 172291,
-        "functions": 362
-      },
-      {
-        "name": "scan-core::inflate",
-        "bytes": 146535,
-        "functions": 149
-      },
-      {
-        "name": "scan-core::pbzx",
-        "bytes": 124423,
-        "functions": 92
-      },
-      {
-        "name": "scan-core::nested",
-        "bytes": 115154,
-        "functions": 7
-      },
-      {
-        "name": "scan-core::(root)",
-        "bytes": 113447,
-        "functions": 224
+        "bytes": 220238,
+        "functions": 51
       },
       {
         "name": "lzma-rust2",
-        "bytes": 52522,
-        "functions": 93
+        "bytes": 92466,
+        "functions": 69
+      },
+      {
+        "name": "scan-core::hfs",
+        "bytes": 80587,
+        "functions": 25
+      },
+      {
+        "name": "scan-core::pkg",
+        "bytes": 79541,
+        "functions": 17
+      },
+      {
+        "name": "scan-core::apfs",
+        "bytes": 76809,
+        "functions": 28
       },
       {
         "name": "sevenz-rust2",
-        "bytes": 46849,
-        "functions": 55
-      },
-      {
-        "name": "plist",
-        "bytes": 35763,
-        "functions": 34
+        "bytes": 68129,
+        "functions": 48
       },
       {
         "name": "scan-core::zip",
-        "bytes": 33602,
-        "functions": 21
+        "bytes": 68012,
+        "functions": 24
       },
       {
-        "name": "Unclassified symbols",
-        "bytes": 33206,
-        "functions": 101
+        "name": "scan-core::stream_bundle",
+        "bytes": 61046,
+        "functions": 14
       },
       {
-        "name": "roxmltree",
-        "bytes": 23572,
-        "functions": 71
+        "name": "scan-core::(root)",
+        "bytes": 56496,
+        "functions": 24
       },
       {
-        "name": "scan-core::tar",
-        "bytes": 21003,
-        "functions": 12
+        "name": "plist",
+        "bytes": 49781,
+        "functions": 30
       },
       {
-        "name": "scan-core::inventory",
-        "bytes": 20203,
-        "functions": 129
-      },
-      {
-        "name": "libbz2-rs-sys",
-        "bytes": 19983,
-        "functions": 7
-      },
-      {
-        "name": "ruzstd",
-        "bytes": 19029,
-        "functions": 35
-      },
-      {
-        "name": "scan-core::sevenz",
-        "bytes": 17765,
+        "name": "scan-core::inflate",
+        "bytes": 40951,
         "functions": 12
       },
       {
         "name": "scan-core::dmg",
-        "bytes": 17665,
+        "bytes": 40376,
+        "functions": 3
+      },
+      {
+        "name": "roxmltree",
+        "bytes": 36049,
+        "functions": 36
+      },
+      {
+        "name": "ruzstd",
+        "bytes": 30295,
         "functions": 16
       },
       {
-        "name": "scan-core::udif_codec",
-        "bytes": 9105,
-        "functions": 2
-      },
-      {
-        "name": "zlib-rs",
-        "bytes": 8793,
-        "functions": 24
-      },
-      {
-        "name": "sha2",
-        "bytes": 8193,
-        "functions": 3
-      },
-      {
-        "name": "dlmalloc",
-        "bytes": 7274,
-        "functions": 6
-      },
-      {
-        "name": "bzip2",
-        "bytes": 6492,
+        "name": "scan-core::sevenz",
+        "bytes": 25951,
         "functions": 11
       },
       {
-        "name": "js-sys",
-        "bytes": 6150,
-        "functions": 52
+        "name": "zlib-rs",
+        "bytes": 23867,
+        "functions": 13
+      },
+      {
+        "name": "scan-core::diagnostic",
+        "bytes": 23768,
+        "functions": 23
+      },
+      {
+        "name": "libbz2-rs-sys",
+        "bytes": 23235,
+        "functions": 6
+      },
+      {
+        "name": "Unclassified symbols",
+        "bytes": 21910,
+        "functions": 41
       },
       {
         "name": "lzfse-rust",
-        "bytes": 5628,
-        "functions": 14
+        "bytes": 16073,
+        "functions": 16
       },
       {
-        "name": "scan-core::local_bundle",
-        "bytes": 5220,
+        "name": "scan-core::tar",
+        "bytes": 12763,
+        "functions": 7
+      },
+      {
+        "name": "scan-core::nested",
+        "bytes": 12531,
         "functions": 3
       },
       {
+        "name": "scan-core::decode",
+        "bytes": 10700,
+        "functions": 7
+      },
+      {
         "name": "scan-core::launcher",
-        "bytes": 5202,
+        "bytes": 10694,
+        "functions": 2
+      },
+      {
+        "name": "scan-core::bundle",
+        "bytes": 9263,
+        "functions": 12
+      },
+      {
+        "name": "js-sys",
+        "bytes": 8398,
+        "functions": 47
+      },
+      {
+        "name": "sha2",
+        "bytes": 8309,
+        "functions": 1
+      },
+      {
+        "name": "bzip2",
+        "bytes": 8057,
+        "functions": 11
+      },
+      {
+        "name": "dlmalloc",
+        "bytes": 7898,
+        "functions": 6
+      },
+      {
+        "name": "scan-core::local_bundle",
+        "bytes": 7820,
         "functions": 2
       },
       {
         "name": "unicode-normalization",
-        "bytes": 5172,
-        "functions": 14
-      },
-      {
-        "name": "hashbrown",
-        "bytes": 4480,
-        "functions": 23
-      },
-      {
-        "name": "scan-core::bundle",
-        "bytes": 4399,
-        "functions": 12
-      },
-      {
-        "name": "scan-core::bom",
-        "bytes": 4389,
-        "functions": 7
-      },
-      {
-        "name": "serde-json",
-        "bytes": 4286,
-        "functions": 27
-      },
-      {
-        "name": "scan-core::plist_value",
-        "bytes": 3697,
-        "functions": 2
-      },
-      {
-        "name": "wasm-bindgen glue",
-        "bytes": 3477,
-        "functions": 63
-      },
-      {
-        "name": "scan-wasm",
-        "bytes": 3435,
-        "functions": 4
-      },
-      {
-        "name": "scan-core::decode",
-        "bytes": 3392,
-        "functions": 10
-      },
-      {
-        "name": "time",
-        "bytes": 2968,
-        "functions": 15
-      },
-      {
-        "name": "quick-xml",
-        "bytes": 2543,
-        "functions": 11
-      },
-      {
-        "name": "memchr",
-        "bytes": 2356,
-        "functions": 8
+        "bytes": 6927,
+        "functions": 5
       },
       {
         "name": "scan-core::cpio",
-        "bytes": 2156,
+        "bytes": 6578,
+        "functions": 6
+      },
+      {
+        "name": "quick-xml",
+        "bytes": 5910,
         "functions": 8
       },
       {
-        "name": "scan-core::gzip_tail",
-        "bytes": 2042,
+        "name": "serde-json",
+        "bytes": 5819,
+        "functions": 12
+      },
+      {
+        "name": "scan-core::plist_value",
+        "bytes": 5758,
+        "functions": 2
+      },
+      {
+        "name": "hashbrown",
+        "bytes": 4873,
+        "functions": 3
+      },
+      {
+        "name": "scan-core::pbzx",
+        "bytes": 4453,
+        "functions": 1
+      },
+      {
+        "name": "wasm-bindgen",
+        "bytes": 3698,
+        "functions": 56
+      },
+      {
+        "name": "base64",
+        "bytes": 3530,
+        "functions": 1
+      },
+      {
+        "name": "scan-core::inventory",
+        "bytes": 3449,
+        "functions": 9
+      },
+      {
+        "name": "scan-wasm",
+        "bytes": 3200,
+        "functions": 3
+      },
+      {
+        "name": "scan-core::bom",
+        "bytes": 2580,
+        "functions": 5
+      },
+      {
+        "name": "time",
+        "bytes": 1622,
         "functions": 2
       },
       {
         "name": "crc32fast",
-        "bytes": 1408,
-        "functions": 4
-      },
-      {
-        "name": "--rustc",
-        "bytes": 1189,
-        "functions": 7
-      },
-      {
-        "name": "tinyvec",
-        "bytes": 1063,
-        "functions": 5
-      },
-      {
-        "name": "zmij",
-        "bytes": 1003,
-        "functions": 4
-      },
-      {
-        "name": "twox-hash",
-        "bytes": 587,
+        "bytes": 1343,
         "functions": 2
       },
       {
+        "name": "scan-core::udif_codec",
+        "bytes": 1242,
+        "functions": 2
+      },
+      {
+        "name": "scan-core::gzip_tail",
+        "bytes": 1241,
+        "functions": 1
+      },
+      {
+        "name": "tinyvec",
+        "bytes": 1097,
+        "functions": 3
+      },
+      {
+        "name": "--rustc",
+        "bytes": 1093,
+        "functions": 5
+      },
+      {
         "name": "indexmap",
-        "bytes": 523,
+        "bytes": 810,
         "functions": 1
       },
       {
-        "name": "itoa",
-        "bytes": 299,
+        "name": "memchr",
+        "bytes": 603,
         "functions": 1
       },
       {
-        "name": "hybrid-array",
-        "bytes": 88,
+        "name": "twox-hash",
+        "bytes": 600,
         "functions": 1
       },
       {
-        "name": "equivalent",
-        "bytes": 33,
-        "functions": 1
+        "name": "flate2",
+        "bytes": 480,
+        "functions": 2
+      },
+      {
+        "name": "wasm-bindgen glue",
+        "bytes": 410,
+        "functions": 7
       },
       {
         "name": "Code section header",
-        "bytes": 7,
+        "bytes": 6,
         "functions": 0
       }
     ],
     "inspectPayloadSymbols": {
-      "entries": 92,
-      "bodyBytes": 1334200,
-      "directEntries": 46,
-      "directBodyBytes": 1328064
+      "entries": 2,
+      "bodyBytes": 31306,
+      "directEntries": 1,
+      "directBodyBytes": 30877
     },
     "inspectSymbols": {
       "entries": 1,
-      "bodyBytes": 38534
+      "bodyBytes": 16303
     }
   }
 }

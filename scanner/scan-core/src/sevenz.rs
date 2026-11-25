@@ -1,5 +1,6 @@
 use crate::{
-    BinaryInventory, ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
+    BinaryInventory, ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, Window,
+    bundle, check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
@@ -73,7 +74,15 @@ pub(crate) async fn scan(
             result.format = out.format;
             let attempt = match source.open(index) {
                 Ok(mut member) => {
-                    nested::scan(&mut member, kind, path, work, target, &mut result).await
+                    nested::scan(
+                        &mut ContainerReader::new(&mut member),
+                        kind,
+                        path,
+                        work,
+                        target,
+                        &mut result,
+                    )
+                    .await
                 }
                 Err(error) => Err(error),
             };

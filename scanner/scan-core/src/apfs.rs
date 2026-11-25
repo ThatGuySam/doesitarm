@@ -1,6 +1,6 @@
 //! Selective reads of ordinary APFS volumes using the Apple File System Reference.
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range,
+    ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range,
     decode::DecodeBudget,
     inventory::{self, Allowance},
     le16, le32, le64, nested, pkg,
@@ -883,5 +883,13 @@ async fn read_package(
         data,
         disk: device.disk,
     };
-    nested::package(&mut source, kind, &name, work, target, out).await
+    nested::package(
+        &mut ContainerReader::new(&mut source),
+        kind,
+        &name,
+        work,
+        target,
+        out,
+    )
+    .await
 }

@@ -33,7 +33,7 @@ pub use launcher::ScriptRuntime;
 pub use local_bundle::{LocalBundleMetadata, local_bundle_metadata};
 
 use serde::Serialize;
-use std::{collections::BTreeMap, fmt, str::FromStr};
+use std::{collections::BTreeMap, fmt, future::Future, pin::Pin, str::FromStr};
 
 const MIB: u64 = 1024 * 1024;
 pub const REMOTE_BUDGET_TIERS: [u64; 3] = [8 * MIB, 64 * MIB, 256 * MIB];
@@ -102,6 +102,52 @@ pub trait ReadAt {
         u64::MAX
     }
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>>;
+}
+
+// A concrete parser input with a type-erased source. Keep ReadAt generic at
+// the host boundary and erase readers where nested container types fan out.
+pub(crate) struct ContainerReader<'a>(&'a mut dyn ErasedReadAt);
+
+impl<'a> ContainerReader<'a> {
+    pub(crate) fn new(source: &'a mut impl ReadAt) -> Self {
+        Self(source)
+    }
+}
+
+trait ErasedReadAt {
+    fn source_size(&self) -> u64;
+    fn source_budget(&self) -> u64;
+    fn read_boxed(&mut self, offset: u64, len: usize) -> ReadFuture<'_>;
+}
+
+type ReadFuture<'a> = Pin<Box<dyn Future<Output = Result<Vec<u8>>> + 'a>>;
+
+impl<S: ReadAt> ErasedReadAt for S {
+    fn source_size(&self) -> u64 {
+        self.size()
+    }
+
+    fn source_budget(&self) -> u64 {
+        self.remaining_budget()
+    }
+
+    fn read_boxed(&mut self, offset: u64, len: usize) -> ReadFuture<'_> {
+        Box::pin(self.read_at(offset, len))
+    }
+}
+
+impl ReadAt for ContainerReader<'_> {
+    fn size(&self) -> u64 {
+        self.0.source_size()
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.0.source_budget()
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        self.0.read_boxed(offset, len).await
+    }
 }
 
 pub type Result<T> = std::result::Result<T, ScanError>;
@@ -386,7 +432,8 @@ async fn scan_internal(
         u64::MAX
     };
     let work = decode::DecodeBudget::with_limits(decoded, limits.profile, expired);
-    if let Err(error) = inspect(&mut input, &work, target, &mut result).await {
+    let mut reader = ContainerReader::new(&mut input);
+    if let Err(error) = inspect(&mut reader, &work, target, &mut result).await {
         result.set_error(error);
     }
     if result.min_macos.is_none() {
@@ -415,7 +462,7 @@ async fn scan_internal(
 }
 
 async fn inspect(
-    input: &mut impl ReadAt,
+    input: &mut ContainerReader<'_>,
     work: &decode::DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,

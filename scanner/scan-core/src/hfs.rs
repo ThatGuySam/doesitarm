@@ -1,6 +1,7 @@
 //! HFS+ and HFSX structures and block addressing follow Apple TN1150.
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle, check_range,
+    ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, be16, be32, be64, bundle,
+    check_range,
     decode::DecodeBudget,
     inventory::{self, Allowance},
     launcher, nested, pkg,
@@ -742,7 +743,7 @@ async fn read_package<S: ReadAt>(
     };
     let fork = file_fork(item, volume.geometry)?;
     nested::package(
-        &mut ForkReader { volume, fork },
+        &mut ContainerReader::new(&mut ForkReader { volume, fork }),
         kind,
         &name,
         work,
