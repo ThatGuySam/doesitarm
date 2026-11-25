@@ -2,6 +2,13 @@
 
 This report uses the 2026-11-24 scan ledger as the historical record. The ledger keeps the original URL, available HTTP evidence and byte log, source run, scanner revision, profile, budgets, target, and replay command for each attempt. Read `~/Code/doesitarm-data/scan-ledger/attempts.jsonl` by `ledger_id`. The matching `latest.jsonl` is the last attempt by original URL. `scanner-ledger:scanner/LEDGER.md` explains how to read and replay the records.
 
+[Acquisition attempt records](results/acquire/ledger-acquisition.jsonl) preserves all 285 matching ledger rows for 160 app tokens or names and 168 distinct URLs as of the handoff. It includes prior failed tiers even when a later attempt succeeded. It includes HTTP rejection classes, transfer and source errors, range rejection, timeouts, HTML responses, size caps, and robots decisions. Timeouts retain their original stage and error because some were scan deadlines. A record may omit fields the original run did not capture.
+
+```sh
+jq -c 'select(.token == "dropzone" or .token == "jabra-direct")' results/acquire/ledger-acquisition.jsonl
+jq -r 'select(.failure_class == "transport_error") | .repro' results/acquire/ledger-acquisition.jsonl
+```
+
 | Case | Historical evidence and status |
 | --- | --- |
 | GitHub releases and Sparkle | 56 latest URLs have `robots_disallowed`. 42 originate at GitHub (32 GitHub connector assets, 8 Sparkle appcasts, 2 Sparkle enclosures). The other 14 are publisher origins. |
