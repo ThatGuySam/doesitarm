@@ -35,3 +35,13 @@ A separate range fixture pins a strong ETag, then returns a weak ETag on the nex
 ## Replaying pinned GitHub assets
 
 Historical source tasks with a pinned artifact previously went straight to the web URL. The offline replay failed with `fixture_miss` on that URL. It now uses the same connector resolver as a fresh run. A second offline CLI replay found that a relative appcast enclosure resolved against the asset API path and also failed with `fixture_miss`. The corrected replay records the publisher's sibling release URL and validates HTTP 206 through the asset API.
+
+## Source-tools transfer and access fixtures
+
+| Fixture | Before | After |
+| --- | --- | --- |
+| BetterTouchTool-style truncated 206 | The partial response ended in `unable to read HTTP response body`. | The reader requests only the missing bytes. It requires the original strong ETag, total length, final URL and exact interval on every resumed response. The test rejects a changed ETag. |
+| SEGGER J-Link 9.96a GET | The HTTP 200 HTML response became a generic `html_landing_page`. | The publisher's macOS package endpoint is classified `needs_attestation`. An eligible user can obtain the package through SEGGER's download flow and scan the saved file with `scan-cli scan FILE --profile local`. [SEGGER downloads and eligibility](https://www.segger.com/downloads/jlink/) |
+| Content-Disposition on an extensionless URL | The probe omitted the filename. | The probe retains a safe basename. The fixtures cover UTF-8 `filename*` precedence, path stripping, and a quoted filename containing a semicolon. The name is advisory and byte inspection still determines the format. [RFC 6266](https://www.rfc-editor.org/rfc/rfc6266.html#section-4.3) |
+
+The BetterTouchTool replay uses a generated four-byte window. The historical source-tools attempt captured a dropped 4,194,304-byte response for bytes 29,649,623–33,843,926 at the 64 MiB scan tier. The fixture models the same partial-body failure and counts every byte actually received.

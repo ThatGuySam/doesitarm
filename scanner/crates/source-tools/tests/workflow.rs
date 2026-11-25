@@ -210,3 +210,39 @@ fn unsupported_nar_retains_prefix_and_does_not_claim_compatibility() {
     assert_eq!(outcome.evidence.unwrap().first_bytes_hex, hex);
     assert_eq!(outcome.attempts, [8 * 1024 * 1024]);
 }
+
+#[test]
+fn reports_a_segger_installer_attestation_without_posting() {
+    let fixture = Fixture::open(&fixture_path("acquisition-responses.json")).unwrap();
+    let url = "https://www.segger.com/downloads/jlink/JLink_MacOSX_V996a_universal.pkg";
+    let candidate = ConnectorId::UrlList
+        .connector()
+        .direct(&Default::default(), url)
+        .unwrap();
+    let result = source_tools::artifact::inspect(&fixture, &candidate, ScanOptions::default());
+    assert_eq!(result.failure.unwrap().class, "needs_attestation");
+    assert_eq!(result.traffic.requests, 1);
+    assert!(result.result.is_none());
+    assert_eq!(result.evidence.unwrap().status, Some(200));
+}
+
+#[test]
+fn preserves_advisory_filenames_for_extensionless_downloads() {
+    let fixture = Fixture::open(&fixture_path("acquisition-responses.json")).unwrap();
+    let connector = ConnectorId::UrlList.connector();
+    for (url, name) in [
+        (
+            "https://downloads.example.org/download",
+            "Viewer édition.zip",
+        ),
+        ("https://downloads.example.org/latest", "Viewer; macOS.dmg"),
+    ] {
+        let candidate = connector.direct(&Default::default(), url).unwrap();
+        let result = source_tools::artifact::inspect(&fixture, &candidate, ScanOptions::default());
+        assert!(result.failure.is_none());
+        assert_eq!(
+            serde_json::to_value(result.probe).unwrap()["filename"],
+            name
+        );
+    }
+}

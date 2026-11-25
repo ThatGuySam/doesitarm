@@ -72,6 +72,8 @@ pub struct Probe {
     pub accept_ranges: Option<String>,
     pub range_supported: Option<bool>,
     pub etag: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub filename: Option<String>,
 }
 
 pub struct Outcome {
@@ -212,6 +214,7 @@ fn probe(
         accept_ranges: response.header("accept-ranges").map(str::to_owned),
         range_supported: Some(false),
         etag: response.header("etag").map(str::to_owned),
+        filename: response.filename(),
     };
     if matches!(response.status, 400 | 405 | 416)
         && !response.header("allow").is_some_and(|allow| {
@@ -235,6 +238,7 @@ fn probe(
             outcome.probe.bytes_total = outcome.probe.content_length;
             outcome.probe.accept_ranges = headers.header("accept-ranges").map(str::to_owned);
             outcome.probe.etag = headers.header("etag").map(str::to_owned);
+            outcome.probe.filename = headers.filename();
             return Err(Failure::new(
                 "no_range_support",
                 "HEAD succeeded but the range probe was rejected",
@@ -244,6 +248,19 @@ fn probe(
     response.require_success(original)?;
     if is_html(&response) {
         outcome.probe.reachable = false;
+        if response.status == 200
+            && response.url.host_str() == Some("www.segger.com")
+            && response
+                .url
+                .path()
+                .starts_with("/downloads/jlink/JLink_MacOSX_")
+            && response.url.path().ends_with(".pkg")
+        {
+            return Err(Failure::new(
+                "needs_attestation",
+                "SEGGER J-Link requires license and export-control attestations on the vendor download page",
+            ));
+        }
         return Err(Failure::new(
             "html_landing_page",
             "artifact endpoint returned HTML",
@@ -317,43 +334,79 @@ impl ReadAt for RangeSource<'_> {
         if let Some(failure) = &self.failure {
             return Err(ScanError::Source(failure.message.clone()));
         }
-        let mut request = Request::new(
-            self.representation.url.clone(),
-            BodyMode::Range {
-                start: offset,
-                end: offset + len as u64 - 1,
-            },
-        );
-        request.if_match = self.representation.etag.clone();
-        request.deadline = Some(self.deadline);
-        let response = self.transport.fetch(request, self.traffic);
-        let result = response.and_then(|response| {
-            let valid = response.require_success(self.original).and_then(|()| {
-                if is_html(&response) {
-                    return Err(Failure::new(
-                        "html_landing_page",
-                        "artifact became HTML during range reads",
-                    ));
-                }
-                validate_range(&response, offset, len, Some(self.representation)).map(|_| ())
-            });
-            if let Err(error) = valid {
-                return Err(error.with_http(response.evidence(self.original)));
+        self.fetch_range(offset, len).map_err(|failure| {
+            let detail = failure.message.clone();
+            self.failure = Some(failure);
+            ScanError::Source(detail)
+        })
+    }
+}
+
+impl RangeSource<'_> {
+    fn fetch_range(&mut self, offset: u64, len: usize) -> Result<Vec<u8>, Failure> {
+        const MAX_RESUMES: usize = 2;
+        let end = offset + len as u64 - 1;
+        let mut prefix = Vec::new();
+        for attempt in 0..=MAX_RESUMES {
+            let start = offset + prefix.len() as u64;
+            let remaining = len - prefix.len();
+            let mut request = Request::new(
+                self.representation.url.clone(),
+                BodyMode::Range { start, end },
+            );
+            request.if_match = self.representation.etag.clone();
+            request.deadline = Some(self.deadline);
+            let response = self.transport.fetch(request, self.traffic)?;
+            if !(200..300).contains(&response.status) {
+                response.require_success(self.original)?;
             }
-            if offset == 0
+            let evidence = |failure: Failure| failure.with_http(response.evidence(self.original));
+            if is_html(&response) && (200..300).contains(&response.status) {
+                return Err(evidence(Failure::new(
+                    "html_landing_page",
+                    "artifact became HTML during range reads",
+                )));
+            }
+            let pinned = self.representation.etag.is_some()
+                && self.representation.etag.as_deref() == strong_etag(&response);
+            if !prefix.is_empty() && !pinned {
+                return Err(evidence(Failure::new(
+                    "representation_changed",
+                    "artifact size, validator or final URL changed before range resume",
+                )));
+            }
+            let interrupted = response.body.len() < remaining
+                && response.read_failure.as_ref().is_none_or(|error| {
+                    matches!(error.class.as_str(), "timeout" | "transport_error")
+                });
+            if attempt < MAX_RESUMES
+                && !response.body.is_empty()
+                && interrupted
+                && pinned
+                && !response.too_large
+            {
+                validate_range_headers(&response, start, remaining, Some(self.representation))
+                    .map_err(evidence)?;
+                prefix.extend(response.body);
+                continue;
+            }
+            response.require_success(self.original)?;
+            validate_range(&response, start, remaining, Some(self.representation))
+                .map_err(evidence)?;
+            if start == 0
                 && self.evidence.as_ref().is_none_or(|before| {
                     before.first_bytes_hex.len() < response.body.len().min(512) * 2
                 })
             {
                 *self.evidence = Some(response.evidence(self.original));
             }
-            Ok(response.body)
-        });
-        result.map_err(|failure| {
-            let detail = failure.message.clone();
-            self.failure = Some(failure);
-            ScanError::Source(detail)
-        })
+            if prefix.is_empty() {
+                return Ok(response.body);
+            }
+            prefix.extend(response.body);
+            return Ok(prefix);
+        }
+        unreachable!("last range attempt never resumes")
     }
 }
 
@@ -364,6 +417,22 @@ fn strong_etag(response: &Response) -> Option<&str> {
 }
 
 fn validate_range(
+    response: &Response,
+    offset: u64,
+    len: usize,
+    expected: Option<&Representation>,
+) -> Result<u64, Failure> {
+    let size = validate_range_headers(response, offset, len, expected)?;
+    if response.body.len() != len {
+        return Err(Failure::new(
+            "invalid_range",
+            "response body size does not match the requested range",
+        ));
+    }
+    Ok(size)
+}
+
+fn validate_range_headers(
     response: &Response,
     offset: u64,
     len: usize,
@@ -381,7 +450,6 @@ fn validate_range(
         .ok_or_else(|| Failure::new("invalid_range", "missing or invalid Content-Range"))?;
     if start != offset
         || stop != offset + len as u64 - 1
-        || response.body.len() != len
         || response
             .header("content-length")
             .is_some_and(|v| v.parse() != Ok(len))
@@ -400,7 +468,7 @@ fn validate_range(
             || expected
                 .etag
                 .as_deref()
-                .zip(strong_etag(response))
+                .zip(response.header("etag"))
                 .is_some_and(|(before, after)| before != after))
     {
         return Err(Failure::new(
@@ -489,5 +557,106 @@ fn ready<T>(future: impl Future<Output = T>) -> T {
     match pin!(future).poll(&mut Context::from_waker(Waker::noop())) {
         Poll::Ready(result) => result,
         Poll::Pending => unreachable!("blocking ReadAt has no asynchronous I/O"),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::Mutex;
+
+    struct PartialRange {
+        requests: Mutex<Vec<BodyMode>>,
+        resumed_etag: &'static str,
+    }
+
+    impl Transport for PartialRange {
+        fn fetch(&self, request: Request, traffic: &mut Traffic) -> Result<Response, Failure> {
+            assert_eq!(request.if_match.as_deref(), Some("\"artifact-v1\""));
+            self.requests.lock().unwrap().push(request.mode);
+            let (range, expected_len, body, tag, read_failure) = match request.mode {
+                BodyMode::Range { start: 8, end: 11 } => (
+                    "bytes 8-11/100",
+                    "4",
+                    b"M".as_slice(),
+                    "\"artifact-v1\"",
+                    Some(Failure::new(
+                        "transport_error",
+                        "unable to read HTTP response body",
+                    )),
+                ),
+                BodyMode::Range { start: 9, end: 11 } => (
+                    "bytes 9-11/100",
+                    "3",
+                    b"ach".as_slice(),
+                    self.resumed_etag,
+                    None,
+                ),
+                unexpected => panic!("unexpected range {unexpected:?}"),
+            };
+            traffic.bytes += body.len() as u64;
+            traffic.requests += 1;
+            Ok(Response {
+                url: request.url,
+                status: 206,
+                headers: [
+                    ("content-range".into(), range.into()),
+                    ("content-length".into(), expected_len.into()),
+                    ("etag".into(), tag.into()),
+                ]
+                .into(),
+                body: body.to_vec(),
+                received: body.len(),
+                too_large: false,
+                read_failure,
+            })
+        }
+    }
+
+    #[test]
+    fn resumes_only_the_missing_bytes_of_a_truncated_validated_range() {
+        let url = public_url("https://downloads.example.org/artifact.zip").unwrap();
+        let representation = Representation {
+            url: url.clone(),
+            size: 100,
+            etag: Some("\"artifact-v1\"".into()),
+        };
+        for (etag, accepted) in [("\"artifact-v1\"", true), ("\"artifact-v2\"", false)] {
+            let fixture = PartialRange {
+                requests: Mutex::default(),
+                resumed_etag: etag,
+            };
+            let mut traffic = Traffic::default();
+            let mut source = RangeSource {
+                transport: &fixture,
+                original: &url,
+                representation: &representation,
+                deadline: Instant::now() + Duration::from_secs(10),
+                budget: 4,
+                traffic: &mut traffic,
+                failure: None,
+                evidence: &mut None,
+                started_bytes: 0,
+            };
+            let result = ready(source.read_at(8, 4));
+            if accepted {
+                assert_eq!(result.unwrap(), b"Mach");
+            } else {
+                assert!(
+                    result
+                        .unwrap_err()
+                        .to_string()
+                        .contains("artifact size, validator or final URL changed")
+                );
+            }
+            assert_eq!(source.remaining_budget(), 0);
+            assert_eq!(
+                *fixture.requests.lock().unwrap(),
+                [
+                    BodyMode::Range { start: 8, end: 11 },
+                    BodyMode::Range { start: 9, end: 11 },
+                ]
+            );
+        }
     }
 }

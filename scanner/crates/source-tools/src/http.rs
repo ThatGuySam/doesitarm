@@ -79,6 +79,11 @@ impl Response {
         self.headers.get(key).map(String::as_str)
     }
 
+    pub(crate) fn filename(&self) -> Option<String> {
+        let disposition = self.header("content-disposition")?;
+        disposition_filename(disposition)
+    }
+
     pub fn evidence(&self, original: &Url) -> HttpEvidence {
         let headers = self
             .headers
@@ -158,6 +163,68 @@ impl Response {
         };
         Err(Failure::new(class, format!("HTTP {}", self.status)).with_http(self.evidence(original)))
     }
+}
+
+fn disposition_filename(value: &str) -> Option<String> {
+    let mut quoted = false;
+    let mut escaped = false;
+    let mut plain = None;
+    let mut extended = None;
+    let parameters = value.split(|ch| {
+        if escaped {
+            escaped = false;
+        } else if ch == '\\' && quoted {
+            escaped = true;
+        } else if ch == '"' {
+            quoted = !quoted;
+        } else {
+            return ch == ';' && !quoted;
+        }
+        false
+    });
+    for parameter in parameters.skip(1) {
+        let Some((key, value)) = parameter.trim().split_once('=') else {
+            continue;
+        };
+        let value = value.trim();
+        if key.trim().eq_ignore_ascii_case("filename*") {
+            if let Some((encoding, tail)) = value.split_once('\'')
+                && encoding.eq_ignore_ascii_case("utf-8")
+                && let Some((_, encoded)) = tail.split_once('\'')
+            {
+                extended = percent_encoding::percent_decode_str(encoded)
+                    .decode_utf8()
+                    .ok()
+                    .and_then(|decoded| safe_filename(&decoded));
+            }
+        } else if key.trim().eq_ignore_ascii_case("filename") {
+            let decoded = if let Some(quoted) = value.strip_prefix('"') {
+                let mut chars = quoted.strip_suffix('"')?.chars();
+                let mut name = String::new();
+                while let Some(ch) = chars.next() {
+                    name.push(if ch == '\\' { chars.next()? } else { ch });
+                }
+                name
+            } else {
+                value.to_owned()
+            };
+            plain = safe_filename(&decoded);
+        }
+    }
+    extended.or(plain)
+}
+
+fn safe_filename(value: &str) -> Option<String> {
+    let name = value.rsplit(['/', '\\']).next()?.trim();
+    if matches!(name, "" | "." | "..")
+        || name.len() > 255
+        || name.chars().any(|ch| {
+            ch.is_control() || matches!(ch, '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}')
+        })
+    {
+        return None;
+    }
+    Some(name.into())
 }
 
 fn mentions_secret(text: &str) -> bool {
