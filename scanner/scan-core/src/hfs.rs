@@ -572,12 +572,20 @@ pub(crate) async fn scan(
         root = Some(items);
         app
     };
-    let Some((app, app_path)) = app else {
-        let items = match root {
-            Some(items) => items,
-            None => catalog.children(&mut volume, ROOT_ID).await?,
-        };
-        return read_package(&mut volume, &mut catalog, items, work, target, out).await;
+    let (app, app_path) = match app {
+        Some(app) => app,
+        None => {
+            let items = match root {
+                Some(items) => items,
+                None => catalog.children(&mut volume, ROOT_ID).await?,
+            };
+            match grouped_app(&mut volume, &mut catalog, &items, work, target, out).await? {
+                Some(app) => app,
+                None => {
+                    return read_package(&mut volume, &mut catalog, items, work, target, out).await;
+                }
+            }
+        }
     };
     out.bundle_path = Some(app_path.clone());
 
@@ -669,6 +677,88 @@ pub(crate) async fn scan(
     }
     out.inventory = Some(inventory);
     primary
+}
+
+// A product image may have one enclosing folder with several apps beside
+// each other. Never look inside a different app or a package during this pass.
+async fn grouped_app<S: ReadAt>(
+    volume: &mut Volume<'_, S>,
+    catalog: &mut Catalog,
+    root: &[Item],
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<Option<(u32, String)>> {
+    let requested = match target {
+        Target::Auto => None,
+        Target::Bundle(path) if !path.trim_start_matches("./").contains('/') => {
+            Some(path.trim_start_matches("./"))
+        }
+        _ => return Ok(None),
+    };
+    if root
+        .iter()
+        .any(|item| !item.name.starts_with('.') && pkg::package_name(&item.name))
+    {
+        return Ok(None);
+    }
+    let limit = if work.strict() {
+        8
+    } else if work.local() {
+        4096
+    } else {
+        32
+    };
+    let mut folders = root.iter().filter(|item| {
+        item.file.is_none()
+            && !item.name.starts_with('.')
+            && bundle::installed_bundle_kind(&item.name).is_none()
+            && bundle::archive_path(&item.name).is_some()
+    });
+    let mut choices = Vec::new();
+    for folder in folders.by_ref().take(limit) {
+        work.check_deadline()?;
+        let children = catalog.children(volume, folder.id).await?;
+        for item in children {
+            let Some(stem) = item.name.strip_suffix(".app") else {
+                continue;
+            };
+            if item.file.is_some()
+                || stem.starts_with('.')
+                || bundle::archive_path(&item.name).is_none()
+            {
+                continue;
+            }
+            let path = format!("{}/{}", folder.name, item.name);
+            if requested.is_none_or(|name| {
+                bundle::matches_path(&path, name)
+                    || !catalog.tree.case_sensitive
+                        && item.name.to_lowercase() == name.to_lowercase()
+            }) {
+                choices.push((item.id, path, bundle::matches_path(&folder.name, stem)));
+                if choices.len() > 128 {
+                    return Err(ScanError::Limit("too many apps in HFS product folders"));
+                }
+            }
+        }
+    }
+    if folders.next().is_some() {
+        return Err(ScanError::Limit(
+            "too many HFS directories to select a product",
+        ));
+    }
+    if requested.is_none() && choices.iter().any(|(_, _, named)| *named) {
+        choices.retain(|(_, _, named)| *named);
+    }
+    if choices.len() > 1 {
+        out.candidate_bundle_paths
+            .extend(choices.into_iter().map(|(_, path, _)| path));
+        out.candidate_bundle_paths.sort_unstable();
+        return Err(ScanError::Unsupported(
+            "multi-app HFS image; select a bundle path",
+        ));
+    }
+    Ok(choices.pop().map(|(id, path, _)| (id, path)))
 }
 
 async fn read_main<S: ReadAt>(

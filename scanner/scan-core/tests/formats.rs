@@ -902,3 +902,41 @@ fn zip_product_selection_requests_a_target_for_independent_apps() {
     assert!(matches!(selected.status, Status::Complete), "{selected:?}");
     assert_eq!(selected.bundle_path.as_deref(), Some("Z Tool.app"));
 }
+
+#[test]
+fn hfs_suite_finds_the_product_named_by_its_enclosing_directory() {
+    let input = include_bytes!("../../fixtures/bundles/hfs-suite.dmg");
+    let path = "NetLogo 7.0.4/NetLogo 7.0.4.app";
+    for target in [
+        Target::Auto,
+        Target::Bundle(path),
+        Target::Bundle("NetLogo 7.0.4.app"),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_core::scan_target_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+                target,
+            ));
+            assert!(matches!(result.status, Status::Complete), "{result:?}");
+            assert_eq!(result.bundle_path.as_deref(), Some(path));
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn hfs_suite_with_no_primary_product_preserves_its_candidates() {
+    let input = include_bytes!("../../fixtures/bundles/hfs-suite-ambiguous.dmg");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.error.unwrap().contains("multi-app"));
+    assert_eq!(
+        result.candidate_bundle_paths,
+        [
+            "NetLogo 7.0.4/BehaviorSearch 7.0.4.app",
+            "NetLogo 7.0.4/HubNet Client 7.0.4.app",
+        ]
+    );
+    assert!(result.architectures.is_empty());
+}

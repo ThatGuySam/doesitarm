@@ -73,3 +73,11 @@ zip_fixture("resources-and-installer.zip", {
     "Installer.pkg": (HERE.parent / "gzip-newc.pkg").read_bytes(),
 })
 zip_fixture("independent-apps.zip", {**app("A Utility.app"), **tool})
+
+suite = "NetLogo 7.0.4"
+for name, programs in [
+    ("hfs-suite.dmg", [f"{suite}/{suite}.app", f"{suite}/BehaviorSearch 7.0.4.app"]),
+    ("hfs-suite-ambiguous.dmg", [f"{suite}/BehaviorSearch 7.0.4.app", f"{suite}/HubNet Client 7.0.4.app"]),
+]:
+    volume = hfs_tree({path: data for product in programs for path, data in app(product).items()})
+    write_udif(HERE / name, volume, [(1, len(volume) // 512, bytes)], "Apple_HFS")
