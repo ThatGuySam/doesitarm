@@ -47,12 +47,20 @@ Use the exact pinned URL from the attempt index. Bundle paths use `--bundle-path
 | Folding@home beta 8.5.6 | `usr/local/bin/fah-client` | The checksum-matching payload also contains `fahctl`. Targeting the client verified x86_64 and arm64 after 4,268,002 source bytes. |
 | StarNet2 2.6.2 | `usr/local/bin/starnet2` | The checksum-matching PKG installs a standalone CLI. The exact target verified arm64 after 70,901 source bytes. |
 | Orka VM Tools 4.0.0 | `Applications/orka-vm-tools/orka-vm-tools` | The checksum-matching PKG also contains a partition-resize script. The exact executable target verified arm64 after 70,758 source bytes. |
+| Eclipse Temurin 26.0.2.1+1 | `Library/Java/JavaVirtualMachines/temurin-26.jdk/Contents/Home/bin/java` | The checksum-matching installer has no app target. The exact Java CLI verified x86_64 and macOS 11.0 after 334,045 local source bytes. |
+| SSHFS 3.7.5 | `usr/local/bin/sshfs` | The exact file in the checksum-matching installer verified x86_64 and arm64. The payload has a command-line product. |
+| Microsoft .NET SDK 8.0.428 | `dotnet` | The shared host component contains a standalone x86_64 binary with macOS 10.15 minimum. The checksum-matching local scan verified the target after 214,277,043 source bytes. |
+| Enclave 2026.6.3 | `Applications/enclave/enclave` | The checksum-matching PKG's exact entry verified x86_64 and macOS 12.0 after 71,713 local source bytes. |
+| NDI Redistributable 6.4.0.2.261117 | `libndi.dylib` | The current 4,794,396-byte PKG verified x86_64 and arm64, both with macOS 13.0 minimum, after 4,265,114 range bytes. The catalog uses no checksum. Observed SHA-256 `b6ee5bba56b561877ce8493cf14392fe9b20941428e2c54490cf37cec23e7a93`. The vendor describes this install as a dynamic runtime library in `/usr/local/lib`. [NDI runtime documentation](https://docs.ndi.video/all/developing-with-ndi/sdk/dynamic-loading-of-ndi-libraries) |
 
 ## Remaining evidence gaps
 
 - Suunto DM5's checksum-matching image declares a 3,465-byte launcher script and contains `Contents/Resources/SuuntoDM5.exe`. Its four verified Mach-O inventory entries include the Intel Mono splash app and three Intel libraries. The preview found no static Mach-O runtime target for the script. The recorded primary stays a shell launcher, and the splash app's architecture applies to that helper.
 - LaTeXiT and Rolisteam still lack the recorded embedded metadata described above. LaTeXiT's pinned download failed TLS on this run. Rolisteam's replayed plist and x86_64 launcher are inspectable offline.
 - A FairPlay-protected representation with accessible Mach-O headers can be inspected for its slices and encryption command. Actual validation here uses a synthetic opaque segment. An authorized installed copy is the legitimate route when an artifact is available only through the App Store.
+- NVS 1.7.1's checksum-matched tarball contains the executable shell entry `nvs-1.7.1/nvs` and the separately sourced `nvs.sh`. The old scan expected an app plist. The exact 480-byte launcher from the vendor tag classified as a shell script. A direct range retry received HTTP 200 for the one-byte request. A local archive supports explicit targeting of the shell entry. NVS selects a separate Node version. [Pinned launcher source](https://github.com/jasongin/nvs/blob/v1.7.1/nvs)
+- Both OpenZFS 2.4.1 variants reach `Library/Extensions/zfs.kext/Contents/MacOS/zfs`. The installer minimums are 12.0 and 13.0 respectively. The bundle and launcher observations leave their own minimum unknown.
+- The checksum-matched Krisp 3.20.5 PKG contains separate driver, uninstall and app components. The app component's CPIO Payload contains only its root directory. Package metadata declares a postinstall script, and the XAR lists a separate Scripts member. The app bytes and architecture remain unverified. The authorized installed app is a local scan target.
 - The attempt index preserves the other full-climb failures, including incomplete transfers, packages that need a proven installed entry point, and direct scans that reached time or byte limits. Exact executable targeting is verified for the package rows above. Automatic CPIO selection for arbitrary standalone programs remains open.
 
 ## Cursor's targeted launcher
@@ -60,3 +68,6 @@ Use the exact pinned URL from the attempt index. Bundle paths use `--bundle-path
 The checksum-matching 175,371,496-byte archive contains the 147,346,352-byte `dist-package/node` before the 1,837-byte `dist-package/cursor-agent` script. A local direct target verified Node on a second pass and requested 288,683,244 bytes in total. The live 256 MiB attempt found the script and static Node path with no room to verify the earlier member. Automatic mode detected eight independent candidates, including the shell launcher, native launch variants, and ripgrep.
 
 The small targeted regression previously reread the source locally and left the runtime slice list empty at the 288-byte Worker budget. The forward scan now retains observed sibling executable headers and uses a matching header when it encounters the script's exact static reference. The one-pass test passes in all three profiles.
+
+
+The after-fix scan of the same archive, with the remote-cli profile and a one-pass byte budget, verified the exact arm64 Node member and macOS 13.5. It requested 159,449,092 bytes. The primary remains the shell launcher and has an empty Mach-O slice list. The temporary archive was removed after verification.

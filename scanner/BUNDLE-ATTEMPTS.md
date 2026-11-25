@@ -17,11 +17,11 @@ The two OpenZFS releases below count as distinct artifacts. Follow-up outcomes r
 
 | Layout to investigate | Full-climb cases | Follow-up evidence |
 | --- | --- | --- |
-| Installer with a standalone CLI product or service | fx-cast-bridge, folding-at-home@beta, starnet2, orka3, dotnet-sdk@preview, dotnet-sdk@8, enclave, orka-vm-tools | Orka 3 and .NET SDK preview verified with explicit paths in EDGE. This pass verified exact executable targets for fx-cast Bridge, Folding@home beta, StarNet2 and Orka VM Tools. The recorded .NET SDK 8 and Enclave remote attempts reached their deadlines. |
-| Installer with an app, runtime, or extension | sys-pc-tool, openzfs (two variants), temurin, krisp, libndi, microsoft-openjdk@11, sshfs-mac | EDGE verified System PC Tool. Both OpenZFS attempts found partial metadata. The CPIO link fix verified Microsoft OpenJDK 11 on the pinned installer. Temurin, Krisp, libndi and sshfs-mac still need product or payload investigation. |
+| Installer with a standalone CLI product or service | fx-cast-bridge, folding-at-home@beta, starnet2, orka3, dotnet-sdk@preview, dotnet-sdk@8, enclave, orka-vm-tools | Orka 3 and .NET SDK preview verified with explicit paths in EDGE. This pass verified exact executable targets for fx-cast Bridge, Folding@home beta, StarNet2 and Orka VM Tools. The recorded .NET SDK 8 and Enclave remote attempts reached their deadlines. Both later verified with explicit local payload targets. |
+| Installer with an app, runtime, or extension | sys-pc-tool, openzfs (two variants), temurin, krisp, libndi, microsoft-openjdk@11, sshfs-mac | EDGE verified System PC Tool. Both OpenZFS attempts found partial metadata. The CPIO link fix verified Microsoft OpenJDK 11 on the pinned installer. Temurin and SSHFS have verified explicit executable paths, and libndi has a verified dynamic library target. Krisp's app component has an empty payload and remains open. |
 | Disk image with a suite or missing app path | ampps, sketchup, tageditor, psi, chemdoodle, netlogo | The container branch verifies AMPPS. This pass verified NetLogo and ChemDoodle in enclosing directories, Psi by automatic discovery, and SketchUp by explicit target after discovering two suite apps. Tag Editor's vendor image holds `Tag Editor 2.app`, which differs from the pinned declaration. |
 | ZIP with a versioned enclosing directory | ecamm-live | The catalog says `Ecamm/Ecamm Live.app`. The vendor ZIP contains `Ecamm v4.6.2/Ecamm Live.app`. A basename target verified both slices in the same representation. |
-| Script-based installer archive | nvs | EDGE records a complete 518,704-byte tarball and no app plist. A verified program path has not been established. |
+| Script-based installer archive | nvs | The checksum-matching tarball has an executable shell entry at `nvs-1.7.1/nvs` and separate sourced script contents. The application plist failure is expected for this layout. |
 
 ## Uncategorised outcomes
 
