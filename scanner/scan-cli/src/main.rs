@@ -136,20 +136,40 @@ fn main() -> ExitCode {
             }
         }
     } else {
-        let arch: Vec<_> = result
-            .architectures
-            .iter()
-            .map(|value| value.name)
-            .collect();
+        let evidence = if let Some(windows) = &result.windows {
+            let mut facts = vec!["Windows".to_owned()];
+            if !windows.architectures.is_empty() {
+                let scope = match windows.architecture_source {
+                    Some("msi_template") => " (MSI package)",
+                    Some("appx_manifest") => " (Appx manifest)",
+                    Some("pe_machine" | "archive_pe_machine") => " (PE machine fields)",
+                    _ if windows.emulated_only => " (emulated on Windows on Arm)",
+                    _ => "",
+                };
+                facts.push(format!("{}{scope}", windows.architectures.join(", ")));
+            }
+            if let Some(payload) = windows.payload_status {
+                facts.push(payload.to_owned());
+            } else if windows.architectures.is_empty() {
+                facts.push("architecture unknown".to_owned());
+            }
+            facts.join(" · ")
+        } else {
+            result
+                .architectures
+                .iter()
+                .map(|value| value.name)
+                .collect::<Vec<_>>()
+                .join(", ")
+        };
         let label = result
             .name
             .as_deref()
             .or(result.bundle_id.as_deref())
             .unwrap_or("Input");
         println!(
-            "{label} ({}) — {}",
-            result.format.unwrap_or("unknown"),
-            arch.join(", ")
+            "{label} ({}) — {evidence}",
+            result.format.unwrap_or("unknown")
         );
         println!(
             "{} of {} unique bytes read, {} bytes requested across {} reads, {} decoded bytes",
