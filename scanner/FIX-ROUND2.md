@@ -83,6 +83,22 @@ The ledger already has higher-tier or targeted observations for these smaller gz
 | Vercel CLI | `8e3eea2e2b6e` · 8,388,608 | `961d89673605` · 65,541 | The npm binary `package/bin/vercel` verified. Use the exact executable target. |
 | Warp Agent CLI | `3deba2a349c9` · 67,108,864 | `77b433163875` · 86,543,179 | The exact archived `warp-tui-stable` verified. The Warp desktop DMG below uses a separate download route. |
 
+### Additional combined-branch gzip and nested archive replays
+
+The ZIPs add a sequential DEFLATE layer around the inner disk image or PKG. Monotype's ZIP member contains a 254,658,611-byte gzip XAR Payload. The file-backed controls enforce the same 256 MiB request budget without depending on origin speed. Local counts come from checksum-matched files and describe the measured scan.
+
+| Case and ledger attempt | Bytes before | Combined capped bytes | Combined local bytes | Status and decision |
+| --- | ---: | ---: | ---: | --- |
+| Monotype Fonts 7.8.2 `37fee8732b60` | 254,380,473 | 254,380,473 | 254,380,473 | Needs local and an explicit target. `Monotype Fonts/Application/Monotype Fonts.app` verifies x86_64. The ZIP rewinds brought total requests to 509,088,476. The automatic scan selected the separate Manager app. |
+| TI SmartView CE `5e0c4b2aa712` | 268,173,305 | 268,173,306 | 371,116,198 | Needs more budget. Local verifies the x86_64 emulator. |
+| Adobe Acrobat Reader `6cffc78e5abf` | 268,173,305 | 268,173,306 | 401,265,150 for the named app, 401,924,847 for the exact launcher | The named app plist declares `AdobeReader`. Both launcher path forms missed even locally. The automatic pass verified the unrelated Native Messaging helper after 400,805,349 bytes. Use an installed Reader copy or inspect the exact product payload before assigning architecture. |
+| Excire Search Intel `2772a6a45796` | 268,435,451 | 268,435,452 | 893,889,414 | The exact `excire-search.app` runtime verifies x86_64 locally. The nested DMG is a single deflated ZIP member. Its rewinds brought total requests to 4,216,673,740. The automatic pass found the uninstaller. Keep the runtime finding scoped separately from the Lightroom plug-in. [Excire Search](https://excire.com/en/excire-search/) |
+| Tableau Desktop Intel `5cf3b8fdd817` | 267,790,212 | 267,790,212 | 1,111,719,773 | Needs more budget. Local verifies the x86_64 app. |
+| Tableau Desktop Arm `ac1f9ad9d409` | 171,087,478 at its deadline | 268,259,773 | 1,059,979,746 | Needs more budget. Local verifies the arm64 app. |
+| RipX DAW `43e68c764f74` | 267,647,789 | — | — | Checksum conflict. The full 1,582,743,140-byte vendor body has a SHA-256 beginning `747870eb6ebb`. The ledger digest begins `5a4c91fe8fc5`. Reconcile the pin before accepting a new scan. |
+| CodeLite `2f1760bf6b96` | 8,388,603 | 25,921,204 | 12,648,448 with the exact binary path | Exact targeting verifies arm64. The plist declares `CodeLite` with a capital C. Use the archive's lowercase `codelite.app/Contents/MacOS/codelite` or obtain a corrected publisher build. |
+| Serviio `d02fcb18a963` | 8,388,608 | 46,202,880 at its deadline | 173,443,402 for the tarball, then 92,275,370 for the extracted PKG | The tarball contains only `Serviio-2.5.pkg`. The local archive scan reaches its end without an app. Extracting the single regular member and scanning it locally verifies the x86_64 Console. A claim about the separate server runtime needs its own target. |
+
 ## Krisp 3.20.5
 
 The checksum-matched 267,366,929-byte XAR puts the user app in `krisp-app.uli.pkg/Scripts`. That gzip CPIO member contains `postinstall` and `Krisp_app_3.20.5_arm64.pkg`. The script selects the nested package for the platform installer. Static extraction and an independent local scan verified `Applications/krisp.app/Contents/MacOS/krisp` as arm64 after reading 267,686,801 bytes of the inner XAR.
@@ -216,7 +232,9 @@ The 44 Source-tools observations include the 32 pinned GitHub cases, 10 Sparkle 
 | ardia (alias replay) | 1,247,021 | 1,607,682 | Verified arm64 |
 | ping-island (alias replay) | 3,854,939 | 3,854,939 | Verified arm64, x86_64 |
 
-The verified connector rows need no catalog action. Select a higher byte tier for mlx-serve. Mole's tarball exposes multiple standalone executables, so choose the archived target to represent the product. Ardia's GitHub DMG and Sparkle ZIP are separate representations of 0.2.48. The new probe saw the 182,924,830-byte ZIP with the `Ardia-0.2.48.zip` filename. Ping Island's authorized GitHub alias supplied `PingIsland-0.33.0.dmg`, and Cove's resolved asset supplied `Cove.dmg`. The offline Content-Disposition fixtures also passed.
+The verified connector rows need no catalog action. The 256 MiB automatic replay verified mlx-serve's arm64 executable after 103,345,925 bytes. With the exact `mlx-serve-macos-arm64/mlx-serve` target, the 8 MiB live replay verified it after 65,536 bytes. Mole's automatic scan still needs a selection. Exact file-backed scans verified arm64 for both `analyze-darwin-arm64` after 65,536 bytes and `status-darwin-arm64` after 2,162,688 bytes. Choose the executable that should represent the product.
+
+Ardia's GitHub DMG and Sparkle ZIP are separate representations of 0.2.48. The new probe saw the 182,924,830-byte ZIP with the `Ardia-0.2.48.zip` filename. Ping Island's public GitHub alias supplied `PingIsland-0.33.0.dmg`, and Cove's resolved asset supplied `Cove.dmg`. The offline Content-Disposition fixtures also passed.
 
 ## Combined-branch container and bundle replays
 
