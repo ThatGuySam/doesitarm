@@ -719,3 +719,35 @@ fn a_same_stem_script_does_not_verify_an_undeclared_main() {
         "observed helper still belongs in the inventory"
     );
 }
+
+#[test]
+fn disk_images_resolve_a_contents_relative_executable_after_the_declared_lookup() {
+    let fixtures: &[(&[u8], &str)] = &[
+        (
+            include_bytes!("../../fixtures/bundles/contents-relative-hfs.dmg"),
+            "Sci-Hub EVA.app/Contents/MacOS/Sci-Hub EVA",
+        ),
+        (
+            include_bytes!("../../fixtures/bundles/contents-relative-apfs.dmg"),
+            "Fixture.app/Contents/MacOS/FixtureBinary",
+        ),
+    ];
+    for (input, path) in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.executable_path.as_deref(), Some(*path));
+            assert_eq!(result.executable_resolution, Some("contents_relative"));
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+            let inventory = result.inventory.unwrap();
+            assert_eq!(inventory.binaries.len(), 1);
+            assert_eq!(inventory.binaries[0].role, "main");
+        }
+    }
+}

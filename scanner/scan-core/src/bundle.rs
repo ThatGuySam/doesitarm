@@ -193,10 +193,14 @@ pub(crate) fn resolve_executable(executable: &str, flat: bool) -> Result<String>
 /// Some publishers record the Contents-relative MacOS/file spelling.
 /// Prefer the normal MacOS-relative lookup when both entries exist.
 pub(crate) fn contents_relative_alias(path: &str, root: &str) -> Option<String> {
-    let leaf = path
-        .strip_prefix(root)?
-        .strip_prefix("/Contents/MacOS/MacOS/")?;
-    Some(format!("{root}/Contents/MacOS/{leaf}"))
+    let relative = path.strip_prefix(root)?.strip_prefix("/Contents/")?;
+    let alias = contents_relative_executable(relative)?;
+    Some(format!("{root}/Contents/{alias}"))
+}
+
+pub(crate) fn contents_relative_executable(relative: &str) -> Option<&str> {
+    let path = relative.strip_prefix("MacOS/")?;
+    path.starts_with("MacOS/").then_some(path)
 }
 
 /// Normalize a reference entirely inside the artifact.

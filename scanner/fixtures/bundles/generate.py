@@ -1,6 +1,7 @@
 """Build compact offline reproductions using synthetic Mach-O headers."""
 import gzip
 from pathlib import Path
+import plistlib
 import sys
 import zipfile
 
@@ -9,6 +10,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(HERE.parent))
 from generate import fat, thin
 from dmg_fixture import hfs_tree, write_udif
+from apfs_fixture import apfs_fixture
 
 from edge.generate import tar
 
@@ -31,3 +33,19 @@ zip_fixture("missing-key-helper.zip", {
     f"{root}/Contents/MacOS/Helper": thin(),
     f"{root}/Contents/MacOS/{root[:-4]}": b"#!/bin/sh\nexit 0\n",
 })
+
+root = "Sci-Hub EVA.app"
+name = "Sci-Hub EVA"
+metadata = {
+    "CFBundleExecutable": f"MacOS/{name}",
+    "CFBundleIdentifier": "tech.leovan.SciHubEVA",
+    "CFBundleShortVersionString": "6.5.1",
+}
+files = {
+    f"{root}/Contents/Info.plist": plistlib.dumps(metadata),
+    f"{root}/Contents/MacOS/{name}": thin(),
+}
+volume = hfs_tree(files)
+write_udif(HERE / "contents-relative-hfs.dmg", volume, [(1, len(volume) // 512, bytes)], "Apple_HFS")
+metadata["CFBundleExecutable"] = "MacOS/FixtureBinary"
+apfs_fixture(HERE / "contents-relative-apfs.dmg", metadata, fat())

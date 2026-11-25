@@ -1,6 +1,6 @@
 # Bundle and entry-point fixes
 
-Baseline `scanner-preview` at `bb62a7c`, integrated November 24, 2026. The scan ledger branch was at `d01862b` when work began. This report uses data from its shared ledger and the pinned CLIMB and EDGE runs.
+Baseline `scanner-preview` at `bb62a7c`, integrated November 24, 2026. The scan ledger branch was at `d01862b` when work began. [Attempt index and campaign groups](BUNDLE-ATTEMPTS.md). This report uses data from its shared ledger and the pinned CLIMB and EDGE runs.
 
 ## Verified changes
 
@@ -8,6 +8,7 @@ Baseline `scanner-preview` at `bb62a7c`, integrated November 24, 2026. The scan 
 | --- | --- | --- |
 | Missing CFBundleExecutable on a conventional app | `archives_verify_a_same_stem_macho_when_the_app_plist_has_no_executable_key` failed with `not found: CFBundleExecutable in Info.plist`. ZIP, gzip tar and HFS now verify the same-stem Mach-O in local, remote-cli and Worker profiles. | Generated fixtures use the recorded AgentSessions 3.8.2 plist fields and synthetic headers. The earlier checksum-matched public DMG separately verified x86_64 and arm64, minimum macOS 14.0, at `AgentSessions.app/Contents/MacOS/AgentSessions`. AgentSessions is a conventional app bundle. See [BIGFOLDER.md](web/BIGFOLDER.md#agentsessions-382). |
 | Same-stem script plus a separate helper | `a_same_stem_script_does_not_verify_an_undeclared_main` failed because the scan stopped before reporting the helper. It now reports the helper in the inventory and leaves the primary unverified. | The script and the Mach-O helper are both in the generated archive. |
+| HFS and APFS Contents-relative executable path | `disk_images_resolve_a_contents_relative_executable_after_the_declared_lookup` failed at `Contents/MacOS/MacOS/Sci-Hub EVA`. HFS and APFS fixtures now report the corrected path, verified slices and one main inventory entry in all three profiles. | Sci-Hub EVA 6.5.1's pinned 57,761,645-byte image (SHA-256 `769aa2eff2e44b926bbde6b1611355af09cabd50e281864ea57d2d3051d8754d`) gave the same pre-fix error locally. Its inventory independently verified arm64 at `Contents/MacOS/Sci-Hub EVA`, which the fixture reproduces. |
 
 Rebuild the small archives with `python3 fixtures/bundles/generate.py`. Run the tests offline from `scanner/` with `cargo test --locked -j2 -p scan-core --test formats same_stem`.
 

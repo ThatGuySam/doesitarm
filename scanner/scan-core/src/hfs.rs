@@ -595,6 +595,10 @@ pub(crate) async fn scan(
     let relative = &path[app_path.len() + "/Contents/".len()..];
     let primary = read_main(&mut volume, &mut catalog, contents.id, relative, out).await;
     let primary = bundle::confirm_executable(out, primary);
+    let inspected_path = out
+        .executable_path
+        .as_deref()
+        .and_then(|path| inventory::relative(path, &app_path));
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
     let mut allowance = Allowance::new(volume.disk, work);
@@ -628,7 +632,7 @@ pub(crate) async fn scan(
                 pending.push((item.id, path));
                 continue;
             }
-            if path.strip_prefix("Contents/") == Some(relative)
+            if Some(path.as_str()) == inspected_path
                 || item
                     .file
                     .as_ref()
@@ -677,25 +681,29 @@ async fn read_main<S: ReadAt>(
     let (item, chosen) = match catalog.find_path(volume, contents, relative, true).await {
         Ok(item) => (item, relative),
         Err(error @ ScanError::NotFound(_)) => {
-            if out.executable_resolution == Some(bundle::NAME_FALLBACK) {
-                return Err(error);
+            if let Some(alias) = bundle::contents_relative_executable(relative) {
+                let item = catalog.find_path(volume, contents, alias, true).await?;
+                out.executable_resolution = Some("contents_relative");
+                (item, alias)
+            } else {
+                let Some(leaf) = relative
+                    .strip_prefix("MacOS/")
+                    .filter(|leaf| !leaf.contains('/'))
+                    .filter(|_| out.executable_resolution != Some(bundle::NAME_FALLBACK))
+                else {
+                    return Err(error);
+                };
+                let children = catalog.children(volume, contents).await?;
+                if children
+                    .iter()
+                    .any(|item| item.name.eq_ignore_ascii_case("MacOS"))
+                {
+                    return Err(error);
+                }
+                let item = catalog.find(volume, contents, leaf, true).await?;
+                out.executable_resolution = Some("legacy_contents_executable");
+                (item, leaf)
             }
-            let Some(leaf) = relative
-                .strip_prefix("MacOS/")
-                .filter(|leaf| !leaf.contains('/'))
-            else {
-                return Err(error);
-            };
-            let children = catalog.children(volume, contents).await?;
-            if children
-                .iter()
-                .any(|item| item.name.eq_ignore_ascii_case("MacOS"))
-            {
-                return Err(error);
-            }
-            let item = catalog.find(volume, contents, leaf, true).await?;
-            out.executable_resolution = Some("legacy_contents_executable");
-            (item, leaf)
         }
         Err(error) => return Err(error),
     };
