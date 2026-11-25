@@ -267,17 +267,23 @@ pub fn resolve_page(
     let url = page_resolver::public_url(url, None)
         .ok_or_else(|| JsValue::from_str("Expected a public HTTPS hostname."))?;
     let document = page_resolver::Document {
-        url: &url, bytes,
+        url: &url,
+        bytes,
         headers: page_resolver::Headers {
-            status: Some(status), content_type: Some(content_type), link: Some(link),
+            status: Some(status),
+            content_type: Some(content_type),
+            link: Some(link),
         },
     };
     let result = page_resolver::resolve_with_adapters(document, None, adapters);
-    serde_json::to_string(&result).map_err(|_| JsValue::from_str("Could not encode page resolution."))
+    serde_json::to_string(&result)
+        .map_err(|_| JsValue::from_str("Could not encode page resolution."))
 }
 
 #[cfg(feature = "page-resolution")]
 #[wasm_bindgen]
 pub fn download_share_target(url: &str) -> Option<String> {
-    page_resolver::public_url(url, None).as_ref().and_then(page_resolver::direct_target)
+    page_resolver::public_url(url, None)
+        .as_ref()
+        .and_then(page_resolver::direct_target)
 }

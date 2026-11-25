@@ -75,6 +75,8 @@ function display(candidate, found, source) {
     host: new URL(candidate.url).hostname,
     filename: cleanLabel(found.name),
     arch: candidate.arch,
+    score: candidate.score ?? 0,
+    reasons: candidate.reasons ?? ['submitted_url'],
     os: candidate.os === 'unknown' && /\.(?:dmg|pkg)$/i.test(found.name) ? 'macos' : candidate.os,
     kind: candidate.kind,
     evidence: {
@@ -90,8 +92,14 @@ function outcome(decision, reason, candidates = []) {
   return { decision, reason, candidates };
 }
 
-function comparableHost(a, b) {
-  return a.hostname.replace(/^www\./, '') === b.hostname.replace(/^www\./, '');
+function declaredDocument(source, target) {
+  if (source.hostname.replace(/^www\./, '') === target.hostname.replace(/^www\./, '')) return true;
+  return source.hostname === 'desktop.github.com' && target.hostname === 'github.com' &&
+    target.pathname === '/apps/desktop' && !target.search;
+}
+
+function preferredMetadata(candidate) {
+  return candidate.kind === 'feed' && candidate.evidence.selector === 'publisher Mac update manifest';
 }
 
 function readCandidates(state, level, tasks) {
@@ -102,9 +110,14 @@ function readCandidates(state, level, tasks) {
   if (candidates.length > 0) tasks.push(...candidates.map((candidate) => ({ candidate, source: url, level: level + 1 })));
   // After an intermediate document, the remaining actions are file probes only.
   if (level === 0) {
-    const endpoints = resolution.candidates.filter((candidate) => METADATA.has(candidate.kind));
+    const endpoints = resolution.candidates.filter((candidate) => METADATA.has(candidate.kind))
+      .sort((a, b) => Number(preferredMetadata(b)) - Number(preferredMetadata(a)));
     const jobs = endpoints.map((candidate) => ({ candidate, source: url, level: 1 }));
-    if (resolution.decision === 'needs_api' && candidates.every((candidate) => !['meta[http-equiv=refresh]', 'include-fragment[src]'].includes(candidate.evidence.selector))) {
+    const explicitDocument = candidates.some(({ evidence }) => evidence.selector === 'meta[http-equiv=refresh]' ||
+      evidence.selector === 'SourceForge project files' ||
+      (evidence.selector === 'include-fragment[src]' && url.pathname.includes('/releases/tag/')));
+    const noDirectFile = candidates.every((candidate) => candidate.kind === 'redirect');
+    if (!explicitDocument && (resolution.decision === 'needs_api' || (noDirectFile && endpoints[0] && preferredMetadata(endpoints[0])))) {
       tasks.unshift(...jobs);
     } else {
       tasks.push(...jobs);
@@ -152,7 +165,8 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
     let delay = retry ? (/^\d+$/.test(retry) ? Number(retry) * 1000 : Date.parse(retry) - Date.now()) : 60_000;
     if (!retry && remaining === '0' && reset && /^\d+$/.test(reset)) delay = Number(reset) * 1000 - Date.now();
     if (backoff.size >= 128) backoff.delete(backoff.keys().next().value);
-    backoff.set(await digest(url.hostname), Date.now() + Math.max(1000, Math.min(900_000, Number.isFinite(delay) ? delay : 60_000)));
+    const maximum = url.hostname === 'api.github.com' ? 3_600_000 : 900_000;
+    backoff.set(await digest(url.hostname), Date.now() + Math.max(1000, Math.min(maximum, Number.isFinite(delay) ? delay : 60_000)));
   }
 
   function parse(bytes, url, response, mime, adapters) {
@@ -211,7 +225,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
       return { url, gated: !rateLimited, rateLimited };
     }
     if (response.status !== 200 || !mayParse || !allowedDocument(url, mime, entry) ||
-        (!root && (api ? HTML.has(mime) : !comparableHost(source, url)))) {
+        (!root && (api ? HTML.has(mime) : !declaredDocument(source, url)))) {
       discard(response);
       return { url };
     }
@@ -314,6 +328,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
       if (visited.has(url.href)) continue;
       visited.add(url.href);
       reached++;
+      let followedDocument = false;
       try {
         const found = await inspect(get, url, { entry: candidate, source, level, budget, signal, adapters });
         tooLarge ||= Boolean(found.tooLarge);
@@ -325,6 +340,7 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
         } else if (found.resolution?.decision === 'gated') {
           blocked = true;
         } else if (found.resolution && level < 2) {
+          followedDocument = true;
           ambiguous ||= found.resolution.decision === 'ambiguous';
           readCandidates(found, level, pending);
           // The explicitly selected intermediate owns the remaining candidate slots.
@@ -333,6 +349,11 @@ export function createDownloadService({ createResolver, outbound, logUnresolved 
       } catch (error) {
         if (signal.aborted) throw error;
         if (error instanceof RangeFailure && error.httpStatus === 429) rateLimited = true;
+      }
+      // After a failed file hint, leave room for a declared endpoint and its file.
+      if (reached === 1 && !confirmed.length && !followedDocument && ARTIFACTS.has(candidate.kind)) {
+        const fallback = pending.findIndex(({ candidate }) => preferredMetadata(candidate));
+        if (fallback > 0) pending.unshift(...pending.splice(fallback, 1));
       }
     }
     if (confirmed.length) {

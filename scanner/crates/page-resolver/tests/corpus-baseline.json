@@ -1,0 +1,1264 @@
+{
+  "sol/zoom": {
+    "outcome": "correct",
+    "urls": [
+      "e8fe38193af5717a49cee8c8079eadf34d5b5e9ea504e9e8d52f10b55d91c4cd"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/vscode": {
+    "outcome": "correct",
+    "urls": [
+      "23e9d02104797bf1690f13122afd1aee88fe0b20ecf4f0010340d82a7ec955bb",
+      "5aa654e8c17722bdd43ca203a1dfff49ad913340d38546ae38700cd2a87c8087"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/cursor": {
+    "outcome": "correct",
+    "urls": [
+      "1908ee94c381d1a8a365c74269cfe3863e967132ab8e117e48a58d13ecb122bf"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/zed": {
+    "outcome": "correct",
+    "urls": [
+      "425a7e7bfffc9f1b45c96188a8c7616756de8b3ce8ef19e04ef0c5464469b815",
+      "c9df7854ce8c087e571b6b0514d9bc2058ee16f17bf7bdb0a9933e02bc75b496"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/bbedit": {
+    "outcome": "correct",
+    "urls": [
+      "503c95398c3dfbc553db19bd4e69ffa6be9906726e3670ceb10fa3f149fb6c7e"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/jetbrains-toolbox": {
+    "outcome": "correct",
+    "urls": [
+      "8c6b816f632aeec584682d12368f42dfc0b1430d31ca833a22b50f574a19eb28",
+      "4111f1ad6cd4c69b38ddf88955e61c6b6ec0406d022630314a2fd620bbddf251"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/intellij": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/android-studio": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/arduino": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/processing": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/chatgpt": {
+    "outcome": "correct",
+    "urls": [
+      "9e403167b234e00f74f275871a69d081dc3260391a3d666b91e61cb91649dfeb",
+      "4e19b6fc82c2184d479cb3151ccd61830e78641fe3605daa865f4a3c82c473a2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/lm-studio": {
+    "outcome": "correct",
+    "urls": [
+      "b8cc87f857497181f3526226f9b5189cf745556e577a60c430b6ccd5116e61a7"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/jan": {
+    "outcome": "correct",
+    "urls": [
+      "95f1a3d1c9825036503956e4b283d2c0adb0e434288f5070c077d60de81fa959"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/claude": {
+    "outcome": "correct",
+    "urls": [
+      "5fe1142a2ca88484c0979ad7e093221482bd5cbb88404564064f3aa7c01b5586"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/iterm2": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/ghostty": {
+    "outcome": "correct",
+    "urls": [
+      "19c0f395c677f77aae09bb01159884b1e48e00e182f709a5314f9cc6a20e561e"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/one-sentence": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/hyper": {
+    "outcome": "correct",
+    "urls": [
+      "e10075018efaf4e53bc18c4267b7a72e344b675eab4798896181b72fa2ea145f",
+      "e8c0c6e63b15fee62811c1217b1c6b9d4eddadb888ebcf5e20da6ef48152da7a"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/onedrive-rdm": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/orbstack": {
+    "outcome": "correct",
+    "urls": [
+      "2bf04e28609c5480d5d5baf7c6165a5141e5e2e069ce3cf996b9efc2cd5f0a5f"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/utm": {
+    "outcome": "correct",
+    "urls": [
+      "9b17d4626a57d592ba9a4e5017e2649ec753750352d2f318e0bba9e990177127"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/electron-fiddle": {
+    "outcome": "correct",
+    "urls": [
+      "33ab11fecd55324cf9fad7ec20e43168bed19eed3e957c002263a04765deedb2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/bun": {
+    "outcome": "correct",
+    "urls": [
+      "1291b227a630422b910cda8b377873cf197528286f8a1307e7b235d814222bb2",
+      "e45b83a6922b63caa8efe73eae3d4019dc36f0a9e50df507d06631de309b9302"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/go": {
+    "outcome": "correct",
+    "urls": [
+      "92799720d0c3f9ef6e03aa06b1349d0281fa43a5d94db437ff962e0a7a55c2fa",
+      "8903b0abc2a483f2b847f165b6dde2f3795f5b340e3c5b69a530f925e65c7e26"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/dotnet": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/azure-cli": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/rustup": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/adoptium": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/dbeaver": {
+    "outcome": "correct",
+    "urls": [
+      "f14260d6eee2e4372acb8f6aab5e51c85e168ee827c0192e8d90b9288ecf3dc8"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/mega-opencomic": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/beekeeper-studio": {
+    "outcome": "correct",
+    "urls": [
+      "67d9d097b1487247258016de513d569538e9bb816e347da507fbd7e07e6277d5"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/sequel-ace": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/postgres-app": {
+    "outcome": "ambiguous",
+    "urls": [
+      "0f6beae7cab66c55eca64b8c388bcddc6ab90e06f59f292d228dea00886a1c28",
+      "ee1ca83486d0ed6619f2fb816e7f8fc081f4a6abb2702e3a69302046ec5b6e2f"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/mongodb-compass": {
+    "outcome": "correct",
+    "urls": [
+      "4f0a496ed75eb6e99aea923dc073d8cd001a1e1bb19cc54eabd094bb1ffc11e2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/mysql": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/pgadmin": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/postman": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/bruno": {
+    "outcome": "correct",
+    "urls": [
+      "407562ae03b75b27e0940cb52d26e3b47187377a3e23631627e303716f0bc2a6",
+      "b14704c5963a02aac1fb52bd90530082555126e79d61331a874fdf526e908b8f"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/hoppscotch": {
+    "outcome": "correct",
+    "urls": [
+      "c6e98ccec2a3faf823e0a74d04b2cc72612ab8100978d1923d1e1e910dc9d280",
+      "9730d1f2d5652e1e5e6257bd02cdc7a9978e97ce206a601ec6205fddbefabaf3"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/charles": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/wireshark": {
+    "outcome": "correct",
+    "urls": [
+      "d0ceb9e522cfe66d4920f674207fae1e82d0f5e4ca7fb585af012e315c705d5c"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/tailscale": {
+    "outcome": "correct",
+    "urls": [
+      "9987010b04dd6bf2eaf784c6877f761837c30b15364064272b88cc38f01b3eab"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/wireguard": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/drive-spek-forum": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/qbittorrent": {
+    "outcome": "ambiguous",
+    "urls": [
+      "6b84e2afbf8fe204050378907c97ec2b780a9ef17631c84c32bd981d5b771a25",
+      "c601cfdcf49b46e1c0ec3c116574e4274d4c20ed9a9928f0469a23c4dda1a30a"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/syncthing": {
+    "outcome": "correct",
+    "urls": [
+      "dc359ba66e2205533cbda0995be6d06ca6221d6fac9e688e1da0768eba1ed10b",
+      "2318af24d75c8f26c4eb0c50a4d44138af5d3c4afb7b46b8439fc1e535c83f2f",
+      "b495fedf38146d19382d474bc76d806c205b88b018d2b5cab68db4d741695b60"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/nextcloud": {
+    "outcome": "ambiguous",
+    "urls": [
+      "04c9288b49b2d7eba5e3b601a8d11b2dcc914bc26a9b870c43dce8f14bc2c86e",
+      "8217c9615c150806331886c3ecdf409292f3c311af31663a94b324d5cc90de56",
+      "9db70f6398097fdea461f594a73119b43b3c25f76354f7f9a9f257114c7641a8"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/lulu": {
+    "outcome": "correct",
+    "urls": [
+      "dec23ab3827f0830745cf03a54d8d0a23063cab8782088c153ec9ef3522ece18"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/rectangle": {
+    "outcome": "correct",
+    "urls": [
+      "5afedae0f40acbcbbf6e802431b4f3bef9c1fcdf0bf570438e72587259c3d7fc"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/alt-tab": {
+    "outcome": "correct",
+    "urls": [
+      "5a1e42887ae8243d30602a65be3d866716fe15e2ac1cc10d9747fcebd191bb08"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/bettertouchtool": {
+    "outcome": "correct",
+    "urls": [
+      "df9299e2b5affbb8c7d31d3058e1576f5b90c1d50789f06e4b53bf10f82dc766"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/handbrake": {
+    "outcome": "correct",
+    "urls": [
+      "08f0798fd62dd3fbaa4f5d7fa85d2a518fcf63d64b9cde191d3e56216225a789"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/libreoffice": {
+    "outcome": "correct",
+    "urls": [
+      "f14806c4e82045a55c8d12f7626f63dff8cfa36ce1b5cde2921dd137d898b77f"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/firefox-en-download": {
+    "outcome": "correct",
+    "urls": [
+      "c0e670bcfb4ec3cd3b6cbc8ed71d1cc5b6ee8d42710dc68f4c534e41685c662f"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/chrome": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/chrome-for-testing": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/softpedia-openscad": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/cnet-cyberduck": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/macup-keka": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/uptodown-vlc": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/fosshub-audacity": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/obsidian": {
+    "outcome": "correct",
+    "urls": [
+      "a53798566266a95ec136b89b53e609219c163c516cef43576a0ca37c1f75dd89"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/signal": {
+    "outcome": "correct",
+    "urls": [
+      "977e76816743b61c1dac37edda8927be387ce1d250bc45794927d85c5251e385",
+      "4e95de1b0bc21512c139953a18e322f03f5da04ed6e419ad80d2bfd6a4125d21"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/slack": {
+    "outcome": "correct",
+    "urls": [
+      "ed258dad08b732dd39e11588315e533a83ccc790ca1f6aa3008e14e12a249901"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/notion": {
+    "outcome": "ambiguous",
+    "urls": [
+      "9b910bc6eaf35d6f5f3b34c325f3e3f1f975b6e8a5c8ec68b3f648b6277c0f44",
+      "e5691ba5a56b4d22fc4687bf4ff36e6082450401adbbfd0500cc7ddf54244624"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/figma": {
+    "outcome": "correct",
+    "urls": [
+      "37571850ca917dd66e0e7e71b37cd41c666b60ddf434844c85082eee7889b48e"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/github-desktop": {
+    "outcome": "correct",
+    "urls": [
+      "405f2d62f8664dc64b741d6a5a0f19bec77cbec7cb12f2af3c0ebd8355878eb1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/gitkraken": {
+    "outcome": "correct",
+    "urls": [
+      "a231ddbc7e3fff34d22bfbe2aeb6e92097267acfbe780f722d191fe66862c777"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/gitlab-meld": {
+    "outcome": "correct",
+    "urls": [
+      "56fda541d41d9cbea72eaa6ba45450111f02fea0f079775cd596aa6ee0d5d663"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/github-nvim": {
+    "outcome": "correct",
+    "urls": [
+      "501b89a3015c5b05cf411a31c3101c42c70d99a5ca0a6fa9d0e8c43e27af2225",
+      "5589da210d66d35f3c4b99d387c911f6eea30099543f9f161ede02737da09e70"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/github-uv": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/alacritty": {
+    "outcome": "correct",
+    "urls": [
+      "0d0da81fd75297652228ed3fd5f9836cfe7d815aa052a7472f684ec2179b133f"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/codeberg-librewolf": {
+    "outcome": "correct",
+    "urls": [
+      "f4f8a92af1301a733898373c6e84cc3847f0dc1c1886191c5500d1017ce51d18"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/sourcehut-aerc": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/gitea-releases": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/support-bitbucket": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/itch-decker": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/itch-tic80": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/godot": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/setapp-base": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/testflight-headjust": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/command-x": {
+    "outcome": "correct",
+    "urls": [
+      "b768e137c7ed1013e32acff2bf5f225d7f6dc4741cc3cf5e47eecead5066d457"
+    ],
+    "rangedWithinBudget": true
+  },
+  "sol/liclipse": {
+    "outcome": "correct",
+    "urls": [
+      "645af93f57e26e602ce171bdc2beea84b99060faf90a0c63766cadf2a3ea9182",
+      "4277e6a5afe14e557adc24c24b123812259898f7e8be3ee1cb8f7bfb619f83de"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/parallels": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/splunk": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/displaylink": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/localwp": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/duckdb": {
+    "outcome": "correct",
+    "urls": [
+      "48005514fe50ca018a7617d1d538d38a102a70a06c814006baf6e6baf250489e"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/qt": {
+    "outcome": "correct",
+    "urls": [
+      "3713a69bbfede01902e548bd92c2dccafa5771b1395b80867fb9fecba37ad67a"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/mamp": {
+    "outcome": "correct",
+    "urls": [
+      "0d06ff6c83b9ab11c5c5f6d0d2682e99f69c36b7cd1133ec364165911f07220c"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/kodi": {
+    "outcome": "ambiguous",
+    "urls": [
+      "1928ad0141f0bfc275fa58c00fae55b1ff68ac3728957fa2ba1a5a57ebe44848",
+      "6c8a589ae1967533a3bb7231224b42658520584b89c8f63f5c46e394bf89f9e4"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/rancher-desktop": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/brew-macfuse": {
+    "outcome": "correct",
+    "urls": [
+      "15a40a1535bf4f9aa5e69c57c64d901f9b56cb10ca9d4d5f376eedb0029683bc"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/eclipse-mirror": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/openemu": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/gumroad-mac-mouse": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/paddle-betterdisplay": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/wled-installer": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "sol/onetag": {
+    "outcome": "correct",
+    "urls": [
+      "431011c9834c7ca81f44b797bd8dbabf4e8a623e0d8801e6bd7505bd130aaf58"
+    ],
+    "rangedWithinBudget": false
+  },
+  "sol/sourceforge-freemind-tree": {
+    "outcome": "correct",
+    "urls": [
+      "42d067b4a01b1f87274dd29931e26bd3176957369e880d97f71e23861ce073e3"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/office": {
+    "outcome": "ambiguous",
+    "urls": [
+      "387a90e95a5db189e7558b4facb3c2ff73982fb244cf5619476cfa2ddfeb5857",
+      "12f03f453dd55f375cbfdc0f85de0b2d793c79bf1c7448b033aee41fd7b478e1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/discord": {
+    "outcome": "correct",
+    "urls": [
+      "5228f432d06d96bdae375a22e37013137dc3df0b6cedba633ce2b29f3eb452a8"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/notion": {
+    "outcome": "correct",
+    "urls": [
+      "9b910bc6eaf35d6f5f3b34c325f3e3f1f975b6e8a5c8ec68b3f648b6277c0f44"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/obsidian": {
+    "outcome": "correct",
+    "urls": [
+      "a53798566266a95ec136b89b53e609219c163c516cef43576a0ca37c1f75dd89"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/sketch": {
+    "outcome": "correct",
+    "urls": [
+      "db0182f00661f682753304bfbbe2e5ffc7d12204bebf575a1f294a635f0d5287"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/figma": {
+    "outcome": "correct",
+    "urls": [
+      "27dd74b741d35951d97c986be862d364a74c7f1d54f48f2576c471165bb5dcfd"
+    ],
+    "rangedWithinBudget": true
+  },
+  "astra/freecad": {
+    "outcome": "correct",
+    "urls": [
+      "d3549b00ad580720535504d2719fef847e1862b8fdd653244519d210a3b56c67",
+      "2a5ad496dc293663c5eece5b322b6b479db79fb2ad1480c08afc6c9e169c0cf7"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/gimp": {
+    "outcome": "correct",
+    "urls": [
+      "6c48b1ec1622f9940e611acc60624c0d8aa11395fc20bd809b69f14be370c63d",
+      "f4f24a193d8e3007104d101431dcdd5ab5f3a781fe4aa37365d6833e8adf5b46"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/handbrake": {
+    "outcome": "correct",
+    "urls": [
+      "08f0798fd62dd3fbaa4f5d7fa85d2a518fcf63d64b9cde191d3e56216225a789"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/vlc": {
+    "outcome": "correct",
+    "urls": [
+      "5b0240dc6703904922e402274b851f900669ffebfe57b5c444379ebee65ea0af",
+      "82ef68a4a1cb3b71255a81b4f7144d70a0c3cb8f5617016c3e8ec27f930eadb1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/reaper": {
+    "outcome": "correct",
+    "urls": [
+      "f41efe5d9c55814988e5569e817b04c62faef9062ff9c37b0824bf6935a03fc3",
+      "1000f2d7d32bc7f9824ac932948b091ddfce016164c95b512d454c09cc082f94",
+      "56d9a36860aa56d601bec6c31413802be8e0f3481827f3a97669b2b2adadbca7"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/audacity": {
+    "outcome": "correct",
+    "urls": [
+      "4a1c4cc8a4f25932b840b5b1ae8327c465e70fd434fa7d1d1e1cc2fa2e93fb5d",
+      "64fb90415081190195a03d3dd3ebc1a48086f1620dc872d4bfb935593a66c678",
+      "4030454dba0635c1c39646cc8f7c521a78d6c66d829d8bb8a71e3cee562884a2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/bitwig": {
+    "outcome": "correct",
+    "urls": [
+      "9b033ef6e18853fb3eabd69ff233f2143807f611d1ed7a01cf53020f499522e0"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/tenacity": {
+    "outcome": "ambiguous",
+    "urls": [
+      "eae69c06c2531fbdb640b2d7454785aaf296e502318127fec4fa472e06d01564",
+      "49c6278a64ac64a1d22412cb71baa891558e41d56d964f0b7094b0bd6dc83cf4"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/gog": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/steam": {
+    "outcome": "correct",
+    "urls": [
+      "ec5c95a1fc1b19e84c24839b1fb68ab7665065032b5569ae2a85f42d13ca84f1"
+    ],
+    "rangedWithinBudget": true
+  },
+  "astra/logitech": {
+    "outcome": "correct",
+    "urls": [
+      "643ae765e6596e7bb788386a880a1cd67b247fa82efd7359838c1d0737889ee1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/tailscale": {
+    "outcome": "correct",
+    "urls": [
+      "9987010b04dd6bf2eaf784c6877f761837c30b15364064272b88cc38f01b3eab"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/macupdate": {
+    "outcome": "ambiguous",
+    "urls": [
+      "b76a63242bf1b2d23a82c4e07275ea91e6244fb463637c3198911013ec0dcf70",
+      "4a7f2d673bb0c656a2dcf0cdc7e708a4241788658dbb6c276212689b71c5a10b"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/wireguard": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/mindustry": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/epic": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/softpedia": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/blender": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/signal": {
+    "outcome": "correct",
+    "urls": [
+      "977e76816743b61c1dac37edda8927be387ce1d250bc45794927d85c5251e385"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/openscad": {
+    "outcome": "correct",
+    "urls": [
+      "e9c6db52dc5de985e8615cb3b2a85c377553b4278441320541c15a751af97a2b"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/qmk": {
+    "outcome": "correct",
+    "urls": [
+      "ed17428941887beaa54717acecb7562f80bb6bff20edac9d6f6410445188385e"
+    ],
+    "rangedWithinBudget": true
+  },
+  "astra/balena": {
+    "outcome": "correct",
+    "urls": [
+      "c64050f544aa4bdae1edf787e03bcd0723ebb3c0aaa768d9e9dd88dee01ecc39",
+      "dc332bc641eabaec9cda6e4dc37b2d4ca833e1341800224e4f17bfc872daf50c"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/logseq": {
+    "outcome": "correct",
+    "urls": [
+      "8e671a7f80eec595963eaaf7ca2cb284ca2789f285c664867f89f91232b93d7e",
+      "5f4d424fee66750aeba53a320aab5fa8bd5fb85606e842811181d1168b258ff1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/jetbrains": {
+    "outcome": "correct",
+    "urls": [
+      "8c6b816f632aeec584682d12368f42dfc0b1430d31ca833a22b50f574a19eb28",
+      "4111f1ad6cd4c69b38ddf88955e61c6b6ec0406d022630314a2fd620bbddf251"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/homebrew-blender": {
+    "outcome": "ambiguous",
+    "urls": [
+      "ba972e1e4a29039c61ecc0d5f8b4d4d25d7705fac566489ccb41b1cc787bc0f6",
+      "df16a09f410f0cf94f3affa11fd40b327a92021cfe200ac4dd44e522ceccb914"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/gitlab": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/bitbucket-cef": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/tea": {
+    "outcome": "correct",
+    "urls": [
+      "ab458e868778d0bc6947e75dfd3202a8655040b6ece710709c3ac6b575c971ee"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/librewolf": {
+    "outcome": "correct",
+    "urls": [
+      "d006c34a3b0b5fca91aa1c3c9fd44aa2b8c4a211f333e67249f5fa3f4a6d3a4c",
+      "3caba0abd481ccd99708561fde4039faaa1cbeae96174b2a3f64150630cfd866"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/itch": {
+    "outcome": "correct",
+    "urls": [
+      "d56ea094ce8a17efa64b861bfd1363578081b22eb328fb21d0c1b7a8d43aef32"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/arturia": {
+    "outcome": "correct",
+    "urls": [
+      "3e8160c1ec3f898f23884d28da21280d299f10b4d7e5b1f9a2920e3e49459845"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/surge": {
+    "outcome": "correct",
+    "urls": [
+      "2550d0cb8656d2f5bcb827ca6ea86232ee4fbb4d2d86acbf3321de93133f378b"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/focusrite": {
+    "outcome": "ambiguous",
+    "urls": [
+      "282311fc230ababd4abd8295854f919c3af5af705c22e056470433b96943e6e4",
+      "30268182766b5fd5b7da522256067594adfd20940b8059889cd44aed2c4d71f2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/melda": {
+    "outcome": "correct",
+    "urls": [
+      "05fbf8d364b29147a65d7d28ab6c37ae9802f59c1b9e24e14d39dbf3d14f0aac"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/airwindows": {
+    "outcome": "ambiguous",
+    "urls": [
+      "109314be0c09c50300e99fce9501557aa03b3e6c1e0c69151341d34f1ace211a",
+      "c0d8bfb7c6321c1eb1e6d84ced0ea760e3ce3dca4e08930c67aa2f62ad059442"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/clop": {
+    "outcome": "correct",
+    "urls": [
+      "bdb3258efa6774786dd3628fff76e97083abf9af060dc96a6f209def76f57800"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/cleanshot": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/ableton": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/captureone": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/blackhole": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/macwhisper": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/speedy": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/setapp-one": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/cnet": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/oracle": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/applelogic": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/sourcehut": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/brew": {
+    "outcome": "correct",
+    "urls": [
+      "6e87fbbbd2d2d73f71a81728feb8d0e5f77c0b4b0313ff563f6e1eb7e69128c9"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/doki": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/tour-mega": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/zoom": {
+    "outcome": "correct",
+    "urls": [
+      "2ec9fdbd73c5e90e03ab70cf9c0135ee6528b1d4d8c29a26e13ee6c53f280d66",
+      "f3378ba520fc7c8d45420c1587e1c9b6a59fabdd7a682e74fafc1ebac5dcdff7"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/dropbox": {
+    "outcome": "correct",
+    "urls": [
+      "52962479af715149ed69cebf3154100c0e92df78aa8f66a7921062076c236711",
+      "ad26043c67a1aa2d5c06d9196a7f3ae873b3640ac2cab820ea293a4bd156261a"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/slack": {
+    "outcome": "correct",
+    "urls": [
+      "ed258dad08b732dd39e11588315e533a83ccc790ca1f6aa3008e14e12a249901"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/nativeaccess": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/battle": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/github-desktop": {
+    "outcome": "correct",
+    "urls": [
+      "405f2d62f8664dc64b741d6a5a0f19bec77cbec7cb12f2af3c0ebd8355878eb1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/fosshub": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/sourceforge": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/screen-studio": {
+    "outcome": "correct",
+    "urls": [
+      "230973db531d542e9ae74582b430dffff6612715811a6a90b84ab52d8cf7a77a"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/wacom": {
+    "outcome": "correct",
+    "urls": [
+      "874d2eba963bf23cd913a2cb428f7bd6b68757992b1d8165543956fa71281d07"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/elgato": {
+    "outcome": "ambiguous",
+    "urls": [
+      "f8ffe22bf66cf1a834a9bf628dc5fb0a44b0434b82313bbf4381fbf3ffc35dfe",
+      "c5c575a3d75ad8632c318ce3d8597a887abaaded0deb0b911f8e05df74655a3b",
+      "b0881e99092d2d56273f7d4264b19240499e31482dceffcac5564d3444e47ca9"
+    ],
+    "rangedWithinBudget": true
+  },
+  "astra/bambu": {
+    "outcome": "correct",
+    "urls": [
+      "a9f50654c0c683f76a30d58d18efd78d4580f2360e8fd406507891516ca7d2d5"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/robofont": {
+    "outcome": "correct",
+    "urls": [
+      "b79495e5316e6359829c28656f1cf3000670e3f1947f4a826005fc39077d9b28"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/clashverge": {
+    "outcome": "correct",
+    "urls": [
+      "608cf1eeaf896a5b38fae43b3346560ec609f28bbd168b5a3cd07a73c53eaa7e",
+      "14b9e4846dbcbb16b9bb83902379d82f912e60fc5e4beb5f9855cf13d757d2e2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/iina": {
+    "outcome": "correct",
+    "urls": [
+      "d4334895d7d5ad901540051f23129a83d29193eadedce9d64f16520ed1f61050"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/cyberduck": {
+    "outcome": "correct",
+    "urls": [
+      "9048cebc809993cfeb8303a5457a024626349d960ad3054a698b324df7fd0223"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/hamsterdam": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/hotspotter": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/braintrace": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/pubmedapp": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/atom-bitwig": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/mega-app": {
+    "outcome": "ambiguous",
+    "urls": [
+      "065002cedccfa765fcec6ff39497d340d22ece5a20f2fdc56105fd1fc4307547",
+      "9c7fe43e60b3a2f8a10507a562a3b51bbe2e740dbcef77ba99cb83c6e72466f1"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/test-omnifocus": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/test-omnigraffle": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/dropshare-paddle": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/forklift-fastspring": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/chrome": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/adobe": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/acrobat": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/blackmagic": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/uptodown": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/codeberg": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/firealpaca": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/fliqlo": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/sap-btp": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/apple-developer-downloads": {
+    "outcome": "gated",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/starship": {
+    "outcome": "correct",
+    "urls": [
+      "21daddc969be00621c14bf02ac835b2ed2e131855094f846a552ac4e54c649e6",
+      "ecdef6c1f9769f835561295ed033995202fda4dff7268a051605ac2d1bc9895f"
+    ],
+    "rangedWithinBudget": true
+  },
+  "astra/ilok": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/vscode": {
+    "outcome": "correct",
+    "urls": [
+      "23e9d02104797bf1690f13122afd1aee88fe0b20ecf4f0010340d82a7ec955bb",
+      "5aa654e8c17722bdd43ca203a1dfff49ad913340d38546ae38700cd2a87c8087"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/teamviewer": {
+    "outcome": "correct",
+    "urls": [
+      "be05736e528dcf66445ab64fbce55935ab099e89bc1ce99f07b9aa827d3ea6e4"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/locale-mullvad": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  },
+  "astra/fiddle": {
+    "outcome": "correct",
+    "urls": [
+      "cba2d53b71e3d0cc7469d538c8eaf3b6128fea1c3b188da0d1b34c44f34c0227",
+      "2ccab630a3758e87b9d78b3b72a120c7cc04265e53eddf4a004cbf55f5c637ad"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/ecopaste": {
+    "outcome": "correct",
+    "urls": [
+      "5e24e44cf0ff2684d12b0e6fca13100ab7066e54e33753d224abd95df14130c2"
+    ],
+    "rangedWithinBudget": false
+  },
+  "astra/pico8": {
+    "outcome": "unresolved",
+    "urls": [],
+    "rangedWithinBudget": false
+  }
+}

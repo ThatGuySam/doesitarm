@@ -248,6 +248,10 @@ fn rejects_non_public_urls_and_bounds_parser_work() {
 
 #[test]
 fn failure_ledger_carries_hashes_and_structural_evidence() {
+    assert_eq!(
+        page_resolver::sha256(b""),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    );
     let url = public_url("https://publisher.example.org/?session=privacy", None).unwrap();
     let document = document(&url, b"<h1>Downloads</h1>", "text/html");
     let result = resolve(document, None);

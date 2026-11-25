@@ -250,3 +250,67 @@ test('honors anonymous forge API rate limits across requests', async () => {
   assert.equal((await (await handle(request(project), env)).json()).reason, 'host_rate_limit');
   assert.equal(apiCalls, 1);
 });
+
+test('reads one named Mac YAML feed and rejects executable-document MIME', async () => {
+  const page = 'https://signal.org/download/';
+  const feed = 'https://updates.signal.org/desktop/latest-mac.yml';
+  const file = 'https://updates.signal.org/desktop/Signal-universal.dmg';
+  for (const mime of ['application/yaml', 'text/javascript']) {
+    const visits = [];
+    const handle = handler((url, headers) => {
+      visits.push(url.href);
+      if (url.href === page) return html('<title>Signal downloads</title>');
+      if (url.href === feed) {
+        return new Response('version: 1.0.0\nfiles:\n  - url: Signal-universal.dmg\npath: decoy.dmg\n',
+          { headers: { 'Content-Type': mime } });
+      }
+      assert.equal(url.href, file);
+      assert.equal(headers.get('Range'), 'bytes=0-0');
+      return new Response('x', { status: 206, headers: {
+        'Content-Type': 'application/x-apple-diskimage', 'Content-Range': 'bytes 0-0/120',
+      } });
+    });
+    const result = await (await handle(request(page), env)).json();
+    assert.equal(result.decision, mime === 'application/yaml' ? 'resolved' : 'none');
+    assert.deepEqual(visits, mime === 'application/yaml' ? [page, feed, file] : [page, feed]);
+  }
+});
+
+test('uses the canonical Mac manifest before opaque links and cache-buster variants', async () => {
+  const page = 'https://signal.org/download/';
+  const feed = 'https://updates.signal.org/desktop/latest-mac.yml';
+  const file = 'https://updates.signal.org/desktop/Signal-universal.dmg';
+  const visits = [];
+  const handle = handler((url) => {
+    visits.push(url.href);
+    if (url.href === page) return html(`<a href="/download/macos/">Mac</a><script>const source = "${feed}?bar=";</script>`);
+    if (url.href === feed) return Response.json({ files: [{ url: 'Signal-universal.dmg' }] });
+    assert.equal(url.href, file);
+    return new Response('x', { status: 206, headers: {
+      'Content-Type': 'application/x-apple-diskimage', 'Content-Range': 'bytes 0-0/120',
+    } });
+  });
+  const result = await (await handle(request(page), env)).json();
+  assert.equal(result.decision, 'resolved');
+  assert.equal(result.candidates[0].url, file);
+  assert.deepEqual(visits.slice(0, 3), [page, feed, file]);
+});
+
+test('permits the scoped GitHub Desktop handoff as one intermediate', async () => {
+  const page = 'https://desktop.github.com/download/';
+  const doc = 'https://github.com/apps/desktop';
+  const file = 'https://cdn.example.net/Desktop-ARM64.dmg';
+  const visits = [];
+  const handle = handler((url) => {
+    visits.push(url.href);
+    if (url.href === page) return html(`<meta http-equiv=refresh content="0; url=${doc}">`);
+    if (url.href === doc) return html(`<a href="${file}">Download macOS</a>`);
+    assert.equal(url.href, file);
+    return new Response('x', { status: 206, headers: {
+      'Content-Type': 'application/x-apple-diskimage', 'Content-Range': 'bytes 0-0/120',
+    } });
+  });
+  const result = await (await handle(request(page), env)).json();
+  assert.equal(result.decision, 'resolved');
+  assert.deepEqual(visits, [page, doc, file]);
+});
