@@ -77,6 +77,17 @@ test('validates every redirect and DNS outcome before requesting a target', asyn
   }
 });
 
+test('rechecks DNS when a same-host redirect changes address', async () => {
+  let dnsLookups = 0;
+  const visits = [];
+  const handle = handler((url) => {
+    visits.push(url.href);
+    return redirect('/redirected');
+  }, { addresses: () => ++dnsLookups > 2 ? ['8.8.8.8', '3fff::1'] : undefined });
+  assert.equal((await handle(request(), env)).status, 400);
+  assert.deepEqual(visits, [target]);
+});
+
 test('bounds a chain of open redirects and detects a meta refresh loop', async () => {
   const paths = [];
   const handle = handler((url) => {

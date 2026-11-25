@@ -2,7 +2,7 @@ import ipaddr from 'ipaddr.js';
 import { redactPaths } from '../public/path-privacy.js';
 import { deadlineError, RangeFailure, scanRemote } from '../public/range-scan.js';
 import { DEFAULT_BUDGET, emptyResult } from '../public/scan-result.js';
-import { createEgress, validatePageTarget, validateTarget } from './egress.js';
+import { createEgress, validatePageTarget } from './egress.js';
 import { createDownloadService } from './downloads.js';
 import { contentType, readBounded } from './http-body.js';
 
@@ -70,7 +70,7 @@ export function createHandler({
     let budget;
     if (!discoveryRoute) {
       try {
-        target = validateTarget(url.searchParams.get('url'), url.hostname);
+        target = validatePageTarget(url.searchParams.get('url'), url.hostname);
         budget = readBudget(url.searchParams.get('budget'), env.SCAN_MAX_BUDGET);
       } catch (error) {
         return json(emptyResult(error.status, error.message), error.httpStatus);

@@ -3,7 +3,7 @@ import { discard, RangeFailure } from '../public/range-scan.js';
 import { readBounded } from './http-body.js';
 
 const MAX_SUBREQUESTS = 36;
-const MAX_REDIRECTS = 6;
+const MAX_REDIRECTS = 3;
 const REDIRECTS = new Set([301, 302, 303, 307, 308]);
 const GLOBAL_IPV6 = ipaddr.IPv6.parse('2000::');
 
@@ -16,31 +16,6 @@ function isPublicAddress(text) {
   const address = ipaddr.parse(text);
   return address.range() === 'unicast' &&
     (address.kind() === 'ipv4' || address.match(GLOBAL_IPV6, 3));
-}
-
-export function validateTarget(raw, ownHost, base) {
-  let url;
-  try {
-    if (!raw || raw.length > 4096) throw new Error();
-    url = new URL(raw, base);
-  } catch {
-    throw blocked('Provide a valid public HTTPS download URL.');
-  }
-  if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '80')) {
-    throw blocked('Downloads require HTTPS on port 443 or 80, without URL credentials.');
-  }
-
-  const name = url.hostname.replace(/^\[|\]$|\.$/g, '');
-  if (ipaddr.isValid(name)) {
-    if (!isPublicAddress(name)) throw blocked('Private and reserved addresses are blocked.');
-    // Workers fetch does not support literal IP origins.
-    throw blocked('Use the public hostname of the download.');
-  }
-  if (name === ownHost || !name.includes('.') || /\.(?:local|localhost|internal|lan|home\.arpa)$/.test(name)) {
-    throw blocked('This download hostname is blocked.');
-  }
-  url.hash = '';
-  return url;
 }
 
 async function dnsAddresses(host, type, subrequest, signal) {
@@ -60,8 +35,6 @@ async function dnsAddresses(host, type, subrequest, signal) {
     .map((record) => record.data);
 }
 
-// Page discovery accepts the narrower public-HTTPS policy even if legacy range
-// clients supply a URL accepted by the original scan endpoint.
 export function validatePageTarget(raw, ownHost, base) {
   const text = typeof raw === 'string' ? raw.trim() : '';
   const authority = /^(?:https:)?\/\/([^/?#]*)/i.exec(text)?.[1];
@@ -71,14 +44,23 @@ export function validatePageTarget(raw, ownHost, base) {
       authority?.includes('@')) {
     throw blocked('Provide a valid public HTTPS download URL.');
   }
-  const url = validateTarget(text, ownHost, base);
-  const host = url.hostname.replace(/\.$/, '');
-  if (url.port || /\.(?:test|invalid|example|onion|alt|arpa|corp|home|localdomain|intranet)$/.test(host) ||
-      host === 'cloudflare-dns.com' || host === ownHost ||
+  let url;
+  try { url = new URL(text, base); } catch { throw blocked('Provide a valid public HTTPS download URL.'); }
+  if (url.protocol !== 'https:' || url.username || url.password || url.port) {
+    throw blocked('Downloads require HTTPS on port 443, without URL credentials.');
+  }
+  const host = url.hostname.replace(/^\[|\]$|\.$/g, '');
+  if (ipaddr.isValid(host)) {
+    if (!isPublicAddress(host)) throw blocked('Private and reserved addresses are blocked.');
+    throw blocked('Use the public hostname of the download.');
+  }
+  if (!host.includes('.') || /\.(?:local|localhost|internal|lan|test|invalid|example|onion|alt|arpa|corp|home|localdomain|intranet)$/.test(host) ||
+      host === 'cloudflare-dns.com' || host === ownHost?.replace(/\.$/, '') ||
       host.split('.').some((label) => !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(label))) {
     throw blocked('Provide a valid public HTTPS download URL.');
   }
   url.hostname = host;
+  url.hash = '';
   if (new TextEncoder().encode(url.href).length > 4096) throw blocked('The URL is too long.');
   return url;
 }
@@ -134,7 +116,7 @@ export function createPageEgress({ ownHost, outbound, signal, permitHost, freshD
       }
       if (!REDIRECTS.has(response.status)) return { url, response };
       discard(response);
-      if (hop >= 3 || ++redirects > maxRedirects) {
+      if (hop >= MAX_REDIRECTS || ++redirects > maxRedirects) {
         throw new RangeFailure('The download reached its redirect limit.', 'limit_reached', 422);
       }
       url = validatePageTarget(response.headers.get('Location'), ownHost, url);
@@ -148,6 +130,7 @@ export function createEgress({ target, ownHost, outbound, signal }) {
   let url = target;
   let requests = 0;
   let redirects = 0;
+  let redirected = false;
 
   function subrequest(url, options) {
     signal.throwIfAborted();
@@ -155,7 +138,7 @@ export function createEgress({ target, ownHost, outbound, signal }) {
     if (requests > MAX_SUBREQUESTS) {
       throw new RangeFailure('Scan reached the 36-subrequest limit.', 'limit_reached', 503);
     }
-    return outbound(url, { ...options, redirect: 'manual', signal });
+    return outbound(url, { ...options, redirect: 'manual', signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
   }
 
   const checkDNS = checkedDNS(subrequest, signal);
@@ -164,7 +147,8 @@ export function createEgress({ target, ownHost, outbound, signal }) {
     const headers = new Headers({ Range: range, 'Accept-Encoding': 'identity' });
     if (etag) headers.set('If-Match', etag);
     while (true) {
-      await checkDNS(url.hostname);
+      await checkDNS(url.hostname, redirected);
+      redirected = false;
       const response = await subrequest(url, { headers, cache: 'no-store' });
       if (signal.aborted) {
         discard(response);
@@ -178,9 +162,10 @@ export function createEgress({ target, ownHost, outbound, signal }) {
       discard(response);
       redirects += 1;
       if (redirects > MAX_REDIRECTS) {
-        throw new RangeFailure('Scan reached the six-redirect limit.', 'limit_reached', 503);
+        throw new RangeFailure('Scan reached the three-redirect limit.', 'limit_reached', 503);
       }
-      url = validateTarget(response.headers.get('Location'), ownHost, url);
+      url = validatePageTarget(response.headers.get('Location'), ownHost, url);
+      redirected = true;
     }
   };
 }
