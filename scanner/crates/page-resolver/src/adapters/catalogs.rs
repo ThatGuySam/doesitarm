@@ -58,11 +58,20 @@ pub(super) fn add(context: &mut Context<'_>) {
             Some(Kind::ReleaseApi),
             true,
         );
-    } else if host == "www.jetbrains.com"
-        && matches!(path, "/toolbox-app" | "/toolbox-app/download")
-    {
-        context.add("https://data.services.jetbrains.com/products/releases?code=TBA&latest=true&type=release",
-            "provider", "JetBrains Toolbox API", "", Some(Kind::ReleaseApi), true);
+    } else if host == "www.jetbrains.com" {
+        let product = match path {
+            "/toolbox-app" | "/toolbox-app/download" => "TBA",
+            "/idea/download" => "IIU",
+            _ => return,
+        };
+        context.add(
+            &format!("https://data.services.jetbrains.com/products/releases?code={product}&latest=true&type=release"),
+            "provider",
+            "JetBrains product API",
+            "",
+            Some(Kind::ReleaseApi),
+            true,
+        );
     } else if host == "code.visualstudio.com" && path.eq_ignore_ascii_case("/download") {
         for (sku, label) in [
             ("arm64", "Apple Silicon"),
@@ -229,12 +238,17 @@ pub(super) fn parse(context: &mut Context<'_>, body: &Value) -> bool {
             }
         }
     } else if host == "data.services.jetbrains.com" && path == "/products/releases" {
+        let Some(product) = context.base.query_pairs().find_map(|(key, value)| {
+            (key == "code" && matches!(value.as_ref(), "TBA" | "IIU")).then(|| value.into_owned())
+        }) else {
+            return true;
+        };
         for (key, arch) in [("macM1", "arm64"), ("mac", "Intel")] {
-            if let Some(link) = body["TBA"][0]["downloads"][key]["link"].as_str() {
+            if let Some(link) = body[product.as_str()][0]["downloads"][key]["link"].as_str() {
                 context.add(
                     link,
                     "metadata",
-                    &format!("$.TBA[0].downloads.{key}.link"),
+                    &format!("$.{product}[0].downloads.{key}.link"),
                     arch,
                     None,
                     true,

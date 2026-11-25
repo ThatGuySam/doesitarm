@@ -355,3 +355,25 @@ fn finds_only_a_github_projects_declared_fragment() {
             .any(|c| c.url.path().contains("/another/"))
     );
 }
+
+#[test]
+fn uses_the_exact_jetbrains_product_requested() {
+    let page = public_url("https://www.jetbrains.com/idea/download/", None).unwrap();
+    let api = public_url(
+        "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release",
+        None,
+    )
+    .unwrap();
+    let root = document(&page, b"<title>IntelliJ IDEA</title>", "text/html");
+    assert_eq!(resolve(root, None).candidates[0].url, api);
+    let metadata = br#"{"IIU":[{"downloads":{"macM1":{"link":"https://cdn.example.org/idea-arm64.dmg"}}}],"TBA":[{"downloads":{"mac":{"link":"https://cdn.example.org/toolbox.dmg"}}}]}"#;
+    let result = resolve(root, Some(document(&api, metadata, "application/json")));
+    assert_eq!(result.decision, Decision::Resolved);
+    assert_eq!(result.candidates[0].url.path(), "/idea-arm64.dmg");
+    assert!(
+        !result
+            .candidates
+            .iter()
+            .any(|candidate| candidate.url.path().ends_with("toolbox.dmg"))
+    );
+}
