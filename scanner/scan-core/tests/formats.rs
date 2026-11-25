@@ -434,6 +434,19 @@ fn pkg_reads_installer_metadata_and_gzip_or_stored_cpio() {
 }
 
 #[test]
+fn pkg_auto_selects_the_product_in_packageinfo_bundle_version() {
+    let package = include_bytes!("../../fixtures/product-bundle-version.pkg");
+    let result = run(package, 8192);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    let path = "Library/Audio/Plug-Ins/VST3/Fixture.vst3";
+    assert_eq!(result.bundle_kind, Some("audio_plugin"));
+    assert_eq!(result.bundle_path.as_deref(), Some(path));
+    assert_eq!(result.installer.unwrap().payload_bundles, [path]);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
+#[test]
 fn pkg_returns_installer_metadata_when_payload_budget_runs_out() {
     let result = run(PKG, 550);
     assert!(

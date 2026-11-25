@@ -12,7 +12,7 @@ from struct import pack
 
 from apfs_fixture import apfs_fixture
 from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, write_udif
-from pkg_fixture import late_bom_fixture, pkg_fixture, write_xar
+from pkg_fixture import cpio, late_bom_fixture, pkg_fixture, write_xar
 
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
@@ -134,6 +134,17 @@ if __name__ == "__main__":
     ], "Apple_HFS", with_preamble=False)
     pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
+    plugin = "Library/Audio/Plug-Ins/VST3/Fixture.vst3"
+    plugin_payload = cpio([
+        (f"{plugin}/Contents/MacOS/FixtureBinary", fat()),
+        (f"{plugin}/Contents/Info.plist", plistlib.dumps(METADATA)),
+    ], odc=True)
+    write_xar(ROOT / "product-bundle-version.pkg", gzip.compress(plugin_payload, mtime=0),
+              package_info=f'''<pkg-info identifier="org.doesitarm.fixture.vst3" install-location="/">
+                <bundle-version><bundle path="./{plugin}">
+                  <bundle path="./Contents/Plugins/Nested.kext"/>
+                </bundle></bundle-version>
+              </pkg-info>'''.encode())
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
     apfs_fixture(ROOT / "apfs-lzvn.dmg", METADATA, fat(intel_offset=65_536), compressed=True)
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)

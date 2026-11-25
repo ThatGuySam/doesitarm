@@ -611,6 +611,11 @@ async fn read_metadata(
             .map(str::to_owned);
         meta.payload_bundles = root
             .children()
+            .chain(
+                named_child(root, "bundle-version")
+                    .into_iter()
+                    .flat_map(|version| version.children()),
+            )
             .filter(|node| node.has_tag_name("bundle"))
             .filter_map(|node| bundle::archive_path(node.attribute("path")?))
             .filter(|path| path.len() <= 4096)
