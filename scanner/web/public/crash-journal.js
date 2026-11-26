@@ -304,7 +304,7 @@ export function crashReportLines(session) {
   return [
     { type: 'crash_report', report_schema_version: 1, outcome: 'no_clean_end', ...header,
       event_count: events.length, sample_count: samples.length, long_task_count: longTasks.length },
-    ...events.map((entry) => ({ type: 'journal_event', ...entry })),
+    ...events.map(({ type, ...entry }) => ({ type: 'journal_event', event: type, ...entry })),
     ...samples.map((entry) => ({ type: 'sample', ...entry })),
     ...longTasks.map((entry) => ({ type: 'long_task', ...entry })),
   ].map((line) => stringifyRedacted(line)).join('\n') + '\n';

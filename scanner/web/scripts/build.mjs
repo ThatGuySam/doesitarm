@@ -31,17 +31,20 @@ function packageWasm(outDir, variant) {
   writeFileSync(shipped, withoutWasmNames(named));
 }
 
+const prebuilt = process.argv.includes('--prebuilt-wasm') || process.env.PREBUILT_WASM === '1';
 const workerOnly = process.argv.includes('--worker-only');
-if (!workerOnly) {
+if (!workerOnly && !prebuilt) {
   run('cargo', ['build', '--locked', '-j2', '-p', 'scan-wasm', '--profile', wasmProfile,
     '--target', 'wasm32-unknown-unknown']);
   packageWasm('pkg', 'browser');
 }
 
 // Leave headroom for the Worker isolate's JS heap and HTTP buffers.
+if (!prebuilt) {
 run('cargo', ['rustc', '--locked', '-j2', '-p', 'scan-wasm', '--profile', wasmProfile,
   '--target', 'wasm32-unknown-unknown', '--features', 'page-resolution', '--', '-C', 'link-arg=--max-memory=83886080']);
 packageWasm('pkg/worker', 'worker');
+}
 
 // wasm-bindgen's web glue normally caches one instance per module. Give each
 // factory invocation its own Wasm exports, JS handles, and memory views so
