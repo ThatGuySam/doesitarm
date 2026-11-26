@@ -609,6 +609,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Monero GUI Wallet](https://www.getmonero.org/downloads/) - ✳️ Yes, works via Rosetta 2 with a few minor bugs - [Source](https://github.com/ThatGuySam/doesitarm/issues/435)
 * [MoneyWiz](https://apps.apple.com/us/app/moneywiz-3-personal-finance/id1004710719) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/) [View on Setapp](https://setapp.sjv.io/c/2708043/344415/5114)
 * [Moon FM](https://apps.apple.com/us/app/moon-fm-premium-podcast-app/id1465712037?mt=12) - ✅ Yes, Full Native Apple Silicon Support as of v2.0.3
+* [Ncored](https://ncored.com/) - ✅ Yes, Native Apple Silicon Support - [Verification](https://ncored.com/facts.html)
 * [Newton Mail](https://newtonhq.com/#app) - ✅ Yes, Full Native Apple Silicon Support
 * [Nisus Writer Express](https://nisus.com/Express/) - ✅ Native as of v3.2; some conversion helpers use Rosetta - [Release notes](https://www.nisus.com/pro//whatsnew.php) [Requirements & details](https://github.com/ThatGuySam/doesitarm/blob/master/docs/app-status-details.md#nisus-writer-express)
 * [Nisus Writer Pro](https://nisus.com/pro/) - ✅ Native as of v3.2; some conversion helpers use Rosetta - [Release notes](https://www.nisus.com/pro//whatsnew.php) [Requirements & details](https://github.com/ThatGuySam/doesitarm/blob/master/docs/app-status-details.md#nisus-writer-pro)
