@@ -1,5 +1,6 @@
 import { observedInventory } from './bundle-inventory.js';
 import { timeSlice } from './folder-walk.js';
+import { crash } from './crash-journal.js';
 import { prettyBytes } from './scan-view.js';
 
 export const PLAIN_JSON_LIMIT = 5_000;
@@ -32,8 +33,13 @@ function scannerBuild() {
 }
 
 let build;
-export async function runHeader(run, finished, longTasks) {
+export function buildInfo() {
   build ??= scannerBuild();
+  return build;
+}
+
+export async function runHeader(run, finished, longTasks) {
+  buildInfo();
   const now = performance.now();
   const end = run.ended ?? now;
   const scanMs = duration(run.ended === null && run.active ? now : run.lastScan, run.firstScan);
@@ -169,6 +175,8 @@ export async function makeExport(header, rows, { count, format = 'ndjson.gz', sc
     throw new RangeError('Plain JSON is available for exports under 5,000 rows.');
   }
   const worker = new Worker(new URL('./diagnostics-worker.js', import.meta.url), { type: 'module' });
+  const owned = crash.begin('export');
+  crash.stage('exporting');
   let acknowledge;
   const finished = new Promise((resolve, reject) => {
     worker.onmessage = ({ data }) => {
@@ -214,6 +222,7 @@ export async function makeExport(header, rows, { count, format = 'ndjson.gz', sc
     return await finished;
   } finally {
     worker.terminate();
+    if (owned) void crash.end('export_done');
   }
 }
 

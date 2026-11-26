@@ -19,17 +19,24 @@
     </nav>
   </header>
 
+  <aside id="crash-notice" class="crash-notice" role="status" hidden>
+    <p>The last scan ended unexpectedly.</p>
+    <button type="button" id="crash-download" class="quiet-button">Download crash report</button>
+    <button type="button" id="crash-dismiss" class="quiet-button">Dismiss</button>
+  </aside>
+
   <main id="main">
     <section id="scan" class="hero" aria-labelledby="scan-title">
       <h1 id="scan-title">Apple Silicon App Test</h1>
       <p class="subtitle">Check whether your Mac apps run natively on Apple&nbsp;silicon.</p>
 
       <div id="drop-zone" class="drop-zone">
+        <p class="drop-prompt drag-copy" id="drop-prompt">Drag an app, a folder, or a folder of apps here.</p>
         <details id="device-files" class="device-files" open>
           <summary>Scan files from this device</summary>
           <div class="device-picker">
             <button type="button" id="choose-files" class="select-apps">Select Apps</button>
-            <p class="helper"><span class="drag-copy">Drop Mac or Windows apps, folders, archives, or installers here. </span>Local files stay in this browser.</p>
+            <p class="helper">Mac or Windows apps, archives and installers work too. Local files stay in this browser.</p>
             <button type="button" id="choose-folder" class="text-button">Choose folder</button>
           </div>
         </details>

@@ -42,6 +42,8 @@ export function configureScannerEntry() {
   try { stored = localStorage.getItem(PREFERENCE); } catch { /* Storage is optional. */ }
   const entry = defaultEntry({ mac }, stored);
   zone.dataset.entry = entry;
+  // Feature detection, not user-agent sniffing: Firefox and Safari take folders by drag and drop.
+  get('choose-folder').hidden = typeof window.showDirectoryPicker !== 'function';
   document.body.classList.toggle('touch-input', touch);
   if (entry === 'url') {
     zone.prepend(urlDetails);

@@ -1,8 +1,24 @@
+import { crash, memoryPressure } from './crash-journal.js';
 import { fileJob, FolderLimitError, folderStats, skipped, walkDirectory, walkFileList, yieldToPage } from './folder-walk.js';
 
 const number = new Intl.NumberFormat();
 const MAX_FLAT_FILES = 512;
 const MAX_FOLDER_ROWS = 8192;
+const MEMORY_LIMIT = 0.92;
+const FEWER_FOLDERS = 'Your results so far are kept. Drag fewer folders, or one subfolder at a time.';
+class MemoryPressureError extends Error {
+  name = 'MemoryPressureError';
+}
+
+// Errors the folder read can recover from by stopping and keeping what it has.
+export function recoverableFolderError(error) {
+  if (error instanceof FolderLimitError) return 'folder_result_limit';
+  if (error instanceof MemoryPressureError) return 'memory_pressure';
+  if (error instanceof RangeError) return 'out_of_memory';
+  if (typeof DOMException !== 'undefined' && error instanceof DOMException) return `dom_exception:${error.name}`;
+  return `enumeration_error:${error?.name ?? 'Error'}`;
+}
+
 const FOLDER_GUIDANCE = 'Drag your folder here. If the browser cannot read it, drag smaller subfolders or individual .app bundles. You can also select an app archive.';
 
 function captureDrop(transfer) {
@@ -97,6 +113,7 @@ export function bindLocalInputs({ view, mode }) {
         stats,
         signal: controller.signal,
         onProgress() {
+          if (memoryPressure() > MEMORY_LIMIT) throw new MemoryPressureError('The page is close to its memory limit.');
           const seen = number.format(stats.files_seen);
           reading(total ? `Preparing ${number.format(total)} files… ${seen} checked` :
             `Reading folder… ${seen} files found`);
@@ -120,13 +137,16 @@ export function bindLocalInputs({ view, mode }) {
     } catch (error) {
       if (!controller.signal.aborted) {
         stats.partial = true;
+        const reason = recoverableFolderError(error);
         if (error instanceof FolderLimitError) {
           notice.textContent = 'This selection reached the scan limit. Scan smaller subfolders to check the remaining apps.';
-          skipped(stats, 'folder_result_limit', stats.folder_name);
+        } else if (reason === 'memory_pressure' || reason === 'out_of_memory') {
+          notice.textContent = `The browser is running low on memory, so reading stopped early. ${FEWER_FOLDERS}`;
         } else {
-          notice.textContent = 'The browser could not finish reading this selection.';
-          skipped(stats, `enumeration_error:${error?.name ?? 'Error'}`, stats.folder_name);
+          notice.textContent = `The browser could not finish reading this selection. ${FEWER_FOLDERS}`;
         }
+        skipped(stats, reason, stats.folder_name);
+        crash.error('folder_read_error', error, { reason, recovered: true });
         await flush().catch(() => {});
       }
     } finally {

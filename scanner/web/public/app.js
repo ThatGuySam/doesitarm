@@ -2,6 +2,7 @@ import { redactPath } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { bindDownloadInput, configureScannerEntry } from './download-input.js';
 import { bindLocalInputs } from './local-inputs.js';
+import { showCrashNotice } from './crash-journal.js';
 import { ResultsList } from './results-list.js';
 import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
@@ -137,3 +138,4 @@ async function loadHomebrew() {
 }
 
 void loadHomebrew();
+void showCrashNotice();

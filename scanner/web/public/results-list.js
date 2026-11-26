@@ -1,5 +1,6 @@
 import { redactPath } from './path-privacy.js';
-import { diagnosticControls, runHeader, watchLongTasks } from './diagnostics.js';
+import { buildInfo, diagnosticControls, runHeader, watchLongTasks } from './diagnostics.js';
+import { crash } from './crash-journal.js';
 import { FolderJournal } from './folder-journal.js';
 import { showSavedFolders } from './folder-recovery.js';
 import { folderStats, skipped, timeSlice } from './folder-walk.js';
@@ -115,6 +116,7 @@ export class ResultsList {
   constructor(pool, mode) {
     this.#pool = pool;
     this.#mode = mode;
+    crash.attach(() => this.crashSnapshot(), buildInfo);
     this.#cards = new ScanCards((id) => this.#pool.cancel(id), (row) => this.#inventory(row));
     const change = () => {
       this.#page = 0;
@@ -180,7 +182,28 @@ export class ResultsList {
     this.#latestFolder = null;
   }
 
+  crashSnapshot() {
+    let filesSeen = 0;
+    let directories = 0;
+    let bundles = 0;
+    let skippedEntries = 0;
+    for (const run of this.#runs) {
+      filesSeen += run.stats.files_seen ?? 0;
+      directories += run.stats.directories_seen ?? 0;
+      bundles += run.appCount;
+      for (const n of Object.values(run.stats.skipped_entries ?? {})) skippedEntries += n;
+    }
+    const batch = this.#batch;
+    return {
+      stage: this.#discoveries ? 'enumerating' : this.#artifactListings.size ? 'grouping' : this.#pending.size ? 'scanning' : 'idle',
+      files_seen: filesSeen, directories_seen: directories, bundles, skipped_entries: skippedEntries,
+      rows_total: batch?.total ?? 0, rows_done: batch?.finished ?? 0,
+      queue_length: Math.max(0, this.#pending.size - this.#active.size), active_scans: this.#active.size,
+    };
+  }
+
   #newRun(stats, mode, profile) {
+    crash.begin({ drop: 'drop', 'DataTransfer.files': 'drop', showDirectoryPicker: 'picker', URL: 'url', 'file picker': 'file-picker' }[stats.method] ?? stats.method);
     const run = {
       stats, mode, profile, started: performance.now(), enumerated: null, firstScan: null, lastScan: null,
       ended: null, canceled: false, appCount: 0, bytes: 0, active: 0, peak: 0, finished: 0,
@@ -487,6 +510,7 @@ export class ResultsList {
 
   #endBatch() {
     if (this.#busy) return;
+    void crash.end(this.#batch.canceled ? 'canceled' : 'complete');
     this.#batch.ended = performance.now();
     clearInterval(this.#clock);
     this.#clock = undefined;

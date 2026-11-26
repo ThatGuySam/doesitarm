@@ -437,3 +437,26 @@ pre { overflow: auto; max-block-size: 22rem; margin: .5rem 0 0; padding: .7rem; 
 .candidate-picker { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; gap: .4rem; margin-block-end: .6rem; }
 .candidate-picker label, .candidate-picker select { min-inline-size: 0; max-inline-size: 100%; }
 .candidate-picker select { display: block; margin-block-start: .2rem; }
+
+.drop-prompt {
+  max-inline-size: 22ch;
+  margin: 0 0 .2rem;
+  font-size: clamp(1.25rem, 5vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--strong);
+}
+.crash-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem 1rem;
+  padding: .4rem 1rem;
+  font-size: .8rem;
+  background: var(--darkest);
+  border-block-end: 1px solid #ffffff14;
+}
+.crash-notice[hidden] { display: none; }
+.crash-notice p { margin: 0; color: var(--strong); }
