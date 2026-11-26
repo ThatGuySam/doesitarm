@@ -175,6 +175,10 @@ export class ScanCards {
     line.dataset.tone = tone;
     line.querySelector('.verdict-icon').textContent = icon;
     line.querySelector('.verdict-text').textContent = redactPath(text);
+    // The Minimal view shows the verdict as the Details disclosure's own label.
+    const lead = card.el.querySelector('.sum-verdict');
+    lead.dataset.tone = tone;
+    lead.textContent = `${icon} ${redactPath(text)}`;
     const arch = architectures(result);
     const badges = line.querySelector('.result-arch');
     line.hidden = false;
@@ -255,6 +259,7 @@ export class ScanCards {
       card.inventorySummary ??= document.createElement('span');
       card.inventorySummary.className = 'inventory-summary';
       setText(card.inventorySummary, ` ${binaries.length} ${binaries.length === 1 ? 'binary' : 'binaries'}, ${intel.length} Intel-only`);
+      card.el.querySelector('.sum-verdict').dataset.note = `${intel.length} Intel-only helper${intel.length === 1 ? '' : 's'}`;
       if (!card.inventorySummary.isConnected) card.el.querySelector('.result-verdict').append(card.inventorySummary);
     }
     if (!details.open || card.inventory === inventory) return;

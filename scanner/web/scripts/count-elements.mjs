@@ -149,6 +149,7 @@ async function shot(page, name, fullPage = false) {
 try {
   const inputs = sparseInputs(scratch);
   for (const [device, viewport] of Object.entries(widths)) {
+   for (const level of ['minimal', 'more', 'research']) {
     const context = await browser.newContext({
       viewport, reducedMotion: 'reduce',
       userAgent: device === 'phone' ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)' : undefined,
@@ -156,46 +157,52 @@ try {
     if (device === 'desktop') await emulateMac(context);
     await context.route((target) => target.origin !== url, (route) => route.abort());
     await context.addInitScript(installDelay, slow);
+    if (level !== 'minimal') {
+      await context.addInitScript((value) => localStorage.setItem('doesitarm.scanner.view.v1', JSON.stringify({ level: value })), level);
+    }
     const page = await context.newPage();
+    const tag = level === 'minimal' ? '' : `${level}-`;
 
-    const original = async (state, rows) => {
-      await page.goto(`${url}/original/index.html`);
-      if (rows) await page.evaluate(originalRows, rows);
-      const counted = await page.evaluate(countElements, '.app-main');
-      results.push({ page: 'original', device, state, ...counted });
-      if (state === 'idle') await shot(page, `original-${device}-idle`);
-    };
-    await original('idle');
-    await original('mid-scan', { finished: 2, unfinished: 4 });
-    await original('done', { finished: 6, unfinished: 0 });
+    if (level === 'minimal') {
+      const original = async (state, rows) => {
+        await page.goto(`${url}/original/index.html`);
+        if (rows) await page.evaluate(originalRows, rows);
+        const counted = await page.evaluate(countElements, '.app-main');
+        results.push({ page: 'original', device, state, ...counted });
+        if (state === 'idle') await shot(page, `original-${device}-idle`);
+      };
+      await original('idle');
+      await original('mid-scan', { finished: 2, unfinished: 4 });
+      await original('done', { finished: 6, unfinished: 0 });
+    }
 
     await page.goto(url);
     await page.locator('#run-date').filter({ hasText: /casks/ }).waitFor({ state: 'attached' });
-    results.push({ page: 'ours', device, state: 'idle', ...(await page.evaluate(countElements, 'main')) });
-    await shot(page, `${device}-idle`);
+    results.push({ page: 'ours', level, device, state: 'idle', ...(await page.evaluate(countElements, 'main')) });
+    await shot(page, `${device}-${tag}idle`);
 
     await page.locator('#files').setInputFiles(inputs);
     await page.waitForFunction(() => document.getElementById('results-count').textContent === '2 of 6 finished · 1 scanning · 3 queued');
     await page.waitForTimeout(1100);
-    results.push({ page: 'ours', device, state: 'mid-scan', ...(await page.evaluate(countElements, 'main')) });
+    results.push({ page: 'ours', level, device, state: 'mid-scan', ...(await page.evaluate(countElements, 'main')) });
     await page.locator('#results').scrollIntoViewIfNeeded();
-    await shot(page, `${device}-mid-scan`);
+    await shot(page, `${device}-${tag}mid-scan`);
 
     await page.waitForFunction(() => document.getElementById('results-count').textContent === '6 of 6 finished', null, { timeout: 60_000 });
-    results.push({ page: 'ours', device, state: 'done', ...(await page.evaluate(countElements, 'main')) });
-    if (countsOnly) {
-      await context.close();
-      continue;
-    }
-    const first = page.locator('.result').filter({ has: page.getByRole('heading', { name: 'Charlie.macho', exact: true }) });
-    await first.locator('summary').click();
+    results.push({ page: 'ours', level, device, state: 'done', ...(await page.evaluate(countElements, 'main')) });
     await page.locator('#results').scrollIntoViewIfNeeded();
-    await shot(page, `${device}-done`);
-    await first.getByRole('button', { name: /View full scan details/ }).click();
-    await page.locator('#scan-dialog').waitFor();
-    await shot(page, `${device}-dialog`);
-    await page.keyboard.press('Escape');
+    await shot(page, `${device}-${tag}done`);
+    if (level === 'research' && !countsOnly) {
+      const first = page.locator('.result').filter({ has: page.getByRole('heading', { name: 'Charlie.macho', exact: true }) });
+      await first.locator('summary').click();
+      await shot(page, `${device}-done-details`);
+      await first.getByRole('button', { name: /View full scan details/ }).click();
+      await page.locator('#scan-dialog').waitFor();
+      await shot(page, `${device}-dialog`);
+      await page.keyboard.press('Escape');
+    }
     await context.close();
+   }
   }
 } finally {
   await browser.close();
@@ -204,18 +211,26 @@ try {
   rmSync(scratch, { recursive: true, force: true });
 }
 
-const range = (n) => [Math.ceil(0.9 * n), Math.floor(1.1 * n)];
+// Element counts of the build before the UX2 simplification, same script and fixtures.
+const BEFORE = { desktop: { idle: 12, 'mid-scan': 34, done: 45 }, phone: { idle: 11, 'mid-scan': 31, done: 38 } };
 const table = [];
 for (const device of Object.keys(widths)) {
   for (const state of ['idle', 'mid-scan', 'done']) {
     const o = results.find((r) => r.page === 'original' && r.device === device && r.state === state);
-    const ours = results.find((r) => r.page === 'ours' && r.device === device && r.state === state);
-    const [low, high] = range(o.total);
-    table.push({ device, state, original: o.total, ours: ours.total, low, high, within: ours.total >= low && ours.total <= high });
+    const row = { device, state, original: o.total, before: BEFORE[device][state] };
+    for (const level of ['minimal', 'more', 'research']) {
+      row[level] = results.find((r) => r.page === 'ours' && r.level === level && r.device === device && r.state === state).total;
+    }
+    row.ceiling = Math.floor(1.3 * o.total);
+    row.cut = Math.round((1 - row.minimal / row.before) * 100);
+    // Minimal must stay at most 30% above the original and cut at least 40% from the old build.
+    row.within = row.minimal <= row.ceiling && row.cut >= 40;
+    table.push(row);
   }
 }
 console.log(JSON.stringify({ table, shots, ...(withLedger ? { results } : {}) }, null, 2));
-console.log('\n| Width | State | Original | Target ±10% | Ours | Within |\n|---|---|---:|---|---:|---|');
+console.log('\n| Width | State | Original | Before UX2 | Minimal | Cut | More | Research | Ceiling (1.3x original) | Within |\n|---|---|---:|---:|---:|---:|---:|---:|---:|---|');
 for (const row of table) {
-  console.log(`| ${row.device} | ${row.state} | ${row.original} | ${row.low}–${row.high} | ${row.ours} | ${row.within ? 'yes' : 'no'} |`);
+  console.log(`| ${row.device} | ${row.state} | ${row.original} | ${row.before} | ${row.minimal} | ${row.cut}% | ${row.more} | ${row.research} | ${row.ceiling} | ${row.within ? 'yes' : 'no'} |`);
 }
+if (table.some((row) => !row.within)) process.exitCode = 1;

@@ -2,6 +2,7 @@ import { redactPath } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { bindDownloadInput, configureScannerEntry } from './download-input.js';
 import { bindLocalInputs } from './local-inputs.js';
+import { bindViewLevel } from './view-level.js';
 import { showCrashNotice } from './crash-journal.js';
 import { ResultsList } from './results-list.js';
 import { scanMode } from './scan-mode.js';
@@ -9,6 +10,7 @@ import { ScanPool } from './worker-pool.js';
 import { architectures, get, prettyBytes, statuses } from './scan-view.js';
 
 const entry = configureScannerEntry();
+bindViewLevel();
 const gentleToggle = get('gentle');
 const divider = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
 const coveragePercent = new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 });

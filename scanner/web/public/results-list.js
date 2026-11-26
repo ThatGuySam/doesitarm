@@ -6,7 +6,8 @@ import { showSavedFolders } from './folder-recovery.js';
 import { folderStats, skipped, timeSlice } from './folder-walk.js';
 import { formatDuration, estimateBatch, estimateRemaining, recordSample } from './scan-progress.js';
 import { emptyResult } from './scan-result.js';
-import { get, ScanCards, statuses } from './scan-view.js';
+import { get, ScanCards, statuses, verdict } from './scan-view.js';
+import { drawOutcomes } from './view-level.js';
 import { observedInventory } from './bundle-inventory.js';
 import { emptyBatchTotals, finishBatchTotals, formatSeconds, recordBatchResult, steadyRate, totalsPhrase } from './scan-totals.js';
 
@@ -90,6 +91,7 @@ export class ResultsList {
   #active = new Set();
   #statusCounts = new Map();
   #archCounts = new Map();
+  #tones = new Map();
   #longTasks = watchLongTasks();
   #list = get('scan-results');
   #rendered = new Map();
@@ -400,6 +402,7 @@ export class ResultsList {
 
   #finishResult(row, run) {
     count(this.#statusCounts, row.status, 1);
+    count(this.#tones, row.status === 'canceled' || !row.result ? 'other' : verdict(row.result).tone, 1);
     for (const arch of row.archNames) {
       if (!this.#archCounts.has(arch) && ![...this.#filters.arch.options].some((option) => option.value === arch)) {
         this.#filters.arch.add(new Option(arch, arch));
@@ -620,6 +623,7 @@ export class ResultsList {
     delete this.#tools.dataset.paged;
     this.#statusCounts.clear();
     this.#archCounts.clear();
+    this.#tones.clear();
     const { status, arch, sort } = this.#filters;
     status.value = sort.value = arch.value = '';
     while (arch.options.length > 2) arch.remove(2);
@@ -718,6 +722,7 @@ export class ResultsList {
       ...Array.from(this.#archCounts, ([key, value]) => `${key} ${number.format(value)}`),
     ];
     setText(this.#summary, summary.join(' · '));
+    drawOutcomes(get('outcome-strip'), this.#tones);
     const cancelAll = get('cancel-all');
     const scanning = this.#busy;
     if (!scanning && document.activeElement === cancelAll) get('results-title').focus({ preventScroll: true });

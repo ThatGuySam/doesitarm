@@ -50,6 +50,7 @@ export function configureScannerEntry() {
     urlDetails.open = true;
     deviceFiles.open = false;
     get('scan-help').append(get('scan-settings'));
+    deviceFiles.querySelector('summary').textContent = 'Scan files instead';
   } else {
     get('scan-options').prepend(get('choose-folder'));
   }

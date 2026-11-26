@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-level="minimal">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,45 +28,56 @@
   <main id="main">
     <section id="scan" class="hero" aria-labelledby="scan-title">
       <h1 id="scan-title">Apple Silicon App Test</h1>
-      <p class="subtitle">Check whether your Mac apps run natively on Apple&nbsp;silicon.</p>
 
       <div id="drop-zone" class="drop-zone">
-        <p class="drop-prompt drag-copy" id="drop-prompt">Drag an app, a folder, or a folder of apps here.</p>
+        <p class="drop-prompt" id="drop-prompt"><span class="drag-copy">Drag an app, a folder, or a folder of apps here.<br></span><span class="privacy">Files stay in this browser.</span></p>
         <details id="device-files" class="device-files" open>
           <summary>Scan files from this device</summary>
           <div class="device-picker">
             <button type="button" id="choose-files" class="select-apps">Select Apps</button>
-            <p class="helper">Mac or Windows apps, archives and installers work too. Local files stay in this browser.</p>
             <button type="button" id="choose-folder" class="text-button">Choose folder</button>
           </div>
         </details>
         <div id="scan-options" class="more-actions">
-          <details id="advanced" class="inline-details">
-            <summary>Advanced</summary>
+          <details id="more-options" class="inline-details">
+            <summary>More options</summary>
             <div class="panel">
-              <form id="url-form" class="url-form" novalidate>
-                <label for="scan-url">Paste a download link or the app's download page</label>
-                <div class="url-row">
-                  <input id="scan-url" type="url" placeholder="https://…" required
-                    aria-describedby="url-error" autocomplete="off" spellcheck="false">
-                  <button type="submit" class="quiet-button">Scan URL</button>
+              <p class="hint" id="formats">Mac apps, Mach-O files, DMG, ZIP, PKG and tar.gz archives, and Windows installers.</p>
+              <details id="advanced" class="inline-details">
+                <summary>Scan a download link</summary>
+                <div class="panel">
+                  <form id="url-form" class="url-form" novalidate>
+                    <label for="scan-url" class="visually-hidden">Paste a download link or the app's download page</label>
+                    <div class="url-row">
+                      <input id="scan-url" type="url" placeholder="https://…" required
+                        aria-describedby="url-error" autocomplete="off" spellcheck="false">
+                      <button type="submit" class="quiet-button">Scan URL</button>
+                    </div>
+                    <p id="url-error" class="error" role="alert"></p>
+                    <p id="url-phase" class="url-phase" role="status" tabindex="-1"></p>
+                  </form>
+                  <div id="download-options"></div>
+                  <div id="scan-settings" class="setting">
+                    <label class="check"><input type="checkbox" id="gentle"> Gentle</label>
+                    <p class="hint">Scan one app at a time to keep this device responsive. <span id="mode-status" role="status"></span></p>
+                  </div>
                 </div>
-                <p id="url-error" class="error" role="alert"></p>
-                <p id="url-phase" class="url-phase" role="status" tabindex="-1"></p>
-              </form>
-              <div id="download-options"></div>
-              <div id="scan-settings" class="setting">
-                <label class="check"><input type="checkbox" id="gentle"> Gentle</label>
-                <p class="hint">Scan one app at a time to keep this device responsive. <span id="mode-status" role="status"></span></p>
-              </div>
-            </div>
-          </details>
-          <details id="how" class="inline-details">
-            <summary>How it works</summary>
-            <div id="scan-help" class="panel prose">
-              <p>The scanner reads executable headers and package metadata to identify processor architecture. It reads only the ranges it needs, even for large downloads. Local files never leave this browser.</p>
-              <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
-              <p>If your browser cannot open a folder with <strong>Choose folder</strong>, drag the folder or individual <code>.app</code> bundles into the scanner.</p>
+              </details>
+              <details id="how" class="inline-details">
+                <summary>Scan help</summary>
+                <div id="scan-help" class="panel prose">
+                  <p>The scanner reads executable headers and package metadata to identify processor architecture. It reads only the ranges it needs, even for large downloads. Local files never leave this browser.</p>
+                  <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
+                  <p>If your browser cannot open a folder with <strong>Choose folder</strong>, drag the folder or individual <code>.app</code> bundles into the scanner.</p>
+                  <p><strong>✓ Apple Silicon native</strong> means the main executable has a verified arm64 or arm64e slice. <strong>Universal</strong> means it also has a verified 64-bit Intel slice. <strong>◆ Intel only</strong> means only an x86_64 slice was found; the app may run through Rosetta 2, usually slower and with more battery use. Rosetta will be limited in future macOS releases, so native apps are the safer choice.</p>
+                  <p><strong>? Unknown</strong> means the scanner stopped before it could verify an architecture: the file was damaged or unsupported, the browser could not read it, or a read limit was reached. Open the row's <strong>Details</strong> for the reason. If a scan never seems to end, try fewer apps at once or scan the app inside the disk image.</p>
+                </div>
+              </details>
+              <details id="research-view" class="inline-details">
+                <summary>Research view</summary>
+                <p class="hint">Shows evidence, filters, exports and the recorded Homebrew run.</p>
+              </details>
+              <button type="button" id="reset-view" class="text-button">Reset view</button>
             </div>
           </details>
         </div>
@@ -88,6 +99,7 @@
         <button type="button" id="clear-results" class="quiet-button" hidden>Clear results</button>
       </div>
       <progress id="overall-progress" aria-label="Batch progress by scans finished"></progress>
+      <svg id="outcome-strip" class="outcome-strip" role="img" aria-label="" viewBox="0 0 100 10" preserveAspectRatio="none"></svg>
       <p id="batch-notice" class="visually-hidden" role="status"></p>
       <p id="timer-notice" class="visually-hidden" role="status"></p>
       <ul id="scan-results" class="result-list" role="list"></ul>
@@ -127,29 +139,6 @@
         </div>
       </details>
 
-      <div class="faq">
-        <details>
-          <summary>What do the results mean?</summary>
-          <div class="panel prose">
-            <p><strong>✓ Apple Silicon native</strong> means the main executable has a verified arm64 or arm64e slice. <strong>Universal</strong> means it also has a verified 64-bit Intel slice.</p>
-            <p><strong>◆ Intel only</strong> means only an x86_64 slice was found. The app may run through Rosetta 2 translation, usually slower and with more battery use.</p>
-            <p>The binary inventory shows the slices observed in plug-ins, helper tools and other components.</p>
-          </div>
-        </details>
-        <details>
-          <summary>Why couldn't an app be checked?</summary>
-          <div class="panel prose">
-            <p><strong>? Unknown</strong> means the scanner stopped before it could verify an architecture: the file was damaged or unsupported, the browser could not read it, or a read limit was reached. Open the row's <strong>Details</strong> for the reason.</p>
-            <p>If a scan never seems to end, try fewer apps at once or scan the app inside the disk image. For folders that drop empty, try smaller subfolders or select an app archive.</p>
-          </div>
-        </details>
-        <details>
-          <summary>How does Rosetta work?</summary>
-          <div class="panel prose">
-            <p>Rosetta 2 translates Intel apps so they can run on Apple silicon. Most Intel apps work, but this scanner cannot tell whether a specific app will run correctly under Rosetta. Apple has said Rosetta will be limited in future macOS releases, so native apps are the safer choice.</p>
-          </div>
-        </details>
-      </div>
     </section>
   </main>
 
@@ -177,7 +166,7 @@
         <span class="result-read-label visually-hidden">Source reads</span>
         <p class="result-verdict" hidden><span class="verdict-icon" aria-hidden="true"></span><span class="verdict-text"></span><span class="result-arch"></span></p>
         <details class="result-details" hidden>
-          <summary>Details</summary>
+          <summary><span class="sum-verdict"></span><span class="sum-detail">Details</span></summary>
           <div class="panel">
             <p class="result-speed"></p>
             <dl class="facts">

@@ -238,7 +238,7 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   content-visibility: auto;
   contain-intrinsic-block-size: auto 4rem;
 }
-.result + .result { border-block-start: 1px solid var(--rule); }
+.result + .result { box-shadow: inset 0 1px 0 var(--rule); }
 /* An active row's progress strip takes the place of its divider. */
 .result[data-state="active"] { border-block-start-color: transparent; }
 .result-monogram { display: none; }
@@ -460,3 +460,34 @@ pre { overflow: auto; max-block-size: 22rem; margin: .5rem 0 0; padding: .7rem; 
 }
 .crash-notice[hidden] { display: none; }
 .crash-notice p { margin: 0; color: var(--strong); }
+
+/* View levels. Minimal is the default; More and Research disclose detail. The level is a
+   presentation choice only, kept in localStorage (see view-level.js). */
+.privacy { font-size: .8rem; font-weight: 400; color: var(--text); }
+.sum-verdict { font-weight: 700; margin-inline-end: .6em; }
+.sum-verdict[data-tone="native"] { color: var(--native); }
+.sum-verdict[data-tone="intel"] { color: var(--gold); }
+.sum-verdict[data-note]::after { content: " · " attr(data-note); font-weight: 400; color: var(--muted); }
+.sum-detail { color: var(--muted); font-size: .8rem; }
+#more-options > .panel { display: grid; gap: .6rem; justify-items: start; text-align: start; padding: .6rem 0; }
+#more-options .panel .panel { padding-block: .4rem; }
+#reset-view { font-size: .8rem; }
+.outcome-strip { display: none; inline-size: min(100%, 24rem); block-size: .6rem; margin-block: .4rem; border-radius: .3rem; }
+.outcome-strip rect { shape-rendering: crispEdges; }
+
+html[data-level="minimal"] .result:not([data-state="done"]),
+html[data-level="minimal"] .result-size, html[data-level="minimal"] .result-time, html[data-level="minimal"] .result-verdict,
+html[data-level="minimal"] .result-monogram, html[data-level="minimal"] .result-read-label,
+html[data-level="minimal"] #results-tools-disclosure, html[data-level="minimal"] #homebrew,
+html[data-level="minimal"] #results:has(#cancel-all:not([hidden])) #batch-metrics,
+html[data-level="minimal"] #results:not(:has(#cancel-all:not([hidden]))) #overall-progress,
+html[data-level="minimal"] .result-details .facts > div:has([data-field="bundle_id"], [data-field="signing"], [data-field="bytes_read"], [data-field="status"]),
+html[data-level="minimal"] .open-dialog,
+html[data-level="more"] .result-monogram, html[data-level="more"] #results-tools-disclosure, html[data-level="more"] #homebrew,
+html[data-level="more"] .result-details .facts > div:has([data-field="bytes_read"]),
+html[data-level="more"] .open-dialog,
+html[data-level="more"] .sum-verdict, html[data-level="research"] .sum-verdict,
+html:not([data-level="minimal"]) .sum-verdict { display: none; }
+html[data-level="more"] .outcome-strip, html[data-level="research"] .outcome-strip { display: block; }
+html:not([data-level="research"]) .result-arch code { display: none; }
+html[data-level="minimal"] .result-verdict { display: none; }
