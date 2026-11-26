@@ -1,3 +1,4 @@
+#![allow(clippy::collapsible_if)]
 #![forbid(unsafe_code)]
 
 mod http;

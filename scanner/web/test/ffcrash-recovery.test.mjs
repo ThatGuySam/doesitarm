@@ -39,6 +39,8 @@ test('a reloaded page offers the rows a folder scan saved before it was lost', {
     });
     const page = await context.newPage();
     page.setDefaultTimeout(10_000);
+    // Non-Mac browsers open on the URL tab; this test drives the file tab.
+    await page.addInitScript(() => localStorage.setItem('scanner-entry', 'files'));
     await page.goto(url);
     const executable = await readFile(new URL('../../fixtures/thin.macho', import.meta.url));
     await page.evaluate(fixtureFolder, [...executable]);

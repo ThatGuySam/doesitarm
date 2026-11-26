@@ -1,3 +1,10 @@
+// Byte-slice parsers here read fixed-width records; these newer lints would force as_chunks rewrites.
+#![allow(
+    clippy::chunks_exact_to_as_chunks,
+    clippy::manual_is_multiple_of,
+    clippy::question_mark
+)]
+
 pub(crate) mod cab;
 mod installer;
 mod msi;

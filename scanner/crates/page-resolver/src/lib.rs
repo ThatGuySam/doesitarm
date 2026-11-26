@@ -1,3 +1,5 @@
+// Let-chain collapsing and identical-branch lints from the newer toolchain; the branches are kept for readability.
+#![allow(clippy::collapsible_if, clippy::if_same_then_else)]
 #![forbid(unsafe_code)]
 
 mod adapters;
