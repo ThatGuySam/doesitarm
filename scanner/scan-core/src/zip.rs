@@ -1,5 +1,5 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
+    ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
@@ -326,7 +326,15 @@ async fn scan_nested_member(
     const MAX_EXPANDED: u64 = 32 * 1024 * 1024;
     let mut member = member(input, entry, heap_end, work).await?;
     if let Member::Stored(mut source) = member {
-        return nested::scan(&mut source, kind, path, work, target, out).await;
+        return nested::scan(
+            &mut ContainerReader::new(&mut source),
+            kind,
+            path,
+            work,
+            target,
+            out,
+        )
+        .await;
     }
     if entry.expanded > MAX_EXPANDED {
         if work.strict() {
@@ -335,10 +343,26 @@ async fn scan_nested_member(
                 "compressed nested ZIP member exceeds 32 MiB",
             ));
         }
-        return nested::scan(&mut SeekableMember(member), kind, path, work, target, out).await;
+        return nested::scan(
+            &mut ContainerReader::new(&mut SeekableMember(member)),
+            kind,
+            path,
+            work,
+            target,
+            out,
+        )
+        .await;
     }
     let bytes = member.read_at(0, entry.expanded as usize).await?;
-    nested::scan(&mut Buffered(bytes), kind, path, work, target, out).await
+    nested::scan(
+        &mut ContainerReader::new(&mut Buffered(bytes)),
+        kind,
+        path,
+        work,
+        target,
+        out,
+    )
+    .await
 }
 
 /// Large nested images can jump back to earlier decoded offsets. Replay their

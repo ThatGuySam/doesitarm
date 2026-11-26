@@ -32,13 +32,16 @@ export async function startPreview({ port = 0, api = null, fromSource = false, e
 
   const server = createServer(async (request, response) => {
     try {
-      const url = new URL(request.url, 'http://127.0.0.1');
+      const url = new URL(request.url, `http://127.0.0.1:${server.address().port}`);
       if (url.pathname.startsWith('/api/')) {
         if (!api) {
           response.writeHead(503, { 'Content-Type': 'text/plain' });
           return response.end('Use the deployed Worker for server-assisted URL scans.');
         }
-        const result = await api(new Request(url, { method: request.method, headers: request.headers }));
+        const hasBody = request.method !== 'GET' && request.method !== 'HEAD';
+        const options = { method: request.method, headers: request.headers };
+        if (hasBody) Object.assign(options, { body: Readable.toWeb(request), duplex: 'half' });
+        const result = await api(new Request(url, options));
         response.writeHead(result.status, Object.fromEntries(result.headers));
         if (result.body) Readable.fromWeb(result.body).pipe(response);
         else response.end();

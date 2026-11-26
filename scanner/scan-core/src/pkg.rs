@@ -1,7 +1,7 @@
 use crate::pbzx::Pbzx;
 use crate::{
-    InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Target, Window, be16, be64, bom,
-    bundle, check_range, cpio,
+    ContainerReader, InstallerMetadata, ReadAt, Result, ScanError, ScanResult, Target, Window,
+    be16, be64, bom, bundle, check_range, cpio,
     decode::{self, DecodeBudget},
     gzip_tail,
     inflate::{Codec, Forward},
@@ -32,7 +32,7 @@ struct Segment {
 }
 
 pub(crate) async fn scan(
-    input: &mut impl ReadAt,
+    input: &mut ContainerReader<'_>,
     work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
@@ -365,9 +365,9 @@ async fn scan_payload(
         && budget > 2 * PREVIEW_BYTES + bom.packed + gzip_tail::TAIL_BYTES
     {
         let mut preview = out.subresult();
-        let source = Preview::new(Window::new(input, member.offset, member.packed)?);
+        let mut source = Preview::new(Window::new(input, member.offset, member.packed)?);
         let result = inspect_payload(
-            source,
+            ContainerReader::new(&mut source),
             kind,
             work,
             StreamBundle::new(selection).with_mount(mount.clone()),
@@ -400,8 +400,8 @@ async fn scan_payload(
         }
     }
 
-    let source = Window::new(input, member.offset, member.packed)?;
-    inspect_payload(source, kind, work, target, out).await
+    let mut source = Window::new(input, member.offset, member.packed)?;
+    inspect_payload(ContainerReader::new(&mut source), kind, work, target, out).await
 }
 
 #[derive(Clone, Copy)]
@@ -412,7 +412,7 @@ enum Payload {
 }
 
 async fn inspect_payload(
-    mut source: impl ReadAt,
+    mut source: ContainerReader<'_>,
     kind: Payload,
     work: &DecodeBudget<'_>,
     target: StreamBundle<'_>,

@@ -22,3 +22,13 @@ run_worker_first = ["/api/*"]
 name = "SCAN_LIMIT"
 namespace_id = "1795500007"
 simple = { limit = 12, period = 60 }
+
+[[ratelimits]]
+name = "DOWNLOAD_HOST_LIMIT"
+namespace_id = "1795500008"
+simple = { limit = 60, period = 60 }
+
+[[ratelimits]]
+name = "DOWNLOAD_GLOBAL_LIMIT"
+namespace_id = "1795500009"
+simple = { limit = 120, period = 60 }

@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { chromium } from 'playwright-core';
 import { startPreview } from './serve.mjs';
-import { dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat, workerHeap } from '../test/browser-helpers.mjs';
+import { emulateMac, dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat, workerHeap } from '../test/browser-helpers.mjs';
 import { fixture } from '../test/helpers.mjs';
 import { appsFolder, heldInputs, mixedInputs, streamInput, timerInput } from '../test/ui-fixtures.mjs';
 
@@ -59,6 +59,7 @@ function installProbe() {
 
 async function withPage(browser, url, run, { cores, gentle = false, reducedMotion = 'no-preference' } = {}) {
   const context = await browser.newContext({ viewport: { width: 1180, height: 880 }, reducedMotion });
+  await emulateMac(context);
   try {
     await context.route((request) => request.origin !== url, (route) => route.abort());
     await context.addInitScript(installProbe);

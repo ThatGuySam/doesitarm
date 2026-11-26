@@ -275,6 +275,7 @@ export class ResultsList {
             this.#addArtifacts(job.artifacts, event.result.executable_path, run);
           }
           this.#receive(row, run, event);
+          if (event.type === 'done' || event.type === 'canceled') job.onSettled?.(event);
         });
       }
     }
@@ -539,7 +540,7 @@ export class ResultsList {
     get('timer-notice').textContent = '';
     get('batch-notice').textContent = 'Results cleared.';
     this.#renderPage();
-    get('choose-files').focus();
+    (get('device-files').open ? get('choose-files') : get('scan-url')).focus();
   }
 
   #latestRows(start) {

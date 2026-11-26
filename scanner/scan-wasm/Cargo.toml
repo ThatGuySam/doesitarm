@@ -6,7 +6,11 @@ edition.workspace = true
 [lib]
 crate-type = ["cdylib"]
 
+[features]
+page-resolution = ["dep:page-resolver"]
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
+page-resolver = { path = "../crates/page-resolver", optional = true }
 scan-core = { path = "../scan-core" }
 serde_json.workspace = true
 wasm-bindgen = "=0.2.130"

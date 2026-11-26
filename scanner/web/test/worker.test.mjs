@@ -40,6 +40,7 @@ test('serves assets and rejects invalid targets without outbound fetches', async
   assert.equal((await handle(request(target, 8, 'POST'), env)).headers.get('Allow'), 'GET');
   for (const url of [
     null, 'http://example.com/a', 'https://x:y@example.com/a', 'https://example.com:444/a',
+    'https://example.com:80/a', 'https://@example.com/private',
     'https://127.0.0.1/', 'https://2130706433/', 'https://192.168.1.1/', 'https://169.254.169.254/',
     'https://[::1]/', 'https://[::ffff:127.0.0.1]/', 'https://[fc00::1]/', 'https://[fe80::1]/',
     'https://preview.example.net./a', 'https://localhost/', 'https://test.local/',
@@ -206,7 +207,7 @@ test('caps redirects, total subrequests and wall time', async () => {
   const looped = await loop(request(), env);
   assert.equal(looped.status, 503);
   assert.match((await looped.json()).error, /redirect limit/);
-  assert.equal(redirects, 7);
+  assert.equal(redirects, 4);
 
   let fetches = 0;
   const capped = createHandler({

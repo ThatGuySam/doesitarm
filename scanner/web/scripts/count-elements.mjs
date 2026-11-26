@@ -1,3 +1,4 @@
+import { emulateMac } from '../test/browser-helpers.mjs';
 // Count visible elements on the original Does It ARM scanner and on this page, per the UX research
 // counting spec (docs/research/macho-wasm-scanner-2026-11-23-team/seats/ux-research/notes.md).
 //
@@ -148,7 +149,11 @@ async function shot(page, name, fullPage = false) {
 try {
   const inputs = sparseInputs(scratch);
   for (const [device, viewport] of Object.entries(widths)) {
-    const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
+    const context = await browser.newContext({
+      viewport, reducedMotion: 'reduce',
+      userAgent: device === 'phone' ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)' : undefined,
+    });
+    if (device === 'desktop') await emulateMac(context);
     await context.route((target) => target.origin !== url, (route) => route.abort());
     await context.addInitScript(installDelay, slow);
     const page = await context.newPage();

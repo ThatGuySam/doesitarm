@@ -1,6 +1,6 @@
 use crate::{
-    ReadAt, Result, ScanError, ScanResult, Target, decode::DecodeBudget, dmg, inflate::Codec, pkg,
-    tar,
+    ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, decode::DecodeBudget, dmg,
+    inflate::Codec, pkg, tar,
 };
 
 #[derive(Clone, Copy)]
@@ -37,7 +37,7 @@ impl Kind {
 }
 
 pub(crate) async fn scan(
-    input: &mut impl ReadAt,
+    input: &mut ContainerReader<'_>,
     kind: Kind,
     path: &str,
     work: &DecodeBudget<'_>,
@@ -72,7 +72,7 @@ pub(crate) async fn scan(
 }
 
 pub(crate) async fn package(
-    input: &mut impl ReadAt,
+    input: &mut ContainerReader<'_>,
     kind: Kind,
     path: &str,
     work: &DecodeBudget<'_>,

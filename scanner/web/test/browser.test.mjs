@@ -11,7 +11,7 @@ import { DEFAULT_BUDGET } from '../public/scan-result.js';
 import { formatSize } from '../public/scan-totals.js';
 import { startPreview } from '../scripts/serve.mjs';
 import { createHandler } from '../worker/handler.js';
-import { dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat } from './browser-helpers.mjs';
+import { emulateMac, dropPaths, monitorChromiumMemory, openDisclosure, processMemory, requireBrowserHeadroom, readScanJson, sparseFat } from './browser-helpers.mjs';
 import { cli, dnsResponse, expectedRemote, fixture, rangedResponse } from './helpers.mjs';
 
 const names = [
@@ -113,6 +113,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
   memory = await monitorChromiumMemory(browser);
 
   const context = await browser.newContext({ viewport: { width: 1180, height: 880 } });
+  await emulateMac(context);
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
@@ -230,12 +231,12 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
       ['whole.dmg', expectedRemote(backendFile, DEFAULT_BUDGET)],
     ]) {
       await openDisclosure(page, '#advanced');
-      await page.getByRole('textbox', { name: 'Public HTTPS download URL' }).fill(`https://browser.example.net/${filename}`);
+      await page.getByRole('textbox', { name: "Paste a download link or the app's download page" }).fill(`https://browser.example.net/${filename}`);
       await page.getByRole('button', { name: 'Scan URL' }).click();
       assert.deepEqual(await scanResult(page, filename), result);
     }
 
-    await page.getByRole('textbox', { name: 'Public HTTPS download URL' }).fill('https://browser.example.net/resource.dmg');
+    await page.getByRole('textbox', { name: "Paste a download link or the app's download page" }).fill('https://browser.example.net/resource.dmg');
     await page.getByRole('button', { name: 'Scan URL' }).click();
     assert.equal((await scanResult(page, 'resource.dmg')).status, 'limit_reached');
     assert.deepEqual(apiCalls, ['cors.dmg', 'whole.dmg', 'resource.dmg'].map((name) => `https://browser.example.net/${name}`));
