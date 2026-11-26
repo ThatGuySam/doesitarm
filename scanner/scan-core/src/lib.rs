@@ -12,6 +12,7 @@ mod gzip_tail;
 mod hfs;
 mod inflate;
 mod inventory;
+mod iso9660;
 mod launcher;
 mod local_bundle;
 mod macho;
@@ -20,6 +21,7 @@ mod pbzx;
 mod pkg;
 mod plist_value;
 mod sevenz;
+mod sparse_dmg;
 mod stream_bundle;
 mod tar;
 mod udif_codec;
@@ -207,8 +209,12 @@ pub struct Architecture {
     pub offset: u64,
     pub size: u64,
     pub header_verified: bool,
+    #[serde(skip)]
+    pub file_type: Option<u32>,
     pub min_macos: Option<String>,
     pub code_signature_present: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub encrypted: Option<bool>,
 }
 
 #[derive(Debug, Serialize)]
@@ -243,6 +249,8 @@ pub struct ScanResult {
     pub bundle_path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle_kind: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub wrapper_path: Option<String>,
     pub bundle_id: Option<String>,
     pub version: Option<String>,
     pub name: Option<String>,
@@ -259,6 +267,8 @@ pub struct ScanResult {
     pub nested_artifacts: Vec<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub candidate_executables: Vec<ExecutableCandidate>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub candidate_bundle_paths: Vec<String>,
     pub installer: Option<InstallerMetadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub inventory: Option<BinaryInventory>,
@@ -285,6 +295,7 @@ impl ScanResult {
             architectures: Vec::new(),
             bundle_path: None,
             bundle_kind: None,
+            wrapper_path: None,
             bundle_id: None,
             version: None,
             name: None,
@@ -296,6 +307,7 @@ impl ScanResult {
             bundle_metadata_source: None,
             nested_artifacts: Vec::new(),
             candidate_executables: Vec::new(),
+            candidate_bundle_paths: Vec::new(),
             installer: None,
             inventory: None,
             script_runtime: None,
@@ -333,7 +345,7 @@ pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
     result.bytes_read = result.total_size;
     result.bytes_requested = result.total_size;
     result.reads = 1;
-    if let Err(error) = bundle::apply_plist(plist, bundle_path, &mut result) {
+    if let Err(error) = bundle::apply_plist(plist, bundle_path, &mut result, false) {
         result.set_error(error);
     }
     result
@@ -493,6 +505,14 @@ async fn inspect(
         out.executable_size = Some(input.size());
         return Err(ScanError::Unsupported("declared executable is a script"));
     }
+    if magic == b"encr" && input.size() >= 512 && input.read_at(4, 4).await? == b"cdsa" {
+        out.format = Some("dmg");
+        return Err(ScanError::Unsupported("encrypted Apple disk image"));
+    }
+    if magic == b"sprs" {
+        out.format = Some("dmg");
+        return sparse_dmg::scan(input, work, target, out).await;
+    }
     if matches!(
         magic.as_slice(),
         b"PK\x03\x04" | b"PK\x05\x06" | b"PK\x07\x08"
@@ -526,6 +546,10 @@ async fn inspect(
             out.format = Some("dmg");
             return dmg::scan(input, work, &trailer, target, out).await;
         }
+        if trailer.ends_with(b"cdsaencr") {
+            out.format = Some("dmg");
+            return Err(ScanError::Unsupported("encrypted Apple disk image"));
+        }
     }
     // UDIF stores compressed runs from byte zero. Its koly footer takes
     // precedence over a bzip2 or XZ prefix from the first run.
@@ -542,7 +566,7 @@ async fn inspect(
         let header = input.read_at(0, 512).await?;
         if tar::is_header(&header) {
             out.format = Some("tar");
-            return tar::scan(input, work, target, out).await;
+            return tar::scan(input, work, target, out, tar::PriorRuntime::Ignore).await;
         }
         if dmg::scan_raw(input, &header, work, target, out).await? {
             return Ok(());
@@ -569,7 +593,7 @@ async fn compressed_tar(
     let size = input.size();
     let source = Window::new(input, 0, size)?;
     let mut source = inflate::Forward::new(source, work.stream_limit(), codec, work)?;
-    let primary = tar::scan(&mut source, work, target, out).await;
+    let primary = tar::scan(&mut source, work, target, out, tar::PriorRuntime::Retain).await;
     if let Some(runtime) = out.script_runtime.as_mut()
         && runtime.architectures.is_empty()
         && source.remaining_budget() > 64 * 1024

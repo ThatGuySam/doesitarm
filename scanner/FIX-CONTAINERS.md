@@ -1,0 +1,204 @@
+# Container and read-budget failures
+
+The canonical records are `~/Code/doesitarm-data/scan-ledger/attempts.jsonl` and `catalog.jsonl`. They retain the app, URL, pinned digest when available, profile, budgets, scanner revision, exact invocation, error, transfer and parser measurements, and source file and row. Tables report the ledger’s `bytes_read` field. Request totals and transport details are available in the same records. The ledger includes historical failures followed by later successes. Use the attempt ID when comparing a particular failure rather than the latest app status.
+
+Extract every attempt in this workstream from the ledger, including failures from earlier tiers and runs:
+
+```sh
+jq -c 'select(.failure_class as $class | ["budget_hit","nested_container","invalid_container","unsupported_container","unsupported_codec","parser_limit"] | index($class))' \
+  ~/Code/doesitarm-data/scan-ledger/attempts.jsonl
+```
+
+The [EDGE inspection](EDGE.md) and [CLIMB reports](CLIMB.md) retain earlier source layout inspections and verified local scans. A ledger kit is a sparse recording of reads the old parser made. If a successful fix needs new offsets, the original kit can show where the parser advanced, and a pinned live rerun or checked local artifact is needed to verify the app.
+
+| App / fixture | Pinned evidence and diagnosis | Bytes read before | Bytes read after | Verification |
+| --- | --- | ---: | ---: | --- |
+| XAMPP 8.2.4-0 | `c2ccaced609094ef14aa5f0eca86b7d50259af034c2655546b7ff48e8c732347`, `kits/xampp-invalid_container`. The block map supplies 308,704 sectors when the footer supplies zero. The decoded image uses ISO 9660 with Rock Ridge names. | 40,001 | 1,153,811 | Container fixed. The same ETag yielded InstallBuilder's `installbuilder.sh` as the declared entry point and three independently scanned Mach-O helpers. |
+| RStudio 2026.11.0-203 | `6903eecd23b8f5d24b110dd1efe30d67cb89d9f693040cc8686f696b040ae1af`. `Contents/MacOS/RStudio` has a type 8 `com.apple.decmpfs` header and a 14,497-byte resource fork in an APFS data stream. | 2,400,004 | 3,288,237 | Verified the actual x86_64 and arm64 main headers with the remote CLI profile on the checksum-matching image. Worker verified both headers at 2,402,270 bytes. The optional inventories were partial. |
+| JProfiler 16.3.1 | `1780ef0454f6db335dd1dca5667a43fcc9ac0c59e2e5d0e87dcad0e7562ec31e`, `kits/jprofiler-budget_hit`. The stream fallback cannot reach the UDIF footer under 8 MiB. Ledger attempt `40126cb60eaa` previously verified at the 256 MiB tier. The captured 4 bytes count completed parser reads. | 4 | 212,551,284 at 256 MiB | Historical tier recovery. |
+| Soothe2 1.3.3 | `b968ad35df98f9d17d55eb3c3c73de34fe66ddee9edc1241733cb4f1a5812d64`. Four plug-in formats in distinct components. The XAR TOC locates the VST3 component and its PackageInfo names the VST3 in `<bundle-version>`. | 268,173,277 | 63,813,324 | Fixed. Automatic selection verified both VST3 headers at the 64 MiB tier against the checksum-matching artifact. At 8 MiB it found the plist and confirmed only the x86_64 header. |
+| Aqua Data Studio 26.1.0 | `c8b419addd4931e5f89dabf7718bbdb36f984a7da5b78c2e437094c74cef47e1`. The ordinary gzip tar exposes its plist first, with the launcher about 829 MB into the compressed stream. | 268,435,451 | 835,675,421 in the recorded local scan | The remote cap still prevents reaching the executable. The public pinned tarball verifies x86_64 and i386 locally. |
+| Insta360 Link Controller 2.2.5 build 25 | `1979b4c560baa4a0b20ab3cc47e2e3456bfef7fbf7b36b8a65c13f8eb1c2329e`. The only payload is a single 772,108,405-byte gzip stream. The CPIO puts the 417,541,840-byte executable before the outer plist. | 268,173,301 | 772,116,907 in the recorded local scan | The remote tier verifies both candidate slice headers but cannot confirm the app's declared executable. Local replay on the public pinned installer verifies the app. |
+| MPP Viewer Mac 0.1.3 | `dd0e2e40e7a992ab3211500814b54ff0bbe1b7a37d3dc31959dde3b78446fb8e` exceeded 8 MiB on the 85,522,821-byte PKG. The other recorded attempt (`9a89172d915d`) was blocked by robots.txt. | 8,388,608 | 85,458,251 at 256 MiB | The existing parser verified `MPPViewer.app/Contents/MacOS/MPPViewerMac` as arm64 from the exact public GitHub release asset. At 64 MiB it still exhausted the budget. |
+| ChronoSync | `1fe8f1b23fe209c9c64979eb804b87e1b3246e00513636f195f72c0813d2bc25`. HFS image has `Install.pkg` and `Remove.pkg`. The installer declares both a Library helper and `Applications/ChronoSync.app`. | 284,798 | 90,101,604 at 256 MiB | The full local file verifies x86_64 and arm64 in the declared launcher under the 256 MiB remote CLI profile. The original 16-second live deadline still stops the scan. |
+| Jumper build 3660 | `42c32ea6aae43259893a68b32e84e336fbeae7a0521fc4538a86a88ee4b7a362`. The ZIP32 directory offset rolled over at 4 GiB. The plist member also rolled over. | 6,360,986 | 8,388,607 | Fixed. The pinned range scan matched the 5,003,419,189-byte representation and verified both launcher headers at the 8 MiB tier. |
+| AMPPS 4.4 | `454c6fe92eb3899a0dd56b7475209b2b7ae1a12756edc3b8d6a49a2208f522fd`, `kits/ampps-plist_not_found`. A single visible HFS root directory contains `Ampps.app`. A second copy sits under the hidden `.Trashes` tree. | 16,775 | 109,005 | Fixed on the pinned image. The scanner selects the visible app and verifies the x86_64 main. |
+| Hancom Word 12.30.0.6544 | `b0804cedf5def69f1121cb22e89d791c00313a7c973d0ab95143f2ec143a1575`, `kits/hancom-word-unsupported_container`. The URL redirects to an 82-byte HTML meta-refresh to Hancom's homepage under the same ETag. | 4 | 82-byte origin inspection | Origin has no installer at the pinned URL. Use the publisher distribution channel if it offers an entitled macOS package. |
+
+## Earlier parser recoveries to verify against this checkout
+
+- FabFilter Pro-DS's nested AAX plug-in verified in `99d2df4578c7` after 7,347,312 bytes. Timeless was also verified in the held-out cohort. Keep the 12 historical nested rows and their later outcomes in the ledger.
+- Qt Design Studio's solid 7z verified in `e479832a4b53` at 2,519,947 bytes. A full local scan recorded 652 Mach-O files. CodeQL's tar.zst reached its declared shell script in `92bc984eecf3` at 62,893,053 bytes.
+- LaunchControl and ImageOptim still have historical XZ-stream errors at 66,055 bytes. EDGE identified their 64 MiB LZMA2 dictionaries and added native dictionary support. LaunchControl previously verified at 5,510,472 bytes in `97cd69474566`.
+- The existing generated UDIF fixture exercises bzip2, ADC, LZFSE and other codecs. EDGE already has a raw GPT/HFSX fixture. Sparse image, encrypted image, APM, and segmented-image coverage is tracked separately from those recoveries.
+
+## Zero-sector UDIF footer
+
+`dmg_with_zero_footer_sector_count_uses_block_map_geometry` zeroes the sector count in the 66,444-byte generated bzip2-prefixed disk image. The same regression went from `invalid data: range outside its container` after 1,383 bytes to a verified bundle after 4,963 bytes. Local, remote CLI, and Worker profiles all pass. The nonzero footer still bounds the declared partition ranges. The existing segmentation test also passes. [Upstream UDIF structure](https://github.com/foxlet/dmg2img/blob/master/dmg2img.h)
+
+## APFS LZVN resource forks
+
+`apfs_dmg_verifies_macho_slices_in_lzvn_resource_fork_chunks` uses a 75,970-byte generated DMG with its two Mach-O slices in separate 64 KiB blocks. The first block uses LZVN and the second carries Apple's stored-block marker. Before the fix the scanner stopped at `unsupported: APFS decmpfs-compressed file` after 2,425 bytes. The updated scan verified both headers after 3,093 bytes and passes in all three profiles. It uses the APFS xattr extents and reads the two fork offsets for each requested block. The RStudio replay used the artifact with SHA-256 `8af768450f9f38586bf48958d348b41ffc4f3d42c9d225cb6d4f2b8e8b986135`. Type 8 is supported. Other compression types still return an explicit unsupported result. [Apple XNU decmpfs](https://github.com/apple/darwin-xnu/blob/main/bsd/kern/decmpfs.c) · [libfsapfs format notes](https://github.com/libyal/libfsapfs/blob/main/documentation/Apple%20File%20System%20%28APFS%29.asciidoc)
+
+The local profile also verified both RStudio main slices. Its optional inventory stopped at an invalid decmpfs resource fork after 123,847,587 total bytes read. The failed optional entry needs its own evidence before a parser change.
+
+## PackageInfo product selection
+
+`pkg_auto_selects_the_product_in_packageinfo_bundle_version` reads a 1,208-byte synthetic flat package. It reproduced `not found: app Info.plist in sequential archive` after 1,208 bytes. Reading bundle declarations at the top level of `<bundle-version>` made the same scan verify both synthetic VST3 headers after the same 1,208 bytes. The nested `<bundle>` in the fixture declares a helper and stays outside product selection.
+
+The pinned Soothe2 package's `soothe2_VST3.pkg/Payload` is a 63,805,398-byte gzip member. The larger scan used to visit enough components to spend 268,173,278 bytes on the same local-file source under the remote profile. With the fix it verifies `Library/Audio/Plug-Ins/VST3/soothe2.vst3/Contents/MacOS/soothe2` after 63,813,324 bytes with verified x86_64 and arm64 headers. The 8 MiB scan reads 8,126,454 bytes and reports budget exhaustion after verifying the Intel header only. BOM-assisted late plist recovery supplies metadata at that tier while the far header still requires a sequential read.
+
+## Insta360's unindexed gzip payload
+
+The checksum-matching XAR exposes a 322,313-byte expanded BOM and a single member with gzip ISIZE 1,249,850,880. The BOM independently identifies the 3,319-byte `Applications/Insta360 Link Controller.app/Contents/Info.plist` as record 2761 of 2762. Its CPIO data starts at decoded offset 1,249,846,910. Capture `1979b4c560ba` verified both slice headers on `Webcam-desktop` as an executable candidate.
+
+The last DEFLATE block starts 28,343 compressed bytes from the end. Replay from its exact bit position with two different missing-window seeds left 1,104 plist bytes indeterminate. Replay from a known block boundary 476,892 bytes from the end still left 370 plist bytes indeterminate. The XAR TOC and BOM describe offsets and paths outside the gzip dictionary state. The local scanner can read the full original stream as in verified attempt `e87b6b79dedc`. An externally produced seek index would need validated decompressor checkpoints tied to this specific artifact.
+
+## Rock Ridge ISO 9660 inside UDIF
+
+`dmg_verifies_the_bundle_named_by_rock_ridge_records` formerly returned `unsupported: no HFS+ or APFS filesystem in UDIF image`. The 2,161-byte generated fixture now verifies `Fixture.app` and both slices after 2,161 bytes in the remote CLI profile. All three profiles pass. ISO names such as `INFO.PLI;1` are disambiguated using the Rock Ridge `NM` entry.
+
+The pinned XAMPP range rerun kept the original strong ETag `"642ecbde-953250a"` and 156,443,914-byte size. It read 1,153,811 bytes and reported the declared script `xampp-osx-8.2.4-0-installer.app/Contents/MacOS/installbuilder.sh`. The installer bundle ID is `com.installbuilder.appinstaller`. Its completed inventory recorded x86_64, i386 and PPC slices in `Contents/MacOS/XAMPP`, i386 in `osx-intel`, and x86_64 in `osx-x86_64`. These headers belong to installer contents. [ECMA-119](https://ecma-international.org/publications-and-standards/standards/ecma-119/) · [Rock Ridge draft](https://bitsavers.org/projects/cdrom/Rock_Ridge_Interchange_Protocol.pdf)
+
+## ZIP32 offsets above 4 GiB
+
+`zip_recovers_a_wrapped_directory_and_individual_member_offsets` uses the small generated ZIP and a sparse in-memory view. It reproduces `invalid data: ZIP central directory entry` at 379 bytes. After the fix it verifies the bundle and two slice headers in under 2 KiB. The test keeps the launcher at its low offset and shifts only the plist and directory above 4 GiB.
+
+Jumper build 3660 has 37,142 central-directory entries, a directory size of 6,360,959, and a recorded 32-bit offset of 702,090,912. The actual directory starts at 4,997,058,208 and ends immediately before the end record. There is no ZIP64 locator. `Jumper.app/Contents/MacOS/Jumper` is physically at offset 31,728, and its plist's 32-bit offset is 702,089,179. The parser recovers the directory from the exact 4 GiB difference and rechecks the member header, flags, name and available CRC before accepting an alternate offset. The range rerun's ETag was `"2095595b63ef4e6a982755c51a6dc9ca-597"`. Both x86_64 and arm64 main headers verified. The optional inventory reached its allowance. [PKWARE ZIP format specification](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT)
+
+## Pinned tier and origin outcomes
+
+- Aqua Data Studio's checksum-matching 835,675,421-byte gzip tar has `Info.plist` at decoded byte 29,696. `JavaAppLauncher` is tar entry 1534, decoded byte 1,035,073,024, with 828,637,194 compressed bytes already fetched by the sequential inspector. The gzip trailer's ISIZE is 1,060,238,336. The declaring plist and launcher are both observed, and a full local replay is recorded as `a628f3f0a852`. No seek index was observed on the pinned artifact.
+- MPP Viewer's release API produced the 85,522,821-byte ARM64 package with SHA-256 `aaa906fc7de294eac6add4264a1839b4042f829a51f357cba7f47214650f253a`. The 8 MiB and 64 MiB local-file replays under the remote CLI profile exhausted their budgets after 8,126,454 and 66,846,710 bytes. The 256 MiB replay verified the declared main after 85,458,251 bytes. [Publisher's GitHub release](https://github.com/ramos1053/MPP-Viewer-Mac/releases/tag/v0.1.3)
+- Hancom's original URL returned a 302 followed by a 200 `text/html`. The same recorded ETag identified an 82-byte refresh page for the vendor homepage. The old artifact route supplies no package to the parser. [Hancom](https://www.hancom.com/)
+
+## Ledger reruns
+
+These live `ledger rerun` results use the ledger driver at `2d02b4d` with the parser files through `705c7b5`. The scratch driver uses `~/Code/doesitarm-data/scan-ledger/kits/` for the original offline recordings and writes reruns under `~/.cache/doesitarm-fix-containers/rerun-ledger/`.
+
+| App | Rerun ID | Previous outcome and bytes | Rerun outcome and bytes |
+| --- | --- | --- | --- |
+| XAMPP | `61963fc8af081b7f36c51cbc1775d7a0507232521716116259ff5e53b1710697` | invalid container, 40,001 | declared script, 1,153,811 |
+| Jumper | `1ca57056a69bb1c772d03c77138e3babdb7ab977e8d8f676da5e568f28ade3df` | invalid container, 6,360,986 | verified, 8,388,607 |
+| RStudio | `aa1c886fdc30422300b1df276796f36c24cfdfc39727f7bdd573c0471eb97f74` | unsupported codec, 2,400,004 | verified, 3,288,237 |
+| Soothe2 | `2716ca1af300fd7622f5bc77142acb14450ee2af3dfdaf1fa7d573ac5ffca9ff` | budget hit, 268,173,277 | verified plug-in, 63,813,324 |
+| LaunchControl | `e649f1d33c858312eb83bc02d7a11c6683e5131c8ab25a6efb581ce91f4eb8a9` | invalid XZ stream, 66,055 | verified, 5,510,472 |
+
+## Sparse, encrypted, and segmented images
+
+- `sparse_image_seeks_hfs_through_unordered_bands_and_an_apple_partition_map` was unsupported at 1,026 bytes. Its 28,672-byte fixture uses a single version-3 band index, reordered populated bands, and unallocated zero bands. The virtual disk contains an Apple Partition Map with 2 KiB partition blocks and an HFSX volume. The new reader verifies both executable headers after 9,726 bytes in the remote CLI profile. Local and Worker profiles also pass the fixture. Multi-index and partial stored-band layouts have explicit unsupported outcomes. [libmodi sparse image format](https://github.com/libyal/libmodi/blob/main/documentation/Mac%20OS%20disk%20image%20types.asciidoc)
+- `identifies_encrypted_apple_disk_images_by_header_or_trailer` tests the modern `encrcdsa` header and legacy `cdsaencr` end marker. Both previously read 1,026 bytes and reported an unrecognized format. The modern header now reports an encrypted image after 8 bytes and the legacy trailer after 516 bytes. Neither probe produces architecture evidence. An authorized user can open an encrypted image with its key and scan the mounted content or export an unencrypted copy. [Apple Disk Utility image guide](https://support.apple.com/en-ca/guide/disk-utility/dskutl11888/mac)
+- The existing segmented UDIF test still reports `unsupported: segmented UDIF image` after probing the footer. A range reader operates on one stable representation. An authorized conversion on macOS requires all the original segments. The existing HFSX fixture already exercises bzip2, ADC and LZFSE; the EDGE fixtures cover raw GPT/HFSX. [Apple hdiutil manual](https://keith.github.io/xcode-man-pages/hdiutil.1.html)
+
+## A single visible folder on an HFS image
+
+`hfs_auto_finds_an_app_in_the_single_visible_root_directory` uses a 2,176-byte HFSX DMG. Before the fix it reported `not found: app or package at the HFS volume root` after 2,123 bytes. The corrected result verifies both generated slice headers from `Suite/Fixture.app` after the same bytes. The existing root app and package selection retain priority. The fallback requires one visible root folder and one immediate visible app.
+
+The AMPPS kit confirms the visible `AMPPS` directory and the `Applications` link at the volume root. Inspecting the checksum-matching full image found `AMPPS/Ampps.app` and a duplicate under `.Trashes/501/AMPPS/`. The explicit visible path verified in the old scanner at 109,005 bytes. The revised default route reaches the same path and verifies its x86_64 launcher at 109,005 bytes. Its optional inventory is partial. SHA-256 `77b1107c02b7ca33cefa785432867f9706ac3eeaa3ab3723c8b63a1f30cfb28c`.
+
+## Products mounted at PackageInfo's install location
+
+`pkg_mounts_contents_relative_payload_in_the_declared_plugin` uses a 1,294-byte ZIP containing a flat XAR. The payload stores `Contents/Info.plist` and `Contents/MacOS/FixtureBinary` and PackageInfo supplies the absolute `.aaxplugin` destination. The old parser read 1,294 bytes and returned `not found: app Info.plist in sequential archive`. The corrected scan verifies both synthetic slice headers after the same bytes in all three profiles.
+
+The pinned TDR Nova ZIP was the same 27,043,108-byte representation with ETag `"19ca524-65d9f06a5b093"`. Attempt `a795f153f3da9e24ae28b37df068c8ae1d6b8f3cb0fb9c1a80c9e230035a6437` read every byte and returned a nested-container failure. The corrected scan read the same number of bytes and verified both x86_64 and arm64 in `Library/Application Support/Avid/Audio/Plug-Ins/TDR Nova.aaxplugin/Contents/MacOS/TDR Nova` inside `TDR Nova.pkg`.
+
+## Adjacent install and removal packages
+
+`hfs_selects_the_declared_app_across_install_and_remove_packages` uses a 3,461-byte generated DMG. It originally failed after 3,408 bytes with `unsupported: multiple nested PKGs in HFS volume`. The corrected result reads the same 3,408 bytes and verifies both synthetic headers from the app under `Applications`, even though a helper appears first in the payload. A multiple-PKG image must have one verified result and no competing bundle or executable evidence. Scans are bounded to four root packages and retain ambiguity if more than one package verifies or if another package cannot be evaluated.
+
+The observed ChronoSync image is 102,704,658 bytes with SHA-256 `686c6452debc28da75b49b25268d6d9d50e876d80714c045c679453852f3b7bc`. `Install.pkg` declares `./Library/Application Support/ChronoSync/ChronoAgentLocal.app` and `./Applications/ChronoSync.app`. `Remove.pkg` has an 80-byte payload and declares no bundle. The 256 MiB remote CLI profile verified `Applications/ChronoSync.app/Contents/MacOS/ChronoSync` from the local artifact after 90,101,604 bytes. The optional inventory was partial.
+
+## Nested-container and inherited-format reruns
+
+The next table covers every latest nested-container failure in the 18:37 Central ledger snapshot plus five historical format and budget attempts. The driver and parser are the same checkpoint as the preceding ledger table. Later parser fixes for named cases are recorded separately. Resolve an abbreviated ID against the original or scratch ledger with `jq -r --arg prefix PREFIX 'select(.ledger_id | startswith($prefix)) | .ledger_id' attempts.jsonl`.
+
+| App | Before ID | Rerun ID | Bytes before | Bytes after | Result |
+| --- | --- | --- | ---: | ---: | --- |
+| astah-professional | `91b43c312065` | `470e78c66a56` | 158,895,764 | 134,376,084 | Deadline inside the installer. The named app remained unresolved. |
+| chef-workstation | `a09cde871542` | `dd15e450cb22` | 220,105,673 | 130,717,194 | Package declares `/opt/chef-workstation`. Deadline before a declared entry point verified. |
+| chronosync | `1fe8f1b23fe2` | `776d882bc9ef` | 284,798 | 284,798 | Multiple root packages on this checkpoint. The later paired-package fix verified ChronoSync as recorded above. |
+| dingtalk | `a4bff78ef332` | `87f7fc046b9b` | 63,486,042 | 39,252,966 | Deadline after discovering the nested package. |
+| font-sf-georgian | `fd0f70b20c5e` | `0c4a25206747` | 249,833 | 249,833 | Apple font installer `com.apple.pkg.SFGeorgianFonts` declares no app. |
+| font-sf-hebrew | `9b6dae8e3560` | `9ad910fe4a2d` | 205,623 | 205,623 | Apple font installer `com.apple.pkg.SFHebrewFonts` declares no app. |
+| mysql-shell | `143e9db8c9fb` | `26094c8cd322` | 44,494,175 | 29,087,124 | Apple app auto-selection reached a deadline. The CLI product path is recorded in the package BOM. |
+| ripx | `09a67a03f4c6` | `5ffa61cad4ae` | 183,438,257 | 57,685,715 | Deadline inside the nested installer. |
+| tableau | `ac1f9ad9d409` | `b418853b2767` | 171,087,478 | 56,539,316 | Deadline after the nested installer was found. |
+| tdr-nova | `a795f153f3da` | `4aac4523edde` | 27,043,108 | 27,043,108 | Missing app plist on this checkpoint. The later install-location fix verified the AAX plug-in as recorded above. |
+| vagrant | `dabaca1bbc2b` | `511f36e13135` | 56,157,030 | 56,157,030 | Flat PKG `com.vagrant.vagrant` yielded no app plist. Inspect a named packaged executable or script. |
+| valhalla-space-modulator | `1649bfe34642` | `2a4db8b2d308` | 8,878,132 | 2,283,141 | Verified the PackageInfo-declared AAX product. |
+| virtualbox@beta | `00308342c678` | `d72e02eb402b` | 2,320,542 | 21,615,398 | Deadline during the nested package scan. |
+| zulu@17 | `30f782c8bad7` | `b74ad8ba4b90` | 192,098,522 | 51,557,253 | Deadline during the nested package scan. |
+| fabfilter-pro-ds | `964eaceb16c7` | `dbe9a338e76f` | 8,385,550 | 7,347,312 | Verified the AAX product inside the nested PKG. |
+| qt-design-studio | `3f63879dfd7b` | `911ccdeed63d` | 1,029 | 2,519,947 | Verified the named app in the solid 7z repository component. |
+| codeql-bundle | `c4dda37c2b62` | `c66897eb63c6` | 1,029 | 8,388,603 | Recognized tar.zst. The 8 MiB tier exhausted. See the recorded 256 MiB script outcome below. |
+| imageoptim | `d509cd177516` | `af6f5b0b4037` | 66,055 | 3,858,908 | Verified the app with the native XZ dictionary limit. |
+| jprofiler | `1780ef0454f6` | `da653ae111ca` | 4 | 4 | HTTPS range probe returned HTTP 200. The old kit and new run both stopped before the footer at 8 MiB. |
+
+The earlier CodeQL tier record `92bc984eecf3` reached its declared `codeql/codeql` shell script after 62,893,053 bytes at 256 MiB. Supported tar.zst framing makes that script observable. Package or feed architecture hints do not establish the architecture of the declared script or an eventual runtime.
+
+The same-origin XAMPP kit stops at `Kit lacks coverage for offset 0, length 83472` with the improved parser. The older sparse capture contains the footer and index. The live `61963fc8af08` read supplies the newly requested block. AMPPS likewise has new reads after root traversal.
+
+Both pinned jamovi installer URLs returned HTTP 302 followed by identical HTML at the time of inspection. The x64 attempt `4e4f61400d19` and arm64 attempt `1699edf20919` each read 1,026 bytes before rejecting the purported DMG. The two full HTML responses shared SHA-256 `bf5944797cb121480627611556a12025decdc70c438a57605b5a7f6aeb0506ee`. The publisher’s current download page is the legitimate discovery route. [jamovi downloads](https://www.jamovi.org/download.html)
+
+## Explicit executable targets inside nested HFS packages
+
+`hfs_finds_a_declared_executable_inside_the_package` reproduced `not found: bundle path in HFS catalog` even though the target exists in `Fixture.pkg`. The failed synthetic scan read 2,691 bytes. The same generated image now verifies both headers under the selected path after 2,691 bytes. A direct filesystem match still takes precedence. If the HFS catalog lacks that path, the selector can inspect visible root packages.
+
+The MySQL Shell 8.0.29 DMG contains a single flat PKG with `PackageInfo` install location `/usr/local`. Its BOM identifies `./mysql-shell-8.0.29-macos12-arm64/bin/mysqlsh` as a regular 36,335,104-byte member. An explicit `--binary-path 'mysql-shell-8.0.29-macos12-arm64/bin/mysqlsh'` first failed at 964,642 bytes. The corrected scan verified its arm64 header after 4,623,388 bytes. The original app auto-selection attempt `143e9db8c9fb` remains separate. The downloaded image matched the 44,517,756-byte representation and had SHA-256 `7095eaa8c67a8952101e0e6173645ac4377b1c06df5e8f87ceddea418d79b5a6`.
+
+The live 256 MiB CodeQL check `9c6671d2cc04cd0f6eb8a96ae1066d679643667ddb242edfdebe91b2ce25bd66` confirmed the historical shell entry point after 62,893,053 bytes. This resolves tar.zst recognition and preserves the observed script outcome.
+
+## Final targeted ledger reruns
+
+These results use the ledger driver at `2d02b4d` and the local parser through `02aab1d`.
+
+| App | Rerun ID | Previous bytes | Rerun bytes | Observed outcome |
+| --- | --- | ---: | ---: | --- |
+| AMPPS | `b9be9d24a16be9cee4fcd801019b2ffef21d2db5afb207ba9f501c33fd4bf634` | 16,775 | 109,005 | verified with range reads |
+| TDR Nova | `7359c3acb64f6129fd8ab0d420f702dbc257338860dd8aaaa8bfe916f83dd038` | 27,043,108 | 27,043,108 | verified plug-in under the same ETag |
+| ChronoSync | `96ce61330d26cdfeb76c11864e740834a9c6d6710fed6eef82cacea663181527` | 284,798 | 34,278,719 | proceeded into the nested packages and reached the recorded 16-second deadline |
+
+## Read-budget reruns
+
+This table covers the 27 latest budget failures in the initial ledger snapshot. Reruns use the original attempt’s selected target and tier. The MPP Viewer observation uses the public release API and a 256 MiB local-file replay under the remote CLI profile. Original records and individual reruns retain transport, artifact identity, exact settings and raw diagnostics in the ledger.
+
+| App | Attempt and rerun | Tier before | Bytes before | Bytes after | Outcome |
+| --- | --- | ---: | ---: | ---: | --- |
+| adobe-acrobat-reader | `6cffc78e5abf` → `a0df72716d36` | 268,435,456 | 268,173,305 | 205,720,003 | nested_container |
+| baretorrent | `c996be9531a4` → `35bd9c6c02e1` | 8,388,608 | 4 | 4 | budget_hit at the recorded tier |
+| bluestacks | `574d57418a63` → `6494adf51b97` | 268,435,456 | 268,173,301 | 88,356,356 | timeout |
+| cardinal | `5476c8168e25` → `a70e5e08efbb` | 268,435,456 | 268,173,295 | 50,405,256 | timeout |
+| chatgptclassic | `f97d37969d02` → `65258fa5b597` | 8,388,608 | 8,388,608 | 8,126,453 | budget_hit at the recorded tier |
+| display-pilot | `61447b21d7c5` → `7433928d2136` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| elecom-mouse-util | `ff2616b5cc38` → `33c67f3354cf` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| excire-search | `2772a6a45796` → `29cb44a0ae76` | 268,435,456 | 268,435,451 | 268,435,451 | budget_hit at the recorded tier |
+| iloklicensemanager | `fd8c419a68d7` → `4ba9513a2dbf` | 8,388,608 | 8,388,608 | 8,388,603 | budget_hit at the recorded tier |
+| jprofiler | `1780ef0454f6` → `2f4a15222c4c` | 8,388,608 | 4 | 4 | budget_hit at the recorded tier |
+| jumpdesktop | `f0237bd1d0da` → `335bbf7438cb` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| loopcloud | `d1fca6774a32` → `ae1fd333bb62` | 8,388,608 | 8,388,608 | 8,126,453 | budget_hit at the recorded tier |
+| mamp | `96167649b183` → `4646adcc1b5d` | 268,435,456 | 426,590 | 426,590 | budget_hit at the recorded tier |
+| microsoft-outlook | `7abb09e2f13b` → `f52f087d3a3e` | 268,435,456 | 268,435,445 | 42,026,946 | timeout |
+| monotype | `37fee8732b60` → `52def181d568` | 268,435,456 | 254,380,473 | 254,380,473 | budget_hit at the recorded tier |
+| mppviewermac | `dd0e2e40e7a9` | 8,388,608 | 8,388,608 | 85,458,251 | verified ARM64 at 256 MiB by public release API replay |
+| napari | `ba8eec249bdf` → `527152edba1a` | 268,435,456 | 268,173,301 | 104,971,147 | timeout |
+| pdfexpert | `ab73a357be0e` → `5a9d2cc13619` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| prezi-video | `5022b72d0dd3` → `3a19545342b4` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| protondrive | `7c9624c86fb2` → `3b301deada0b` | 8,388,608 | 8,388,608 | 8,388,601 | budget_hit at the recorded tier |
+| superwhisper | `45144840d754` → `45f20547840d` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| tableau | `5cf3b8fdd817` → `9ba27715e24c` | 268,435,456 | 267,790,212 | 48,148,184 | nested_container |
+| ti-smartview-ce-for-the-ti-84-plus-family | `5e0c4b2aa712` → `2f42382fc601` | 268,435,456 | 268,173,305 | 197,352,260 | nested_container |
+| tuple | `bbbf92ced838` → `a2ef650ab0d9` | 8,388,608 | 8,388,608 | 8,388,607 | budget_hit at the recorded tier |
+| unity-ios-support-for-editor | `5784919ee40a` → `27da14e92fc8` | 268,435,456 | 268,173,301 | 33,957,924 | timeout |
+| vienna-assistant | `b755ecd583e0` → `82b44acf4efa` | 8,388,608 | 8,388,603 | 8,388,603 | budget_hit at the recorded tier |
+| workspaces | `6c5968e03572` → `a234c4f70c20` | 8,388,608 | 8,388,608 | 8,388,603 | budget_hit at the recorded tier |
+
+Of the 26 exact-tier reruns, 18 still reached the read budget, five reached their deadline, and three reached a nested PKG and then hit their deadline. The 27th case is MPP Viewer, verified at a higher tier through the publisher’s release API.
+
+The HTTP 200 range probes for Baretorrent and JProfiler made their footer reads sequential under the recorded 8 MiB tier. MAMP’s stream scanned the XAR header and index, then hit the 256 MiB cap trying to reach metadata at offset 714,272,766. Monotype used its entire 268,435,456-byte request allowance while reading 254,380,473 unique bytes and revisiting earlier ranges of `MTFInstaller.pkg`. Excire Search spent its tier reading sequential data from the compressed nested `ExcireSearch-5.0.6-x64.dmg`. These outcomes are unresolved at the recorded limits.
+
+## Final offline verification
+
+- 62 Rust tests passed across the workspace. The new failing-before regressions use generated data below 2 MB and perform no network I/O. The competing-package fixture also checks that two verified alternatives preserve ambiguity and expose zero architecture claims.
+- Native and wasm32 Clippy passed with warnings denied. Both the standard Wasm package and the Worker package with its 80 MiB memory ceiling built offline.
+- 288 native/Wasm comparisons passed. The comparisons cover synchronous and asynchronous reads, physical byte accounting, sparse images, ambiguous packages, and explicit binary targets inside HFS packages.
+- The 36 offline Node tests, six Python runner tests, and 31 generated EDGE fixture checks passed. Browser automation was outside the requested verification environment.

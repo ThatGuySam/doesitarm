@@ -1,0 +1,5 @@
+Identifier: com.example.download.Alias
+ParentRecipe: com.example.download.RuntimeParent
+Input:
+  NAME: Alias
+  DOWNLOAD_URL: '%PARENT_URL%'

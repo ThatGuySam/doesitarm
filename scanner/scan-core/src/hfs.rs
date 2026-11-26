@@ -543,7 +543,17 @@ pub(crate) async fn scan(
     };
     let mut catalog = Catalog::load(&mut volume, catalog).await?;
     if let Target::Executable(path) = target {
-        let item = catalog.find_path(&mut volume, ROOT_ID, path, true).await?;
+        let item = match catalog.find_path(&mut volume, ROOT_ID, path, true).await {
+            Ok(item) => item,
+            Err(missing @ ScanError::NotFound(_)) => {
+                let root = catalog.children(&mut volume, ROOT_ID).await?;
+                if root.iter().any(visible_package) {
+                    return read_package(&mut volume, &mut catalog, root, work, target, out).await;
+                }
+                return Err(missing);
+            }
+            Err(error) => return Err(error),
+        };
         out.executable_path = Some(path.to_owned());
         let fork = file_fork(item, geometry)?;
         out.executable_size = Some(fork.size);
@@ -573,12 +583,20 @@ pub(crate) async fn scan(
         root = Some(items);
         app
     };
-    let Some((app, app_path)) = app else {
-        let items = match root {
-            Some(items) => items,
-            None => catalog.children(&mut volume, ROOT_ID).await?,
-        };
-        return read_package(&mut volume, &mut catalog, items, work, target, out).await;
+    let (app, app_path) = match app {
+        Some(app) => app,
+        None => {
+            let items = match root {
+                Some(items) => items,
+                None => catalog.children(&mut volume, ROOT_ID).await?,
+            };
+            match grouped_app(&mut volume, &mut catalog, &items, work, target, out).await? {
+                Some(app) => app,
+                None => {
+                    return read_package(&mut volume, &mut catalog, items, work, target, out).await;
+                }
+            }
+        }
     };
     out.bundle_path = Some(app_path.clone());
 
@@ -592,9 +610,21 @@ pub(crate) async fn scan(
     }
     let info_size = info.size as usize;
     let plist = volume.read_fork(&mut info, 0, info_size).await?;
-    let path = bundle::apply_plist(&plist, &app_path, out)?;
+    let path = bundle::apply_plist(&plist, &app_path, out, true)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
     let primary = read_main(&mut volume, &mut catalog, contents.id, relative, out).await;
+    let primary = bundle::confirm_executable(out, primary);
+    if primary.is_ok()
+        && out.name.is_none()
+        && let Some(name) = development_name(&mut volume, &mut catalog, contents.id, &plist).await
+    {
+        out.name = Some(name);
+        out.bundle_metadata_source = Some("info_plist_with_development_region_strings");
+    }
+    let inspected_path = out
+        .executable_path
+        .as_deref()
+        .and_then(|path| inventory::relative(path, &app_path));
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
     let mut allowance = Allowance::new(volume.disk, work);
@@ -628,7 +658,7 @@ pub(crate) async fn scan(
                 pending.push((item.id, path));
                 continue;
             }
-            if path.strip_prefix("Contents/") == Some(relative)
+            if Some(path.as_str()) == inspected_path
                 || item
                     .file
                     .as_ref()
@@ -667,6 +697,108 @@ pub(crate) async fn scan(
     primary
 }
 
+async fn development_name(
+    volume: &mut Volume<'_, impl ReadAt>,
+    catalog: &mut Catalog,
+    contents: u32,
+    info: &[u8],
+) -> Option<String> {
+    let path = bundle::localized::development_path(info)?;
+    let item = catalog
+        .find_path(volume, contents, &path, true)
+        .await
+        .ok()?;
+    let mut fork = file_fork(item, volume.geometry).ok()?;
+    if fork.size > bundle::localized::MAX_STRINGS {
+        return None;
+    }
+    let size = fork.size as usize;
+    let bytes = volume.read_fork(&mut fork, 0, size).await.ok()?;
+    bundle::localized::name(&bytes)
+}
+
+// A product image may have one enclosing folder with several apps beside
+// each other. Never look inside a different app or a package during this pass.
+async fn grouped_app<S: ReadAt>(
+    volume: &mut Volume<'_, S>,
+    catalog: &mut Catalog,
+    root: &[Item],
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<Option<(u32, String)>> {
+    let requested = match target {
+        Target::Auto => None,
+        Target::Bundle(path) if !path.trim_start_matches("./").contains('/') => {
+            Some(path.trim_start_matches("./"))
+        }
+        _ => return Ok(None),
+    };
+    if root
+        .iter()
+        .any(|item| !item.name.starts_with('.') && pkg::package_name(&item.name))
+    {
+        return Ok(None);
+    }
+    let limit = if work.strict() {
+        8
+    } else if work.local() {
+        4096
+    } else {
+        32
+    };
+    let mut folders = root.iter().filter(|item| {
+        item.file.is_none()
+            && !item.name.starts_with('.')
+            && bundle::installed_bundle_kind(&item.name).is_none()
+            && bundle::archive_path(&item.name).is_some()
+    });
+    let mut choices = Vec::new();
+    for folder in folders.by_ref().take(limit) {
+        work.check_deadline()?;
+        let children = catalog.children(volume, folder.id).await?;
+        for item in children {
+            let Some(stem) = item.name.strip_suffix(".app") else {
+                continue;
+            };
+            if item.file.is_some()
+                || stem.starts_with('.')
+                || bundle::archive_path(&item.name).is_none()
+            {
+                continue;
+            }
+            let path = format!("{}/{}", folder.name, item.name);
+            if requested.is_none_or(|name| {
+                bundle::matches_path(&path, name)
+                    || !catalog.tree.case_sensitive
+                        && item.name.to_lowercase() == name.to_lowercase()
+            }) {
+                choices.push((item.id, path, bundle::matches_path(&folder.name, stem)));
+                if choices.len() > 128 {
+                    return Err(ScanError::Limit("too many apps in HFS product folders"));
+                }
+            }
+        }
+    }
+    if folders.next().is_some() {
+        return Err(ScanError::Limit(
+            "too many HFS directories to select a product",
+        ));
+    }
+    if requested.is_none() && choices.iter().any(|(_, _, named)| *named) {
+        choices.retain(|(_, _, named)| *named);
+    }
+    if choices.len() > 1 {
+        out.candidate_bundle_paths
+            .extend(choices.into_iter().map(|(_, path, _)| path));
+        out.candidate_bundle_paths.sort_unstable();
+        return Err(ScanError::Unsupported(
+            "multi-app HFS image; select a bundle path",
+        ));
+    }
+    Ok(choices.pop().map(|(id, path, _)| (id, path)))
+}
+
 async fn read_main<S: ReadAt>(
     volume: &mut Volume<'_, S>,
     catalog: &mut Catalog,
@@ -677,22 +809,29 @@ async fn read_main<S: ReadAt>(
     let (item, chosen) = match catalog.find_path(volume, contents, relative, true).await {
         Ok(item) => (item, relative),
         Err(error @ ScanError::NotFound(_)) => {
-            let Some(leaf) = relative
-                .strip_prefix("MacOS/")
-                .filter(|leaf| !leaf.contains('/'))
-            else {
-                return Err(error);
-            };
-            let children = catalog.children(volume, contents).await?;
-            if children
-                .iter()
-                .any(|item| item.name.eq_ignore_ascii_case("MacOS"))
-            {
-                return Err(error);
+            if let Some(alias) = bundle::contents_relative_executable(relative) {
+                let item = catalog.find_path(volume, contents, alias, true).await?;
+                out.executable_resolution = Some("contents_relative");
+                (item, alias)
+            } else {
+                let Some(leaf) = relative
+                    .strip_prefix("MacOS/")
+                    .filter(|leaf| !leaf.contains('/'))
+                    .filter(|_| out.executable_resolution != Some(bundle::NAME_FALLBACK))
+                else {
+                    return Err(error);
+                };
+                let children = catalog.children(volume, contents).await?;
+                if children
+                    .iter()
+                    .any(|item| item.name.eq_ignore_ascii_case("MacOS"))
+                {
+                    return Err(error);
+                }
+                let item = catalog.find(volume, contents, leaf, true).await?;
+                out.executable_resolution = Some("legacy_contents_executable");
+                (item, leaf)
             }
-            let item = catalog.find(volume, contents, leaf, true).await?;
-            out.executable_resolution = Some("legacy_contents_executable");
-            (item, leaf)
         }
         Err(error) => return Err(error),
     };
@@ -721,16 +860,59 @@ async fn read_package<S: ReadAt>(
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
-    let mut choices = root
-        .into_iter()
-        .filter(|item| !item.name.starts_with('.') && pkg::package_name(&item.name));
-    let item = choices
+    const MAX_ROOT_PACKAGES: usize = 4;
+    let mut choices = root.into_iter().filter(visible_package);
+    let first = choices
         .next()
         .ok_or(ScanError::NotFound("app or package at the HFS volume root"))?;
-    if let Some(other) = choices.next() {
-        out.nested_artifacts.extend([item.name, other.name]);
-        return Err(ScanError::Unsupported("multiple nested PKGs in HFS volume"));
+    let Some(second) = choices.next() else {
+        return read_package_item(volume, catalog, first, work, target, out).await;
+    };
+    let ambiguous = ScanError::Unsupported("multiple nested PKGs in HFS volume");
+    let mut candidates = vec![first, second];
+    candidates.extend(choices.take(MAX_ROOT_PACKAGES - 1));
+    let parents = out.nested_artifacts.clone();
+    out.nested_artifacts
+        .extend(candidates.iter().map(|item| item.name.clone()));
+    if candidates.len() > MAX_ROOT_PACKAGES {
+        return Err(ambiguous);
     }
+
+    let mut verified = None;
+    for item in candidates {
+        let mut candidate = out.subresult();
+        candidate.format = out.format;
+        candidate.nested_artifacts.clone_from(&parents);
+        match read_package_item(volume, catalog, item, work, target, &mut candidate).await {
+            Ok(()) if verified.is_none() => verified = Some(candidate),
+            Err(ScanError::NotFound(_))
+                if candidate.bundle_path.is_none()
+                    && candidate.executable_path.is_none()
+                    && candidate.candidate_executables.is_empty() => {}
+            Err(error @ (ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_))) => {
+                candidate.nested_artifacts.clone_from(&out.nested_artifacts);
+                *out = candidate;
+                return Err(error);
+            }
+            _ => return Err(ambiguous),
+        }
+    }
+    *out = verified.ok_or(ambiguous)?;
+    Ok(())
+}
+
+fn visible_package(item: &Item) -> bool {
+    !item.name.starts_with('.') && pkg::package_name(&item.name)
+}
+
+async fn read_package_item<S: ReadAt>(
+    volume: &mut Volume<'_, S>,
+    catalog: &mut Catalog,
+    item: Item,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
     let (item, name, kind) = if item.file.is_some() {
         let name = item.name.clone();
         (item, name, nested::Kind::Package)

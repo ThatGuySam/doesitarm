@@ -1,5 +1,5 @@
 [workspace]
-members = ["scan-core", "scan-cli", "scan-wasm", "crates/page-resolver"]
+members = ["scan-core", "scan-cli", "scan-wasm", "crates/page-resolver", "crates/source-tools"]
 resolver = "3"
 
 [workspace.package]

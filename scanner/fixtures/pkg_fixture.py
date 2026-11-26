@@ -14,18 +14,19 @@ DIST = b"""<installer-gui-script><title>Fixture Installer</title>
 INFO = b'<pkg-info identifier="org.doesitarm.fixture-installer" version="5"/>'
 
 
-def cpio(files, *, odc):
+def cpio(files, *, odc, modes=None):
     output = bytearray()
     for index, (name, data) in enumerate([*files, ("TRAILER!!!", b"")], 1):
+        mode = (modes or {}).get(name, 0o100755)
         name = name.encode() + b"\0"
         if odc:
             header = "070707" + "".join(
-                f"{field:06o}" for field in [0, index, 0o100755, 0, 0, 1, 0]
+                f"{field:06o}" for field in [0, index, mode, 0, 0, 1, 0]
             ) + f"{0:011o}{len(name):06o}{len(data):011o}"
         else:
             header = "070701" + "".join(
                 f"{field:08x}" for field in [
-                    index, 0o100755, 0, 0, 1, 0, len(data), 0, 0, 0, 0, len(name), 0
+                    index, mode, 0, 0, 1, 0, len(data), 0, 0, 0, 0, len(name), 0
                 ]
             )
         output.extend(header.encode())
@@ -52,7 +53,7 @@ def pkg_fixture(path, info_path, bin_path, metadata, executable, *, odc=False, p
     write_xar(path, payload)
 
 
-def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO, package_info_bzip2=False):
+def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, package_info=INFO, package_info_bzip2=False, scripts=None):
     root = Element("xar")
     toc = SubElement(root, "toc")
     package = SubElement(toc, "file", id="1")
@@ -67,6 +68,8 @@ def write_xar(path, payload=None, bom=None, nested=None, distribution=DIST, pack
         members.append((package, "Bom", bom, True))
     if payload is not None:
         members.append((package, "Payload", payload, False))
+    if scripts is not None:
+        members.append((package, "Scripts", scripts, False))
     if nested is not None:
         members.append((toc, "Component.pkg", nested, False))
     for index, (parent, name, data, compressed) in enumerate(members, 2):
@@ -140,10 +143,11 @@ def encode_bom(records):
     return output
 
 
-def late_bom_fixture(path, info_path, bin_path, metadata, executable):
+def late_bom_fixture(path, info_path, bin_path, metadata, executable, *, reordered_bom=False):
     plist = plistlib.dumps(metadata)
     filler = b"F" * (710 * 1024)
-    prefix = cpio([(bin_path, executable), ("unrelated", filler)], odc=True)
+    extra = [(f"unrelated-{i}", b"side") for i in range(40)] if reordered_bom else []
+    prefix = cpio([(bin_path, executable), ("unrelated", filler), *extra], odc=True)
     end = cpio([(info_path, plist)], odc=True)
     trailer_len = len(cpio([], odc=True))
     encoder = zlib.compressobj(0, zlib.DEFLATED, 31)
@@ -161,6 +165,7 @@ def late_bom_fixture(path, info_path, bin_path, metadata, executable):
         (binary, 4, executable),
         ("unrelated", 1, filler),
         (info, 3, plist),
+        *((name, 1, data) for name, data in extra),
     ])
     write_xar(path, payload, bom)
 

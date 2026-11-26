@@ -2,6 +2,7 @@ import ipaddr from 'ipaddr.js';
 import { discard, RangeFailure } from '../public/range-scan.js';
 import { readBounded } from './http-body.js';
 
+const USER_AGENT = 'DoesItARM-Scanner/0.1';
 const MAX_SUBREQUESTS = 36;
 const MAX_REDIRECTS = 3;
 const REDIRECTS = new Set([301, 302, 303, 307, 308]);
@@ -69,11 +70,10 @@ function checkedDNS(subrequest, signal) {
   const checked = new Set();
   return async function validateDNS(host, refresh = false) {
     if (!refresh && checked.has(host)) return;
-    const records = await Promise.all([
-      dnsAddresses(host, 'A', subrequest, signal),
-      dnsAddresses(host, 'AAAA', subrequest, signal),
-    ]);
-    const addresses = records.flat();
+    const addresses = [
+      ...await dnsAddresses(host, 'A', subrequest, signal),
+      ...await dnsAddresses(host, 'AAAA', subrequest, signal),
+    ];
     if (!addresses.length) throw new RangeFailure('The download hostname has no public DNS addresses.');
     if (addresses.some((address) => !isPublicAddress(address))) {
       throw blocked('The download hostname resolves to a private or reserved address.');
@@ -131,6 +131,7 @@ export function createEgress({ target, ownHost, outbound, signal }) {
   let requests = 0;
   let redirects = 0;
   let redirected = false;
+  let pinned = false;
 
   function subrequest(url, options) {
     signal.throwIfAborted();
@@ -144,9 +145,14 @@ export function createEgress({ target, ownHost, outbound, signal }) {
   const checkDNS = checkedDNS(subrequest, signal);
 
   return async (range, etag) => {
-    const headers = new Headers({ Range: range, 'Accept-Encoding': 'identity' });
+    const headers = new Headers({ Range: range, 'Accept-Encoding': 'identity', 'User-Agent': USER_AGENT });
     if (etag) headers.set('If-Match', etag);
+    const visited = new Set();
     while (true) {
+      if (visited.has(url.href)) {
+        throw new RangeFailure('The download origin returned a redirect loop.', 'limit_reached', 503);
+      }
+      visited.add(url.href);
       await checkDNS(url.hostname, redirected);
       redirected = false;
       const response = await subrequest(url, { headers, cache: 'no-store' });
@@ -154,14 +160,17 @@ export function createEgress({ target, ownHost, outbound, signal }) {
         discard(response);
         signal.throwIfAborted();
       }
-      if (response.status === 206) return response;
+      if (response.status === 206) {
+        pinned = true;
+        return response;
+      }
       if (!REDIRECTS.has(response.status)) {
         discard(response);
         throw new RangeFailure('The download origin did not provide a usable byte range.');
       }
       discard(response);
-      redirects += 1;
-      if (redirects > MAX_REDIRECTS) {
+      if (pinned) throw new RangeFailure('The download origin changed during the scan.');
+      if (++redirects > MAX_REDIRECTS) {
         throw new RangeFailure('Scan reached the three-redirect limit.', 'limit_reached', 503);
       }
       url = validatePageTarget(response.headers.get('Location'), ownHost, url);

@@ -6,13 +6,16 @@ import io
 import plistlib
 import random
 import tarfile
+import tempfile
 import zipfile
+import zlib
 from pathlib import Path
 from struct import pack
 
 from apfs_fixture import apfs_fixture
-from dmg_fixture import dmg_fixture, hfs_volume, pkg_dmg_fixture, write_udif
-from pkg_fixture import late_bom_fixture, pkg_fixture, write_xar
+from dmg_fixture import dmg_fixture, hfs_tree, hfs_volume, pkg_dmg_fixture, sparse_apm_fixture, write_udif
+from iso_fixture import iso_dmg_fixture
+from pkg_fixture import cpio, late_bom_fixture, pkg_fixture, write_xar
 
 ROOT = Path(__file__).resolve().parent
 ARM = 0x0100000C
@@ -127,6 +130,23 @@ if __name__ == "__main__":
     zip_fixture(ROOT / "lzma.zip", zipfile.ZIP_LZMA, binary_plist=True)
 
     dmg_fixture(ROOT / "hfsx.dmg", METADATA, fat(intel_offset=4096))
+    sparse_apm_fixture(ROOT / "apm.sparseimage", METADATA, fat(intel_offset=4096))
+    wrapped = hfs_volume(METADATA, fat(intel_offset=4096), wrapper="Suite")
+    write_udif(ROOT / "wrapped-hfs.dmg", wrapped, [(0x80000005, len(wrapped) // 512, zlib.compress)],
+               "Apple_HFSX")
+    localized = hfs_tree({
+        INFO: plistlib.dumps({
+            "CFBundleExecutable": "FixtureBinary",
+            "CFBundleDevelopmentRegion": "English",
+            "CFBundleVersion": "1.15.0",
+        }),
+        EXECUTABLE: pack(">7I", 0xFEEDFACE, 18, 0, 2, 0, 0, 0),
+        "Fixture.app/Contents/Resources/English.lproj/InfoPlist.strings":
+            b"\xff\xfe" + ('/* CFBundleName = "Commented out"; */\n'
+                               'CFBundleName = "Localized Fixture";\n').encode("utf-16le"),
+    })
+    write_udif(ROOT / "localized-name.dmg", localized,
+               [(0x80000005, len(localized) // 512, zlib.compress)], "Apple_HFS")
     volume = hfs_volume(METADATA, fat(intel_offset=4096))
     write_udif(ROOT / "bzip2-prefix.dmg", volume, [
         (0x80000006, 1, bz2.compress),
@@ -134,11 +154,71 @@ if __name__ == "__main__":
     ], "Apple_HFS", with_preamble=False)
     pkg_fixture(ROOT / "gzip-newc.pkg", INFO, EXECUTABLE, METADATA, fat())
     pkg_fixture(ROOT / "stored-odc.pkg", INFO, EXECUTABLE, METADATA, fat(), odc=True)
+    scripts = cpio([
+        ("./postinstall", b'#!/bin/sh\n/usr/sbin/installer -pkg "./Application.pkg" -target /\n'),
+        ("./Application.pkg", (ROOT / "gzip-newc.pkg").read_bytes()),
+    ], odc=True)
+    write_xar(ROOT / "pkg-in-scripts.pkg", cpio([], odc=True),
+              package_info=b'<pkg-info><scripts><postinstall file="./postinstall"/></scripts></pkg-info>',
+              scripts=gzip.compress(scripts, mtime=0))
+    plugin = "Library/Audio/Plug-Ins/VST3/Fixture.vst3"
+    plugin_payload = cpio([
+        (f"{plugin}/Contents/MacOS/FixtureBinary", fat()),
+        (f"{plugin}/Contents/Info.plist", plistlib.dumps(METADATA)),
+    ], odc=True)
+    write_xar(ROOT / "product-bundle-version.pkg", gzip.compress(plugin_payload, mtime=0),
+              package_info=f'''<pkg-info identifier="org.doesitarm.fixture.vst3" install-location="/">
+                <bundle-version><bundle path="./{plugin}">
+                  <bundle path="./Contents/Plugins/Nested.kext"/>
+                </bundle></bundle-version>
+              </pkg-info>'''.encode())
+    mounted_payload = cpio([
+        ("Contents/MacOS/FixtureBinary", fat()),
+        ("Contents/Info.plist", plistlib.dumps(METADATA)),
+    ], odc=True)
+    with tempfile.TemporaryDirectory() as temp:
+        package = Path(temp) / "Fixture.pkg"
+        write_xar(package, gzip.compress(mounted_payload, mtime=0), package_info=b'''
+          <pkg-info identifier="org.doesitarm.fixture.aax" install-location="/Library/Application Support/Avid/Audio/Plug-Ins/Fixture.aaxplugin">
+            <bundle path="./Contents/__Pace_Eden.bundle"/>
+          </pkg-info>
+        ''')
+        with zipfile.ZipFile(ROOT / "mounted-plugin.zip", "w", zipfile.ZIP_STORED) as archive:
+            archive.writestr(zipfile.ZipInfo(package.name), package.read_bytes())
     apfs_fixture(ROOT / "apfs.dmg", METADATA, fat(intel_offset=4096))
+    apfs_fixture(ROOT / "apfs-nested-pkg.dmg", METADATA, fat(),
+                 package=(ROOT / "gzip-newc.pkg").read_bytes())
+    apfs_fixture(ROOT / "apfs-lzvn.dmg", METADATA, fat(intel_offset=65_536), compressed=True)
+    iso_dmg_fixture(ROOT / "rock-ridge.dmg", METADATA, fat())
     pkg_fixture(ROOT / "pbzx.pkg", INFO, EXECUTABLE, METADATA, fat(), pbzx=True)
     late_bom_fixture(ROOT / "late-bom.pkg", INFO, EXECUTABLE, METADATA, fat())
+    late_bom_fixture(ROOT / "late-bom-reordered.pkg", INFO, EXECUTABLE, METADATA,
+                     fat(), reordered_bom=True)
 
     pkg_dmg_fixture(ROOT / "nested-pkg.dmg", (ROOT / "gzip-newc.pkg").read_bytes())
+    with tempfile.TemporaryDirectory() as temp:
+        install = Path(temp) / "Install.pkg"
+        remove = Path(temp) / "Remove.pkg"
+        helper = "Library/Application Support/Fixture/Helper.app"
+        workspace = cpio([
+            (f"{helper}/Contents/Info.plist", plistlib.dumps(METADATA)),
+            (f"{helper}/Contents/MacOS/FixtureBinary", thin(INTEL, 3, legacy=True)),
+            ("Applications/" + INFO, plistlib.dumps(METADATA)),
+            ("Applications/" + EXECUTABLE, fat()),
+        ], odc=True)
+        write_xar(install, gzip.compress(workspace, mtime=0), package_info=f'''
+          <pkg-info identifier="org.doesitarm.fixture.install" install-location="/">
+            <bundle-version><bundle path="./{helper}"/><bundle path="./Applications/{BUNDLE}"/></bundle-version>
+          </pkg-info>
+        '''.encode())
+        write_xar(remove, gzip.compress(cpio([], odc=True), mtime=0))
+        packages = hfs_tree({p.name: p.read_bytes() for p in (install, remove)})
+        write_udif(ROOT / "install-remove.dmg", packages, [(0x80000005, len(packages) // 512, zlib.compress)],
+                   "Apple_HFS")
+        competing = hfs_tree({install.name: install.read_bytes(),
+                              "Other.pkg": (ROOT / "gzip-newc.pkg").read_bytes()})
+        write_udif(ROOT / "competing-packages.dmg", competing,
+                   [(0x80000005, len(competing) // 512, zlib.compress)], "Apple_HFS")
     write_xar(ROOT / "remote-component.xar", distribution=b"""
         <installer-gui-script><title>Remote fixture</title>
           <pkg-ref id="remote">https://example.invalid/component.pkg</pkg-ref>

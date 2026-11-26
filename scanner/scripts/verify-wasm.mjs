@@ -65,9 +65,21 @@ assert.match(help.stdout, /URL attempts default to remote-cli with 8, 64, and 25
 assert.match(help.stdout, /Worker defaults: 8388608 bytes requested, 67108864 bytes decoded/);
 
 const fixtures = resolve(root, 'fixtures');
+const bundleFixtures = (await readdir(resolve(fixtures, 'bundles'))).map((name) => `bundles/${name}`);
+const expectedOutcomes = new Map([
+  ['competing-packages.dmg', 'unsupported'],
+  ['bundles/cli-ambiguous.zip', 'unsupported'],
+  ['bundles/cli-script-runtime.tar.gz', 'unsupported'],
+  ['bundles/hfs-suite-ambiguous.dmg', 'unsupported'],
+  ['bundles/independent-apps.zip', 'unsupported'],
+  ['bundles/jdk-link-escaping.pkg', 'unsupported'],
+  ['bundles/missing-key-helper.zip', 'not_found'],
+  ['bundles/resources-only.zip', 'no_executable'],
+  ['bundles/resources-with-binary.zip', 'not_found'],
+]);
 let comparisons = 0;
-for (const name of (await readdir(fixtures)).sort()) {
-  if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|pkg)$/.test(name)) continue;
+for (const name of [...await readdir(fixtures), ...bundleFixtures].sort()) {
+  if (!/\.(macho|zip|tar(?:\.(?:gz|bz2|xz))?|dmg|sparseimage|pkg)$/.test(name)) continue;
   const file = resolve(fixtures, name);
   const size = (await stat(file, { bigint: true })).size;
   const fd = openSync(file, 'r');
@@ -88,7 +100,8 @@ for (const name of (await readdir(fixtures)).sort()) {
       return destination.subarray(0, bytesRead);
     };
     const budgets = [[0], [52], [64 * 1024 * 1024], [8192, 0]];
-    if (name === 'late-bom.pkg') budgets.push([600 * 1024]);
+    const usesBomTail = ['late-bom.pkg', 'late-bom-reordered.pkg'].includes(name);
+    if (usesBomTail) budgets.push([600 * 1024]);
     for (const [budget, decoded] of budgets) {
       const args = ['scan', file, '--profile', 'worker', '--budget', String(budget), '--json'];
       if (decoded !== undefined) args.push('--decoded-budget', String(decoded));
@@ -98,8 +111,13 @@ for (const name of (await readdir(fixtures)).sort()) {
       assert.ifError(native.error);
       assert.ok([0, 1].includes(native.status), native.stderr);
       const expected = JSON.parse(native.stdout);
-      if (budget === 64 * 1024 * 1024) assert.equal(expected.status, 'complete', name);
-      if (name === 'late-bom.pkg' && budget === 600 * 1024) {
+      if (budget === 64 * 1024 * 1024) {
+        assert.equal(expected.status, expectedOutcomes.get(name) ?? 'complete', name);
+        if (name === 'competing-packages.dmg') {
+          assert.equal(expected.error, 'unsupported: multiple nested PKGs in HFS volume', name);
+        }
+      }
+      if (usesBomTail && budget === 600 * 1024) {
         assert.equal(expected.status, 'complete', name);
         assert.equal(expected.bundle_metadata_source, 'bom_verified_gzip_cpio_tail');
       }
@@ -126,7 +144,7 @@ for (const name of (await readdir(fixtures)).sort()) {
         comparisons++;
       }
     }
-    if (name === 'stored.zip' || name === 'apfs.dmg') {
+    if (['stored.zip', 'apfs.dmg', 'nested-pkg.dmg', 'apfs-nested-pkg.dmg'].includes(name)) {
       for (const { kind, option, path } of [
         { kind: 'bundle', option: '--bundle-path', path: 'Fixture.app' },
         { kind: 'executable', option: '--binary-path', path: 'Fixture.app/Contents/MacOS/FixtureBinary' },
@@ -142,6 +160,19 @@ for (const name of (await readdir(fixtures)).sort()) {
         assert.deepEqual(actual, expected, `${name}, ${kind}, ${path}`);
         comparisons++;
       }
+    }
+    if (name === 'bundles/cli-script-runtime.tar.gz') {
+      const budget = size + 4n;
+      const path = 'dist-package/cursor-agent';
+      const native = spawnSync(cli, ['scan', file, '--profile', 'worker', '--budget', String(budget),
+        '--binary-path', path, '--json'], { encoding: 'utf8' });
+      assert.ifError(native.error);
+      assert.equal(native.status, 1, native.stderr);
+      const expected = JSON.parse(native.stdout);
+      assert.equal(expected.script_runtime.architectures[0].header_verified, true);
+      const actual = JSON.parse(await scanTarget(size, budget, readAsync, 'executable', path));
+      assert.deepEqual(actual, expected, 'Targeted shell launcher with an earlier runtime');
+      comparisons++;
     }
     console.log(`${name}: native and Wasm agree for sync and async reads`);
   } finally {

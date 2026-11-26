@@ -6,13 +6,20 @@ use crate::{
 const BLOCK: usize = 512;
 const MAX_METADATA: u64 = 64 * 1024;
 
+pub(crate) enum PriorRuntime {
+    Ignore,
+    Retain,
+}
+
 pub(crate) async fn scan(
     input: &mut impl ReadAt,
     work: &DecodeBudget<'_>,
     target: Target<'_>,
     out: &mut ScanResult,
+    prior_runtime: PriorRuntime,
 ) -> Result<()> {
-    let mut bundle = StreamBundle::new(target);
+    let mut bundle = StreamBundle::new(target)
+        .with_earlier_runtime(matches!(prior_runtime, PriorRuntime::Retain));
     let traversal = scan_entries(input, work, &mut bundle, out).await;
     bundle.finish(traversal, out)
 }
@@ -54,8 +61,22 @@ async fn scan_entries(
                 let path = next_path.take().or_else(|| header_path(&header));
                 if let Some(path) = path {
                     match kind {
-                        b'0' | 0 if bundle.file(input, work, &path, start, size, out).await? => {
-                            return Ok(());
+                        b'0' | 0 => {
+                            if bundle.file(input, work, &path, start, size, out).await? {
+                                return Ok(());
+                            }
+                            if number(&header[100..108]).is_ok_and(|mode| mode & 0o111 != 0) {
+                                bundle
+                                    .standalone_file(
+                                        input,
+                                        work,
+                                        &path,
+                                        start,
+                                        size,
+                                        out.diagnostic.is_some(),
+                                    )
+                                    .await?;
+                            }
                         }
                         b'1' | b'2' if bundle.is_executable_path(&path) => {
                             return Err(ScanError::Unsupported(
@@ -176,7 +197,14 @@ pub(crate) async fn read_runtime(
     runtime: &mut crate::ScriptRuntime,
 ) {
     let mut result = ScanResult::new(input.size());
-    let _ = scan(input, work, Target::Executable(&runtime.path), &mut result).await;
+    let _ = scan(
+        input,
+        work,
+        Target::Executable(&runtime.path),
+        &mut result,
+        PriorRuntime::Ignore,
+    )
+    .await;
     if result.executable_path.as_deref() == Some(&runtime.path) {
         runtime.architectures = result.architectures;
     }

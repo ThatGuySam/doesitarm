@@ -52,7 +52,7 @@ pub(crate) async fn scan(
                 crate::compressed_tar(input, work, target, out, out.format.unwrap_or("tar"), codec)
                     .await
             } else {
-                tar::scan(input, work, target, out).await
+                tar::scan(input, work, target, out, tar::PriorRuntime::Ignore).await
             }
         }
         Kind::DiskImage => {

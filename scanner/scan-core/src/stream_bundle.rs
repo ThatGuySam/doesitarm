@@ -1,31 +1,25 @@
 use crate::{
-    Architecture, BinaryInventory, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult,
-    ScriptRuntime, Target, Window, bundle,
+    BinaryInventory, ExecutableCandidate, ReadAt, Result, ScanError, ScanResult, Target, Window,
+    bundle,
     decode::DecodeBudget,
-    diagnostic::ExecutableDiagnostic,
     inventory::{self, Allowance},
-    launcher, macho,
+    launcher::{self, Candidate, Standalone},
+    macho,
 };
 
-struct Candidate {
-    path: String,
-    size: u64,
-    architectures: Vec<Architecture>,
-    outcome: Result<()>,
-    runtime: Option<ScriptRuntime>,
-    diagnostic: Option<ExecutableDiagnostic>,
+const JDK_SHIM: &str = "MacOS/libjli.dylib";
+
+#[derive(Default)]
+struct JdkLinks {
+    links: std::collections::BTreeMap<String, Result<String>>,
+    candidates: Vec<Candidate>,
 }
 
-impl Candidate {
-    fn apply(self, out: &mut ScanResult) -> Result<()> {
-        out.executable_size = Some(self.size);
-        out.architectures = self.architectures;
-        if let (Some(result), Some(diagnostic)) = (&mut out.diagnostic, self.diagnostic) {
-            result.executable = diagnostic;
-        }
-        out.script_runtime = self.runtime;
-        self.outcome
-    }
+fn jdk_library(relative: &str) -> bool {
+    matches!(
+        relative,
+        "Home/lib/jli/libjli.dylib" | "Home/lib/libjli.dylib"
+    )
 }
 
 /// When the executable precedes its plist, retain observations for plausible
@@ -43,6 +37,9 @@ pub(crate) struct StreamBundle<'a> {
     inventory: Option<BinaryInventory>,
     allowance: Option<Allowance>,
     skipped_prefix: bool,
+    standalone: Standalone,
+    retain_earlier_runtime: bool,
+    jdk: Option<JdkLinks>,
 }
 
 impl<'a> StreamBundle<'a> {
@@ -61,6 +58,101 @@ impl<'a> StreamBundle<'a> {
     pub(crate) fn with_target(mut self, target: String) -> Self {
         self.target = Some(target);
         self
+    }
+
+    pub(crate) fn with_earlier_runtime(mut self, enabled: bool) -> Self {
+        self.retain_earlier_runtime = enabled;
+        self
+    }
+
+    pub(crate) fn enable_cpio_links(&mut self) {
+        if matches!(self.selection, Target::Bundle(path) if path.ends_with(".jdk")) {
+            self.jdk = Some(JdkLinks::default());
+        }
+    }
+
+    fn jdk_member<'b>(&self, path: &'b str) -> Option<(&'b str, &'b str)> {
+        self.jdk.as_ref()?;
+        let Target::Bundle(asked) = self.selection else {
+            return None;
+        };
+        let (root, relative) = path.rsplit_once("/Contents/")?;
+        (bundle::matches_path(root, asked)
+            && self.target.as_deref().is_none_or(|target| {
+                inventory::relative(target, root) == Some("Contents/MacOS/libjli.dylib")
+            }))
+        .then_some((root, relative))
+    }
+
+    pub(crate) async fn cpio_link(
+        &mut self,
+        source: &mut impl ReadAt,
+        path: &str,
+        offset: u64,
+        size: u64,
+        out: &mut ScanResult,
+    ) -> Result<()> {
+        let declared = self.is_executable_path(path);
+        let Some(path) = self.member_path(path) else {
+            return Ok(());
+        };
+        let Some((root, JDK_SHIM)) = self.jdk_member(&path) else {
+            return if declared {
+                Err(ScanError::Unsupported(
+                    "declared CPIO executable is a symlink",
+                ))
+            } else {
+                Ok(())
+            };
+        };
+
+        let destination = if size > 4096 {
+            Err(ScanError::Limit("CPIO launcher link exceeds 4096 bytes"))
+        } else {
+            let bytes = source.read_at(offset, size as usize).await?;
+            std::str::from_utf8(&bytes)
+                .ok()
+                .and_then(|to| bundle::resolve_symlink(&path, to))
+                .filter(|to| {
+                    inventory::relative(to, root)
+                        .and_then(|relative| relative.strip_prefix("Contents/"))
+                        .is_some_and(jdk_library)
+                })
+                .ok_or(ScanError::Unsupported(
+                    "CPIO JDK launcher link leaves its library directory",
+                ))
+        };
+        let path = path.into_owned();
+        if let Some(jdk) = &mut self.jdk {
+            if jdk.links.len() == 16 {
+                return Err(ScanError::Limit("too many CPIO JDK launcher links"));
+            }
+            jdk.links.insert(path.clone(), destination);
+        }
+        if declared {
+            self.target = Some(self.follow_jdk_link(path, out)?);
+        }
+        Ok(())
+    }
+
+    fn follow_jdk_link(&mut self, path: String, out: &mut ScanResult) -> Result<String> {
+        let Some(jdk) = &mut self.jdk else {
+            return Ok(path);
+        };
+        let Some(destination) = jdk.links.remove(&path) else {
+            return Ok(path);
+        };
+        let destination = destination?;
+        out.executable_path = Some(destination.clone());
+        out.executable_resolution = Some("archive_symlink");
+        if let Some(index) = jdk
+            .candidates
+            .iter()
+            .position(|candidate| candidate.path == destination)
+        {
+            self.primary = Some(jdk.candidates.swap_remove(index).apply(out));
+        }
+        Ok(destination)
     }
 
     fn member_path<'b>(&self, path: &'b str) -> Option<std::borrow::Cow<'b, str>> {
@@ -117,9 +209,9 @@ impl<'a> StreamBundle<'a> {
                 read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
             out.executable_path = Some(candidate.path.clone());
             let primary = candidate.apply(out);
-            if out.script_runtime.is_some() {
+            if let Some(runtime) = &mut out.script_runtime {
                 self.primary = Some(primary);
-                return Ok(false);
+                return Ok(self.standalone.attach_runtime(runtime));
             }
             primary?;
             return Ok(true);
@@ -132,15 +224,40 @@ impl<'a> StreamBundle<'a> {
             return Ok(false);
         }
 
+        if self.primary.is_none()
+            && size >= 8
+            && self
+                .jdk_member(path)
+                .is_some_and(|(_, relative)| jdk_library(relative))
+            && let Some(jdk) = &mut self.jdk
+        {
+            if jdk.candidates.len() == 16 {
+                return Err(ScanError::Limit("too many CPIO JDK launcher libraries"));
+            }
+            let candidate =
+                read_candidate(source, path, offset, size, out.diagnostic.is_some()).await?;
+            self.inventory
+                .get_or_insert_with(BinaryInventory::default)
+                .push(
+                    candidate.path.clone(),
+                    "runtime",
+                    candidate.architectures.clone(),
+                );
+            jdk.candidates.push(candidate);
+            return Ok(false);
+        }
+
         if self.target.is_none()
             && let Some(root) = bundle::selected_plist(path, self.selection)
         {
             out.bundle_path = Some(root.to_owned());
+            self.standalone = Standalone::default();
             if size > bundle::MAX_PLIST {
                 return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
             }
             let plist = source.read_at(offset, size as usize).await?;
-            let target = bundle::apply_plist(&plist, root, out)?;
+            let target = bundle::apply_plist(&plist, root, out, true)?;
+            let target = self.follow_jdk_link(target, out)?;
             out.candidate_executables.clear();
             self.alias = bundle::contents_relative_alias(&target, root);
             for candidate in std::mem::take(&mut self.candidates) {
@@ -231,6 +348,32 @@ impl<'a> StreamBundle<'a> {
         Ok(false)
     }
 
+    pub(crate) async fn standalone_file(
+        &mut self,
+        source: &mut impl ReadAt,
+        work: &DecodeBudget<'_>,
+        path: &str,
+        offset: u64,
+        size: u64,
+        diagnostic: bool,
+    ) -> Result<()> {
+        let path = match self.selection {
+            Target::Auto if self.target.is_none() => launcher::standalone_path(path),
+            Target::Executable(asked) if self.retain_earlier_runtime && self.primary.is_none() => {
+                launcher::sibling_executable_path(path, asked)
+            }
+            _ => None,
+        };
+        if size >= 8
+            && let Some(path) = path
+            && self.standalone.allow(work)
+        {
+            let data = &mut Window::new(source, offset, size)?;
+            self.standalone.inspect(data, path, diagnostic).await?;
+        }
+        Ok(())
+    }
+
     /// Enforce a limit on post-primary traversal even when it only skips
     /// non-bundle members in a sequential stream.
     pub(crate) fn check_traversal(
@@ -247,6 +390,10 @@ impl<'a> StreamBundle<'a> {
     }
 
     pub(crate) fn finish(mut self, traversal: Result<()>, out: &mut ScanResult) -> Result<()> {
+        if self.target.is_none() && matches!(self.selection, Target::Auto) && traversal.is_ok() {
+            let missing = self.missing();
+            return self.standalone.finish(out, missing);
+        }
         if self.primary.is_none()
             && traversal.is_ok()
             && let Some(candidate) = self.alias_candidate.take()
@@ -276,7 +423,7 @@ impl<'a> StreamBundle<'a> {
             }
             out.inventory = Some(inventory);
         }
-        match self.primary {
+        let primary = match self.primary {
             Some(primary) => primary,
             None => traversal.and_then(|()| {
                 if matches!(self.selection, Target::Executable(_)) && out.executable_path.is_some()
@@ -286,7 +433,8 @@ impl<'a> StreamBundle<'a> {
                     Err(self.missing())
                 }
             }),
-        }
+        };
+        bundle::confirm_executable(out, primary)
     }
 
     fn missing(&self) -> ScanError {
@@ -320,29 +468,5 @@ async fn read_candidate(
     size: u64,
     diagnostic: bool,
 ) -> Result<Candidate> {
-    let mut architectures = Vec::new();
-    let mut runtime = None;
-    let mut diagnostic = diagnostic.then(ExecutableDiagnostic::default);
-    let outcome = launcher::inspect(
-        &mut Window::new(source, offset, size)?,
-        path,
-        &mut architectures,
-        &mut runtime,
-        diagnostic.as_mut(),
-    )
-    .await;
-    if let Err(error) = &outcome
-        && inventory::stop(error)
-        && architectures.is_empty()
-    {
-        return Err(error.clone());
-    }
-    Ok(Candidate {
-        path: path.to_owned(),
-        size,
-        architectures,
-        outcome,
-        runtime,
-        diagnostic,
-    })
+    launcher::observe(&mut Window::new(source, offset, size)?, path, diagnostic).await
 }

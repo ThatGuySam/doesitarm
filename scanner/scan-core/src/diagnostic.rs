@@ -16,8 +16,8 @@ pub struct ScanDiagnostic {
 }
 
 impl ScanDiagnostic {
-    pub(crate) fn plist_source(&mut self, bundle: &str, bytes: &[u8]) {
-        self.info_plist_path = Some(format!("{bundle}/Contents/Info.plist"));
+    pub(crate) fn plist_source(&mut self, bundle: &str, plist: &str, bytes: &[u8]) {
+        self.info_plist_path = Some(format!("{bundle}/{plist}"));
         self.info_plist_size = Some(bytes.len());
         self.info_plist_encoding = Some(plist_encoding(bytes));
         self.info_plist_keys.clear();

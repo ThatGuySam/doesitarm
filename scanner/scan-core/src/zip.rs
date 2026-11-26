@@ -1,5 +1,6 @@
 use crate::{
-    ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, Window, bundle, check_range,
+    ContainerReader, ReadAt, Result, ScanError, ScanResult, Status, Target, Window, bundle,
+    check_range,
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
@@ -7,22 +8,34 @@ use crate::{
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
+const ZIP32_WRAP: u64 = 1 << 32;
 
 struct Directory {
     offset: u64,
     size: u64,
     count: u64,
     end_record: u64,
+    wrapped_offsets: bool,
 }
 
 struct Entry {
     path: String,
     offset: u64,
+    wrapped_offset: Option<u64>,
     packed: u64,
     expanded: u64,
+    crc32: u32,
     method: u16,
     flags: u16,
     mode: u16,
+}
+
+#[derive(Clone, Copy)]
+struct App<'a> {
+    info: &'a Entry,
+    name: &'a str,
+    wrapper: Option<&'a str>,
+    flat: bool,
 }
 
 impl Entry {
@@ -86,7 +99,7 @@ async fn scan_directory(
     let records = input
         .read_at(directory.offset, directory.size as usize)
         .await?;
-    let entries = read_entries(&records, directory.count)?;
+    let entries = read_entries(&records, &directory)?;
 
     if let Target::Executable(requested) = target {
         let executable = entries
@@ -103,29 +116,147 @@ async fn scan_directory(
         return primary;
     }
 
-    let app = entries
+    let mut apps: Vec<_> = entries
         .iter()
-        .filter_map(|entry| {
-            if entry.is_symlink() {
-                return None;
+        .filter(|entry| !entry.is_symlink())
+        .filter_map(|info| {
+            let path = bundle::archive_path(&info.path)?;
+            if let Some((name, wrapper, flat)) = bundle::wrapped_plist(path, target) {
+                return Some(App {
+                    info,
+                    name,
+                    wrapper: Some(wrapper),
+                    flat,
+                });
             }
-            let path = bundle::archive_path(&entry.path)?;
-            Some((entry, bundle::selected_plist(path, target)?))
+            let name = bundle::selected_plist(path, target)?;
+            Some(App {
+                info,
+                name,
+                wrapper: None,
+                flat: false,
+            })
         })
-        .min_by_key(|(_, name)| (name.matches('/').count(), *name));
-    let Some((entry, name)) = app else {
-        return scan_nested(input, &entries, directory.offset, work, target, out).await;
+        .collect();
+    apps.sort_by_key(|app| (app.name.matches('/').count(), app.name, app.flat));
+    apps.dedup_by_key(|app| app.name);
+    if apps.is_empty() {
+        return scan_without_app(input, &entries, directory.offset, work, target, out).await;
+    }
+    let limit = if work.strict() {
+        8
+    } else if work.local() {
+        usize::MAX
+    } else {
+        32
     };
+    if apps.len() > limit {
+        out.candidate_bundle_paths
+            .extend(apps.iter().take(limit).map(|app| app.name.to_owned()));
+        return Err(ScanError::Limit(
+            "too many ZIP app plists to select a product",
+        ));
+    }
+
+    let mut selected: Option<(App<'_>, ScanResult, Result<()>)> = None;
+    let mut first_failure = None;
+    for app in apps {
+        if let Some((parent, _, _)) = &selected
+            && app.wrapper == Some(parent.name)
+        {
+            continue;
+        }
+        work.check_deadline()?;
+        let mut result = out.subresult();
+        result.format = out.format;
+        let primary = read_app(input, &entries, directory.offset, work, app, &mut result).await;
+        match primary {
+            Ok(()) | Err(ScanError::Unsupported("declared executable is a script")) => {
+                if let Some((previous, _, _)) = selected {
+                    out.candidate_bundle_paths =
+                        vec![previous.name.to_owned(), app.name.to_owned()];
+                    return Err(ScanError::Unsupported(
+                        "multi-app ZIP archive; select a bundle path",
+                    ));
+                }
+                selected = Some((app, result, primary));
+            }
+            Err(ref error) if inventory::stop(error) || matches!(error, ScanError::Limit(_)) => {
+                *out = result;
+                return primary;
+            }
+            Err(_) if first_failure.is_none() => first_failure = Some((app, result, primary)),
+            Err(_) => (),
+        }
+    }
+    let (app, mut result, primary) = if let Some(selected) = selected {
+        selected
+    } else {
+        if matches!(target, Target::Auto) {
+            let mut installed = out.subresult();
+            installed.format = out.format;
+            let nested = scan_nested(
+                input,
+                &entries,
+                directory.offset,
+                work,
+                target,
+                &mut installed,
+            )
+            .await;
+            if nested.is_ok() || nested.as_ref().is_err_and(inventory::stop) {
+                *out = installed;
+                return nested;
+            }
+        }
+        // The nonempty app list always leaves a verified result or a first failure.
+        first_failure.unwrap()
+    };
+    read_runtime(input, &entries, directory.offset, work, &mut result).await;
+    let primary = read_inventory(
+        input,
+        &entries,
+        directory.offset,
+        work,
+        app,
+        &mut result,
+        primary,
+    )
+    .await;
+    *out = result;
+    primary
+}
+
+async fn read_app(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    app: App<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let App {
+        info: entry,
+        name,
+        wrapper,
+        flat,
+    } = app;
     out.bundle_path = Some(name.to_owned());
+    out.wrapper_path = wrapper.map(str::to_owned);
 
     if entry.expanded > bundle::MAX_PLIST {
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
     }
-    let plist = member(input, entry, directory.offset, work)
+    let plist = member(input, entry, heap_end, work)
         .await?
         .read_at(0, entry.expanded as usize)
         .await?;
-    let mut path = bundle::apply_plist(&plist, name, out)?;
+    let primary_path = if flat {
+        bundle::apply_flat_plist(&plist, name, out)
+    } else {
+        bundle::apply_plist(&plist, name, out, true)
+    };
+    let mut path = primary_path?;
     if !entries
         .iter()
         .any(|entry| bundle::archive_path(&entry.path) == Some(&path))
@@ -139,29 +270,64 @@ async fn scan_directory(
         path = alias;
     }
 
-    let primary = read_main(input, &entries, directory.offset, work, &path, out).await;
-    read_runtime(input, &entries, directory.offset, work, out).await;
+    let primary = read_main(input, entries, heap_end, work, &path, out).await;
+    bundle::confirm_executable(out, primary)
+}
+
+async fn read_inventory(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    app: App<'_>,
+    out: &mut ScanResult,
+    primary: Result<()>,
+) -> Result<()> {
+    let declared_resource = matches!(
+        primary,
+        Err(ScanError::NotFound(bundle::RESOURCE_NO_EXECUTABLE))
+    );
     let mut inventory = crate::BinaryInventory::default();
-    inventory.record_primary(&primary);
+    if !declared_resource {
+        inventory.record_primary(&primary);
+    }
     let mut allowance = Allowance::new(input, work);
-    for entry in &entries {
+    for entry in entries {
         let Some(relative) = bundle::archive_path(&entry.path)
             .filter(|candidate| Some(*candidate) != out.executable_path.as_deref())
-            .and_then(|candidate| inventory::relative(candidate, name))
+            .and_then(|candidate| inventory::relative(candidate, app.name))
         else {
             continue;
         };
-        let Some(role) = inventory::role(relative) else {
+        let role = if app.flat {
+            inventory::flat_role(relative)
+        } else {
+            inventory::role(relative)
+        };
+        let nested = relative
+            .strip_prefix("Wrapper/")
+            .and_then(|path| path.split_once('/'))
+            .is_some_and(|(child, _)| child.ends_with(".app"));
+        let Some(role) = role
+            .or(nested.then_some("nested_app"))
+            .or(declared_resource.then_some("resource"))
+        else {
             continue;
         };
-        if relative.ends_with('/') || entry.expanded < 8 || entry.is_symlink() {
+        if entry.is_symlink() {
+            if declared_resource {
+                inventory.partial("unresolved link in resource bundle");
+            }
+            continue;
+        }
+        if relative.ends_with('/') || entry.expanded < 8 {
             continue;
         }
         if let Err(error) = allowance.step(input, work) {
             inventory.partial(error.to_string());
             break;
         }
-        let observed = match member(input, entry, directory.offset, work).await {
+        let observed = match member(input, entry, heap_end, work).await {
             Ok(mut data) => inventory::read(&mut data, relative, role, &mut inventory).await,
             Err(error) => Err(error),
         };
@@ -173,7 +339,14 @@ async fn scan_directory(
             }
         }
     }
+    let resource_only = declared_resource && inventory.complete && inventory.binaries.is_empty();
     out.inventory = Some(inventory);
+    if resource_only {
+        out.status = Status::NoExecutable;
+        out.bundle_kind = Some("resource_only");
+        out.error = Some("This resource bundle declares no executable.".into());
+        return Ok(());
+    }
     primary
 }
 
@@ -196,7 +369,9 @@ async fn read_main(
         let mut data = member(input, executable, heap_end, work).await?;
         if !executable.is_symlink() {
             if resolved != path {
-                out.executable_resolution = Some("archive_symlink");
+                if out.executable_resolution != Some(bundle::NAME_FALLBACK) {
+                    out.executable_resolution = Some("archive_symlink");
+                }
                 out.executable_path = Some(resolved.clone());
             }
             out.executable_size = Some(executable.expanded);
@@ -251,6 +426,42 @@ async fn read_runtime(
     if let Ok(mut data) = member(input, entry, heap_end, work).await {
         let _ = macho::scan(&mut data, &mut runtime.architectures, None).await;
     }
+}
+
+async fn scan_without_app(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    target: Target<'_>,
+    out: &mut ScanResult,
+) -> Result<()> {
+    let nested = scan_nested(input, entries, heap_end, work, target, out).await;
+    let missing = match nested {
+        Err(error @ ScanError::NotFound("app Info.plist in ZIP central directory"))
+            if matches!(target, Target::Auto) =>
+        {
+            error
+        }
+        result => return result,
+    };
+    let mut standalone = launcher::Standalone::default();
+    for entry in entries {
+        if entry.mode & 0o170000 != 0o100000 || entry.mode & 0o111 == 0 || entry.expanded < 8 {
+            continue;
+        }
+        let Some(path) = launcher::standalone_path(&entry.path) else {
+            continue;
+        };
+        if !standalone.allow(work) {
+            break;
+        }
+        let mut data = member(input, entry, heap_end, work).await?;
+        standalone
+            .inspect(&mut data, path, out.diagnostic.is_some())
+            .await?;
+    }
+    standalone.finish(out, missing)
 }
 
 async fn scan_nested(
@@ -455,11 +666,21 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
         || length == u32::MAX
         || offset == u32::MAX;
     if !zip64 {
+        let offset = u64::from(offset);
+        let size = u64::from(length);
+        // Some ZIP32 writers roll over at 4 GiB instead of emitting ZIP64.
+        // Recover only when the unwrapped directory ends exactly at the EOCD.
+        let wrapped_offsets = offset + ZIP32_WRAP + size == eocd_offset;
         return Ok(Directory {
-            offset: offset as u64,
-            size: length as u64,
+            offset: if wrapped_offsets {
+                offset + ZIP32_WRAP
+            } else {
+                offset
+            },
+            size,
             count: count as u64,
             end_record: eocd_offset,
+            wrapped_offsets,
         });
     }
 
@@ -491,6 +712,7 @@ async fn read_directory(input: &mut impl ReadAt) -> Result<Directory> {
         size: le64(&record, 40),
         count: le64(&record, 32),
         end_record: record_at,
+        wrapped_offsets: false,
     })
 }
 
@@ -522,7 +744,8 @@ fn appended_end_record(tail: &[u8], tail_at: u64) -> Option<usize> {
     })
 }
 
-fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
+fn read_entries(mut bytes: &[u8], directory: &Directory) -> Result<Vec<Entry>> {
+    let count = directory.count;
     if count > (bytes.len() / 46) as u64 {
         return Err(ScanError::Invalid("ZIP central directory entry count"));
     }
@@ -554,6 +777,10 @@ fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
             let mut expanded = le32(bytes, 24) as u64;
             let mut packed = le32(bytes, 20) as u64;
             let mut offset = le32(bytes, 42) as u64;
+            let wrapped_offset = (directory.wrapped_offsets
+                && offset != u32::MAX as u64
+                && offset + ZIP32_WRAP < directory.offset)
+                .then_some(offset + ZIP32_WRAP);
             let mut disk = le16(bytes, 34) as u32;
             if [expanded, packed, offset].contains(&(u32::MAX as u64)) || disk == u16::MAX as u32 {
                 let mut ext = zip64_extra(extra)?;
@@ -579,8 +806,10 @@ fn read_entries(mut bytes: &[u8], count: u64) -> Result<Vec<Entry>> {
             entries.push(Entry {
                 path: path.to_owned(),
                 offset,
+                wrapped_offset,
                 packed,
                 expanded,
+                crc32: le32(bytes, 16),
                 method,
                 flags,
                 mode: if bytes[5] == 3 { le16(bytes, 40) } else { 0 },
@@ -626,27 +855,13 @@ async fn member<'a, S: ReadAt>(
         return Err(ScanError::Invalid("ZIP stored member lengths differ"));
     }
 
-    check_range(heap_end, entry.offset, 30)?;
-    let header = input.read_at(entry.offset, 30).await?;
-    let name_len = le16(&header, 26) as usize;
-    if &header[..4] != b"PK\x03\x04"
-        || le16(&header, 8) != entry.method
-        || le16(&header, 6) != entry.flags
-        || name_len != entry.path.len()
-    {
-        return Err(ScanError::Invalid(
-            "ZIP local header differs from directory",
-        ));
-    }
-
-    let name_at = entry.offset + 30;
-    let extra_len = le16(&header, 28) as u64;
-    check_range(heap_end, name_at, name_len as u64 + extra_len)?;
-    let offset = name_at + name_len as u64 + extra_len;
-    check_range(heap_end, offset, entry.packed)?;
-    if input.read_at(name_at, name_len).await? != entry.path.as_bytes() {
-        return Err(ScanError::Invalid("ZIP local name differs from directory"));
-    }
+    let direct = local_data_offset(input, entry, heap_end, entry.offset).await;
+    let offset = match (direct, entry.wrapped_offset) {
+        (Err(ScanError::Invalid(_)), Some(wrapped)) => {
+            local_data_offset(input, entry, heap_end, wrapped).await?
+        }
+        (result, _) => result?,
+    };
     if matches!(codec, Some(Codec::Lzma)) {
         const ZIP_LZMA_HEADER: u64 = 9;
         check_range(entry.packed, 0, ZIP_LZMA_HEADER)?;
@@ -674,6 +889,42 @@ async fn member<'a, S: ReadAt>(
         Some(codec) => Member::Compressed(Forward::new(source, entry.expanded, codec, work)?),
         None => Member::Stored(source),
     })
+}
+
+async fn local_data_offset(
+    input: &mut impl ReadAt,
+    entry: &Entry,
+    heap_end: u64,
+    header_at: u64,
+) -> Result<u64> {
+    // The directory already fixes the expected name length. Fetch the
+    // adjacent header and name together and check both before using the offset.
+    let local_len = 30 + entry.path.len();
+    check_range(heap_end, header_at, local_len as u64)?;
+    let local = input.read_at(header_at, local_len).await?;
+    let (header, name) = local.split_at(30);
+    let name_len = le16(header, 26) as usize;
+    if &header[..4] != b"PK\x03\x04"
+        || le16(header, 8) != entry.method
+        || le16(header, 6) != entry.flags
+        || name_len != entry.path.len()
+        || (entry.wrapped_offset.is_some()
+            && entry.flags & 8 == 0
+            && le32(header, 14) != entry.crc32)
+    {
+        return Err(ScanError::Invalid(
+            "ZIP local header differs from directory",
+        ));
+    }
+    let extra_at = header_at + local_len as u64;
+    let extra_len = le16(header, 28) as u64;
+    check_range(heap_end, extra_at, extra_len)?;
+    let offset = extra_at + extra_len;
+    check_range(heap_end, offset, entry.packed)?;
+    if name != entry.path.as_bytes() {
+        return Err(ScanError::Invalid("ZIP local name differs from directory"));
+    }
+    Ok(offset)
 }
 
 enum Member<'a, S> {

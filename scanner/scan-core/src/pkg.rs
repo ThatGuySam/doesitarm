@@ -8,7 +8,7 @@ use crate::{
     stream_bundle::StreamBundle,
 };
 use roxmltree::{Document, Node, ParsingOptions};
-use std::rc::Rc;
+use std::{future::Future, pin::Pin, rc::Rc};
 
 const MAX_TOC: u64 = 8 * 1024 * 1024;
 const MAX_METADATA: u64 = 2 * 1024 * 1024;
@@ -31,11 +31,45 @@ struct Segment {
     components: Vec<Rc<str>>,
 }
 
+struct ScriptArchive {
+    offset: u64,
+    size: u64,
+    path: String,
+    parents: Vec<String>,
+}
+
 pub(crate) async fn scan(
     input: &mut ContainerReader<'_>,
     work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
+) -> Result<()> {
+    let mut input = PackageReader(input);
+    let mut scripts = Vec::new();
+    let primary = scan_packages(&mut input, work, selection, out, Some(&mut scripts)).await;
+    if !matches!(primary, Err(ScanError::NotFound(_))) || out.bundle_path.is_some() {
+        return primary;
+    }
+    for archive in scripts {
+        let mut result = out.subresult();
+        result.format = out.format;
+        result.installer.clone_from(&out.installer);
+        result.nested_artifacts = archive.parents.clone();
+        let attempt = scan_script_archive(&mut input, work, selection, &mut result, archive).await;
+        if attempt.is_ok() || attempt.as_ref().is_err_and(crate::inventory::stop) {
+            *out = result;
+            return attempt;
+        }
+    }
+    primary
+}
+
+async fn scan_packages(
+    input: &mut PackageReader<'_>,
+    work: &DecodeBudget<'_>,
+    selection: Target<'_>,
+    out: &mut ScanResult,
+    mut scripts: Option<&mut Vec<ScriptArchive>>,
 ) -> Result<()> {
     let mut pending = vec![Segment {
         size: input.size(),
@@ -66,6 +100,7 @@ pub(crate) async fn scan(
             work,
             selection,
             &mut candidate,
+            scripts.as_deref_mut(),
         )
         .await
         {
@@ -102,6 +137,7 @@ async fn inspect_xar(
     work: &DecodeBudget<'_>,
     selection: Target<'_>,
     out: &mut ScanResult,
+    mut script_archives: Option<&mut Vec<ScriptArchive>>,
 ) -> Result<()> {
     let (start, size) = (segment.offset, segment.size);
     check_range(size, 0, 28)?;
@@ -131,13 +167,18 @@ async fn inspect_xar(
     let mut package_infos = Vec::new();
     let mut payloads = Vec::new();
     let mut boms = Vec::new();
+    let mut scripts = Vec::new();
     let mut embedded = Vec::new();
     for file in root.descendants().filter(|node| node.has_tag_name("file")) {
         let Some(name) = field(file, "name") else {
             continue;
         };
         let is_pkg = package_name(name);
-        if !matches!(name, "Distribution" | "PackageInfo" | "Payload" | "Bom") && !is_pkg {
+        if !matches!(
+            name,
+            "Distribution" | "PackageInfo" | "Payload" | "Bom" | "Scripts"
+        ) && !is_pkg
+        {
             continue;
         }
         if field(file, "type") != Some("file") {
@@ -170,6 +211,7 @@ async fn inspect_xar(
             "PackageInfo" => package_infos.push((file.parent(), member)),
             "Payload" => payloads.push((file.parent(), member)),
             "Bom" => boms.push((file.parent(), member)),
+            "Scripts" => scripts.push((file.parent(), member)),
             _ if is_pkg => embedded.push(member),
             _ => {}
         }
@@ -245,7 +287,34 @@ async fn inspect_xar(
             .iter()
             .find(|(container, _)| *container == parent)
             .map(|(_, member)| member);
-        match scan_payload(input, &member, bom, work, selection, &mut result).await {
+        let outcome = scan_payload(input, &member, bom, work, selection, &mut result).await;
+        if matches!(outcome, Err(ScanError::NotFound(_)))
+            && result.bundle_path.is_none()
+            && result.executable_path.is_none()
+            && result
+                .installer
+                .as_ref()
+                .is_some_and(|meta| meta.script_entries.iter().any(|path| path == "postinstall"))
+            && let Some(archives) = &mut script_archives
+            && let Some((_, script)) = scripts.iter().find(|(container, _)| *container == parent)
+            && script.encoding == "application/octet-stream"
+            && script.packed == script.expanded
+        {
+            let path = parent
+                .and_then(|parent| field(parent, "name"))
+                .and_then(bundle::archive_path)
+                .map_or_else(
+                    || "Scripts".to_owned(),
+                    |parent| format!("{parent}/Scripts"),
+                );
+            archives.push(ScriptArchive {
+                offset: script.offset,
+                size: script.packed,
+                path,
+                parents: result.nested_artifacts.clone(),
+            });
+        }
+        match outcome {
             outcome @ (Ok(())
             | Err(ScanError::Budget | ScanError::WorkLimit(_) | ScanError::Source(_))) => {
                 *out = result;
@@ -258,6 +327,88 @@ async fn inspect_xar(
     let (error, result) = first_miss.unwrap();
     *out = result;
     Err(error)
+}
+
+async fn scan_script_archive(
+    input: &mut PackageReader<'_>,
+    work: &DecodeBudget<'_>,
+    selection: Target<'_>,
+    out: &mut ScanResult,
+    archive: ScriptArchive,
+) -> Result<()> {
+    let missing = ScanError::NotFound("single application package in installer Scripts");
+    let mut source = Window::new(input, archive.offset, archive.size)?;
+    if source.size() < 2 || source.read_at(0, 2).await? != b"\x1f\x8b" {
+        return Err(missing);
+    }
+    let mut decoded = Forward::new(source, work.stream_limit(), Codec::Gzip, work)?;
+    out.nested_artifacts.push(archive.path.clone());
+    let (path, offset, size) = cpio::script_package(&mut decoded, work)
+        .await?
+        .ok_or(missing)?;
+    // Keep only the decoder window in memory. The inner XAR can visit its
+    // metadata out of order, so a backward read restarts the gzip decoder.
+    let mut decoded = ReplayedScripts(decoded);
+    let mut package = Window::new(&mut decoded, offset, size)?;
+    *out.nested_artifacts.last_mut().unwrap() = format!("{}/{path}", archive.path);
+    scan_packages(&mut PackageReader(&mut package), work, selection, out, None).await
+}
+
+struct ReplayedScripts<'a, S>(Forward<'a, S>);
+
+impl<S: ReadAt> ReadAt for ReplayedScripts<'_, S> {
+    fn size(&self) -> u64 {
+        self.0.size()
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.0.remaining_budget()
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        self.0.rewind_for(offset)?;
+        self.0.read_at(offset, len).await
+    }
+}
+
+// Share the package parser between direct, nested and replayed script readers.
+// The host interface stays generic and retains the same byte meter.
+struct PackageReader<'a>(&'a mut dyn ErasedReadAt);
+
+type RangeRead<'a> = Pin<Box<dyn Future<Output = Result<Vec<u8>>> + 'a>>;
+
+trait ErasedReadAt {
+    fn source_size(&self) -> u64;
+    fn source_budget(&self) -> u64;
+    fn read_boxed(&mut self, offset: u64, len: usize) -> RangeRead<'_>;
+}
+
+impl<S: ReadAt> ErasedReadAt for S {
+    fn source_size(&self) -> u64 {
+        self.size()
+    }
+
+    fn source_budget(&self) -> u64 {
+        self.remaining_budget()
+    }
+
+    fn read_boxed(&mut self, offset: u64, len: usize) -> RangeRead<'_> {
+        Box::pin(self.read_at(offset, len))
+    }
+}
+
+impl ReadAt for PackageReader<'_> {
+    fn size(&self) -> u64 {
+        self.0.source_size()
+    }
+
+    fn remaining_budget(&self) -> u64 {
+        self.0.source_budget()
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        self.0.read_boxed(offset, len).await
+    }
 }
 
 pub(crate) fn package_name(path: &str) -> bool {
@@ -283,7 +434,14 @@ pub(crate) async fn scan_legacy(
     if is_cpio {
         return cpio::scan_with(&mut source, work, StreamBundle::new(target), out).await;
     }
-    crate::tar::scan(&mut source, work, target, out).await
+    crate::tar::scan(
+        &mut source,
+        work,
+        target,
+        out,
+        crate::tar::PriorRuntime::Ignore,
+    )
+    .await
 }
 
 struct Replay<S> {
@@ -344,13 +502,12 @@ async fn scan_payload(
         .and_then(|meta| meta.install_location.as_deref())
         .and_then(bundle_mount)
         .map(str::to_owned);
-    let selected_product = if mount.is_none() && matches!(selection, Target::Auto) {
-        install
-            .and_then(|meta| product_bundle(&meta.payload_bundles))
-            .map(str::to_owned)
-    } else {
-        None
-    };
+    let selected_product = match (selection, mount.as_deref()) {
+        (Target::Auto, Some(root)) if !root.ends_with(".app") => Some(root),
+        (Target::Auto, None) => install.and_then(|meta| product_bundle(&meta.payload_bundles)),
+        _ => None,
+    }
+    .map(str::to_owned);
     let selection = selected_product
         .as_deref()
         .map_or(selection, Target::Bundle);
@@ -481,7 +638,7 @@ async fn recover_target(
     };
     let root = bundle::selected_plist(path, selection)?;
     let mut bundle = out.subresult();
-    let target = bundle::apply_plist(&bytes, root, &mut bundle).ok()?;
+    let target = bundle::apply_plist(&bytes, root, &mut bundle, true).ok()?;
     bundle.installer = out.installer.take();
     bundle.format = out.format;
     bundle.nested_artifacts = std::mem::take(&mut out.nested_artifacts);
@@ -523,6 +680,13 @@ impl<S: ReadAt> ReadAt for Preview<S> {
 }
 
 fn product_bundle(bundles: &[String]) -> Option<&str> {
+    let mut applications = bundles.iter().filter(|path| {
+        path.strip_prefix("Applications/")
+            .is_some_and(|name| name.ends_with(".app") && !name.contains('/'))
+    });
+    if let Some(app) = applications.next() {
+        return applications.next().is_none().then_some(app);
+    }
     if bundles
         .iter()
         .any(|path| bundle::installed_bundle_kind(path) == Some("app"))
@@ -541,7 +705,7 @@ fn product_bundle(bundles: &[String]) -> Option<&str> {
 
 fn bundle_mount(install_location: &str) -> Option<&str> {
     let path = install_location.strip_prefix('/')?.trim_end_matches('/');
-    bundle::archive_path(path).filter(|path| path.ends_with(".app"))
+    bundle::archive_path(path).filter(|path| bundle::installed_bundle_kind(path).is_some())
 }
 
 async fn read_metadata(
@@ -611,6 +775,11 @@ async fn read_metadata(
             .map(str::to_owned);
         meta.payload_bundles = root
             .children()
+            .chain(
+                named_child(root, "bundle-version")
+                    .into_iter()
+                    .flat_map(|version| version.children()),
+            )
             .filter(|node| node.has_tag_name("bundle"))
             .filter_map(|node| bundle::archive_path(node.attribute("path")?))
             .filter(|path| path.len() <= 4096)

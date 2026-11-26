@@ -3,7 +3,7 @@ use crate::{
     ContainerReader, ReadAt, Result, ScanError, ScanResult, Target, bundle, check_range,
     decode::DecodeBudget,
     inventory::{self, Allowance},
-    le16, le32, le64, nested, pkg,
+    le16, le32, le64, nested, pkg, udif_codec,
 };
 use std::{
     collections::{HashSet, VecDeque},
@@ -21,6 +21,7 @@ const NODE: u16 = 3;
 const OMAP: u16 = 11;
 const VOLUME: u16 = 13;
 const INODE: u8 = 3;
+const XATTR: u8 = 4;
 const EXTENT: u8 = 8;
 const DREC: u8 = 9;
 const ROOT_DIRECTORY: u64 = 2;
@@ -29,6 +30,8 @@ const DIRECTORY: u16 = 4;
 const PHYSICAL: u32 = 0x4000_0000;
 const MAX_TREE_NODES: usize = 4096;
 const MAX_TREE_RECORDS: usize = 256 * 1024;
+const LZVN_CHUNK: u64 = 64 * 1024;
+const BAD_FORK: ScanError = ScanError::Invalid("APFS decmpfs resource fork");
 
 struct Device<'a, S> {
     disk: &'a mut S,
@@ -486,7 +489,24 @@ impl Volume {
         if inodes.len() != 1 {
             return Err(BAD_RECORD);
         }
-        let (data_id, size) = inodes.pop().unwrap();
+        let (data_id, size, stored_size) = match inodes.pop().unwrap() {
+            InodeData::Extents { data_id, size } => (data_id, size, None),
+            InodeData::Compressed => {
+                let attributes = self.entries(device, (id, XATTR), compression_attr).await?;
+                let mut size = None;
+                let mut fork = None;
+                for attribute in attributes.into_iter().flatten() {
+                    match attribute {
+                        CompressionAttr::Header(value) if size.is_none() => size = Some(value),
+                        CompressionAttr::Fork(id, len) if fork.is_none() => fork = Some((id, len)),
+                        _ => return Err(BAD_FORK),
+                    }
+                }
+                let size = size.ok_or(BAD_FORK)?;
+                let (data_id, stored_size) = fork.ok_or(BAD_FORK)?;
+                (data_id, size, Some(stored_size))
+            }
+        };
         let block_size = device.block_size as u64;
         let disk_size = block_size * device.blocks;
         let mut extents = self
@@ -522,7 +542,11 @@ impl Volume {
         {
             return Err(BAD_RECORD);
         }
-        Ok(FileData { size, extents })
+        Ok(FileData {
+            size,
+            extents,
+            stored_size,
+        })
     }
 }
 
@@ -534,15 +558,21 @@ fn file_key(key: &[u8]) -> Result<(u64, u8)> {
     Ok((encoded & 0x0fff_ffff_ffff_ffff, (encoded >> 60) as u8))
 }
 
-fn inode(bytes: &[u8]) -> Result<(u64, u64)> {
+enum InodeData {
+    Extents { data_id: u64, size: u64 },
+    Compressed,
+}
+
+fn inode(bytes: &[u8]) -> Result<InodeData> {
     if bytes.len() < 92 || le16(bytes, 80) & 0o170000 != 0o100000 {
         return Err(BAD_RECORD);
     }
     if le32(bytes, 68) & 0x20 != 0 {
-        return Err(ScanError::Unsupported("APFS decmpfs-compressed file"));
+        return Ok(InodeData::Compressed);
     }
+    let data_id = le64(bytes, 8);
     if bytes.len() == 92 {
-        return Ok((le64(bytes, 8), 0));
+        return Ok(InodeData::Extents { data_id, size: 0 });
     }
     if bytes.len() < 96 {
         return Err(BAD_RECORD);
@@ -558,11 +588,50 @@ fn inode(bytes: &[u8]) -> Result<(u64, u64)> {
             if data.len() != 40 {
                 return Err(BAD_RECORD);
             }
-            return Ok((le64(bytes, 8), le64(data, 0)));
+            return Ok(InodeData::Extents {
+                data_id,
+                size: le64(data, 0),
+            });
         }
         offset += (len + 7) & !7;
     }
-    Ok((le64(bytes, 8), 0))
+    Ok(InodeData::Extents { data_id, size: 0 })
+}
+
+enum CompressionAttr {
+    Header(u64),
+    Fork(u64, u64),
+}
+
+fn compression_attr(key: &[u8], value: &[u8]) -> Result<Option<CompressionAttr>> {
+    let name = key.get(10..).ok_or(BAD_RECORD)?;
+    if le16(key, 8) as usize != name.len() {
+        return Err(BAD_RECORD);
+    }
+    if !matches!(name, b"com.apple.decmpfs\0" | b"com.apple.ResourceFork\0") {
+        return Ok(None);
+    }
+    let data = value.get(4..).ok_or(BAD_FORK)?;
+    if le16(value, 2) as usize != data.len() {
+        return Err(BAD_FORK);
+    }
+    let storage = le16(value, 0) & 3;
+    if name == b"com.apple.decmpfs\0" {
+        if storage != 2 || data.len() < 16 || !data.starts_with(b"fpmc") {
+            return Err(BAD_FORK);
+        }
+        if le32(data, 4) != 8 {
+            return Err(ScanError::Unsupported("APFS decmpfs compression type"));
+        }
+        if data.len() != 16 {
+            return Err(BAD_FORK);
+        }
+        Ok(Some(CompressionAttr::Header(le64(data, 8))))
+    } else if storage == 1 && data.len() == 48 {
+        Ok(Some(CompressionAttr::Fork(le64(data, 0), le64(data, 8))))
+    } else {
+        Err(BAD_FORK)
+    }
 }
 
 struct Entry {
@@ -579,11 +648,14 @@ struct Extent {
 struct FileData {
     size: u64,
     extents: Vec<Extent>,
+    stored_size: Option<u64>,
 }
 
 struct ApfsFile<'a, S> {
     data: FileData,
     disk: &'a mut S,
+    work: &'a DecodeBudget<'a>,
+    cached_chunk: Option<(u64, Vec<u8>)>,
 }
 
 impl<S: ReadAt> ReadAt for ApfsFile<'_, S> {
@@ -597,6 +669,81 @@ impl<S: ReadAt> ReadAt for ApfsFile<'_, S> {
 
     async fn read_at(&mut self, mut offset: u64, len: usize) -> Result<Vec<u8>> {
         check_range(self.data.size, offset, len as u64)?;
+        let Some(stored_size) = self.data.stored_size else {
+            return self.read_extents(self.data.size, offset, len).await;
+        };
+        let mut result = Vec::with_capacity(len);
+        while result.len() < len {
+            self.work.check_deadline()?;
+            let index = offset / LZVN_CHUNK;
+            if self.cached_chunk.as_ref().is_none_or(|(i, _)| index != *i) {
+                self.cached_chunk = Some((index, self.read_lzvn_chunk(stored_size, index).await?));
+            }
+            let chunk = &self.cached_chunk.as_ref().unwrap().1;
+            let within = (offset % LZVN_CHUNK) as usize;
+            let count = (len - result.len()).min(chunk.len() - within);
+            result.extend_from_slice(&chunk[within..within + count]);
+            offset += count as u64;
+        }
+        Ok(result)
+    }
+}
+
+impl<S: ReadAt> ApfsFile<'_, S> {
+    fn new<'a>(device: &'a mut Device<'_, S>, data: FileData) -> ApfsFile<'a, S> {
+        ApfsFile {
+            data,
+            disk: device.disk,
+            work: device.work,
+            cached_chunk: None,
+        }
+    }
+
+    async fn read_lzvn_chunk(&mut self, stored_size: u64, index: u64) -> Result<Vec<u8>> {
+        let chunks = self.data.size.div_ceil(LZVN_CHUNK);
+        let table_size = (chunks + 1) * 4;
+        if table_size > stored_size || stored_size > u32::MAX as u64 {
+            return Err(BAD_FORK);
+        }
+        let offsets = self.read_extents(stored_size, index * 4, 8).await?;
+        let start = le32(&offsets, 0) as u64;
+        let end = le32(&offsets, 4) as u64;
+        let size = (self.data.size - index * LZVN_CHUNK).min(LZVN_CHUNK) as usize;
+        if start < table_size
+            || (index == 0 && start != table_size)
+            || end <= start
+            || end > stored_size
+            || end - start > LZVN_CHUNK + 1
+        {
+            return Err(BAD_FORK);
+        }
+        let packed = self
+            .read_extents(stored_size, start, (end - start) as usize)
+            .await?;
+        if packed[0] == 0x06 {
+            if packed.len() != 1 + size {
+                return Err(BAD_FORK);
+            }
+            self.work.charge(size as u64)?;
+            return Ok(packed[1..].to_vec());
+        }
+
+        // APFS stores an LZVN payload without the standard block wrapper.
+        let mut framed = Vec::with_capacity(packed.len() + 16);
+        framed.extend_from_slice(b"bvxn");
+        framed.extend_from_slice(&(size as u32).to_le_bytes());
+        framed.extend_from_slice(&(packed.len() as u32).to_le_bytes());
+        framed.extend_from_slice(&packed);
+        framed.extend_from_slice(b"bvx$");
+        udif_codec::decode(udif_codec::LZFSE, &framed, size, self.work).map_err(|error| match error
+        {
+            ScanError::Invalid(_) => BAD_FORK,
+            error => error,
+        })
+    }
+
+    async fn read_extents(&mut self, size: u64, mut offset: u64, len: usize) -> Result<Vec<u8>> {
+        check_range(size, offset, len as u64)?;
         let mut result = Vec::with_capacity(len);
         while result.len() < len {
             let index = self
@@ -672,6 +819,7 @@ pub(crate) async fn scan(
     }
 
     let mut unsupported = None;
+    let mut volumes_without_executable = Vec::new();
     for id in ids {
         let address = map.get(&mut device, id).await?;
         let volume = match Volume::load(&mut device, address).await {
@@ -688,7 +836,10 @@ pub(crate) async fn scan(
                 .await
             {
                 Ok(item) => item,
-                Err(ScanError::NotFound(_)) => continue,
+                Err(ScanError::NotFound(_)) => {
+                    volumes_without_executable.push(volume);
+                    continue;
+                }
                 Err(error) => return Err(error),
             };
             out.executable_path = Some(path.to_owned());
@@ -727,18 +878,14 @@ pub(crate) async fn scan(
             return read_app(&mut device, &volume, app.id, &app.name, out).await;
         }
 
-        let mut packages = root.into_iter().filter(|entry| {
-            matches!(entry.kind, FILE | DIRECTORY)
-                && !entry.name.starts_with('.')
-                && pkg::package_name(&entry.name)
-        });
-        if let Some(entry) = packages.next() {
-            if let Some(other) = packages.next() {
-                out.nested_artifacts.extend([entry.name, other.name]);
-                return Err(ScanError::Unsupported(
-                    "multiple nested PKGs in APFS volume",
-                ));
-            }
+        if let Some(entry) = root_package(root, out)? {
+            return read_package(&mut device, &volume, entry, work, target, out).await;
+        }
+    }
+    // Search installed paths on every volume before opening a package.
+    for volume in volumes_without_executable {
+        let root = volume.children(&mut device, ROOT_DIRECTORY).await?;
+        if let Some(entry) = root_package(root, out)? {
             return read_package(&mut device, &volume, entry, work, target, out).await;
         }
     }
@@ -748,6 +895,23 @@ pub(crate) async fn scan(
         Target::Executable(_) => "declared executable in APFS volume",
     };
     Err(unsupported.unwrap_or(ScanError::NotFound(missing)))
+}
+
+fn root_package(root: Vec<Entry>, out: &mut ScanResult) -> Result<Option<Entry>> {
+    let mut packages = root.into_iter().filter(|entry| {
+        matches!(entry.kind, FILE | DIRECTORY)
+            && !entry.name.starts_with('.')
+            && pkg::package_name(&entry.name)
+    });
+    let first = packages.next();
+    if let (Some(first), Some(other)) = (&first, packages.next()) {
+        out.nested_artifacts
+            .extend([first.name.clone(), other.name]);
+        return Err(ScanError::Unsupported(
+            "multiple nested PKGs in APFS volume",
+        ));
+    }
+    Ok(first)
 }
 
 async fn read_app(
@@ -765,18 +929,33 @@ async fn read_app(
         return Err(ScanError::Limit("bundle Info.plist exceeds 2 MiB"));
     }
     let len = data.size as usize;
-    let plist = ApfsFile {
-        data,
-        disk: device.disk,
-    }
-    .read_at(0, len)
-    .await?;
-    let path = bundle::apply_plist(&plist, app_path, out)?;
+    let plist = ApfsFile::new(device, data).read_at(0, len).await?;
+    let path = bundle::apply_plist(&plist, app_path, out, true)?;
     let relative = &path[app_path.len() + "/Contents/".len()..];
-    let primary = match volume.find_path(device, contents.id, relative, FILE).await {
+    let item = match volume.find_path(device, contents.id, relative, FILE).await {
+        Err(error @ ScanError::NotFound(_)) => match bundle::contents_relative_executable(relative)
+        {
+            Some(alias) => match volume.find_path(device, contents.id, alias, FILE).await {
+                Ok(item) => {
+                    out.executable_path = Some(format!("{app_path}/Contents/{alias}"));
+                    out.executable_resolution = Some("contents_relative");
+                    Ok(item)
+                }
+                Err(error) => Err(error),
+            },
+            None => Err(error),
+        },
+        result => result,
+    };
+    let primary = match item {
         Ok(item) => read_executable(device, volume, item, out).await,
         Err(error) => Err(error),
     };
+    let primary = bundle::confirm_executable(out, primary);
+    let inspected_path = out
+        .executable_path
+        .as_deref()
+        .and_then(|path| inventory::relative(path, app_path));
     let mut inventory = crate::BinaryInventory::default();
     inventory.record_primary(&primary);
     let work = device.work;
@@ -811,7 +990,7 @@ async fn read_app(
                 pending.push((item.id, path));
                 continue;
             }
-            if item.kind != FILE || path.strip_prefix("Contents/") == Some(relative) {
+            if item.kind != FILE || Some(path.as_str()) == inspected_path {
                 continue;
             }
             if let Err(error) = allowance.step(device.disk, work) {
@@ -821,10 +1000,7 @@ async fn read_app(
             let observed = match volume.file(device, item.id).await {
                 Ok(data) => {
                     inventory::read(
-                        &mut ApfsFile {
-                            data,
-                            disk: device.disk,
-                        },
+                        &mut ApfsFile::new(device, data),
                         &path,
                         role,
                         &mut inventory,
@@ -853,11 +1029,7 @@ async fn read_executable(
 ) -> Result<()> {
     let data = volume.file(device, item.id).await?;
     out.executable_size = Some(data.size);
-    out.scan_macho(&mut ApfsFile {
-        data,
-        disk: device.disk,
-    })
-    .await
+    out.scan_macho(&mut ApfsFile::new(device, data)).await
 }
 
 async fn read_package(
@@ -879,12 +1051,8 @@ async fn read_package(
         (file, name, nested::Kind::LegacyPackage)
     };
     let data = volume.file(device, file.id).await?;
-    let mut source = ApfsFile {
-        data,
-        disk: device.disk,
-    };
     nested::package(
-        &mut ContainerReader::new(&mut source),
+        &mut ContainerReader::new(&mut ApfsFile::new(device, data)),
         kind,
         &name,
         work,
