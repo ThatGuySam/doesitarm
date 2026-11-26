@@ -4,8 +4,8 @@
   // production cutover. Netlify remains configured as the rollback origin.
   //
   // @astrojs/cloudflare (v13, on @cloudflare/vite-plugin) reads THIS file at
-  // build time, so it must NOT declare `main`/`assets` (the adapter generates
-  // those into dist/server/wrangler.json). It carries what the build, prerender,
+  // build time. The adapter writes the bundled entrypoint and asset settings
+  // into dist/server/wrangler.json. This file carries what the build, prerender,
   // and runtime need:
   //   - nodejs_compat: the adapter's default flags are empty, which broke the
   //     build-time prerender on `node:timers`. With it, Workers also maps the
@@ -16,12 +16,17 @@
   //     omitted — it is a build-time-only secret for list generation.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "doesitarm-cf-preview",
+  "main": "./workers/frontend/index.js",
   "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
   "compatibility_date": "2026-04-15",
   "compatibility_flags": ["nodejs_compat"],
 
   "kv_namespaces": [
     { "binding": "SESSION", "id": "1d2d917cf9b44c70957c30171ae915f2" }
+  ],
+
+  "services": [
+    { "binding": "SCANNER_V3", "service": "doesitarm-scanner-preview" }
   ],
 
   "vars": {
@@ -44,5 +49,10 @@
     { "pattern": "doesitarm.com/*", "zone_name": "doesitarm.com" }
   ],
 
-  "observability": { "enabled": true }
+  // URL scans may include signed download URLs in the query string.
+  "observability": {
+    "enabled": true,
+    "logs": { "invocation_logs": false },
+    "traces": { "enabled": false }
+  }
 }
