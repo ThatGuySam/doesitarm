@@ -572,6 +572,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [GoodTask](https://goodtaskapp.com/mac/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344377/5114)
 * [Google Backup and Sync](https://www.google.com/drive/download/) - ✳️ Yes, works via Rosetta 2 as of v3.54 - [Release Notes](https://support.google.com/a/answer/7573023?hl=en) [Verification](https://github.com/ThatGuySam/doesitarm/issues/564#issue-807949490)
 * [Google Drive for desktop](https://support.google.com/drive/answer/7329379#zippy=%2Cdownload-install-google-drive-for-desktop) - ✅ Yes, Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/589#issuecomment-896177858)
+* [Gramfix](https://gramfix.app/) - ✅ Yes, Full Native Apple Silicon Support as of v1.0.4 - [Download](https://gramfix.app/downloads/Gramfix-1.0.4-arm64.dmg)
 * [Grapefruit for Mac](https://haveagrapefruit.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/grapefruit)
 * [Harvest for Mac](https://www.getharvest.com/apps/mac) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/604#issue-835321721)
 * [HCL Notes](https://www.hcltechsw.com/products/nd) - 🔶 Unknown, more info needed - [Discussion](https://domino-ideas.hcltechsw.com/ideas/NTS-I-1496)
