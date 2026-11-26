@@ -51,4 +51,6 @@ Not merged: `scanner-ui`, `scanner-bigfolder`, `scanner-edge`, `scanner-harden`,
 
 ## Deploy
 
-See the section below, filled in after deploy.
+Worker `doesitarm-scanner-preview`, version ID `c1f79147-f300-4cd6-9ba6-5bcbba929035`, https://doesitarm-scanner-preview.samcarlton.workers.dev. Deployed from commit 0fde263 (`scanner-build.json` commit equals it; this notes commit follows it).
+
+Live checks: page 200; `/pkg/scan_wasm_bg.wasm` is `application/wasm` with zstd, br and gzip encodings; Firefox 161.0 DMG scan complete (x86_64 + arm64, Firefox.app); Firefox 161.0 Windows setup EXE scan complete as `windows` (7z SFX installer, payload not inspectable); `http://127.0.0.1/...`, `http://localhost`, `https://127.0.0.1` refused with 400 "valid public HTTPS download URL" (403 only when the browser client header is absent); `/api/resolve` on https://rectangleapp.com/ resolved to download.rectangleapp.com/Rectangle2.0.5.dmg (verified_range).
