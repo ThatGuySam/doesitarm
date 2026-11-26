@@ -491,3 +491,5 @@ html:not([data-level="minimal"]) .sum-verdict { display: none; }
 html[data-level="more"] .outcome-strip, html[data-level="research"] .outcome-strip { display: block; }
 html:not([data-level="research"]) .result-arch code { display: none; }
 html[data-level="minimal"] .result-verdict { display: none; }
+html:not([data-level="research"]) .result { grid-template-columns: minmax(0, 1fr) auto; }
+.result-details > summary { display: list-item; }
