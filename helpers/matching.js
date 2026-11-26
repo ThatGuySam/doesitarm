@@ -1,13 +1,22 @@
 function escapeRegex ( string ) {
-    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+    // No `-` here: the pattern uses the `u` flag, where `\-` outside a class is invalid.
+    return string.replace(/[\/\\^$*+?.()|[\]{}]/g, '\\$&')
 }
 
-// Match whole word
-export function matchesWholeWord (needle, haystack) {
-    // console.log('haystack', haystack)
-    // console.trace('needle', needle)
+const wordCharacter = /[\p{L}\p{N}_]/u
 
-    return new RegExp('\\b' + escapeRegex( needle ) + '\\b').test(haystack)
+// Match whole word.
+// The needle must not be glued to a letter or digit in front of it, so `.NET`
+// does not match inside `Battle.net`. A needle ending in a letter or digit must
+// not be glued to one after it either. Trailing punctuation such as `++` stays
+// free, so `Xournal++` still matches in `Xournal++Portable`.
+export function matchesWholeWord (needle, haystack) {
+    if ( needle.length === 0 ) return false
+
+    const endsInWordCharacter = wordCharacter.test( needle.at( -1 ) )
+    const pattern = '(?<![\\p{L}\\p{N}_])' + escapeRegex( needle ) + ( endsInWordCharacter ? '(?![\\p{L}\\p{N}_])' : '' )
+
+    return new RegExp( pattern, 'u' ).test( haystack )
 }
 
 export function fuzzyMatchesWholeWord (needle, haystack) {
@@ -18,6 +27,9 @@ export function eitherMatches (stringARaw, stringBRaw) {
     // Make strings lowercase for more generous comparison
     const stringA = stringARaw.toLowerCase()
     const stringB = stringBRaw.toLowerCase()
+
+    // A blank alias would otherwise match every name
+    if ( stringA.trim().length === 0 || stringB.trim().length === 0 ) return false
 
     const stringALength = stringA.length
     const stringBLength = stringB.length

@@ -5,7 +5,7 @@ import statuses, { getStatusName } from './statuses.js'
 import appStoreGenres from './app-store/genres.js'
 import { findCategoryForTagsSet } from './categories.js'
 import parseDate from './parse-date'
-import { eitherMatches } from './matching.js'
+import { findReadmeMatchAlias } from './readme-scan-match.js'
 import { getAppEndpoint } from './app-derived'
 import { makeSlug } from './slug.js'
 import { byTimeThenNull }  from './sort-list.js'
@@ -132,45 +132,41 @@ export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
             // Search for this app in the scanList and remove duplicates
             scanListMap.forEach( ( scannedApp, key ) => {
                 if (isBrowserPlaybackListing) return
-                // BrickLink's Studio shares a generic alias with Android Studio.
-                // Keep its scan and evidence attached to the separate product.
-                if (name === 'Android Studio' && scannedApp.aliases.some(alias => /bricklink/i.test(alias))) return
 
-                for ( const alias of scannedApp.aliases ) {
-                    // console.log( key, alias, name, eitherMatches(alias, name) )
+                // Name match plus vendor checks, see docs/app-name-collisions.md
+                const alias = findReadmeMatchAlias( { name, url }, scannedApp )
 
-                    if ( eitherMatches(alias, name) ) {
-                        // If we don't have any bundleIds yet
-                        // Add this app's bundleId to the list
-                        if ( !bundleIds.includes( scannedApp.bundleIds[0] ) ) { bundleIds.push(scannedApp.bundleIds[0]) }
+                if ( alias === null ) return
 
-                        // Merge this scanned app's tags into the matching app
-                        tags = Array.from(new Set([
-                            ...tags,
-                            ...scannedApp.tags
-                        ]))
+                // If we don't have any bundleIds yet
+                // Add this app's bundleId to the list
+                if ( !bundleIds.includes( scannedApp.bundleIds[0] ) ) { bundleIds.push(scannedApp.bundleIds[0]) }
 
-                        // Merge as set then convert to array to prevent duplicates
-                        aliases = Array.from(new Set([
-                            ...aliases,
-                            ...scannedApp.aliases
-                        ]))
+                // Merge this scanned app's tags into the matching app
+                tags = Array.from(new Set([
+                    ...tags,
+                    ...scannedApp.tags
+                ]))
 
-                        // Merge relatated links
-                        for ( const link of scannedApp.relatedLinks ) {
+                // Merge as set then convert to array to prevent duplicates
+                aliases = Array.from(new Set([
+                    ...aliases,
+                    ...scannedApp.aliases
+                ]))
 
-                            relatedLinksMap.set( link.href, {
-                                ...link,
-                                label: (link.label === 'View') ? 'App Website' : link.label
-                            } )
-                        }
+                // Merge relatated links
+                for ( const link of scannedApp.relatedLinks ) {
 
-                        if ( cliOptions.showMerges || cliOptions.verbose ) {
-                            console.log(`Merged ${alias} (${scannedApp.bundleIds[0]}) from scanned apps into ${name} from README`)
-                        }
-                        scanListMap.delete( key )
-                    }
+                    relatedLinksMap.set( link.href, {
+                        ...link,
+                        label: (link.label === 'View') ? 'App Website' : link.label
+                    } )
                 }
+
+                if ( cliOptions.showMerges || cliOptions.verbose ) {
+                    console.log(`Merged ${alias} (${scannedApp.bundleIds[0]}) from scanned apps into ${name} from README`)
+                }
+                scanListMap.delete( key )
             })
 
 
