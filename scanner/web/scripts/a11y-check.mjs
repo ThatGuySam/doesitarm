@@ -35,6 +35,7 @@ const check = (name, ok, detail = '') => {
 };
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
+  await context.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
   await emulateMac(context);
   await context.route((target) => target.origin !== url, (route) => route.abort());
   const page = await context.newPage();

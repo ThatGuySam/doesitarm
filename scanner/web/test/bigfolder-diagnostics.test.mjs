@@ -210,7 +210,9 @@ test('50,000 full browser diagnostics gzip NDJSON and small exports can use plai
       const monitor = await monitorChromiumMemory(browser, ({ rss }) => { peakRss = Math.max(peakRss, rss); });
       try {
         const page = await context.newPage();
+        await page.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
         await page.goto(url);
+        await page.evaluate(() => { document.documentElement.dataset.level = 'research'; });
         const awaitingDownload = page.waitForEvent('download', { timeout: 60_000 });
         void awaitingDownload.catch(() => {});
         const result = await page.evaluate(measureExport, { format, rowCount: count, failureCount, executablePrefix });

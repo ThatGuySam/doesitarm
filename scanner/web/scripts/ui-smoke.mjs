@@ -63,6 +63,7 @@ async function withPage(browser, url, run, { cores, gentle = false, reducedMotio
   try {
     await context.route((request) => request.origin !== url, (route) => route.abort());
     await context.addInitScript(installProbe);
+    await context.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
     if (gentle) await context.addInitScript(() => localStorage.setItem('scan-mode', 'gentle'));
     const page = await context.newPage();
     const errors = [];

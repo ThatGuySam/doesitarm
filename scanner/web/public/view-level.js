@@ -57,7 +57,7 @@ export function bindViewLevel({ storage = globalThis.localStorage, root = docume
   }
   apply(level, false);
   more.addEventListener('toggle', () => {
-    if (!more.open) apply('minimal');
+    if (!more.open) { if (level !== 'minimal') apply('minimal'); }
     else if (level === 'minimal') apply('more');
   });
   research.addEventListener('toggle', () => {

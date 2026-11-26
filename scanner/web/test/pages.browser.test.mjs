@@ -73,10 +73,11 @@ test('device-aware entry and phase changes in a real Chromium page', { timeout: 
         if (touches > 0) {
           await page.evaluate(() => document.body.classList.add('drag-active'));
           assert.equal(await page.locator('.drop-hint').isVisible(), false);
-          await page.getByText('Scan files from this device').click();
+          await page.getByText('Scan files instead').click();
           assert.equal(await page.locator('.drag-copy').isVisible(), false);
         }
         if (label === 'macOS') {
+          await page.locator('#more-options > summary').click();
           await page.locator('#advanced > summary').click();
           await page.reload();
           await page.locator('#drop-zone[data-entry="url"]').waitFor();

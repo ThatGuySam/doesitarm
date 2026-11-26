@@ -57,7 +57,9 @@ test('whole-list filtering and paging keep the DOM bounded at 50,000 results', {
     const page = await browser.newPage({ viewport: { width: 1180, height: 880 } });
     page.setDefaultTimeout(7000);
     await page.route('**/app.js', (route) => route.fulfill({ contentType: 'text/javascript', body: '' }));
+    await page.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
     await page.goto(url);
+    await page.evaluate(() => { document.documentElement.dataset.level = 'research'; });
     const seedMs = await page.evaluate(seedResults);
     const rendered = page.locator('#scan-results .result');
     const heading = rendered.first().locator('h3');
