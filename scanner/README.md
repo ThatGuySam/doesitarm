@@ -21,6 +21,10 @@ URL scans start with `Range: bytes=0-0` to discover the total size. Every subseq
 
 `--bundle-path "Example.app"` selects a registered bundle from a container with multiple candidates. `--binary-path "bin/example"` scans an exact standalone executable and reports its architecture and macOS deployment target. The Homebrew runner supplies these paths from artifact declarations. [Campaign and resume instructions](CLIMB.md)
 
+## Replay a scanner regression
+
+Use `scan-cli shim` to record an artifact, replay the exact ranges offline, and reduce the input into a Rust regression test. [Scanner shims](SHIMS.md)
+
 ## Build Wasm and check parity
 
 ```sh

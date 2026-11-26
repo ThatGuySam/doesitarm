@@ -88,6 +88,9 @@ impl Output {
 }
 
 fn main() -> ExitCode {
+    if std::env::args_os().nth(1).as_deref() == Some(std::ffi::OsStr::new("shim")) {
+        return ledger::shim::cli();
+    }
     if std::env::args_os().nth(1).as_deref() == Some(std::ffi::OsStr::new("resolve")) {
         return page::command(std::env::args_os().skip(2));
     }
@@ -100,6 +103,7 @@ fn main() -> ExitCode {
             println!("{USAGE}");
             println!("{}", page::USAGE);
             println!("Use scan-cli ledger --help for scan history, reports, and offline replay.");
+            println!("{}", ledger::shim::USAGE);
             println!("Local files default to local with no work budget or deadline.");
             println!(
                 "Local .app directories scan one bundle. Other directories scan recursively; --json emits a JSON array."

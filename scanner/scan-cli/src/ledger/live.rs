@@ -24,7 +24,11 @@ pub(super) fn cache() -> Result<PathBuf> {
 }
 
 pub(super) fn network_guard() -> Result<(PathBuf, File)> {
-    let dir = cache()?;
+    network_guard_in(cache()?)
+}
+
+pub(super) fn network_guard_in(dir: PathBuf) -> Result<(PathBuf, File)> {
+    fs::create_dir_all(&dir)?;
     let lock = File::options()
         .create(true)
         .truncate(false)

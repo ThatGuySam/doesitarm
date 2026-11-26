@@ -4,7 +4,6 @@ use super::{
     classify, import, live, privacy,
     store::{Record, Settings, Store, success},
 };
-use crate::Output;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{fs, path::Path};
@@ -30,13 +29,13 @@ fn reproduces_recorded_failure_class() {
 "#;
 
 #[derive(Deserialize, Serialize)]
-struct Kit {
+pub(super) struct Kit {
     version: u8,
     artifact: Value,
-    settings: Settings,
-    expected_class: String,
-    probe: Option<HttpEvidence>,
-    phases: Vec<Phase>,
+    pub(super) settings: Settings,
+    pub(super) expected_class: String,
+    pub(super) probe: Option<HttpEvidence>,
+    pub(super) phases: Vec<Phase>,
     payload_sha256: String,
 }
 
@@ -107,28 +106,13 @@ impl Kit {
         Ok(serde_json::from_value(bytes)?)
     }
 
-    fn replay(&self, payload: &[u8]) -> Result<(String, Value)> {
+    pub(super) fn replay(&self, payload: &[u8]) -> Result<(String, Value)> {
         if self.version != 1 || self.payload_sha256 != privacy::sha(payload) {
             return Err("Kit version or range payload hash does not match".into());
         }
         let limits = live::limits(&self.settings)?;
         let target = live::target(&self.settings);
-        let mut prior = None::<Output>;
-        for phase in &self.phases {
-            if phase.transport == "stream"
-                && let Some(previous) = &prior
-                && !matches!(previous.scan.status, scan_core::Status::SourceError)
-            {
-                break;
-            }
-            let mut output = capture::replay_phase(phase, payload, limits, target)?;
-            if let Some(previous) = &prior {
-                output.scan.bytes_requested += previous.scan.bytes_requested;
-                output.scan.reads += previous.scan.reads;
-            }
-            prior = Some(output);
-        }
-        let output = match prior {
+        let output = match capture::replay_phases(&self.phases, payload, limits, target)? {
             Some(output) => output,
             None => {
                 capture::probe_replay(self.probe.as_ref().ok_or("Kit contains no HTTP response")?)?
@@ -267,7 +251,7 @@ pub(super) fn create(root: &Path, id: &str, out: &Path, input: Option<&Path>) ->
     Ok(())
 }
 
-pub(super) fn inspect(dir: &Path) -> Result<()> {
+pub(super) fn load(dir: &Path) -> Result<(Kit, Vec<u8>)> {
     let metadata = dir.join("replay.json");
     let ranges = dir.join("ranges.bin");
     if ranges.metadata()?.len() > KIT_BYTES as u64
@@ -276,7 +260,11 @@ pub(super) fn inspect(dir: &Path) -> Result<()> {
         return Err("Kit exceeds the 2 MB replay limit".into());
     }
     let kit: Kit = serde_json::from_slice(&fs::read(metadata)?)?;
-    let payload = fs::read(ranges)?;
+    Ok((kit, fs::read(ranges)?))
+}
+
+pub(super) fn inspect(dir: &Path) -> Result<()> {
+    let (kit, payload) = load(dir)?;
     let (class, mut result) = kit.replay(&payload)?;
     privacy::value(&mut result);
     println!("{class}");

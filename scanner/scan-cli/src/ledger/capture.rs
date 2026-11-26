@@ -11,6 +11,8 @@ pub(crate) type ReplayResult<T> = Result<T>;
 
 pub(super) const KIT_BYTES: usize = 1_800_000;
 const LOG_LIMIT: usize = 1600;
+pub(super) const SHIM_BYTES: usize = 288 * 1024 * 1024;
+pub(super) const SHIM_LOG: usize = 32_768;
 
 #[derive(Clone, Default, Deserialize, Serialize)]
 pub(crate) struct HttpEvidence {
@@ -125,11 +127,20 @@ pub(crate) struct Capture {
     pub(super) payload: Vec<u8>,
     pub(super) over_limit: bool,
     pub(super) prefix: Vec<u8>,
-    keep_bytes: bool,
+    payload_limit: usize,
+    log_limit: usize,
 }
 
 impl Capture {
     pub(super) fn new(keep_bytes: bool) -> Self {
+        Self::with_limits(if keep_bytes { KIT_BYTES } else { 0 }, LOG_LIMIT)
+    }
+
+    pub(super) fn shim() -> Self {
+        Self::with_limits(SHIM_BYTES, SHIM_LOG)
+    }
+
+    fn with_limits(payload_limit: usize, log_limit: usize) -> Self {
         Self {
             probe: None,
             probe_error: None,
@@ -137,7 +148,8 @@ impl Capture {
             payload: Vec::new(),
             over_limit: false,
             prefix: Vec::new(),
-            keep_bytes,
+            payload_limit,
+            log_limit,
         }
     }
 
@@ -195,7 +207,7 @@ impl<S: ReadAt> ReadAt for RecordReads<'_, S> {
         };
         if let Ok(data) = &result {
             self.capture.prefix(offset, data);
-            if self.capture.keep_bytes && !self.capture.over_limit {
+            if self.capture.payload_limit > 0 && !self.capture.over_limit {
                 let existing = self.phase.read_log.iter().find_map(|earlier| {
                     let start = usize::try_from(offset.checked_sub(earlier.offset)?).ok()?;
                     let position = earlier.payload_offset?.checked_add(start)?;
@@ -213,7 +225,7 @@ impl<S: ReadAt> ReadAt for RecordReads<'_, S> {
                 });
                 if let Some(existing) = existing {
                     span.payload_offset = Some(existing);
-                } else if self.capture.payload.len() + data.len() <= KIT_BYTES {
+                } else if self.capture.payload.len() + data.len() <= self.capture.payload_limit {
                     span.payload_offset = Some(self.capture.payload.len());
                     self.capture.payload.extend_from_slice(data);
                 } else {
@@ -224,7 +236,7 @@ impl<S: ReadAt> ReadAt for RecordReads<'_, S> {
         }
         self.hash
             .update(serde_json::to_vec(&span).expect("span serialization"));
-        if self.phase.read_log.len() == LOG_LIMIT {
+        if self.phase.read_log.len() == self.capture.log_limit {
             self.phase.log_overflow += 1;
         } else {
             self.phase.read_log.push(span);
@@ -402,9 +414,18 @@ pub(super) fn local(
     target: Target<'_>,
     deadline: Option<Deadline>,
 ) -> Result<(Output, Capture, u64)> {
+    local_with_capture(path, limits, target, deadline, Capture::new(true))
+}
+
+pub(super) fn local_with_capture(
+    path: &std::path::Path,
+    limits: ScanLimits,
+    target: Target<'_>,
+    deadline: Option<Deadline>,
+    mut capture: Capture,
+) -> Result<(Output, Capture, u64)> {
     let start = Instant::now();
     let mut input = crate::FileSource::open(path)?;
-    let mut capture = Capture::new(true);
     let mut phase = Phase {
         transport: "file".into(),
         ..Phase::default()
@@ -429,4 +450,32 @@ pub(super) fn probe_replay(probe: &HttpEvidence) -> Result<Output> {
     // Replay a response whose headers already make the range probe fail. The
     // HTTP validation path derives the error from the actual recorded status.
     http::replay_probe(probe)
+}
+
+pub(super) fn replay_phases(
+    phases: &[Phase],
+    payload: &[u8],
+    limits: ScanLimits,
+    target: Target<'_>,
+) -> Result<Option<Output>> {
+    let mut prior = None::<Output>;
+    for phase in phases {
+        if phase.transport == "stream"
+            && let Some(previous) = &prior
+            && !matches!(previous.scan.status, scan_core::Status::SourceError)
+        {
+            break;
+        }
+        let mut output = replay_phase(phase, payload, limits, target)?;
+        if let Some(previous) = &prior {
+            output.scan.bytes_requested += previous.scan.bytes_requested;
+            output.scan.reads += previous.scan.reads;
+        }
+        prior = Some(output);
+    }
+    Ok(prior)
+}
+
+pub(super) fn probe_error_replay(error: &CapturedError) -> Output {
+    http::probe_failure(error.as_error())
 }

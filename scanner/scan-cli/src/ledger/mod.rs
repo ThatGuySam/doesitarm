@@ -5,6 +5,8 @@ mod live;
 mod privacy;
 mod store;
 
+pub(crate) mod shim;
+
 use std::{
     env,
     error::Error,

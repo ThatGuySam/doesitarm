@@ -26,3 +26,25 @@ A shim is a small offline input that preserves what the scanner reports about a 
 Raw captures can contain compressed vendor data and names that text filters cannot detect. Keep captures outside Git. Use generated archive contents with neutral fixture names for checked-in tests. Treat any unmodified vendor header excerpt as requiring a provenance and license review. Use the repository's existing license for authored fixture code.
 
 Research receipt `scanner-shims-20261124`. Primary papers, project documentation, and GitHub source trees inspected. The Utah C-Reduce paper timed out, so the project's own README supports the C-Reduce description. The zip-rs web tree failed and its GitHub API tree was inspected via `gh`.
+
+## Record and reduce a new case
+
+Run these from `scanner/` after building the native CLI.
+
+```sh
+cargo build --offline --locked -j2 -p scan-cli
+cli=target/debug/scan-cli
+"$cli" shim record /path/to/artifact --out /tmp/original.shim
+"$cli" shim replay /tmp/original.shim
+"$cli" shim reduce /tmp/original.shim --out /tmp/reduced.shim
+"$cli" shim emit /tmp/reduced.shim --out /tmp/shim_replay.rs
+"$cli" shim add 'https://example.com/artifact.dmg'
+```
+
+Pass a ledger kit directory to `record` to reuse an existing observation. For a URL the default is one 256 MiB remote CLI attempt with a 45-second deadline. Use `--budget`, `--profile`, `--decoded-budget`, `--deadline-ms` and a neutral bundle or executable selector to reproduce a specific attempt. An HTTP 200 stream fallback requires `--allow-stream`. Spools are anonymous files under `~/.cache/doesitarm-shims/` and the CLI checks disk space before acquiring bytes. When an output path is omitted, `record` and `reduce` create private files in that cache.
+
+The trace stores the original size, the effective scan settings, ordered source reads, the successful byte payload, and recorded source errors. A digest covers the uncompressed payload. The predicate compares status, error text, container format, bundle kind, verified flags, ordered CPU slices, candidate slices, nested container count and whether the scan found installer metadata. The reducer removes redundant coverage, tries truncating unused tails and subdivides byte groups for zero and deterministic low-entropy substitution. The default budget is 1,024 mutation attempts with a 30-second trial window. Compressed formats can require a new structural fixture when removing or changing any compressed byte breaks the stream.
+
+The recorder caps its raw payload at 288 MiB and its per-phase log at 32,768 reads. A capture beyond either limit requires a smaller profile or a generated artifact. Use `emit` for a Rust integration test in `scan-cli/tests/`. It emits a zero-filled generator with byte patches when that is small enough, or a single compressed trace under 50 KB with `include_bytes!`. The tests invoke the native scanner with no network access. `--blob` selects the compressed form explicitly.
+
+`shim add` appends the observed outcome to the failure ledger, then links a reduced private draft by its cache key. It also emits a Rust test when the reduced trace fits. When recording or reduction cannot produce a replay, the observation records the blocker. This command performs no Git operations. Review draft bytes and metadata before copying fixtures into the repository. For the checked-in cohort, synthesized headers, neutral paths and stub or generated payloads carry the repository's application-code license. [Apache 2.0](../LICENSE_APP.md)

@@ -167,7 +167,7 @@ pub(crate) fn replay_probe(probe: &HttpEvidence) -> capture::ReplayResult<Output
     }
 }
 
-fn probe_failure(error: ScanError) -> Output {
+pub(crate) fn probe_failure(error: ScanError) -> Output {
     let mut scan = failure(error, 1);
     scan.bytes_requested = 1;
     Output::new(scan)
