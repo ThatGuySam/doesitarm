@@ -8,16 +8,18 @@ const duration = (end, start) => start === null || end === null ? null : Math.ma
 
 export function watchLongTasks() {
   const entries = [];
+  const remember = (records) => {
+    for (const { startTime, duration } of records) entries.push({ startTime, duration });
+    if (entries.length > 256) entries.splice(0, entries.length - 256);
+  };
   let observer;
   if (globalThis.PerformanceObserver?.supportedEntryTypes?.includes('longtask')) {
-    observer = new PerformanceObserver((list) => {
-      for (const { startTime, duration } of list.getEntries()) entries.push({ startTime, duration });
-    });
+    observer = new PerformanceObserver((list) => remember(list.getEntries()));
     observer.observe({ type: 'longtask' });
   }
   return (start, end) => {
     if (!observer) return null;
-    for (const { startTime, duration } of observer.takeRecords()) entries.push({ startTime, duration });
+    remember(observer.takeRecords());
     return entries.filter(({ startTime, duration }) => startTime + duration >= start && startTime <= end)
       .map(({ startTime, duration }) => ({ offset_ms: startTime - start, duration_ms: duration }));
   };
@@ -111,6 +113,7 @@ export function resultRecord(row, full, cutoff) {
   const nestedArtifacts = result.nested_artifacts ?? row.nestedArtifacts ?? [];
   const diagnostic = {
     ...record,
+    ...(row.diagnosticsTruncated ? { diagnostics_truncated: true } : {}),
     info_plist: evidence?.info_plist ?? null,
     info_plist_path: plistPath,
     info_plist_size: evidence?.info_plist_size ?? null,
@@ -122,6 +125,7 @@ export function resultRecord(row, full, cutoff) {
     candidate_executables: candidates,
     nested_artifacts: nestedArtifacts,
     read_log: evidence?.read_log ?? null,
+    ...(evidence?.read_log_truncated ? { read_log_truncated: true } : {}),
     reproduction: ['complete', 'canceled'].includes(result.status) ? null : {
       relative_path: displayPath,
       copy_from_selection: copy,
@@ -186,7 +190,7 @@ export async function makeExport(header, rows, { count, format = 'ndjson.gz', sc
       worker.postMessage({ records: records.splice(0) });
       sent += 1;
     };
-    for (const row of rows) {
+    for await (const row of rows) {
       if (row.result && (scope !== 'failures' || !['complete', 'canceled'].includes(row.result.status))) {
         records.push(resultRecord(row, scope !== 'results', cutoff));
         if (records.length >= 16) send();
@@ -213,7 +217,7 @@ export async function makeExport(header, rows, { count, format = 'ndjson.gz', sc
   }
 }
 
-export function diagnosticControls(resolver) {
+export function diagnosticControls(resolver, { idPrefix = '' } = {}) {
   const container = document.createElement('div');
   container.className = 'diagnostic-actions';
   const feedback = document.createElement('p');
@@ -266,7 +270,7 @@ export function diagnosticControls(resolver) {
         `${filter === 'failures' ? 'Failure' : 'Success and failure'} details, including Info.plist and up to 64 executable bytes per result`;
       feedback.textContent = `${contents} · ${prettyBytes(blob.size)} · local file`;
       if (kind === 'copy' && type === 'json') {
-        const copy = button('copy-results-ready', 'Copy prepared results JSON');
+        const copy = button(`${idPrefix}copy-results-ready`, 'Copy prepared results JSON');
         copy.addEventListener('click', async () => {
           try {
             await navigator.clipboard.write([
@@ -297,7 +301,7 @@ export function diagnosticControls(resolver) {
     ['diagnostics', 'Download diagnostics'], ['results', 'Download results JSON'],
     ['failures', 'Download failures JSON'], ['copy', 'Copy results JSON'],
   ]) {
-    const control = button(kind === 'copy' ? 'copy-results' : `download-${kind}`, text);
+    const control = button(`${idPrefix}${kind === 'copy' ? 'copy-results' : `download-${kind}`}`, text);
     control.addEventListener('click', () => void prepare(kind));
     controls.set(kind, control);
   }

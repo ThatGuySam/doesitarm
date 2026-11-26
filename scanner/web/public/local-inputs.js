@@ -1,8 +1,12 @@
-import { fileJob, folderStats, skipped, walkDirectory, walkFileList, yieldToPage } from './folder-walk.js';
+import { fileJob, FolderLimitError, folderStats, skipped, walkDirectory, walkFileList, yieldToPage } from './folder-walk.js';
 
 const number = new Intl.NumberFormat();
+const MAX_FLAT_FILES = 512;
+const MAX_FOLDER_ROWS = 8192;
+const FOLDER_GUIDANCE = 'Drag your folder here. If the browser cannot read it, drag smaller subfolders or individual .app bundles. You can also select an app archive.';
 
 function captureDrop(transfer) {
+  if (transfer.items?.length > MAX_FLAT_FILES) return {};
   const sources = [];
   for (const item of transfer.items ?? []) {
     if (item.kind !== 'file') continue;
@@ -42,22 +46,13 @@ async function preferHandle(handle, fallback, signal) {
 export function bindLocalInputs({ view, mode }) {
   const get = (id) => document.getElementById(id);
   const files = get('files');
-  const folder = get('folder');
   const chooser = get('choose-folder');
   const dropZone = get('drop-zone');
   const loader = get('folder-loader');
   const [throbber, label, announcement] = loader.children;
   const notice = get('input-status');
-  const directPicker = () => typeof window.showDirectoryPicker === 'function';
-  const fallbackChooser = document.createElement('button');
-  fallbackChooser.type = 'button';
-  fallbackChooser.className = 'text-button';
-  fallbackChooser.textContent = 'Use alternate folder picker';
-  fallbackChooser.hidden = !(directPicker() && /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform));
-  loader.append(fallbackChooser);
-  const active = new Set();
-  let picker = null;
-  let folderSelection = null;
+  let active;
+  let picker = false;
 
   function reading(text) {
     if (label.textContent !== text) label.textContent = text;
@@ -72,35 +67,32 @@ export function bindLocalInputs({ view, mode }) {
   window.addEventListener('focus', restoredFocus);
   document.addEventListener('visibilitychange', restoredFocus);
 
-  function finishPicker() {
-    picker = null;
-    if (!active.size) reading('');
-  }
-
-  function openFallback() {
-    if (picker) return;
-    picker = {};
-    notice.textContent = '';
-    reading('Reading folder…');
-    folder.click();
-  }
-
-  async function discover(method, total, walk, folderName = null, controller = new AbortController()) {
+  async function discover(method, total, walk, folderName = null) {
+    if (active) {
+      notice.textContent = 'Wait for the current folder to finish or cancel it before adding another.';
+      return;
+    }
+    const controller = new AbortController();
+    const { signal } = controller;
     const discovered = new Set();
     const stats = folderStats(method);
     stats.folder_name = folderName;
-    const run = view.beginFolder(stats, mode());
+    const run = view.beginFolder(stats, mode(), { resultLimit: MAX_FOLDER_ROWS, recoverable: true });
     const jobs = [];
-    const flush = () => {
-      if (jobs.length) view.add(jobs.splice(0), run);
-    };
-    active.add(controller);
+    async function flush() {
+      if (!jobs.length) return;
+      await view.waitForCapacity(jobs.length, signal, true);
+      signal.throwIfAborted();
+      view.add(jobs.splice(0), run);
+    }
+    active = controller;
     notice.textContent = '';
     reading(total ? `Preparing ${number.format(total)} files…` : 'Reading folder…');
     try {
-      // Let the loader paint before touching a native FileList.
+      // Paint the loader before starting filesystem work.
       await yieldToPage();
-      controller.signal.throwIfAborted();
+      await run.ready;
+      signal.throwIfAborted();
       await walk({
         stats,
         signal: controller.signal,
@@ -108,87 +100,79 @@ export function bindLocalInputs({ view, mode }) {
           const seen = number.format(stats.files_seen);
           reading(total ? `Preparing ${number.format(total)} files… ${seen} checked` :
             `Reading folder… ${seen} files found`);
-          flush();
+          return flush();
         },
         onJob(job) {
           if (discovered.has(job.label)) {
             skipped(stats, 'duplicate_path', job.label);
             return;
           }
+          if (discovered.size >= MAX_FOLDER_ROWS) throw new FolderLimitError();
           discovered.add(job.label);
           if (job.kind === 'bundle') run.appCount += 1;
           jobs.push(job);
-          if (jobs.length >= 32) flush();
+          if (jobs.length >= 16) return flush();
         },
       });
-      flush();
-      if (!discovered.size) notice.textContent = 'No apps, Mach-O files, or supported archives were found.';
+      await flush();
+      if (stats.partial) notice.textContent = 'Some bundle members exceeded the scan limit. Scan the affected apps in smaller selections for more detail.';
+      else if (!discovered.size) notice.textContent = 'No apps, Mach-O files, or supported archives were found.';
     } catch (error) {
       if (!controller.signal.aborted) {
-        flush();
-        notice.textContent = 'The browser could not finish reading this selection.';
-        skipped(stats, `enumeration_error:${error?.name ?? 'Error'}`, stats.folder_name);
+        stats.partial = true;
+        if (error instanceof FolderLimitError) {
+          notice.textContent = 'This selection reached the scan limit. Scan smaller subfolders to check the remaining apps.';
+          skipped(stats, 'folder_result_limit', stats.folder_name);
+        } else {
+          notice.textContent = 'The browser could not finish reading this selection.';
+          skipped(stats, `enumeration_error:${error?.name ?? 'Error'}`, stats.folder_name);
+        }
+        await flush().catch(() => {});
       }
     } finally {
-      active.delete(controller);
+      active = undefined;
       view.finishFolder(run, controller.signal.aborted);
-      if (!active.size && !picker) reading('');
+      if (!active && !picker) reading('');
     }
   }
 
   get('cancel-all').addEventListener('click', () => {
-    for (const controller of active) controller.abort();
+    active?.abort();
     view.cancelAll();
     notice.textContent = '';
     reading('');
   });
   get('choose-files').addEventListener('click', () => files.click());
-  fallbackChooser.addEventListener('click', openFallback);
-  chooser.addEventListener('click', () => {
+  chooser.addEventListener('click', async () => {
     if (picker) return;
     notice.textContent = '';
-    if (!directPicker()) {
-      openFallback();
+    if (typeof window.showDirectoryPicker !== 'function') {
+      notice.textContent = FOLDER_GUIDANCE;
       return;
     }
-    picker = {};
-    reading('Reading folder…');
-    void (async () => {
-      let handle;
-      try {
-        handle = await window.showDirectoryPicker({ mode: 'read' });
-      } catch (error) {
-        // The API uses AbortError for both dismissal and a protected directory.
-        fallbackChooser.hidden = false;
-        if (error.name !== 'AbortError') {
-          notice.textContent = 'The browser could not open the folder directly.';
-        }
-      } finally {
-        finishPicker();
-      }
-      if (handle) await discover('showDirectoryPicker', 0,
-        (options) => walkDirectory(handle, 'handle', options), handle.name);
-    })();
+    picker = true;
+    reading('Opening folder…');
+    let handle;
+    try {
+      handle = await window.showDirectoryPicker({ mode: 'read' });
+    } catch {
+      // Chromium also reports protected directory selections as AbortError.
+      notice.textContent = FOLDER_GUIDANCE;
+    } finally {
+      picker = false;
+      if (!active) reading('');
+    }
+    if (handle) await discover('showDirectoryPicker', 0,
+      (options) => walkDirectory(handle, 'handle', options), handle.name);
   });
 
   files.addEventListener('change', () => {
-    view.add(Array.from(files.files, (file) => fileJob(file)));
-    files.value = '';
-  });
-  folder.addEventListener('cancel', finishPicker);
-  folder.addEventListener('change', async () => {
-    const selection = folder.files;
-    folderSelection?.abort();
-    const controller = new AbortController();
-    folderSelection = controller;
-    finishPicker();
-    if (selection.length) await discover('webkitdirectory', selection.length,
-      (options) => walkFileList(selection, options), null, controller);
-    // Clearing the input also empties Chromium's live FileList.
-    if (folderSelection === controller) {
-      if (folder.files === selection) folder.value = '';
-      folderSelection = null;
+    if (files.files.length > MAX_FLAT_FILES) {
+      notice.textContent = 'Select up to 512 files at a time, or drag their folder here.';
+    } else {
+      view.add(Array.from(files.files, (file) => fileJob(file)));
     }
+    files.value = '';
   });
 
   const hasFiles = (event) => Array.from(event.dataTransfer?.types ?? []).includes('Files');
@@ -224,9 +208,14 @@ export function bindLocalInputs({ view, mode }) {
     // The drop's data store closes on return. Only native entry promises and
     // explicit files captured above are used after that point.
     if (!sources) {
-      const selection = Array.from(dropped);
-      if (selection.length) void discover('DataTransfer.files', selection.length, (options) => walkFileList(selection, options));
-      else notice.textContent = 'No files were found in that drop. Some browsers, including Firefox, do not expose dropped folders. Use Choose folder instead.';
+      if (dropped?.length > MAX_FLAT_FILES || !dropped) {
+        notice.textContent = 'Drop up to 512 items at a time, or drop their parent folder.';
+      } else if (dropped.length) {
+        const selection = Array.from(dropped);
+        void discover('DataTransfer.files', selection.length, (options) => walkFileList(selection, options));
+      } else {
+        notice.textContent = FOLDER_GUIDANCE;
+      }
       return;
     }
     void discover('drop', 0, async (options) => {
@@ -244,7 +233,7 @@ export function bindLocalInputs({ view, mode }) {
         } else if (file) {
           methods.add('DataTransfer.files');
           options.stats.files_seen += 1;
-          options.onJob(fileJob(file));
+          await options.onJob(fileJob(file));
         }
         options.stats.method = [...methods].join(', ') || 'drop';
       }

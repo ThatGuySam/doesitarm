@@ -36,7 +36,7 @@ export function observedInventory(row, cutoff = Infinity) {
     if (child.children) {
       for (const member of child.children) pending.push(member);
     }
-    if (!binary || child.ended > cutoff || (binary.format !== 'macho' && child.kind !== 'bundle')) continue;
+    if (!binary || (child.settled ?? child.ended) > cutoff || (binary.format !== 'macho' && child.kind !== 'bundle')) continue;
     const path = binary.executable_path ?? (binary.format === 'macho' ? child.label : null);
     if (path) record(path, role(path.slice(row.label.length + 1)), binary.architectures);
   }
