@@ -3,6 +3,7 @@ export const DEFAULT_BUDGET = 8 * MIB;
 
 export function emptyResult(status, error, totalSize = 0) {
   return {
+    platform: 'unknown',
     format: null,
     status,
     architectures: [],

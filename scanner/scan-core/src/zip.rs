@@ -4,7 +4,7 @@ use crate::{
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
-    launcher, le16, le32, le64, macho, nested,
+    launcher, le16, le32, le64, macho, nested, windows,
 };
 
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
@@ -350,6 +350,89 @@ async fn read_inventory(
     primary
 }
 
+async fn scan_windows(
+    input: &mut impl ReadAt,
+    entries: &[Entry],
+    heap_end: u64,
+    work: &DecodeBudget<'_>,
+    out: &mut ScanResult,
+) -> Result<bool> {
+    for (path, bundle) in [
+        ("AppxMetadata/AppxBundleManifest.xml", true),
+        ("AppxManifest.xml", false),
+    ] {
+        if let Some(entry) = entries
+            .iter()
+            .find(|entry| !entry.is_symlink() && entry.path.eq_ignore_ascii_case(path))
+        {
+            if entry.expanded > windows::package::MAX_MANIFEST {
+                return Err(ScanError::Limit("Appx manifest exceeds 256 KiB"));
+            }
+            let bytes = member(input, entry, heap_end, work)
+                .await?
+                .read_at(0, entry.expanded as usize)
+                .await?;
+            let mut result = crate::Windows::default();
+            windows::package::manifest(&bytes, bundle, &mut result)?;
+            result.set_result(out);
+            out.format = Some(if bundle { "appxbundle" } else { "appx" });
+            return Ok(true);
+        }
+    }
+    let mut candidates: Vec<_> = entries
+        .iter()
+        .filter_map(|entry| {
+            if entry.is_symlink() || entry.expanded < 64 {
+                return None;
+            }
+            Some((
+                entry,
+                windows::pe_extension(bundle::archive_path(&entry.path)?)?,
+            ))
+        })
+        .collect();
+    candidates.sort_by_key(|(entry, executable)| (!executable, entry.path.matches('/').count()));
+    let mut evidence = windows::ArchiveEvidence::default();
+    if entries.iter().any(|entry| {
+        !entry.is_symlink()
+            && bundle::archive_path(&entry.path).is_some_and(windows::resembles_installer)
+    }) {
+        evidence.partial();
+    }
+    let mut allowance = Allowance::new(input, work);
+    let mut interrupted = None;
+    for (entry, executable) in candidates {
+        if let Err(error) = allowance.step(input, work) {
+            interrupted = Some(error);
+            break;
+        }
+        let mut observed = crate::Windows::default();
+        let status = match member(input, entry, heap_end, work).await {
+            Ok(Member::Stored(mut source)) => windows::pe(&mut source, &mut observed).await,
+            Ok(mut source) => windows::pe_prefix(&mut source, &mut observed).await,
+            Err(error) => Err(error),
+        };
+        if observed.machine.is_some() {
+            evidence.add(observed, executable);
+        }
+        if let Err(error) = status {
+            evidence.partial();
+            if inventory::stop(&error) {
+                interrupted = Some(error);
+                break;
+            }
+        }
+    }
+    if interrupted.is_some() {
+        evidence.partial();
+    }
+    let found = evidence.finish("zip", out);
+    match interrupted {
+        Some(error @ (ScanError::Budget | ScanError::Source(_))) => Err(error),
+        _ => Ok(found),
+    }
+}
+
 async fn read_main(
     input: &mut impl ReadAt,
     entries: &[Entry],
@@ -436,6 +519,9 @@ async fn scan_without_app(
     target: Target<'_>,
     out: &mut ScanResult,
 ) -> Result<()> {
+    if matches!(target, Target::Auto) && scan_windows(input, entries, heap_end, work, out).await? {
+        return Ok(());
+    }
     let nested = scan_nested(input, entries, heap_end, work, target, out).await;
     let missing = match nested {
         Err(error @ ScanError::NotFound("app Info.plist in ZIP central directory"))

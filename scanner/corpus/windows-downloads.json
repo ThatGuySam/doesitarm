@@ -1,0 +1,594 @@
+[
+  {
+    "id": "spotify",
+    "app": "Spotify",
+    "variant": "web installer",
+    "expected": "ARM64 available \u00b7 web stub architecture independent",
+    "url": "https://download.scdn.co/SpotifySetup.exe",
+    "vendor": "https://learn.microsoft.com/en-us/surface/surface-arm-faq"
+  },
+  {
+    "id": "vscode-win32-arm64-user",
+    "app": "VS Code",
+    "variant": "User installer ARM64",
+    "expected": "ARM64",
+    "url": "https://update.code.visualstudio.com/latest/win32-arm64-user/stable",
+    "vendor": "https://code.visualstudio.com/download"
+  },
+  {
+    "id": "vscode-win32-arm64-archive",
+    "app": "VS Code",
+    "variant": "ZIP ARM64",
+    "expected": "ARM64",
+    "url": "https://update.code.visualstudio.com/latest/win32-arm64-archive/stable",
+    "vendor": "https://code.visualstudio.com/download"
+  },
+  {
+    "id": "vscode-win32-x64-user",
+    "app": "VS Code",
+    "variant": "User installer x64",
+    "expected": "x64",
+    "url": "https://update.code.visualstudio.com/latest/win32-x64-user/stable",
+    "vendor": "https://code.visualstudio.com/download"
+  },
+  {
+    "id": "vscode-win32-x64-archive",
+    "app": "VS Code",
+    "variant": "ZIP x64",
+    "expected": "x64",
+    "url": "https://update.code.visualstudio.com/latest/win32-x64-archive/stable",
+    "vendor": "https://code.visualstudio.com/download"
+  },
+  {
+    "id": "node-arm64-exe",
+    "app": "Node.js",
+    "variant": "EXE ARM64",
+    "expected": "ARM64",
+    "url": "https://nodejs.org/dist/v22.14.0/win-arm64/node.exe",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-arm64-msi",
+    "app": "Node.js",
+    "variant": "MSI ARM64",
+    "expected": "ARM64",
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-arm64.msi",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-arm64-zip",
+    "app": "Node.js",
+    "variant": "ZIP ARM64",
+    "expected": "ARM64",
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-win-arm64.zip",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-x64-exe",
+    "app": "Node.js",
+    "variant": "EXE x64",
+    "expected": "x64",
+    "url": "https://nodejs.org/dist/v22.14.0/win-x64/node.exe",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-x64-msi",
+    "app": "Node.js",
+    "variant": "MSI x64",
+    "expected": "x64",
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-x64.msi",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-x64-zip",
+    "app": "Node.js",
+    "variant": "ZIP x64",
+    "expected": "x64",
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-win-x64.zip",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-x86-exe",
+    "app": "Node.js",
+    "variant": "EXE x86",
+    "expected": "x86",
+    "url": "https://nodejs.org/dist/v22.14.0/win-x86/node.exe",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-x86-msi",
+    "app": "Node.js",
+    "variant": "MSI x86",
+    "expected": "x86",
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-x86.msi",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "node-x86-zip",
+    "app": "Node.js",
+    "variant": "ZIP x86",
+    "expected": "x86",
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-win-x86.zip",
+    "vendor": "https://nodejs.org/en/blog/release/v22.14.0"
+  },
+  {
+    "id": "python-arm64-installer",
+    "app": "Python",
+    "variant": "installer ARM64",
+    "expected": "ARM64",
+    "url": "https://www.python.org/ftp/python/3.13.2/python-3.13.2-arm64.exe",
+    "vendor": "https://www.python.org/downloads/release/python-3132/"
+  },
+  {
+    "id": "python-arm64-embeddable",
+    "app": "Python",
+    "variant": "embeddable ZIP ARM64",
+    "expected": "ARM64",
+    "url": "https://www.python.org/ftp/python/3.13.2/python-3.13.2-embed-arm64.zip",
+    "vendor": "https://www.python.org/downloads/release/python-3132/"
+  },
+  {
+    "id": "python-x64-installer",
+    "app": "Python",
+    "variant": "installer x64",
+    "expected": "x64",
+    "url": "https://www.python.org/ftp/python/3.13.2/python-3.13.2-amd64.exe",
+    "vendor": "https://www.python.org/downloads/release/python-3132/"
+  },
+  {
+    "id": "python-x64-embeddable",
+    "app": "Python",
+    "variant": "embeddable ZIP x64",
+    "expected": "x64",
+    "url": "https://www.python.org/ftp/python/3.13.2/python-3.13.2-embed-amd64.zip",
+    "vendor": "https://www.python.org/downloads/release/python-3132/"
+  },
+  {
+    "id": "python-x86-installer",
+    "app": "Python",
+    "variant": "installer x86",
+    "expected": "x86",
+    "url": "https://www.python.org/ftp/python/3.13.2/python-3.13.2.exe",
+    "vendor": "https://www.python.org/downloads/release/python-3132/"
+  },
+  {
+    "id": "python-x86-embeddable",
+    "app": "Python",
+    "variant": "embeddable ZIP x86",
+    "expected": "x86",
+    "url": "https://www.python.org/ftp/python/3.13.2/python-3.13.2-embed-win32.zip",
+    "vendor": "https://www.python.org/downloads/release/python-3132/"
+  },
+  {
+    "id": "7zip-arm64",
+    "app": "7-Zip",
+    "variant": "25.01 installer ARM64",
+    "expected": "ARM64",
+    "url": "https://www.7-zip.org/a/7z2501-arm64.exe",
+    "vendor": "https://www.7-zip.org/download.html"
+  },
+  {
+    "id": "7zip-x64",
+    "app": "7-Zip",
+    "variant": "25.01 installer x64",
+    "expected": "x64",
+    "url": "https://www.7-zip.org/a/7z2501-x64.exe",
+    "vendor": "https://www.7-zip.org/download.html"
+  },
+  {
+    "id": "7zip-x86",
+    "app": "7-Zip",
+    "variant": "25.01 installer x86",
+    "expected": "x86",
+    "url": "https://www.7-zip.org/a/7z2501.exe",
+    "vendor": "https://www.7-zip.org/download.html"
+  },
+  {
+    "id": "firefox-win64-aarch64",
+    "app": "Firefox",
+    "variant": "full installer ARM64",
+    "expected": "ARM64",
+    "url": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64-aarch64&lang=en-US",
+    "vendor": "https://www.mozilla.org/en-US/firefox/all/desktop-release/"
+  },
+  {
+    "id": "firefox-win64",
+    "app": "Firefox",
+    "variant": "full installer x64",
+    "expected": "x64",
+    "url": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US",
+    "vendor": "https://www.mozilla.org/en-US/firefox/all/desktop-release/"
+  },
+  {
+    "id": "firefox-win",
+    "app": "Firefox",
+    "variant": "full installer x86",
+    "expected": "x86",
+    "url": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US",
+    "vendor": "https://www.mozilla.org/en-US/firefox/all/desktop-release/"
+  },
+  {
+    "id": "vlc-win64-exe",
+    "app": "VLC",
+    "variant": "exe x64",
+    "expected": "x64",
+    "url": "https://download.videolan.org/pub/videolan/vlc/3.0.21/win64/vlc-3.0.21-win64.exe",
+    "vendor": "https://www.videolan.org/vlc/releases/3.0.21.html"
+  },
+  {
+    "id": "vlc-win64-zip",
+    "app": "VLC",
+    "variant": "zip x64",
+    "expected": "x64",
+    "url": "https://download.videolan.org/pub/videolan/vlc/3.0.21/win64/vlc-3.0.21-win64.zip",
+    "vendor": "https://www.videolan.org/vlc/releases/3.0.21.html"
+  },
+  {
+    "id": "vlc-win64-7z",
+    "app": "VLC",
+    "variant": "7z x64",
+    "expected": "x64",
+    "url": "https://download.videolan.org/pub/videolan/vlc/3.0.21/win64/vlc-3.0.21-win64.7z",
+    "vendor": "https://www.videolan.org/vlc/releases/3.0.21.html"
+  },
+  {
+    "id": "vlc-win32-exe",
+    "app": "VLC",
+    "variant": "exe x86",
+    "expected": "x86",
+    "url": "https://download.videolan.org/pub/videolan/vlc/3.0.21/win32/vlc-3.0.21-win32.exe",
+    "vendor": "https://www.videolan.org/vlc/releases/3.0.21.html"
+  },
+  {
+    "id": "vlc-win32-zip",
+    "app": "VLC",
+    "variant": "zip x86",
+    "expected": "x86",
+    "url": "https://download.videolan.org/pub/videolan/vlc/3.0.21/win32/vlc-3.0.21-win32.zip",
+    "vendor": "https://www.videolan.org/vlc/releases/3.0.21.html"
+  },
+  {
+    "id": "vlc-win32-7z",
+    "app": "VLC",
+    "variant": "7z x86",
+    "expected": "x86",
+    "url": "https://download.videolan.org/pub/videolan/vlc/3.0.21/win32/vlc-3.0.21-win32.7z",
+    "vendor": "https://www.videolan.org/vlc/releases/3.0.21.html"
+  },
+  {
+    "id": "chrome-x64",
+    "app": "Chrome",
+    "variant": "Enterprise MSI x64",
+    "expected": "x64",
+    "url": "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi",
+    "vendor": "https://chromeenterprise.google/download/"
+  },
+  {
+    "id": "chrome-x86",
+    "app": "Chrome",
+    "variant": "Enterprise MSI x86",
+    "expected": "x86",
+    "url": "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise.msi",
+    "vendor": "https://chromeenterprise.google/download/"
+  },
+  {
+    "id": "chrome-arm64",
+    "app": "Chrome",
+    "variant": "Enterprise MSI ARM64",
+    "expected": "ARM64",
+    "url": "https://dl.google.com/edgedl/chrome/install/GoogleChromeStandaloneEnterprise_Arm64.msi",
+    "vendor": "https://learn.microsoft.com/en-us/surface/surface-arm-faq"
+  },
+  {
+    "id": "slack-x64",
+    "app": "Slack",
+    "variant": "standalone x64",
+    "expected": "x64",
+    "url": "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.43.52/SlackSetup.exe",
+    "vendor": "https://slack.com/downloads/windows"
+  },
+  {
+    "id": "slack-msix-arm64",
+    "app": "Slack",
+    "variant": "4.53.292 MSIX ARM64",
+    "expected": "ARM64",
+    "url": "https://downloads.slack-edge.com/desktop-releases/windows/arm64/4.53.292/Slack.msix",
+    "vendor": "https://github.com/microsoft/winget-pkgs/blob/master/manifests/s/SlackTechnologies/Slack/4.53.292/SlackTechnologies.Slack.installer.yaml"
+  },
+  {
+    "id": "slack-msix-x64",
+    "app": "Slack",
+    "variant": "4.53.292 MSIX x64",
+    "expected": "x64",
+    "url": "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.53.292/Slack.msix",
+    "vendor": "https://github.com/microsoft/winget-pkgs/blob/master/manifests/s/SlackTechnologies/Slack/4.53.292/SlackTechnologies.Slack.installer.yaml"
+  },
+  {
+    "id": "zoom-x64",
+    "app": "Zoom",
+    "variant": "standalone x64",
+    "expected": "x64",
+    "url": "https://zoom.us/client/latest/ZoomInstallerFull.exe?archType=x64",
+    "vendor": "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060407"
+  },
+  {
+    "id": "zoom-arm64",
+    "app": "Zoom",
+    "variant": "MSI ARM64",
+    "expected": "ARM64",
+    "url": "https://zoom.us/client/latest/ZoomInstallerFull.msi?archType=winarm64",
+    "vendor": "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060407"
+  },
+  {
+    "id": "discord",
+    "app": "Discord",
+    "variant": "stable Windows",
+    "expected": "x64 offered \u00b7 launcher may vary",
+    "url": "https://discord.com/api/download?platform=win",
+    "vendor": "https://discord.com/download"
+  },
+  {
+    "id": "discord-x64",
+    "app": "Discord",
+    "variant": "stable explicit x64",
+    "expected": "x64",
+    "url": "https://discord.com/api/download?platform=win&arch=x64",
+    "vendor": "https://discord.com/download"
+  },
+  {
+    "id": "obs-x64",
+    "app": "OBS Studio",
+    "variant": "32.0.4 installer x64",
+    "expected": "x64",
+    "url": "https://github.com/obsproject/obs-studio/releases/download/32.0.4/OBS-Studio-32.0.4-Windows-x64-Installer.exe",
+    "vendor": "https://github.com/obsproject/obs-studio/releases/tag/32.0.4"
+  },
+  {
+    "id": "obs-arm64",
+    "app": "OBS Studio",
+    "variant": "32.0.4 installer ARM64",
+    "expected": "ARM64",
+    "url": "https://github.com/obsproject/obs-studio/releases/download/32.0.4/OBS-Studio-32.0.4-Windows-arm64-Installer.exe",
+    "vendor": "https://github.com/obsproject/obs-studio/releases/tag/32.0.4"
+  },
+  {
+    "id": "obs-arm64-zip",
+    "app": "OBS Studio",
+    "variant": "33.0.3 ZIP ARM64",
+    "expected": "ARM64",
+    "url": "https://github.com/obsproject/obs-studio/releases/download/33.0.3/OBS-Studio-33.0.3-Windows-arm64.zip",
+    "vendor": "https://github.com/obsproject/obs-studio/releases/tag/33.0.3"
+  },
+  {
+    "id": "notion-windows-msix",
+    "app": "Notion",
+    "variant": "Windows universal download",
+    "expected": "x64/ARM64 universal installer",
+    "url": "https://www.notion.com/desktop/windows/download",
+    "vendor": "https://www.notion.com/en-gb/desktop/windows"
+  },
+  {
+    "id": "notion-windows-setup",
+    "app": "Notion",
+    "variant": "Windows universal setup EXE",
+    "expected": "x64/ARM64 universal installer",
+    "url": "https://www.notion.com/desktop/windows-installer/download",
+    "vendor": "https://www.notion.com/en-gb/desktop/windows"
+  },
+  {
+    "id": "figma",
+    "app": "Figma",
+    "variant": "desktop installer",
+    "expected": "publisher does not label default download",
+    "url": "https://desktop.figma.com/win/FigmaSetup.exe",
+    "vendor": "https://www.figma.com/downloads/"
+  },
+  {
+    "id": "steam",
+    "app": "Steam",
+    "variant": "web installer",
+    "expected": "Windows setup \u00b7 publisher does not label architecture",
+    "url": "https://cdn.fastly.steamstatic.com/client/installer/SteamSetup.exe",
+    "vendor": "https://store.steampowered.com/about/"
+  },
+  {
+    "id": "teams-x64",
+    "app": "Microsoft Teams",
+    "variant": "MSIX x64",
+    "expected": "x64",
+    "url": "https://go.microsoft.com/fwlink/?linkid=2196106",
+    "vendor": "https://learn.microsoft.com/en-us/microsoftteams/teams-client-bulk-install"
+  },
+  {
+    "id": "teams-arm64",
+    "app": "Microsoft Teams",
+    "variant": "MSIX ARM64",
+    "expected": "ARM64",
+    "url": "https://go.microsoft.com/fwlink/?linkid=2196207",
+    "vendor": "https://learn.microsoft.com/en-us/microsoftteams/teams-client-bulk-install"
+  },
+  {
+    "id": "dropbox",
+    "app": "Dropbox",
+    "variant": "offline installer",
+    "expected": "ARM64 available \u00b7 default installer may vary",
+    "url": "https://www.dropbox.com/download?plat=win&type=full",
+    "vendor": "https://help.dropbox.com/installs/download-dropbox"
+  },
+  {
+    "id": "git-arm64",
+    "app": "Git for Windows",
+    "variant": "2.51.0 installer ARM64",
+    "expected": "ARM64",
+    "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-arm64.exe",
+    "vendor": "https://github.com/git-for-windows/git/releases/tag/v2.51.0.windows.1"
+  },
+  {
+    "id": "git-64-bit",
+    "app": "Git for Windows",
+    "variant": "2.51.0 installer x64",
+    "expected": "x64",
+    "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-64-bit.exe",
+    "vendor": "https://github.com/git-for-windows/git/releases/tag/v2.51.0.windows.1"
+  },
+  {
+    "id": "jetbrains-arm64",
+    "app": "JetBrains IntelliJ IDEA",
+    "variant": "2025.2.4 Windows ARM64",
+    "expected": "ARM64",
+    "url": "https://download.jetbrains.com/idea/ideaIU-2025.2.4-aarch64.exe",
+    "vendor": "https://www.jetbrains.com/idea/download/?section=windows"
+  },
+  {
+    "id": "jetbrains-x64",
+    "app": "JetBrains IntelliJ IDEA",
+    "variant": "2025.2.4 Windows x64",
+    "expected": "x64",
+    "url": "https://download.jetbrains.com/idea/ideaIU-2025.2.4.exe",
+    "vendor": "https://www.jetbrains.com/idea/download/?section=windows"
+  },
+  {
+    "id": "win-ntdll-arm64x",
+    "app": "Windows 11",
+    "variant": "ntdll.dll 10.0.28000.2704",
+    "expected": "ARM64X system DLL",
+    "url": "https://msdl.microsoft.com/download/symbols/ntdll.dll/96615DAD43b000/ntdll.dll",
+    "vendor": "https://learn.microsoft.com/en-us/windows/arm/arm64ec"
+  },
+  {
+    "id": "win-kernelbase-arm64x",
+    "app": "Windows 11",
+    "variant": "KernelBase.dll 10.0.28000.2704",
+    "expected": "ARM64X system DLL",
+    "url": "https://msdl.microsoft.com/download/symbols/kernelbase.dll/F25633336f2000/kernelbase.dll",
+    "vendor": "https://learn.microsoft.com/en-us/windows/arm/arm64ec"
+  },
+  {
+    "id": "win-explorer-arm64",
+    "app": "Windows 11",
+    "variant": "Explorer 10.0.28000.3614",
+    "expected": "ARM64 system EXE",
+    "url": "https://msdl.microsoft.com/download/symbols/explorer.exe/97695DB032a000/explorer.exe",
+    "vendor": "https://learn.microsoft.com/en-us/windows/arm/arm64ec"
+  },
+  {
+    "id": "office-current-cab",
+    "app": "Microsoft 365 Apps",
+    "variant": "Current Channel metadata cabinet",
+    "expected": "version metadata \u00b7 no executable target declared",
+    "url": "https://officecdn.microsoft.com/pr/492350f6-3a01-4f97-b9c0-c7c6ddf67d60/Office/Data/v64.cab",
+    "vendor": "https://learn.microsoft.com/en-us/microsoft-365-apps/updates/overview-update-channels"
+  },
+  {
+    "id": "office-ec",
+    "app": "Microsoft 365 Apps",
+    "variant": "ARM64EC installer handoff",
+    "expected": "publisher confirms ARM64EC",
+    "url": null,
+    "vendor": "https://blogs.windows.com/windowsdeveloper/2021/06/28/announcing-arm64ec-building-native-and-interoperable-apps-for-windows-11-on-arm/"
+  },
+  {
+    "id": "cubase-ec",
+    "app": "Cubase 15",
+    "variant": "15.0.40 installer ZIP",
+    "expected": "ARM64EC payload",
+    "url": "https://download.steinberg.net/automated_updates/sda_downloads/1863ce51-3403-4e60-bea9-27a3b06918ae/Cubase_15.0.40_Installer_winarm64ec.zip",
+    "vendor": "https://download.steinberg.net/downloads/software/cubase-15.html"
+  },
+  {
+    "id": "groove-agent-ec",
+    "app": "Groove Agent SE",
+    "variant": "6.0.30 installer ZIP",
+    "expected": "ARM64EC payload",
+    "url": "https://download.steinberg.net/automated_updates/sda_downloads/5dcb11f5-a8cb-4d78-a9f5-bff7733c1c10/GrooveAgent_SE_6.0.30_Installer_winarm64ec.zip",
+    "vendor": "https://download.steinberg.net/downloads/software/cubase-15.html"
+  },
+  {
+    "id": "padshop-ec",
+    "app": "Padshop",
+    "variant": "2.3 installer ZIP",
+    "expected": "ARM64EC payload",
+    "url": "https://download.steinberg.net/automated_updates/sda_downloads/b1a5fbc5-b52a-4e00-8be0-f2e22b963057/Padshop_2.3_Installer_winarm64ec.zip",
+    "vendor": "https://download.steinberg.net/downloads/software/cubase-15.html"
+  },
+  {
+    "id": "microsoft",
+    "app": "Microsoft Store only listings",
+    "variant": "account, store or installer handoff",
+    "expected": "no public artifact verified",
+    "url": null,
+    "vendor": "https://learn.microsoft.com/en-us/windows/arm/add-arm-support"
+  },
+  {
+    "id": "adobe",
+    "app": "Adobe Photoshop (Creative Cloud)",
+    "variant": "account, store or installer handoff",
+    "expected": "no public artifact verified",
+    "url": null,
+    "vendor": "https://helpx.adobe.com/photoshop/kb/photoshop-for-apple-silicon.html"
+  },
+  {
+    "id": "go-amd64-msi",
+    "app": "Go",
+    "variant": "1.24.0 msi x64",
+    "expected": "x64",
+    "url": "https://go.dev/dl/go1.24.0.windows-amd64.msi",
+    "vendor": "https://go.dev/dl/#go1.24.0"
+  },
+  {
+    "id": "go-amd64-zip",
+    "app": "Go",
+    "variant": "1.24.0 zip x64",
+    "expected": "x64",
+    "url": "https://go.dev/dl/go1.24.0.windows-amd64.zip",
+    "vendor": "https://go.dev/dl/#go1.24.0"
+  },
+  {
+    "id": "go-arm64-msi",
+    "app": "Go",
+    "variant": "1.24.0 msi ARM64",
+    "expected": "ARM64",
+    "url": "https://go.dev/dl/go1.24.0.windows-arm64.msi",
+    "vendor": "https://go.dev/dl/#go1.24.0"
+  },
+  {
+    "id": "go-arm64-zip",
+    "app": "Go",
+    "variant": "1.24.0 zip ARM64",
+    "expected": "ARM64",
+    "url": "https://go.dev/dl/go1.24.0.windows-arm64.zip",
+    "vendor": "https://go.dev/dl/#go1.24.0"
+  },
+  {
+    "id": "go-386-msi",
+    "app": "Go",
+    "variant": "1.24.0 msi x86",
+    "expected": "x86",
+    "url": "https://go.dev/dl/go1.24.0.windows-386.msi",
+    "vendor": "https://go.dev/dl/#go1.24.0"
+  },
+  {
+    "id": "go-386-zip",
+    "app": "Go",
+    "variant": "1.24.0 zip x86",
+    "expected": "x86",
+    "url": "https://go.dev/dl/go1.24.0.windows-386.zip",
+    "vendor": "https://go.dev/dl/#go1.24.0"
+  },
+  {
+    "id": "pwsh-x64",
+    "app": "PowerShell",
+    "variant": "7.5.4 ZIP x64",
+    "expected": "x64",
+    "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-x64.zip",
+    "vendor": "https://github.com/PowerShell/PowerShell/releases/tag/v7.5.4"
+  },
+  {
+    "id": "pwsh-arm64",
+    "app": "PowerShell",
+    "variant": "7.5.4 ZIP ARM64",
+    "expected": "ARM64",
+    "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-arm64.zip",
+    "vendor": "https://github.com/PowerShell/PowerShell/releases/tag/v7.5.4"
+  }
+]

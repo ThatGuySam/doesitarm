@@ -1,4 +1,4 @@
-//! Range-based inspection of macOS downloads. The caller supplies all I/O.
+//! Range-based inspection of macOS and Windows downloads. The caller supplies all I/O.
 #![forbid(unsafe_code)]
 
 mod apfs;
@@ -25,7 +25,10 @@ mod sparse_dmg;
 mod stream_bundle;
 mod tar;
 mod udif_codec;
+mod windows;
 mod zip;
+
+pub use windows::{DotNet, Windows};
 
 pub use diagnostic::ScanDiagnostic;
 pub use inventory::{
@@ -241,8 +244,20 @@ pub struct InstallerMetadata {
     pub remote_components: Vec<String>,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Platform {
+    Macos,
+    Windows,
+    #[default]
+    Unknown,
+}
+
 #[derive(Debug, Serialize)]
 pub struct ScanResult {
+    pub platform: Platform,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub windows: Option<Windows>,
     pub format: Option<&'static str>,
     pub status: Status,
     pub architectures: Vec<Architecture>,
@@ -290,6 +305,8 @@ pub struct ScanResult {
 impl ScanResult {
     pub fn new(total_size: u64) -> Self {
         Self {
+            platform: Platform::Unknown,
+            windows: None,
             format: None,
             status: Status::Complete,
             architectures: Vec::new(),
@@ -338,6 +355,7 @@ impl ScanResult {
 pub fn bundle_metadata(plist: &[u8], bundle_path: &str) -> ScanResult {
     let mut result = ScanResult::new(plist.len() as u64);
     result.format = Some("app");
+    result.platform = Platform::Macos;
     if result.total_size > bundle::MAX_PLIST {
         result.set_error(ScanError::Limit("bundle Info.plist size"));
         return result;
@@ -465,6 +483,13 @@ async fn scan_internal(
             })
             .cloned();
     }
+    if result.platform == Platform::Unknown
+        && (matches!(result.format, Some("macho" | "dmg" | "pkg" | "app"))
+            || result.bundle_path.is_some()
+            || !result.architectures.is_empty())
+    {
+        result.platform = Platform::Macos;
+    }
     inventory::finalize(&mut result);
     result.bytes_read = input.coverage.bytes;
     result.bytes_requested = input.requested;
@@ -499,6 +524,29 @@ async fn inspect(
         out.executable_size = Some(input.size());
         out.scan_macho(input).await?;
         return Ok(());
+    }
+    if magic.starts_with(b"MZ") && matches!(target, Target::Auto) {
+        let mut windows = Windows::default();
+        let primary = windows::pe(input, &mut windows).await;
+        if windows.machine.is_some() {
+            out.format = Some("pe");
+            out.executable_size = Some(input.size());
+            windows.set_result(out);
+        }
+        return primary;
+    }
+    if magic == b"\xd0\xcf\x11\xe0" && matches!(target, Target::Auto) {
+        let mut windows = Windows::default();
+        let primary = windows::msi(input, &mut windows).await;
+        if windows.installer_kind.is_some() {
+            out.format = Some("msi");
+            windows.set_result(out);
+        }
+        return primary;
+    }
+    if magic == b"MSCF" && matches!(target, Target::Auto) {
+        out.format = Some("cab");
+        return windows::cab::inspect(input, work, out).await;
     }
     if magic.starts_with(b"#!") {
         out.format = Some("script");

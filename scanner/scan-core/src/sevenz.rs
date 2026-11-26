@@ -4,7 +4,7 @@ use crate::{
     decode::DecodeBudget,
     inflate::{Codec, Forward},
     inventory::{self, Allowance},
-    le32, le64, nested,
+    le32, le64, nested, windows,
 };
 use sevenz_rust2::{Archive, ArchiveEntry, EncoderMethod, Password, SIGNATURE_HEADER_SIZE};
 use std::io::{self, Read, Seek, SeekFrom};
@@ -55,6 +55,9 @@ pub(crate) async fn scan(
         .filter_map(|(index, path)| Some((index, bundle::selected_plist(path, target)?)))
         .min_by_key(|(_, name)| (name.matches('/').count(), *name));
     let Some((info, root)) = app else {
+        if matches!(target, Target::Auto) && scan_windows(&mut source, paths.clone(), out).await? {
+            return Ok(());
+        }
         let mut candidates: Vec<_> = paths
             .filter_map(|(index, path)| Some((index, path, nested::Kind::from_path(path)?)))
             .collect();
@@ -132,6 +135,63 @@ pub(crate) async fn scan(
     inventory.record_primary(&primary);
     out.inventory = Some(inventory);
     primary
+}
+
+async fn scan_windows<'a>(
+    source: &mut Members<'_, impl ReadAt>,
+    paths: impl Iterator<Item = (usize, &'a str)> + Clone,
+    out: &mut ScanResult,
+) -> Result<bool> {
+    let mut evidence = windows::ArchiveEvidence::default();
+    if paths
+        .clone()
+        .any(|(_, path)| windows::resembles_installer(path))
+    {
+        evidence.partial();
+    }
+    let mut allowance = Allowance::new(source.input, source.work);
+    let mut interrupted = None;
+    for (index, executable) in
+        paths.filter_map(|(index, path)| Some((index, windows::pe_extension(path)?)))
+    {
+        if source.archive.files[index].size < 64 {
+            continue;
+        }
+        if let Err(error) = allowance.step(source.input, source.work) {
+            interrupted = Some(error);
+            break;
+        }
+        if !source.work.local() && source.offsets[index] > 2 * 1024 * 1024 {
+            evidence.partial();
+            continue;
+        }
+        let mut observed = crate::Windows::default();
+        let status = match source.open(index) {
+            Ok(mut member) if matches!(member.data, BlockSource::Stored(_)) => {
+                windows::pe(&mut member, &mut observed).await
+            }
+            Ok(mut member) => windows::pe_prefix(&mut member, &mut observed).await,
+            Err(error) => Err(error),
+        };
+        if observed.machine.is_some() {
+            evidence.add(observed, executable);
+        }
+        if let Err(error) = status {
+            evidence.partial();
+            if inventory::stop(&error) {
+                interrupted = Some(error);
+                break;
+            }
+        }
+    }
+    if interrupted.is_some() {
+        evidence.partial();
+    }
+    let found = evidence.finish("7z", out);
+    match interrupted {
+        Some(error @ (ScanError::Budget | ScanError::Source(_))) => Err(error),
+        _ => Ok(found),
+    }
 }
 
 async fn inventory_members(

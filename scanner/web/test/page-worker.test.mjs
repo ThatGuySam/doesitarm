@@ -348,3 +348,34 @@ test('permits the scoped GitHub Desktop handoff as one intermediate', async () =
   assert.equal(result.decision, 'resolved');
   assert.deepEqual(visits, [page, doc, file]);
 });
+
+test('routes a pasted extensionless Windows download to the normal range scanner', async () => {
+  const data = readFileSync(fixture('windows/arm64.exe'));
+  const visits = [];
+  let canceled = false;
+  const handle = handler((url, headers) => {
+    visits.push([url.pathname, headers.get('Range')]);
+    if (url.pathname === '/redirect.exe') return redirect('/product');
+    const type = 'application/vnd.microsoft.portable-executable';
+    if (!headers.has('Range')) {
+      return new Response(new ReadableStream({ cancel() { canceled = true; } }), {
+        headers: { 'Content-Type': type, 'Content-Length': '67108864' },
+      });
+    }
+    if (headers.get('Range') === 'bytes=0-0') {
+      return new Response(data.subarray(0, 1), {
+        status: 206, headers: { 'Content-Type': type, 'Content-Range': 'bytes 0-0/67108864' },
+      });
+    }
+    assert.fail('Discovery must not read the installer payload');
+  });
+  const resolved = await (await handle(request(publisher + '/redirect.exe'), env)).json();
+  assert.equal(resolved.decision, 'resolved');
+  assert.equal(resolved.candidates[0].os, 'windows');
+  assert.deepEqual(visits, [['/redirect.exe', 'bytes=0-0'], ['/product', 'bytes=0-0']]);
+  visits.length = 0;
+  const extensionless = await (await handle(request(), env)).json();
+  assert.equal(extensionless.candidates[0].os, 'windows');
+  assert.deepEqual(visits, [['/product', null], ['/product', 'bytes=0-0']]);
+  assert.ok(canceled);
+});
