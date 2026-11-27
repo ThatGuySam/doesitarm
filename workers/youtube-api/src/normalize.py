@@ -13,6 +13,8 @@ TIMESTAMP_RE = re.compile(r"(?:([0-5]?[0-9]):)?([0-5]?[0-9]):([0-5][0-9])")
 
 DEFAULT_PLAYLIST_LIMIT = 50
 MAX_PLAYLIST_LIMIT = 200
+# Internal (updater) limit for whole source playlists.
+MAX_SOURCE_PLAYLIST = 3000
 
 
 class BadInput(ValueError):
@@ -87,6 +89,7 @@ def normalize_video(info):
         "categories": list(info.get("categories") or []),
         "duration": info.get("duration"),
         "upload_date": info.get("upload_date"),
+        "timestamp": info.get("timestamp") or info.get("release_timestamp"),
         "channel": info.get("channel") or info.get("uploader"),
         "channel_id": info.get("channel_id"),
         "thumbnail": _thumbnail(info),
@@ -108,6 +111,8 @@ def normalize_playlist(info, limit):
             "title": entry.get("title"),
             "url": f"https://www.youtube.com/watch?v={video_id}",
             "duration": entry.get("duration"),
+            "channel": entry.get("channel") or entry.get("uploader"),
+            "channel_id": entry.get("channel_id"),
         })
         if len(items) >= limit:
             break
@@ -115,6 +120,7 @@ def normalize_playlist(info, limit):
         "id": info.get("id"),
         "title": info.get("title"),
         "channel": info.get("channel") or info.get("uploader"),
+        "channel_id": info.get("channel_id") or info.get("uploader_id"),
         "count": len(items),
         "items": items,
     }
