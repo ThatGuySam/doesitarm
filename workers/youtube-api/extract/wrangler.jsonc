@@ -1,0 +1,15 @@
+{
+  "$schema": "../../../node_modules/wrangler/config-schema.json",
+  // Runs yt-dlp. No bindings, no secrets, no vars, no route: reachable only through
+  // service bindings from doesitarm-youtube-api and doesitarm-youtube-updater.
+  "name": "doesitarm-youtube-extract",
+  "main": "../src/extract.py",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-11-23",
+  "compatibility_flags": ["python_workers"],
+  "workers_dev": false,
+  "preview_urls": false,
+  // Extraction is CPU-heavy Python; network waits do not count.
+  "limits": { "cpu_ms": 120000 },
+  "observability": { "enabled": true }
+}

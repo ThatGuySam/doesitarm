@@ -7,9 +7,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
-sys.path.insert(1, str(ROOT / "python_modules"))
+sys.path.insert(1, str(ROOT / "extract" / "python_modules"))
 
 import canary  # noqa: E402
+import schema  # noqa: E402
 import provenance  # noqa: E402
 import release  # noqa: E402
 import transport  # noqa: E402
@@ -375,6 +376,43 @@ class ProvenanceTests(unittest.TestCase):
         for label, prov, name, sha in cases:
             with self.assertRaises(provenance.AttestationError, msg=label):
                 provenance.verify_provenance(prov, name, sha)
+
+
+class SchemaTests(unittest.TestCase):
+    GOOD = {"id": "3SG5e4z-Ygg", "title": "T", "description": "0:10 intro\n1:00 end", "tags": ["a"],
+            "categories": [], "duration": 60, "upload_date": "20210208", "channel": "C",
+            "channel_id": "UCB3jOb5QVjX7lYecvyCoTqQ", "thumbnail": "https://i.ytimg.com/vi/x/hq.jpg",
+            "url": "javascript:alert(1)", "extra": {"x": 1}, "timestamps": [{"time": "9:99", "fullText": "evil"}]}
+
+    def test_video_rebuilds_derived_fields(self):
+        out = schema.video(dict(self.GOOD), "3SG5e4z-Ygg")
+        self.assertEqual(out["url"], "https://www.youtube.com/watch?v=3SG5e4z-Ygg")
+        self.assertEqual([t["time"] for t in out["timestamps"]], ["0:10", "1:00"])
+        self.assertNotIn("extra", out)
+        self.assertTrue(out["complete"])
+
+    def test_video_rejects_bad_output(self):
+        for change in ({"id": "yLVcRkFtEcA"}, {"title": ""}, {"title": None}, {"title": "x" * 400},
+                       {"tags": "a"}, {"tags": [1]}, {"upload_date": "2021-02-08"}, {"duration": -1},
+                       {"duration": True}, {"description": "x" * 20000}):
+            with self.assertRaises(schema.InvalidOutput, msg=change):
+                schema.video({**self.GOOD, **change}, "3SG5e4z-Ygg")
+        out = schema.video({**self.GOOD, "thumbnail": "https://evil.example/x.jpg", "channel_id": "bad"},
+                           "3SG5e4z-Ygg")
+        self.assertIsNone(out["thumbnail"])
+        self.assertIsNone(out["channel_id"])
+
+    def test_playlist(self):
+        data = {"id": "PLaa9cZC07ZPFqjoYLZRR3kbbnJRHhlmXq", "title": "B", "channel": "Sam",
+                "items": [{"index": 1, "id": "3SG5e4z-Ygg", "title": "a"},
+                          {"index": 2, "id": "3SG5e4z-Ygg", "title": "dupe"},
+                          {"index": 3, "id": "yLVcRkFtEcA", "title": None}]}
+        out = schema.playlist(data, "PLaa9cZC07ZPFqjoYLZRR3kbbnJRHhlmXq")
+        self.assertEqual([i["id"] for i in out["items"]], ["3SG5e4z-Ygg", "yLVcRkFtEcA"])
+        for bad in ({**data, "id": "PLother0000000000"}, {**data, "items": [{"index": 1, "id": "../x"}]},
+                    {**data, "items": "x"}):
+            with self.assertRaises(schema.InvalidOutput):
+                schema.playlist(bad, "PLaa9cZC07ZPFqjoYLZRR3kbbnJRHhlmXq")
 
 
 if __name__ == "__main__":

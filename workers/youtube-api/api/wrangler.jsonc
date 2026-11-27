@@ -1,0 +1,30 @@
+{
+  "$schema": "../../../node_modules/wrangler/config-schema.json",
+  // Public read API. Trusted code only: no yt-dlp, no secrets; writes only its cache KV.
+  "name": "doesitarm-youtube-api",
+  "main": "../src/api.py",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-11-23",
+  "compatibility_flags": ["python_workers"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "limits": { "cpu_ms": 10000 },
+  "observability": { "enabled": true },
+  "vars": {
+    "PLAYER_CLIENT": "tv_simply,web_embedded"
+  },
+  // No cron here: the updater owns the schedule.
+  "triggers": { "crons": [] },
+  "kv_namespaces": [
+    { "binding": "CACHE", "id": "b0978ce60f7d4d7494047a8feff3a01b" }
+  ],
+  // Cache misses (real YouTube extractions) per client IP and in total, per location.
+  "ratelimits": [
+    { "name": "MISS_PER_IP", "namespace_id": "471101", "simple": { "limit": 10, "period": 60 } },
+    { "name": "MISS_GLOBAL", "namespace_id": "471102", "simple": { "limit": 60, "period": 60 } }
+  ],
+  "services": [
+    { "binding": "EXTRACT", "service": "doesitarm-youtube-extract" },
+    { "binding": "UPDATER", "service": "doesitarm-youtube-updater" }
+  ]
+}
