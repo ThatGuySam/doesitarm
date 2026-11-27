@@ -883,6 +883,7 @@ Movavi Video Converter also absorbs the `Movavi Video Converter 22 Premium` scan
 | Octave-6.2.0 | native | Name carries the old 6.2.0 scan version; Octave.app does not absorb the scan, and the GNU Octave entry already covers Octave |
 | GLMv4 | rosetta | Evidence covers only GLM 4 on macOS 11 to 12.0 (Cloud AutoCal2); GLM 5 is the native current product, and GLM 4 does not absorb the GLMv4 scan |
 | Soundminer v5Pro | rosetta | Evidence covers the old V5 Pro major version, which the vendor supports only up to macOS Monterey; the native successor is a separate purchase |
+| Mail for Gmail | native | Name collision: under the matching rules on master the entry also absorbs Apple's Mail scan (`com.apple.mail`, README name = scan name + qualifier), which would remove Apple Mail's page. The current name, Mail+ for Gmail, collides the same way, and the vendor rules cannot separate them without a `SEPARATE_PRODUCTS` exception. |
 | Mixbus32C-7 | rosetta | Evidence covers the 7.x bundle with an M1 report that predates Harrison's native release; renaming to Mixbus32C would misstate the current product |
 
 ### Kept under the scan name
