@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../node_modules/wrangler/config-schema.json",
+  // The only writer: pointer KV, wheels/runs/events/snapshot in R2. Holds UPDATER_KEY.
+  // Never imports yt-dlp. workers.dev serves key-protected /admin/* only.
+  "name": "doesitarm-youtube-updater",
+  "main": "../src/updater.py",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-11-23",
+  "compatibility_flags": ["python_workers"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "limits": { "cpu_ms": 60000 },
+  "observability": { "enabled": true },
+  "vars": {
+    // From hosted canaries on 2026-11-27: Watch pages from Cloudflare egress are often
+    // redirected to google.com/sorry and the default visionos Player returns
+    // LOGIN_REQUIRED; tv_simply then web_embedded returned full metadata 5/5.
+    "PLAYER_CLIENT": "tv_simply,web_embedded"
+  },
+  // UTC. 09:17: qualify-and-promote job (the only thing that can change versions),
+  // then a full snapshot sweep. Hourly at :41: incremental snapshot step.
+  "triggers": { "crons": ["17 9 * * *", "41 * * * *"] },
+  "kv_namespaces": [
+    { "binding": "POINTERS", "id": "cf5fcc72406542c39a08c5d54934354a" }
+  ],
+  "r2_buckets": [
+    { "binding": "WHEELS", "bucket_name": "doesitarm-youtube-wheels" }
+  ],
+  "services": [
+    { "binding": "EXTRACT", "service": "doesitarm-youtube-extract" }
+  ]
+  // Secret (not in this file): UPDATER_KEY, set with `wrangler secret put UPDATER_KEY`.
+}

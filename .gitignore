@@ -106,3 +106,6 @@ dist
 
 # Keep plan/search artifacts for OMX workflows
 docs/data/
+
+# Local agent notes (machine-specific, not committed)
+AGENTS.local.md

@@ -1,0 +1,7 @@
+python_modules/
+.vendor/
+.wrangler/
+__pycache__/
+.dev.vars
+extract/bundled.whl
+extract/bundled.js

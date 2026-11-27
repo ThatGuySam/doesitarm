@@ -498,6 +498,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Lightroom Classic](https://www.adobe.com/products/photoshop-lightroom-classic.html) - ✅ Yes, Native Apple Silicon Support as of v10.3 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Linearity Curve](https://www.linearity.io/curve/) - ✅ Yes, it was shown at the November 10th, 2021 event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1300)
 * [Logoist 4](https://www.syniumsoftware.com/logoist) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Official News](https://www.syniumsoftware.com/synium-blog/apple-silicon-is-here-and-we-are-ready)
+* [Louppe](https://louppe.eu/) - ✅ Yes, Native Apple Silicon Support in v1.14.1 - [Release](https://github.com/murlexander/louppe-media-culler/releases/tag/v1.14.1)
 * [Luminar](https://skylum.com/luminar) - ✳️ Yes, works via Rosetta 2 - [Source](https://youtu.be/CKA1YW9l8j0?t=43)
 * [MacTeX](https://www.tug.org/mactex/mactex-download.html) - ✅ Yes, Full Native Apple Silicon Support as of MacTeX-2021 - [Official FAQ](https://www.tug.org/mactex/faq/index.html#qm08)
 * [Mail Designer 365](https://maildesigner365.com) - ✅ Yes, fully native support as of v2.0 - [Official page](https://www.maildesigner365.com/new-mail-designer-365-2-0-with-big-sur-optimization/)
@@ -617,6 +618,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [WebTorrent](https://webtorrent.io/desktop/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/494#issuecomment-759525123)
 * [Wondershare Filmora](https://apps.apple.com/us/app/filmora-video-editor/id1516822341?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://filmora.wondershare.com/filmora-supports-apple-arm.html)
 * [XFUtility3](https://hk.canon/en/support/0200776202) - ✅ Yes, Native Apple Silicon Support as of v3.16.10.1 - [Official Article](https://hk.canon/en/support/0200776202) [Inspected Download](https://gdlp01.c-wss.com/gds/2/0200007762/01/xum-3-16-10-1-10l.zip)
+* [Yaptake](https://yaptake.com/) - ✅ Yes, Native Apple Silicon Support as of v0.1.0 - [System requirements](https://yaptake.com/)
 * [YTD](https://www.ytddownloader.com/macosx.html) - ✅ Yes, Native Apple Silicon Support as of v7.8 - [Evidence](https://www.ytddownloader.com/en/) [Inspected Download](https://dl.ytddownloader.com/installers/YTDMac.dmg)
 
 
@@ -830,6 +832,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Jump Desktop](https://jumpdesktop.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.7.15 - [Changelog](https://changelog.jumpdesktop.com/jump-desktop-8.7.15-for-mac-3cSLeM)
 * [Keep It](https://reinventedsoftware.com/keepit/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9 - [Official News](https://reinventedsoftware.com/news/)
 * [Key Codes](https://manytricks.com/keycodes/) - ✅ Yes, Full Native Apple Silicon Support as of v2.2 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
+* [Kimiko](https://kimiko.app/) - ✅ Native Apple Silicon support in v0.9.12 - [Release notes](https://docs.kimiko.app/changelog/#v0912) [Issue](https://github.com/ThatGuySam/doesitarm/issues/1126)
 * [Kingsoft Kdocs Mac](https://www.kdocs.cn/newDownload) - ✳️ Yes, works via Rosetta 2 - [Homebrew Cask](https://formulae.brew.sh/cask/kdocs) [Inspected Download](https://volcengine-kdocs-cache.wpscdn.cn/kdocs/apk/kdesktopmac/KDocs_1001_v3.11.7.dmg)
 * [Kiwi for Gmail](https://www.kiwiforgmail.com/download) - ✅ Yes, Native Apple Silicon Support as of v5.0.2 - [Homebrew Cask](https://formulae.brew.sh/cask/kiwi-for-gmail)
 * [Lacona](https://lacona.app/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344402/5114)
@@ -1084,6 +1087,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [VLC](https://www.videolan.org/vlc/download-macosx.html) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.12 - [Release Notes](https://www.videolan.org/news.html#news-2021-01-12)
 * [Volanta](https://volanta.app/) - ✅ Yes, Native Apple Silicon Support as of v1.19.2 - [Homebrew Cask](https://formulae.brew.sh/cask/volanta) [Evidence](https://desktopinsights.com/apps/volanta?platform=macos)
 * [Xbox Game Pass for PC](https://www.xbox.com/en-US/xbox-game-pass/pc-games) - ✳️ Yes, works via Parallels virtualization - [Download Parallels](https://prf.hn/l/6qOdLPB)
+* [Zenaria](https://zenaria.ru/en/mac) - ✅ Native Apple Silicon support in v11.21.8, ad hoc signed - [Mac requirements](https://zenaria.ru/en/mac) [Official download](https://zenaria.ru/download/mac) [Issue](https://github.com/ThatGuySam/doesitarm/issues/1122)
 * [Zwift](https://www.zwift.com/eu-de/download) - ✳️ Yes, works via Rosetta 2 as of v1.0 (25) - [Source](https://forums.zwift.com/t/m1-apple-silicon-compatibility/514491/81) [Verification](https://raw.githubusercontent.com/steve1878/images_does_it_arm/main/zwift_1.0_25.png)
 
 
@@ -1295,6 +1299,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Juicy](https://getjuicy.app) - ✅ Yes, Native Apple Silicon Support as of v1.5.6 - [Official Compatibility](https://getjuicy.app/#faq) [Release Notes](https://getjuicy.app/changelog/)
 * [Jumpcut](https://snark.github.io/jumpcut) - ✅ Yes, Native Apple Silicon Support as of v0.74 - [GitHub Issue](https://github.com/snark/jumpcut/issues/59#issuecomment-854313788)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
+* [KarmaDisk](https://apps.apple.com/us/app/karmadisk-photos-storage/id6816219976) - ✅ Native Apple Silicon support reported in v1.2.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/1119)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
 * [KeyboardCleanTool](https://folivora.ai/keyboardcleantool/) - ✅ Yes, Native Apple Silicon Support as of v9.0 - [Official Site](https://folivora.ai/keyboardcleantool/) [Inspected Download](https://folivora.ai/releases/KeyboardCleanTool9.zip)
 * [Kyocera Print Panel](https://online-hilfe.kyocera-ds.de/wissensdatenbank/drucker-probleme-unter-macos-26-tahoe-fehlermeldung-stopped-support-filter-failed/) - ✅ Yes, Native Apple Silicon Support as of v6.2 - [Evidence](https://kyoceradocumentsolutions.com.au/knowledge/driver-installation-mac)
@@ -1325,6 +1330,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [NFC Tools for Desktop](https://www.wakdev.com/en/apps/nfc-tools-pc-mac.html) - ✅ Yes, Native Apple Silicon Support as of v2.7 - [Release Notes](https://www.wakdev.com/en/apps/nfc-tools-pc-mac/all-version.html)
 * [NoMachine](https://download.nomachine.com/download/?id=42) - ✅ Yes, Native Apple Silicon Support as of v10.2.3 - [Official Article](https://kb.nomachine.com/SU10X00290)
 * [NoNotify](https://nonotify.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/nonotify)
+* [NotchNook](https://lo.cafe/notchnook/) - ✅ Native Apple Silicon Support reported as of v1.5.5 - [Website update](https://github.com/ThatGuySam/doesitarm/issues/1115)
 * [One Switch](https://fireball.studio/oneswitch/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/635280/5114)
 * [OnyX for macOS](https://titanium-software.fr/en/onyx.html) - ✅ Yes, Full Native Apple Silicon Support reported as of v3.9.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/622#issue-849839262) [Release Notes](https://titanium-software.fr/en/release_onyx.html)
 * [Pacifist](https://www.charlessoft.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/573#issue-812045761)
