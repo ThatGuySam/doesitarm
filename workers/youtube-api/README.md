@@ -180,14 +180,15 @@ with `$W r2 object put ... --remote` and run a snapshot step.
 To change the bundled yt-dlp: update the wheel line in `scripts/vendor.sh`, run it,
 redeploy all three Workers. Routine version changes need no redeploy.
 
-The KV namespace `doesitarm-youtube-state` (`cf44dc02a5e4472bb95fec0f0cf10080`) was
-used by the single-Worker version and is no longer bound; it can be deleted.
+The single-Worker version's KV namespace `doesitarm-youtube-state` was deleted on
+2026-11-27, along with its `CANARY_KEY` secret (replaced by `UPDATER_KEY`).
 
 ## Measured (hosted Cloudflare, 2026-11-27)
 
 - Sandbox cold start (new isolate: Python start plus zipimport of yt-dlp): about 9 to
   11 s for the first video; warm videos 1.5 to 2.5 s; a canary suite about 9 s.
-- Snapshot: sweep of 42 playlists plus 40 videos took 138 s wall in one run.
+- Snapshot: sweep of 42 playlists plus 40 videos took 138 s wall in one run; 100 videos
+  about 3.5 minutes. First full seed: 2,792 videos (546 new, newest 2026-11-26).
 - Playlists from Cloudflare egress work. Videos need the `tv_simply,web_embedded`
   player clients: YouTube often redirects Watch pages from Cloudflare IPs to
   `google.com/sorry`, and the default client then returns "Sign in to confirm you're
