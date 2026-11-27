@@ -204,7 +204,12 @@ pub(crate) struct Forward<'a, S> {
     codec: Codec,
     size: u64,
     work: &'a DecodeBudget<'a>,
+    replays: u32,
 }
+
+/// Each replay decodes the stream again from its start. A reader that keeps
+/// jumping backward would repeat that work without end, so stop and say why.
+const MAX_REPLAYS: u32 = 64;
 
 impl<'a, S: ReadAt> Forward<'a, S> {
     pub(crate) fn new(
@@ -221,13 +226,25 @@ impl<'a, S: ReadAt> Forward<'a, S> {
             codec,
             size,
             work,
+            replays: 0,
         })
     }
 }
 
 impl<S: ReadAt> Forward<'_, S> {
+    /// Decoded bytes consumed so far. A read below this needs a restart.
+    pub(crate) fn position(&self) -> u64 {
+        self.stream.decoded
+    }
+
     pub(crate) fn rewind_for(&mut self, offset: u64) -> Result<()> {
         if offset < self.stream.decoded {
+            self.replays += 1;
+            if self.replays > MAX_REPLAYS {
+                return Err(ScanError::Limit(
+                    "compressed stream was read out of order too many times; scan stopped",
+                ));
+            }
             self.work.start()?;
             self.stream = Stream::new(0..self.source.size(), self.codec, self.work)?;
         }

@@ -641,7 +641,7 @@ async fn scan_nested_member(
             ));
         }
         return nested::scan(
-            &mut ContainerReader::new(&mut SeekableMember(member)),
+            &mut ContainerReader::new(&mut SeekableMember::new(member)),
             kind,
             path,
             work,
@@ -662,27 +662,80 @@ async fn scan_nested_member(
     .await
 }
 
-/// Large nested images can jump back to earlier decoded offsets. Replay their
-/// compressed member on demand, holding only the ranges the inner parser reads.
-struct SeekableMember<'a, S>(Member<'a, S>);
+/// Largest compressed member the local profile keeps decoded in memory so a
+/// nested image can be read in any order.
+const MAX_HELD_MEMBER: u64 = 768 * 1024 * 1024;
+const HOLD_STEP: u64 = 4 * 1024 * 1024;
+
+/// Large nested images can jump back to earlier decoded offsets. A compressed
+/// member cannot be read backward, and replaying it from its start on every jump
+/// re-reads and re-decodes the packed bytes once per jump. Serve forward reads
+/// from the stream. On the first backward jump decode the member once into
+/// memory and answer every later read from that copy. A member too large to hold
+/// ends the scan with a clear status instead of replaying without end.
+struct SeekableMember<'a, S> {
+    member: Member<'a, S>,
+    held: Option<Vec<u8>>,
+}
+
+impl<'a, S> SeekableMember<'a, S> {
+    fn new(member: Member<'a, S>) -> Self {
+        Self { member, held: None }
+    }
+}
+
+impl<S: ReadAt> SeekableMember<'_, S> {
+    fn position(&self) -> u64 {
+        match &self.member {
+            Member::Compressed(source) => source.position(),
+            Member::Lzma(source) => source.position(),
+            Member::Stored(_) => 0,
+        }
+    }
+
+    async fn hold(&mut self) -> Result<()> {
+        let size = self.member.size();
+        if size > MAX_HELD_MEMBER {
+            return Err(ScanError::Limit(
+                "nested disk image in a compressed ZIP entry is too large to read out of order; extract it first",
+            ));
+        }
+        match &mut self.member {
+            Member::Compressed(source) => source.rewind_for(0)?,
+            Member::Lzma(source) => source.rewind_for(0)?,
+            Member::Stored(_) => {}
+        }
+        let mut held = Vec::new();
+        held.try_reserve_exact(size as usize)
+            .map_err(|_| ScanError::Limit("decoded buffer could not be allocated"))?;
+        while (held.len() as u64) < size {
+            let count = (size - held.len() as u64).min(HOLD_STEP) as usize;
+            let bytes = self.member.read_at(held.len() as u64, count).await?;
+            held.extend_from_slice(&bytes);
+        }
+        self.held = Some(held);
+        Ok(())
+    }
+}
 
 impl<S: ReadAt> ReadAt for SeekableMember<'_, S> {
     fn size(&self) -> u64 {
-        self.0.size()
+        self.member.size()
     }
 
     fn remaining_budget(&self) -> u64 {
-        self.0.remaining_budget()
+        self.member.remaining_budget()
     }
 
     async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
         check_range(self.size(), offset, len as u64)?;
-        match &mut self.0 {
-            Member::Compressed(source) => source.rewind_for(offset)?,
-            Member::Lzma(source) => source.rewind_for(offset)?,
-            Member::Stored(_) => {}
+        if self.held.is_none() && offset < self.position() {
+            self.hold().await?;
         }
-        self.0.read_at(offset, len).await
+        match &self.held {
+            Some(held) => Ok(held[offset as usize..offset as usize + len].to_vec()),
+            None => self.member.read_at(offset, len).await,
+        }
     }
 }
 
