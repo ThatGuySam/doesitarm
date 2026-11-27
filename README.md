@@ -653,6 +653,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [SeaFile](https://www.seafile.com/en/download/) - ✳️ Yes, works via Rosetta 2 as of v7.0.10 - [Source](https://forum.seafile.com/t/native-support-for-apple-silicon/13390)
 * [Session for Mac](https://www.stayinsession.com/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/933407/5114)
 * [Shadow for macOS](https://shadow.tech/shadow-apps/) - ✅ Yes, Native Apple Silicon Support as of v4.28.7 - [Release Notes](https://forum.shadow.tech/roadmap-release-notes-24/shadow-update-week-39-10-01-2021-3167)
+* [shepetal](https://shepetal.app/) - ✅ Yes, Full Native Apple Silicon Support - [Install page](https://shepetal.app/install)
 * [SideNotes](https://www.apptorium.com/sidenotes) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/668340/5114)
 * [Skim PDF Reader](https://skim-app.sourceforge.io/) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/468#issuecomment-751807890)
 * [Skitch](https://evernote.com/products/skitch) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/821#issue-1059058802)
