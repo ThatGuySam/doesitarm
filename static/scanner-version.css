@@ -1,0 +1,19 @@
+.scanner-version-notice {
+    padding: 0.75rem 1rem;
+    text-align: center;
+    color: #e2e8f0;
+    background: #202938;
+}
+
+.scanner-version-notice a,
+.scanner-version-notice button {
+    color: inherit;
+    margin-inline-start: 0.75rem;
+    text-decoration: underline;
+}
+
+.scanner-version-notice button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}

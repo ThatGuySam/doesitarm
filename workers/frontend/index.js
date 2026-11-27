@@ -1,0 +1,117 @@
+import { handle } from '@astrojs/cloudflare/handler'
+
+const scannerPage = '/apple-silicon-app-test'
+const scannerApi = new Set([ '/api/scan', '/api/resolve', '/api/scan-download' ])
+// The scanner shell resolves its assets and data relative to the page.
+const scannerAsset = /^\/(?:pkg\/)?[a-z0-9_-]+\.(?:css|js|json|wasm)$/
+
+function uncached ( response, policy = 'no-store' ) {
+    const result = new Response( response.body, { status: response.status, headers: response.headers } )
+    result.headers.set( 'Cache-Control', policy )
+    result.headers.set( 'Cloudflare-CDN-Cache-Control', 'no-store' )
+    result.headers.set( 'X-Robots-Tag', 'noindex, nofollow' )
+    result.headers.delete( 'Age' )
+    result.headers.delete( 'CF-Cache-Status' )
+    return result
+}
+
+function redirectPreview ( url ) {
+    return uncached( new Response( null, {
+        status: 307,
+        headers: { Location: `${ url.pathname }${ url.search }` }
+    } ) )
+}
+
+function fetchScanner ( scanner, request, url, assetPath ) {
+    if ( assetPath ) {
+        url.pathname = assetPath
+        url.search = ''
+    }
+
+    // Forward the public hostname, browser fetch metadata, and client IP.
+    const headers = new Headers( request.headers )
+    headers.delete( 'Authorization' )
+    headers.delete( 'Cookie' )
+    if ( assetPath === '/' ) {
+        headers.delete( 'If-Modified-Since' )
+        headers.delete( 'If-None-Match' )
+        headers.delete( 'Range' )
+    }
+
+    return scanner.fetch( new Request( url, {
+        method: request.method,
+        headers,
+        body: request.body,
+        redirect: 'manual'
+    } ) )
+}
+
+function scannerPreview ( response ) {
+    const notice = `<aside class="scanner-version-notice" aria-label="Scanner version">
+        <span>You are using scanner v3 (preview).</span>
+        <a href="?v=1">Switch to v1</a>
+        <button type="button" aria-label="Dismiss scanner version notice" hidden>Dismiss</button>
+    </aside>`
+
+    return new HTMLRewriter()
+        .on( 'head', { element: element => element.append(
+            `<meta name="robots" content="noindex"><link rel="canonical" href="https://doesitarm.com${ scannerPage }">
+            <link rel="stylesheet" href="/scanner-version.css"><script src="/scanner-version.js" defer></script>`,
+            { html: true }
+        ) } )
+        .on( 'main', { element: element => element.before( notice, { html: true } ) } )
+        .on( 'nav a[aria-current="page"]', { element: element => element.setAttribute( 'href', '?v=3' ) } )
+        .transform( response )
+}
+
+export default {
+    async fetch ( request, env, context ) {
+        const scanner = env.SCANNER_V3
+        if ( !scanner ) return handle( request, env, context )
+
+        const url = new URL( request.url )
+        const { pathname, searchParams } = url
+        if ( scannerApi.has( pathname ) ) {
+            return uncached( await fetchScanner( scanner, request, url ) )
+        }
+
+        if ( request.method !== 'GET' && request.method !== 'HEAD' ) {
+            return handle( request, env, context )
+        }
+
+        if ( pathname === scannerPage || pathname === `${ scannerPage }/` ) {
+            const version = searchParams.get( 'v' )
+            if ( version === '3' ) {
+                if ( pathname === scannerPage ) {
+                    url.pathname = `${ scannerPage }/`
+                    return redirectPreview( url )
+                }
+
+                const upstream = await fetchScanner( scanner, request, url, '/' )
+                if ( !upstream.ok ) {
+                    return uncached( new Response( 'Scanner v3 is temporarily unavailable. Return to the scanner page with ?v=1.', {
+                        status: 502,
+                        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+                    } ) )
+                }
+                // Keep the scanner CSP and discard validators for the rewritten body.
+                const response = uncached( upstream, 'no-store, no-transform' )
+                response.headers.delete( 'ETag' )
+                response.headers.delete( 'Last-Modified' )
+                return request.method === 'HEAD' ? response : scannerPreview( response )
+            }
+
+            if ( version === '1' && searchParams.has( 'version' ) ) {
+                searchParams.delete( 'version' )
+                return redirectPreview( url )
+            }
+        }
+
+        if ( pathname.startsWith( `${ scannerPage }/` ) ) {
+            const asset = pathname.slice( scannerPage.length )
+            if ( scannerAsset.test( asset ) ) return fetchScanner( scanner, request, url, asset )
+        }
+
+        return handle( request, env, context )
+    }
+}
