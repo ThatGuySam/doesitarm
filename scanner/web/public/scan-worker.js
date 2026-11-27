@@ -1,5 +1,6 @@
 import init, { local_bundle_metadata, scan, scan_diagnostic } from './pkg/scan_wasm.js';
 import { machoEvidence } from './macho-evidence.js';
+import { Coverage } from './coverage.js';
 import { scanRemote } from './range-scan.js';
 import { emptyResult, MIB } from './scan-result.js';
 
@@ -131,7 +132,8 @@ async function capturePrefix(file, path, evidence, onRead) {
 }
 
 async function scanFile(file, path, progress, evidence, declared = false) {
-  let read = 0;
+  // Unique bytes of this file touched so far. Re-reading a range does not count again.
+  const covered = new Coverage(file.size);
   let sourceError;
   let thinHeader;
   let planned = null;
@@ -150,8 +152,8 @@ async function scanFile(file, path, progress, evidence, declared = false) {
 
     // Wasm identifies the last source read of a bare thin Mach-O.
     if (start === thinHeader) {
-      planned = read + length;
-      progress(read, file.size, planned);
+      planned = covered.bytes + length;
+      progress(covered.bytes, file.size, planned);
     }
     try {
       const chunk = planned === null ? READ_CHUNK : PLANNED_READ_CHUNK;
@@ -167,8 +169,8 @@ async function scanFile(file, path, progress, evidence, declared = false) {
         const current = new Uint8Array(await file.slice(position, chunkEnd).arrayBuffer());
         if (current.byteLength !== chunkEnd - position) throw new Error('Incomplete file range');
         physical.outcome = 'ok';
-        read += current.byteLength;
-        progress(read, file.size, planned);
+        covered.add(position, chunkEnd);
+        progress(covered.bytes, file.size, planned);
         if (length > chunk) bytes.set(current, position - start);
         else bytes = current;
       }
@@ -204,8 +206,10 @@ async function scanFile(file, path, progress, evidence, declared = false) {
   delete result.diagnostic;
   if (sourceError) result.error = sourceError;
   if (declared || result.format === 'macho') {
-    const capturedScript = await capturePrefix(file, path, evidence, (length) =>
-      progress(read + length, file.size, planned));
+    const capturedScript = await capturePrefix(file, path, evidence, (length) => {
+      covered.add(0, length);
+      progress(covered.bytes, file.size, planned);
+    });
     script ||= capturedScript;
   }
   if (declared && script) {

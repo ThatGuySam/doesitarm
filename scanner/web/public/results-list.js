@@ -8,6 +8,7 @@ import { formatDuration, estimateBatch, estimateRemaining, recordSample } from '
 import { emptyResult } from './scan-result.js';
 import { get, ScanCards, statuses, verdict } from './scan-view.js';
 import { drawOutcomes } from './view-level.js';
+import { cancelLabel, countPhrase, tailState } from './tail-state.js';
 import { observedInventory } from './bundle-inventory.js';
 import { emptyBatchTotals, finishBatchTotals, formatSeconds, recordBatchResult, steadyRate, totalsPhrase } from './scan-totals.js';
 
@@ -738,9 +739,12 @@ export class ResultsList {
     }
     if (folder?.stats.partial) counts.push('Partial folder scan');
     const queued = this.#pending.size - this.#active.size;
+    const tail = tailState({ started: Array.from(this.#active, ({ started }) => started), queued, now });
+    setText(cancelAll, cancelLabel(tail));
+    cancelAll.setAttribute('aria-label', cancelLabel(tail));
     if (batch.total) {
       counts.push(`${number.format(batch.finished)} of ${number.format(batch.total)} finished`);
-      if (this.#active.size) counts.push(`${number.format(this.#active.size)} scanning`);
+      if (this.#active.size) counts.push(countPhrase(tail));
       if (queued) counts.push(`${number.format(queued)} queued`);
     }
     if (batch.canceled) counts.push(`${number.format(batch.canceled)} canceled`);

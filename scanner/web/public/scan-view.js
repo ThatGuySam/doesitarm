@@ -2,6 +2,7 @@ import { lookupMac, windowsArchitectures, windowsVerdict } from './windows-resul
 import { redactPath, stringifyRedacted } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { formatDuration } from './scan-progress.js';
+import { rowStatus } from './tail-state.js';
 import {
   formatSeconds, formatSize, rowPhrase,
 } from './scan-totals.js';
@@ -140,7 +141,7 @@ export class ScanCards {
     setText(card.sizeLabel, row.size == null ? '' : formatSize(row.size));
     setText(card.status, result
       ? status === 'canceled' ? 'Canceled' : ''
-      : row.remote ? 'Scanning on Cloudflare' : row.started === null ? 'Queued' : 'Scanning');
+      : row.started === null ? 'Queued' : rowStatus(row.started, now, row.remote));
     card.progress.hidden = Boolean(result || row.started === null);
     if (result?.status === 'complete') {
       card.progress.max = row.planned ?? 1;

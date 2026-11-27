@@ -8,6 +8,9 @@ use plist::Value;
 use std::{collections::VecDeque, ops::Range};
 
 const SECTOR: u64 = 512;
+/// Decoded UDIF chunks a local scan keeps for revisits.
+const LOCAL_CHUNK_CACHE: u64 = 256 * 1024 * 1024;
+const LOCAL_CHUNK_ENTRIES: usize = 1024;
 const MAX_RUN: u64 = 16 * 1024 * 1024;
 const MAX_INDEX: u64 = 8 * 1024 * 1024;
 const MAX_IMAGE_RUN_READS: usize = 8192;
@@ -245,6 +248,27 @@ fn parse_index(
     Ok((runs, partitions))
 }
 
+impl<S> Image<'_, S> {
+    /// The worker keeps two decoded chunks. A local scan has no artificial work
+    /// limit, so it keeps recently used chunks up to a memory ceiling. A volume
+    /// walk revisits many chunks, and decoding one again costs a source read.
+    fn make_room(&mut self, incoming: u64) {
+        if self.work.strict() {
+            if self.cache.len() == 2 {
+                self.cache.pop_back();
+            }
+            return;
+        }
+        let mut held: u64 = self.cache.iter().map(|(_, bytes)| bytes.len() as u64).sum();
+        while !self.cache.is_empty()
+            && (held + incoming > LOCAL_CHUNK_CACHE || self.cache.len() >= LOCAL_CHUNK_ENTRIES)
+        {
+            let (_, old) = self.cache.pop_back().unwrap();
+            held -= old.len() as u64;
+        }
+    }
+}
+
 impl<S: ReadAt> ReadAt for Image<'_, S> {
     fn size(&self) -> u64 {
         self.size
@@ -288,19 +312,18 @@ impl<S: ReadAt> ReadAt for Image<'_, S> {
                     {
                         self.cache.remove(pos).unwrap()
                     } else {
+                        let stored_start = run.stored.start;
                         let packed = run.stored.end - run.stored.start;
                         let expanded = run.disk.end - run.disk.start;
                         if packed > MAX_RUN || expanded > MAX_RUN {
                             return Err(ScanError::Limit("UDIF compressed chunk exceeds 16 MiB"));
                         }
                         self.work.check_chunk(packed, expanded)?;
-                        // Release the old chunk before allocating the decoder and output.
-                        if self.cache.len() == 2 {
-                            self.cache.pop_back();
-                        }
+                        // Release old chunks before allocating the decoder and output.
+                        self.make_room(expanded);
                         let input = self
                             .source
-                            .read_at(run.stored.start, packed as usize)
+                            .read_at(stored_start, packed as usize)
                             .await?;
                         (
                             index,
@@ -495,5 +518,75 @@ mod tests {
             );
             assert_eq!(exact.used(), expanded as u64);
         }
+    }
+
+    struct Counting {
+        data: Vec<u8>,
+        requested: u64,
+        reads: u64,
+    }
+
+    impl ReadAt for Counting {
+        fn size(&self) -> u64 {
+            self.data.len() as u64
+        }
+        async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+            self.requested += len as u64;
+            self.reads += 1;
+            Ok(self.data[offset as usize..offset as usize + len].to_vec())
+        }
+    }
+
+    fn ready<T>(f: impl std::future::Future<Output = T>) -> T {
+        let mut f = std::pin::pin!(f);
+        match f.as_mut().poll(&mut std::task::Context::from_waker(std::task::Waker::noop())) {
+            std::task::Poll::Ready(value) => value,
+            std::task::Poll::Pending => panic!("in-memory I/O must be immediately ready"),
+        }
+    }
+
+    /// An APFS walk revisits more compressed chunks than a two-chunk cache holds.
+    /// Every chunk must be fetched and decoded once while the image is read.
+    #[test]
+    fn revisited_chunks_are_fetched_and_decoded_once() {
+        use std::io::Write;
+        const CHUNKS: usize = 24;
+        const EXPANDED: u64 = 64 * 1024;
+        let mut data = Vec::new();
+        let mut runs = Vec::new();
+        for index in 0..CHUNKS as u64 {
+            let mut plain = vec![0u8; EXPANDED as usize];
+            plain[..8].copy_from_slice(&index.to_le_bytes());
+            let mut encoder =
+                flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::default());
+            encoder.write_all(&plain).unwrap();
+            let packed = encoder.finish().unwrap();
+            runs.push(Run {
+                kind: udif_codec::ZLIB,
+                disk: index * EXPANDED..(index + 1) * EXPANDED,
+                stored: data.len() as u64..(data.len() + packed.len()) as u64,
+            });
+            data.extend(packed);
+        }
+        let file_size = data.len() as u64;
+        let mut source = Counting { data, requested: 0, reads: 0 };
+        let work = DecodeBudget::with_limits(u64::MAX, crate::Profile::Local, None);
+        let mut image = Image {
+            source: &mut source,
+            size: CHUNKS as u64 * EXPANDED,
+            runs,
+            cache: VecDeque::new(),
+            work: &work,
+            run_reads: 0,
+        };
+        for round in 0..10u64 {
+            for index in (0..CHUNKS as u64).rev() {
+                let bytes = ready(image.read_at(index * EXPANDED, 8)).unwrap();
+                assert_eq!(bytes, index.to_le_bytes(), "round {round}");
+            }
+        }
+        drop(image);
+        assert_eq!(source.requested, file_size, "reads {}", source.reads);
+        assert_eq!(work.used(), CHUNKS as u64 * EXPANDED);
     }
 }
