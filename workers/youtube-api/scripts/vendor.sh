@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Rebuild each Worker's python_modules/ from pinned, digest-checked wheels.
-# - extract/python_modules: yt-dlp (the bundled fallback and rollback target) + Workers SDK
+# - extract/bundled.whl + extract/bundled.js: the bundled yt-dlp wheel (fallback and
+#   rollback target), loaded into the Dynamic Worker sandbox by extract/host.js
 # - api/ and updater/python_modules: Workers SDK only (they never import yt-dlp)
+# - .vendor/site: yt-dlp unpacked for the CPython unit tests
 # Also writes src/bundled.py, which tells the trusted Workers what the bundled copy is.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -24,12 +26,16 @@ unpack() {  # unpack <wheel> <dir>
 
 ytdlp_file=$(fetch "$ytdlp")
 sdk_file=$(fetch "$sdk")
-for worker in api updater extract; do
+for worker in api updater; do
   rm -rf "$worker/python_modules"
   mkdir -p "$worker/python_modules"
   unpack "$sdk_file" "$worker/python_modules"
 done
-unpack "$ytdlp_file" extract/python_modules
+rm -rf extract/python_modules .vendor/site
+unpack "$ytdlp_file" .vendor/site
+cp "$ytdlp_file" extract/bundled.whl
+version=$(basename "$ytdlp_file" | sed -E 's/^yt_dlp-(.+)-py3-none-any\.whl$/\1/')
+echo "export const BUNDLED_VERSION = \"$version\";" > extract/bundled.js
 # Keep uploads small: drop data files (man pages, completions) and caches.
 rm -rf */python_modules/*.data
 find . -path ./.vendor -prune -o -name '__pycache__' -type d -prune -exec rm -rf {} +

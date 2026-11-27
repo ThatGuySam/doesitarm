@@ -49,6 +49,14 @@ async def updater_json(env, path):
     return json.loads(str(await reply.text()))
 
 
+async def report_event(env, kind, detail):
+    try:
+        await env.UPDATER.fetch(UPDATER + "/internal/event", method="POST",
+                                body=json.dumps({"kind": kind, "detail": detail})[:8000])
+    except Exception as err:  # noqa: BLE001 - reporting must not break reads
+        print("event report failed", kind, err)
+
+
 async def active_pointer(env):
     if _pointer_cache["value"] and time.time() - _pointer_cache["at"] < POINTER_TTL:
         return _pointer_cache["value"]
@@ -164,6 +172,9 @@ class Default(WorkerEntrypoint):
         except Exception as err:  # noqa: BLE001
             status, result = 502, {"ok": False, "error": f"{type(err).__name__}: {err}"[:300],
                                    "class": canary.NETWORK}
+        if result.get("egress_blocked"):
+            await report_event(env, "egress_blocked", {"op": kind, "id": target,
+                                                       "hosts": result["egress_blocked"], "ytdlp": result.get("ytdlp")})
         ytdlp = result.get("ytdlp") if isinstance(result.get("ytdlp"), dict) else {}
         ytdlp = {"version": str(ytdlp.get("version"))[:40], "source": str(ytdlp.get("source"))[:10],
                  **({"fallback": True} if ytdlp.get("fallback_reason") else {})}
@@ -175,6 +186,7 @@ class Default(WorkerEntrypoint):
                 else:
                     data = schema.playlist(result.get("data"), target, PLAYLIST_FETCH)
             except schema.InvalidOutput as err:
+                await report_event(env, "extractor_invalid", {"op": kind, "id": target, "error": str(err)[:300]})
                 result = {"ok": False, "error": f"invalid extractor output: {err}", "class": "invalid_output"}
         if data is None:
             klass = result.get("class") if result.get("class") in (

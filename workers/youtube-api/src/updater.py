@@ -95,7 +95,18 @@ async def run_extract(env, op, pointer, **args):
     if job["wheel"]:
         async def source():
             return await wheel_bytes(env, pointer["version"], pointer["sha256"])
-    return await call_extract(env.EXTRACT, job, source)
+    status, data = await call_extract(env.EXTRACT, job, source)
+    await note_extract_result(env, "updater", op, data)
+    return status, data
+
+
+async def note_extract_result(env, caller, op, data):
+    """Log sandbox egress that the gateway blocked (yt-dlp code bypassing the transport)."""
+    blocked = data.get("egress_blocked") if isinstance(data, dict) else None
+    if blocked:
+        await events.record(env.WHEELS, "egress_blocked", {
+            "caller": caller, "op": op, "hosts": [str(h)[:100] for h in blocked][:20],
+            "ytdlp": data.get("ytdlp")})
 
 
 # ---------------------------------------------------------------- release vetting
@@ -281,6 +292,8 @@ class Default(WorkerEntrypoint):
         method = request.method.upper()
         try:
             if parts.hostname == INTERNAL_HOST and parts.path.startswith("/internal/"):
+                if parts.path == "/internal/event" and method == "POST":
+                    return await self.internal_event(request)
                 return await self.internal(parts.path, query)
             if parts.path.startswith("/admin/"):
                 if not self.authorized(request):
@@ -292,6 +305,17 @@ class Default(WorkerEntrypoint):
 
     async def scheduled(self, controller, *args):
         await run_daily(self.env, promote=True)
+
+    async def internal_event(self, request):
+        """Events reported by the API (it has no storage of its own)."""
+        try:
+            event = json.loads(str(await request.text())[:8000])
+        except ValueError:
+            raise BadInput("event must be JSON") from None
+        if not isinstance(event, dict) or event.get("kind") not in ("egress_blocked", "extractor_invalid"):
+            raise BadInput("unknown event kind")
+        await events.record(self.env.WHEELS, event["kind"], {"caller": "api", "detail": event.get("detail")})
+        return json_response({"ok": True}, cors=False)
 
     async def internal(self, path, query):
         if path == "/internal/pointer":

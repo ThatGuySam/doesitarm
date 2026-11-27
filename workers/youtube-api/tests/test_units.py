@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
-sys.path.insert(1, str(ROOT / "extract" / "python_modules"))
+sys.path.insert(1, str(ROOT / ".vendor" / "site"))
 
 import canary  # noqa: E402
 import schema  # noqa: E402
