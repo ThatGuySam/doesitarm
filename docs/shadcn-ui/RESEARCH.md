@@ -1,0 +1,25 @@
+# Does It ARM shadcn/ui research
+
+Registry and production checked November 27, 2026.
+
+## Installation and isolation
+
+- The official Astro install uses `@astrojs/react` and Tailwind v4, then `shadcn init` to write `components.json` and `shadcn add` to copy source and install dependencies. `components.json` selects the style, CSS-variable mode, paths and aliases. The registry API also exposes the same source and dependency metadata as JSON for bulk imports. [Astro installation](https://ui.shadcn.com/docs/installation/astro), [CLI](https://ui.shadcn.com/docs/cli), [components.json](https://ui.shadcn.com/docs/components-json), [registry API](https://ui.shadcn.com/docs/registry/api-reference)
+- Existing Tailwind v3 and React 18 projects can stay on their legacy registry path. The current registry uses Tailwind v4 and React 19. It uses v4 utilities, CSS-first `@theme` declarations and CSS variables that contain complete color values. Radix and Base UI are alternate primitives in the current styles. Radix is the basis of the New York v4 blocks used here. [Tailwind v4 and React 19](https://ui.shadcn.com/docs/tailwind-v4), [Radix and Base UI presets](https://ui.shadcn.com/docs/changelog/2025-12-shadcn-create), [theming](https://ui.shadcn.com/docs/theming)
+- Does It ARM uses Astro 6, the Cloudflare and Netlify adapters, Vue islands and the locked Tailwind 3.2.6. The existing stylesheet and `tailwind.config.js` can inform the palette, typography, borders and shadows. Compiling the current registry into that pipeline would add global utilities and risk changing existing CSS. The chosen design is a separate Vite and Tailwind 4 build with its own dependency tree. Astro serves the review shell and its robots header while only the review page references its client bundle. [Tailwind Vite integration](https://tailwindcss.com/docs/installation/using-vite), [Astro islands](https://docs.astro.build/en/concepts/islands/), [Astro React integration](https://docs.astro.build/en/guides/integrations-guide/react/)
+- A `client:load` island sends the React runtime up front. `client:visible` defers its cost until the island approaches the viewport. The isolated Vite entry has a similar client-only boundary and loads heavier demos on demand. The page shell is plain Astro HTML. Configuring `@astrojs/react` and a second Tailwind pipeline in the shared Astro build would expand the renderer or PostCSS surface for every route. The separate entry avoids that dependency and gives each adapter the same static review assets. [Astro client directives](https://docs.astro.build/en/reference/directives-reference/#client-directives)
+
+## Theme references
+
+- The public homepage and app pages use Inter, a charcoal gradient from `#34393f` to `#191a1d`, gray text, warm `#ffa766` accents and low-contrast inset and outer shadows. The scanner uses a `#121416` recessed surface, visible `#808897` input edges, an amber focus outline, mint native verdicts and pink-red errors. [Homepage](https://doesitarm.com/), [app page](https://doesitarm.com/app/nodejs), [scanner v3](https://doesitarm.com/apple-silicon-app-test?v=3), [Tailwind values](../../tailwind.config.js), [site CSS](../../assets/css/tailwind.css)
+- The review route applies variables on its own `.shadcn-scope` so portal content inherits the same values. The live site defaults to dark. The review also offers a light palette for inspecting the contrast and hierarchy of the same components.
+
+## Official inventory and attribution
+
+The official [components documentation](https://ui.shadcn.com/docs/components), [blocks browser](https://ui.shadcn.com/blocks), [charts browser](https://ui.shadcn.com/charts/area), and [New York v4 registry](https://ui.shadcn.com/r/styles/new-york-v4/registry.json) enumerate different surfaces. The registry snapshot has 61 `registry:ui` items, 239 `registry:example` items, 13 internal examples, 27 layout blocks and 70 chart blocks. Fonts, themes, styles, utilities and hooks are supporting registry entries. The [Radix Nova registry](https://ui.shadcn.com/r/styles/radix-nova/registry.json) adds Code Block, Questionnaire and Trace.
+
+The layout blocks are Dashboard 01, Sidebar 01–16, Login 01–05 and Signup 01–05. Chart blocks cover area, bar, line, pie, radar, radial and tooltip examples. The registry stores a JSON record with the source path and dependencies for each example. [Dashboard source record](https://ui.shadcn.com/r/styles/new-york-v4/dashboard-01.json)
+
+Data Table, Date Picker, Typography and the forms guides are documented recipes built from registry primitives. Toast is in the legacy documentation, alongside Sonner as the current toast component. [Data Table](https://ui.shadcn.com/docs/components/data-table), [Date Picker](https://ui.shadcn.com/docs/components/date-picker), [Typography](https://ui.shadcn.com/docs/components/typography), [Legacy Toast](https://v3.shadcn.com/docs/components/toast)
+
+The upstream shadcn/ui source is MIT licensed. Vendored code retains the upstream copyright and license in `ui-review/LICENSE.shadcn.md`. [Upstream license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md)
