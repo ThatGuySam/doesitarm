@@ -884,6 +884,7 @@ Movavi Video Converter also absorbs the `Movavi Video Converter 22 Premium` scan
 | GLMv4 | rosetta | Evidence covers only GLM 4 on macOS 11 to 12.0 (Cloud AutoCal2); GLM 5 is the native current product, and GLM 4 does not absorb the GLMv4 scan |
 | Soundminer v5Pro | rosetta | Evidence covers the old V5 Pro major version, which the vendor supports only up to macOS Monterey; the native successor is a separate purchase |
 | Mail for Gmail | native | Name collision: under the matching rules on master the entry also absorbs Apple's Mail scan (`com.apple.mail`, README name = scan name + qualifier), which would remove Apple Mail's page. The current name, Mail+ for Gmail, collides the same way, and the vendor rules cannot separate them without a `SEPARATE_PRODUCTS` exception. |
+| MathMagic Pro InD | native | The maker's site, which holds the release listing and the inspected installer, is served only over plain HTTP, and the README validation test requires HTTPS links. The only HTTPS source is a distributor page for the older 9.41 release, which does not support the claim. |
 | Mixbus32C-7 | rosetta | Evidence covers the 7.x bundle with an M1 report that predates Harrison's native release; renaming to Mixbus32C would misstate the current product |
 
 ### Kept under the scan name
@@ -929,3 +930,7 @@ The maker's name for these products does not absorb the scan under the current m
 | WSM | Sennheiser Wireless Systems Manager |
 | XFUtility3 | Canon XF Utility |
 | Zentraedi ZspaceMacApp | Zspace (极空间) |
+
+### Links changed
+
+- Bino: the plain-HTTP inspected download link was dropped because the README validation test requires HTTPS; the record still lists it.

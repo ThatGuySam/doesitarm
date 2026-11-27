@@ -11,8 +11,11 @@ import { PaginatedList } from '~/helpers/api/pagination.js'
 
 require('dotenv').config()
 
+// Beyond ASCII letters and digits: punctuation and letters that appear in
+// makers' own product names (Sideloadly!, G*Power, TNEF's Enough,
+// Autenticação.gov). makeSlug drops or transliterates all of them.
 const allowedTitleCharacters = new Set(
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -+:_.®/\()音乐体验版'.split('')
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 -+:_.®/\()!*\'çã音乐体验版'.split('')
 )
 
 /**

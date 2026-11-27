@@ -166,6 +166,7 @@ These are the manually reported apps. You can search all apps on the website.
 * [KiCad EDA](https://kicad.org/download/macos/) - ✅ Yes, Full Native Apple Silicon Support - [Release Notes](https://www.kicad.org/blog/2023/02/Version-7.0.0-Released/)
 * [kitty](https://github.com/kovidgoyal/kitty/releases) - ✅ Yes, Full Native Apple Silicon Support - [Github Issue](https://github.com/kovidgoyal/kitty/issues/3238)
 * [Lens Studio](https://lensstudio.snapchat.com/download/) - ✳️ Yes, works via Rosetta 2 translation - [Supported Hardware](https://lensstudio.snapchat.com/download/)
+* [Letos (SQLiteStudio)](https://letos.org/) - ✅ Yes, Native Apple Silicon Support as of v4.0.4 - [Release](https://github.com/pawelsalawa/letos/releases/tag/4.0.4)
 * [LLVM Clang](https://releases.llvm.org/download.html) - ✳️ Yes, it works via Rosetta 2 - [Apple Forums](https://developer.apple.com/forums/thread/649992)
 * [LTspice](https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html) - ✅ Yes, Full Native Apple Silicon Support - [Verification](https://github.com/ThatGuySam/doesitarm/issues/421#issuecomment-1116859670)
 * [MacDown](https://macdown.uranusjr.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/382)
@@ -189,7 +190,6 @@ These are the manually reported apps. You can search all apps on the website.
 * [Onivim2](https://v2.onivim.io/early-access-portal) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/601#issue-834313049) [Github Issue](https://github.com/onivim/oni2/issues/2708)
 * [OpenJDK](https://openjdk.java.net/install/) - ✅ Yes, Full Native Apple Silicon Support via Azul Zulu
 Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAImfEcXRihJbySZcRr32tn6WSWAtslfXltds58/edit#gid=1469348209) [Azul Builds](https://www.azul.com/downloads/zulu-community/?os=macos&architecture=arm-64-bit&package=jdk) [Early Access Builds](https://github.com/microsoft/openjdk-aarch64/releases) [JEP Ticket](https://openjdk.java.net/jeps/391) [Discussion](https://bugs.openjdk.java.net/browse/JDK-8251280)
-* [Letos (SQLiteStudio)](https://letos.org/) - ✅ Yes, Native Apple Silicon Support as of v4.0.4 - [Release](https://github.com/pawelsalawa/letos/releases/tag/4.0.4)
 * [OpenOCD](https://openocd.org/) - ✅ Yes, Native Apple Silicon Support - [Homebrew Listing](https://formulae.brew.sh/formula/open-ocd#default)
 * [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) - ✅ Yes, Native Apple Silicon Support as of v17 - [Release Notes](https://www.oracle.com/java/technologies/javase/17all-relnotes.html)
 * [Oracle SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/) - ✅ Yes, Native Apple Silicon Support as of v20.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/1014#issue-1682073611)
@@ -493,7 +493,6 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Luminar](https://skylum.com/luminar) - ✳️ Yes, works via Rosetta 2 - [Source](https://youtu.be/CKA1YW9l8j0?t=43)
 * [MacTeX](https://www.tug.org/mactex/mactex-download.html) - ✅ Yes, Full Native Apple Silicon Support as of MacTeX-2021 - [Official FAQ](https://www.tug.org/mactex/faq/index.html#qm08)
 * [Mail Designer 365](https://maildesigner365.com) - ✅ Yes, fully native support as of v2.0 - [Official page](https://www.maildesigner365.com/new-mail-designer-365-2-0-with-big-sur-optimization/)
-* [MathMagic Pro InD](http://www.mathmagic.com/download/download.html) - ✅ Yes, Native Apple Silicon Support as of v10.51 - [Evidence](https://mathmagicturkiye.com/product/pro.html) [Inspected Download](http://www.mathmagic.com/download/installers/MathMagicPro.64-bit.zip)
 * [Mockuuups Studio](https://mockuuups.studio/download/) - ✅ Yes, Native Apple Silicon Support as of v3.7.0 - [Download](https://mockuuups.studio/download/apple-sillicon/) [Official Article](https://mockuuups.studio/help/article/72-how-to-use-figma-plugin-with-setapp-subscription/)
 * [Optimage](https://optimage.app/) - ✅ Yes, Full Native Apple Silicon Support - [🧪 Apple Silicon App Tested](https://doesitarm.com/apple-silicon-app-test/)
 * [Package Central](https://zevrix.com/PackageCentral/) - ✅ Yes, Native Apple Silicon Support as of v2.1 - [Download](https://zevrix.com/download/) [Release Notes](https://zevrix.com/versioncontrol-PackageCentral.php)
@@ -982,7 +981,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [American Truck Simulator](https://store.steampowered.com/app/270880/American_Truck_Simulator/) - ✳️ Yes, works via Rosetta 2 - [Evidence](https://blog.scssoft.com/2026/11/american-truck-simulator-162-update.html?spref=bl) [Forum Report](https://forum.scssoft.com/viewtopic.php?p=2164302)
 * [Asphalt 9](https://apps.apple.com/us/app/asphalt-9-legends/id1491129197?mt=12) - ✅ Yes, Native Apple Silicon Support
 * [BeardedSpice](https://github.com/beardedspice/beardedspice) - ✳️ Yes, works via Rosetta 2 - [Release](https://github.com/beardedspice/beardedspice/releases/tag/v2.2.3) [GitHub Issue](https://github.com/beardedspice/beardedspice/issues/969)
-* [Bino](https://bino3d.org/download/) - ✳️ Yes, works via Rosetta 2 - [Evidence](https://sourceforge.net/projects/bino3d-macos/files/) [Inspected Download](http://devernay.free.fr/hacks/bino/Bino-1.6.6-OSX-Mavericks-GPL.zip)
+* [Bino](https://bino3d.org/download/) - ✳️ Yes, works via Rosetta 2 - [Evidence](https://sourceforge.net/projects/bino3d-macos/files/)
 * [BitTorrent Web](https://www.bittorrent.com/products/mac/web-free/) - ✅ Yes, Native Apple Silicon Support as of v1.6.0 - [Official Site](https://www.bittorrent.com/products/mac/web-free/) [Inspected Download](https://btwebappbundle.bittorrent.com/1.6.0.6575/BitTorrentWeb.zip)
 * [Blitz](https://blitz.gg/) - ✅ Yes, Native Apple Silicon Support as of v3.0.29 - [Homebrew Cask](https://formulae.brew.sh/cask/blitz-gg)
 * [BlueStacks](https://www.bluestacks.com/) - 🚫 No, not yet supported only works on Intel-based Macs - [Report #1](https://www.reddit.com/r/BlueStacks/comments/n9f9wn/apple_silicon/gxowg9g?utm_source=share&utm_medium=web2x&context=3) [Report #2](https://www.reddit.com/r/BlueStacks/comments/kea3uw/macos_bigsur_111_with_m1_issue/gg3xi2r?utm_source=share&utm_medium=web2x&context=3)
