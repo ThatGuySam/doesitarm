@@ -61,4 +61,22 @@ SOURCES = [
     {"id": "PLv-goqr3JHiRlly49iSp69J-0eEeIBEXu", "name": "ProgramHub - MacBook M2"},
     {"id": "PLaa9cZC07ZPFqjoYLZRR3kbbnJRHhlmXq", "name": "My Personal Benchmarks Playlist", "tags": ["benchmark"]},
     {"id": "PLaa9cZC07ZPGM1f6A3F72qXNtPbVLl4V7", "name": "My Personal Playlist (For odds and ends)"},
+    # Added 2026-11-27: current (M4, M5, M6 era) Apple Silicon playlists.
+    # Benchmark feeds: game, music production, photo/video and Unreal Engine tests.
+    {"id": "PLn132FFz1edcPZ77JtsBcd76823NauGIG", "name": "MacSHIFT - Mac Game Benchmarks - M4 Max", "tags": ["benchmark"]},
+    {"id": "PLfBMpN0Ce1w4", "name": "MacSHIFT - Mac Game Benchmark - M5 Pro", "tags": ["benchmark"]},
+    {"id": "PLtStgcR51D_rzZXAtQkXrMGh2eatV0RNh", "name": "Ghobso Gaming - MacBook Pro M5 Playtests", "tags": ["benchmark"]},
+    {"id": "PLtStgcR51D_rCOyc1NwPQ5QUu0M2aDYcK", "name": "Ghobso Gaming - MacBook Air M4 Playtests", "tags": ["benchmark"]},
+    {"id": "PLoho91JNnNU0SMd2iumpQUitAnARWGaO7", "name": "FPS Logger - MacBook Air M4 Gaming Performance", "tags": ["benchmark"]},
+    {"id": "PLoho91JNnNU20x-sJCocKZw_lMjXRGkHB", "name": "FPS Logger - Mac mini M4 Gaming Performance", "tags": ["benchmark"]},
+    {"id": "PLgWWQ8iNIiN0uDWTiMwP-GdSEp5afGaXK", "name": "Bjornar Kibsgaard - M1 to M5 Macs in Music Production Tests / Benchmarks", "tags": ["benchmark"]},
+    {"id": "PLjlr8rlxl_q4aVEJ3WD5lXBZJoEe_t_hS", "name": "Art Is Right - Apple M4 Macs Late 2024 (pro photo and video tests)", "tags": ["benchmark"]},
+    {"id": "PLTTqY2TKwzNBPr9wM6ugWvRJBY6htdf39", "name": "Adam Doing Tech - Unreal Engine 5 Performance on Apple M Series Chips", "tags": ["benchmark"]},
+    # Reviews and coverage (no benchmark tag).
+    {"id": "PLE7wGZJ6gagS3NooNNr6uD3T6SWXhiSfb", "name": "Luke Miani - M4 Chip Coverage"},
+    {"id": "PLE7wGZJ6gagQbZwu65AO41AqlDQDcfGng", "name": "Luke Miani - M5 Chip Coverage"},
+    {"id": "PLDULGFL6-iHw", "name": "Luke Miani - M6 Chip Coverage"},
+    {"id": "PLo11Rczpzuj1SQc4DQlPqK1nnUjHRttts", "name": "Max Tech - M5 Max"},
+    {"id": "PLcbQnQIwz6qTycnarKNlHZuyrFLSzfFxz", "name": "Created Tech - Apple Silicon Macs"},
+    {"id": "PLF6Mty7gZuo6KdBSkHcUELK2I8v6EvMxS", "name": "Savvy Music Tech - Apple Silicon Macs, Logic Pro and macOS"},
 ]
