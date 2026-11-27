@@ -18,11 +18,11 @@ export const publishedYouTubeVideosUrl = 'https://api.doesitarm.com/api/youtube-
 export function defaultYouTubeVideoSources ( videoSource = process.env.VIDEO_SOURCE ) {
     const explicitSource = videoSource === publishedYouTubeVideosUrl ? null : videoSource
 
-    return [
+    return [ ...new Set( [
         explicitSource,
         youtubeSnapshotUrl,
         publishedYouTubeVideosUrl
-    ]
+    ].filter( Boolean ) ) ]
 }
 
 

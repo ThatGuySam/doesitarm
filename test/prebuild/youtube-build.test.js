@@ -108,14 +108,11 @@ describe( 'saveYouTubeVideos', () => {
     } )
 
     it( 'prefers the snapshot when VIDEO_SOURCE is the old published-copy setting', () => {
-        expect( defaultYouTubeVideoSources( publishedYouTubeVideosUrl ).filter( Boolean ) ).toEqual([
-            youtubeSnapshotUrl,
-            publishedYouTubeVideosUrl
-        ])
-        expect( defaultYouTubeVideoSources( undefined ).filter( Boolean ) ).toEqual([
-            youtubeSnapshotUrl,
-            publishedYouTubeVideosUrl
-        ])
+        const snapshotThenPublished = [ youtubeSnapshotUrl, publishedYouTubeVideosUrl ]
+
+        expect( defaultYouTubeVideoSources( publishedYouTubeVideosUrl ) ).toEqual( snapshotThenPublished )
+        expect( defaultYouTubeVideoSources( youtubeSnapshotUrl ) ).toEqual( snapshotThenPublished )
+        expect( defaultYouTubeVideoSources( '' ) ).toEqual( snapshotThenPublished )
     } )
 
     it( 'keeps the previous published list when the snapshot is unavailable', async () => {
