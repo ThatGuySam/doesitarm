@@ -5,7 +5,7 @@ import statuses, { getStatusName } from './statuses.js'
 import appStoreGenres from './app-store/genres.js'
 import { findCategoryForTagsSet } from './categories.js'
 import parseDate from './parse-date'
-import { findReadmeMatchAlias } from './readme-scan-match.js'
+import { assignScansToReadmeEntries, laterScanTakesSlug } from './readme-scan-match.js'
 import { getAppEndpoint } from './app-derived'
 import { makeSlug } from './slug.js'
 import { byTimeThenNull }  from './sort-list.js'
@@ -92,7 +92,25 @@ export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
 
     const appListTokens = getReadmeTokenList( result )
 
+    // Pass 1: collect README entries, then give each scan to its best entry
+    const readmeEntries = []
+    {
+        let isParagraph = false
+        for (const token of appListTokens) {
+            if (token.type.includes('paragraph_')) isParagraph = !isParagraph
+            if ( isParagraph && token.type === 'inline' && token.content.includes(' - ') ) {
+                const [ link ] = token.content.split(' - ').map(string => string.trim())
+                const [ name, url ] = link.substring(1, link.length-1).split('](')
+                // Netflix 4K on Safari describes browser playback, not a scanned app.
+                // A Netflix-named Fluid wrapper cannot verify Safari UHD support.
+                readmeEntries.push({ name, url, absorbsScans: name !== 'Netflix 4K on Safari' })
+            }
+        }
+    }
+    const scanAssignments = assignScansToReadmeEntries( readmeEntries, scanListMap )
+
     const appList = []
+    let readmeEntryIndex = -1
 
     let categorySlug = 'start'
     let categoryTitle = 'Start'
@@ -125,18 +143,15 @@ export function buildReadmeAppList ({ readmeContent, scanListMap, commits }) {
             let aliases = []
             const relatedLinksMap = new Map( getTokenLinks(token.children).map( link => [ link.href, link ] ) )
 
-            // Netflix 4K on Safari describes browser playback, not a scanned app.
-            // A Netflix-named Fluid wrapper cannot verify Safari UHD support.
-            const isBrowserPlaybackListing = name === 'Netflix 4K on Safari'
+            readmeEntryIndex++
 
-            // Search for this app in the scanList and remove duplicates
+            // Merge the scans assigned to this entry, see docs/app-name-collisions.md
             scanListMap.forEach( ( scannedApp, key ) => {
-                if (isBrowserPlaybackListing) return
+                const assignment = scanAssignments.get( key )
 
-                // Name match plus vendor checks, see docs/app-name-collisions.md
-                const alias = findReadmeMatchAlias( { name, url }, scannedApp )
+                if ( assignment === undefined || assignment.index !== readmeEntryIndex ) return
 
-                if ( alias === null ) return
+                const { alias } = assignment
 
                 // If we don't have any bundleIds yet
                 // Add this app's bundleId to the list
@@ -313,6 +328,93 @@ function generateTagsSetFromGenres( bundleId, bundleGenres ) {
 }
 
 
+// Turn the scans feed into listings keyed by slug. When two scans share a slug,
+// the later one in the feed wins unless the earlier one has a clearly stronger
+// claim to the name (see laterScanTakesSlug).
+export function buildScanListMap ( appList, bundleGenres = new Map() ) {
+    const scanListMap = new Map()
+    const slugHolders = new Map()
+
+    appList.forEach( appScan => {
+
+        const appName = appScan.aliases[0]
+
+        // 'native' or 'unreported'
+        const statusName = getStatusName( appScan['Result'] )
+
+        const statusText = (statusName === 'native') ? `✅ Yes, Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
+
+        const appSlug = makeSlug( appName )
+
+        // Skip empty slugs
+        if (appSlug.trim().length === 0) {
+            console.log('Empty slug', appScan)
+            return
+        }
+
+        const candidate = { bundleId: appScan.bundleIdentifier, name: appName, version: appScan['App Version'] }
+        const existing = slugHolders.get( appSlug )
+        if ( existing && !laterScanTakesSlug( existing, candidate ) ) return
+        slugHolders.set( appSlug, candidate )
+
+        const relatedLinks = []
+
+        // If downloadUrl is not empty then add it as the download link
+        if ( appScan['downloadUrl'] !== null ) {
+            relatedLinks.push({
+                href: appScan['downloadUrl'],
+                label: 'View',
+            })
+        }
+
+        // Add 🧪 Apple Silicon App Tested link
+        relatedLinks.push({
+            label: '🧪 Apple Silicon App Tested',
+            href: 'https://doesitarm.com/apple-silicon-app-test/',
+        })
+
+        // console.log('appScan', appScan)
+
+        const tags = generateTagsSetFromGenres( appScan.bundleIdentifier, bundleGenres )
+
+        // Move productivity tag to the end since it's a more generic tag
+        if ( tags.has('Productivity') ) {
+            tags.delete('Productivity')
+            tags.add('Productivity')
+        }
+
+        const foundCategory = findCategoryForTagsSet( tags )
+
+        const category = {
+            label: foundCategory ? foundCategory.label : undefined,
+            slug: foundCategory ? foundCategory.slug : 'uncategorized'
+        }
+
+        // Add to scanned app list
+        scanListMap.set( appSlug, {
+            name: appName,
+            aliases: appScan['aliases'],
+            bundleIds: [ appScan.bundleIdentifier ],
+            status: statusName,
+            lastUpdated: parseDate( appScan['Date'] ),
+            // url,
+            text: statusText,
+            slug: appSlug,
+            endpoint: getAppEndpoint({
+                category: {
+                    slug: null
+                },
+                slug: appSlug
+            }),
+            category,
+            tags: Array.from(tags),
+            relatedLinks
+        })
+    })
+
+    return scanListMap
+}
+
 export default async function () {
 
     const readmeContent = await fs.readFile('./README-temp.md', 'utf8')
@@ -351,77 +453,9 @@ export default async function () {
 
             await fs.writeJson('./static/app-bundles.json', appBundles)
 
-            response.appList.forEach( appScan => {
-
-                const appName = appScan.aliases[0]
-
-                // 'native' or 'unreported'
-                const statusName = getStatusName( appScan['Result'] )
-
-                const statusText = (statusName === 'native') ? `✅ Yes, Native Apple Silicon Support reported as of v${appScan['App Version']}` : '🔶 App has not yet been reported to be native to Apple Silicon'
-
-                const appSlug = makeSlug( appName )
-
-                // Skip empty slugs
-                if (appSlug.trim().length === 0) {
-                    console.log('Empty slug', appScan)
-                    return
-                }
-
-                const relatedLinks = []
-
-                // If downloadUrl is not empty then add it as the download link
-                if ( appScan['downloadUrl'] !== null ) {
-                    relatedLinks.push({
-                        href: appScan['downloadUrl'],
-                        label: 'View',
-                    })
-                }
-
-                // Add 🧪 Apple Silicon App Tested link
-                relatedLinks.push({
-                    label: '🧪 Apple Silicon App Tested',
-                    href: 'https://doesitarm.com/apple-silicon-app-test/',
-                })
-
-                // console.log('appScan', appScan)
-
-                const tags = generateTagsSetFromGenres( appScan.bundleIdentifier, bundleGenres )
-
-                // Move productivity tag to the end since it's a more generic tag
-                if ( tags.has('Productivity') ) {
-                    tags.delete('Productivity')
-                    tags.add('Productivity')
-                }
-
-                const foundCategory = findCategoryForTagsSet( tags )
-
-                const category = {
-                    label: foundCategory ? foundCategory.label : undefined,
-                    slug: foundCategory ? foundCategory.slug : 'uncategorized'
-                }
-
-                // Add to scanned app list
-                scanListMap.set( appSlug, {
-                    name: appName,
-                    aliases: appScan['aliases'],
-                    bundleIds: [ appScan.bundleIdentifier ],
-                    status: statusName,
-                    lastUpdated: parseDate( appScan['Date'] ),
-                    // url,
-                    text: statusText,
-                    slug: appSlug,
-                    endpoint: getAppEndpoint({
-                        category: {
-                            slug: null
-                        },
-                        slug: appSlug
-                    }),
-                    category,
-                    tags: Array.from(tags),
-                    relatedLinks
-                })
-            })
+            for ( const [ appSlug, listing ] of buildScanListMap( response.appList, bundleGenres ) ) {
+                scanListMap.set( appSlug, listing )
+            }
         })
         .catch(function (error) {
             // handle error

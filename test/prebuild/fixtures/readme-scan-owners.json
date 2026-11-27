@@ -1,0 +1,2277 @@
+{
+ "source": "Scans feed and README.md, 2026-11-25/26. Keys are \"bundle ID|display name\". Each scan maps to { readmeEntry } when a README entry absorbs it, { ownListing } when it keeps its own page, or { dropped, slugKeptBy } when another scan with the same slug keeps the listing.",
+ "readme": "#### Fixture\n\n* [Android Studio](https://developer.android.com/studio) - ✅ fixture\n\n* [App Preview Video Converter](https://apps.apple.com/us/app/app-preview-video-converter/id1137451860) - ✅ fixture\n\n* [Aptana Studio](https://github.com/aptana/studio3/releases) - ✅ fixture\n\n* [Arduino IDE](https://www.arduino.cc/en/software) - ✅ fixture\n\n* [Charles Web Debugging Proxy](https://www.charlesproxy.com/download/) - ✅ fixture\n\n* [Electron Framework](https://www.electronjs.org/releases/stable) - ✅ fixture\n\n* [Insomnia Core](https://insomnia.rest/download/) - ✅ fixture\n\n* [Insomnia Designer](https://insomnia.rest/download/) - ✅ fixture\n\n* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac) - ✅ fixture\n\n* [iTerm](https://iterm2.com/downloads.html) - ✅ fixture\n\n* [kitty](https://github.com/kovidgoyal/kitty/releases) - ✅ fixture\n\n* [Lens Studio](https://lensstudio.snapchat.com/download/) - ✅ fixture\n\n* [MongoDB](https://www.mongodb.com/try/download/community) - ✅ fixture\n\n* [Nova](https://nova.app) - ✅ fixture\n\n* [OpenJDK](https://openjdk.java.net/install/) - ✅ fixture\n\n* [React Native](https://reactnative.dev/) - ✅ fixture\n\n* [React Native Debugger](https://github.com/jhen0409/react-native-debugger) - ✅ fixture\n\n* [Surge](https://nssurge.com/) - ✅ fixture\n\n* [Unity](https://store.unity.com/download) - ✅ fixture\n\n* [Visual Studio for Mac](https://learn.microsoft.com/en-us/lifecycle/announcements/visual-studio-mac-end-of-servicing) - ✅ fixture\n\n* [VS Code](https://code.visualstudio.com/) - ✅ fixture\n\n* [Warp Terminal](https://www.warp.dev/) - ✅ fixture\n\n* [Wave Terminal](https://www.waveterm.dev/) - ✅ fixture\n\n* [Wireshark](https://www.wireshark.org/) - ✅ fixture\n\n* [Xcode](https://apps.apple.com/us/app/xcode/id497799835) - ✅ fixture\n\n* [IBM ILOG CPLEX Optimization Studio](https://www.ibm.com/products/ilog-cplex-optimization-studio) - ✅ fixture\n\n* [JabRef](https://www.jabref.org/) - ✅ fixture\n\n* [Colibri](https://apps.apple.com/us/app/colibri/id1178295426?ls=1&mt=12) - ✅ fixture\n\n* [Colibri DAC DSD Test](https://apps.apple.com/us/app/colibri-dac-dsd-test/id1455508413?ls=1&mt=12) - ✅ fixture\n\n* [Finale Music](https://www.finalemusic.com/free-trial/) - ✅ fixture\n\n* [FL Studio](https://www.image-line.com/fl-studio-download/) - ✅ fixture\n\n* [n-Track Studio](https://ntrack.com/download.php) - ✅ fixture\n\n* [Spectrasonics Keyscape](https://www.spectrasonics.net/products/keyscape/index.php) - ✅ fixture\n\n* [X Lossless Decoder (XLD)](https://sourceforge.net/projects/xld/) - ✅ fixture\n\n* [Figma](https://www.figma.com/downloads/) - ✅ fixture\n\n* [FontBook](https://www.lemkesoft.de/en/products/fontbook/download/) - ✅ fixture\n\n* [Lightroom](https://www.adobe.com/products/photoshop-lightroom.html) - ✅ fixture\n\n* [Lightroom Classic](https://www.adobe.com/products/photoshop-lightroom-classic.html) - ✅ fixture\n\n* [Mail Designer 365](https://maildesigner365.com) - ✅ fixture\n\n* [Simple Comic](https://github.com/arauchfuss/Simple-Comic) - ✅ fixture\n\n* [Simple Comic (Community Fork)](https://github.com/MaddTheSane/Simple-Comic) - ✅ fixture\n\n* [Autokroma Influx](https://www.autokroma.com/Influx/) - ✅ fixture\n\n* [Final Cut Library Manager](https://www.arcticwhiteness.com/finalcutlibrarymanager/download/) - ✅ fixture\n\n* [GoPro Fusion Studio](https://gopro.com/en/us/news/fusion-end-of-life) - ✅ fixture\n\n* [Maxon Chromatic Displacement](https://www.maxon.net/en/red-giant-complete/vfx-suite/chromatic-displacement) - ✅ fixture\n\n* [Maxon Cosmo](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/cosmo) - ✅ fixture\n\n* [Maxon Denoiser](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/denoiser) - ✅ fixture\n\n* [Maxon Echospace](https://www.maxon.net/en/red-giant-complete/trapcode-suite/echospace) - ✅ fixture\n\n* [Maxon Form](https://www.maxon.net/en/red-giant-complete/trapcode-suite/form) - ✅ fixture\n\n* [Maxon Horizon](https://www.maxon.net/en/red-giant-complete/trapcode-suite/horizon) - ✅ fixture\n\n* [Maxon Looks](https://www.maxon.net/en/red-giant-complete/magic-bullet-suite/looks) - ✅ fixture\n\n* [Maxon Optical Glow](https://www.maxon.net/en/red-giant-complete/vfx-suite/optical-glow) - ✅ fixture\n\n* [Maxon Particular](https://www.maxon.net/en/red-giant-complete/trapcode-suite/particular) - ✅ fixture\n\n* [Maxon PluralEyes](https://www.maxon.net/en/red-giant-complete/pluraleyes) - ✅ fixture\n\n* [Maxon Redshift](https://www.maxon.net/en/redshift) - ✅ fixture\n\n* [Maxon Shadow](https://www.maxon.net/en/red-giant-complete/vfx-suite/shadow) - ✅ fixture\n\n* [Maxon Shine](https://www.maxon.net/en/red-giant-complete/trapcode-suite/shine) - ✅ fixture\n\n* [Maxon Sound Keys](https://www.maxon.net/en/red-giant-complete/trapcode-suite/sound-keys) - ✅ fixture\n\n* [Maxon Starglow](https://www.maxon.net/en/red-giant-complete/trapcode-suite/starglow) - ✅ fixture\n\n* [Maxon Supercomp](https://www.maxon.net/en/red-giant-complete/vfx-suite/supercomp) - ✅ fixture\n\n* [Maxon Universe](https://www.maxon.net/en/red-giant-complete/universe) - ✅ fixture\n\n* [AJA U-TAP Updater](https://www.aja.com/products/u-tap-hdmi#support) - ✅ fixture\n\n* [Elgato OBS Link](https://help.elgato.com/hc/en-us/articles/360031314272-Elgato-OBS-Link-Software-Release-Notes) - ✅ fixture\n\n* [OBS](https://obsproject.com/) - ✅ fixture\n\n* [Rhinoceros 3D](https://www.rhino3d.com/download/) - ✅ fixture\n\n* [Acrobat Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) - ✅ fixture\n\n* [Acrobat Reader](https://get.adobe.com/reader/) - ✅ fixture\n\n* [AdBlock Pro for Safari](https://apps.apple.com/app/id1018301773) - ✅ fixture\n\n* [Alfred](https://www.alfredapp.com/universal/) - ✅ fixture\n\n* [Anki](https://apps.ankiweb.net/) - ✅ fixture\n\n* [Call Recorder for Skype](https://www.ecamm.com/mac/callrecorder/) - ✅ fixture\n\n* [Chrome](https://www.google.com/chrome/) - ✅ fixture\n\n* [Dropbox](https://www.dropbox.com/) - ✅ fixture\n\n* [Eon Timer](https://software.charliemonroe.net/eon/) - ✅ fixture\n\n* [Firefox](https://www.mozilla.org/en-US/firefox/new/) - ✅ fixture\n\n* [Focus for Mac](https://heyfocus.com/) - ✅ fixture\n\n* [GitHub Classroom Assistant](https://classroom.github.com/assistant) - ✅ fixture\n\n* [HCL Notes](https://www.hcltechsw.com/products/nd) - ✅ fixture\n\n* [Merlin Project](https://www.projectwizards.net/en/merlin-project) - ✅ fixture\n\n* [Merlin Project Express](https://www.projectwizards.net/en/merlin-project-express) - ✅ fixture\n\n* [Microsoft Remote Desktop](https://apps.apple.com/au/app/microsoft-remote-desktop/id1295203466?mt=12) - ✅ fixture\n\n* [Newton Mail](https://newtonhq.com/#app) - ✅ fixture\n\n* [Notion Desktop](https://www.notion.so) - ✅ fixture\n\n* [Safari Web Browser](https://www.apple.com/safari/) - ✅ fixture\n\n* [Session for Mac](https://www.stayinsession.com/) - ✅ fixture\n\n* [Shadow for macOS](https://shadow.tech/shadow-apps/) - ✅ fixture\n\n* [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✅ fixture\n\n* [TeamViewer](https://www.teamviewer.com/en-us/) - ✅ fixture\n\n* [VMWare Horizon Client](https://my.vmware.com/en/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_horizon_clients/horizon_8) - ✅ fixture\n\n* [VMWare Remote Console](https://apps.apple.com/app/vmware-remote-console/id1230249825) - ✅ fixture\n\n* [Amazon Music](https://music.amazon.com/NA/help/apps) - ✅ fixture\n\n* [Dolphin](https://dolphin-emu.org/download/) - ✅ fixture\n\n* [NetEase Music](https://music.163.com/#/download) - ✅ fixture\n\n* [Netflix 4K on Safari](https://www.netflix.com/) - ✅ fixture\n\n* [News Explorer](https://betamagic.nl/products/newsexplorer.html) - ✅ fixture\n\n* [NVIDIA GeForce NOW](https://www.nvidia.com/en-us/geforce-now/download/) - ✅ fixture\n\n* [PS Remote Play](https://remoteplay.dl.playstation.net/remoteplay/lang/en/ps5_mac.html) - ✅ fixture\n\n* [QQ音乐(QQ Music)](https://apps.apple.com/cn/app/qq音乐-让生活充满音乐/id595615424?l=en&mt=12) - ✅ fixture\n\n* [Remote Buddy](https://www.iospirit.com/products/remotebuddy/download/) - ✅ fixture\n\n* [Spotify](https://www.spotify.com/download/mac/) - ✅ fixture\n\n* [Steam](https://store.steampowered.com/about/) - ✅ fixture\n\n* [Twitch Studio](https://www.twitch.tv/downloads/) - ✅ fixture\n\n* [Vienna](https://github.com/ViennaRSS/vienna-rss/releases/latest) - ✅ fixture\n\n* [Aviary Twitter Client](https://apps.apple.com/us/app/aviary/id1522043420) - ✅ fixture\n\n* [Canary Mail](https://canarymail.io/) - ✅ fixture\n\n* [Discord](https://discord.com/download) - ✅ fixture\n\n* [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/group-chat-software) - ✅ fixture\n\n* [QQ](https://im.qq.com/macqq/) - ✅ fixture\n\n* [QQ 体验版(MacCatalyst)](https://im.qq.com/macqq/) - ✅ fixture\n\n* [Signal](https://signal.org/) - ✅ fixture\n\n* [Skype](https://www.skype.com/en/get-skype/) - ✅ fixture\n\n* [Skype for Business](https://www.microsoft.com/en-us/microsoft-365/skype-for-business/download-app) - ✅ fixture\n\n* [Spark Mail](https://apps.apple.com/app/apple-store/id1176895641) - ✅ fixture\n\n* [Twitter](https://apps.apple.com/app/twitter/id1482454543?mt=12) - ✅ fixture\n\n* [Zoom](https://zoom.us/download) - ✅ fixture\n\n* [1Password](https://1password.com/) - ✅ fixture\n\n* [Angry IP Scanner](https://angryip.org/download/#mac) - ✅ fixture\n\n* [BIG-IP Edge Client](https://techdocs.f5.com/kb/en-us/bigip-edge-apps.html) - ✅ fixture\n\n* [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html) - ✅ fixture\n\n* [Cisco Packet Tracer](https://www.netacad.com/courses/packet-tracer) - ✅ fixture\n\n* [Sophos Home](https://my.sophos.com/download) - ✅ fixture\n\n* [Tor Browser](https://www.torproject.org/download/) - ✅ fixture\n\n* [Camo Studio](https://reincubate.com/camo/) - ✅ fixture\n\n* [iBoysoft NTFS for Mac](https://iboysoft.com/ntfs-for-mac/) - ✅ fixture\n\n* [Jamf Self Service](https://docs.jamf.com/10.26.0/jamf-pro/administrator-guide/About_Jamf_Self_Service_for_macOS.html) - ✅ fixture\n\n* [LaCie RAID Manager](https://www.lacie.com/support/software/lacie-raid-manager/) - ✅ fixture\n\n* [Magic Window Air](https://apps.apple.com/us/app/magic-window-air/id1481258399) - ✅ fixture\n\n* [Parallels Toolbox](https://prf.hn/l/7QA4VqE) - ✅ fixture\n\n* [start for Mac](https://apps.apple.com/us/app/start/id1329701389?mt=12) - ✅ fixture\n\n* [Ivan Enderlin Twitter Thread](https://twitter.com/mnt_io/status/1327166454765150208?s=21) - ✅ fixture\n\n* [Does It ARM Twitter Thread](https://twitter.com/DoesItARM/status/1330027384041508865) - ✅ fixture\n\n<!-- end-of-list -->\n",
+ "scans": [
+  {
+   "bundleIdentifier": "com.valvesoftware.steam",
+   "aliases": [
+    "Steam",
+    "steam_osx",
+    "Valvesoftware Steam"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-11-10T14:11:46.427Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.news",
+   "aliases": [
+    "News",
+    "Apple News"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-11T04:30:38.941Z",
+   "App Version": "10.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.Home",
+   "aliases": [
+    "Home",
+    "Apple Home"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-11T04:19:07.436Z",
+   "App Version": "9.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.Notes",
+   "aliases": [
+    "Notes",
+    "Apple Notes"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-08-19T04:24:42.786Z",
+   "App Version": "4.13",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.FontBook",
+   "aliases": [
+    "Font Book",
+    "Apple FontBook"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-11T07:11:05.238Z",
+   "App Version": "11.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.google.Chrome",
+   "aliases": [
+    "Google Chrome",
+    "Chrome"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-05-15T16:47:11.422Z",
+   "App Version": "148.0.7778.168",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "notion.id",
+   "aliases": [
+    "Notion",
+    "Notion Id"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-02-19T19:13:44.582Z",
+   "App Version": "4.21.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.inevio.horbitonova",
+   "aliases": [
+    "horbito NOVA",
+    "Inevio Horbitonova"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-02-16T22:08:13.492Z",
+   "App Version": "1.0.1",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.jamfsoftware.selfservice.mac",
+   "aliases": [
+    "Self Service",
+    "Jamfsoftware Selfservice Mac"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-10-19T04:38:07.261Z",
+   "App Version": "10.32.2",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.cycling74.Max",
+   "aliases": [
+    "Max",
+    "Cycling74 Max"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-10-02T20:14:24.643Z",
+   "App Version": "8.1.10 (f1acba9)",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.microsoft.VSCode",
+   "aliases": [
+    "Code",
+    "Visual Studio Code",
+    "Microsoft VSCode"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-05-13T02:38:25.254Z",
+   "App Version": "1.119.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.Preview",
+   "aliases": [
+    "Preview",
+    "Apple Preview"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-04-01T15:28:51.409Z",
+   "App Version": "11.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.Safari",
+   "aliases": [
+    "Safari",
+    "Apple Safari"
+   ],
+   "downloadUrl": null,
+   "Date": "2025-04-12T11:49:37.995Z",
+   "App Version": "18.4",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.mail",
+   "aliases": [
+    "Mail",
+    "Apple Mail"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-08-03T19:20:43.566Z",
+   "App Version": "14.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.Music",
+   "aliases": [
+    "Music",
+    "Apple Music"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-11T04:30:35.527Z",
+   "App Version": "1.5.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.runningwithcrayons.Alfred",
+   "aliases": [
+    "Alfred",
+    "Alfred 5",
+    "Runningwithcrayons Alfred"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-12-26T22:24:34.832Z",
+   "App Version": "5.5.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.microsoft.VSCodeInsiders",
+   "aliases": [
+    "Code - Insiders",
+    "Electron",
+    "Visual Studio Code - Insiders",
+    "Microsoft VSCodeInsiders"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-02-28T13:26:05.079Z",
+   "App Version": "1.65.0-insider",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.googlecode.iterm2",
+   "aliases": [
+    "iTerm2",
+    "iTerm",
+    "Googlecode Iterm2"
+   ],
+   "downloadUrl": "https://iterm2.com",
+   "Date": "2026-06-03T21:56:10.364Z",
+   "App Version": "3.5.11",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.hnc.Discord",
+   "aliases": [
+    "Discord",
+    "Hnc Discord"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-07-11T01:13:53.302Z",
+   "App Version": "0.0.398",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.hnc.DiscordPTB",
+   "aliases": [
+    "Discord PTB",
+    "Hnc DiscordPTB"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-06-08T04:35:34.958Z",
+   "App Version": "0.0.116",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.electron.shadow",
+   "aliases": [
+    "Shadow",
+    "Electron Shadow"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-11-28T23:35:48.643Z",
+   "App Version": "5.0.1020",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "maccatalyst.com.atebits.Tweetie2",
+   "aliases": [
+    "Twitter",
+    "Maccatalyst Atebits Tweetie2"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-07-28T22:20:58.712Z",
+   "App Version": "8.75",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.heliconsoft.heliconfocus",
+   "aliases": [
+    "HeliconFocus",
+    "Focus",
+    "Heliconsoft Heliconfocus"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-06-30T16:34:16.107Z",
+   "App Version": "9",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.nvidia.gfnpc.mall",
+   "aliases": [
+    "GeForceNOW",
+    "GeForce NOW",
+    "Nvidia Gfnpc Mall"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-01-25T00:00:10.385Z",
+   "App Version": "2.0.81.177",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.microsoft.VSCodeExploration",
+   "aliases": [
+    "Code - Exploration",
+    "Electron",
+    "Visual Studio Code - Exploration",
+    "Microsoft VSCodeExploration"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-07-02T06:37:47.478Z",
+   "App Version": "1.58.0-exploration",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.microsoft.SkypeForBusiness",
+   "aliases": [
+    "Skype for Business",
+    "Microsoft SkypeForBusiness"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-07-28T11:29:06.309Z",
+   "App Version": "16.31.74",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "",
+   "aliases": [
+    "Multipass",
+    ""
+   ],
+   "downloadUrl": null,
+   "Date": "2021-11-15T07:06:05.377Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "org.whispersystems.signal-desktop",
+   "aliases": [
+    "Signal",
+    "Whispersystems Signal-desktop"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-05-09T13:26:50.188Z",
+   "App Version": "8.9.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "tv.plex.desktop",
+   "aliases": [
+    "Plex",
+    "Tv Plex Desktop"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-08-03T16:50:18.012Z",
+   "App Version": "1.74.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "net.battle.app",
+   "aliases": [
+    "Battle.net",
+    "Battle",
+    "Battle App"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-05-28T00:12:25.828Z",
+   "App Version": "2.51.5.17438",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.insomnia.app",
+   "aliases": [
+    "Insomnia",
+    "Insomnia App"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-07-16T06:50:38.477Z",
+   "App Version": "2022.4.2",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.mcneel.rhinoceros.7",
+   "aliases": [
+    "Rhino 7",
+    "Rhinoceros",
+    "Mcneel Rhinoceros 7"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-04-29T19:07:15.697Z",
+   "App Version": "7.50",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.adobe.LightroomClassicCC7",
+   "aliases": [
+    "Adobe Lightroom Classic",
+    "Adobe LightroomClassicCC7"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-06-29T15:06:47.443Z",
+   "App Version": "11.2",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": null,
+   "aliases": [
+    "darkplaces-sdl",
+    "Wrath"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-10-10T21:19:34.833Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.skype.s4l",
+   "aliases": [
+    "Skype",
+    "Skype S4l"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-02-10T20:47:57.005Z",
+   "App Version": "8.94",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.lightheadsw.caffeine",
+   "aliases": [
+    "Caffeine",
+    "Lightheadsw Caffeine"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-03-23T22:26:56.430Z",
+   "App Version": "1.1.1",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "unity.InXile Entertainment.Torment",
+   "aliases": [
+    "Torment",
+    "TidesOfNumenera",
+    "Torment Tides of Numenera",
+    "Unity InXile Entertainment Torment"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-03-25T14:19:44.522Z",
+   "App Version": "Unity Player version 5.4.1p3",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.xk72.Charles",
+   "aliases": [
+    "Charles",
+    "Xk72 Charles"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-10-09T08:08:59.294Z",
+   "App Version": "4.6.3",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "sddda.Plex",
+   "aliases": [
+    "Plex",
+    "Sddda Plex"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-04-03T12:50:09.628Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "io.hyperapp.XcodeCleaner",
+   "aliases": [
+    "Cleaner for Xcode",
+    "Io Hyperapp XcodeCleaner"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-04-11T10:06:05.425Z",
+   "App Version": "4.0.4",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.10baseT.IPScannerMac",
+   "aliases": [
+    "IP Scanner",
+    "10baseT IPScannerMac"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-04-15T15:39:10.723Z",
+   "App Version": "4.00",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.jetbrains.intellij.ce",
+   "aliases": [
+    "Testlum Desktop",
+    "idea",
+    "Testlum Desktop PE",
+    "Jetbrains Intellij Ce"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-05-14T10:19:05.967Z",
+   "App Version": "2023.2.3",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "io.nwjs.nwjs",
+   "aliases": [
+    "nwjs",
+    "Io Nwjs Nwjs"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-07-27T08:04:11.410Z",
+   "App Version": "115.0.5790.98",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.jetbrains.intellij",
+   "aliases": [
+    "IntelliJ IDEA",
+    "idea",
+    "Jetbrains Intellij"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-10-08T01:36:26.802Z",
+   "App Version": "2021.3",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.obsproject.obs-studio",
+   "aliases": [
+    "OBS Studio",
+    "OBS",
+    "Obsproject Obs-studio"
+   ],
+   "downloadUrl": "https://obsproject.com",
+   "Date": "2026-07-01T15:08:23.653Z",
+   "App Version": "31.0.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "CBD.CHITUBOX",
+   "aliases": [
+    "CHITUBOX",
+    "CBD CHITUBOX"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-04-28T13:09:07.946Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "org.wireshark.Wireshark",
+   "aliases": [
+    "Wireshark",
+    "Wireshark Wireshark"
+   ],
+   "downloadUrl": "https://wireshark.org",
+   "Date": "2022-12-14T16:38:03.144Z",
+   "App Version": "4.0.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "IPScanner",
+   "aliases": [
+    "IP Scanner",
+    "IPScanner"
+   ],
+   "downloadUrl": "https://10base-t.com",
+   "Date": "2021-05-11T19:10:19.860Z",
+   "App Version": "4.00",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "jp.tmkk.XLD",
+   "aliases": [
+    "XLD",
+    "Jp Tmkk XLD"
+   ],
+   "downloadUrl": "https://sf.net",
+   "Date": "2023-07-21T02:05:23.685Z",
+   "App Version": "20230627",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.betafish.adblock-mac",
+   "aliases": [
+    "AdBlock",
+    "Betafish Adblock-mac"
+   ],
+   "downloadUrl": "https://adblock.dev",
+   "Date": "2024-11-11T03:44:18.777Z",
+   "App Version": "2.1.7",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.adobe.Acrobat.Pro",
+   "aliases": [
+    "Acrobat",
+    "AdobeAcrobat",
+    "Adobe Acrobat",
+    "Adobe Acrobat Pro"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-04-12T18:56:22.671Z",
+   "App Version": "24.001.20643",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.sap.openjdk.jdk",
+   "aliases": [
+    "SapMachine 17-ea",
+    "libjli.dylib",
+    "sapmachine-jdk-17",
+    "Sap Openjdk Jdk"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-05-21T17:12:29.938Z",
+   "App Version": "17.00",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer8.0.0",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 8",
+    "Netacad PacketTracer8 0 0"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-05-22T18:25:55.633Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "org.niltsh.MPlayerX",
+   "aliases": [
+    "MPlayerX",
+    "Niltsh MPlayerX"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-05-23T03:17:13.417Z",
+   "App Version": "1.0.14",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.dolphinteam.dolphin-updater",
+   "aliases": [
+    "Updater",
+    "Dolphin Updater",
+    "Dolphinteam Dolphin-updater"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-05-24T18:30:25.502Z",
+   "App Version": "1.00",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.figma.desktop.dynamic-universal-app",
+   "aliases": [
+    "DynamicUniversalApp",
+    "Figma",
+    "Figma Desktop Dynamic-universal-app"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-05-25T14:39:12.118Z",
+   "App Version": "1.00",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "cc.arduino.Arduino",
+   "aliases": [
+    "Arduino",
+    "Cc Arduino Arduino"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-29T09:35:18.979Z",
+   "App Version": "1.8.19",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "gaborhargitai.colibri",
+   "aliases": [
+    "Colibri",
+    "Gaborhargitai Colibri"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-08-07T20:00:40.568Z",
+   "App Version": "2.2.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "test.Colibri-DAC-DSD-Test",
+   "aliases": [
+    "Colibri DAC DSD Test",
+    "Test Colibri-DAC-DSD-Test"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-06-08T17:13:39.256Z",
+   "App Version": "2.00",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.figma.Desktop.dua",
+   "aliases": [
+    "DynamicUniversalApp",
+    "Figma",
+    "Figma Desktop Dua"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-10-21T08:19:53.051Z",
+   "App Version": "1.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.dennisameling.signal-desktop",
+   "aliases": [
+    "Signal Unofficial",
+    "Dennisameling Signal-desktop"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-06-13T14:36:02.874Z",
+   "App Version": "5.4.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.uaudio.console",
+   "aliases": [
+    "Console",
+    "Uaudio Console"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-06-23T05:29:08.849Z",
+   "App Version": "9.14.6",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.valvesoftware.SteamLink17",
+   "aliases": [
+    "Steam Link",
+    "Valvesoftware SteamLink17"
+   ],
+   "downloadUrl": null,
+   "Date": "2025-06-29T10:36:05.846Z",
+   "App Version": "1.3.15",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "net.delsuc.pdftoolkit",
+   "aliases": [
+    "PDF Toolkit+",
+    "Delsuc Pdftoolkit"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-07-01T11:08:04.348Z",
+   "App Version": "2.40",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.electron.react-native-debugger",
+   "aliases": [
+    "React Native Debugger",
+    "Electron React-native-debugger"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-03T15:46:15.777Z",
+   "App Version": "0.12.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer8.0.1",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 8",
+    "Netacad PacketTracer8 0 1"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-02T01:44:09.421Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "unity.The Pokémon Company International.Pokemon Trading Card Game Online",
+   "aliases": [
+    "Pokemon Trading Card Game Online",
+    "Unity The Pokémon Company International Pokemon Trading Card Game Online"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-06T20:14:21.291Z",
+   "App Version": "2.81.0.5316",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.electron.plutotv",
+   "aliases": [
+    "PlutoTV",
+    "Electron",
+    "Electron Plutotv"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-09T02:24:53.410Z",
+   "App Version": "0.2.0",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.parallels.winapp.3be6a3fe5affd872c0eb18fbb28ac581.ca1c4e3184a142b8971753f2607b393f",
+   "aliases": [
+    "Wireshark",
+    "WinAppHelper",
+    "Parallels Winapp 3be6a3fe5affd872c0eb18fbb28ac581 Ca1c4e3184a142b8971753f2607b393f"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-10T16:34:16.109Z",
+   "App Version": "Windows 10 Pro",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.1password.1password",
+   "aliases": [
+    "1Password",
+    "1password 1password"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-08-15T23:28:06.447Z",
+   "App Version": "8.10.9",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.rdbrck.shift",
+   "aliases": [
+    "Shift",
+    "Rdbrck Shift"
+   ],
+   "downloadUrl": "https://tryshift.com",
+   "Date": "2022-12-20T01:01:22.533Z",
+   "App Version": "8.2.0.594",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "ru.yandex.desktop.disk2",
+   "aliases": [
+    "Yandex.Disk.2",
+    "Yandex",
+    "Ru Yandex Desktop Disk2"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-08-19T14:24:24.959Z",
+   "App Version": "3.2.50",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "nl.transip.stack",
+   "aliases": [
+    "stack",
+    "Nl Transip Stack"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-16T14:45:20.101Z",
+   "App Version": "2.8.2 (build 20210601)",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.joogps.Magic",
+   "aliases": [
+    "Magic",
+    "Joogps Magic"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-08-21T07:30:48.828Z",
+   "App Version": "1.20",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "TODO",
+   "aliases": [
+    "Influx",
+    "TODO"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-01T17:36:29.002Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "io.shift.app-production",
+   "aliases": [
+    "Shift",
+    "Io Shift App-production"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-05T18:26:46.081Z",
+   "App Version": "1.14.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.qview.qView",
+   "aliases": [
+    "qView",
+    "Qview QView"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-16T08:37:15.942Z",
+   "App Version": "4.00",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.adobe.lightroomCC",
+   "aliases": [
+    "Adobe Lightroom",
+    "Adobe LightroomCC"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-18T19:52:56.756Z",
+   "App Version": "Adobe Lightroom 4.4 (20210805-0652-b84a95f)",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "net.projectwizards.merlinprojectexpress-macappstore",
+   "aliases": [
+    "Merlin Project Express",
+    "Projectwizards Merlinprojectexpress-macappstore"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-20T08:00:54.874Z",
+   "App Version": "8.0.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.vk.messenger",
+   "aliases": [
+    "VK Messenger",
+    "Vk Messenger"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-24T10:31:27.892Z",
+   "App Version": "5.2.3",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.novem.Teams",
+   "aliases": [
+    "Teams",
+    "Novem Teams"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-24T12:36:05.110Z",
+   "App Version": "1.0.3",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.yourcompany.CHITUBOX",
+   "aliases": [
+    "CHITUBOX",
+    "Yourcompany CHITUBOX"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-09-25T21:25:11.126Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer7",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer7",
+    "Netacad PacketTracer7"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-10-11T15:52:09.313Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "net.maxon.app-manager",
+   "aliases": [
+    "Maxon App",
+    "Maxon",
+    "Maxon App-manager"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-03-25T15:03:44.242Z",
+   "App Version": "2.1.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "unity.Blizzard Entertainment.Hearthstone",
+   "aliases": [
+    "Hearthstone",
+    "Unity Blizzard Entertainment Hearthstone"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-10-19T15:39:11.935Z",
+   "App Version": "1.00",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.stack.io",
+   "aliases": [
+    "Stack",
+    "Stack Io"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-10-27T20:11:34.767Z",
+   "App Version": "3.36.1",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.lightheadsw.Caffeine",
+   "aliases": [
+    "Caffeine",
+    "Lightheadsw Caffeine"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-10-28T13:27:18.360Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "org.sbooth.Max",
+   "aliases": [
+    "Max",
+    "Sbooth Max"
+   ],
+   "downloadUrl": "https://sbooth.org",
+   "Date": "2021-10-28T23:28:36.904Z",
+   "App Version": "0.9.2b4",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.tencent.start.mac.Start",
+   "aliases": [
+    "START",
+    "Tencent Start Mac Start"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-11-14T03:21:04.098Z",
+   "App Version": "0.298.3",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.electron.nativefier.discord-nativefier-18566a",
+   "aliases": [
+    "Discord",
+    "Discord for M1",
+    "Electron Nativefier Discord-nativefier-18566a"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-11-30T20:55:41.909Z",
+   "App Version": "1.0.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.vk.messages",
+   "aliases": [
+    "VK Messenger",
+    "Vk Messages"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-12-03T18:52:06.562Z",
+   "App Version": "5.3.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "unity.Empyrean.Unity-HouseFlipper",
+   "aliases": [
+    "House Flipper Game",
+    "HouseFlipper",
+    "Unity Empyrean Unity-HouseFlipper"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-12-08T09:29:21.523Z",
+   "App Version": "1.21303 (92af7)",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "unity.GAME.Christmas Shopper Simulator 2",
+   "aliases": [
+    "CSS2",
+    "Unity GAME Christmas Shopper Simulator 2"
+   ],
+   "downloadUrl": null,
+   "Date": "2021-12-30T18:27:22.739Z",
+   "App Version": "Unity Player version 5.2.3p1",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.ironhidegames.vengance.mac.steam",
+   "aliases": [
+    "Kingdom Rush Vengeance",
+    "Ironhidegames Vengance Mac Steam"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-02T13:46:48.159Z",
+   "App Version": "1.9.9.19",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.codeweavers.CrossOverHelper.363F6C1A194181DEFCF9D77291BAAB60.D7B460B2ACE2473B3D92C221DB864590",
+   "aliases": [
+    "Steam (Rocket League)",
+    "Menu Helper",
+    "Codeweavers CrossOverHelper 363F6C1A194181DEFCF9D77291BAAB60 D7B460B2ACE2473B3D92C221DB864590"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-03T14:56:56.260Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.redgiant.PluralEyes-4",
+   "aliases": [
+    "PluralEyes",
+    "PluralEyes 4",
+    "Redgiant PluralEyes-4"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-01-13T04:47:29.950Z",
+   "App Version": "2023.0.0",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "org.jabref.gui",
+   "aliases": [
+    "JabRef",
+    "Jabref Gui"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-08T03:27:28.717Z",
+   "App Version": "5.3.60000",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.agilebits.onepassword-osx",
+   "aliases": [
+    "1Password",
+    "Agilebits Onepassword-osx"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-11T22:34:01.461Z",
+   "App Version": "6.8.9",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.interversehq.qView",
+   "aliases": [
+    "qView",
+    "Interversehq QView"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-08-18T03:00:21.270Z",
+   "App Version": "6.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.fxcoudert.pdftools",
+   "aliases": [
+    "PDF Toolkit",
+    "Fxcoudert Pdftools"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-22T11:47:10.186Z",
+   "App Version": "1.80",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.alfredapp.Alfred",
+   "aliases": [
+    "Alfred",
+    "Alfredapp Alfred"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-22T16:16:02.297Z",
+   "App Version": "1.20",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.flowpaper.desktop.publisher",
+   "aliases": [
+    "FlowPaper Desktop Publisher",
+    "Electron",
+    "Flowpaper Desktop Publisher"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-01-29T19:11:20.599Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.azuredatastudio.oss",
+   "aliases": [
+    "Azure Data Studio",
+    "Electron",
+    "Azuredatastudio Oss"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-03-19T09:47:36.508Z",
+   "App Version": "1.35.1",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.codeweavers.wargaminggamecenter",
+   "aliases": [
+    "Wargaming.net Game Center",
+    "Wargaming",
+    "Codeweavers Wargaminggamecenter"
+   ],
+   "downloadUrl": "https://wargaming.net",
+   "Date": "2022-02-08T13:48:18.634Z",
+   "App Version": "4.10",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.visualstudio.code.oss",
+   "aliases": [
+    "VSCodium",
+    "Electron",
+    "Visualstudio Code Oss"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-02-12T04:05:43.536Z",
+   "App Version": "1.63.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.sony.Remote",
+   "aliases": [
+    "Remote",
+    "Sony Remote"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-02-16T17:08:57.602Z",
+   "App Version": "3.3.00.01191",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.electron.kontena-lens",
+   "aliases": [
+    "Lens",
+    "Electron Kontena-lens"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-02-27T06:09:04.873Z",
+   "App Version": "5.3.4-latest.20220120.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer8.1.1",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 8",
+    "Netacad PacketTracer8 1 1"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-02-28T13:25:38.342Z",
+   "App Version": "8.1.1",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.electron.dropbox-capture",
+   "aliases": [
+    "Dropbox Capture",
+    "Electron Dropbox-capture"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-03-18T18:31:55.423Z",
+   "App Version": "72.0.0",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.uaudio.console2",
+   "aliases": [
+    "Console",
+    "Uaudio Console2"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-08-27T02:00:03.566Z",
+   "App Version": "10.2.4",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "org.surge-synth-team.surge-xt",
+   "aliases": [
+    "Surge XT",
+    "Surge-synth-team Surge-xt"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-03-22T12:28:38.091Z",
+   "App Version": "1.0.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "pt.vodafone.webapp",
+   "aliases": [
+    "nwjs",
+    "Tv Vodafone",
+    "Pt Vodafone Webapp"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-01-17T22:15:09.240Z",
+   "App Version": "87.0.4280.66",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "maccatalyst.social.street.MemoryAssistant",
+   "aliases": [
+    "Anki Notes",
+    "Maccatalyst Social Street MemoryAssistant"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-03-28T01:12:32.986Z",
+   "App Version": "4.06",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.plarium.raidlegends",
+   "aliases": [
+    "Raid: Shadow Legends",
+    "Raid",
+    "Plarium Raidlegends"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-04-29T17:52:50.904Z",
+   "App Version": "5.40.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.michaelvillar.Timer",
+   "aliases": [
+    "Timer",
+    "Michaelvillar Timer"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-05-05T00:32:36.943Z",
+   "App Version": "1.6.0",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "net.ankiweb.dtop",
+   "aliases": [
+    "Anki",
+    "MacOS/anki",
+    "Ankiweb Dtop"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-07-30T21:00:43.049Z",
+   "App Version": "2.1.54",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.apple.Terminal",
+   "aliases": [
+    "Terminal",
+    "Apple Terminal"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-09-18T15:29:12.539Z",
+   "App Version": "2.14",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "us.zoom.ZoomVDI",
+   "aliases": [
+    "ZoomVDI",
+    "Us Zoom ZoomVDI"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-10-12T06:06:52.937Z",
+   "App Version": "5.15.10 (24130)",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.instagram",
+   "aliases": [
+    "instagram",
+    "Instagram"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-07-24T22:16:55.076Z",
+   "App Version": "4.1.1.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.codeweavers.CrossOverHelper.4DB4563826BAD0EB2F60EE6E42D0EA4B.D7B460B2ACE2473B3D92C221DB864590",
+   "aliases": [
+    "Steam (Steam)",
+    "Menu Helper",
+    "Codeweavers CrossOverHelper 4DB4563826BAD0EB2F60EE6E42D0EA4B D7B460B2ACE2473B3D92C221DB864590"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-09-11T10:41:47.312Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "kr.co.vcnc.couple.mac",
+   "aliases": [
+    "Between",
+    "Electron",
+    "Kr Co Vcnc Couple Mac"
+   ],
+   "downloadUrl": null,
+   "Date": "2022-11-25T04:32:01.051Z",
+   "App Version": "1.0.7",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.nosqlbooster.mongodb",
+   "aliases": [
+    "NoSQLBooster for MongoDB",
+    "Nosqlbooster Mongodb"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-04-28T14:14:13.779Z",
+   "App Version": "10.1.4",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "org.jabref.cli",
+   "aliases": [
+    "JabRef",
+    "Jabref Cli"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-01-03T20:24:39.810Z",
+   "App Version": "5.8.60000",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.spectrasonics.keyscapestandalone",
+   "aliases": [
+    "Keyscape",
+    "Spectrasonics Keyscapestandalone"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-03-05T08:46:17.705Z",
+   "App Version": "1.2.1c",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer8.2.0",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 8",
+    "Netacad PacketTracer8 2 0"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-01-25T11:46:33.763Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.apple.Console",
+   "aliases": [
+    "Console",
+    "Apple Console"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-02-12T20:18:06.325Z",
+   "App Version": "1.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "at.co.vsl.viennaensemblepro",
+   "aliases": [
+    "Vienna Ensemble Pro",
+    "Vienna Ensemble Pro Server",
+    "At Co Vsl Viennaensemblepro"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-08-06T05:09:39.905Z",
+   "App Version": "7.3.3335",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "at.co.vsl.standalone",
+   "aliases": [
+    "Vienna Synchron Pianos",
+    "At Co Vsl Standalone"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-06-10T04:38:27.567Z",
+   "App Version": "1.3.407",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.tencent.qq",
+   "aliases": [
+    "QQ",
+    "Tencent Qq"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-03-03T01:36:49.068Z",
+   "App Version": "6.9.6",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.paragon-software.ntfs.fsapp",
+   "aliases": [
+    "NTFS for Mac",
+    "FSApp",
+    "Paragon-software Ntfs Fsapp"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-03-07T21:44:44.071Z",
+   "App Version": "15.10.559",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "at.co.vsl.viennaensemblepro.au3",
+   "aliases": [
+    "Vienna Ensemble Pro AU3",
+    "At Co Vsl Viennaensemblepro Au3"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-04-21T08:19:08.507Z",
+   "App Version": "7.0.0",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.drmare.smconverter",
+   "aliases": [
+    "DRmare Spotify Music Converter",
+    "DRmare Music Converter",
+    "Drmare Smconverter"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-05-01T15:38:42.993Z",
+   "App Version": "2.6.4",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.BrickLink.Studio",
+   "aliases": [
+    "Studio",
+    "BrickLink Studio"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-11-16T00:44:34.098Z",
+   "App Version": "2.23.10_1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.mosyle.macos.business",
+   "aliases": [
+    "Self-Service",
+    "Mosyle Macos Business"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-06-04T19:54:42.180Z",
+   "App Version": "6.12.12",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.eastwest.Play",
+   "aliases": [
+    "Play",
+    "Eastwest Play"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-06-11T21:05:51.389Z",
+   "App Version": "6.1.9",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.teamviewer.TeamViewerHost",
+   "aliases": [
+    "TeamViewerHost",
+    "Teamviewer TeamViewerHost"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-07-01T04:17:37.791Z",
+   "App Version": "15.43.6",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "net.domzilla.caffeine",
+   "aliases": [
+    "Caffeine",
+    "Domzilla Caffeine"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-09-24T16:39:36.121Z",
+   "App Version": "1.6.4",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.telephoto.identifier",
+   "aliases": [
+    "MPlayerX",
+    "oarage",
+    "Telephoto Identifier"
+   ],
+   "downloadUrl": null,
+   "Date": "2023-11-05T09:46:37.517Z",
+   "App Version": "107.114",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer8.2.1",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 8",
+    "Netacad PacketTracer8 2 1"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-01-23T08:05:14.875Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.loki-project.messenger-desktop",
+   "aliases": [
+    "Session",
+    "Loki-project Messenger-desktop"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-03-29T17:55:58.030Z",
+   "App Version": "1.11.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.apple.automator.Win-Steam",
+   "aliases": [
+    "Win-Steam",
+    "Automator Application Stub",
+    "Apple Automator Win-Steam"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-04-06T02:55:30.675Z",
+   "App Version": "1.3",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "org.torproject.torbrowser",
+   "aliases": [
+    "Tor Browser",
+    "firefox",
+    "Torproject Torbrowser"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-08-12T23:17:51.129Z",
+   "App Version": "13.0.8",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.toofifi.TFFPaPaClient",
+   "aliases": [
+    "Client",
+    "Toofifi TFFPaPaClient"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-08-30T01:20:01.345Z",
+   "App Version": "3.4.1.19",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.fluidapp.FluidApp2.Library",
+   "aliases": [
+    "Library",
+    "FluidApp",
+    "Fluidapp FluidApp2 Library"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-09-19T13:29:46.144Z",
+   "App Version": "2.1.2",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "JabRef",
+   "aliases": [
+    "JabRef"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-08T14:30:54.345Z",
+   "App Version": "5.15",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.SunblinkEntertainment.HelloKitty",
+   "aliases": [
+    "Hello Kitty",
+    "SunblinkEntertainment HelloKitty"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-11T04:03:08.550Z",
+   "App Version": "2.1.1",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "DJI.Assistant",
+   "aliases": [
+    "Assistant",
+    "DJI Assistant 2(Consumer Drones Series)",
+    "DJI Assistant"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-11-19T20:42:24.070Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "uk.co.opencommunity.vienna2",
+   "aliases": [
+    "Vienna",
+    "Uk Co Opencommunity Vienna2"
+   ],
+   "downloadUrl": "https://github.io",
+   "Date": "2024-11-25T18:26:16.493Z",
+   "App Version": "3.9.4 :498937af:",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.renault.toolbox",
+   "aliases": [
+    "Renault Media Nav Evolution Toolbox",
+    "toolbox",
+    "Renault Toolbox"
+   ],
+   "downloadUrl": null,
+   "Date": "2024-12-17T00:05:31.892Z",
+   "App Version": "5.22.2024141022",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.google.Chrome.app.akpamiohjfcnimfljfndmaldlcfphjmp",
+   "aliases": [
+    "Instagram",
+    "app_mode_loader",
+    "Google Chrome App Akpamiohjfcnimfljfndmaldlcfphjmp"
+   ],
+   "downloadUrl": null,
+   "Date": "2025-04-19T06:05:38.519Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.ToWatchList.SimpleComic",
+   "aliases": [
+    "Simple Comic",
+    "ToWatchList SimpleComic"
+   ],
+   "downloadUrl": null,
+   "Date": "2025-08-02T15:42:54.308Z",
+   "App Version": "1.9.9",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer9.0.0",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 9",
+    "Netacad PacketTracer9 0 0"
+   ],
+   "downloadUrl": null,
+   "Date": "2025-09-02T03:34:08.378Z",
+   "App Version": "",
+   "Result": "🔶"
+  },
+  {
+   "bundleIdentifier": "com.google.Chrome.app.agimnkijcaahngcdmfeangaknmldooml",
+   "aliases": [
+    "YouTube",
+    "app_mode_loader",
+    "Google Chrome App Agimnkijcaahngcdmfeangaknmldooml"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-01-19T19:38:07.242Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.aldelaro5.dolphin-memory-engine",
+   "aliases": [
+    "Dolphin Memory Engine",
+    "dolphin-memory-engine",
+    "Aldelaro5 Dolphin-memory-engine"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-05-06T07:23:44.618Z",
+   "App Version": "",
+   "Result": "✅"
+  },
+  {
+   "bundleIdentifier": "com.netacad.PacketTracer8.2.2",
+   "aliases": [
+    "Cisco Packet Tracer",
+    "PacketTracer",
+    "Cisco Packet Tracer 8",
+    "Netacad PacketTracer8 2 2"
+   ],
+   "downloadUrl": null,
+   "Date": "2026-08-02T13:58:50.914Z",
+   "App Version": "",
+   "Result": "🔶"
+  }
+ ],
+ "expected": {
+  "com.valvesoftware.steam|Steam": {
+   "readmeEntry": "Steam"
+  },
+  "com.apple.news|News": {
+   "ownListing": "/app/news"
+  },
+  "com.apple.Home|Home": {
+   "ownListing": "/app/home"
+  },
+  "com.apple.Notes|Notes": {
+   "ownListing": "/app/notes"
+  },
+  "com.apple.FontBook|Font Book": {
+   "ownListing": "/app/font-book"
+  },
+  "com.google.Chrome|Google Chrome": {
+   "readmeEntry": "Chrome"
+  },
+  "notion.id|Notion": {
+   "readmeEntry": "Notion Desktop"
+  },
+  "com.inevio.horbitonova|horbito NOVA": {
+   "ownListing": "/app/horbito-nova"
+  },
+  "com.jamfsoftware.selfservice.mac|Self Service": {
+   "dropped": true,
+   "slugKeptBy": "com.mosyle.macos.business"
+  },
+  "com.cycling74.Max|Max": {
+   "dropped": true,
+   "slugKeptBy": "org.sbooth.Max"
+  },
+  "com.microsoft.VSCode|Code": {
+   "readmeEntry": "VS Code"
+  },
+  "com.apple.Preview|Preview": {
+   "ownListing": "/app/preview"
+  },
+  "com.apple.Safari|Safari": {
+   "readmeEntry": "Safari Web Browser"
+  },
+  "com.apple.mail|Mail": {
+   "ownListing": "/app/mail"
+  },
+  "com.apple.Music|Music": {
+   "ownListing": "/app/music"
+  },
+  "com.runningwithcrayons.Alfred|Alfred": {
+   "dropped": true,
+   "slugKeptBy": "com.alfredapp.Alfred"
+  },
+  "com.microsoft.VSCodeInsiders|Code - Insiders": {
+   "ownListing": "/app/code-insiders"
+  },
+  "com.googlecode.iterm2|iTerm2": {
+   "readmeEntry": "iTerm"
+  },
+  "com.hnc.Discord|Discord": {
+   "readmeEntry": "Discord"
+  },
+  "com.hnc.DiscordPTB|Discord PTB": {
+   "readmeEntry": "Discord"
+  },
+  "com.electron.shadow|Shadow": {
+   "ownListing": "/app/shadow"
+  },
+  "maccatalyst.com.atebits.Tweetie2|Twitter": {
+   "readmeEntry": "Twitter"
+  },
+  "com.heliconsoft.heliconfocus|HeliconFocus": {
+   "ownListing": "/app/heliconfocus"
+  },
+  "com.nvidia.gfnpc.mall|GeForceNOW": {
+   "readmeEntry": "NVIDIA GeForce NOW"
+  },
+  "com.microsoft.VSCodeExploration|Code - Exploration": {
+   "ownListing": "/app/code-exploration"
+  },
+  "com.microsoft.SkypeForBusiness|Skype for Business": {
+   "readmeEntry": "Skype for Business"
+  },
+  "|Multipass": {
+   "ownListing": "/app/multipass"
+  },
+  "org.whispersystems.signal-desktop|Signal": {
+   "readmeEntry": "Signal"
+  },
+  "tv.plex.desktop|Plex": {
+   "ownListing": "/app/plex"
+  },
+  "net.battle.app|Battle.net": {
+   "ownListing": "/app/battlenet"
+  },
+  "com.insomnia.app|Insomnia": {
+   "readmeEntry": "Insomnia Core"
+  },
+  "com.mcneel.rhinoceros.7|Rhino 7": {
+   "readmeEntry": "Rhinoceros 3D"
+  },
+  "com.adobe.LightroomClassicCC7|Adobe Lightroom Classic": {
+   "readmeEntry": "Lightroom Classic"
+  },
+  "|darkplaces-sdl": {
+   "ownListing": "/app/darkplaces-sdl"
+  },
+  "com.skype.s4l|Skype": {
+   "readmeEntry": "Skype"
+  },
+  "com.lightheadsw.caffeine|Caffeine": {
+   "dropped": true,
+   "slugKeptBy": "net.domzilla.caffeine"
+  },
+  "unity.InXile Entertainment.Torment|Torment": {
+   "ownListing": "/app/torment"
+  },
+  "com.xk72.Charles|Charles": {
+   "readmeEntry": "Charles Web Debugging Proxy"
+  },
+  "sddda.Plex|Plex": {
+   "dropped": true,
+   "slugKeptBy": "tv.plex.desktop"
+  },
+  "io.hyperapp.XcodeCleaner|Cleaner for Xcode": {
+   "ownListing": "/app/cleaner-for-xcode"
+  },
+  "com.10baseT.IPScannerMac|IP Scanner": {
+   "dropped": true,
+   "slugKeptBy": "IPScanner"
+  },
+  "com.jetbrains.intellij.ce|Testlum Desktop": {
+   "ownListing": "/app/testlum-desktop"
+  },
+  "io.nwjs.nwjs|nwjs": {
+   "ownListing": "/app/nwjs"
+  },
+  "com.jetbrains.intellij|IntelliJ IDEA": {
+   "readmeEntry": "IntelliJ IDEA"
+  },
+  "com.obsproject.obs-studio|OBS Studio": {
+   "readmeEntry": "OBS"
+  },
+  "CBD.CHITUBOX|CHITUBOX": {
+   "ownListing": "/app/chitubox"
+  },
+  "org.wireshark.Wireshark|Wireshark": {
+   "readmeEntry": "Wireshark"
+  },
+  "IPScanner|IP Scanner": {
+   "ownListing": "/app/ip-scanner"
+  },
+  "jp.tmkk.XLD|XLD": {
+   "readmeEntry": "X Lossless Decoder (XLD)"
+  },
+  "com.betafish.adblock-mac|AdBlock": {
+   "ownListing": "/app/adblock"
+  },
+  "com.adobe.Acrobat.Pro|Acrobat": {
+   "readmeEntry": "Acrobat Pro"
+  },
+  "com.sap.openjdk.jdk|SapMachine 17-ea": {
+   "ownListing": "/app/sapmachine-17-ea"
+  },
+  "com.netacad.PacketTracer8.0.0|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "org.niltsh.MPlayerX|MPlayerX": {
+   "ownListing": "/app/mplayerx"
+  },
+  "com.dolphinteam.dolphin-updater|Updater": {
+   "ownListing": "/app/updater"
+  },
+  "com.figma.desktop.dynamic-universal-app|DynamicUniversalApp": {
+   "dropped": true,
+   "slugKeptBy": "com.figma.Desktop.dua"
+  },
+  "cc.arduino.Arduino|Arduino": {
+   "readmeEntry": "Arduino IDE"
+  },
+  "gaborhargitai.colibri|Colibri": {
+   "readmeEntry": "Colibri"
+  },
+  "test.Colibri-DAC-DSD-Test|Colibri DAC DSD Test": {
+   "readmeEntry": "Colibri DAC DSD Test"
+  },
+  "com.figma.Desktop.dua|DynamicUniversalApp": {
+   "readmeEntry": "Figma"
+  },
+  "com.dennisameling.signal-desktop|Signal Unofficial": {
+   "ownListing": "/app/signal-unofficial"
+  },
+  "com.uaudio.console|Console": {
+   "dropped": true,
+   "slugKeptBy": "com.apple.Console"
+  },
+  "com.valvesoftware.SteamLink17|Steam Link": {
+   "readmeEntry": "Steam"
+  },
+  "net.delsuc.pdftoolkit|PDF Toolkit+": {
+   "dropped": true,
+   "slugKeptBy": "com.fxcoudert.pdftools"
+  },
+  "com.electron.react-native-debugger|React Native Debugger": {
+   "readmeEntry": "React Native Debugger"
+  },
+  "com.netacad.PacketTracer8.0.1|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "unity.The Pokémon Company International.Pokemon Trading Card Game Online|Pokemon Trading Card Game Online": {
+   "ownListing": "/app/pokemon-trading-card-game-online"
+  },
+  "com.electron.plutotv|PlutoTV": {
+   "ownListing": "/app/plutotv"
+  },
+  "com.parallels.winapp.3be6a3fe5affd872c0eb18fbb28ac581.ca1c4e3184a142b8971753f2607b393f|Wireshark": {
+   "dropped": true,
+   "slugKeptBy": "org.wireshark.Wireshark"
+  },
+  "com.1password.1password|1Password": {
+   "readmeEntry": "1Password"
+  },
+  "com.rdbrck.shift|Shift": {
+   "dropped": true,
+   "slugKeptBy": "io.shift.app-production"
+  },
+  "ru.yandex.desktop.disk2|Yandex.Disk.2": {
+   "ownListing": "/app/yandexdisk2"
+  },
+  "nl.transip.stack|stack": {
+   "dropped": true,
+   "slugKeptBy": "com.stack.io"
+  },
+  "com.joogps.Magic|Magic": {
+   "ownListing": "/app/magic"
+  },
+  "TODO|Influx": {
+   "readmeEntry": "Autokroma Influx"
+  },
+  "io.shift.app-production|Shift": {
+   "ownListing": "/app/shift"
+  },
+  "com.qview.qView|qView": {
+   "dropped": true,
+   "slugKeptBy": "com.interversehq.qView"
+  },
+  "com.adobe.lightroomCC|Adobe Lightroom": {
+   "readmeEntry": "Lightroom"
+  },
+  "net.projectwizards.merlinprojectexpress-macappstore|Merlin Project Express": {
+   "readmeEntry": "Merlin Project Express"
+  },
+  "com.vk.messenger|VK Messenger": {
+   "dropped": true,
+   "slugKeptBy": "com.vk.messages"
+  },
+  "com.novem.Teams|Teams": {
+   "ownListing": "/app/teams"
+  },
+  "com.yourcompany.CHITUBOX|CHITUBOX": {
+   "dropped": true,
+   "slugKeptBy": "CBD.CHITUBOX"
+  },
+  "com.netacad.PacketTracer7|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "net.maxon.app-manager|Maxon App": {
+   "ownListing": "/app/maxon-app"
+  },
+  "unity.Blizzard Entertainment.Hearthstone|Hearthstone": {
+   "ownListing": "/app/hearthstone"
+  },
+  "com.stack.io|Stack": {
+   "ownListing": "/app/stack"
+  },
+  "com.lightheadsw.Caffeine|Caffeine": {
+   "dropped": true,
+   "slugKeptBy": "net.domzilla.caffeine"
+  },
+  "org.sbooth.Max|Max": {
+   "ownListing": "/app/max"
+  },
+  "com.tencent.start.mac.Start|START": {
+   "ownListing": "/app/start"
+  },
+  "com.electron.nativefier.discord-nativefier-18566a|Discord": {
+   "dropped": true,
+   "slugKeptBy": "com.hnc.Discord"
+  },
+  "com.vk.messages|VK Messenger": {
+   "ownListing": "/app/vk-messenger"
+  },
+  "unity.Empyrean.Unity-HouseFlipper|House Flipper Game": {
+   "ownListing": "/app/house-flipper-game"
+  },
+  "unity.GAME.Christmas Shopper Simulator 2|CSS2": {
+   "ownListing": "/app/css2"
+  },
+  "com.ironhidegames.vengance.mac.steam|Kingdom Rush Vengeance": {
+   "ownListing": "/app/kingdom-rush-vengeance"
+  },
+  "com.codeweavers.CrossOverHelper.363F6C1A194181DEFCF9D77291BAAB60.D7B460B2ACE2473B3D92C221DB864590|Steam (Rocket League)": {
+   "ownListing": "/app/steam-rocket-league"
+  },
+  "com.redgiant.PluralEyes-4|PluralEyes": {
+   "readmeEntry": "Maxon PluralEyes"
+  },
+  "org.jabref.gui|JabRef": {
+   "dropped": true,
+   "slugKeptBy": "JabRef"
+  },
+  "com.agilebits.onepassword-osx|1Password": {
+   "dropped": true,
+   "slugKeptBy": "com.1password.1password"
+  },
+  "com.interversehq.qView|qView": {
+   "ownListing": "/app/qview"
+  },
+  "com.fxcoudert.pdftools|PDF Toolkit": {
+   "ownListing": "/app/pdf-toolkit"
+  },
+  "com.alfredapp.Alfred|Alfred": {
+   "readmeEntry": "Alfred"
+  },
+  "com.flowpaper.desktop.publisher|FlowPaper Desktop Publisher": {
+   "ownListing": "/app/flowpaper-desktop-publisher"
+  },
+  "com.azuredatastudio.oss|Azure Data Studio": {
+   "ownListing": "/app/azure-data-studio"
+  },
+  "com.codeweavers.wargaminggamecenter|Wargaming.net Game Center": {
+   "ownListing": "/app/wargamingnet-game-center"
+  },
+  "com.visualstudio.code.oss|VSCodium": {
+   "ownListing": "/app/vscodium"
+  },
+  "com.sony.Remote|Remote": {
+   "ownListing": "/app/remote"
+  },
+  "com.electron.kontena-lens|Lens": {
+   "ownListing": "/app/lens"
+  },
+  "com.netacad.PacketTracer8.1.1|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "com.electron.dropbox-capture|Dropbox Capture": {
+   "ownListing": "/app/dropbox-capture"
+  },
+  "com.uaudio.console2|Console": {
+   "dropped": true,
+   "slugKeptBy": "com.apple.Console"
+  },
+  "org.surge-synth-team.surge-xt|Surge XT": {
+   "ownListing": "/app/surge-xt"
+  },
+  "pt.vodafone.webapp|nwjs": {
+   "dropped": true,
+   "slugKeptBy": "io.nwjs.nwjs"
+  },
+  "maccatalyst.social.street.MemoryAssistant|Anki Notes": {
+   "ownListing": "/app/anki-notes"
+  },
+  "com.plarium.raidlegends|Raid: Shadow Legends": {
+   "ownListing": "/app/raid-shadow-legends"
+  },
+  "com.michaelvillar.Timer|Timer": {
+   "ownListing": "/app/timer"
+  },
+  "net.ankiweb.dtop|Anki": {
+   "readmeEntry": "Anki"
+  },
+  "com.apple.Terminal|Terminal": {
+   "ownListing": "/app/terminal"
+  },
+  "us.zoom.ZoomVDI|ZoomVDI": {
+   "readmeEntry": "Zoom"
+  },
+  "com.instagram|instagram": {
+   "ownListing": "/app/instagram"
+  },
+  "com.codeweavers.CrossOverHelper.4DB4563826BAD0EB2F60EE6E42D0EA4B.D7B460B2ACE2473B3D92C221DB864590|Steam (Steam)": {
+   "ownListing": "/app/steam-steam"
+  },
+  "kr.co.vcnc.couple.mac|Between": {
+   "ownListing": "/app/between"
+  },
+  "com.nosqlbooster.mongodb|NoSQLBooster for MongoDB": {
+   "ownListing": "/app/nosqlbooster-for-mongodb"
+  },
+  "org.jabref.cli|JabRef": {
+   "dropped": true,
+   "slugKeptBy": "JabRef"
+  },
+  "com.spectrasonics.keyscapestandalone|Keyscape": {
+   "readmeEntry": "Spectrasonics Keyscape"
+  },
+  "com.netacad.PacketTracer8.2.0|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "com.apple.Console|Console": {
+   "ownListing": "/app/console"
+  },
+  "at.co.vsl.viennaensemblepro|Vienna Ensemble Pro": {
+   "ownListing": "/app/vienna-ensemble-pro"
+  },
+  "at.co.vsl.standalone|Vienna Synchron Pianos": {
+   "ownListing": "/app/vienna-synchron-pianos"
+  },
+  "com.tencent.qq|QQ": {
+   "readmeEntry": "QQ"
+  },
+  "com.paragon-software.ntfs.fsapp|NTFS for Mac": {
+   "ownListing": "/app/ntfs-for-mac"
+  },
+  "at.co.vsl.viennaensemblepro.au3|Vienna Ensemble Pro AU3": {
+   "ownListing": "/app/vienna-ensemble-pro-au3"
+  },
+  "com.drmare.smconverter|DRmare Spotify Music Converter": {
+   "ownListing": "/app/drmare-spotify-music-converter"
+  },
+  "com.BrickLink.Studio|Studio": {
+   "ownListing": "/app/studio"
+  },
+  "com.mosyle.macos.business|Self-Service": {
+   "ownListing": "/app/self-service"
+  },
+  "com.eastwest.Play|Play": {
+   "ownListing": "/app/play"
+  },
+  "com.teamviewer.TeamViewerHost|TeamViewerHost": {
+   "readmeEntry": "TeamViewer"
+  },
+  "net.domzilla.caffeine|Caffeine": {
+   "ownListing": "/app/caffeine"
+  },
+  "com.telephoto.identifier|MPlayerX": {
+   "dropped": true,
+   "slugKeptBy": "org.niltsh.MPlayerX"
+  },
+  "com.netacad.PacketTracer8.2.1|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "com.loki-project.messenger-desktop|Session": {
+   "ownListing": "/app/session"
+  },
+  "com.apple.automator.Win-Steam|Win-Steam": {
+   "ownListing": "/app/win-steam"
+  },
+  "org.torproject.torbrowser|Tor Browser": {
+   "readmeEntry": "Tor Browser"
+  },
+  "com.toofifi.TFFPaPaClient|Client": {
+   "ownListing": "/app/client"
+  },
+  "com.fluidapp.FluidApp2.Library|Library": {
+   "ownListing": "/app/library"
+  },
+  "JabRef|JabRef": {
+   "readmeEntry": "JabRef"
+  },
+  "com.SunblinkEntertainment.HelloKitty|Hello Kitty": {
+   "ownListing": "/app/hello-kitty"
+  },
+  "DJI.Assistant|Assistant": {
+   "ownListing": "/app/assistant"
+  },
+  "uk.co.opencommunity.vienna2|Vienna": {
+   "readmeEntry": "Vienna"
+  },
+  "com.renault.toolbox|Renault Media Nav Evolution Toolbox": {
+   "ownListing": "/app/renault-media-nav-evolution-toolbox"
+  },
+  "com.google.Chrome.app.akpamiohjfcnimfljfndmaldlcfphjmp|Instagram": {
+   "dropped": true,
+   "slugKeptBy": "com.instagram"
+  },
+  "com.ToWatchList.SimpleComic|Simple Comic": {
+   "readmeEntry": "Simple Comic"
+  },
+  "com.netacad.PacketTracer9.0.0|Cisco Packet Tracer": {
+   "dropped": true,
+   "slugKeptBy": "com.netacad.PacketTracer8.2.2"
+  },
+  "com.google.Chrome.app.agimnkijcaahngcdmfeangaknmldooml|YouTube": {
+   "readmeEntry": "Chrome"
+  },
+  "com.aldelaro5.dolphin-memory-engine|Dolphin Memory Engine": {
+   "ownListing": "/app/dolphin-memory-engine"
+  },
+  "com.netacad.PacketTracer8.2.2|Cisco Packet Tracer": {
+   "readmeEntry": "Cisco Packet Tracer"
+  }
+ }
+}
