@@ -73,3 +73,21 @@ Context moved out of the status headlines on September 7, 2026. These are the ex
 ✳️ Yes, works via Rosetta 2 as of v2.2049.10 with native support currently in beta
 
 [Verification](https://github.com/ThatGuySam/doesitarm/issues/956) [Native Apple Silicon TestFlight Download](https://faq.whatsapp.com/545358030455627/?locale=en_GB)
+
+## GTKWave
+
+✅ Runs natively when installed from the community Homebrew tap or built from source; the old prebuilt SourceForge bundle (3.3.107) is Intel-only and the maintainers say it is not compatible with current macOS. The project's install guide points Mac users to the tap or a source build, and users in the upstream discussion report running it on M1 Macs that way. One 2023 report says waveforms only displayed correctly on an external screen on Apple Silicon laptops.
+
+[Install Guide](https://gtkwave.github.io/gtkwave/install/mac.html) [Discussion](https://github.com/gtkwave/gtkwave/issues/250) [Homebrew Tap](https://github.com/randomplum/homebrew-gtkwave/blob/main/gtkwave.rb)
+
+## Solstice
+
+✅ Native Apple Silicon client since v6.3.3. Mersive removed the Room Camera + Mic option from it, and Solstice video conferencing is no longer supported natively on Apple Silicon or Intel Macs. Version 6.3 was the final client built for Intel Macs and video conferencing.
+
+[Release Notes](https://documentation.mersive.com/en/solstice/solstice-release-notes.html)
+
+## CamTwist
+
+✳️ CamTwist 3.4.3 is Intel-only, including its virtual camera plug-in, and runs via Rosetta 2. From macOS Sonoma 14.1, cameras that use the legacy plug-in architecture are unavailable by default, and a user reports CamTwist stopped appearing as a camera after that update. Apple documents a Recovery-mode Terminal command, `system-override legacy-camera-plugins-without-sw-camera-indication=on`, that restores legacy camera plug-ins; with it on, the menu-bar camera indicator does not appear for those cameras.
+
+[Evidence](https://www.kotobato.jp/articles/tips/web-cam-trouble-caused-by-mmhmm.html) [Apple Support](https://support.apple.com/en-us/108387)

@@ -12,16 +12,16 @@ Claude Code then turned the records into README lines with a script and reviewed
 
 | Finding | Apps | In this PR |
 | --- | ---: | --- |
-| Native Apple Silicon | 390 | 334 README lines |
-| Works via Rosetta 2 | 122 | 100 README lines |
-| Unsupported on Apple Silicon | 17 | 12 README lines |
+| Native Apple Silicon | 390 | 320 README lines (334 as opened) |
+| Works via Rosetta 2 | 122 | 97 README lines (100 as opened) |
+| Unsupported on Apple Silicon | 17 | 11 README lines (12 as opened) |
 | Discontinued | 235 | No change |
 | Intel-only, Rosetta unverified | 110 | No change |
 | Not a standalone app listing | 112 | No change |
 | Still unknown | 188 | No change |
-| **Total** | **1,174** | **446 README lines** |
+| **Total** | **1,174** | **428 README lines (446 as opened)** |
 
-Of the 529 native, Rosetta and unsupported findings, 446 became README lines, 49 were held back for name collisions, 27 in the review pass, 3 for missing or unusable fields, and 4 already had a README entry with the same name.
+Of the 529 native, Rosetta and unsupported findings, 446 became README lines, 49 were held back for name collisions, 27 in the review pass, 3 for missing or unusable fields, and 4 already had a README entry with the same name. After maintainer review, 18 of the 446 lines were removed and GTKWave moved from unsupported to native; see [Changes after maintainer review](#changes-after-maintainer-review-2026-11-27).
 
 ## Discontinued (235)
 
@@ -934,3 +934,16 @@ The maker's name for these products does not absorb the scan under the current m
 ### Links changed
 
 - Bino: the plain-HTTP inspected download link was dropped because the README validation test requires HTTPS; the record still lists it.
+- Fourteen entries linked the app name to one release tag. The name now links to the project's releases page and the specific release stays as an evidence link: Asset Catalog Tinkerer, AudioBookBinder, Candle, ExifCleaner, Firestorm, Flameshot, Fluor, Gramps, IGdm, Neon, QtScrcpy, Sonarr, Tabby, Twine. GitHub `expanded_assets` fragment links were replaced with the release page.
+
+### Statuses qualified
+
+Checked against the linked sources on 2026-11-27. Longer context is in [app status details](../app-status-details.md).
+
+| README name | Record says | README status now |
+| --- | --- | --- |
+| GTKWave | Unsupported (legacy prebuilt bundle is x86_64 only) | Native via the community Homebrew tap or a source build, which the official install guide recommends and which users in [gtkwave#250](https://github.com/gtkwave/gtkwave/issues/250) report running on M1 Macs; the old prebuilt bundle is Intel-only |
+| Solstice | Native as of 6.3.5; notes say the client omits Room Camera + Mic | Native as of 6.3.3 (the first native client per the release notes); drops Solstice video conferencing |
+| CamTwist | Rosetta; legacy virtual camera may fail on newer macOS | Rosetta; the virtual camera needs Apple's legacy camera plug-in override from macOS Sonoma 14.1 |
+| Smaart | Rosetta for v8; the separately marketed v9 line is native | Scoped to Smaart v8. The vendor's Rosetta notice does not state v9's architecture, so no v9 claim is made |
+| PdaNetMac | Unsupported for USB tethering with the scanned client | Scoped to the USB tethering client and its kernel extension, which Rosetta cannot load; the separate Wi-Fi Direct client is not covered |
