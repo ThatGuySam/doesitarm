@@ -27,3 +27,10 @@ At the top of the review, headless Chromium reported 19 review assets and 244,48
 ## Local review
 
 `pnpm build:ui` installs the isolated lockfile and generates the review assets. `pnpm dev` then serves `/ui`. Both production build commands run the review build before Astro. Use `PLAYWRIGHT_BROWSER_PATH=/usr/bin/chromium pnpm test:browser` on this machine. `node ui-review/scripts/capture.mjs https://doesitarm.com/ui live` captures the production viewports and reports initial transfer bytes.
+
+## Release verification against `23cd9ff`
+
+- Replayed the review commits onto the latest production master and rebuilt the candidate. Cloudflare's `_astro` assets, sitemap XML and Pagefind index matched the baseline byte for byte. The four local legacy/default route responses matched after applying the normalizations above. The review responded 200 with `X-Robots-Tag: noindex, nofollow`. Its content-addressed JS and CSS have a scoped immutable cache rule.
+- The full Netlify build also passed. Netlify SSR returned 200 for the review with the same robots header. Its existing `_astro` assets, search index and sitemaps matched byte for byte, and the same four default SSR responses matched after normalization.
+- Vitest passed 400 tests with three existing TODOs on both the baseline and candidate. The baseline's 10 Playwright tests passed on the compiled Cloudflare build. All 13 passed on the candidate, including the original scanner upload modes, Pagefind filtering and the new review tests. The machine's Netlify dev emulator failed to start its Deno edge process, so browser verification used the compiled Cloudflare build.
+- Chromium loaded all 1,015 upstream previews at rest. Six upstream code samples had export-looking text inside code strings. The importer now inspects parsed TypeScript exports, and those six previews all passed a targeted retest. The original archive contains eight site/settings previews and the catalog includes the current Base UI RTL demo. The complete parallel Base UI catalog, additional browser engines and every possible upstream interaction remain outside this verification.

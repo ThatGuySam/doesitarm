@@ -97,6 +97,7 @@ describe( 'UI review', () => {
         const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
         try {
             await openReview( page )
+            await page.getByRole( 'button', { name: 'View scan details', exact: true } ).waitFor()
             await page.addScriptTag({ path: resolve( 'ui-review/node_modules/axe-core/axe.min.js' ) })
             const auditShell = () => page.evaluate( async () => {
                 const { axe } = window as typeof window & {
