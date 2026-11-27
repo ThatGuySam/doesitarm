@@ -410,7 +410,7 @@
 .dia-scanner .drop-zone[data-entry="url"] #advanced { inline-size: min(100%, 34rem); }
 .dia-scanner .drop-zone[data-entry="url"] .select-apps { font-size: 1.1rem; }
 .dia-scanner .drop-zone[data-entry="url"] .device-files[open] > summary { margin-block-end: .8rem; }
-.dia-scanner .touch-input .drag-copy,
+.dia-scanner.touch-input .drag-copy,
 .dia-scanner.touch-input .drop-hint { display: none; }
 
 .dia-scanner .url-phase { color: var(--text); font-size: .8rem; }
