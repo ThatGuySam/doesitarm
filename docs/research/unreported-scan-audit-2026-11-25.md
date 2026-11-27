@@ -947,3 +947,16 @@ Checked against the linked sources on 2026-11-27. Longer context is in [app stat
 | CamTwist | Rosetta; legacy virtual camera may fail on newer macOS | Rosetta; the virtual camera needs Apple's legacy camera plug-in override from macOS Sonoma 14.1 |
 | Smaart | Rosetta for v8; the separately marketed v9 line is native | Scoped to Smaart v8. The vendor's Rosetta notice does not state v9's architecture, so no v9 claim is made |
 | PdaNetMac | Unsupported for USB tethering with the scanned client | Scoped to the USB tethering client and its kernel extension, which Rosetta cannot load; the separate Wi-Fi Direct client is not covered |
+
+### First native versions corrected
+
+Checked at the makers' sources on 2026-11-27. The records gave the current version; the README now gives the first native one.
+
+| README name | Was | Now | Source |
+| --- | --- | --- | --- |
+| Firefoo | v1.5.11 | v1.4.1 | [Release notes](https://www.firefoo.com/docs/about-firefoo/release-notes): 1.4.1 (August 24, 2022) "Support for Apple Silicon" |
+| DriveDx | v1.12.1 | v1.12.0 | [Release notes](https://binaryfruit.com/drivedx/release-notes/): 1.12.0 (June 8, 2023) "Added native support for Apple Silicon Macs" |
+| TeXstudio | v4.9.10 | v4.7.3 | [Release 4.7.3](https://github.com/texstudio-org/texstudio/releases/tag/4.7.3) is the first stable release with a `osx-m1` download |
+
+Fritzing stays at v1.0.8: a 1.0.7 first-native claim could not be confirmed at fritzing.org, which blocked automated requests.
+
