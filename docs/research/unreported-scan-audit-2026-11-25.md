@@ -799,3 +799,132 @@ The agents could not settle the product or its architecture. The finding column 
 | [Yuque App](https://doesitarm.com/app/yuque-app) | The current public Mac DMG is approximately 197 MB and was not eligible for binary inspection under the brief’s limit. | [source](https://www.yuque.com/download) |
 | [Zen Pinball 2](https://doesitarm.com/app/zen-pinball-2) | The Rosetta report predates version 1.4.3, whose architecture and Apple Silicon runtime have not been verified. | [source](https://apps.apple.com/us/app/zen-pinball-2/id527953383?mt=12) |
 | [Zhan Mokao](https://doesitarm.com/app/zhan-mokao) | The official Mac download requires sign-in, so the current downloadable version and its architecture could not be verified. | [source](https://toefl.zhan.com/index.php/) |
+
+## Changes after maintainer review (2026-11-27)
+
+The JSONL records are unchanged; they still use the scan listing names. This section records how README lines differ from them.
+
+### Renamed
+
+Each line now uses the name the maker uses for the product, without a version, build or file suffix. Every renamed entry still absorbs its own scan under the matching rules in [app-name-collisions.md](../app-name-collisions.md), and each changed URL has a 301 in `src/middleware-rules.js`. Names with a parenthesised part keep the scan's name as an exact alternative so the scan is still absorbed.
+
+| Record name | README name | Old path | New path |
+| --- | --- | --- | --- |
+| 115 | 115 Desktop | /app/115 | /app/115-desktop |
+| ApacheDirectoryStudio | Apache Directory Studio | /app/apachedirectorystudio | /app/apache-directory-studio |
+| BrowserStackLocal | BrowserStack Local | /app/browserstacklocal | /app/browserstack-local |
+| Cheat Engine 7.3 | Cheat Engine | /app/cheat-engine-73 | /app/cheat-engine |
+| Eclipse-inst | Eclipse Installer | /app/eclipse-inst | /app/eclipse-installer |
+| gtkwave | GTKWave | /app/gtkwave | unchanged |
+| pico8 | PICO-8 | /app/pico8 | /app/pico-8 |
+| SoapUI-5.7.2 | SoapUI | /app/soapui-572 | /app/soapui |
+| SQLiteStudio | Letos (SQLiteStudio) | /app/sqlitestudio | /app/letos-sqlitestudio |
+| iramuteq | IRaMuTeQ | /app/iramuteq | unchanged |
+| Loupe Browser 6 | Loupe Browser | /app/loupe-browser-6 | /app/loupe-browser |
+| ngraph-gtk | Ngraph-GTK | /app/ngraph-gtk | unchanged |
+| Ovito | OVITO | /app/ovito | unchanged |
+| Slicer 4.11.20210226 | 3D Slicer (Slicer) | /app/slicer-41120210226 | /app/3d-slicer-slicer |
+| CradleHub | Cradle Hub | /app/cradlehub | /app/cradle-hub |
+| Mixed In Key 10 | Mixed In Key | /app/mixed-in-key-10 | /app/mixed-in-key |
+| Philharmonik 2 | Miroslav Philharmonik 2 | /app/philharmonik-2 | /app/miroslav-philharmonik-2 |
+| VCV Rack 2 Free | VCV Rack | /app/vcv-rack-2-free | /app/vcv-rack |
+| Corel Font Manager 2021 | Corel Font Manager | /app/corel-font-manager-2021 | /app/corel-font-manager |
+| Corel PHOTO-PAINT 2021 | Corel PHOTO-PAINT | /app/corel-photo-paint-2021 | /app/corel-photo-paint |
+| Icons8 | Pichon (Icons8) | /app/icons8 | /app/pichon-icons8 |
+| PhotoScapeX | PhotoScape X | /app/photoscapex | /app/photoscape-x |
+| Avidemux2.8.app | Avidemux | /app/avidemux28app | /app/avidemux |
+| Mocha Pro 2020.5 | Mocha Pro | /app/mocha-pro-20205 | /app/mocha-pro |
+| Movavi Video Converter 21 Premium | Movavi Video Converter | /app/movavi-video-converter-21-premium | /app/movavi-video-converter |
+| YTD | YTD Video Downloader | /app/ytd | /app/ytd-video-downloader |
+| ontime | Ontime | /app/ontime | unchanged |
+| Creality_Print | Creality Print | /app/crealityprint | /app/creality-print |
+| datovka | Datovka | /app/datovka | unchanged |
+| DeskCover Pro | DeskCover | /app/deskcover-pro | /app/deskcover |
+| Kingsoft Kdocs Mac | Kingsoft KDocs | /app/kingsoft-kdocs-mac | /app/kingsoft-kdocs |
+| owncloud | ownCloud | /app/owncloud | unchanged |
+| teamlogger | TeamLogger | /app/teamlogger | unchanged |
+| texmaker | Texmaker | /app/texmaker | unchanged |
+| Timeular | EARLY (Timeular) | /app/timeular | /app/early-timeular |
+| Tutanota Desktop | Tuta Mail (Tutanota Desktop) | /app/tutanota-desktop | /app/tuta-mail-tutanota-desktop |
+| Covenant Eyes | Victory Shield (Covenant Eyes) | /app/covenant-eyes | /app/victory-shield-covenant-eyes |
+| Democracy3 | Democracy 3 | /app/democracy3 | /app/democracy-3 |
+| eso | The Elder Scrolls Online (ESO) | /app/eso | /app/the-elder-scrolls-online-eso |
+| SecondLife | Second Life Viewer | /app/secondlife | /app/second-life-viewer |
+| touchbar_nyancat | Touchbar Nyancat | /app/touchbarnyancat | /app/touchbar-nyancat |
+| WeLinkMeeting | HUAWEI CLOUD Meeting (WeLinkMeeting) | /app/welinkmeeting | /app/huawei-cloud-meeting-welinkmeeting |
+| JetDriveToolbox | JetDrive Toolbox | /app/jetdrivetoolbox | /app/jetdrive-toolbox |
+| LibreELEC | LibreELEC USB-SD Creator | /app/libreelec | /app/libreelec-usb-sd-creator |
+| Retroactive (right click to open) | Retroactive | /app/retroactive-right-click-to-open | /app/retroactive |
+| SMARTReporter-DEMO | SMARTReporter | /app/smartreporter-demo | /app/smartreporter |
+| Suuntolink | SuuntoLink | /app/suuntolink | unchanged |
+| Camera Settings | Logitech Camera Settings | /app/camera-settings | /app/logitech-camera-settings |
+| Maltego 4.12.1 | Maltego | /app/maltego-4121 | /app/maltego |
+| Stonesoft VPN Client | Forcepoint VPN Client (Stonesoft VPN Client) | /app/stonesoft-vpn-client | /app/forcepoint-vpn-client-stonesoft-vpn-client |
+| Outline | Outline Client | /app/outline | /app/outline-client |
+
+Movavi Video Converter also absorbs the `Movavi Video Converter 22 Premium` scan (an older copy of the same product), so `/app/movavi-video-converter-22-premium` redirects too.
+
+### Removed
+
+| Record name | Status in the record | Why |
+| --- | --- | --- |
+| MySQLWorkbench | native | Duplicate of the existing MySQL Workbench entry; the spaced name does not absorb the MySQLWorkbench scan under current matching |
+| BitdefenderVirusScanner | native | Duplicate of the existing Bitdefender Virus Scanner entry; the spaced name does not absorb the scan |
+| lghub | native | Duplicate of the existing Logitech G HUB entry; that name does not absorb the lghub scan |
+| SamsungPortableSSD | native | Duplicate of the existing Samsung Portable SSD entry (which claims native as of v1.7.3.0, this record 1.6.10.1); the spaced name does not absorb the scan |
+| Hype4 | native | Duplicate of the existing Tumult Hype entry; Tumult Hype 4 does not absorb the Hype4 scan |
+| Oplide | native | Duplicate of the existing IBM ILOG CPLEX Optimization Studio entry (Oplide is its IDE executable) |
+| Hiero13.0v2 | native | Name carries an old build (13.0v2) while the status is about 17.1v3; Hiero does not absorb the Hiero13.0v2 scan |
+| HieroPlayer13.0v2 | native | Same as Hiero: HieroPlayer does not absorb the HieroPlayer13.0v2 scan |
+| Nuke13.0v2 NC | native | Same as Hiero: Nuke Non-commercial does not absorb the Nuke13.0v2 NC scan |
+| NukeAssist13.0v2 | native | Same as Hiero: Nuke Assist does not absorb the NukeAssist13.0v2 scan |
+| NukeIndie13.0v2 | native | Same as Hiero: Nuke Indie does not absorb the NukeIndie13.0v2 scan |
+| SpringToolSuite4 | native | Status covers Spring Tools 5 (now Spring Tools for Eclipse); no unversioned name absorbs the SpringToolSuite4 scan |
+| Octave-6.2.0 | native | Name carries the old 6.2.0 scan version; Octave.app does not absorb the scan, and the GNU Octave entry already covers Octave |
+| GLMv4 | rosetta | Evidence covers only GLM 4 on macOS 11 to 12.0 (Cloud AutoCal2); GLM 5 is the native current product, and GLM 4 does not absorb the GLMv4 scan |
+| Soundminer v5Pro | rosetta | Evidence covers the old V5 Pro major version, which the vendor supports only up to macOS Monterey; the native successor is a separate purchase |
+| Mixbus32C-7 | rosetta | Evidence covers the 7.x bundle with an M1 report that predates Harrison's native release; renaming to Mixbus32C would misstate the current product |
+
+### Kept under the scan name
+
+The maker's name for these products does not absorb the scan under the current matching rules: the scan's names are run together, abbreviated or carry a build number, and no scan alias equals the spaced name. Renaming would leave the scan's own "need info" page in place next to a new page, so these keep the scan name and URL for now. A matching rule that treats names equal after removing spaces and punctuation would let most of them be renamed.
+
+| README name | Maker's name tried |
+| --- | --- |
+| Aunbox ScreenRec | 嗨格式录屏大师 (HiFormat Screen Recorder) |
+| cnlabSpeedTest | cnlab Speedtest |
+| DAirRegistration | D-air Registration |
+| DAZStudio | Daz Studio |
+| DisplayPilot | Display Pilot |
+| DrPDF | Dr.PDF |
+| DSAssistant | Synology Assistant |
+| DyingLightGame | Dying Light |
+| Electron Hellofont | HelloFont |
+| Electron Keyan | 棵岩阅读 (Keyan) |
+| eparakstitajs3 | eParakstītājs 3.0 |
+| F5Access | F5 Access |
+| FoundryVTT | Foundry Virtual Tabletop |
+| FTBApp | FTB App |
+| Gapminder Offline | Gapminder Tools Offline |
+| LogiTune | Logi Tune |
+| LycheeSlicer | Lychee Slicer |
+| MakeCode for microbit | MakeCode for micro:bit |
+| MPKMini Mk2 Editor | MPK Mini mkII Editor |
+| NoxAppPlayer | NoxPlayer |
+| PA-InstallationManager | Plugin Alliance Installation Manager |
+| PdaNetMac | PdaNet+ |
+| PdfMetadataEditor | PDF Metadata Editor |
+| PGPTSession | PGPT Session |
+| PictureStyleEditor | Picture Style Editor |
+| RapidMiner Studio | RapidMiner AI Studio |
+| RemotePCSuite | RemotePC |
+| RobloxStudio | Roblox Studio |
+| SamyangLensManager | Samyang Lens Manager |
+| SDFormatter | SD Memory Card Formatter |
+| TouchPortal | Touch Portal |
+| UVIWorkstation | UVI Workstation |
+| Vista | Chroma-Q Vista |
+| VNC Server | RealVNC Server |
+| WSM | Sennheiser Wireless Systems Manager |
+| XFUtility3 | Canon XF Utility |
+| Zentraedi ZspaceMacApp | Zspace (极空间) |
