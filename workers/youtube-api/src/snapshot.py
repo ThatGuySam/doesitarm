@@ -227,9 +227,15 @@ def publishable(snapshot, members):
     return out
 
 
-def fix_shard(shard, members, state):
-    """Drop entries that are no longer members and recompute tags. Returns changed."""
+def fix_shard(shard, members, state, index=None):
+    """Drop entries that are no longer members and recompute tags. With index, also
+    repair state: a video marked stored whose entry is missing from this shard is
+    marked not stored, so it is extracted again. Returns changed."""
     changed = False
+    if index is not None:
+        for vid, vstate in state["videos"].items():
+            if vstate.get("s") and vid not in shard and shard_of(vid) == index:
+                vstate["s"] = 0
     for vid in list(shard):
         member = members.get(vid)
         if member is None:

@@ -287,7 +287,22 @@ async def save_run(env, record):
 
 # ---------------------------------------------------------------- video snapshot
 
+SNAPSHOT_LOCK = "lock:snapshot"
+
+
 async def snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
+    """Run one snapshot step unless another is running (KV lock, 20 minutes)."""
+    lock = await kv_json(env.POINTERS, SNAPSHOT_LOCK)
+    if lock and time.time() - lock.get("at", 0) < 1200:
+        return {"skipped": f"another snapshot run started at {now_iso(lock['at'])}"}
+    await kv_put_json(env.POINTERS, SNAPSHOT_LOCK, {"at": time.time()}, ttl=1200)
+    try:
+        return await _snapshot_step(env, sweep, max_videos)
+    finally:
+        await env.POINTERS.delete(SNAPSHOT_LOCK)
+
+
+async def _snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
     """One incremental snapshot run: sweep playlists if due, extract new and stale
     videos within budget, rewrite only the shards that changed, and publish if
     coverage holds. Returns a status dict (also saved to snapshot/status.json)."""
@@ -394,7 +409,7 @@ async def snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
             if item.get("ok") and snap.shard_of(vid) == index:
                 snap.record_result(state, shard, members, vid, item, str(ytdlp_version), now, is_new)
                 changed = changed or bool(item.get("ok"))
-        changed = snap.fix_shard(shard, members, state) or changed
+        changed = snap.fix_shard(shard, members, state, index) or changed
         if changed:
             await r2_put(env.WHEELS, snap.shard_key(index),
                          json.dumps(shard, ensure_ascii=False, separators=(",", ":")))
