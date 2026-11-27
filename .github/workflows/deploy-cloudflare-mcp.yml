@@ -1,0 +1,50 @@
+name: Deploy Cloudflare MCP
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - workers/mcp/**
+      - .github/workflows/deploy-cloudflare-mcp.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-mcp-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/mcp
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: workers/mcp/package-lock.json
+
+      - run: npm ci
+
+      - name: Test MCP Worker
+        run: npm test
+
+      - name: Deploy exact commit
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: 8d4ef8fe891f53e5658d3fdd5a4c7630
+          command: deploy --config wrangler.jsonc --message "GitHub ${{ github.sha }}"
+          workingDirectory: workers/mcp
+          wranglerVersion: 4.105.0
+
+      - name: Smoke test live endpoint
+        run: node scripts/smoke.mjs https://mcp.doesitarm.com/mcp

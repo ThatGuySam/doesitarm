@@ -1,0 +1,19 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.doesitarm/mcp",
+  "title": "Does It ARM",
+  "description": "Check whether Mac apps, games and Homebrew formulae run natively on Apple silicon or via Rosetta.",
+  "version": "1.0.0",
+  "websiteUrl": "https://doesitarm.com",
+  "repository": {
+    "url": "https://github.com/ThatGuySam/doesitarm",
+    "source": "github",
+    "subfolder": "workers/mcp"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.doesitarm.com/mcp"
+    }
+  ]
+}
