@@ -16,7 +16,7 @@ from workers import Response, WorkerEntrypoint
 import canary
 import schema
 from normalize import BadInput, parse_limit, require_playlist_id, require_video_id
-from wutil import CORS, call_extract, js_obj, json_response, kv_json, kv_put_json, now_iso, to_bytes
+from wutil import CORS, call_extract, raw, js_obj, json_response, kv_json, kv_put_json, now_iso, to_bytes
 
 API_VERSION = 2
 VIDEO_TTL = 6 * 3600
@@ -38,12 +38,12 @@ def client_ip(request):
 async def rate_ok(binding, key):
     if binding is None:
         return True
-    outcome = await binding.limit(js_obj({"key": key}))
+    outcome = await raw(binding).limit(js_obj({"key": key}))
     return bool(outcome.success)
 
 
 async def updater_json(env, path):
-    reply = await env.UPDATER.fetch(UPDATER + path)
+    reply = await raw(env.UPDATER).fetch(UPDATER + path)
     if int(reply.status) != 200:
         raise RuntimeError(f"updater {path} returned {reply.status}")
     return json.loads(str(await reply.text()))
@@ -51,8 +51,8 @@ async def updater_json(env, path):
 
 async def report_event(env, kind, detail):
     try:
-        await env.UPDATER.fetch(UPDATER + "/internal/event", method="POST",
-                                body=json.dumps({"kind": kind, "detail": detail})[:8000])
+        await raw(env.UPDATER).fetch(UPDATER + "/internal/event", js_obj({
+            "method": "POST", "body": json.dumps({"kind": kind, "detail": detail})[:8000]}))
     except Exception as err:  # noqa: BLE001 - reporting must not break reads
         print("event report failed", kind, err)
 
@@ -99,12 +99,12 @@ class Default(WorkerEntrypoint):
             return json_response({"error": str(err)}, 400)
 
     async def snapshot(self, request):
-        reply = await self.env.UPDATER.fetch(UPDATER + "/internal/snapshot")
+        reply = await raw(self.env.UPDATER).fetch(UPDATER + "/internal/snapshot")
         if int(reply.status) != 200:
             return json_response({"error": "snapshot not available yet"}, 503)
         headers = {"content-type": "application/json; charset=utf-8", **CORS,
                    "cache-control": "public, max-age=900"}
-        for name in ("etag", "last-modified", "x-snapshot-videos", "x-snapshot-generated"):
+        for name in ("etag", "last-modified", "x-snapshot-videos", "x-snapshot-generated", "x-snapshot-newest"):
             value = reply.headers.get(name)
             if value:
                 headers[name] = str(value)
@@ -161,7 +161,7 @@ class Default(WorkerEntrypoint):
             job["wheel"] = {"version": pointer["version"], "sha256": pointer["sha256"]}
 
             async def source():
-                reply = await env.UPDATER.fetch(
+                reply = await raw(env.UPDATER).fetch(
                     f"{UPDATER}/internal/wheel?version={pointer['version']}&sha256={pointer['sha256']}")
                 if int(reply.status) != 200:
                     raise RuntimeError(f"wheel fetch returned {reply.status}")

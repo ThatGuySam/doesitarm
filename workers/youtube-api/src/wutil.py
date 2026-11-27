@@ -48,6 +48,28 @@ def js_obj(value):
     return to_js(value, dict_converter=js.Object.fromEntries)
 
 
+def missing(value):
+    """True for None and JavaScript null/undefined (raw bindings return JsNull)."""
+    return value is None or type(value).__name__ in ("JsNull", "JsUndefined")
+
+
+def raw(binding):
+    """The JavaScript binding behind the SDK wrapper. The wrapper walks every argument
+    element by element (a 10 MB body costs minutes of CPU), so large R2 writes use
+    the raw binding."""
+    return getattr(binding, "_binding", binding)
+
+
+async def r2_put(bucket, key, body, content_type="application/json; charset=utf-8", custom=None):
+    """R2 put through the raw binding. body: str, bytes or a JS stream."""
+    if isinstance(body, (bytes, bytearray)):
+        body = js_bytes(body)
+    options = {"httpMetadata": {"contentType": content_type}}
+    if custom:
+        options["customMetadata"] = custom
+    await raw(bucket).put(key, body, js_obj(options))
+
+
 async def kv_json(namespace, key):
     value = await namespace.get(key)
     if not isinstance(value, str) or not value:
@@ -66,15 +88,14 @@ async def kv_put_json(namespace, key, value, ttl=None):
 
 
 async def r2_json(bucket, key):
-    obj = await bucket.get(key)
-    if obj is None:
+    obj = await raw(bucket).get(key)
+    if missing(obj):
         return None
     return json.loads(str(await obj.text()))
 
 
 async def r2_put_json(bucket, key, value):
-    await bucket.put(key, json.dumps(value, ensure_ascii=False),
-                     js_obj({"httpMetadata": {"contentType": "application/json; charset=utf-8"}}))
+    await r2_put(bucket, key, json.dumps(value, ensure_ascii=False))
 
 
 async def js_get(url, max_bytes, accept=None):
@@ -97,10 +118,11 @@ async def call_extract(binding, job, wheel_source=None, max_reply=24 * 1024 * 10
     """POST a job to the extractor. wheel_source is an async function returning wheel
     bytes, called only if the extractor asks for them. Returns (status, data)."""
     head = json.dumps(job).encode("utf-8") + b"\n"
-    reply = await binding.fetch(EXTRACT_URL, method="POST", body=js_bytes(head))
+    service = raw(binding)
+    reply = await service.fetch(EXTRACT_URL, js_obj({"method": "POST", "body": js_bytes(head)}))
     if int(reply.status) == 409 and wheel_source is not None:
         wheel = await wheel_source()
-        reply = await binding.fetch(EXTRACT_URL, method="POST", body=js_bytes(head + wheel))
+        reply = await service.fetch(EXTRACT_URL, js_obj({"method": "POST", "body": js_bytes(head + wheel)}))
     text = str(await reply.text())
     if len(text) > max_reply:
         return 502, {"error": "extractor reply too large"}

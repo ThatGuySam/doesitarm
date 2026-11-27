@@ -11,6 +11,7 @@ sys.path.insert(1, str(ROOT / ".vendor" / "site"))
 
 import canary  # noqa: E402
 import schema  # noqa: E402
+import snapshot  # noqa: E402
 import provenance  # noqa: E402
 import release  # noqa: E402
 import transport  # noqa: E402
@@ -413,6 +414,72 @@ class SchemaTests(unittest.TestCase):
                     {**data, "items": "x"}):
             with self.assertRaises(schema.InvalidOutput):
                 schema.playlist(bad, "PLaa9cZC07ZPFqjoYLZRR3kbbnJRHhlmXq")
+
+
+class SnapshotTests(unittest.TestCase):
+    SOURCES = [{"id": "PLaaaaaaaaaaaa", "name": "A"},
+               {"id": "PLbbbbbbbbbbbb", "name": "Bench", "tags": ["benchmark"]}]
+    NOW = 1_800_000_000
+
+    def video(self, vid, title="T"):
+        return schema.video({"id": vid, "title": title, "description": "0:10 a", "duration": 5,
+                             "upload_date": "20261120", "channel": "Owner", "channel_id": "UC" + "x" * 22}, vid)
+
+    def test_flow(self):
+        old = {"3SG5e4z-Ygg": {"title": "Old", "description": "", "timestamps": [], "tags": ["benchmark"],
+                               "rawData": {"snippet": {"playlistId": "PLaaaaaaaaaaaa", "publishedAt": "2021-01-01T00:00:00Z",
+                                                       "channelTitle": "Sam", "channelId": "UC" + "s" * 22}}}}
+        state = snapshot.seed_state(old, self.SOURCES, self.NOW)
+        self.assertEqual(state["playlists"]["PLbbbbbbbbbbbb"]["ids"], ["3SG5e4z-Ygg"])
+        listing = {"id": "PLbbbbbbbbbbbb", "title": "Bench", "channel": "Sam", "channel_id": "UC" + "s" * 22,
+                   "items": [{"id": "3SG5e4z-Ygg"}, {"id": "yLVcRkFtEcA"}]}
+        self.assertIsNone(snapshot.apply_sweep(state, "PLbbbbbbbbbbbb", listing, self.NOW))
+        members = snapshot.membership(self.SOURCES, state)
+        self.assertEqual(members["3SG5e4z-Ygg"]["playlist"], "PLaaaaaaaaaaaa")
+        self.assertEqual(members["3SG5e4z-Ygg"]["tags"], {"benchmark"})
+        new, refresh = snapshot.plan(members, state, old, self.NOW, 10)
+        self.assertEqual(new, ["yLVcRkFtEcA"])
+        self.assertEqual(refresh, [])  # carried-over entries are spread over 90 days
+        working = dict(old)
+        snapshot.record_result(state, working, members, "yLVcRkFtEcA",
+                               {"ok": True, "video": self.video("yLVcRkFtEcA")}, "2026.11.23", self.NOW, True)
+        out = snapshot.publishable(working, members)
+        entry = out["yLVcRkFtEcA"]
+        self.assertEqual(entry["tags"], ["benchmark"])
+        snip = entry["rawData"]["snippet"]
+        self.assertEqual(snip["publishedAt"], "2026-11-20T00:00:00Z")
+        self.assertEqual((snip["channelTitle"], snip["playlistId"], snip["position"]), ("Sam", "PLbbbbbbbbbbbb", 1))
+        self.assertEqual(snip["videoOwnerChannelTitle"], "Owner")
+        self.assertEqual(set(snip["thumbnails"]), {"default", "medium", "high", "standard"})
+        self.assertEqual(entry["timestamps"], [{"time": "0:10", "fullText": "0:10 a"}])
+        self.assertEqual(snapshot.newest_published(out), "2026-11-20T00:00:00Z")
+        self.assertEqual(set(entry), {"title", "description", "timestamps", "tags", "rawData"})
+
+    def test_guards(self):
+        state = snapshot.empty_state()
+        listing = {"id": "PLaaaaaaaaaaaa", "items": [{"id": "3SG5e4z-Ygg"}, {"id": "yLVcRkFtEcA"}, {"id": "IcwRflRZchU"}]}
+        snapshot.apply_sweep(state, "PLaaaaaaaaaaaa", listing, self.NOW)
+        note = snapshot.apply_sweep(state, "PLaaaaaaaaaaaa", {"id": "PLaaaaaaaaaaaa", "items": [{"id": "3SG5e4z-Ygg"}]},
+                                    self.NOW)
+        self.assertIn("shrank", note)
+        self.assertEqual(len(state["playlists"]["PLaaaaaaaaaaaa"]["ids"]), 3)
+        self.assertTrue(snapshot.coverage_ok(100, 95))
+        self.assertFalse(snapshot.coverage_ok(100, 80))
+        members = snapshot.membership(self.SOURCES, state)
+        for _ in range(3):
+            snapshot.record_result(state, {}, members, "IcwRflRZchU", {"ok": False, "class": "unavailable"},
+                                   "v", self.NOW, True)
+        self.assertTrue(state["videos"]["IcwRflRZchU"]["gone"])
+
+    def test_old_shape_matches(self):
+        """Every key build-video-list.js reads exists in a new entry."""
+        members = {"3SG5e4z-Ygg": {"playlist": "PLaaaaaaaaaaaa", "position": 0, "tags": set(),
+                                   "owner": None, "owner_id": None}}
+        entry = snapshot.build_entry(self.video("3SG5e4z-Ygg"), members["3SG5e4z-Ygg"], "v", self.NOW)
+        snip = entry["rawData"]["snippet"]
+        for key in ("publishedAt", "channelTitle", "channelId", "thumbnails"):
+            self.assertIsNotNone(snip[key], key)
+        self.assertEqual(snip["thumbnails"]["default"]["url"], "https://i.ytimg.com/vi/3SG5e4z-Ygg/default.jpg")
 
 
 if __name__ == "__main__":

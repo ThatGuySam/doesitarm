@@ -32,7 +32,10 @@ from wutil import (
     kv_json,
     kv_put_json,
     now_iso,
+    missing,
+    r2_json,
     r2_put_json,
+    raw,
     to_bytes,
 )
 
@@ -44,6 +47,13 @@ RUN_HISTORY = 20
 PYPI_JSON = "https://pypi.org/pypi/yt-dlp/json"
 PROVENANCE_URL = "https://pypi.org/integrity/yt-dlp/{version}/{filename}/provenance"
 DAILY_CRON = "17 9 * * *"
+SNAPSHOT_KEY = "snapshot/youtube-videos.json"
+SNAPSHOT_PREV_KEY = "snapshot/youtube-videos.prev.json"
+SNAPSHOT_STATE_KEY = "snapshot/state.json"
+SNAPSHOT_STATUS_KEY = "snapshot/status.json"
+SWEEP_EVERY = 20 * 3600
+VIDEOS_PER_RUN = 40
+VIDEOS_PER_CALL = 20
 
 
 def bundled_pointer():
@@ -70,8 +80,8 @@ async def wheel_bytes(env, version, sha256):
     meta = await kv_json(env.POINTERS, f"wheel:{version}")
     if not meta or meta.get("sha256") != sha256 or not meta.get("attestation"):
         raise LookupError(f"no attested wheel {version} {sha256[:12]}")
-    obj = await env.WHEELS.get(wheel_key(version))
-    if obj is None:
+    obj = await raw(env.WHEELS).get(wheel_key(version))
+    if missing(obj):
         raise LookupError(f"R2 object {wheel_key(version)} missing")
     data = to_bytes(await obj.arrayBuffer())
     if hashlib.sha256(data).hexdigest() != sha256:
@@ -134,11 +144,9 @@ async def qualify_release(env, release):
         return meta, False
     data, attestation, checks = await vet_release(release)
     key = wheel_key(release["version"])
-    from wutil import js_obj, js_bytes
-    await env.WHEELS.put(key, js_bytes(data), js_obj({
-        "httpMetadata": {"contentType": "application/zip"},
-        "customMetadata": {"sha256": release["sha256"], "version": release["version"]},
-    }))
+    from wutil import r2_put
+    await r2_put(env.WHEELS, key, data, "application/zip",
+                 {"sha256": release["sha256"], "version": release["version"]})
     meta = {"version": release["version"], "source": "wheel", "sha256": release["sha256"], "key": key,
             "size": len(data), "url": release["url"], "uploaded": release.get("uploaded"),
             "stored_at": now_iso(), "attestation": attestation, "checks": checks}
@@ -277,6 +285,157 @@ async def save_run(env, record):
     await kv_put_json(env.POINTERS, RUN_INDEX, [summary, *index][:RUN_HISTORY])
 
 
+# ---------------------------------------------------------------- video snapshot
+
+async def snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
+    """One incremental snapshot run: sweep playlists if due, extract new and stale
+    videos within budget, rewrite only the shards that changed, and publish if
+    coverage holds. Returns a status dict (also saved to snapshot/status.json)."""
+    import schema
+    import snapshot as snap
+    from sources import SOURCES
+    from wutil import r2_json, r2_put
+    now = int(time.time())
+    started = time.time()
+    state = await r2_json(env.WHEELS, SNAPSHOT_STATE_KEY)
+    if state is None:
+        raise RuntimeError("no snapshot state; upload the seed shards first (README)")
+    status = {"started": now_iso(now)}
+    pointer = await active_pointer(env)
+    before_members = snap.membership(SOURCES, state)
+    before_count, _ = snap.summary(state, before_members)
+    status["previous_videos"] = before_count
+
+    if sweep is None:
+        sweep = now - state.get("last_sweep", 0) > SWEEP_EVERY
+    if sweep:
+        ok = failed = 0
+        notes = {}
+        for source in SOURCES:
+            pid = source["id"]
+            try:
+                code, result = await run_extract(env, "playlist", pointer, id=pid, limit=3000, source=True)
+                if code != 200 or not result.get("ok"):
+                    raise RuntimeError(result.get("error") or f"extractor status {code}")
+                note = snap.apply_sweep(state, pid, schema.playlist(result.get("data"), pid, 3000), now)
+                if note:
+                    notes[pid] = note
+                ok += 1
+            except Exception as err:  # noqa: BLE001 - keep the previous list for this playlist
+                snap.note_sweep_failure(state, pid, f"{type(err).__name__}: {err}", now)
+                notes[pid] = str(err)[:200]
+                failed += 1
+        if ok >= failed:
+            state["last_sweep"] = now
+        status["sweep"] = {"ok": ok, "failed": failed, "notes": notes}
+
+    members = snap.membership(SOURCES, state)
+    present = snap.stored(state)
+    new_ids, refresh_ids = snap.plan(members, state, present, now, max_videos)
+    status["planned"] = {"new": len(new_ids), "refresh": len(refresh_ids)}
+    todo = [(vid, True) for vid in new_ids] + [(vid, False) for vid in refresh_ids]
+    results = {}
+    counts = {"ok": 0, "failed": 0, "blocked": 0, "invalid": 0}
+    ytdlp_version = pointer.get("version")
+    for start in range(0, len(todo), VIDEOS_PER_CALL):
+        chunk = todo[start:start + VIDEOS_PER_CALL]
+        code, result = await run_extract(env, "videos", pointer, ids=[vid for vid, _ in chunk],
+                                         stop_when_blocked=True)
+        if code != 200 or not isinstance(result.get("results"), dict):
+            status["batch_error"] = str(result.get("error") or f"extractor status {code}")[:300]
+            break
+        ytdlp_version = (result.get("ytdlp") or {}).get("version") or ytdlp_version
+        blocked = False
+        for vid, is_new in chunk:
+            item = result["results"].get(vid)
+            if item is None:
+                continue
+            if item.get("ok"):
+                try:
+                    item = {"ok": True, "video": schema.video(item.get("data"), vid)}
+                except schema.InvalidOutput as err:
+                    counts["invalid"] += 1
+                    item = {"ok": False, "class": "invalid_output", "error": str(err)}
+            if item.get("ok"):
+                counts["ok"] += 1
+            elif item.get("class") == canary.YOUTUBE_BLOCKED:
+                counts["blocked"] += 1
+                blocked = True
+            else:
+                counts["failed"] += 1
+            results[vid] = (item, is_new)
+        if blocked:
+            status["stopped"] = "YouTube is challenging this egress; stopped early"
+            break
+    status["extracted"] = counts
+    if counts["invalid"]:
+        await events.record(env.WHEELS, "extractor_invalid", {"caller": "snapshot", "count": counts["invalid"]})
+
+    # Coverage check from state alone, before touching any shard.
+    projected = {vid for vid in members if vid in present
+                 or (vid in results and results[vid][0].get("ok") and results[vid][1])}
+    status["videos"] = len(projected)
+    if not snap.coverage_ok(before_count, len(projected)):
+        status.update(published=False,
+                      reason=f"coverage would drop from {before_count} to {len(projected)}; kept the previous snapshot")
+        await events.record(env.WHEELS, "snapshot_held", {"previous": before_count, "new": len(projected)})
+        status["finished"] = now_iso()
+        await r2_put_json(env.WHEELS, SNAPSHOT_STATUS_KEY, status)
+        return status
+
+    # Rewrite shards: every shard after a sweep (membership and tags may change),
+    # otherwise only shards holding extracted videos.
+    touched = set(range(snap.SHARDS)) if sweep else {snap.shard_of(vid) for vid in results}
+    rewritten = 0
+    for index in sorted(touched):
+        shard = await r2_json(env.WHEELS, snap.shard_key(index)) or {}
+        changed = False
+        for vid, (item, is_new) in results.items():
+            if item.get("ok") and snap.shard_of(vid) == index:
+                snap.record_result(state, shard, members, vid, item, str(ytdlp_version), now, is_new)
+                changed = changed or bool(item.get("ok"))
+        changed = snap.fix_shard(shard, members, state) or changed
+        if changed:
+            await r2_put(env.WHEELS, snap.shard_key(index),
+                         json.dumps(shard, ensure_ascii=False, separators=(",", ":")))
+            rewritten += 1
+        del shard
+    for vid, (item, is_new) in results.items():
+        if not item.get("ok"):  # failures need no shard, only state
+            snap.record_result(state, {}, members, vid, item, str(ytdlp_version), now, is_new)
+    await r2_put_json(env.WHEELS, SNAPSHOT_STATE_KEY, state)
+    status["shards_rewritten"] = rewritten
+
+    count, newest = snap.summary(state, members)
+    status.update(videos=count, newest_published=newest)
+    status["pending_new"] = sum(1 for vid in members if not (state["videos"].get(vid) or {}).get("s")
+                                and not (state["videos"].get(vid) or {}).get("gone"))
+    status["playlists_failing"] = sorted(pid for pid, pl in state["playlists"].items()
+                                         if pl.get("error") and (pl.get("error_at") or 0) >= (pl.get("ok_at") or 0))
+    if rewritten or missing(await raw(env.WHEELS).head(SNAPSHOT_KEY)):
+        parts = []
+        for index in range(snap.SHARDS):
+            obj = await raw(env.WHEELS).get(snap.shard_key(index))
+            parts.append(b"{}" if missing(obj) else to_bytes(await obj.arrayBuffer()))
+        body = snap.join_shards(parts)
+        del parts
+        old = await raw(env.WHEELS).get(SNAPSHOT_KEY)
+        if not missing(old):
+            await r2_put(env.WHEELS, SNAPSHOT_PREV_KEY, old.body)
+        await r2_put(env.WHEELS, SNAPSHOT_KEY, body,
+                     custom={"videos": str(count), "generated": now_iso(now), "newest": str(newest)})
+        status.update(published=True, bytes=len(body))
+        del body
+        await events.record(env.WHEELS, "snapshot_published", {
+            "videos": count, "added": count - before_count, "extracted_ok": counts["ok"]})
+    else:
+        status.update(published=False, reason="nothing changed")
+    status["elapsed_ms"] = round((time.time() - started) * 1000)
+    status["finished"] = now_iso()
+    await r2_put_json(env.WHEELS, SNAPSHOT_STATUS_KEY, status)
+    return status
+
+
 # ---------------------------------------------------------------- entrypoint
 
 class Default(WorkerEntrypoint):
@@ -304,7 +463,12 @@ class Default(WorkerEntrypoint):
             return json_response({"error": str(err)}, 400, cors=False)
 
     async def scheduled(self, controller, *args):
-        await run_daily(self.env, promote=True)
+        cron = str(getattr(controller, "cron", "") or "")
+        if cron == DAILY_CRON:
+            await run_daily(self.env, promote=True)
+            await snapshot_step(self.env, sweep=True)
+        else:
+            await snapshot_step(self.env)
 
     async def internal_event(self, request):
         """Events reported by the API (it has no storage of its own)."""
@@ -320,6 +484,18 @@ class Default(WorkerEntrypoint):
     async def internal(self, path, query):
         if path == "/internal/pointer":
             return json_response(public_pointer(await active_pointer(self.env)), cors=False)
+        if path == "/internal/snapshot":
+            obj = await raw(self.env.WHEELS).get(SNAPSHOT_KEY)
+            if missing(obj):
+                return json_response({"error": "no snapshot yet"}, 404, cors=False)
+            meta = obj.customMetadata
+            headers = {"content-type": "application/json; charset=utf-8", "etag": str(obj.httpEtag),
+                       "last-modified": str(obj.uploaded.toUTCString())}
+            for name in ("videos", "generated", "newest"):
+                value = getattr(meta, name, None) if meta is not None else None
+                if value is not None:
+                    headers[f"x-snapshot-{name}"] = str(value)
+            return Response(obj.body, headers=headers)
         if path == "/internal/wheel":
             data = await wheel_bytes(self.env, query.get("version", ""), query.get("sha256", ""))
             return Response(data, headers={"content-type": "application/zip"})
@@ -335,7 +511,12 @@ class Default(WorkerEntrypoint):
                 "recent_runs": [{k: r.get(k) for k in ("started", "action", "applied", "latest", "reason")}
                                 for r in (await kv_json(env.POINTERS, RUN_INDEX) or [])[:7]],
                 "events": await events.summary(env.WHEELS),
+                "snapshot": await r2_json(env.WHEELS, SNAPSHOT_STATUS_KEY),
             }, cors=False)
+        if path == "/admin/snapshot-step" and method == "POST":
+            sweep = {"1": True, "0": False}.get(query.get("sweep", ""), None)
+            limit = min(max(int(query.get("max", VIDEOS_PER_RUN)), 0), 100)
+            return json_response(await snapshot_step(env, sweep=sweep, max_videos=limit), cors=False)
         if path == "/admin/run-daily" and method == "POST":
             return json_response(await run_daily(env, promote=False), cors=False)
         if path == "/admin/check-release" and method == "POST":

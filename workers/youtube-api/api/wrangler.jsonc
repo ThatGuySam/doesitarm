@@ -7,6 +7,8 @@
   "compatibility_date": "2026-11-23",
   "compatibility_flags": ["python_workers"],
   "workers_dev": true,
+  // Public hostname (Workers custom domain on the doesitarm.com zone). workers.dev stays on.
+  "routes": [{ "pattern": "youtube.doesitarm.com", "custom_domain": true }],
   "preview_urls": false,
   "limits": { "cpu_ms": 10000 },
   "observability": { "enabled": true },

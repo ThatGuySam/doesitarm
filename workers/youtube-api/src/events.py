@@ -15,19 +15,17 @@ RECENT = 50
 
 
 async def record(bucket, kind, detail):
-    from wutil import js_obj, now_iso, r2_json
+    from wutil import now_iso, r2_json, r2_put
     at = now_iso()
     event = {"at": at, "kind": kind, "detail": detail}
     try:
         suffix = f"{random.getrandbits(32):08x}"
-        await bucket.put(f"events/{at[:10]}/{at}-{kind}-{suffix}.json", json.dumps(event),
-                         js_obj({"httpMetadata": {"contentType": "application/json"}}))
+        await r2_put(bucket, f"events/{at[:10]}/{at}-{kind}-{suffix}.json", json.dumps(event))
         summary = await r2_json(bucket, SUMMARY_KEY) or {"counts": {}, "recent": []}
         summary["counts"][kind] = summary["counts"].get(kind, 0) + 1
         summary["recent"] = [event, *summary.get("recent", [])][:RECENT]
         summary["updated"] = at
-        await bucket.put(SUMMARY_KEY, json.dumps(summary),
-                         js_obj({"httpMetadata": {"contentType": "application/json"}}))
+        await r2_put(bucket, SUMMARY_KEY, json.dumps(summary))
     except Exception as err:  # noqa: BLE001 - logging must never break the job
         print("event log failed", kind, err)
     return event

@@ -1,156 +1,199 @@
-# doesitarm-youtube-api
+# doesitarm-youtube (three Workers)
 
-A small YouTube read API for Does It ARM. It runs **unmodified yt-dlp** inside a
-Cloudflare Python Worker (Pyodide/WebAssembly). It replaces the YouTube Data API
-reader removed in `5442471` and `63b5534`.
+A small YouTube read API and a daily video snapshot for Does It ARM. It runs
+**unmodified yt-dlp** as Python on Cloudflare Workers. It replaces the YouTube Data
+API reader removed in `5442471` and `63b5534`.
 
-Deployed at <https://doesitarm-youtube-api.samcarlton.workers.dev> (workers.dev only,
-no routes or custom domains).
+- Public API: <https://youtube.doesitarm.com> (also <https://doesitarm-youtube-api.samcarlton.workers.dev>)
+- Video snapshot: <https://youtube.doesitarm.com/snapshot/youtube-videos.json>
+- Security model and residual risks: [SECURITY.md](SECURITY.md)
+
+## Architecture
+
+```
+            public                     service bindings only
+client ──▶ doesitarm-youtube-api ──────────────▶ doesitarm-youtube-extract (JS host, LOADER only)
+            (cache KV, rate limits,   │                │ Worker Loader
+             schema validation)       │                ▼
+                                      │        yt-dlp Dynamic Worker (Python)
+                                      │        env: wheel labels only
+                                      │        egress: YouTubeGateway (YouTube hosts only)
+                                      ▼                ▲
+            doesitarm-youtube-updater ─────────────────┘
+            (cron, pointer KV, R2, UPDATER_KEY; never imports yt-dlp)
+```
+
+| Worker | Code | Bindings | Route |
+| --- | --- | --- | --- |
+| `doesitarm-youtube-api` | `src/api.py` (`api/wrangler.jsonc`) | KV `doesitarm-youtube-cache` (cache only), services EXTRACT and UPDATER, 2 rate limits, var `PLAYER_CLIENT` | `youtube.doesitarm.com` custom domain + workers.dev |
+| `doesitarm-youtube-updater` | `src/updater.py` (`updater/wrangler.jsonc`) | KV `doesitarm-youtube-pointers`, R2 `doesitarm-youtube-wheels`, service EXTRACT, secret `UPDATER_KEY`, var `PLAYER_CLIENT` | workers.dev, `/admin/*` only (key) |
+| `doesitarm-youtube-extract` | `extract/host.js` + `src/sandbox.py`, `extract.py`, `transport.py`, `loader.py`, `canary.py`, `normalize.py` | Worker Loader only | none |
+
+Shared pure-Python modules: `normalize.py` (IDs, timestamps), `schema.py` (strict
+validation of extractor output), `canary.py` (suite, failure classes, decisions),
+`release.py` (which release, static wheel checks), `provenance.py` (PEP 740 /
+Sigstore verification), `snapshot.py` (snapshot logic), `sources.py` (snapshot
+playlists), `events.py` (R2 event log), `wutil.py` (Worker helpers), `bundled.py`
+(generated: bundled wheel facts).
+
+### The extractor sandbox
+
+`extract/host.js` receives a job (one line of JSON, a newline, optional wheel bytes)
+and runs it in a Python Dynamic Worker:
+
+- ID `yt-extract:<code hash>:<wheel sha256>`: each yt-dlp version gets its own isolates.
+- `env` holds only `WHEEL_VERSION`, `WHEEL_SHA256`, `WHEEL_SOURCE`. The wheel bytes
+  come in the request body (Dynamic Worker env is capped at 1 MB); the sandbox writes
+  them to `/tmp` and zipimports them. The bundled wheel is a Data module of the host.
+- `globalOutbound` is `YouTubeGateway`: the runtime sends every `fetch()` and
+  `connect()` from the sandbox there. It passes only `https` to `youtube.com`,
+  `www.youtube.com`, `m.youtube.com`, `consent.youtube.com` on port 443, refuses raw
+  sockets, and reports blocked hosts back as `egress_blocked` (logged by the callers).
+- If a requested wheel fails to import, the job reruns on the bundled wheel and says
+  so in `ytdlp.fallback_reason` (a canary then fails).
+
+Inside the sandbox yt-dlp uses `WorkerFetchRH` (`src/transport.py`), a yt-dlp
+`RequestHandler` that sends each request through JavaScript `fetch` and waits with
+`pyodide.ffi.run_sync` (JSPI). It keeps yt-dlp's cookie jar, follows redirects by hand
+with the same host allowlist on every hop, drops cookie/auth headers across origins,
+caps bodies at 8 MiB and requests per job, and reports `google.com/sorry` redirects as
+a bot check. yt-dlp is imported per request because it calls `random` at import time.
+
+Python Workers note: the Workers SDK's binding wrapper walks every argument element
+by element, so a multi-megabyte body costs minutes of CPU. Large R2 writes and
+service-binding calls go through the raw JavaScript binding (`wutil.raw`).
 
 ## API
 
-All responses are JSON with `access-control-allow-origin: *`.
+All responses are JSON with `access-control-allow-origin: *`. Only `id` and `limit`
+are accepted.
 
 | Route | Returns |
 | --- | --- |
-| `GET /playlist?id=PL...&limit=50` | `{id, title, channel, count, items: [{index, id, title, url, duration}], meta}`. Follows continuations up to `limit` (1 to 200, default 50). Flat listing, so no per-video requests. |
-| `GET /video?id=VIDEOID` | `{id, title, description, timestamps: [{time, fullText}], tags, categories, duration, upload_date, channel, channel_id, thumbnail, url, complete, meta}`. `timestamps` uses the same regex as the old reader. `tags` are YouTube keywords; the Does It ARM `benchmark` tag stays a consumer concern. `complete` is false if duration or upload date is missing, which is what a partial (bot-checked) extraction looks like. |
-| `GET /health` | Bundled and active yt-dlp versions, last-good pointer, player clients, what this isolate has loaded, last daily run and the last 7 runs. |
+| `GET /playlist?id=PL...&limit=50` | `{id, title, channel, channel_id, count, items: [{index, id, title, url, duration, channel, channel_id}], meta}`. `limit` 1 to 200 (default 50). Fetched and cached at 200, then sliced. |
+| `GET /video?id=VIDEOID` | `{id, title, description, timestamps: [{time, fullText}], tags, categories, duration, upload_date, timestamp, channel, channel_id, thumbnail, url, complete, meta}` |
+| `GET /snapshot/youtube-videos.json` | The video snapshot (below). Headers `x-snapshot-videos`, `x-snapshot-generated`, `x-snapshot-newest`. |
+| `GET /health` | `{ok, ytdlp: {version, source}}` |
 
-`meta` holds `fetched_at`, the yt-dlp version and source (`bundled` or `wheel`), the
-number of YouTube requests, elapsed time and `cache` (`hit`, `miss`, `stale`, `bypass`).
+`meta`: `fetched_at`, `ytdlp {version, source}`, `player_client`, `requests`,
+`elapsed_ms`, `cache` (`hit`, `miss`, `stale`). Cache: KV, fresh for 6 h (videos) or
+1 h (playlists), kept 30 days and served `stale` when YouTube fails. Failures are cached
+for 60 s. Cache misses are rate limited per IP (10/min) and in total (60/min) per
+Cloudflare location; over the limit you get the stale copy or 429. Extractor output is
+validated by `schema.py` before it is cached; URLs and timestamps are rebuilt by the API.
 
-Input validation: video IDs must be 11 characters of `[A-Za-z0-9_-]`; playlist IDs must
-start with `PL`, `UU`, `FL`, `LL`, `RD` or `OL`. The transport only reaches `https`
-`youtube.com`, `www.youtube.com`, `m.youtube.com` and `consent.youtube.com`, also on
-redirects. Each extraction has a request budget (12 per video, about 4 + 2 per 50
-playlist items).
+## Video snapshot
 
-Caching: results go to KV with a 30-day lifetime. They count as fresh for 6 hours
-(videos) or 1 hour (playlists). If YouTube fails, a stale copy is served with
-`meta.cache = "stale"` and the failure in `meta.stale_reason`. (The Cache API is a
-no-op on workers.dev, so KV is used.)
+`https://youtube.doesitarm.com/snapshot/youtube-videos.json` is a drop-in for the old
+`VIDEO_SOURCE` file (`helpers/api/youtube/build.js`, read by
+`helpers/build-video-list.js`): an object keyed by video ID with `title`,
+`description`, `timestamps`, `tags` (`benchmark` for videos in a playlist tagged
+`benchmark`) and `rawData` (`kind`, `snippet.{publishedAt, channelId, title,
+description, thumbnails{default, medium, high, standard}, channelTitle, playlistId,
+position, resourceId, videoOwnerChannelTitle, videoOwnerChannelId}`,
+`contentDetails.{videoId, videoPublishedAt}`, plus `fetchedBy`). As in the old file,
+`channelTitle`/`channelId` are the playlist owner. Difference: new videos get the video
+publish date (midnight UTC of the upload date) as `publishedAt`, because yt-dlp cannot
+see the add-to-playlist date. Entries carried over from the last old file (2,246
+videos, newest 2023-01-19) keep their original data until refreshed.
 
-### Privileged parameters
+**Sources:** `src/sources.py`. Add a playlist (`{"id", "name", "tags"?}`; `"tags":
+["benchmark"]` feeds the benchmark tag), deploy the updater (`cd updater && $W
+deploy`), then run a snapshot step with `sweep=1` (below) or wait for the 09:17 UTC
+sweep. Three historical playlists no longer exist on YouTube (status lists them under
+`playlists_failing`); their last known videos are kept.
 
-These need the `x-canary-key` header (the `CANARY_KEY` secret):
+**How it updates** (`snapshot_step` in `src/updater.py`):
 
-- `ytdlp=<version>|bundled` runs a stored candidate version.
-- `player_client=a,b` overrides yt-dlp's YouTube player clients.
-- `fresh=1` skips the cache; `debug=1` adds the request log and yt-dlp warnings.
-- `GET /internal/canary?ytdlp=<version>` runs the canary suite for one version.
-- `POST /admin/run-daily` runs the daily job as a dry run (it never promotes; only the cron does).
-- `POST /admin/check-release?version=<v>` runs the attestation and static wheel checks without storing anything.
+- 09:17 UTC: after the version job, sweep every source playlist (flat listing, one
+  extractor call each). A failed or sharply shrunk listing keeps the previous list.
+- Every hour at :41: extract up to 40 videos (batches of 20): new videos first, then
+  entries due for refresh (every 90 days; carried-over entries are spread over that
+  window). It stops early if YouTube starts challenging the egress. A new video that is
+  unavailable three times is skipped for good.
+- Entries live in 32 shards (`snapshot/shards/NN.json` in R2); a run rewrites only the
+  shards it changed and publishes the shards joined without parsing (Pyodide cannot
+  hold the 11 MB file as Python objects in a 128 MB isolate).
+- Publishing is skipped, and `snapshot_held` logged, if the video count would drop
+  below 90% of the previous count. The previous file is kept as
+  `snapshot/youtube-videos.prev.json`. Status: `snapshot/status.json` and `/admin/status`.
 
-Phase 1 gates (2026-11-27): stable releases only, at least 3 days old, strictly newer than the
-active version; a valid PEP 740 attestation from GitHub `yt-dlp/yt-dlp` `release.yml` for the
-exact wheel digest (`src/provenance.py`, verified in pure Python against pinned Sigstore keys);
-static wheel checks (`src/release.py`); the bundled copy is the only rollback target.
+## Releases: how yt-dlp updates itself
 
-## How it works
+Daily at 09:17 UTC the updater:
 
-- **Transport** (`src/transport.py`): yt-dlp's own transports use blocking sockets, which
-  Workers lack. `WorkerFetchRH` is a yt-dlp `RequestHandler` that sends each request
-  through JavaScript `fetch` and waits with `pyodide.ffi.run_sync` (JSPI). It keeps
-  yt-dlp's cookie jar (reads every `Set-Cookie` via `getSetCookie()`), follows redirects
-  by hand (`redirect: "manual"`, allowlist checked on every hop, 303/301/302 POST become
-  GET, 307/308 keep method and body, cookie and auth headers dropped across origins, 5
-  hops maximum), applies a per-request `AbortSignal` timeout, streams the body with an
-  8 MiB cap, and maps non-2xx to yt-dlp `HTTPError` and failures to `TransportError`. A
-  redirect to `google.com/sorry` is reported as a YouTube bot check.
-  `WorkerYoutubeDL` overrides `_request_director` so no socket handler is ever used.
-- **Lazy import**: yt-dlp calls `random` at import time and workerd forbids startup
-  entropy, so yt-dlp is imported inside the request.
-- **Versioning without a rebuild** (`src/loader.py`): `python_modules/` bundles yt-dlp
-  2026.11.23 as the fallback. Any other version is a wheel in R2. The Worker reads the
-  bytes, checks the SHA-256 against the pointer, writes the wheel to `/tmp`, puts it first
-  on `sys.path` and lets `zipimport` load it. Switching versions removes `yt_dlp*` from
-  `sys.modules` first. If anything fails (missing object, digest mismatch, import error),
-  the request falls back to the bundled copy and says so in `meta.ytdlp.fallback_reason`.
-- **Pointers** (KV `doesitarm-youtube-state`): `pointer:active` names the version serving
-  traffic, `pointer:last_good` the rollback target, and `wheel:<version>` the digest and
-  R2 key of each stored wheel. Runs are stored in `run:latest`, `run:index` (last 20)
-  and R2 `runs/<timestamp>.json`.
-- **Daily job** (cron `17 9 * * *` UTC, `scheduled()` → `run_daily`):
-  1. Read PyPI's JSON for yt-dlp and pick the newest stable `py3-none-any` wheel
-     (`channel=nightly` picks the newest dev build instead).
-  2. Download it, check PyPI's SHA-256 and store it in R2 (`doesitarm-youtube-wheels`).
-  3. Run the canary suite for the active version and for the candidate. Each suite
-     runs as a separate invocation through the `SELF` service binding, so each gets its
-     own CPU and subrequest budget. If the active version fails, also run last-good.
-  4. Decide (`canary.decide`): promote a candidate that passes all cases; roll back to
-     last-good if active fails for yt-dlp reasons (`upstream_broke`, `contract`) while
-     last-good passes; otherwise hold. If failures are only `youtube_blocked` or
-     `network`, versions stay unchanged. Only a version that just passed becomes
-     last-good.
-- **Canary suite** (`src/canary.py`): 3 playlists (first 3 IDs must match, in order)
-  and 3 videos (title substring, description at least 80% of the expected length,
-  timestamp count, at least half the expected tags). Expected values come from native
-  CPython yt-dlp 2026.11.23 on 2026-11-27. Failures are classed `youtube_blocked`
-  (sign-in or bot check, 429/403, CAPTCHA), `network` (timeouts, transport), `contract`
-  (a field is missing or short) or `upstream_broke` (anything else, including a wheel
-  that fails to load).
+1. Picks the newest **stable** PyPI release that is at least **3 days old** and
+   **strictly newer** than the active and bundled versions (`release.pick_release`).
+2. Requires a valid **PEP 740 attestation** for the exact wheel digest from GitHub
+   `yt-dlp/yt-dlp`, workflow `release.yml` (`provenance.py`): publisher, statement
+   subject (file name and SHA-256), DSSE signature, Fulcio certificate chained to a
+   pinned intermediate with the release-workflow identity and GitHub OIDC issuer, and
+   the Rekor entry (signed entry timestamp, inclusion proof, signed checkpoint, logged
+   within the certificate's validity). Nightlies fail this (they come from
+   `release-nightly.yml`).
+3. Downloads the wheel from `files.pythonhosted.org` (10 MB cap), checks SHA-256 and
+   static rules (`release.check_wheel`: only `yt_dlp/`, its dist-info and data/share,
+   no `.pth` or native files, size and file count within 25% of the bundled wheel,
+   METADATA and `version.py` match), then stores it in R2. Nothing before this point
+   imports it.
+4. Runs the canary suite (3 playlists, 3 videos) in the sandbox for the active version
+   and the candidate, and promotes a candidate that passes all six. If the active wheel
+   fails for yt-dlp reasons while the **bundled copy** passes, it rolls back to bundled.
+   The bundled copy is the only rollback target; no wheel ever becomes one.
 
-## Deploy
+Only the cron promotes. Pointers: KV `doesitarm-youtube-pointers` (`pointer:active`,
+`wheel:<version>`, `run:latest`, `run:index`); run records in R2 `runs/`; events in R2
+`events/` (`pointer_changed`, `canary_failed`, `candidate_rejected`, `daily_error`,
+`egress_blocked`, `extractor_invalid`, `snapshot_held`, `snapshot_published`), counted in
+`/admin/status`.
+
+## Operations
+
+Commands run from `workers/youtube-api/`. Wrangler on omarchy:
+`W="node /home/tiki/.npm/_npx/c943b712072b77c4/node_modules/wrangler/bin/wrangler.js"`.
+The admin key is in `~/.config/doesitarm-youtube-api/updater-key` (mode 600).
 
 ```sh
-cd workers/youtube-api
-./scripts/vendor.sh                 # pinned, digest-checked wheels -> python_modules/
-python3 -I tests/test_units.py      # CPython unit tests (timestamps, IDs, transport, decisions)
-npx wrangler deploy
-npx wrangler secret put CANARY_KEY  # once
+./scripts/vendor.sh                       # pinned wheels: extract/bundled.whl, python_modules, src/bundled.py
+python3 -I tests/test_units.py            # CPython unit tests
+(cd extract && $W deploy)                 # deploy order: extract, updater, api
+(cd updater && $W deploy)
+(cd api && $W deploy)
+(cd updater && $W secret put UPDATER_KEY < ~/.config/doesitarm-youtube-api/updater-key)   # once / rotation
+
+U=https://doesitarm-youtube-updater.samcarlton.workers.dev
+K=$(cat ~/.config/doesitarm-youtube-api/updater-key)
+curl -H "x-admin-key: $K" $U/admin/status                                   # pointers, runs, events, snapshot
+curl -X POST -H "x-admin-key: $K" "$U/admin/snapshot-step?sweep=1&max=40"   # sweep + extract now
+curl -X POST -H "x-admin-key: $K" "$U/admin/snapshot-step?max=100"          # extract pending videos
+curl -X POST -H "x-admin-key: $K" $U/admin/run-daily                        # release job, dry run (never promotes)
+curl -X POST -H "x-admin-key: $K" "$U/admin/check-release?version=2026.11.23"  # attestation + static checks only
+curl -X POST -H "x-admin-key: $K" "$U/admin/stage-release?version=X&canary=1"  # vet, store, canary; no promotion
+curl -X POST -H "x-admin-key: $K" "$U/admin/extract?id=VIDEOID&ytdlp=bundled"  # debug one extraction
+curl -X POST -H "x-admin-key: $K" $U/admin/rollback                         # back to the bundled copy
 ```
 
-Resources: KV `doesitarm-youtube-state` (`cf44dc02a5e4472bb95fec0f0cf10080`), R2
-`doesitarm-youtube-wheels`, and the service binding to itself. `limits.cpu_ms` is
-120000 (Workers Paid). To change the bundled fallback, update both wheel lines in
-`scripts/vendor.sh` and redeploy. Routine version changes need no redeploy.
+Reset the snapshot from a saved file: `python3 -I scripts/seed_snapshot.py OLD.json OUT`,
+then upload `OUT/state.json` and `OUT/shards/*.json` to `doesitarm-youtube-wheels/snapshot/`
+with `$W r2 object put ... --remote` and run a snapshot step.
 
-## What works and what doesn't (measured 2026-11-27 on hosted Cloudflare)
+To change the bundled yt-dlp: update the wheel line in `scripts/vendor.sh`, run it,
+redeploy all three Workers. Routine version changes need no redeploy.
 
-Works:
+The KV namespace `doesitarm-youtube-state` (`cf44dc02a5e4472bb95fec0f0cf10080`) was
+used by the single-Worker version and is no longer bound; it can be deleted.
 
-- **Playlists from Cloudflare egress**: all 3 canary playlists, every run. The 58-item
-  benchmarks playlist (`limit=60`) took 3 requests (page plus 2 continuations), 2.0 s
-  wall and 1.2 s CPU on a warm isolate.
-- **Videos, once the player clients were changed**: with the `tv_simply,web_embedded`
-  clients, full metadata (description, keywords, duration) came back 5/5 for a video
-  that failed with the default. Warm requests use 0.2 to 0.8 s CPU and 1.1 to 2.9 s wall.
-  A KV cache hit is about 0.1 s.
-- **Runtime wheel loading from R2** (zipimport) works on hosted Workers. The stable
-  2026.11.23 wheel and the nightly 2026.11.24.232653.dev0 wheel both loaded from R2,
-  reported the right `__version__` and passed all 6 canaries.
-- **Daily job**: stored the wheel, qualified it and promoted it (bundled → R2 wheel). A
-  nightly dry run qualified without promoting. The Cron Trigger itself fired on hosted
-  Workers (tested with a temporary `*/3` schedule: 85 ms CPU for the orchestrator, 4.8 s
-  CPU for the canary invocation, action `hold`). With the active pointer deliberately given
-  a bad digest, live requests fell back to bundled and the job rolled back to
-  last-good.
+## Measured (hosted Cloudflare, 2026-11-27)
 
-Doesn't, or needs watching:
-
-- **YouTube challenges Cloudflare egress.** On most requests the Watch page
-  (`/watch?v=`) answers 302 to `google.com/sorry` (the unusual-traffic CAPTCHA). yt-dlp's
-  default `visionos` Player response then says "Sign in to confirm you're not a bot".
-  yt-dlp falls back to `/youtubei/v1/next` data, which keeps title and usually the full
-  description and timestamps, but loses keywords and duration, and one video's
-  description dropped from 638 to 497 characters. In 12 default-client samples across 6
-  videos, 10 Watch pages were redirected. The `tv_simply` client still returned full
-  data when the Watch page was redirected. This depends on YouTube's current treatment
-  of Cloudflare IPs and can change at any time. The canary will then fail as
-  `youtube_blocked` and versions are left alone.
-- **Cold starts are CPU-heavy.** A fresh isolate's first extraction costs about 3 to
-  4 s CPU with the bundled copy and about 7 s when importing from an R2 wheel, because
-  zipimport compiles source with no cached bytecode. A full canary suite costs 3 to 11 s
-  CPU. This needs Workers Paid. The Free plan's 10 ms limit cannot run it.
-- **Startup time** is reported as 0.5 to 1.4 s at deploy (the limit is 1 s for global
-  scope). Nothing heavy runs at module scope. Watch this if code grows.
-- **Memory** is not reported per request. No out-of-memory failures were seen, but
-  loading a second yt-dlp version in one isolate keeps some garbage until GC.
-- **Not handled**: EJS signature/n-challenge solving (only needed for media URLs),
-  PO tokens, media downloads, and non-YouTube extractors. Brotli is decoded by the
-  Workers runtime before Python sees the body. Responses reached Python with no
-  `Content-Encoding` header and parsed as text. gzip still encoded is decoded in Python
-  (unit-tested).
-- KV is eventually consistent, so a pointer change can take up to a minute to reach
-  every location.
+- Sandbox cold start (new isolate: Python start plus zipimport of yt-dlp): about 9 to
+  11 s for the first video; warm videos 1.5 to 2.5 s; a canary suite about 9 s.
+- Snapshot: sweep of 42 playlists plus 40 videos took 138 s wall in one run.
+- Playlists from Cloudflare egress work. Videos need the `tv_simply,web_embedded`
+  player clients: YouTube often redirects Watch pages from Cloudflare IPs to
+  `google.com/sorry`, and the default client then returns "Sign in to confirm you're
+  not a bot". This can change at any time; the canary then fails as
+  `youtube_blocked` and versions are left alone, and the snapshot stops early.
+- Not handled: signature/n-challenge solving (media URLs only), PO tokens, downloads,
+  non-YouTube extractors.
+- KV is eventually consistent: a pointer change can take up to a minute to reach every
+  location.
