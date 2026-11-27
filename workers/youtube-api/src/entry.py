@@ -154,7 +154,6 @@ def ytdl_options(logger, extra):
         "logger": logger,
         "socket_timeout": 15,
         "retries": 0,
-        "extractor_retries": 1,
         "ignore_no_formats_error": True,
         "noprogress": True,
         "extractor_args": {"youtube": {
@@ -166,13 +165,14 @@ def ytdl_options(logger, extra):
     return opts
 
 
-def extract(url, extra_opts, max_requests, player_client=None):
+def extract(url, extra_opts, max_requests, player_client=None, retries=1):
     """Run yt-dlp synchronously. Network I/O suspends through JSPI inside the adapter."""
     import transport
     handler = transport.make_handler(transport.js_fetch, max_requests=max_requests)
     ydl_class = transport.make_youtube_dl_class(handler)
     logger = CaptureLogger()
     opts = ytdl_options(logger, extra_opts)
+    opts["extractor_retries"] = retries
     if player_client:
         opts["extractor_args"]["youtube"]["player_client"] = player_client.split(",")
     ydl = ydl_class(opts)
@@ -215,6 +215,7 @@ def get_video(video_id, player_client=None):
         {"noplaylist": True},
         max_requests=12,
         player_client=player_client,
+        retries=0,
     )
     return normalize_video(info), warnings, calls
 
@@ -262,11 +263,15 @@ async def ensure_wheel(env, release):
 
 async def call_canary(env, pointer):
     """Run the suite in a separate invocation (own CPU and subrequest budget)."""
-    target = "bundled" if pointer.get("source") == "bundled" else pointer["version"]
+    if pointer.get("source") == "bundled":
+        query = "ytdlp=bundled"
+    else:
+        # Pass the pointer's own digest so a corrupted pointer is tested as it is.
+        query = f"ytdlp={pointer['version']}&sha256={pointer.get('sha256', '')}"
     started = time.time()
     try:
         reply = await env.SELF.fetch(
-            f"https://self.internal/internal/canary?ytdlp={target}",
+            f"https://self.internal/internal/canary?{query}",
             headers={"x-canary-key": str(env.CANARY_KEY)},
         )
         text = await reply.text()
@@ -311,8 +316,11 @@ async def run_daily(env, channel="stable", promote=True):
                                        last_good, last_good_result)
         record.update(action=action, reason=reason, results={
             "active": active_result, "candidate": candidate_result, "last_good": last_good_result})
+        record["applied"] = bool(promote and action in ("promote", "rollback"))
         if promote and action == "promote":
-            await kv_put_json(env, POINTER_LAST_GOOD, active)
+            # Only a version that just passed becomes the rollback target.
+            if active_result.get("ok"):
+                await kv_put_json(env, POINTER_LAST_GOOD, active)
             await kv_put_json(env, POINTER_ACTIVE, {**candidate, "promoted_at": now_iso()})
             record["active_after"] = candidate
         elif promote and action == "rollback":
@@ -336,6 +344,7 @@ def summarize(record):
         "channel": record.get("channel"),
         "latest": (record.get("latest") or {}).get("version"),
         "action": record.get("action"),
+        "applied": record.get("applied"),
         "reason": record.get("reason"),
         "active_after": record.get("active_after"),
         "canaries": {name: None if not r else {
@@ -402,18 +411,23 @@ class Default(WorkerEntrypoint):
     async def scheduled(self, controller, *args):
         await run_daily(self.env, "stable", promote=True)
 
+    def default_player_client(self):
+        value = getattr(self.env, "PLAYER_CLIENT", None)
+        return str(value) if value else None
+
     async def health(self):
         active = await kv_json(self.env, POINTER_ACTIVE)
         return json_response({
             "ok": True,
             "api_version": API_VERSION,
             "bundled_ytdlp": bundled_version(),
+            "player_client": self.default_player_client(),
             "active": active or bundled_pointer(),
             "last_good": await kv_json(self.env, POINTER_LAST_GOOD),
             "loaded_in_this_isolate": loader.loaded(),
             "last_run": await kv_json(self.env, RUN_LATEST),
             "recent_runs": [
-                {k: r.get(k) for k in ("started", "action", "latest", "reason")}
+                {k: r.get(k) for k in ("started", "channel", "action", "applied", "latest", "reason")}
                 for r in (await kv_json(self.env, RUN_INDEX) or [])[:7]
             ],
         }, extra={"cache-control": "no-store"})
@@ -434,8 +448,8 @@ class Default(WorkerEntrypoint):
         privileged = self.authorized(request)
         requested = query.get("ytdlp")
         player_client = query.get("player_client")
-        if (requested or player_client or query.get("debug")) and not privileged:
-            return json_response({"error": "ytdlp, player_client and debug need the canary key"}, 401)
+        if (requested or player_client or query.get("debug") or query.get("fresh")) and not privileged:
+            return json_response({"error": "ytdlp, player_client, fresh and debug need the canary key"}, 401)
         if kind == "video":
             target = require_video_id(query.get("id"))
             limit = None
@@ -454,6 +468,7 @@ class Default(WorkerEntrypoint):
                                  extra={"cache-control": "public, max-age=300"})
 
         started = time.time()
+        player_client = player_client or self.default_player_client()
         pointer = await self.pointer_for(requested)
         ytdlp = await activate(self.env, pointer)
         try:
@@ -473,7 +488,9 @@ class Default(WorkerEntrypoint):
                     **cached["meta"], "cache": "stale", "stale_reason": body}})
             return json_response(body, 502)
 
-        meta = {"fetched_at": now_iso(), "ytdlp": ytdlp, "requests": len(calls),
+        if kind == "video":
+            data["complete"] = bool(data.get("title") and data.get("duration") and data.get("upload_date"))
+        meta = {"fetched_at": now_iso(), "ytdlp": ytdlp, "player_client": player_client, "requests": len(calls),
                 "elapsed_ms": round((time.time() - started) * 1000), "warnings": len(warnings)}
         if use_cache:
             await kv_put_json(self.env, cache_key, {"data": data, "meta": meta,
@@ -486,6 +503,8 @@ class Default(WorkerEntrypoint):
 
     async def canary(self, query):
         pointer = await self.pointer_for(query.get("ytdlp") or "bundled")
+        if query.get("sha256") and pointer.get("source") != "bundled":
+            pointer = {**pointer, "sha256": query["sha256"]}
         ytdlp = await activate(self.env, pointer)
         started = time.time()
 
@@ -493,8 +512,10 @@ class Default(WorkerEntrypoint):
             data, warnings, _ = get_playlist(pid, limit)
             return data, warnings
 
+        player_client = query.get("player_client") or self.default_player_client()
+
         def video(vid):
-            data, warnings, _ = get_video(vid)
+            data, warnings, _ = get_video(vid, player_client)
             return data, warnings
 
         result = canary.run_suite(playlist, video, time.time)
@@ -502,6 +523,6 @@ class Default(WorkerEntrypoint):
             # The requested wheel did not load; do not let a bundled pass count for it.
             result["ok"] = False
             result["failure_classes"] = sorted({*result["failure_classes"], canary.UPSTREAM_BROKE})
-        result.update(ytdlp=ytdlp, requested=pointer, elapsed_ms=round((time.time() - started) * 1000),
+        result.update(ytdlp=ytdlp, requested=pointer, player_client=player_client, elapsed_ms=round((time.time() - started) * 1000),
                       at=now_iso())
         return json_response(result)

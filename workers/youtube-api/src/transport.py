@@ -181,7 +181,11 @@ def make_handler(fetch_fn, *, max_bytes=DEFAULT_MAX_BYTES, max_requests=DEFAULT_
                 if reply.status in REDIRECT_CODES and location:
                     next_url = urljoin(url, location)
                     if not host_allowed(next_url):
-                        raise TransportError(cause=f"redirect to disallowed URL {urlsplit(next_url).hostname}")
+                        target = urlsplit(next_url)
+                        if (target.hostname or "").endswith("google.com") and target.path.startswith("/sorry"):
+                            raise TransportError(cause="YouTube redirected to Google's unusual traffic (/sorry) "
+                                                       "CAPTCHA page; this egress IP is being challenged")
+                        raise TransportError(cause=f"redirect to disallowed URL {target.hostname}")
                     new_method = get_redirect_method(method, reply.status)
                     if new_method != method or reply.status == 303:
                         body = None
