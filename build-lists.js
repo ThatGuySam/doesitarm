@@ -156,7 +156,11 @@ class BuildLists {
         {
             name: 'video',
             endpointPrefix: 'tv',
-            path: '/static/video-list.json',
+            // Each video embeds its related videos, so this file grows with
+            // videos x related count. It passed Vercel's 1 GB per-file upload
+            // limit in November 2026, and nothing reads it after the build, so
+            // keep it out of static/ (the deployed API).
+            path: '/.cache/video-list.json',
             buildMethod: async () => {
 
                 return await buildVideoList( this.getAllVideoAppsList() )
@@ -286,6 +290,7 @@ class BuildLists {
 
         // Make the relative path for our new JSON file
         const listFullPath = `.${listOptions.path}`
+        await fs.ensureDir( listFullPath.split('/').slice(0, -1).join('/') )
 
         const hasSaveMethod = listOptions.hasOwnProperty('beforeSave')
         const saveMethod = hasSaveMethod ? listOptions.beforeSave : listSet => Array.from( listSet )
