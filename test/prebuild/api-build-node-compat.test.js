@@ -112,8 +112,7 @@ describe( 'API build on Node runtimes without SlowBuffer', () => {
         const youtubeBuild = await import( '~/helpers/api/youtube/build.js' )
 
         expect( typeof youtubeBuild.saveYouTubeVideos ).toBe( 'function' )
-        expect( typeof youtubeBuild.getPlaylistsItems ).toBe( 'function' )
-        expect( typeof youtubeBuild.getYouTubeVideos ).toBe( 'function' )
+        expect( typeof youtubeBuild.youtubeVideoPath ).toBe( 'string' )
     } )
 } )
 
