@@ -1,0 +1,132 @@
+[
+  {
+    "id": "docs-field-demo",
+    "label": "Field Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-demo.tsx"
+  },
+  {
+    "id": "docs-field-input",
+    "label": "Field Input",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-input.tsx"
+  },
+  {
+    "id": "docs-field-textarea",
+    "label": "Field Textarea",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-textarea.tsx"
+  },
+  {
+    "id": "docs-field-select",
+    "label": "Field Select",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-select.tsx"
+  },
+  {
+    "id": "docs-field-slider",
+    "label": "Field Slider",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-slider.tsx"
+  },
+  {
+    "id": "docs-field-fieldset",
+    "label": "Field Fieldset",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-fieldset.tsx"
+  },
+  {
+    "id": "docs-field-checkbox",
+    "label": "Field Checkbox",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-checkbox.tsx"
+  },
+  {
+    "id": "docs-field-radio",
+    "label": "Field Radio",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-radio.tsx"
+  },
+  {
+    "id": "docs-field-switch",
+    "label": "Field Switch",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-switch.tsx"
+  },
+  {
+    "id": "docs-field-choice-card",
+    "label": "Field Choice Card",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-choice-card.tsx"
+  },
+  {
+    "id": "docs-field-group",
+    "label": "Field Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-group.tsx"
+  },
+  {
+    "id": "docs-field-rtl",
+    "label": "Field RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-rtl.tsx"
+  },
+  {
+    "id": "docs-field-responsive",
+    "label": "Field Responsive",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-responsive.tsx"
+  },
+  {
+    "id": "new-york-v4-field-demo",
+    "label": "Field Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-demo.json"
+  },
+  {
+    "id": "new-york-v4-field-input",
+    "label": "Field Input \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-input.json"
+  },
+  {
+    "id": "new-york-v4-field-textarea",
+    "label": "Field Textarea \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-textarea.json"
+  },
+  {
+    "id": "new-york-v4-field-fieldset",
+    "label": "Field Fieldset \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-fieldset.json"
+  },
+  {
+    "id": "new-york-v4-field-radio",
+    "label": "Field Radio \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-radio.json"
+  },
+  {
+    "id": "new-york-v4-field-checkbox",
+    "label": "Field Checkbox \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-checkbox.json"
+  },
+  {
+    "id": "new-york-v4-field-switch",
+    "label": "Field Switch \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-switch.json"
+  },
+  {
+    "id": "new-york-v4-field-slider",
+    "label": "Field Slider \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-slider.json"
+  },
+  {
+    "id": "new-york-v4-field-select",
+    "label": "Field Select \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-select.json"
+  },
+  {
+    "id": "new-york-v4-field-choice-card",
+    "label": "Field Choice Card \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-choice-card.json"
+  },
+  {
+    "id": "new-york-v4-field-group",
+    "label": "Field Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-group.json"
+  },
+  {
+    "id": "new-york-v4-field-responsive",
+    "label": "Field Responsive \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/field-responsive.json"
+  },
+  {
+    "id": "radix-nova-field-example",
+    "label": "Field \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/field-example.json"
+  }
+]

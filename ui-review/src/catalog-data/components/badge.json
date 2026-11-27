@@ -1,0 +1,62 @@
+[
+  {
+    "id": "docs-badge-demo",
+    "label": "Badge Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-demo.tsx"
+  },
+  {
+    "id": "docs-badge-variants",
+    "label": "Badge Variants",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-variants.tsx"
+  },
+  {
+    "id": "docs-badge-icon",
+    "label": "Badge Icon",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-icon.tsx"
+  },
+  {
+    "id": "docs-badge-spinner",
+    "label": "Badge Spinner",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-spinner.tsx"
+  },
+  {
+    "id": "docs-badge-link",
+    "label": "Badge Link",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-link.tsx"
+  },
+  {
+    "id": "docs-badge-colors",
+    "label": "Badge Colors",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-colors.tsx"
+  },
+  {
+    "id": "docs-badge-rtl",
+    "label": "Badge RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/badge-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-badge-demo",
+    "label": "Badge Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/badge-demo.json"
+  },
+  {
+    "id": "new-york-v4-badge-destructive",
+    "label": "Badge Destructive \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/badge-destructive.json"
+  },
+  {
+    "id": "new-york-v4-badge-outline",
+    "label": "Badge Outline \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/badge-outline.json"
+  },
+  {
+    "id": "new-york-v4-badge-secondary",
+    "label": "Badge Secondary \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/badge-secondary.json"
+  },
+  {
+    "id": "radix-nova-badge-example",
+    "label": "Badge \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/badge-example.json"
+  }
+]

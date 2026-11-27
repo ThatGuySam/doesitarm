@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-dialog-demo",
+    "label": "Dialog Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dialog-demo.tsx"
+  },
+  {
+    "id": "docs-dialog-close-button",
+    "label": "Dialog Close Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dialog-close-button.tsx"
+  },
+  {
+    "id": "docs-dialog-no-close-button",
+    "label": "Dialog No Close Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dialog-no-close-button.tsx"
+  },
+  {
+    "id": "docs-dialog-sticky-footer",
+    "label": "Dialog Sticky Footer",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dialog-sticky-footer.tsx"
+  },
+  {
+    "id": "docs-dialog-scrollable-content",
+    "label": "Dialog Scrollable Content",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dialog-scrollable-content.tsx"
+  },
+  {
+    "id": "docs-dialog-rtl",
+    "label": "Dialog RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dialog-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-dialog-demo",
+    "label": "Dialog Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dialog-demo.json"
+  },
+  {
+    "id": "new-york-v4-dialog-close-button",
+    "label": "Dialog Close Button \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dialog-close-button.json"
+  },
+  {
+    "id": "radix-nova-dialog-example",
+    "label": "Dialog \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/dialog-example.json"
+  }
+]

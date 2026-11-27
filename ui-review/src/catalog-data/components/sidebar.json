@@ -1,0 +1,157 @@
+[
+  {
+    "id": "docs-sidebar-demo",
+    "label": "Sidebar Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-demo.tsx"
+  },
+  {
+    "id": "docs-sidebar-controlled",
+    "label": "Sidebar Controlled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-controlled.tsx"
+  },
+  {
+    "id": "docs-sidebar-footer",
+    "label": "Sidebar Footer",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-footer.tsx"
+  },
+  {
+    "id": "docs-sidebar-group-action",
+    "label": "Sidebar Group Action",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-group-action.tsx"
+  },
+  {
+    "id": "docs-sidebar-group-collapsible",
+    "label": "Sidebar Group Collapsible",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-group-collapsible.tsx"
+  },
+  {
+    "id": "docs-sidebar-group",
+    "label": "Sidebar Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-group.tsx"
+  },
+  {
+    "id": "docs-sidebar-header",
+    "label": "Sidebar Header",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-header.tsx"
+  },
+  {
+    "id": "docs-sidebar-menu-action",
+    "label": "Sidebar Menu Action",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-menu-action.tsx"
+  },
+  {
+    "id": "docs-sidebar-menu-badge",
+    "label": "Sidebar Menu Badge",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-menu-badge.tsx"
+  },
+  {
+    "id": "docs-sidebar-menu-collapsible",
+    "label": "Sidebar Menu Collapsible",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-menu-collapsible.tsx"
+  },
+  {
+    "id": "docs-sidebar-menu-sub",
+    "label": "Sidebar Menu Sub",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-menu-sub.tsx"
+  },
+  {
+    "id": "docs-sidebar-menu",
+    "label": "Sidebar Menu",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-menu.tsx"
+  },
+  {
+    "id": "docs-sidebar-rsc",
+    "label": "Sidebar Rsc",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-rsc.tsx"
+  },
+  {
+    "id": "docs-sidebar-rtl",
+    "label": "Sidebar RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sidebar-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-sidebar-demo",
+    "label": "Sidebar Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-demo.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-header",
+    "label": "Sidebar Header \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-header.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-footer",
+    "label": "Sidebar Footer \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-footer.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-group",
+    "label": "Sidebar Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-group.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-group-collapsible",
+    "label": "Sidebar Group Collapsible \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-group-collapsible.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-group-action",
+    "label": "Sidebar Group Action \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-group-action.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-menu",
+    "label": "Sidebar Menu \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-menu.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-menu-action",
+    "label": "Sidebar Menu Action \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-menu-action.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-menu-sub",
+    "label": "Sidebar Menu Sub \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-menu-sub.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-menu-collapsible",
+    "label": "Sidebar Menu Collapsible \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-menu-collapsible.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-menu-badge",
+    "label": "Sidebar Menu Badge \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-menu-badge.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-rsc",
+    "label": "Sidebar Rsc \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-rsc.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-controlled",
+    "label": "Sidebar Controlled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-controlled.json"
+  },
+  {
+    "id": "radix-nova-sidebar-example",
+    "label": "Sidebar \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/sidebar-example.json"
+  },
+  {
+    "id": "radix-nova-sidebar-icon-example",
+    "label": "Sidebar (Icon) \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/sidebar-icon-example.json"
+  },
+  {
+    "id": "radix-nova-sidebar-inset-example",
+    "label": "Sidebar (Inset) \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/sidebar-inset-example.json"
+  },
+  {
+    "id": "radix-nova-sidebar-floating-example",
+    "label": "Sidebar (Floating) \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/sidebar-floating-example.json"
+  }
+]

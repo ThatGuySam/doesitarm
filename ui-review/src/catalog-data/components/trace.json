@@ -1,0 +1,87 @@
+[
+  {
+    "id": "docs-trace-demo",
+    "label": "Trace Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-demo.tsx"
+  },
+  {
+    "id": "docs-trace-static",
+    "label": "Trace Static",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-static.tsx"
+  },
+  {
+    "id": "docs-trace-status",
+    "label": "Trace Status",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-status.tsx"
+  },
+  {
+    "id": "docs-trace-description",
+    "label": "Trace Description",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-description.tsx"
+  },
+  {
+    "id": "docs-trace-collapsible",
+    "label": "Trace Collapsible",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-collapsible.tsx"
+  },
+  {
+    "id": "docs-trace-open",
+    "label": "Trace Open",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-open.tsx"
+  },
+  {
+    "id": "docs-trace-link",
+    "label": "Trace Link",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-link.tsx"
+  },
+  {
+    "id": "docs-trace-dialog",
+    "label": "Trace Dialog",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-dialog.tsx"
+  },
+  {
+    "id": "docs-trace-sheet",
+    "label": "Trace Sheet",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-sheet.tsx"
+  },
+  {
+    "id": "docs-trace-group",
+    "label": "Trace Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-group.tsx"
+  },
+  {
+    "id": "docs-trace-sources",
+    "label": "Trace Sources",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-sources.tsx"
+  },
+  {
+    "id": "docs-trace-steps",
+    "label": "Trace Steps",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-steps.tsx"
+  },
+  {
+    "id": "docs-trace-commit",
+    "label": "Trace Commit",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-commit.tsx"
+  },
+  {
+    "id": "docs-trace-turn",
+    "label": "Trace Turn",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-turn.tsx"
+  },
+  {
+    "id": "docs-trace-thinking",
+    "label": "Trace Thinking",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-thinking.tsx"
+  },
+  {
+    "id": "docs-trace-tool-calls",
+    "label": "Trace Tool Calls",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/trace-tool-calls.tsx"
+  },
+  {
+    "id": "radix-nova-trace-example",
+    "label": "Trace \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/trace-example.json"
+  }
+]

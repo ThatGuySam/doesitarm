@@ -1,0 +1,52 @@
+[
+  {
+    "id": "docs-command-demo",
+    "label": "Command Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-demo.tsx"
+  },
+  {
+    "id": "docs-command-basic",
+    "label": "Command Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-basic.tsx"
+  },
+  {
+    "id": "docs-command-shortcuts",
+    "label": "Command Shortcuts",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-shortcuts.tsx"
+  },
+  {
+    "id": "docs-command-groups",
+    "label": "Command Groups",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-groups.tsx"
+  },
+  {
+    "id": "docs-command-scrollable",
+    "label": "Command Scrollable",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-scrollable.tsx"
+  },
+  {
+    "id": "docs-command-rtl",
+    "label": "Command RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-rtl.tsx"
+  },
+  {
+    "id": "docs-command-dialog",
+    "label": "Command Dialog",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/command-dialog.tsx"
+  },
+  {
+    "id": "new-york-v4-command-demo",
+    "label": "Command Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/command-demo.json"
+  },
+  {
+    "id": "new-york-v4-command-dialog",
+    "label": "Command Dialog \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/command-dialog.json"
+  },
+  {
+    "id": "radix-nova-command-example",
+    "label": "Command \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/command-example.json"
+  }
+]

@@ -1,0 +1,132 @@
+[
+  {
+    "id": "docs-code-block-demo",
+    "label": "Code Block Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-demo.tsx"
+  },
+  {
+    "id": "docs-code-block-basic",
+    "label": "Code Block Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-basic.tsx"
+  },
+  {
+    "id": "docs-code-block-header",
+    "label": "Code Block Header",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-header.tsx"
+  },
+  {
+    "id": "docs-code-block-actions",
+    "label": "Code Block Actions",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-actions.tsx"
+  },
+  {
+    "id": "docs-code-block-floating-actions",
+    "label": "Code Block Floating Actions",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-floating-actions.tsx"
+  },
+  {
+    "id": "docs-code-block-line-numbers",
+    "label": "Code Block Line Numbers",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-line-numbers.tsx"
+  },
+  {
+    "id": "docs-code-block-start-line",
+    "label": "Code Block Start Line",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-start-line.tsx"
+  },
+  {
+    "id": "docs-code-block-wrap",
+    "label": "Code Block Wrap",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-wrap.tsx"
+  },
+  {
+    "id": "docs-code-block-highlighted-lines",
+    "label": "Code Block Highlighted Lines",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-highlighted-lines.tsx"
+  },
+  {
+    "id": "docs-code-block-diff",
+    "label": "Code Block Diff",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-diff.tsx"
+  },
+  {
+    "id": "docs-code-block-height",
+    "label": "Code Block Height",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-height.tsx"
+  },
+  {
+    "id": "docs-code-block-show-more",
+    "label": "Code Block Show More",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-show-more.tsx"
+  },
+  {
+    "id": "docs-code-block-show-more-scroll",
+    "label": "Code Block Show More Scroll",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-show-more-scroll.tsx"
+  },
+  {
+    "id": "docs-code-block-size",
+    "label": "Code Block Size",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-size.tsx"
+  },
+  {
+    "id": "docs-code-block-destructive",
+    "label": "Code Block Destructive",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-destructive.tsx"
+  },
+  {
+    "id": "docs-code-block-trace",
+    "label": "Code Block Trace",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-trace.tsx"
+  },
+  {
+    "id": "docs-code-block-tabs",
+    "label": "Code Block Tabs",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-tabs.tsx"
+  },
+  {
+    "id": "docs-code-block-chat",
+    "label": "Code Block Chat",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-chat.tsx"
+  },
+  {
+    "id": "docs-code-block-typeset",
+    "label": "Code Block Typeset",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-typeset.tsx"
+  },
+  {
+    "id": "docs-code-block-rtl",
+    "label": "Code Block RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-rtl.tsx"
+  },
+  {
+    "id": "docs-code-block-highlighting",
+    "label": "Code Block Highlighting",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-highlighting.tsx"
+  },
+  {
+    "id": "docs-code-block-languages",
+    "label": "Code Block Languages",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-languages.tsx"
+  },
+  {
+    "id": "docs-code-block-ansi",
+    "label": "Code Block Ansi",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-ansi.tsx"
+  },
+  {
+    "id": "docs-code-block-streaming",
+    "label": "Code Block Streaming",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-streaming.tsx"
+  },
+  {
+    "id": "docs-code-block-markdown",
+    "label": "Code Block Markdown",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/code-block-markdown.tsx"
+  },
+  {
+    "id": "radix-nova-code-block-example",
+    "label": "Code Block \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/code-block-example.json"
+  }
+]

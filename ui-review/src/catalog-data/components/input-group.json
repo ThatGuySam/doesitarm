@@ -1,0 +1,182 @@
+[
+  {
+    "id": "docs-input-group-demo",
+    "label": "Input Group Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-demo.tsx"
+  },
+  {
+    "id": "docs-input-group-inline-start",
+    "label": "Input Group Inline Start",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-inline-start.tsx"
+  },
+  {
+    "id": "docs-input-group-inline-end",
+    "label": "Input Group Inline End",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-inline-end.tsx"
+  },
+  {
+    "id": "docs-input-group-block-start",
+    "label": "Input Group Block Start",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-block-start.tsx"
+  },
+  {
+    "id": "docs-input-group-block-end",
+    "label": "Input Group Block End",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-block-end.tsx"
+  },
+  {
+    "id": "docs-input-group-icon",
+    "label": "Input Group Icon",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-icon.tsx"
+  },
+  {
+    "id": "docs-input-group-text",
+    "label": "Input Group Text",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-text.tsx"
+  },
+  {
+    "id": "docs-input-group-button",
+    "label": "Input Group Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-button.tsx"
+  },
+  {
+    "id": "docs-input-group-kbd",
+    "label": "Input Group Kbd",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-kbd.tsx"
+  },
+  {
+    "id": "docs-input-group-dropdown",
+    "label": "Input Group Dropdown",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-dropdown.tsx"
+  },
+  {
+    "id": "docs-input-group-spinner",
+    "label": "Input Group Spinner",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-spinner.tsx"
+  },
+  {
+    "id": "docs-input-group-textarea",
+    "label": "Input Group Textarea",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-textarea.tsx"
+  },
+  {
+    "id": "docs-input-group-custom",
+    "label": "Input Group Custom",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-custom.tsx"
+  },
+  {
+    "id": "docs-input-group-rtl",
+    "label": "Input Group RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-rtl.tsx"
+  },
+  {
+    "id": "docs-input-group-basic",
+    "label": "Input Group Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-basic.tsx"
+  },
+  {
+    "id": "docs-input-group-button-group",
+    "label": "Input Group Button Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-button-group.tsx"
+  },
+  {
+    "id": "docs-input-group-in-card",
+    "label": "Input Group In Card",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-in-card.tsx"
+  },
+  {
+    "id": "docs-input-group-label",
+    "label": "Input Group Label",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-label.tsx"
+  },
+  {
+    "id": "docs-input-group-textarea-examples",
+    "label": "Input Group Textarea Examples",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-textarea-examples.tsx"
+  },
+  {
+    "id": "docs-input-group-tooltip",
+    "label": "Input Group Tooltip",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-tooltip.tsx"
+  },
+  {
+    "id": "docs-input-group-with-addons",
+    "label": "Input Group With Addons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-with-addons.tsx"
+  },
+  {
+    "id": "docs-input-group-with-buttons",
+    "label": "Input Group With Buttons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-with-buttons.tsx"
+  },
+  {
+    "id": "docs-input-group-with-kbd",
+    "label": "Input Group With Kbd",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-with-kbd.tsx"
+  },
+  {
+    "id": "docs-input-group-with-tooltip",
+    "label": "Input Group With Tooltip",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-group-with-tooltip.tsx"
+  },
+  {
+    "id": "new-york-v4-input-group-demo",
+    "label": "Input Group Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-demo.json"
+  },
+  {
+    "id": "new-york-v4-input-group-label",
+    "label": "Input Group Label \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-label.json"
+  },
+  {
+    "id": "new-york-v4-input-group-text",
+    "label": "Input Group Text \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-text.json"
+  },
+  {
+    "id": "new-york-v4-input-group-tooltip",
+    "label": "Input Group Tooltip \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-tooltip.json"
+  },
+  {
+    "id": "new-york-v4-input-group-button",
+    "label": "Input Group Button \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-button.json"
+  },
+  {
+    "id": "new-york-v4-input-group-button-group",
+    "label": "Input Group Button Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-button-group.json"
+  },
+  {
+    "id": "new-york-v4-input-group-dropdown",
+    "label": "Input Group Dropdown \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-dropdown.json"
+  },
+  {
+    "id": "new-york-v4-input-group-spinner",
+    "label": "Input Group Spinner \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-spinner.json"
+  },
+  {
+    "id": "new-york-v4-input-group-textarea",
+    "label": "Input Group Textarea \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-textarea.json"
+  },
+  {
+    "id": "new-york-v4-input-group-icon",
+    "label": "Input Group Icon \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-icon.json"
+  },
+  {
+    "id": "new-york-v4-input-group-custom",
+    "label": "Input Group Custom \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-group-custom.json"
+  },
+  {
+    "id": "radix-nova-input-group-example",
+    "label": "Input Group \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/input-group-example.json"
+  }
+]

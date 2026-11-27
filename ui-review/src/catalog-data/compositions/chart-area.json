@@ -1,0 +1,52 @@
+[
+  {
+    "id": "new-york-v4-chart-area-axes",
+    "label": "Chart Area Axes",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-axes.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-default",
+    "label": "Chart Area Default",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-default.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-gradient",
+    "label": "Chart Area Gradient",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-gradient.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-icons",
+    "label": "Chart Area Icons",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-icons.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-interactive",
+    "label": "Chart Area Interactive",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-interactive.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-legend",
+    "label": "Chart Area Legend",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-legend.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-linear",
+    "label": "Chart Area Linear",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-linear.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-stacked-expand",
+    "label": "Chart Area Stacked Expand",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-stacked-expand.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-stacked",
+    "label": "Chart Area Stacked",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-stacked.json"
+  },
+  {
+    "id": "new-york-v4-chart-area-step",
+    "label": "Chart Area Step",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-area-step.json"
+  }
+]

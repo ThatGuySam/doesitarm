@@ -1,0 +1,42 @@
+[
+  {
+    "id": "docs-menubar-demo",
+    "label": "Menubar Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/menubar-demo.tsx"
+  },
+  {
+    "id": "docs-menubar-checkbox",
+    "label": "Menubar Checkbox",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/menubar-checkbox.tsx"
+  },
+  {
+    "id": "docs-menubar-radio",
+    "label": "Menubar Radio",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/menubar-radio.tsx"
+  },
+  {
+    "id": "docs-menubar-submenu",
+    "label": "Menubar Submenu",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/menubar-submenu.tsx"
+  },
+  {
+    "id": "docs-menubar-icons",
+    "label": "Menubar Icons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/menubar-icons.tsx"
+  },
+  {
+    "id": "docs-menubar-rtl",
+    "label": "Menubar RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/menubar-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-menubar-demo",
+    "label": "Menubar Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/menubar-demo.json"
+  },
+  {
+    "id": "radix-nova-menubar-example",
+    "label": "Menubar \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/menubar-example.json"
+  }
+]

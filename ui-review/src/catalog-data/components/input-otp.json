@@ -1,0 +1,77 @@
+[
+  {
+    "id": "docs-input-otp-demo",
+    "label": "Input OTP Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-demo.tsx"
+  },
+  {
+    "id": "docs-input-otp-pattern",
+    "label": "Input OTP Pattern",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-pattern.tsx"
+  },
+  {
+    "id": "docs-input-otp-separator",
+    "label": "Input OTP Separator",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-separator.tsx"
+  },
+  {
+    "id": "docs-input-otp-disabled",
+    "label": "Input OTP Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-disabled.tsx"
+  },
+  {
+    "id": "docs-input-otp-controlled",
+    "label": "Input OTP Controlled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-controlled.tsx"
+  },
+  {
+    "id": "docs-input-otp-invalid",
+    "label": "Input OTP Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-invalid.tsx"
+  },
+  {
+    "id": "docs-input-otp-four-digits",
+    "label": "Input OTP Four Digits",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-four-digits.tsx"
+  },
+  {
+    "id": "docs-input-otp-alphanumeric",
+    "label": "Input OTP Alphanumeric",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-alphanumeric.tsx"
+  },
+  {
+    "id": "docs-input-otp-form",
+    "label": "Input OTP Form",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-form.tsx"
+  },
+  {
+    "id": "docs-input-otp-rtl",
+    "label": "Input OTP RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-otp-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-input-otp-demo",
+    "label": "Input OTP Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-otp-demo.json"
+  },
+  {
+    "id": "new-york-v4-input-otp-pattern",
+    "label": "Input OTP Pattern \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-otp-pattern.json"
+  },
+  {
+    "id": "new-york-v4-input-otp-separator",
+    "label": "Input OTP Separator \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-otp-separator.json"
+  },
+  {
+    "id": "new-york-v4-input-otp-controlled",
+    "label": "Input OTP Controlled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-otp-controlled.json"
+  },
+  {
+    "id": "radix-nova-input-otp-example",
+    "label": "Input OTP \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/input-otp-example.json"
+  }
+]

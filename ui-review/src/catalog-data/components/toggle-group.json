@@ -1,0 +1,82 @@
+[
+  {
+    "id": "docs-toggle-group-demo",
+    "label": "Toggle Group Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-demo.tsx"
+  },
+  {
+    "id": "docs-toggle-group-outline",
+    "label": "Toggle Group Outline",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-outline.tsx"
+  },
+  {
+    "id": "docs-toggle-group-sizes",
+    "label": "Toggle Group Sizes",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-sizes.tsx"
+  },
+  {
+    "id": "docs-toggle-group-spacing",
+    "label": "Toggle Group Spacing",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-spacing.tsx"
+  },
+  {
+    "id": "docs-toggle-group-vertical",
+    "label": "Toggle Group Vertical",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-vertical.tsx"
+  },
+  {
+    "id": "docs-toggle-group-disabled",
+    "label": "Toggle Group Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-disabled.tsx"
+  },
+  {
+    "id": "docs-toggle-group-font-weight-selector",
+    "label": "Toggle Group Font Weight Selector",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-font-weight-selector.tsx"
+  },
+  {
+    "id": "docs-toggle-group-rtl",
+    "label": "Toggle Group RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-group-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-toggle-group-demo",
+    "label": "Toggle Group Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-demo.json"
+  },
+  {
+    "id": "new-york-v4-toggle-group-disabled",
+    "label": "Toggle Group Disabled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-disabled.json"
+  },
+  {
+    "id": "new-york-v4-toggle-group-lg",
+    "label": "Toggle Group Lg \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-lg.json"
+  },
+  {
+    "id": "new-york-v4-toggle-group-outline",
+    "label": "Toggle Group Outline \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-outline.json"
+  },
+  {
+    "id": "new-york-v4-toggle-group-sm",
+    "label": "Toggle Group Sm \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-sm.json"
+  },
+  {
+    "id": "new-york-v4-toggle-group-single",
+    "label": "Toggle Group Single \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-single.json"
+  },
+  {
+    "id": "new-york-v4-toggle-group-spacing",
+    "label": "Toggle Group Spacing \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-group-spacing.json"
+  },
+  {
+    "id": "radix-nova-toggle-group-example",
+    "label": "Toggle Group \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/toggle-group-example.json"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "app-dashboard",
+    "label": "Dashboard",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/app/%28app%29/examples/dashboard/page.tsx"
+  },
+  {
+    "id": "app-authentication",
+    "label": "Authentication",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/app/%28app%29/examples/authentication/page.tsx"
+  },
+  {
+    "id": "app-tasks",
+    "label": "Tasks",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/app/%28app%29/examples/tasks/page.tsx"
+  },
+  {
+    "id": "app-playground",
+    "label": "Playground",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/app/%28app%29/examples/playground/page.tsx"
+  },
+  {
+    "id": "app-rtl",
+    "label": "RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/app/%28app%29/examples/rtl/page.tsx"
+  }
+]

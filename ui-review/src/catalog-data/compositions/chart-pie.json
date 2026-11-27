@@ -1,0 +1,57 @@
+[
+  {
+    "id": "new-york-v4-chart-pie-donut-active",
+    "label": "Chart Pie Donut Active",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-donut-active.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-donut-text",
+    "label": "Chart Pie Donut Text",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-donut-text.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-donut",
+    "label": "Chart Pie Donut",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-donut.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-interactive",
+    "label": "Chart Pie Interactive",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-interactive.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-label-custom",
+    "label": "Chart Pie Label Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-label-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-label-list",
+    "label": "Chart Pie Label List",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-label-list.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-label",
+    "label": "Chart Pie Label",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-label.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-legend",
+    "label": "Chart Pie Legend",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-legend.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-separator-none",
+    "label": "Chart Pie Separator None",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-separator-none.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-simple",
+    "label": "Chart Pie Simple",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-simple.json"
+  },
+  {
+    "id": "new-york-v4-chart-pie-stacked",
+    "label": "Chart Pie Stacked",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-pie-stacked.json"
+  }
+]

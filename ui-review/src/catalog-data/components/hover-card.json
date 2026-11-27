@@ -1,0 +1,27 @@
+[
+  {
+    "id": "docs-hover-card-demo",
+    "label": "Hover Card Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/hover-card-demo.tsx"
+  },
+  {
+    "id": "docs-hover-card-sides",
+    "label": "Hover Card Sides",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/hover-card-sides.tsx"
+  },
+  {
+    "id": "docs-hover-card-rtl",
+    "label": "Hover Card RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/hover-card-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-hover-card-demo",
+    "label": "Hover Card Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/hover-card-demo.json"
+  },
+  {
+    "id": "radix-nova-hover-card-example",
+    "label": "Hover Card \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/hover-card-example.json"
+  }
+]

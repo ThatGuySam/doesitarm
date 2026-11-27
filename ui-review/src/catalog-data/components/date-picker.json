@@ -1,0 +1,62 @@
+[
+  {
+    "id": "docs-date-picker-demo",
+    "label": "Date Picker Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-demo.tsx"
+  },
+  {
+    "id": "docs-date-picker-basic",
+    "label": "Date Picker Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-basic.tsx"
+  },
+  {
+    "id": "docs-date-picker-range",
+    "label": "Date Picker Range",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-range.tsx"
+  },
+  {
+    "id": "docs-date-picker-dob",
+    "label": "Date Picker Dob",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-dob.tsx"
+  },
+  {
+    "id": "docs-date-picker-input",
+    "label": "Date Picker Input",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-input.tsx"
+  },
+  {
+    "id": "docs-date-picker-time",
+    "label": "Date Picker Time",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-time.tsx"
+  },
+  {
+    "id": "docs-date-picker-natural-language",
+    "label": "Date Picker Natural Language",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-natural-language.tsx"
+  },
+  {
+    "id": "docs-date-picker-rtl",
+    "label": "Date Picker RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/date-picker-rtl.tsx"
+  },
+  {
+    "id": "docs-data-picker-with-dropdowns",
+    "label": "Data Picker With Dropdowns",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/data-picker-with-dropdowns.tsx"
+  },
+  {
+    "id": "new-york-v4-date-picker-demo",
+    "label": "Date Picker Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/date-picker-demo.json"
+  },
+  {
+    "id": "new-york-v4-date-picker-with-presets",
+    "label": "Date Picker With Presets \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/date-picker-with-presets.json"
+  },
+  {
+    "id": "new-york-v4-date-picker-with-range",
+    "label": "Date Picker With Range \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/date-picker-with-range.json"
+  }
+]

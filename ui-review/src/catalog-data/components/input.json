@@ -1,0 +1,112 @@
+[
+  {
+    "id": "docs-input-demo",
+    "label": "Input Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-demo.tsx"
+  },
+  {
+    "id": "docs-input-basic",
+    "label": "Input Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-basic.tsx"
+  },
+  {
+    "id": "docs-input-field",
+    "label": "Input Field",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-field.tsx"
+  },
+  {
+    "id": "docs-input-fieldgroup",
+    "label": "Input Fieldgroup",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-fieldgroup.tsx"
+  },
+  {
+    "id": "docs-input-disabled",
+    "label": "Input Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-disabled.tsx"
+  },
+  {
+    "id": "docs-input-invalid",
+    "label": "Input Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-invalid.tsx"
+  },
+  {
+    "id": "docs-input-file",
+    "label": "Input File",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-file.tsx"
+  },
+  {
+    "id": "docs-input-inline",
+    "label": "Input Inline",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-inline.tsx"
+  },
+  {
+    "id": "docs-input-grid",
+    "label": "Input Grid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-grid.tsx"
+  },
+  {
+    "id": "docs-input-required",
+    "label": "Input Required",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-required.tsx"
+  },
+  {
+    "id": "docs-input-badge",
+    "label": "Input Badge",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-badge.tsx"
+  },
+  {
+    "id": "docs-input-input-group",
+    "label": "Input Input Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-input-group.tsx"
+  },
+  {
+    "id": "docs-input-button-group",
+    "label": "Input Button Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-button-group.tsx"
+  },
+  {
+    "id": "docs-input-form",
+    "label": "Input Form",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-form.tsx"
+  },
+  {
+    "id": "docs-input-rtl",
+    "label": "Input RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/input-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-input-demo",
+    "label": "Input Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-demo.json"
+  },
+  {
+    "id": "new-york-v4-input-disabled",
+    "label": "Input Disabled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-disabled.json"
+  },
+  {
+    "id": "new-york-v4-input-file",
+    "label": "Input File \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-file.json"
+  },
+  {
+    "id": "new-york-v4-input-with-button",
+    "label": "Input With Button \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-with-button.json"
+  },
+  {
+    "id": "new-york-v4-input-with-label",
+    "label": "Input With Label \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-with-label.json"
+  },
+  {
+    "id": "new-york-v4-input-with-text",
+    "label": "Input With Text \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/input-with-text.json"
+  },
+  {
+    "id": "radix-nova-input-example",
+    "label": "Input \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/input-example.json"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "docs-tooltip-demo",
+    "label": "Tooltip Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tooltip-demo.tsx"
+  },
+  {
+    "id": "docs-tooltip-sides",
+    "label": "Tooltip Sides",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tooltip-sides.tsx"
+  },
+  {
+    "id": "docs-tooltip-keyboard",
+    "label": "Tooltip Keyboard",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tooltip-keyboard.tsx"
+  },
+  {
+    "id": "docs-tooltip-disabled",
+    "label": "Tooltip Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tooltip-disabled.tsx"
+  },
+  {
+    "id": "docs-tooltip-rtl",
+    "label": "Tooltip RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tooltip-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-tooltip-demo",
+    "label": "Tooltip Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/tooltip-demo.json"
+  },
+  {
+    "id": "radix-nova-tooltip-example",
+    "label": "Tooltip \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/tooltip-example.json"
+  }
+]

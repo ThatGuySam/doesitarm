@@ -1,0 +1,67 @@
+[
+  {
+    "id": "docs-context-menu-demo",
+    "label": "Context Menu Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-demo.tsx"
+  },
+  {
+    "id": "docs-context-menu-basic",
+    "label": "Context Menu Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-basic.tsx"
+  },
+  {
+    "id": "docs-context-menu-submenu",
+    "label": "Context Menu Submenu",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-submenu.tsx"
+  },
+  {
+    "id": "docs-context-menu-shortcuts",
+    "label": "Context Menu Shortcuts",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-shortcuts.tsx"
+  },
+  {
+    "id": "docs-context-menu-groups",
+    "label": "Context Menu Groups",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-groups.tsx"
+  },
+  {
+    "id": "docs-context-menu-icons",
+    "label": "Context Menu Icons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-icons.tsx"
+  },
+  {
+    "id": "docs-context-menu-checkboxes",
+    "label": "Context Menu Checkboxes",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-checkboxes.tsx"
+  },
+  {
+    "id": "docs-context-menu-radio",
+    "label": "Context Menu Radio",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-radio.tsx"
+  },
+  {
+    "id": "docs-context-menu-destructive",
+    "label": "Context Menu Destructive",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-destructive.tsx"
+  },
+  {
+    "id": "docs-context-menu-rtl",
+    "label": "Context Menu RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-rtl.tsx"
+  },
+  {
+    "id": "docs-context-menu-sides",
+    "label": "Context Menu Sides",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-menu-sides.tsx"
+  },
+  {
+    "id": "new-york-v4-context-menu-demo",
+    "label": "Context Menu Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/context-menu-demo.json"
+  },
+  {
+    "id": "radix-nova-context-menu-example",
+    "label": "Context Menu \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/context-menu-example.json"
+  }
+]

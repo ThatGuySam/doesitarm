@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-alert-demo",
+    "label": "Alert Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-demo.tsx"
+  },
+  {
+    "id": "docs-alert-basic",
+    "label": "Alert Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-basic.tsx"
+  },
+  {
+    "id": "docs-alert-destructive",
+    "label": "Alert Destructive",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-destructive.tsx"
+  },
+  {
+    "id": "docs-alert-action",
+    "label": "Alert Action",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-action.tsx"
+  },
+  {
+    "id": "docs-alert-colors",
+    "label": "Alert Colors",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-colors.tsx"
+  },
+  {
+    "id": "docs-alert-rtl",
+    "label": "Alert RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-alert-demo",
+    "label": "Alert Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/alert-demo.json"
+  },
+  {
+    "id": "new-york-v4-alert-destructive",
+    "label": "Alert Destructive \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/alert-destructive.json"
+  },
+  {
+    "id": "radix-nova-alert-example",
+    "label": "Alert \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/alert-example.json"
+  }
+]

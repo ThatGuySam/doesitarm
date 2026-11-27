@@ -1,0 +1,72 @@
+[
+  {
+    "id": "new-york-v4-chart-radar-default",
+    "label": "Chart Radar Default",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-default.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-dots",
+    "label": "Chart Radar Dots",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-dots.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-grid-circle-fill",
+    "label": "Chart Radar Grid Circle Fill",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-grid-circle-fill.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-grid-circle-no-lines",
+    "label": "Chart Radar Grid Circle No Lines",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-grid-circle-no-lines.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-grid-circle",
+    "label": "Chart Radar Grid Circle",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-grid-circle.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-grid-custom",
+    "label": "Chart Radar Grid Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-grid-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-grid-fill",
+    "label": "Chart Radar Grid Fill",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-grid-fill.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-grid-none",
+    "label": "Chart Radar Grid None",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-grid-none.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-icons",
+    "label": "Chart Radar Icons",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-icons.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-label-custom",
+    "label": "Chart Radar Label Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-label-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-legend",
+    "label": "Chart Radar Legend",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-legend.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-lines-only",
+    "label": "Chart Radar Lines Only",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-lines-only.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-multiple",
+    "label": "Chart Radar Multiple",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-multiple.json"
+  },
+  {
+    "id": "new-york-v4-chart-radar-radius",
+    "label": "Chart Radar Radius",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radar-radius.json"
+  }
+]

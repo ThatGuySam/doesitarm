@@ -1,0 +1,484 @@
+{
+  "atoms": [
+    {
+      "id": "button",
+      "label": "Button",
+      "source": "https://ui.shadcn.com/docs/components/radix/button",
+      "exampleCount": 29
+    },
+    {
+      "id": "badge",
+      "label": "Badge",
+      "source": "https://ui.shadcn.com/docs/components/radix/badge",
+      "exampleCount": 12
+    },
+    {
+      "id": "input",
+      "label": "Input",
+      "source": "https://ui.shadcn.com/docs/components/radix/input",
+      "exampleCount": 22
+    },
+    {
+      "id": "label",
+      "label": "Label",
+      "source": "https://ui.shadcn.com/docs/components/radix/label",
+      "exampleCount": 5
+    },
+    {
+      "id": "kbd",
+      "label": "Kbd",
+      "source": "https://ui.shadcn.com/docs/components/radix/kbd",
+      "exampleCount": 12
+    },
+    {
+      "id": "separator",
+      "label": "Separator",
+      "source": "https://ui.shadcn.com/docs/components/radix/separator",
+      "exampleCount": 7
+    },
+    {
+      "id": "spinner",
+      "label": "Spinner",
+      "source": "https://ui.shadcn.com/docs/components/radix/spinner",
+      "exampleCount": 19
+    },
+    {
+      "id": "avatar",
+      "label": "Avatar",
+      "source": "https://ui.shadcn.com/docs/components/radix/avatar",
+      "exampleCount": 12
+    },
+    {
+      "id": "skeleton",
+      "label": "Skeleton",
+      "source": "https://ui.shadcn.com/docs/components/radix/skeleton",
+      "exampleCount": 10
+    },
+    {
+      "id": "typography",
+      "label": "Typography",
+      "source": "https://ui.shadcn.com/docs/components/radix/typography",
+      "exampleCount": 29
+    }
+  ],
+  "components": [
+    {
+      "id": "accordion",
+      "label": "Accordion",
+      "source": "https://ui.shadcn.com/docs/components/radix/accordion",
+      "exampleCount": 9
+    },
+    {
+      "id": "alert",
+      "label": "Alert",
+      "source": "https://ui.shadcn.com/docs/components/radix/alert",
+      "exampleCount": 9
+    },
+    {
+      "id": "alert-dialog",
+      "label": "Alert Dialog",
+      "source": "https://ui.shadcn.com/docs/components/radix/alert-dialog",
+      "exampleCount": 9
+    },
+    {
+      "id": "aspect-ratio",
+      "label": "Aspect Ratio",
+      "source": "https://ui.shadcn.com/docs/components/radix/aspect-ratio",
+      "exampleCount": 6
+    },
+    {
+      "id": "attachment",
+      "label": "Attachment",
+      "source": "https://ui.shadcn.com/docs/components/radix/attachment",
+      "exampleCount": 8
+    },
+    {
+      "id": "breadcrumb",
+      "label": "Breadcrumb",
+      "source": "https://ui.shadcn.com/docs/components/radix/breadcrumb",
+      "exampleCount": 14
+    },
+    {
+      "id": "bubble",
+      "label": "Bubble",
+      "source": "https://ui.shadcn.com/docs/components/radix/bubble",
+      "exampleCount": 11
+    },
+    {
+      "id": "button-group",
+      "label": "Button Group",
+      "source": "https://ui.shadcn.com/docs/components/radix/button-group",
+      "exampleCount": 24
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "source": "https://ui.shadcn.com/docs/components/radix/calendar",
+      "exampleCount": 15
+    },
+    {
+      "id": "card",
+      "label": "Card",
+      "source": "https://ui.shadcn.com/docs/components/radix/card",
+      "exampleCount": 9
+    },
+    {
+      "id": "carousel",
+      "label": "Carousel",
+      "source": "https://ui.shadcn.com/docs/components/radix/carousel",
+      "exampleCount": 15
+    },
+    {
+      "id": "chart",
+      "label": "Chart",
+      "source": "https://ui.shadcn.com/docs/components/radix/chart",
+      "exampleCount": 15
+    },
+    {
+      "id": "checkbox",
+      "label": "Checkbox",
+      "source": "https://ui.shadcn.com/docs/components/radix/checkbox",
+      "exampleCount": 12
+    },
+    {
+      "id": "code-block",
+      "label": "Code Block",
+      "source": "https://ui.shadcn.com/docs/components/radix/code-block",
+      "exampleCount": 26
+    },
+    {
+      "id": "collapsible",
+      "label": "Collapsible",
+      "source": "https://ui.shadcn.com/docs/components/radix/collapsible",
+      "exampleCount": 7
+    },
+    {
+      "id": "combobox",
+      "label": "Combobox",
+      "source": "https://ui.shadcn.com/docs/components/radix/combobox",
+      "exampleCount": 17
+    },
+    {
+      "id": "command",
+      "label": "Command",
+      "source": "https://ui.shadcn.com/docs/components/radix/command",
+      "exampleCount": 10
+    },
+    {
+      "id": "context-menu",
+      "label": "Context Menu",
+      "source": "https://ui.shadcn.com/docs/components/radix/context-menu",
+      "exampleCount": 13
+    },
+    {
+      "id": "data-table",
+      "label": "Data Table",
+      "source": "https://ui.shadcn.com/docs/components/radix/data-table",
+      "exampleCount": 3
+    },
+    {
+      "id": "date-picker",
+      "label": "Date Picker",
+      "source": "https://ui.shadcn.com/docs/components/radix/date-picker",
+      "exampleCount": 12
+    },
+    {
+      "id": "dialog",
+      "label": "Dialog",
+      "source": "https://ui.shadcn.com/docs/components/radix/dialog",
+      "exampleCount": 9
+    },
+    {
+      "id": "direction",
+      "label": "Direction",
+      "source": "https://ui.shadcn.com/docs/components/radix/direction",
+      "exampleCount": 1
+    },
+    {
+      "id": "drawer",
+      "label": "Drawer",
+      "source": "https://ui.shadcn.com/docs/components/radix/drawer",
+      "exampleCount": 8
+    },
+    {
+      "id": "dropdown-menu",
+      "label": "Dropdown Menu",
+      "source": "https://ui.shadcn.com/docs/components/radix/dropdown-menu",
+      "exampleCount": 18
+    },
+    {
+      "id": "empty",
+      "label": "Empty",
+      "source": "https://ui.shadcn.com/docs/components/radix/empty",
+      "exampleCount": 16
+    },
+    {
+      "id": "field",
+      "label": "Field",
+      "source": "https://ui.shadcn.com/docs/components/radix/field",
+      "exampleCount": 26
+    },
+    {
+      "id": "form",
+      "label": "Form",
+      "source": "https://ui.shadcn.com/r/styles/new-york-v4/form.json",
+      "exampleCount": 30
+    },
+    {
+      "id": "hover-card",
+      "label": "Hover Card",
+      "source": "https://ui.shadcn.com/docs/components/radix/hover-card",
+      "exampleCount": 5
+    },
+    {
+      "id": "input-group",
+      "label": "Input Group",
+      "source": "https://ui.shadcn.com/docs/components/radix/input-group",
+      "exampleCount": 36
+    },
+    {
+      "id": "input-otp",
+      "label": "Input OTP",
+      "source": "https://ui.shadcn.com/docs/components/radix/input-otp",
+      "exampleCount": 15
+    },
+    {
+      "id": "item",
+      "label": "Item",
+      "source": "https://ui.shadcn.com/docs/components/radix/item",
+      "exampleCount": 24
+    },
+    {
+      "id": "marker",
+      "label": "Marker",
+      "source": "https://ui.shadcn.com/docs/components/radix/marker",
+      "exampleCount": 9
+    },
+    {
+      "id": "menubar",
+      "label": "Menubar",
+      "source": "https://ui.shadcn.com/docs/components/radix/menubar",
+      "exampleCount": 8
+    },
+    {
+      "id": "message",
+      "label": "Message",
+      "source": "https://ui.shadcn.com/docs/components/radix/message",
+      "exampleCount": 9
+    },
+    {
+      "id": "message-scroller",
+      "label": "Message Scroller",
+      "source": "https://ui.shadcn.com/docs/components/radix/message-scroller",
+      "exampleCount": 12
+    },
+    {
+      "id": "native-select",
+      "label": "Native Select",
+      "source": "https://ui.shadcn.com/docs/components/radix/native-select",
+      "exampleCount": 10
+    },
+    {
+      "id": "navigation-menu",
+      "label": "Navigation Menu",
+      "source": "https://ui.shadcn.com/docs/components/radix/navigation-menu",
+      "exampleCount": 4
+    },
+    {
+      "id": "pagination",
+      "label": "Pagination",
+      "source": "https://ui.shadcn.com/docs/components/radix/pagination",
+      "exampleCount": 6
+    },
+    {
+      "id": "popover",
+      "label": "Popover",
+      "source": "https://ui.shadcn.com/docs/components/radix/popover",
+      "exampleCount": 7
+    },
+    {
+      "id": "progress",
+      "label": "Progress",
+      "source": "https://ui.shadcn.com/docs/components/radix/progress",
+      "exampleCount": 6
+    },
+    {
+      "id": "questionnaire",
+      "label": "Questionnaire",
+      "source": "https://ui.shadcn.com/docs/components/radix/questionnaire",
+      "exampleCount": 15
+    },
+    {
+      "id": "radio-group",
+      "label": "Radio Group",
+      "source": "https://ui.shadcn.com/docs/components/radix/radio-group",
+      "exampleCount": 10
+    },
+    {
+      "id": "resizable",
+      "label": "Resizable",
+      "source": "https://ui.shadcn.com/docs/components/radix/resizable",
+      "exampleCount": 9
+    },
+    {
+      "id": "scroll-area",
+      "label": "Scroll Area",
+      "source": "https://ui.shadcn.com/docs/components/radix/scroll-area",
+      "exampleCount": 6
+    },
+    {
+      "id": "select",
+      "label": "Select",
+      "source": "https://ui.shadcn.com/docs/components/radix/select",
+      "exampleCount": 10
+    },
+    {
+      "id": "sheet",
+      "label": "Sheet",
+      "source": "https://ui.shadcn.com/docs/components/radix/sheet",
+      "exampleCount": 7
+    },
+    {
+      "id": "sidebar",
+      "label": "Sidebar",
+      "source": "https://ui.shadcn.com/docs/components/radix/sidebar",
+      "exampleCount": 31
+    },
+    {
+      "id": "slider",
+      "label": "Slider",
+      "source": "https://ui.shadcn.com/docs/components/radix/slider",
+      "exampleCount": 9
+    },
+    {
+      "id": "sonner",
+      "label": "Sonner",
+      "source": "https://ui.shadcn.com/docs/components/radix/sonner",
+      "exampleCount": 7
+    },
+    {
+      "id": "switch",
+      "label": "Switch",
+      "source": "https://ui.shadcn.com/docs/components/radix/switch",
+      "exampleCount": 9
+    },
+    {
+      "id": "table",
+      "label": "Table",
+      "source": "https://ui.shadcn.com/docs/components/radix/table",
+      "exampleCount": 6
+    },
+    {
+      "id": "tabs",
+      "label": "Tabs",
+      "source": "https://ui.shadcn.com/docs/components/radix/tabs",
+      "exampleCount": 8
+    },
+    {
+      "id": "textarea",
+      "label": "Textarea",
+      "source": "https://ui.shadcn.com/docs/components/radix/textarea",
+      "exampleCount": 12
+    },
+    {
+      "id": "toast",
+      "label": "Toast",
+      "source": "https://ui.shadcn.com/docs/components/radix/toast",
+      "exampleCount": 1
+    },
+    {
+      "id": "toggle",
+      "label": "Toggle",
+      "source": "https://ui.shadcn.com/docs/components/radix/toggle",
+      "exampleCount": 13
+    },
+    {
+      "id": "toggle-group",
+      "label": "Toggle Group",
+      "source": "https://ui.shadcn.com/docs/components/radix/toggle-group",
+      "exampleCount": 16
+    },
+    {
+      "id": "tooltip",
+      "label": "Tooltip",
+      "source": "https://ui.shadcn.com/docs/components/radix/tooltip",
+      "exampleCount": 7
+    },
+    {
+      "id": "trace",
+      "label": "Trace",
+      "source": "https://ui.shadcn.com/docs/components/radix/trace",
+      "exampleCount": 17
+    }
+  ],
+  "compositions": [
+    {
+      "id": "blocks",
+      "label": "Layout blocks",
+      "exampleCount": 30
+    },
+    {
+      "id": "app",
+      "label": "Site examples",
+      "exampleCount": 5
+    },
+    {
+      "id": "archive",
+      "label": "Archived site examples",
+      "exampleCount": 8
+    },
+    {
+      "id": "chart-area",
+      "label": "Area charts",
+      "exampleCount": 10
+    },
+    {
+      "id": "chart-bar",
+      "label": "Bar charts",
+      "exampleCount": 10
+    },
+    {
+      "id": "chart-line",
+      "label": "Line charts",
+      "exampleCount": 10
+    },
+    {
+      "id": "chart-pie",
+      "label": "Pie charts",
+      "exampleCount": 11
+    },
+    {
+      "id": "chart-radar",
+      "label": "Radar charts",
+      "exampleCount": 14
+    },
+    {
+      "id": "chart-radial",
+      "label": "Radial charts",
+      "exampleCount": 6
+    },
+    {
+      "id": "chart-tooltip",
+      "label": "Chart tooltips",
+      "exampleCount": 9
+    },
+    {
+      "id": "catalog-examples",
+      "label": "Other examples",
+      "exampleCount": 52
+    }
+  ],
+  "counts": {
+    "installed": 65,
+    "currentRadixInstallables": 64,
+    "newYorkInstallables": 61,
+    "documentationExamples": 582,
+    "newYorkExamplesAndSidebarSnippets": 252,
+    "radixNovaRegistryExamples": 67,
+    "layoutBlocks": 30,
+    "chartBlocks": 70,
+    "currentSiteExamples": 5,
+    "archiveSiteExamples": 8,
+    "vendoredPreviewAssets": 23
+  }
+}

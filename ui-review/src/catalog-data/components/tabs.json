@@ -1,0 +1,42 @@
+[
+  {
+    "id": "docs-tabs-demo",
+    "label": "Tabs Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tabs-demo.tsx"
+  },
+  {
+    "id": "docs-tabs-line",
+    "label": "Tabs Line",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tabs-line.tsx"
+  },
+  {
+    "id": "docs-tabs-vertical",
+    "label": "Tabs Vertical",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tabs-vertical.tsx"
+  },
+  {
+    "id": "docs-tabs-disabled",
+    "label": "Tabs Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tabs-disabled.tsx"
+  },
+  {
+    "id": "docs-tabs-icons",
+    "label": "Tabs Icons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tabs-icons.tsx"
+  },
+  {
+    "id": "docs-tabs-rtl",
+    "label": "Tabs RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tabs-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-tabs-demo",
+    "label": "Tabs Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/tabs-demo.json"
+  },
+  {
+    "id": "radix-nova-tabs-example",
+    "label": "Tabs \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/tabs-example.json"
+  }
+]

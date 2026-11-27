@@ -1,0 +1,47 @@
+[
+  {
+    "id": "new-york-v4-chart-tooltip-default",
+    "label": "Chart Tooltip Default",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-default.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-indicator-line",
+    "label": "Chart Tooltip Indicator Line",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-indicator-line.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-indicator-none",
+    "label": "Chart Tooltip Indicator None",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-indicator-none.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-label-none",
+    "label": "Chart Tooltip Label None",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-label-none.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-label-custom",
+    "label": "Chart Tooltip Label Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-label-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-label-formatter",
+    "label": "Chart Tooltip Label Formatter",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-label-formatter.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-formatter",
+    "label": "Chart Tooltip Formatter",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-formatter.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-icons",
+    "label": "Chart Tooltip Icons",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-icons.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-advanced",
+    "label": "Chart Tooltip Advanced",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-advanced.json"
+  }
+]

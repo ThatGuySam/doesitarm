@@ -1,0 +1,87 @@
+[
+  {
+    "id": "docs-combobox-demo",
+    "label": "Combobox Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-demo.tsx"
+  },
+  {
+    "id": "docs-combobox-basic",
+    "label": "Combobox Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-basic.tsx"
+  },
+  {
+    "id": "docs-combobox-multiple",
+    "label": "Combobox Multiple",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-multiple.tsx"
+  },
+  {
+    "id": "docs-combobox-clear",
+    "label": "Combobox Clear",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-clear.tsx"
+  },
+  {
+    "id": "docs-combobox-groups",
+    "label": "Combobox Groups",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-groups.tsx"
+  },
+  {
+    "id": "docs-combobox-custom",
+    "label": "Combobox Custom",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-custom.tsx"
+  },
+  {
+    "id": "docs-combobox-invalid",
+    "label": "Combobox Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-invalid.tsx"
+  },
+  {
+    "id": "docs-combobox-disabled",
+    "label": "Combobox Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-disabled.tsx"
+  },
+  {
+    "id": "docs-combobox-auto-highlight",
+    "label": "Combobox Auto Highlight",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-auto-highlight.tsx"
+  },
+  {
+    "id": "docs-combobox-popup",
+    "label": "Combobox Popup",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-popup.tsx"
+  },
+  {
+    "id": "docs-combobox-input-group",
+    "label": "Combobox Input Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-input-group.tsx"
+  },
+  {
+    "id": "docs-combobox-rtl",
+    "label": "Combobox RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/combobox-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-combobox-demo",
+    "label": "Combobox Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/combobox-demo.json"
+  },
+  {
+    "id": "new-york-v4-combobox-dropdown-menu",
+    "label": "Combobox Dropdown Menu \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/combobox-dropdown-menu.json"
+  },
+  {
+    "id": "new-york-v4-combobox-popover",
+    "label": "Combobox Popover \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/combobox-popover.json"
+  },
+  {
+    "id": "new-york-v4-combobox-responsive",
+    "label": "Combobox Responsive \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/combobox-responsive.json"
+  },
+  {
+    "id": "radix-nova-combobox-example",
+    "label": "Combobox \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/combobox-example.json"
+  }
+]

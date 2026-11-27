@@ -1,0 +1,92 @@
+[
+  {
+    "id": "docs-dropdown-menu-demo",
+    "label": "Dropdown Menu Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-demo.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-basic",
+    "label": "Dropdown Menu Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-basic.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-submenu",
+    "label": "Dropdown Menu Submenu",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-submenu.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-shortcuts",
+    "label": "Dropdown Menu Shortcuts",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-shortcuts.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-icons",
+    "label": "Dropdown Menu Icons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-icons.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-checkboxes",
+    "label": "Dropdown Menu Checkboxes",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-checkboxes.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-checkboxes-icons",
+    "label": "Dropdown Menu Checkboxes Icons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-checkboxes-icons.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-radio-group",
+    "label": "Dropdown Menu Radio Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-radio-group.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-radio-icons",
+    "label": "Dropdown Menu Radio Icons",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-radio-icons.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-destructive",
+    "label": "Dropdown Menu Destructive",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-destructive.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-avatar",
+    "label": "Dropdown Menu Avatar",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-avatar.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-complex",
+    "label": "Dropdown Menu Complex",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-complex.tsx"
+  },
+  {
+    "id": "docs-dropdown-menu-rtl",
+    "label": "Dropdown Menu RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/dropdown-menu-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-dropdown-menu-demo",
+    "label": "Dropdown Menu Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dropdown-menu-demo.json"
+  },
+  {
+    "id": "new-york-v4-dropdown-menu-checkboxes",
+    "label": "Dropdown Menu Checkboxes \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dropdown-menu-checkboxes.json"
+  },
+  {
+    "id": "new-york-v4-dropdown-menu-radio-group",
+    "label": "Dropdown Menu Radio Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dropdown-menu-radio-group.json"
+  },
+  {
+    "id": "new-york-v4-dropdown-menu-dialog",
+    "label": "Dropdown Menu Dialog \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dropdown-menu-dialog.json"
+  },
+  {
+    "id": "radix-nova-dropdown-menu-example",
+    "label": "Dropdown Menu \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/dropdown-menu-example.json"
+  }
+]

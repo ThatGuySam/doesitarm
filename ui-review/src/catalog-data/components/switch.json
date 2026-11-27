@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-switch-demo",
+    "label": "Switch Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-demo.tsx"
+  },
+  {
+    "id": "docs-switch-description",
+    "label": "Switch Description",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-description.tsx"
+  },
+  {
+    "id": "docs-switch-choice-card",
+    "label": "Switch Choice Card",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-choice-card.tsx"
+  },
+  {
+    "id": "docs-switch-disabled",
+    "label": "Switch Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-disabled.tsx"
+  },
+  {
+    "id": "docs-switch-invalid",
+    "label": "Switch Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-invalid.tsx"
+  },
+  {
+    "id": "docs-switch-sizes",
+    "label": "Switch Sizes",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-sizes.tsx"
+  },
+  {
+    "id": "docs-switch-rtl",
+    "label": "Switch RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/switch-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-switch-demo",
+    "label": "Switch Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/switch-demo.json"
+  },
+  {
+    "id": "radix-nova-switch-example",
+    "label": "Switch \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/switch-example.json"
+  }
+]

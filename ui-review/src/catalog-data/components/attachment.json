@@ -1,0 +1,42 @@
+[
+  {
+    "id": "docs-attachment-demo",
+    "label": "Attachment Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/attachment-demo.tsx"
+  },
+  {
+    "id": "docs-attachment-image",
+    "label": "Attachment Image",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/attachment-image.tsx"
+  },
+  {
+    "id": "docs-attachment-states",
+    "label": "Attachment States",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/attachment-states.tsx"
+  },
+  {
+    "id": "docs-attachment-sizes",
+    "label": "Attachment Sizes",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/attachment-sizes.tsx"
+  },
+  {
+    "id": "docs-attachment-group",
+    "label": "Attachment Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/attachment-group.tsx"
+  },
+  {
+    "id": "docs-attachment-trigger",
+    "label": "Attachment Trigger",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/attachment-trigger.tsx"
+  },
+  {
+    "id": "docs-file-upload-list",
+    "label": "File Upload List",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/file-upload-list.tsx"
+  },
+  {
+    "id": "radix-nova-attachment-example",
+    "label": "Attachment \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/attachment-example.json"
+  }
+]

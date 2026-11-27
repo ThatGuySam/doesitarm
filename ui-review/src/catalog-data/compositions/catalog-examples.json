@@ -1,0 +1,262 @@
+[
+  {
+    "id": "docs-chain-of-thought-demo",
+    "label": "Chain Of Thought Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chain-of-thought-demo.tsx"
+  },
+  {
+    "id": "docs-chat-demo",
+    "label": "Chat Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chat-demo.tsx"
+  },
+  {
+    "id": "docs-checkpoint-demo",
+    "label": "Checkpoint Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkpoint-demo.tsx"
+  },
+  {
+    "id": "docs-confirmation-demo",
+    "label": "Confirmation Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/confirmation-demo.tsx"
+  },
+  {
+    "id": "docs-context-demo",
+    "label": "Context Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/context-demo.tsx"
+  },
+  {
+    "id": "docs-file-tree-demo",
+    "label": "File Tree Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/file-tree-demo.tsx"
+  },
+  {
+    "id": "docs-inline-citation-demo",
+    "label": "Inline Citation Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/inline-citation-demo.tsx"
+  },
+  {
+    "id": "docs-markdown-demo",
+    "label": "Markdown Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/markdown-demo.tsx"
+  },
+  {
+    "id": "docs-model-selector-demo",
+    "label": "Model Selector Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/model-selector-demo.tsx"
+  },
+  {
+    "id": "docs-plan-demo",
+    "label": "Plan Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/plan-demo.tsx"
+  },
+  {
+    "id": "docs-plan-description",
+    "label": "Plan Description",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/plan-description.tsx"
+  },
+  {
+    "id": "docs-prompt-input-demo",
+    "label": "Prompt Input Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/prompt-input-demo.tsx"
+  },
+  {
+    "id": "docs-queue-demo",
+    "label": "Queue Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/queue-demo.tsx"
+  },
+  {
+    "id": "docs-queue-descriptions",
+    "label": "Queue Descriptions",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/queue-descriptions.tsx"
+  },
+  {
+    "id": "docs-reasoning-demo",
+    "label": "Reasoning Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/reasoning-demo.tsx"
+  },
+  {
+    "id": "docs-reasoning-duration",
+    "label": "Reasoning Duration",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/reasoning-duration.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-demo",
+    "label": "Scroll Fade Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-demo.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-edge",
+    "label": "Scroll Fade Edge",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-edge.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-horizontal",
+    "label": "Scroll Fade Horizontal",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-horizontal.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-none",
+    "label": "Scroll Fade None",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-none.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-overflow",
+    "label": "Scroll Fade Overflow",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-overflow.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-rtl",
+    "label": "Scroll Fade RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-rtl.tsx"
+  },
+  {
+    "id": "docs-scroll-fade-size",
+    "label": "Scroll Fade Size",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-fade-size.tsx"
+  },
+  {
+    "id": "docs-shimmer-angle",
+    "label": "Shimmer Angle",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-angle.tsx"
+  },
+  {
+    "id": "docs-shimmer-color",
+    "label": "Shimmer Color",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-color.tsx"
+  },
+  {
+    "id": "docs-shimmer-demo",
+    "label": "Shimmer Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-demo.tsx"
+  },
+  {
+    "id": "docs-shimmer-duration",
+    "label": "Shimmer Duration",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-duration.tsx"
+  },
+  {
+    "id": "docs-shimmer-marker",
+    "label": "Shimmer Marker",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-marker.tsx"
+  },
+  {
+    "id": "docs-shimmer-none",
+    "label": "Shimmer None",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-none.tsx"
+  },
+  {
+    "id": "docs-shimmer-once",
+    "label": "Shimmer Once",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-once.tsx"
+  },
+  {
+    "id": "docs-shimmer-rtl",
+    "label": "Shimmer RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-rtl.tsx"
+  },
+  {
+    "id": "docs-shimmer-spread",
+    "label": "Shimmer Spread",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/shimmer-spread.tsx"
+  },
+  {
+    "id": "docs-sources-basic",
+    "label": "Sources Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sources-basic.tsx"
+  },
+  {
+    "id": "docs-sources-demo",
+    "label": "Sources Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/sources-demo.tsx"
+  },
+  {
+    "id": "docs-stack-trace-demo",
+    "label": "Stack Trace Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/stack-trace-demo.tsx"
+  },
+  {
+    "id": "docs-stack-trace-frames",
+    "label": "Stack Trace Frames",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/stack-trace-frames.tsx"
+  },
+  {
+    "id": "docs-subagent-demo",
+    "label": "Subagent Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/subagent-demo.tsx"
+  },
+  {
+    "id": "docs-subagent-details",
+    "label": "Subagent Details",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/subagent-details.tsx"
+  },
+  {
+    "id": "docs-subagent-running",
+    "label": "Subagent Running",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/subagent-running.tsx"
+  },
+  {
+    "id": "docs-suggestion-demo",
+    "label": "Suggestion Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/suggestion-demo.tsx"
+  },
+  {
+    "id": "docs-task-demo",
+    "label": "Task Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/task-demo.tsx"
+  },
+  {
+    "id": "docs-terminal-demo",
+    "label": "Terminal Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/terminal-demo.tsx"
+  },
+  {
+    "id": "docs-terminal-error",
+    "label": "Terminal Error",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/terminal-error.tsx"
+  },
+  {
+    "id": "docs-test-results-demo",
+    "label": "Test Results Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/test-results-demo.tsx"
+  },
+  {
+    "id": "docs-test-results-suites",
+    "label": "Test Results Suites",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/test-results-suites.tsx"
+  },
+  {
+    "id": "docs-tool-approval",
+    "label": "Tool Approval",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tool-approval.tsx"
+  },
+  {
+    "id": "docs-tool-demo",
+    "label": "Tool Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tool-demo.tsx"
+  },
+  {
+    "id": "docs-tool-sheet",
+    "label": "Tool Sheet",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tool-sheet.tsx"
+  },
+  {
+    "id": "docs-tool-states",
+    "label": "Tool States",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/tool-states.tsx"
+  },
+  {
+    "id": "new-york-v4-mode-toggle",
+    "label": "Mode Toggle \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/mode-toggle.json"
+  },
+  {
+    "id": "radix-nova-demo",
+    "label": "Demo \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/demo.json"
+  },
+  {
+    "id": "radix-nova-component-example",
+    "label": "Example \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/component-example.json"
+  }
+]

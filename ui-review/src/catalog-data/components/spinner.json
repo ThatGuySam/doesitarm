@@ -1,0 +1,97 @@
+[
+  {
+    "id": "docs-spinner-demo",
+    "label": "Spinner Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-demo.tsx"
+  },
+  {
+    "id": "docs-spinner-custom",
+    "label": "Spinner Custom",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-custom.tsx"
+  },
+  {
+    "id": "docs-spinner-size",
+    "label": "Spinner Size",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-size.tsx"
+  },
+  {
+    "id": "docs-spinner-button",
+    "label": "Spinner Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-button.tsx"
+  },
+  {
+    "id": "docs-spinner-badge",
+    "label": "Spinner Badge",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-badge.tsx"
+  },
+  {
+    "id": "docs-spinner-input-group",
+    "label": "Spinner Input Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-input-group.tsx"
+  },
+  {
+    "id": "docs-spinner-empty",
+    "label": "Spinner Empty",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-empty.tsx"
+  },
+  {
+    "id": "docs-spinner-rtl",
+    "label": "Spinner RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/spinner-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-spinner-demo",
+    "label": "Spinner Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-demo.json"
+  },
+  {
+    "id": "new-york-v4-spinner-basic",
+    "label": "Spinner Basic \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-basic.json"
+  },
+  {
+    "id": "new-york-v4-spinner-button",
+    "label": "Spinner Button \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-button.json"
+  },
+  {
+    "id": "new-york-v4-spinner-badge",
+    "label": "Spinner Badge \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-badge.json"
+  },
+  {
+    "id": "new-york-v4-spinner-input-group",
+    "label": "Spinner Input Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-input-group.json"
+  },
+  {
+    "id": "new-york-v4-spinner-empty",
+    "label": "Spinner Empty \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-empty.json"
+  },
+  {
+    "id": "new-york-v4-spinner-color",
+    "label": "Spinner Color \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-color.json"
+  },
+  {
+    "id": "new-york-v4-spinner-custom",
+    "label": "Spinner Custom \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-custom.json"
+  },
+  {
+    "id": "new-york-v4-spinner-size",
+    "label": "Spinner Size \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-size.json"
+  },
+  {
+    "id": "new-york-v4-spinner-item",
+    "label": "Spinner Item \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/spinner-item.json"
+  },
+  {
+    "id": "radix-nova-spinner-example",
+    "label": "Spinner \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/spinner-example.json"
+  }
+]

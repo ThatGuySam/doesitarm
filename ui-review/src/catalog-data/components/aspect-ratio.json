@@ -1,0 +1,32 @@
+[
+  {
+    "id": "docs-aspect-ratio-demo",
+    "label": "Aspect Ratio Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/aspect-ratio-demo.tsx"
+  },
+  {
+    "id": "docs-aspect-ratio-square",
+    "label": "Aspect Ratio Square",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/aspect-ratio-square.tsx"
+  },
+  {
+    "id": "docs-aspect-ratio-portrait",
+    "label": "Aspect Ratio Portrait",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/aspect-ratio-portrait.tsx"
+  },
+  {
+    "id": "docs-aspect-ratio-rtl",
+    "label": "Aspect Ratio RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/aspect-ratio-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-aspect-ratio-demo",
+    "label": "Aspect Ratio Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/aspect-ratio-demo.json"
+  },
+  {
+    "id": "radix-nova-aspect-ratio-example",
+    "label": "Aspect Ratio \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/aspect-ratio-example.json"
+  }
+]

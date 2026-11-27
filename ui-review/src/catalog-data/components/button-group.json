@@ -1,0 +1,122 @@
+[
+  {
+    "id": "docs-button-group-demo",
+    "label": "Button Group Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-demo.tsx"
+  },
+  {
+    "id": "docs-button-group-orientation",
+    "label": "Button Group Orientation",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-orientation.tsx"
+  },
+  {
+    "id": "docs-button-group-size",
+    "label": "Button Group Size",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-size.tsx"
+  },
+  {
+    "id": "docs-button-group-nested",
+    "label": "Button Group Nested",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-nested.tsx"
+  },
+  {
+    "id": "docs-button-group-separator",
+    "label": "Button Group Separator",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-separator.tsx"
+  },
+  {
+    "id": "docs-button-group-split",
+    "label": "Button Group Split",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-split.tsx"
+  },
+  {
+    "id": "docs-button-group-input",
+    "label": "Button Group Input",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-input.tsx"
+  },
+  {
+    "id": "docs-button-group-input-group",
+    "label": "Button Group Input Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-input-group.tsx"
+  },
+  {
+    "id": "docs-button-group-dropdown",
+    "label": "Button Group Dropdown",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-dropdown.tsx"
+  },
+  {
+    "id": "docs-button-group-select",
+    "label": "Button Group Select",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-select.tsx"
+  },
+  {
+    "id": "docs-button-group-popover",
+    "label": "Button Group Popover",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-popover.tsx"
+  },
+  {
+    "id": "docs-button-group-rtl",
+    "label": "Button Group RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/button-group-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-button-group-demo",
+    "label": "Button Group Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-demo.json"
+  },
+  {
+    "id": "new-york-v4-button-group-nested",
+    "label": "Button Group Nested \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-nested.json"
+  },
+  {
+    "id": "new-york-v4-button-group-size",
+    "label": "Button Group Size \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-size.json"
+  },
+  {
+    "id": "new-york-v4-button-group-separator",
+    "label": "Button Group Separator \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-separator.json"
+  },
+  {
+    "id": "new-york-v4-button-group-split",
+    "label": "Button Group Split \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-split.json"
+  },
+  {
+    "id": "new-york-v4-button-group-input",
+    "label": "Button Group Input \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-input.json"
+  },
+  {
+    "id": "new-york-v4-button-group-dropdown",
+    "label": "Button Group Dropdown \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-dropdown.json"
+  },
+  {
+    "id": "new-york-v4-button-group-select",
+    "label": "Button Group Select \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-select.json"
+  },
+  {
+    "id": "new-york-v4-button-group-popover",
+    "label": "Button Group Popover \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-popover.json"
+  },
+  {
+    "id": "new-york-v4-button-group-input-group",
+    "label": "Button Group Input Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-input-group.json"
+  },
+  {
+    "id": "new-york-v4-button-group-orientation",
+    "label": "Button Group Orientation \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/button-group-orientation.json"
+  },
+  {
+    "id": "radix-nova-button-group-example",
+    "label": "Button Group \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/button-group-example.json"
+  }
+]

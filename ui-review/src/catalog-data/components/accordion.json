@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-accordion-demo",
+    "label": "Accordion Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-demo.tsx"
+  },
+  {
+    "id": "docs-accordion-basic",
+    "label": "Accordion Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-basic.tsx"
+  },
+  {
+    "id": "docs-accordion-multiple",
+    "label": "Accordion Multiple",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-multiple.tsx"
+  },
+  {
+    "id": "docs-accordion-disabled",
+    "label": "Accordion Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-disabled.tsx"
+  },
+  {
+    "id": "docs-accordion-borders",
+    "label": "Accordion Borders",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-borders.tsx"
+  },
+  {
+    "id": "docs-accordion-card",
+    "label": "Accordion Card",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-card.tsx"
+  },
+  {
+    "id": "docs-accordion-rtl",
+    "label": "Accordion RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/accordion-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-accordion-demo",
+    "label": "Accordion Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/accordion-demo.json"
+  },
+  {
+    "id": "radix-nova-accordion-example",
+    "label": "Accordion \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/accordion-example.json"
+  }
+]

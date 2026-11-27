@@ -1,0 +1,32 @@
+[
+  {
+    "id": "docs-table-demo",
+    "label": "Table Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/table-demo.tsx"
+  },
+  {
+    "id": "docs-table-footer",
+    "label": "Table Footer",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/table-footer.tsx"
+  },
+  {
+    "id": "docs-table-actions",
+    "label": "Table Actions",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/table-actions.tsx"
+  },
+  {
+    "id": "docs-table-rtl",
+    "label": "Table RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/table-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-table-demo",
+    "label": "Table Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/table-demo.json"
+  },
+  {
+    "id": "radix-nova-table-example",
+    "label": "Table \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/table-example.json"
+  }
+]

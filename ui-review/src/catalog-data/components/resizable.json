@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-resizable-demo",
+    "label": "Resizable Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/resizable-demo.tsx"
+  },
+  {
+    "id": "docs-resizable-vertical",
+    "label": "Resizable Vertical",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/resizable-vertical.tsx"
+  },
+  {
+    "id": "docs-resizable-handle",
+    "label": "Resizable Handle",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/resizable-handle.tsx"
+  },
+  {
+    "id": "docs-resizable-rtl",
+    "label": "Resizable RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/resizable-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-resizable-demo",
+    "label": "Resizable Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/resizable-demo.json"
+  },
+  {
+    "id": "new-york-v4-resizable-demo-with-handle",
+    "label": "Resizable Demo With Handle \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/resizable-demo-with-handle.json"
+  },
+  {
+    "id": "new-york-v4-resizable-vertical",
+    "label": "Resizable Vertical \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/resizable-vertical.json"
+  },
+  {
+    "id": "new-york-v4-resizable-handle",
+    "label": "Resizable Handle \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/resizable-handle.json"
+  },
+  {
+    "id": "radix-nova-resizable-example",
+    "label": "Resizable \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/resizable-example.json"
+  }
+]

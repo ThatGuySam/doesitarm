@@ -1,0 +1,52 @@
+[
+  {
+    "id": "new-york-v4-chart-bar-active",
+    "label": "Chart Bar Active",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-active.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-default",
+    "label": "Chart Bar Default",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-default.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-horizontal",
+    "label": "Chart Bar Horizontal",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-horizontal.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-interactive",
+    "label": "Chart Bar Interactive",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-interactive.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-label-custom",
+    "label": "Chart Bar Label Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-label-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-label",
+    "label": "Chart Bar Label",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-label.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-mixed",
+    "label": "Chart Bar Mixed",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-mixed.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-multiple",
+    "label": "Chart Bar Multiple",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-multiple.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-negative",
+    "label": "Chart Bar Negative",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-negative.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-stacked",
+    "label": "Chart Bar Stacked",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-stacked.json"
+  }
+]

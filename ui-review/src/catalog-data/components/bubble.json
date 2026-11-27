@@ -1,0 +1,57 @@
+[
+  {
+    "id": "docs-bubble-demo",
+    "label": "Bubble Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-demo.tsx"
+  },
+  {
+    "id": "docs-bubble-variants",
+    "label": "Bubble Variants",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-variants.tsx"
+  },
+  {
+    "id": "docs-bubble-alignment",
+    "label": "Bubble Alignment",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-alignment.tsx"
+  },
+  {
+    "id": "docs-bubble-group-demo",
+    "label": "Bubble Group Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-group-demo.tsx"
+  },
+  {
+    "id": "docs-bubble-link-button",
+    "label": "Bubble Link Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-link-button.tsx"
+  },
+  {
+    "id": "docs-bubble-reactions",
+    "label": "Bubble Reactions",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-reactions.tsx"
+  },
+  {
+    "id": "docs-bubble-collapsible",
+    "label": "Bubble Collapsible",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-collapsible.tsx"
+  },
+  {
+    "id": "docs-bubble-tooltip",
+    "label": "Bubble Tooltip",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-tooltip.tsx"
+  },
+  {
+    "id": "docs-bubble-popover",
+    "label": "Bubble Popover",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-popover.tsx"
+  },
+  {
+    "id": "docs-bubble-markdown",
+    "label": "Bubble Markdown",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/bubble-markdown.tsx"
+  },
+  {
+    "id": "radix-nova-bubble-example",
+    "label": "Bubble \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/bubble-example.json"
+  }
+]

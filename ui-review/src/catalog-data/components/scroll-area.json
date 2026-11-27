@@ -1,0 +1,32 @@
+[
+  {
+    "id": "docs-scroll-area-demo",
+    "label": "Scroll Area Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-area-demo.tsx"
+  },
+  {
+    "id": "docs-scroll-area-horizontal-demo",
+    "label": "Scroll Area Horizontal Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-area-horizontal-demo.tsx"
+  },
+  {
+    "id": "docs-scroll-area-rtl",
+    "label": "Scroll Area RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/scroll-area-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-scroll-area-demo",
+    "label": "Scroll Area Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/scroll-area-demo.json"
+  },
+  {
+    "id": "new-york-v4-scroll-area-horizontal-demo",
+    "label": "Scroll Area Horizontal Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/scroll-area-horizontal-demo.json"
+  },
+  {
+    "id": "radix-nova-scroll-area-example",
+    "label": "Scroll Area \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/scroll-area-example.json"
+  }
+]

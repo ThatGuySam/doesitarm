@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-marker-demo",
+    "label": "Marker Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-demo.tsx"
+  },
+  {
+    "id": "docs-marker-variants",
+    "label": "Marker Variants",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-variants.tsx"
+  },
+  {
+    "id": "docs-marker-status",
+    "label": "Marker Status",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-status.tsx"
+  },
+  {
+    "id": "docs-marker-shimmer",
+    "label": "Marker Shimmer",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-shimmer.tsx"
+  },
+  {
+    "id": "docs-marker-separator",
+    "label": "Marker Separator",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-separator.tsx"
+  },
+  {
+    "id": "docs-marker-border",
+    "label": "Marker Border",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-border.tsx"
+  },
+  {
+    "id": "docs-marker-icon",
+    "label": "Marker Icon",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-icon.tsx"
+  },
+  {
+    "id": "docs-marker-link-button",
+    "label": "Marker Link Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/marker-link-button.tsx"
+  },
+  {
+    "id": "radix-nova-marker-example",
+    "label": "Marker \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/marker-example.json"
+  }
+]

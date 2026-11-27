@@ -1,0 +1,52 @@
+[
+  {
+    "id": "docs-native-select-demo",
+    "label": "Native Select Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/native-select-demo.tsx"
+  },
+  {
+    "id": "docs-native-select-groups",
+    "label": "Native Select Groups",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/native-select-groups.tsx"
+  },
+  {
+    "id": "docs-native-select-disabled",
+    "label": "Native Select Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/native-select-disabled.tsx"
+  },
+  {
+    "id": "docs-native-select-invalid",
+    "label": "Native Select Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/native-select-invalid.tsx"
+  },
+  {
+    "id": "docs-native-select-rtl",
+    "label": "Native Select RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/native-select-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-native-select-demo",
+    "label": "Native Select Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/native-select-demo.json"
+  },
+  {
+    "id": "new-york-v4-native-select-groups",
+    "label": "Native Select Groups \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/native-select-groups.json"
+  },
+  {
+    "id": "new-york-v4-native-select-disabled",
+    "label": "Native Select Disabled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/native-select-disabled.json"
+  },
+  {
+    "id": "new-york-v4-native-select-invalid",
+    "label": "Native Select Invalid \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/native-select-invalid.json"
+  },
+  {
+    "id": "radix-nova-native-select-example",
+    "label": "Native Select \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/native-select-example.json"
+  }
+]

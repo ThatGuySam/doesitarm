@@ -1,0 +1,77 @@
+[
+  {
+    "id": "docs-chart-demo",
+    "label": "Chart Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-demo.tsx"
+  },
+  {
+    "id": "docs-chart-example",
+    "label": "Chart Example",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-example.tsx"
+  },
+  {
+    "id": "docs-chart-example-grid",
+    "label": "Chart Example Grid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-example-grid.tsx"
+  },
+  {
+    "id": "docs-chart-example-axis",
+    "label": "Chart Example Axis",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-example-axis.tsx"
+  },
+  {
+    "id": "docs-chart-example-tooltip",
+    "label": "Chart Example Tooltip",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-example-tooltip.tsx"
+  },
+  {
+    "id": "docs-chart-example-legend",
+    "label": "Chart Example Legend",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-example-legend.tsx"
+  },
+  {
+    "id": "docs-chart-tooltip",
+    "label": "Chart Tooltip",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-tooltip.tsx"
+  },
+  {
+    "id": "docs-chart-rtl",
+    "label": "Chart RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/chart-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-chart-bar-demo",
+    "label": "Chart Bar Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-demo.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-demo-grid",
+    "label": "Chart Bar Demo Grid \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-demo-grid.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-demo-axis",
+    "label": "Chart Bar Demo Axis \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-demo-axis.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-demo-tooltip",
+    "label": "Chart Bar Demo Tooltip \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-demo-tooltip.json"
+  },
+  {
+    "id": "new-york-v4-chart-bar-demo-legend",
+    "label": "Chart Bar Demo Legend \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-bar-demo-legend.json"
+  },
+  {
+    "id": "new-york-v4-chart-tooltip-demo",
+    "label": "Chart Tooltip Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-tooltip-demo.json"
+  },
+  {
+    "id": "radix-nova-chart-example",
+    "label": "Chart \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/chart-example.json"
+  }
+]

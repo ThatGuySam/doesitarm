@@ -1,0 +1,52 @@
+[
+  {
+    "id": "docs-select-demo",
+    "label": "Select Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-demo.tsx"
+  },
+  {
+    "id": "docs-select-align-item",
+    "label": "Select Align Item",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-align-item.tsx"
+  },
+  {
+    "id": "docs-select-groups",
+    "label": "Select Groups",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-groups.tsx"
+  },
+  {
+    "id": "docs-select-scrollable",
+    "label": "Select Scrollable",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-scrollable.tsx"
+  },
+  {
+    "id": "docs-select-disabled",
+    "label": "Select Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-disabled.tsx"
+  },
+  {
+    "id": "docs-select-invalid",
+    "label": "Select Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-invalid.tsx"
+  },
+  {
+    "id": "docs-select-rtl",
+    "label": "Select RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/select-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-select-demo",
+    "label": "Select Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/select-demo.json"
+  },
+  {
+    "id": "new-york-v4-select-scrollable",
+    "label": "Select Scrollable \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/select-scrollable.json"
+  },
+  {
+    "id": "radix-nova-select-example",
+    "label": "Select \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/select-example.json"
+  }
+]

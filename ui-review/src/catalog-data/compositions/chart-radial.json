@@ -1,0 +1,32 @@
+[
+  {
+    "id": "new-york-v4-chart-radial-grid",
+    "label": "Chart Radial Grid",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radial-grid.json"
+  },
+  {
+    "id": "new-york-v4-chart-radial-label",
+    "label": "Chart Radial Label",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radial-label.json"
+  },
+  {
+    "id": "new-york-v4-chart-radial-shape",
+    "label": "Chart Radial Shape",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radial-shape.json"
+  },
+  {
+    "id": "new-york-v4-chart-radial-simple",
+    "label": "Chart Radial Simple",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radial-simple.json"
+  },
+  {
+    "id": "new-york-v4-chart-radial-stacked",
+    "label": "Chart Radial Stacked",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radial-stacked.json"
+  },
+  {
+    "id": "new-york-v4-chart-radial-text",
+    "label": "Chart Radial Text",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-radial-text.json"
+  }
+]

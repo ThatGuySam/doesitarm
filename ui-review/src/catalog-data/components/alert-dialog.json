@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-alert-dialog-demo",
+    "label": "Alert Dialog Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-demo.tsx"
+  },
+  {
+    "id": "docs-alert-dialog-basic",
+    "label": "Alert Dialog Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-basic.tsx"
+  },
+  {
+    "id": "docs-alert-dialog-small",
+    "label": "Alert Dialog Small",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-small.tsx"
+  },
+  {
+    "id": "docs-alert-dialog-media",
+    "label": "Alert Dialog Media",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-media.tsx"
+  },
+  {
+    "id": "docs-alert-dialog-small-media",
+    "label": "Alert Dialog Small Media",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-small-media.tsx"
+  },
+  {
+    "id": "docs-alert-dialog-destructive",
+    "label": "Alert Dialog Destructive",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-destructive.tsx"
+  },
+  {
+    "id": "docs-alert-dialog-rtl",
+    "label": "Alert Dialog RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/alert-dialog-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-alert-dialog-demo",
+    "label": "Alert Dialog Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/alert-dialog-demo.json"
+  },
+  {
+    "id": "radix-nova-alert-dialog-example",
+    "label": "Alert Dialog \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/alert-dialog-example.json"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "docs-skeleton-demo",
+    "label": "Skeleton Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-demo.tsx"
+  },
+  {
+    "id": "docs-skeleton-avatar",
+    "label": "Skeleton Avatar",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-avatar.tsx"
+  },
+  {
+    "id": "docs-skeleton-card",
+    "label": "Skeleton Card",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-card.tsx"
+  },
+  {
+    "id": "docs-skeleton-text",
+    "label": "Skeleton Text",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-text.tsx"
+  },
+  {
+    "id": "docs-skeleton-form",
+    "label": "Skeleton Form",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-form.tsx"
+  },
+  {
+    "id": "docs-skeleton-table",
+    "label": "Skeleton Table",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-table.tsx"
+  },
+  {
+    "id": "docs-skeleton-rtl",
+    "label": "Skeleton RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/skeleton-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-skeleton-demo",
+    "label": "Skeleton Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/skeleton-demo.json"
+  },
+  {
+    "id": "new-york-v4-skeleton-card",
+    "label": "Skeleton Card \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/skeleton-card.json"
+  },
+  {
+    "id": "radix-nova-skeleton-example",
+    "label": "Skeleton \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/skeleton-example.json"
+  }
+]

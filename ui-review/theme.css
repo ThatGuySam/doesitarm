@@ -1,0 +1,193 @@
+@import "@fontsource/inter/variable.css";
+@import "tailwindcss" source(none);
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@source "./src";
+@custom-variant dark (&:where(.shadcn-scope.dark, .shadcn-scope.dark *));
+
+@theme inline {
+  --font-sans: var(--review-font);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --shadow-xs: var(--review-shadow-small);
+  --shadow-sm: var(--review-shadow-small);
+  --shadow-md: var(--review-shadow);
+  --shadow-lg: var(--review-shadow-overlay);
+}
+
+.shadcn-scope {
+  --review-font: InterVariable, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --background: #191a1d;
+  --foreground: #d1d5db;
+  --card: #26292e;
+  --card-foreground: #f3f4f6;
+  --popover: #23262b;
+  --popover-foreground: #f3f4f6;
+  --primary: #ffa766;
+  --primary-foreground: #191a1d;
+  --secondary: #34393f;
+  --secondary-foreground: #f3f4f6;
+  --muted: #282d32;
+  --muted-foreground: #a9b0bb;
+  --accent: #3c434d;
+  --accent-foreground: #f3f4f6;
+  --destructive: #fca5a5;
+  --destructive-foreground: #392020;
+  --border: #4b5260;
+  --input: #808897;
+  --ring: #ffa766;
+  --radius: 10px;
+  --chart-1: #ffa766;
+  --chart-2: #86efac;
+  --chart-3: #93c5fd;
+  --chart-4: #c4b5fd;
+  --chart-5: #fda4af;
+  --sidebar: #191a1d;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --review-raised: #34393f;
+  --review-recessed: #121416;
+  --review-success: #86efac;
+  --review-shadow-small: -2px -2px 6px #ffffff0a, 2px 3px 7px #0003;
+  --review-shadow: -5px -5px 14px #ffffff08, 5px 8px 18px #0004;
+  --review-shadow-overlay: 0 20px 60px #0008;
+
+  background: var(--background);
+  color: var(--foreground);
+  color-scheme: dark;
+  font-family: var(--review-font);
+  font-size: 20px;
+  word-spacing: 1px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shadcn-scope[data-theme="light"] {
+  --background: #ecebe6;
+  --foreground: #34393f;
+  --card: #f7f6f2;
+  --card-foreground: #191a1d;
+  --popover: #fffefa;
+  --popover-foreground: #191a1d;
+  --primary: #803911;
+  --primary-foreground: #fff8f0;
+  --secondary: #dfdfda;
+  --secondary-foreground: #282d32;
+  --muted: #e4e3de;
+  --muted-foreground: #565c65;
+  --accent: #e8dacb;
+  --accent-foreground: #34271c;
+  --destructive: #9f2632;
+  --destructive-foreground: #fff4f4;
+  --border: #c5c5c0;
+  --input: #6f7580;
+  --ring: #873e14;
+  --chart-1: #9b4419;
+  --chart-2: #257244;
+  --chart-3: #2563a3;
+  --chart-4: #6937a6;
+  --chart-5: #a52d51;
+  --sidebar: #e7e6e0;
+  --review-raised: #faf9f4;
+  --review-recessed: #deded8;
+  --review-success: #236442;
+  --review-shadow-small: -2px -2px 6px #fff8, 2px 3px 7px #3025211a;
+  --review-shadow: -5px -5px 14px #fff8, 5px 8px 18px #30252120;
+  --review-shadow-overlay: 0 20px 60px #30252135;
+
+  color-scheme: light;
+}
+
+@layer base {
+  .shadcn-scope :where(*, *::before, *::after) {
+    border-color: var(--border);
+  }
+
+  .shadcn-scope body {
+    min-block-size: 100vh;
+    background: linear-gradient(to bottom left, var(--review-raised), var(--background)) fixed;
+  }
+}
+
+.shadcn-scope :where(:focus-visible, [data-review-state="focus"]) {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.shadcn-scope :where([data-slot="button"]:is([data-variant="default"], [data-variant="outline"])) {
+  border: 1px solid var(--input);
+  background: var(--review-recessed);
+  color: var(--foreground);
+}
+
+.shadcn-scope :where([data-slot="button"][data-variant="default"]) {
+  box-shadow: var(--review-shadow-small);
+}
+
+.shadcn-scope :where([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]) {
+  background: var(--review-recessed);
+}
+
+.shadcn-scope :where([data-variant="destructive"]:is([data-slot="button"], [data-slot="badge"])) {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shadcn-scope :where([data-slot="button"]:is([data-variant="default"], [data-variant="outline"]):hover, [data-review-state="hover"]) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.shadcn-scope :where([data-slot="button"]:is([data-variant="default"], [data-variant="outline"]):active) {
+  box-shadow: inset 0 1px 5px #0004;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shadcn-scope :where([data-slot="skeleton"], [data-slot="spinner"]) {
+    animation: none;
+  }
+}

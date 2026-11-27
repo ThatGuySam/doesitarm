@@ -1,0 +1,122 @@
+[
+  {
+    "id": "docs-item-demo",
+    "label": "Item Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-demo.tsx"
+  },
+  {
+    "id": "docs-item-variant",
+    "label": "Item Variant",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-variant.tsx"
+  },
+  {
+    "id": "docs-item-size",
+    "label": "Item Size",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-size.tsx"
+  },
+  {
+    "id": "docs-item-icon",
+    "label": "Item Icon",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-icon.tsx"
+  },
+  {
+    "id": "docs-item-avatar",
+    "label": "Item Avatar",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-avatar.tsx"
+  },
+  {
+    "id": "docs-item-image",
+    "label": "Item Image",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-image.tsx"
+  },
+  {
+    "id": "docs-item-group",
+    "label": "Item Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-group.tsx"
+  },
+  {
+    "id": "docs-item-header",
+    "label": "Item Header",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-header.tsx"
+  },
+  {
+    "id": "docs-item-link",
+    "label": "Item Link",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-link.tsx"
+  },
+  {
+    "id": "docs-item-dropdown",
+    "label": "Item Dropdown",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-dropdown.tsx"
+  },
+  {
+    "id": "docs-item-rtl",
+    "label": "Item RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/item-rtl.tsx"
+  },
+  {
+    "id": "docs-muted-item-group",
+    "label": "Muted Item Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/muted-item-group.tsx"
+  },
+  {
+    "id": "docs-outline-item-group",
+    "label": "Outline Item Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/outline-item-group.tsx"
+  },
+  {
+    "id": "new-york-v4-item-demo",
+    "label": "Item Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-demo.json"
+  },
+  {
+    "id": "new-york-v4-item-size",
+    "label": "Item Size \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-size.json"
+  },
+  {
+    "id": "new-york-v4-item-variant",
+    "label": "Item Variant \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-variant.json"
+  },
+  {
+    "id": "new-york-v4-item-icon",
+    "label": "Item Icon \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-icon.json"
+  },
+  {
+    "id": "new-york-v4-item-image",
+    "label": "Item Image \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-image.json"
+  },
+  {
+    "id": "new-york-v4-item-avatar",
+    "label": "Item Avatar \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-avatar.json"
+  },
+  {
+    "id": "new-york-v4-item-group",
+    "label": "Item Group \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-group.json"
+  },
+  {
+    "id": "new-york-v4-item-header",
+    "label": "Item Header \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-header.json"
+  },
+  {
+    "id": "new-york-v4-item-dropdown",
+    "label": "Item Dropdown \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-dropdown.json"
+  },
+  {
+    "id": "new-york-v4-item-link",
+    "label": "Item Link \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/item-link.json"
+  },
+  {
+    "id": "radix-nova-item-example",
+    "label": "Item \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/item-example.json"
+  }
+]

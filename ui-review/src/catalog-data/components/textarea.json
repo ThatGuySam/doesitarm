@@ -1,0 +1,62 @@
+[
+  {
+    "id": "docs-textarea-demo",
+    "label": "Textarea Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/textarea-demo.tsx"
+  },
+  {
+    "id": "docs-textarea-field",
+    "label": "Textarea Field",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/textarea-field.tsx"
+  },
+  {
+    "id": "docs-textarea-disabled",
+    "label": "Textarea Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/textarea-disabled.tsx"
+  },
+  {
+    "id": "docs-textarea-invalid",
+    "label": "Textarea Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/textarea-invalid.tsx"
+  },
+  {
+    "id": "docs-textarea-button",
+    "label": "Textarea Button",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/textarea-button.tsx"
+  },
+  {
+    "id": "docs-textarea-rtl",
+    "label": "Textarea RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/textarea-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-textarea-demo",
+    "label": "Textarea Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/textarea-demo.json"
+  },
+  {
+    "id": "new-york-v4-textarea-disabled",
+    "label": "Textarea Disabled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/textarea-disabled.json"
+  },
+  {
+    "id": "new-york-v4-textarea-with-button",
+    "label": "Textarea With Button \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/textarea-with-button.json"
+  },
+  {
+    "id": "new-york-v4-textarea-with-label",
+    "label": "Textarea With Label \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/textarea-with-label.json"
+  },
+  {
+    "id": "new-york-v4-textarea-with-text",
+    "label": "Textarea With Text \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/textarea-with-text.json"
+  },
+  {
+    "id": "radix-nova-textarea-example",
+    "label": "Textarea \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/textarea-example.json"
+  }
+]

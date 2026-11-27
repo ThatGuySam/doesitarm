@@ -1,0 +1,77 @@
+[
+  {
+    "id": "docs-calendar-demo",
+    "label": "Calendar Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-demo.tsx"
+  },
+  {
+    "id": "docs-calendar-hijri",
+    "label": "Calendar Hijri",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-hijri.tsx"
+  },
+  {
+    "id": "docs-calendar-basic",
+    "label": "Calendar Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-basic.tsx"
+  },
+  {
+    "id": "docs-calendar-range",
+    "label": "Calendar Range",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-range.tsx"
+  },
+  {
+    "id": "docs-calendar-caption",
+    "label": "Calendar Caption",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-caption.tsx"
+  },
+  {
+    "id": "docs-calendar-presets",
+    "label": "Calendar Presets",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-presets.tsx"
+  },
+  {
+    "id": "docs-calendar-time",
+    "label": "Calendar Time",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-time.tsx"
+  },
+  {
+    "id": "docs-calendar-booked-dates",
+    "label": "Calendar Booked Dates",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-booked-dates.tsx"
+  },
+  {
+    "id": "docs-calendar-custom-days",
+    "label": "Calendar Custom Days",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-custom-days.tsx"
+  },
+  {
+    "id": "docs-calendar-week-numbers",
+    "label": "Calendar Week Numbers",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-week-numbers.tsx"
+  },
+  {
+    "id": "docs-calendar-rtl",
+    "label": "Calendar RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-rtl.tsx"
+  },
+  {
+    "id": "docs-calendar-multiple",
+    "label": "Calendar Multiple",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/calendar-multiple.tsx"
+  },
+  {
+    "id": "new-york-v4-calendar-demo",
+    "label": "Calendar Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/calendar-demo.json"
+  },
+  {
+    "id": "new-york-v4-calendar-hijri",
+    "label": "Calendar Hijri \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/calendar-hijri.json"
+  },
+  {
+    "id": "radix-nova-calendar-example",
+    "label": "Calendar \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/calendar-example.json"
+  }
+]

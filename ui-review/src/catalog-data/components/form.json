@@ -1,0 +1,152 @@
+[
+  {
+    "id": "new-york-v4-form-next-demo",
+    "label": "Form Next Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-next-demo.json"
+  },
+  {
+    "id": "new-york-v4-form-next-complex",
+    "label": "Form Next Complex \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-next-complex.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-demo",
+    "label": "Form Rhf Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-demo.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-input",
+    "label": "Form Rhf Input \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-input.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-select",
+    "label": "Form Rhf Select \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-select.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-checkbox",
+    "label": "Form Rhf Checkbox \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-checkbox.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-switch",
+    "label": "Form Rhf Switch \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-switch.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-textarea",
+    "label": "Form Rhf Textarea \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-textarea.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-radiogroup",
+    "label": "Form Rhf Radiogroup \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-radiogroup.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-array",
+    "label": "Form Rhf Array \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-array.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-complex",
+    "label": "Form Rhf Complex \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-complex.json"
+  },
+  {
+    "id": "new-york-v4-form-rhf-password",
+    "label": "Form Rhf Password \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-rhf-password.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-demo",
+    "label": "Form Tanstack Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-demo.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-input",
+    "label": "Form Tanstack Input \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-input.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-textarea",
+    "label": "Form Tanstack Textarea \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-textarea.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-select",
+    "label": "Form Tanstack Select \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-select.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-checkbox",
+    "label": "Form Tanstack Checkbox \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-checkbox.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-switch",
+    "label": "Form Tanstack Switch \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-switch.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-radiogroup",
+    "label": "Form Tanstack Radiogroup \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-radiogroup.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-array",
+    "label": "Form Tanstack Array \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-array.json"
+  },
+  {
+    "id": "new-york-v4-form-tanstack-complex",
+    "label": "Form Tanstack Complex \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-tanstack-complex.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-demo",
+    "label": "Form Formisch Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-demo.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-input",
+    "label": "Form Formisch Input \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-input.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-textarea",
+    "label": "Form Formisch Textarea \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-textarea.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-select",
+    "label": "Form Formisch Select \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-select.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-checkbox",
+    "label": "Form Formisch Checkbox \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-checkbox.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-radiogroup",
+    "label": "Form Formisch Radiogroup \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-radiogroup.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-switch",
+    "label": "Form Formisch Switch \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-switch.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-array",
+    "label": "Form Formisch Array \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-array.json"
+  },
+  {
+    "id": "new-york-v4-form-formisch-complex",
+    "label": "Form Formisch Complex \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/form-formisch-complex.json"
+  }
+]

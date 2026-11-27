@@ -1,0 +1,402 @@
+.shadcn-scope {
+  --review-link: var(--ring);
+  --review-header-height: 3.2rem;
+  --review-width: 1040px;
+  --review-inline-padding: clamp(.8rem, 4vw, 1.5rem);
+}
+
+.shadcn-scope :is(.review-main, .review-main :where(section, article, details)) {
+  scroll-margin-block-start: calc(var(--review-header-height) + .8rem);
+}
+
+.review-width {
+  width: min(100%, var(--review-width));
+  margin-inline: auto;
+  padding-inline: var(--review-inline-padding);
+}
+
+.review-skip-link {
+  position: fixed;
+  z-index: 50;
+  inset: .5rem auto auto .5rem;
+  transform: translateY(-200%);
+  border-radius: var(--radius);
+  padding: .4rem .6rem;
+  background: var(--popover);
+  color: var(--foreground);
+}
+
+.review-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.review-header {
+  position: sticky;
+  z-index: 20;
+  inset-block-start: 0;
+  border-block-end: 1px solid var(--border);
+  background: var(--background);
+}
+
+.review-header-inner {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  min-block-size: var(--review-header-height);
+  align-items: center;
+  gap: .8rem;
+}
+
+.review-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .8rem;
+  font-weight: 650;
+}
+
+.review-brand img {
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  border-radius: .35rem;
+}
+
+.review-toc {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: clamp(.7rem, 2vw, 1.35rem);
+  color: var(--muted-foreground);
+  font-size: .71rem;
+  white-space: nowrap;
+}
+
+.review-toc a,
+.review-source-link {
+  min-block-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.review-toc a:hover,
+.review-source-link:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+}
+
+.review-main {
+  min-block-size: 70vh;
+  padding-block: clamp(1.6rem, 6vw, 3.4rem) 2rem;
+}
+
+.review-intro h1 {
+  margin-block-end: .35rem;
+  font-size: clamp(2.1rem, 6vw, 3rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -.035em;
+}
+
+.review-intro p,
+.review-section-heading p {
+  max-inline-size: 38rem;
+  color: var(--muted-foreground);
+  font-size: .87rem;
+}
+
+.review-section {
+  margin-block-start: 2.4rem;
+}
+
+.review-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: .8rem;
+  row-gap: .35rem;
+  margin-block-end: .8rem;
+}
+
+.review-section-heading h2 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  font-weight: 550;
+  letter-spacing: -.025em;
+}
+
+.review-atom-grid,
+.review-local-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: .7rem;
+}
+
+.review-preview-card,
+.review-component-card,
+.review-compositions {
+  min-inline-size: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--card-foreground);
+}
+
+.review-preview-card > h3 {
+  border-block-end: 1px solid var(--border);
+  padding: .6rem .8rem;
+  font-size: .78rem;
+  font-weight: 650;
+}
+
+.review-preview-stage {
+  padding: .8rem;
+}
+
+.review-input-atoms {
+  display: grid;
+  row-gap: .7rem;
+}
+
+.review-atom-variants {
+  border-block-start: 1px solid var(--border);
+}
+
+.review-atom-variants summary,
+.review-component-card summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  padding: .65rem .8rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  list-style: none;
+}
+
+.review-atom-variants summary::-webkit-details-marker,
+.review-component-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.review-atom-variants summary {
+  color: var(--muted-foreground);
+  font-size: .74rem;
+}
+
+.review-atom-variants summary:hover,
+.review-component-card summary:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.review-atom-variants[open] summary > svg,
+.review-component-card[open] summary > svg {
+  rotate: 180deg;
+}
+
+.review-preview-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .45rem;
+  padding: .55rem .8rem;
+  border-block: 1px solid var(--border);
+  background: var(--background);
+}
+
+.review-field {
+  display: grid;
+  justify-items: start;
+  min-inline-size: 0;
+  gap: .2rem;
+  color: var(--muted-foreground);
+  font-size: .74rem;
+  font-weight: 550;
+}
+
+.review-field :is(input, select) {
+  max-inline-size: 100%;
+}
+
+.review-field input[type="search"] {
+  width: min(15rem, 100%);
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  padding: .3rem .45rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.review-source-link {
+  gap: .2rem;
+  color: var(--review-link);
+  font-size: .72rem;
+}
+
+.review-component-list {
+  display: grid;
+  gap: .4rem;
+}
+
+.review-component-card summary > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .3rem .65rem;
+}
+
+.review-component-title {
+  font-size: .83rem;
+  font-weight: 650;
+}
+
+.review-component-count {
+  color: var(--muted-foreground);
+  font-size: .69rem;
+}
+
+.review-live-demo {
+  max-inline-size: 100%;
+  min-block-size: 4rem;
+  overflow-x: auto;
+  overflow-wrap: anywhere;
+  background: var(--background);
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+}
+
+.review-composition-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: .6rem;
+  border-block-end: 1px solid var(--border);
+  padding: .6rem .8rem;
+}
+
+.review-composition-actions {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.review-composition-frame {
+  display: block;
+  width: 100%;
+  height: 560px;
+  margin-inline: auto;
+  border: 0;
+  background: var(--background);
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+}
+
+.review-composition-frame[data-width="phone"] {
+  max-inline-size: 390px;
+  border-inline: 1px solid var(--border);
+}
+
+.review-isolated-preview {
+  min-block-size: 100vh;
+}
+
+.review-drop-zone {
+  display: grid;
+  justify-items: center;
+  gap: .55rem;
+  border: 1px dashed var(--input);
+  border-radius: var(--radius);
+  padding: 1rem .65rem .45rem;
+  text-align: center;
+  background: var(--background);
+}
+
+.review-drop-zone[data-dragging="true"] {
+  border-style: solid;
+  border-color: var(--ring);
+  background: var(--accent);
+}
+
+.review-hero-button {
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
+  font-size: 1.15rem;
+  box-shadow: var(--review-shadow);
+}
+
+.shadcn-scope [data-slot="button"][data-review-state="hover"] {
+  border-color: var(--ring);
+  background: var(--review-raised);
+  color: var(--foreground);
+}
+
+.review-result {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: .5rem;
+}
+
+.review-result > button {
+  grid-column: 2;
+  justify-self: start;
+}
+
+.review-drawer-inner {
+  width: min(100%, 26rem);
+  margin-inline: auto;
+}
+
+.review-preview-card [data-verdict] {
+  margin-block-start: .25rem;
+}
+
+.review-preview-card [data-verdict="native"],
+.review-drawer-inner [data-verdict="native"] {
+  color: var(--review-success);
+}
+
+.review-preview-card [data-verdict="rosetta"] {
+  color: var(--review-link);
+}
+
+.review-preview-card [data-verdict="unknown"] {
+  color: var(--muted-foreground);
+}
+
+.review-footer {
+  margin-block-start: 1.5rem;
+  padding-block: .6rem 1.2rem;
+  color: var(--muted-foreground);
+  font-size: .7rem;
+}
+
+.review-footer a {
+  text-decoration: underline;
+  text-underline-offset: .15em;
+}
+
+@media (max-width: 38rem) {
+  .shadcn-scope {
+    --review-header-height: 4.5rem;
+  }
+
+  .review-header-inner {
+    grid-template-columns: 1fr max-content;
+    row-gap: .05rem;
+    padding-block: .35rem .1rem;
+  }
+
+  .review-toc {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: start;
+    overflow-x: auto;
+  }
+
+  .review-header-inner > button {
+    justify-self: end;
+  }
+}

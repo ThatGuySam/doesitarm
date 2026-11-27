@@ -1,0 +1,62 @@
+[
+  {
+    "id": "docs-checkbox-demo",
+    "label": "Checkbox Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-demo.tsx"
+  },
+  {
+    "id": "docs-checkbox-invalid",
+    "label": "Checkbox Invalid",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-invalid.tsx"
+  },
+  {
+    "id": "docs-checkbox-basic",
+    "label": "Checkbox Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-basic.tsx"
+  },
+  {
+    "id": "docs-checkbox-description",
+    "label": "Checkbox Description",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-description.tsx"
+  },
+  {
+    "id": "docs-checkbox-disabled",
+    "label": "Checkbox Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-disabled.tsx"
+  },
+  {
+    "id": "docs-checkbox-group",
+    "label": "Checkbox Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-group.tsx"
+  },
+  {
+    "id": "docs-checkbox-table",
+    "label": "Checkbox Table",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-table.tsx"
+  },
+  {
+    "id": "docs-checkbox-rtl",
+    "label": "Checkbox RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/checkbox-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-checkbox-demo",
+    "label": "Checkbox Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/checkbox-demo.json"
+  },
+  {
+    "id": "new-york-v4-checkbox-disabled",
+    "label": "Checkbox Disabled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/checkbox-disabled.json"
+  },
+  {
+    "id": "new-york-v4-checkbox-with-text",
+    "label": "Checkbox With Text \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/checkbox-with-text.json"
+  },
+  {
+    "id": "radix-nova-checkbox-example",
+    "label": "Checkbox \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/checkbox-example.json"
+  }
+]

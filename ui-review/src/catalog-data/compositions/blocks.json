@@ -1,0 +1,152 @@
+[
+  {
+    "id": "new-york-v4-dashboard-01",
+    "label": "Dashboard",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/dashboard-01.json"
+  },
+  {
+    "id": "new-york-v4-login-01",
+    "label": "Login 01",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/login-01.json"
+  },
+  {
+    "id": "new-york-v4-login-02",
+    "label": "Login 02",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/login-02.json"
+  },
+  {
+    "id": "new-york-v4-login-03",
+    "label": "Login 03",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/login-03.json"
+  },
+  {
+    "id": "new-york-v4-login-04",
+    "label": "Login 04",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/login-04.json"
+  },
+  {
+    "id": "new-york-v4-login-05",
+    "label": "Login 05",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/login-05.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-01",
+    "label": "Sidebar 01",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-01.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-02",
+    "label": "Sidebar 02",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-02.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-03",
+    "label": "Sidebar 03",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-03.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-04",
+    "label": "Sidebar 04",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-04.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-05",
+    "label": "Sidebar 05",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-05.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-06",
+    "label": "Sidebar 06",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-06.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-07",
+    "label": "Sidebar 07",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-07.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-08",
+    "label": "Sidebar 08",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-08.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-09",
+    "label": "Sidebar 09",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-09.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-10",
+    "label": "Sidebar 10",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-10.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-11",
+    "label": "Sidebar 11",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-11.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-12",
+    "label": "Sidebar 12",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-12.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-13",
+    "label": "Sidebar 13",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-13.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-14",
+    "label": "Sidebar 14",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-14.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-15",
+    "label": "Sidebar 15",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-15.json"
+  },
+  {
+    "id": "new-york-v4-sidebar-16",
+    "label": "Sidebar 16",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/sidebar-16.json"
+  },
+  {
+    "id": "new-york-v4-signup-01",
+    "label": "Signup 01",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/signup-01.json"
+  },
+  {
+    "id": "new-york-v4-signup-02",
+    "label": "Signup 02",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/signup-02.json"
+  },
+  {
+    "id": "new-york-v4-signup-03",
+    "label": "Signup 03",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/signup-03.json"
+  },
+  {
+    "id": "new-york-v4-signup-04",
+    "label": "Signup 04",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/signup-04.json"
+  },
+  {
+    "id": "new-york-v4-signup-05",
+    "label": "Signup 05",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/signup-05.json"
+  },
+  {
+    "id": "radix-nova-preview",
+    "label": "Preview",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/preview.json"
+  },
+  {
+    "id": "radix-nova-preview-02",
+    "label": "Preview 02",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/preview-02.json"
+  },
+  {
+    "id": "radix-nova-preview-03",
+    "label": "Preview 03",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/preview-03.json"
+  }
+]

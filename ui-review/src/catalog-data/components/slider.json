@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-slider-demo",
+    "label": "Slider Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-demo.tsx"
+  },
+  {
+    "id": "docs-slider-range",
+    "label": "Slider Range",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-range.tsx"
+  },
+  {
+    "id": "docs-slider-multiple",
+    "label": "Slider Multiple",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-multiple.tsx"
+  },
+  {
+    "id": "docs-slider-vertical",
+    "label": "Slider Vertical",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-vertical.tsx"
+  },
+  {
+    "id": "docs-slider-controlled",
+    "label": "Slider Controlled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-controlled.tsx"
+  },
+  {
+    "id": "docs-slider-disabled",
+    "label": "Slider Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-disabled.tsx"
+  },
+  {
+    "id": "docs-slider-rtl",
+    "label": "Slider RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/slider-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-slider-demo",
+    "label": "Slider Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/slider-demo.json"
+  },
+  {
+    "id": "radix-nova-slider-example",
+    "label": "Slider \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/slider-example.json"
+  }
+]

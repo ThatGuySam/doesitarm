@@ -1,0 +1,62 @@
+[
+  {
+    "id": "docs-message-scroller-demo",
+    "label": "Message Scroller Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-demo.tsx"
+  },
+  {
+    "id": "docs-message-scroller-anchoring",
+    "label": "Message Scroller Anchoring",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-anchoring.tsx"
+  },
+  {
+    "id": "docs-message-scroller-group-chat",
+    "label": "Message Scroller Group Chat",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-group-chat.tsx"
+  },
+  {
+    "id": "docs-message-scroller-previous-context",
+    "label": "Message Scroller Previous Context",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-previous-context.tsx"
+  },
+  {
+    "id": "docs-message-scroller-streaming",
+    "label": "Message Scroller Streaming",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-streaming.tsx"
+  },
+  {
+    "id": "docs-message-scroller-opening-position",
+    "label": "Message Scroller Opening Position",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-opening-position.tsx"
+  },
+  {
+    "id": "docs-message-scroller-load-history",
+    "label": "Message Scroller Load History",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-load-history.tsx"
+  },
+  {
+    "id": "docs-message-scroller-animation",
+    "label": "Message Scroller Animation",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-animation.tsx"
+  },
+  {
+    "id": "docs-message-scroller-commands",
+    "label": "Message Scroller Commands",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-commands.tsx"
+  },
+  {
+    "id": "docs-message-scroller-visibility",
+    "label": "Message Scroller Visibility",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-visibility.tsx"
+  },
+  {
+    "id": "docs-message-scroller-scrollable",
+    "label": "Message Scroller Scrollable",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-scroller-scrollable.tsx"
+  },
+  {
+    "id": "radix-nova-message-scroller-example",
+    "label": "Message Scroller \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/message-scroller-example.json"
+  }
+]

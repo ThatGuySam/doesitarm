@@ -1,0 +1,52 @@
+[
+  {
+    "id": "new-york-v4-chart-line-default",
+    "label": "Chart Line Default",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-default.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-dots-colors",
+    "label": "Chart Line Dots Colors",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-dots-colors.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-dots-custom",
+    "label": "Chart Line Dots Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-dots-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-dots",
+    "label": "Chart Line Dots",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-dots.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-interactive",
+    "label": "Chart Line Interactive",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-interactive.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-label-custom",
+    "label": "Chart Line Label Custom",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-label-custom.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-label",
+    "label": "Chart Line Label",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-label.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-linear",
+    "label": "Chart Line Linear",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-linear.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-multiple",
+    "label": "Chart Line Multiple",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-multiple.json"
+  },
+  {
+    "id": "new-york-v4-chart-line-step",
+    "label": "Chart Line Step",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/chart-line-step.json"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "docs-drawer-demo",
+    "label": "Drawer Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/drawer-demo.tsx"
+  },
+  {
+    "id": "docs-drawer-scrollable-content",
+    "label": "Drawer Scrollable Content",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/drawer-scrollable-content.tsx"
+  },
+  {
+    "id": "docs-drawer-sides",
+    "label": "Drawer Sides",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/drawer-sides.tsx"
+  },
+  {
+    "id": "docs-drawer-dialog",
+    "label": "Drawer Dialog",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/drawer-dialog.tsx"
+  },
+  {
+    "id": "docs-drawer-rtl",
+    "label": "Drawer RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/drawer-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-drawer-demo",
+    "label": "Drawer Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/drawer-demo.json"
+  },
+  {
+    "id": "new-york-v4-drawer-dialog",
+    "label": "Drawer Dialog \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/drawer-dialog.json"
+  },
+  {
+    "id": "radix-nova-drawer-example",
+    "label": "Drawer \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/drawer-example.json"
+  }
+]

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "docs-carousel-demo",
+    "label": "Carousel Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-demo.tsx"
+  },
+  {
+    "id": "docs-carousel-size",
+    "label": "Carousel Size",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-size.tsx"
+  },
+  {
+    "id": "docs-carousel-spacing",
+    "label": "Carousel Spacing",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-spacing.tsx"
+  },
+  {
+    "id": "docs-carousel-orientation",
+    "label": "Carousel Orientation",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-orientation.tsx"
+  },
+  {
+    "id": "docs-carousel-api",
+    "label": "Carousel Api",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-api.tsx"
+  },
+  {
+    "id": "docs-carousel-plugin",
+    "label": "Carousel Plugin",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-plugin.tsx"
+  },
+  {
+    "id": "docs-carousel-rtl",
+    "label": "Carousel RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-rtl.tsx"
+  },
+  {
+    "id": "docs-carousel-multiple",
+    "label": "Carousel Multiple",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/carousel-multiple.tsx"
+  },
+  {
+    "id": "new-york-v4-carousel-demo",
+    "label": "Carousel Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/carousel-demo.json"
+  },
+  {
+    "id": "new-york-v4-carousel-size",
+    "label": "Carousel Size \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/carousel-size.json"
+  },
+  {
+    "id": "new-york-v4-carousel-spacing",
+    "label": "Carousel Spacing \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/carousel-spacing.json"
+  },
+  {
+    "id": "new-york-v4-carousel-orientation",
+    "label": "Carousel Orientation \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/carousel-orientation.json"
+  },
+  {
+    "id": "new-york-v4-carousel-api",
+    "label": "Carousel Api \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/carousel-api.json"
+  },
+  {
+    "id": "new-york-v4-carousel-plugin",
+    "label": "Carousel Plugin \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/carousel-plugin.json"
+  },
+  {
+    "id": "radix-nova-carousel-example",
+    "label": "Carousel \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/carousel-example.json"
+  }
+]

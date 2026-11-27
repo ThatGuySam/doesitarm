@@ -1,0 +1,37 @@
+[
+  {
+    "id": "docs-popover-demo",
+    "label": "Popover Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/popover-demo.tsx"
+  },
+  {
+    "id": "docs-popover-basic",
+    "label": "Popover Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/popover-basic.tsx"
+  },
+  {
+    "id": "docs-popover-alignments",
+    "label": "Popover Alignments",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/popover-alignments.tsx"
+  },
+  {
+    "id": "docs-popover-form",
+    "label": "Popover Form",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/popover-form.tsx"
+  },
+  {
+    "id": "docs-popover-rtl",
+    "label": "Popover RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/popover-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-popover-demo",
+    "label": "Popover Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/popover-demo.json"
+  },
+  {
+    "id": "radix-nova-popover-example",
+    "label": "Popover \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/popover-example.json"
+  }
+]

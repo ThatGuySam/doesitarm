@@ -1,0 +1,37 @@
+[
+  {
+    "id": "docs-collapsible-demo",
+    "label": "Collapsible Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/collapsible-demo.tsx"
+  },
+  {
+    "id": "docs-collapsible-basic",
+    "label": "Collapsible Basic",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/collapsible-basic.tsx"
+  },
+  {
+    "id": "docs-collapsible-settings",
+    "label": "Collapsible Settings",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/collapsible-settings.tsx"
+  },
+  {
+    "id": "docs-collapsible-file-tree",
+    "label": "Collapsible File Tree",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/collapsible-file-tree.tsx"
+  },
+  {
+    "id": "docs-collapsible-rtl",
+    "label": "Collapsible RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/collapsible-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-collapsible-demo",
+    "label": "Collapsible Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/collapsible-demo.json"
+  },
+  {
+    "id": "radix-nova-collapsible-example",
+    "label": "Collapsible \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/collapsible-example.json"
+  }
+]

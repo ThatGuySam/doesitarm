@@ -1,0 +1,42 @@
+[
+  {
+    "id": "archive-cards",
+    "label": "Cards",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/cards/page.tsx"
+  },
+  {
+    "id": "archive-forms",
+    "label": "Forms",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/forms/page.tsx"
+  },
+  {
+    "id": "archive-forms-account",
+    "label": "Forms Account",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/forms/account/page.tsx"
+  },
+  {
+    "id": "archive-forms-appearance",
+    "label": "Forms Appearance",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/forms/appearance/page.tsx"
+  },
+  {
+    "id": "archive-forms-notifications",
+    "label": "Forms Notifications",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/forms/notifications/page.tsx"
+  },
+  {
+    "id": "archive-forms-display",
+    "label": "Forms Display",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/forms/display/page.tsx"
+  },
+  {
+    "id": "archive-mail",
+    "label": "Mail",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/mail/page.tsx"
+  },
+  {
+    "id": "archive-music",
+    "label": "Music",
+    "source": "https://github.com/shadcn-ui/ui/blob/shadcn@3.0.0/apps/www/app/%28app%29/examples/music/page.tsx"
+  }
+]

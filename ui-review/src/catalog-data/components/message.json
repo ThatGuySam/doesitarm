@@ -1,0 +1,47 @@
+[
+  {
+    "id": "docs-message-demo",
+    "label": "Message Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-demo.tsx"
+  },
+  {
+    "id": "docs-message-avatar",
+    "label": "Message Avatar",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-avatar.tsx"
+  },
+  {
+    "id": "docs-message-group",
+    "label": "Message Group",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-group.tsx"
+  },
+  {
+    "id": "docs-message-header-footer",
+    "label": "Message Header Footer",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-header-footer.tsx"
+  },
+  {
+    "id": "docs-message-actions",
+    "label": "Message Actions",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-actions.tsx"
+  },
+  {
+    "id": "docs-message-attachment",
+    "label": "Message Attachment",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-attachment.tsx"
+  },
+  {
+    "id": "docs-message-markdown",
+    "label": "Message Markdown",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-markdown.tsx"
+  },
+  {
+    "id": "docs-message-pattern",
+    "label": "Message Pattern",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/message-pattern.tsx"
+  },
+  {
+    "id": "radix-nova-message-example",
+    "label": "Message \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/message-example.json"
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "docs-toggle-demo",
+    "label": "Toggle Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-demo.tsx"
+  },
+  {
+    "id": "docs-toggle-outline",
+    "label": "Toggle Outline",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-outline.tsx"
+  },
+  {
+    "id": "docs-toggle-text",
+    "label": "Toggle Text",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-text.tsx"
+  },
+  {
+    "id": "docs-toggle-sizes",
+    "label": "Toggle Sizes",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-sizes.tsx"
+  },
+  {
+    "id": "docs-toggle-disabled",
+    "label": "Toggle Disabled",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-disabled.tsx"
+  },
+  {
+    "id": "docs-toggle-rtl",
+    "label": "Toggle RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/toggle-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-toggle-demo",
+    "label": "Toggle Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-demo.json"
+  },
+  {
+    "id": "new-york-v4-toggle-disabled",
+    "label": "Toggle Disabled \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-disabled.json"
+  },
+  {
+    "id": "new-york-v4-toggle-lg",
+    "label": "Toggle Lg \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-lg.json"
+  },
+  {
+    "id": "new-york-v4-toggle-outline",
+    "label": "Toggle Outline \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-outline.json"
+  },
+  {
+    "id": "new-york-v4-toggle-sm",
+    "label": "Toggle Sm \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-sm.json"
+  },
+  {
+    "id": "new-york-v4-toggle-with-text",
+    "label": "Toggle With Text \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/toggle-with-text.json"
+  },
+  {
+    "id": "radix-nova-toggle-example",
+    "label": "Toggle \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/toggle-example.json"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "docs-label-demo",
+    "label": "Label Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/label-demo.tsx"
+  },
+  {
+    "id": "docs-field-demo",
+    "label": "Field Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/field-demo.tsx"
+  },
+  {
+    "id": "docs-label-rtl",
+    "label": "Label RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/label-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-label-demo",
+    "label": "Label Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/label-demo.json"
+  },
+  {
+    "id": "radix-nova-label-example",
+    "label": "Label \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/label-example.json"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "docs-navigation-menu-demo",
+    "label": "Navigation Menu Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/navigation-menu-demo.tsx"
+  },
+  {
+    "id": "docs-navigation-menu-rtl",
+    "label": "Navigation Menu RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/navigation-menu-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-navigation-menu-demo",
+    "label": "Navigation Menu Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/navigation-menu-demo.json"
+  },
+  {
+    "id": "radix-nova-navigation-menu-example",
+    "label": "Navigation Menu \u00b7 Radix Nova",
+    "source": "https://ui.shadcn.com/r/styles/radix-nova/navigation-menu-example.json"
+  }
+]

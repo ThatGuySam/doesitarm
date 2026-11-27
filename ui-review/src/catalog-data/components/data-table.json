@@ -1,0 +1,17 @@
+[
+  {
+    "id": "docs-data-table-demo",
+    "label": "Data Table Demo",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/data-table-demo.tsx"
+  },
+  {
+    "id": "docs-data-table-rtl",
+    "label": "Data Table RTL",
+    "source": "https://github.com/shadcn-ui/ui/blob/0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4/apps/v4/examples/radix/data-table-rtl.tsx"
+  },
+  {
+    "id": "new-york-v4-data-table-demo",
+    "label": "Data Table Demo \u00b7 New York v4",
+    "source": "https://ui.shadcn.com/r/styles/new-york-v4/data-table-demo.json"
+  }
+]
