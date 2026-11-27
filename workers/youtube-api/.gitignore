@@ -3,3 +3,5 @@ python_modules/
 .wrangler/
 __pycache__/
 .dev.vars
+extract/bundled.whl
+extract/bundled.js

@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../node_modules/wrangler/config-schema.json",
+  // Hosts yt-dlp in a Dynamic Worker sandbox (env = wheel bytes only, egress limited
+  // to YouTube by YouTubeGateway). Only binding: the Worker Loader. No secrets, no
+  // vars, no route: reachable only through service bindings from
+  // doesitarm-youtube-api and doesitarm-youtube-updater.
+  "name": "doesitarm-youtube-extract",
+  "main": "host.js",
+  "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
+  "compatibility_date": "2026-11-23",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "worker_loaders": [{ "binding": "LOADER" }],
+  "rules": [
+    { "type": "Text", "globs": ["**/*.py"], "fallthrough": false },
+    { "type": "Data", "globs": ["**/*.whl"], "fallthrough": false }
+  ]
+}

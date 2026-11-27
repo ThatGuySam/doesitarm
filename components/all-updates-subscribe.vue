@@ -4,6 +4,7 @@
             v-if="feedbackMessage === null"
         >
             <form
+                ref="form"
                 class="all-updates-subscribe text-xs relative"
                 @submit.prevent="trySubmit"
             >
@@ -42,7 +43,25 @@
                         required
                         @focus="isFocused = true"
                         @blur="isFocused = false"
+                        @keydown.enter.prevent="requestSubmit"
                     >
+                    <!--
+                        The field is meant to stay quiet: it looks like a button
+                        until it is clicked. The submit button only appears once
+                        something is typed, so there is a clear way to send it.
+                        It also gives the form a default button, which browsers
+                        need before Enter submits a form with a second text
+                        field (the honeypot below).
+                    -->
+                    <button
+                        v-if="hasEmail"
+                        class="absolute inset-y-0 right-0 my-1 mr-1 px-2 rounded bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 text-white font-bold"
+                        type="submit"
+                        aria-label="Subscribe to weekly app updates"
+                        @mousedown.prevent
+                    >
+                        Subscribe
+                    </button>
                     <input
                         v-model="website"
                         aria-hidden="true"
@@ -53,12 +72,20 @@
                         type="text"
                     >
                 </div>
+                <p
+                    v-if="errorMessage"
+                    class="mt-2 text-center text-red-400"
+                    role="alert"
+                >
+                    {{ errorMessage }}
+                </p>
             </form>
         </div>
 
         <div
             v-if="feedbackMessage"
             class="text-center p-4"
+            role="status"
         >
             {{ feedbackMessage }}
         </div>
@@ -107,10 +134,15 @@ export default {
             website: '',
 
             isFocused: false,
+            isSending: false,
             feedbackMessage: null,
+            errorMessage: null,
         }
     },
     computed: {
+        hasEmail () {
+            return this.email.trim().length > 0
+        },
         inputId () {
             return `all-updates-subscribe-${ this.uuid }`
         },
@@ -121,6 +153,8 @@ export default {
                 bg: 'bg-darker',
                 focus: 'pl-8',
                 blur: 'placeholder-white text-center border border-transparent px-3',
+                // Room for the submit button once something is typed
+                button: this.hasEmail ? 'pr-20' : '',
             }
 
             const mergedClassGroups = {
@@ -139,26 +173,45 @@ export default {
     },
 
     methods: {
+        requestSubmit () {
+            const form = this.$refs.form
+
+            if ( !form ) return
+
+            if ( typeof form.requestSubmit === 'function' ) {
+                // Runs native validation, then fires the submit event
+                form.requestSubmit()
+                return
+            }
+
+            if ( form.reportValidity() ) {
+                this.trySubmit()
+            }
+        },
         async trySubmit () {
-            // Set intermediate message
+            if ( this.isSending ) return
+
+            this.isSending = true
+            this.errorMessage = null
             this.feedbackMessage = 'Sending...'
 
             try {
-                await postJson( subscriptionEndpoint, {
+                const response = await postJson( subscriptionEndpoint, {
                     email: this.email,
                     website: this.website
                 } )
-                this.feedbackMessage = 'We\'ll keep you informed!'
+                // The Worker says whether a confirmation email went out
+                this.feedbackMessage = response?.confirmationSent
+                    ? 'Check your inbox to confirm your subscription.'
+                    : 'You\'re on the list! New Apple Silicon apps, weekly.'
             } catch ( error ) {
-                console.warn('error', error)
-                this.feedbackMessage = 'Something went wrong. Try refreshing. '
+                console.warn( 'Subscription failed', error )
+                // Bring the field back so they can fix the address or retry
+                this.feedbackMessage = null
+                this.errorMessage = 'That didn\'t go through. Check the address and try again.'
+            } finally {
+                this.isSending = false
             }
-
-            // .catch(error => {
-            //     // handle error
-            //     console.error('Error Subscribing -', error)
-            //     this.feedbackMessage = 'Oops! Something went wrong'
-            // })
         }
     }
 }

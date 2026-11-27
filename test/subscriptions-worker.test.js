@@ -8,6 +8,9 @@ import {
 import subscriptionWorker, {
     handleRequest
 } from '~/workers/subscriptions/src/index.js'
+import {
+    subscribeToKit
+} from '~/workers/subscriptions/src/kit.js'
 
 function makeDatabase () {
     const calls = []
@@ -71,6 +74,7 @@ describe( 'Cloudflare subscription Worker', () => {
 
         expect( response.status ).toBe( 200 )
         expect( JSON.parse( responseText ) ).toEqual({
+            confirmationSent: false,
             ok: true
         } )
         expect( responseText ).not.toContain( 'person@example.com' )
@@ -181,3 +185,90 @@ describe( 'Cloudflare subscription Worker', () => {
         consoleError.mockRestore()
     } )
 } )
+
+
+describe( 'Kit forwarding', () => {
+    const kitEnv = {
+        KIT_API_KEY: 'test-key',
+        KIT_FORM_ID: '123'
+    }
+
+    function makeKitFetch ( statuses = [ 201, 201 ] ) {
+        const calls = []
+        const fetchImpl = vi.fn( async ( url, init ) => {
+            calls.push({ url, init, body: JSON.parse( init.body ) })
+            return new Response( '{}', { status: statuses[ calls.length - 1 ] } )
+        } )
+        return { calls, fetchImpl }
+    }
+
+    it( 'does nothing until Kit is configured', async () => {
+        const { calls, fetchImpl } = makeKitFetch()
+
+        await expect( subscribeToKit( 'a@example.com', {}, fetchImpl ) )
+            .resolves.toEqual({ sent: false, reason: 'not-configured' })
+        await expect( subscribeToKit( 'a@example.com', { KIT_API_KEY: 'k', KIT_FORM_ID: 'abc' }, fetchImpl ) )
+            .resolves.toMatchObject({ sent: false })
+        expect( calls ).toHaveLength( 0 )
+    })
+
+    it( 'creates an inactive subscriber, then adds them to the form', async () => {
+        const { calls, fetchImpl } = makeKitFetch()
+
+        const result = await subscribeToKit( 'a@example.com', kitEnv, fetchImpl )
+
+        expect( result ).toEqual({ sent: true, alreadyOnForm: false })
+        expect( calls.map( call => call.url ) ).toEqual([
+            'https://api.kit.com/v4/subscribers',
+            'https://api.kit.com/v4/forms/123/subscribers'
+        ])
+        expect( calls[0].body ).toEqual({ email_address: 'a@example.com', state: 'inactive' })
+        expect( calls[1].body.email_address ).toBe( 'a@example.com' )
+        expect( calls[0].init.headers['X-Kit-Api-Key'] ).toBe( 'test-key' )
+    })
+
+    it( 'throws a status-only error when Kit rejects', async () => {
+        const { fetchImpl } = makeKitFetch([ 422 ])
+        const error = await subscribeToKit( 'a@example.com', kitEnv, fetchImpl ).catch( caught => caught )
+
+        expect( error.message ).toMatch( /422/ )
+        expect( error.message ).not.toMatch( /example\.com/ )
+    })
+
+    it( 'still stores the signup when Kit is down', async () => {
+        const database = makeDatabase()
+        const originalFetch = globalThis.fetch
+        globalThis.fetch = vi.fn( async () => new Response( '', { status: 500 } ) )
+        const errorSpy = vi.spyOn( console, 'error' ).mockImplementation( () => {} )
+
+        try {
+            const response = await handleRequest( makeRequest({ email: 'b@example.com', website: '' }), {
+                SUBSCRIPTIONS_DB: database,
+                ...kitEnv
+            } )
+
+            expect( response.status ).toBe( 200 )
+            expect( await response.json() ).toEqual({ confirmationSent: false, ok: true })
+            expect( database.calls ).toHaveLength( 1 )
+        } finally {
+            globalThis.fetch = originalFetch
+            errorSpy.mockRestore()
+        }
+    })
+
+    it( 'reports a sent confirmation when Kit accepts', async () => {
+        const originalFetch = globalThis.fetch
+        globalThis.fetch = vi.fn( async () => new Response( '{}', { status: 201 } ) )
+
+        try {
+            const response = await handleRequest( makeRequest({ email: 'c@example.com', website: '' }), {
+                SUBSCRIPTIONS_DB: makeDatabase(),
+                ...kitEnv
+            } )
+
+            expect( await response.json() ).toEqual({ confirmationSent: true, ok: true })
+        } finally {
+            globalThis.fetch = originalFetch
+        }
+    })
+})

@@ -13,7 +13,7 @@ from pathlib import Path
 
 WHEEL_DIR = Path("/tmp/yt-dlp-wheels")
 
-_state = {"version": None, "source": None, "path": None}
+_state = {"version": None, "source": None, "path": None, "sha256": None}
 
 
 def _purge():
@@ -36,22 +36,29 @@ def loaded():
 
 
 def wheel_cached(version, sha256):
+    """A wheel already written to /tmp, only if its bytes still match the digest."""
     path = WHEEL_DIR / f"yt_dlp-{version}-{sha256[:16]}.whl"
-    return path if path.exists() else None
+    if not path.exists():
+        return None
+    if hashlib.sha256(path.read_bytes()).hexdigest() != sha256:
+        path.unlink()
+        return None
+    return path
 
 
 def use_bundled():
     if _state["source"] != "bundled":
         _purge()
     import yt_dlp.version
-    _state.update(version=yt_dlp.version.__version__, source="bundled", path=None)
+    _state.update(version=yt_dlp.version.__version__, source="bundled", path=None, sha256=None)
     return _state["version"]
 
 
 def use_wheel(version, sha256, data=None):
     """Import yt-dlp from a wheel. `data` may be None if the wheel is already on disk."""
-    if _state["source"] == "wheel" and _state["version"] == version:
-        return version
+    if _state["source"] == "wheel" and _state["version"] == version.split(".dev")[0] \
+            and _state.get("sha256") == sha256:
+        return _state["version"]
     path = wheel_cached(version, sha256)
     if path is None:
         if data is None:
@@ -72,5 +79,5 @@ def use_wheel(version, sha256, data=None):
     if actual != version.split(".dev")[0]:
         _purge()
         raise ImportError(f"wheel reports yt-dlp {actual}, expected {version}")
-    _state.update(version=actual, source="wheel", path=str(path))
+    _state.update(version=actual, source="wheel", path=str(path), sha256=sha256)
     return actual
