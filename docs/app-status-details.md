@@ -104,6 +104,12 @@ Context moved out of the status headlines on September 7, 2026. These are the ex
 
 [What's New in 27.2](https://usermanuals.finalemusic.com/FinaleMac/Content/Finale/What_s_new.htm) [Discontinuation Notice](https://www.makemusic.com/press-room/press-releases-2024/makemusic-sunsets-finale/)
 
+## Natron
+
+🔶 The latest stable release, Natron 2.5.0, ships macOS builds for x86_64 (and a legacy i386/x86_64 build) only. An arm64 macOS build exists only in the 2.6 prerelease. Whether 2.5.0 runs correctly under Rosetta 2 has not been confirmed here. The scan listing that reported Natron 2.5.0 as native does not match the official 2.5.0 downloads.
+
+[Release 2.5.0](https://github.com/NatronGitHub/Natron/releases/tag/v2.5.0) [2.6 Alpha](https://github.com/NatronGitHub/Natron/releases/tag/v2.6.0-alpha1) [Apple Silicon Issue](https://github.com/NatronGitHub/Natron/issues/607)
+
 ## Skype
 
 🚫 Microsoft retired Skype in May 2025 and directs users to Microsoft Teams. Later Skype for Mac builds were reported native in this site's scans, but the app is no longer available or supported.
