@@ -716,7 +716,12 @@ class BuildLists {
 
         for ( const [ endpointSetName, endpointSet ] of Object.entries(this.endpointMaps) ) {
             // Save Endpoints
-            await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `./static/${endpointSetName}-endpoints.json`)
+            // The eleventy set holds full page payloads and passed Vercel's 1 GB
+            // per-file upload limit in November 2026, failing every API deploy.
+            // Nothing reads it from the deployed site, so keep it out of static/.
+            const endpointsDir = endpointSetName === 'eleventy' ? './.cache' : './static'
+            await fs.ensureDir( endpointsDir )
+            await this.saveToJson(Array.from( endpointSet , ([route, payload]) => ({ route, payload })), `${ endpointsDir }/${endpointSetName}-endpoints.json`)
         }
 
         const sitemapEndpoints = Object.values(this.endpointMaps).map( endpointSet => {
