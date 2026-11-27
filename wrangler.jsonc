@@ -29,7 +29,7 @@
     "PUBLIC_URL": "https://doesitarm.com",
     "URL": "https://doesitarm.com",
     "VFUNCTIONS_URL": "https://doesitarm-functions-scc.vercel.app",
-    "VIDEO_SOURCE": "https://api.doesitarm.com/api/youtube-videos.json",
+    "VIDEO_SOURCE": "https://youtube.doesitarm.com/snapshot/youtube-videos.json",
     "GAMES_SOURCE": "https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=1er-NivvuIheDmIKBVRu3S_BzA_lZT5z3Z-CxQZ-uPVs&sheet=Games&header=2&startRow=3",
     "HOMEBREW_SOURCE": "https://doesitarm-functions-scc.vercel.app/api/homebrew-issue",
     "COMMITS_SOURCE": "https://doesitarm-functions-scc.vercel.app/api/commits",

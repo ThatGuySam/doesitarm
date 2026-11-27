@@ -5,8 +5,10 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
+    defaultYouTubeVideoSources,
     publishedYouTubeVideosUrl,
     saveYouTubeVideos,
+    youtubeSnapshotUrl,
     youtubeVideoPath
 } from '~/helpers/api/youtube/build.js'
 
@@ -90,7 +92,7 @@ describe( 'saveYouTubeVideos', () => {
         expect( await readSavedVideos() ).toEqual( {} )
     } )
 
-    it( 'tries the published API copy after VIDEO_SOURCE by default', async () => {
+    it( 'tries VIDEO_SOURCE, then the snapshot, then the published API copy by default', async () => {
         vi.stubEnv( 'VIDEO_SOURCE', primarySource )
         fetchMock.mockResolvedValue( new Response( 'gone', { status: 200 } ) )
 
@@ -98,9 +100,37 @@ describe( 'saveYouTubeVideos', () => {
 
         expect( fetchMock.mock.calls.map( call => String( call[0] ) ) ).toEqual([
             primarySource,
+            youtubeSnapshotUrl,
             publishedYouTubeVideosUrl
         ])
 
         vi.unstubAllEnvs()
+    } )
+
+    it( 'prefers the snapshot when VIDEO_SOURCE is the old published-copy setting', () => {
+        expect( defaultYouTubeVideoSources( publishedYouTubeVideosUrl ).filter( Boolean ) ).toEqual([
+            youtubeSnapshotUrl,
+            publishedYouTubeVideosUrl
+        ])
+        expect( defaultYouTubeVideoSources( undefined ).filter( Boolean ) ).toEqual([
+            youtubeSnapshotUrl,
+            publishedYouTubeVideosUrl
+        ])
+    } )
+
+    it( 'keeps the previous published list when the snapshot is unavailable', async () => {
+        const previous = { 'video-3': { title: 'Previous video' } }
+
+        fetchMock
+            .mockResolvedValueOnce( jsonResponse({ error: 'unavailable' }, 404 ) )
+            .mockResolvedValueOnce( jsonResponse( previous ) )
+
+        await saveYouTubeVideos({ sources: defaultYouTubeVideoSources( publishedYouTubeVideosUrl ) })
+
+        expect( fetchMock.mock.calls.map( call => String( call[0] ) ) ).toEqual([
+            youtubeSnapshotUrl,
+            publishedYouTubeVideosUrl
+        ])
+        expect( await readSavedVideos() ).toEqual( previous )
     } )
 } )

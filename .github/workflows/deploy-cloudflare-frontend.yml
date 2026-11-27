@@ -25,7 +25,7 @@ env:
   TEST_RESULT_STORE: https://doesitarm-functions-scc.vercel.app/api/test-results-store
   URL: https://doesitarm.com
   VFUNCTIONS_URL: https://doesitarm-functions-scc.vercel.app
-  VIDEO_SOURCE: https://api.doesitarm.com/api/youtube-videos.json
+  VIDEO_SOURCE: https://youtube.doesitarm.com/snapshot/youtube-videos.json
 
 jobs:
   deploy:

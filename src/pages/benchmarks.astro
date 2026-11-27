@@ -9,6 +9,7 @@
 
 import { DoesItAPI } from '~/helpers/api/client.js'
 import { publicRuntimeConfig } from '~/helpers/public-runtime-config.mjs'
+import { selectBenchmarkVideos } from '~/helpers/benchmark-videos.js'
 import {
     applyResponseDefaults
 } from '~/helpers/astro/request.js'
@@ -22,25 +23,15 @@ applyResponseDefaults( Astro )
 
 const pagesToGet = 10
 
-const allVideos = []
-
-// Run through out newest video pages and get all the videos
-await Promise.all(
-  Array.from({ length: pagesToGet }, (_, i) => i + 1).map(async (page) => {
-
-    // console.log('Getting page', page)
-
-    const videoPage = await DoesItAPI.kind.tv( page ).get()
-
-    // Merge in the new videos
-    allVideos.push( ...videoPage.items )
-
-    return videoPage
-  })
+// Get our newest video pages, keeping page order so the newest video comes first
+const videoPages = await Promise.all(
+  Array.from({ length: pagesToGet }, (_, i) => i + 1).map( page => DoesItAPI.kind.tv( page ).get() )
 )
 
-// Our initial video for the hero
-const heroVideo = allVideos[0]
+const allVideos = videoPages.flatMap( videoPage => videoPage.items )
+
+// Hero is the newest Mac benchmark; rows only use Mac videos
+const { macVideos, heroVideo } = selectBenchmarkVideos( allVideos )
 
 // Setup video rows data for the page
 const videoRows = {
@@ -102,15 +93,18 @@ const videoRows = {
 // Move videos to relevant categories one at a time
 // so that we we don't get duplicates in the rows
 
-for (const video of allVideos) {
+for (const video of macVideos) {
+    // Skip the hero so it is not repeated in a row
+    if ( video === heroVideo ) continue
+
     // Look through row conditions to see if video matches
     for (const rowKey in videoRows) {
         if( videoRows[ rowKey ].matchesCondition(video) ) {
 
-            // Add the matching video
+            // Add the matching video to the first matching row only
             videoRows[ rowKey ].videos.push(video)
 
-            continue
+            break
         }
     }
 }
