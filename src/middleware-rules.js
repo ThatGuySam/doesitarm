@@ -48,6 +48,8 @@ const REDIRECTS = new Map([
     [ '/app/vcv-rack-2-free',                   { to: '/app/vcv-rack',                                   status: 301 } ],
     [ '/app/welinkmeeting',                     { to: '/app/huawei-cloud-meeting-welinkmeeting',         status: 301 } ],
     [ '/app/ytd',                               { to: '/app/ytd-video-downloader',                       status: 301 } ],
+    // Listings renamed or merged in the GitHub notification backlog update
+    [ '/app/imazing-2',                         { to: '/app/digidna-imazing',                            status: 301 } ],
     [ '/device/apple-silicon-imac', { to: '/device/m1-imac/',                     status: 307 } ],
     [ '/kind/entertainment',        { to: '/kind/entertainment-and-media-apps/',   status: 301 } ],
     [ '/kind/photo-tools',          { to: '/kind/photo-and-graphic-tools/',        status: 301 } ],

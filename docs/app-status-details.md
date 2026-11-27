@@ -91,3 +91,21 @@ Context moved out of the status headlines on September 7, 2026. These are the ex
 ✳️ CamTwist 3.4.3 is Intel-only, including its virtual camera plug-in, and runs via Rosetta 2. From macOS Sonoma 14.1, cameras that use the legacy plug-in architecture are unavailable by default, and a user reports CamTwist stopped appearing as a camera after that update. Apple documents a Recovery-mode Terminal command, `system-override legacy-camera-plugins-without-sw-camera-indication=on`, that restores legacy camera plug-ins; with it on, the menu-bar camera indicator does not appear for those cameras.
 
 [Evidence](https://www.kotobato.jp/articles/tips/web-cam-trouble-caused-by-mmhmm.html) [Apple Support](https://support.apple.com/en-us/108387)
+
+## Insomnia Designer
+
+✳️ Insomnia Designer ran via Rosetta 2 on Apple Silicon. Kong merged Insomnia Designer and Insomnia Core into a single app, Insomnia, in 2021.1.0 (March 2, 2021), so there is no longer a separate Designer app. Insomnia itself runs natively on Apple Silicon from 2022.1.0; see the Insomnia Core listing.
+
+[Changelog](https://insomnia.rest/changelog) [Rosetta Report](https://github.com/ThatGuySam/doesitarm/issues/456#issuecomment-748260642)
+
+## Finale Music
+
+✅ Finale v27.2 installed as a universal binary and ran natively on Apple Silicon; earlier versions needed Rosetta 2. MakeMusic ended Finale development on August 26, 2024, and the product is no longer updated or sold.
+
+[What's New in 27.2](https://usermanuals.finalemusic.com/FinaleMac/Content/Finale/What_s_new.htm) [Discontinuation Notice](https://www.makemusic.com/press-room/press-releases-2024/makemusic-sunsets-finale/)
+
+## Skype
+
+🚫 Microsoft retired Skype in May 2025 and directs users to Microsoft Teams. Later Skype for Mac builds were reported native in this site's scans, but the app is no longer available or supported.
+
+[Retirement Notice](https://support.microsoft.com/en-us/skype/skype-is-retiring-in-may-2025-what-you-need-to-know-2a7d2501-427f-485e-8be0-2068a9f90472)

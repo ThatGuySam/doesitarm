@@ -12,7 +12,8 @@ describe( 'site middleware', () => {
         [ '/games', '/games/' ],
         [ '/app/node', '/app/nodejs' ],
         [ '/app/cheat-engine-73', '/app/cheat-engine' ],
-        [ '/app/soapui-572', '/app/soapui' ]
+        [ '/app/soapui-572', '/app/soapui' ],
+        [ '/app/imazing-2', '/app/digidna-imazing' ]
     ])( 'redirects %s to %s', ( path, expectedLocation ) => {
         const rule = getRedirectRule( path )
 
