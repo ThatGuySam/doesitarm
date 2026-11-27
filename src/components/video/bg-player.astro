@@ -4,7 +4,18 @@ const {
     classes = ''
 } = Astro.props
 
-//
+// The looping vumbnail.com preview video stopped serving, so show the video's
+// large YouTube thumbnail instead. maxresdefault (1280px) does not exist for
+// every video, so fall back to the largest thumbnail in the feed data.
+const largestFeedThumbnail = ( video.thumbnail?.srcset || '' )
+    .split(',')
+    .map( entry => entry.trim().split(' ') )
+    .filter( ([ url, width ]) => url && width )
+    .sort( ( a, b ) => parseInt( b[1] ) - parseInt( a[1] ) )
+    .map( ([ url ]) => url )[0]
+
+const fallbackSrc = largestFeedThumbnail || `https://i.ytimg.com/vi/${ video.id }/hqdefault.jpg`
+const src = `https://i.ytimg.com/vi/${ video.id }/maxresdefault.jpg`
 ---
 <div
     class={[
@@ -14,19 +25,23 @@ const {
     style="
         margin-left: -50vw;
         margin-right: -50vw;
-        -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.25));
+        -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0.65));
+        mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0.65));
     "
 >
     <div class="ratio-wrapper w-full">
         <div class="relative overflow-hidden w-full pb-16/9">
-            <video
-                src={`https://vumbnail.com/${ video.id }.mp4`}
-                class="absolute w-full object-cover inset-0 blur-sm"
-                style="height: 200%;"
-                muted
-                autoplay
-                loop
-                playsinline
+            <img
+                src={ src }
+                data-fallback-src={ fallbackSrc }
+                onerror="if (this.dataset.fallbackSrc && this.src !== this.dataset.fallbackSrc) this.src = this.dataset.fallbackSrc"
+                onload="if (this.naturalWidth <= 120 && this.dataset.fallbackSrc && this.src !== this.dataset.fallbackSrc) this.src = this.dataset.fallbackSrc"
+                alt=""
+                aria-hidden="true"
+                fetchpriority="high"
+                decoding="async"
+                class="absolute w-full h-full object-cover inset-0"
+                style="filter: blur(2px);"
             />
         </div>
     </div>

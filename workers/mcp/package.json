@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "doesitarm-mcp",
+  "version": "1.0.0",
+  "description": "Public, read-only remote MCP server for Does It ARM",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "smoke": "node scripts/smoke.mjs",
+    "deploy": "wrangler deploy"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.2"
+  }
+}

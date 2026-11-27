@@ -15,7 +15,9 @@ const vitestConfig = {
         setupFiles: 'tsconfig-paths/register',
         exclude: [
             ...configDefaults.exclude,
-            'test/_disabled/**'
+            'test/_disabled/**',
+            // Has its own package.json, deps and vitest config
+            'workers/mcp/**'
         ]
     }
 }
