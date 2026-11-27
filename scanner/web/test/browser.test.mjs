@@ -114,6 +114,8 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
 
   const context = await browser.newContext({ viewport: { width: 1180, height: 880 } });
   await emulateMac(context);
+  // These checks read the Research view's details; Minimal hides them.
+  await context.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

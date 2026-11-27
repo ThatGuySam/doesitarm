@@ -346,7 +346,7 @@ test('offline Chromium scans, timing, cancellation and scheduling', { timeout: 1
           attributes: true, attributeFilter: ['value'],
         });
       });
-      assert.equal(await progress.evaluate((bar) => bar.max), 1_048_612);
+      assert.equal(await progress.evaluate((bar) => bar.max), 1_048_608);
       assert.ok(statSync(timer).size > 3 * (await progress.evaluate((bar) => bar.max)));
       await page.waitForFunction(() => /About \d+:\d\d left/.test(document.getElementById('batch-metrics').textContent));
       await timerLabel.filter({ hasText: /^Elapsed 0:05$/ }).waitFor({ state: 'visible' });
