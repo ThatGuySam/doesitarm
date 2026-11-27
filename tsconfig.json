@@ -10,6 +10,7 @@
         }
     },
     "exclude": [
-        "helpers/macho/*.js"
+        "helpers/macho/*.js",
+        "ui-review"
     ]
 }

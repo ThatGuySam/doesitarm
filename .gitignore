@@ -94,6 +94,7 @@ dist
 /static/**/*.toml
 /static/**/*.st
 /static/pagefind/
+/static/ui-assets/
 /commits-data.json
 /static/tailwind.css
 
