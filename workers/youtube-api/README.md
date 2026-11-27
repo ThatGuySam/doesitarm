@@ -115,7 +115,9 @@ Works:
   2026.11.23 wheel and the nightly 2026.11.24.232653.dev0 wheel both loaded from R2,
   reported the right `__version__` and passed all 6 canaries.
 - **Daily job**: stored the wheel, qualified it and promoted it (bundled → R2 wheel). A
-  nightly dry run qualified without promoting. With the active pointer deliberately given
+  nightly dry run qualified without promoting. The Cron Trigger itself fired on hosted
+  Workers (tested with a temporary `*/3` schedule: 85 ms CPU for the orchestrator, 4.8 s
+  CPU for the canary invocation, action `hold`). With the active pointer deliberately given
   a bad digest, live requests fell back to bundled and the job rolled back to
   last-good.
 
