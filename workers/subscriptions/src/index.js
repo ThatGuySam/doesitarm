@@ -1,3 +1,5 @@
+import { subscribeToKit } from './kit.js'
+
 const allowedOrigins = new Set([
     'https://doesitarm.com',
     'https://cf.doesitarm.com',
@@ -140,7 +142,8 @@ async function handleHealthRequest ( request, database ) {
     } )
 }
 
-async function handleSubscriptionRequest ( request, database ) {
+async function handleSubscriptionRequest ( request, env ) {
+    const database = env.SUBSCRIPTIONS_DB
     const parsed = await parseSubscription( request )
 
     if ( parsed.error ) {
@@ -180,7 +183,19 @@ async function handleSubscriptionRequest ( request, database ) {
         .bind( parsed.email )
         .run()
 
+    // D1 already has the signup, so a Kit failure must not fail the request.
+    // It can be backfilled from D1.
+    let confirmationSent = false
+
+    try {
+        const kitResult = await subscribeToKit( parsed.email, env )
+        confirmationSent = kitResult.sent
+    } catch ( error ) {
+        console.error( 'Kit forwarding failed.', error.message )
+    }
+
     return makeJsonResponse( request, {
+        confirmationSent,
         ok: true
     } )
 }
@@ -227,7 +242,7 @@ export async function handleRequest ( request, env ) {
         } )
     }
 
-    return await handleSubscriptionRequest( request, env.SUBSCRIPTIONS_DB )
+    return await handleSubscriptionRequest( request, env )
 }
 
 export default {
