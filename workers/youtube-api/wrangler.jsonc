@@ -18,7 +18,7 @@
     "PLAYER_CLIENT": "tv_simply,web_embedded"
   },
   // Daily qualify-and-promote job (UTC).
-  "triggers": { "crons": ["*/3 * * * *"] },
+  "triggers": { "crons": ["17 9 * * *"] },
   "kv_namespaces": [
     { "binding": "YT_STATE", "id": "cf44dc02a5e4472bb95fec0f0cf10080" }
   ],
