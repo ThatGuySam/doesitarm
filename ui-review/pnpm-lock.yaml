@@ -26,9 +26,6 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.3.1)
-      '@fontsource/inter':
-        specifier: 4.0.1
-        version: 4.0.1
       '@formisch/react':
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(valibot@1.5.0)
@@ -564,9 +561,6 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
-
-  '@fontsource/inter@4.0.1':
-    resolution: {integrity: sha512-NjH736K+aj/egfrhqAqW3x9y+VdzIrsLYzKIZ1dpZDd2WsUiJ+DJC+TdIjIB1vZ4wmZdlF2VGlbe/ycRh+dpOw==}
 
   '@formisch/react@0.4.6':
     resolution: {integrity: sha512-+vG5qL2ezl4hi5S/AFWfakxC1c0eitfok+HQB/dxmX20MU9lBICYKzQH3bIYazOvJK5QDQQG4Xdjm+RDcTiAuQ==}
@@ -3864,8 +3858,6 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
 
   '@floating-ui/utils@0.2.12': {}
-
-  '@fontsource/inter@4.0.1': {}
 
   '@formisch/react@0.4.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(valibot@1.5.0)':
     dependencies:

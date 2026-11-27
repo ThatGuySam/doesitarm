@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { Search } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
@@ -10,7 +11,18 @@ import { Separator } from "@/registry/new-york-v4/ui/separator"
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
 import { Spinner } from "@/registry/new-york-v4/ui/spinner"
 
-function ButtonAtoms() {
+function LookPair({ classic, scanner }: { classic: ReactNode; scanner: ReactNode }) {
+  return (
+    <div className="review-scope-pair">
+      <p className="review-look-label">Classic (default)</p>
+      {classic}
+      <p className="review-look-label review-look-scanner">Scanner</p>
+      <div data-look="scanner">{scanner}</div>
+    </div>
+  )
+}
+
+function ButtonRow() {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Button>Scan apps</Button>
@@ -25,7 +37,11 @@ function ButtonAtoms() {
   )
 }
 
-function BadgeAtoms() {
+function ButtonAtoms() {
+  return <LookPair classic={<ButtonRow />} scanner={<ButtonRow />} />
+}
+
+function BadgeRow() {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Badge>Default</Badge>
@@ -36,28 +52,36 @@ function BadgeAtoms() {
   )
 }
 
-function InputAtoms() {
+function BadgeAtoms() {
+  return <LookPair classic={<BadgeRow />} scanner={<BadgeRow />} />
+}
+
+function InputRows({ id }: { id: string }) {
   return (
     <div className="review-input-atoms">
       <div className="grid gap-2">
-        <Label htmlFor="review-input-default">App name</Label>
-        <Input id="review-input-default" placeholder="Search apps" />
+        <Label htmlFor={`${id}-default`}>App name</Label>
+        <Input id={`${id}-default`} placeholder="Search apps" />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="review-input-focus">Focused field</Label>
-        <Input id="review-input-focus" data-review-state="focus" placeholder="App name" />
+        <Label htmlFor={`${id}-focus`}>Focused field</Label>
+        <Input id={`${id}-focus`} data-review-state="focus" placeholder="App name" />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="review-input-disabled">Bundle ID</Label>
-        <Input disabled id="review-input-disabled" value="com.example.app" readOnly />
+        <Label htmlFor={`${id}-disabled`}>Bundle ID</Label>
+        <Input disabled id={`${id}-disabled`} value="com.example.app" readOnly />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="review-input-error">Download URL</Label>
-        <Input id="review-input-error" aria-invalid aria-describedby="review-input-help" defaultValue="example" />
-        <p id="review-input-help" className="text-sm text-destructive">Enter a full HTTPS URL.</p>
+        <Label htmlFor={`${id}-error`}>Download URL</Label>
+        <Input id={`${id}-error`} aria-invalid aria-describedby={`${id}-help`} defaultValue="example" />
+        <p id={`${id}-help`} className="text-sm text-destructive">Enter a full HTTPS URL.</p>
       </div>
     </div>
   )
+}
+
+function InputAtoms() {
+  return <LookPair classic={<InputRows id="review-input" />} scanner={<InputRows id="review-input-scanner" />} />
 }
 
 function LabelAtoms() {

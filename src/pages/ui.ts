@@ -9,12 +9,14 @@ const manifests = import.meta.glob<{ entry: string; stylesheet: string }>(
 const [ assets ] = Object.values( manifests )
 const headers = {
     'Content-Type': 'text/html; charset=utf-8',
-    'X-Robots-Tag': 'noindex, nofollow'
+    'X-Robots-Tag': 'noindex, nofollow',
+    // Short edge cache; hashed assets under /ui-assets/assets/ stay immutable via static/_headers.
+    'Cache-Control': 'public, max-age=0, s-maxage=60, stale-while-revalidate=600'
 }
 
 export const GET: APIRoute = () => {
     if ( !assets ) {
-        return new Response( 'UI review assets are not available. Run pnpm build:ui.', { status: 503, headers } )
+        return new Response( 'UI review assets are not available. Run pnpm build:ui.', { status: 503, headers: { ...headers, 'Cache-Control': 'no-store' } } )
     }
 
     return new Response( `<!doctype html>
