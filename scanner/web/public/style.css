@@ -538,7 +538,7 @@
 
 /* Embedded in doesitarm.com: the site layout owns the navbar, footer and page background. */
 .dia-scanner { inline-size: 100%; }
-.dia-scanner[data-embedded] { padding-block-start: 3.5rem; }
+.dia-scanner[data-embedded] { padding-block-start: 5rem; }
 .dia-scanner .scanner-switch { margin: 0; padding: var(--sp-1) var(--sp-3); text-align: center; font-size: .7rem; color: var(--muted); }
 
 /* Native selects: the same edge, fill and inner padding in every panel. */
