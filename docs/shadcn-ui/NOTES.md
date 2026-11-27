@@ -6,3 +6,24 @@
 - Captured production GET baselines before edits. Home, app test, scanner v3, benchmarks and Node.js each returned 200 after redirects. `/ui` returned 404.
 - Chose a separate Vite entry and Tailwind 4 build with an Astro review shell. See [RESEARCH.md](./RESEARCH.md) for the upstream sources and architecture tradeoffs.
 - A Sol sub-agent is building the review catalog. The Opus review is owned by the lead.
+- Baseline Cloudflare and Netlify Astro builds completed. Cloudflare local workerd needed a writable `XDG_CONFIG_HOME` in scratch for its development registry. The standard prebuild and postbuild checks passed, and Vitest passed 131 tests with 3 existing TODOs.
+- Saved reference screenshots from the live site at 1440×1000 and 390×844. The app page has a desktop reference.
+- Adding a conventional `.astro` page caused global Tailwind v3 preflight to split into a new CSS asset and changed the stylesheet hash on the original site. The final shell is an Astro HTML endpoint backed by the review's Vite asset manifest. The Cloudflare `_astro` directory then matched byte for byte. HTML for `/`, `/apple-silicon-app-test`, `/benchmarks` and `/app/nodejs` matched after normalizing Astro island UIDs, generated subscription and video row IDs, and relative age text.
+- The gallery has 68 cards (64 current Radix installables, legacy Toast, Data Table, Date Picker and Typography) and nine Does It ARM compositions. The 1,015 upstream preview entries include 582 Radix docs examples, 252 New York registry examples and sidebar snippets, 67 Nova registry examples, 30 layout blocks, 70 chart blocks, five live site examples, eight archived examples and the legacy Toast demo. The [catalog](../../ui-review/src/catalog.json) and [individual inventories](../../ui-review/src/catalog-data/) identify each exact example.
+- The current Cloudflare smoke includes the production-style `/ui` SSR endpoint and assets. Playwright passed the navigation, Accordion, login preview, theme persistence, phone keyboard and both-palette axe checks. Axe covers the gallery shell, atoms and Does It ARM examples. The upstream preview surface is tracked separately in the runtime checks.
+
+## Visual and size evidence
+
+| Live site, dark | UI review, dark |
+| --- | --- |
+| [Scanner v3, desktop](screenshots/reference-scanner-v3-dark-desktop.png) | [Scanner and app patterns, desktop](screenshots/review-does-it-arm-dark-desktop.png) |
+| [Scanner v3, phone](screenshots/reference-scanner-v3-dark-phone.png) | [Scanner and app patterns, phone](screenshots/review-does-it-arm-dark-phone.png) |
+| [Homepage, desktop](screenshots/reference-home-dark-desktop.png) | [Atoms, desktop](screenshots/review-atoms-dark-desktop.png) |
+
+Both use the charcoal gradient, gray text and subdued control surfaces. The review adopts the scanner's outlined input and button edges, amber focus ring, green native verdict and muted Rosetta and unknown badges, then applies the same hierarchy to an off-white light palette. The [screenshots](screenshots/) cover all four sections in each palette at both widths.
+
+At the top of the review, headless Chromium reported 19 review assets and 244,489 bytes transferred on each viewport (151,483 encoded JS bytes, 50,566 CSS bytes and 36,740 font bytes, plus request overhead). Compositions load by collection and preview. The default pages reference none of these review assets.
+
+## Local review
+
+`pnpm build:ui` installs the isolated lockfile and generates the review assets. `pnpm dev` then serves `/ui`. Both production build commands run the review build before Astro. Use `PLAYWRIGHT_BROWSER_PATH=/usr/bin/chromium pnpm test:browser` on this machine. `node ui-review/scripts/capture.mjs https://doesitarm.com/ui live` captures the production viewports and reports initial transfer bytes.
