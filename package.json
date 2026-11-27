@@ -29,7 +29,7 @@
     "test:status-headlines": "vitest run --config vitest.playwright.config.mjs test/playwright/status-headline.playwright.ts",
     "test-api-client": "pnpm run with-env vitest ./test/api",
     "test-listings": "pnpm run with-env vitest ./test/listings",
-    "test:subscriptions": "vitest run ./test/subscriptions-worker.test.js",
+    "test:subscriptions": "vitest run test/subscriptions-worker.test.js test/subscription-interests.test.js test/rosetta-notifications.test.js test/rosetta-catalog.test.js",
     "test-postbuild-api": "pnpm test-listings",
     "test-vitest": "vitest",
     "test": "vitest run",

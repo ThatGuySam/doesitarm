@@ -89,7 +89,7 @@
                     🦾 Home
                 </a>
                 <a
-                    v-for="(item, index) in items"
+                    v-for="(item, index) in navigationItems"
                     :key="index"
                     :href="item.url"
                     :class="[
@@ -128,7 +128,7 @@
                 <!-- nav items desktop view -->
                 <div class="hidden lg:flex lg:items-center grow justify-evenly">
                     <a
-                        v-for="(item, index) in items"
+                        v-for="(item, index) in navigationItems"
                         :key="index"
                         :href="item.url"
                         :class="[
@@ -198,6 +198,7 @@ export default {
         LinkButton
     },
     props: {
+        rosettaLaunchEnabled: Boolean,
         items: {
             type: Array,
             default: () => ([
@@ -235,6 +236,10 @@ export default {
         }
     },
     computed: {
+        navigationItems () {
+            if ( !this.rosettaLaunchEnabled ) return this.items
+            return [...this.items, { emoji: '⚠️', label: 'Rosetta', url: '/rosetta-at-risk' }]
+        },
         currentPath () {
             // If we have a nuxt context, use that.
             if ( has( this, [ '$nuxt' ]) ) {

@@ -4,6 +4,22 @@
   "main": "src/index.js",
   "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
   "compatibility_date": "2026-07-25",
+  "keep_vars": true,
+  "triggers": {
+    "crons": ["0 14 * * *"]
+  },
+  "ratelimits": [
+    {
+      "name": "INTEREST_IP_RATE_LIMIT",
+      "namespace_id": "3510321",
+      "simple": { "limit": 10, "period": 60 }
+    },
+    {
+      "name": "INTEREST_EMAIL_RATE_LIMIT",
+      "namespace_id": "3510322",
+      "simple": { "limit": 3, "period": 60 }
+    }
+  ],
   "d1_databases": [
     {
       "binding": "SUBSCRIPTIONS_DB",
@@ -19,6 +35,9 @@
     }
   ],
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "logs": {
+      "invocation_logs": false
+    }
   }
 }

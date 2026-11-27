@@ -1,0 +1,95 @@
+---
+import {
+    findRosettaApps,
+    getRosettaSearchQuery,
+    loadRosettaCatalog,
+    rosettaSearchLength,
+    rosettaStatus
+} from '~/helpers/rosetta-catalog.js'
+import { rosettaPage404 } from '~/helpers/rosetta-launch.js'
+import { appListingPath } from '~/helpers/subscription-interests.js'
+import InterestSubscribe from '~/src/components/interest-subscribe.astro'
+import Layout from '~/src/layouts/default.astro'
+
+export const prerender = false
+
+const unavailable = await rosettaPage404( Astro.rewrite )
+if ( unavailable ) return unavailable
+
+Astro.response.headers.set( 'Cache-Control', 'no-store' )
+const rawQuery = Astro.url.searchParams.get( 'q' )
+const query = getRosettaSearchQuery( rawQuery )
+let results
+let failed = false
+
+if ( query ) {
+    Astro.response.headers.set( 'Referrer-Policy', 'strict-origin' )
+    try {
+        const { apps } = await loadRosettaCatalog( fetch, { cacheOrigin: Astro.url.origin } )
+        results = findRosettaApps( apps, query )
+    } catch {
+        failed = true
+        Astro.response.status = 503
+    }
+}
+---
+<Layout
+    headOptions={ {
+        title: 'Check an app for Rosetta removal risk | Does It ARM',
+        description: 'Check whether a Mac app depends on Rosetta or has reported native Apple silicon support.',
+        pathname: '/rosetta-checker'
+    } }
+>
+    <main class="mx-auto w-full max-w-4xl px-4 pt-24 pb-12 space-y-8 sm:px-6 sm:pt-32">
+        <header class="space-y-4">
+            <h1 class="text-3xl font-semibold leading-tight sm:text-5xl">Rosetta risk checker</h1>
+            <p>Find the reported Apple silicon status of a Mac app.</p>
+        </header>
+
+        <form action="/rosetta-checker" method="get" role="search" class="max-w-lg space-y-2">
+            <label for="rosetta-app-name" class="block font-medium">App name</label>
+            <div class="flex flex-wrap gap-2">
+                <input
+                    id="rosetta-app-name"
+                    type="search"
+                    name="q"
+                    value={ query }
+                    maxlength={ rosettaSearchLength }
+                    class="w-full min-w-0 rounded-md border border-gray-500 bg-darker px-3 py-2 text-white sm:w-auto sm:flex-1"
+                    required
+                />
+                <button type="submit" class="rounded-md bg-white px-4 py-2 font-semibold text-black hover:bg-gray-200">Check app</button>
+            </div>
+        </form>
+
+        { rawQuery !== null && !query && <p>Enter an app name to check its reported status.</p> }
+        { failed && <p>The app list is temporarily unavailable. Try again in a moment.</p> }
+        { results?.count === 0 && <p>Unknown to Does It ARM. No app matched “{ query }”.</p> }
+        { results && results.count > 0 && (
+            <section class="space-y-4" aria-labelledby="checker-results">
+                <h2 id="checker-results" class="text-2xl font-semibold">{ results.count === 1 ? 'Matching app' : 'Matching apps' }</h2>
+                { results.count > results.apps.length && (
+                    <p>Showing { results.apps.length } of { results.count } matches. Enter a more specific name to narrow the results.</p>
+                ) }
+                <p>Reports may cover specific versions or features. Native apps can still rely on Intel-only plug-ins.</p>
+                <ul role="list" class="space-y-6">
+                    { results.apps.map( app => (
+                        <li class="space-y-2 border-t border-gray-600 pt-4">
+                            <h3 class="text-lg font-semibold"><a href={ app.endpoint } class="break-words underline">{ app.name }</a></h3>
+                            <p class="font-semibold">{ rosettaStatus( app.status ) }</p>
+                            { app.text && <p>{ app.text }</p> }
+                            { results.count === 1 && (
+                                <InterestSubscribe kind="app-status" interestKey={ appListingPath.exec( app.endpoint )?.[1] } />
+                            ) }
+                        </li>
+                    ) ) }
+                </ul>
+            </section>
+        ) }
+
+        <div class="space-y-3 border-t border-gray-600 pt-6">
+            <p><a class="underline" href="/apple-silicon-app-test">Use the scanner to check your Applications folder</a></p>
+            <p><a class="underline" href="/rosetta-at-risk">See all apps reported at risk and read about Rosetta removal</a></p>
+        </div>
+    </main>
+</Layout>

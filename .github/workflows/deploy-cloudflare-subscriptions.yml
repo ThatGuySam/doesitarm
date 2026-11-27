@@ -7,6 +7,9 @@ on:
       - master
     paths:
       - workers/subscriptions/**
+      - helpers/rosetta-catalog.js
+      - helpers/rosetta-launch.js
+      - helpers/subscription-interests.js
       - test/subscriptions-worker.test.js
       - scripts/verify-subscriptions-worker.mjs
       - .github/workflows/deploy-cloudflare-subscriptions.yml
@@ -62,3 +65,33 @@ jobs:
 
       - name: Verify D1 binding and CORS
         run: node scripts/verify-subscriptions-worker.mjs
+
+      - name: Check Rosetta app status
+        continue-on-error: true
+        run: |
+          if [ -z "$ROSETTA_CHECK_TOKEN" ]; then
+            echo "::notice::Set ROSETTA_CHECK_TOKEN to enable the post-deploy Rosetta check."
+            exit 0
+          fi
+          result="$RUNNER_TEMP/rosetta-check.json"
+          if ! status=$(curl --silent --show-error --max-time 480 \
+            --output "$result" --write-out '%{http_code}' \
+            --request POST --header "Authorization: Bearer $ROSETTA_CHECK_TOKEN" \
+            https://doesitarm.com/api/subscriptions/check-rosetta); then
+            echo "::notice::Rosetta check could not reach the subscriptions Worker."
+            exit 0
+          fi
+          if summary=$(jq -ce '{ok, mode, changes, notifications, observation, deliveries, confirmations, error}' "$result" 2>/dev/null); then
+            summary=${summary//%/%25}
+            echo "::notice::Rosetta check returned HTTP $status. $summary"
+            if [ "$status" = 409 ]; then
+              echo "::notice::$(jq -r '.recovery.message // "Review the published catalog."' "$result")"
+              while IFS= read -r command; do
+                printf '::notice::%s\n' "$command"
+              done < <(jq -r '.recovery | (.reviewCommand, .acceptSilentlyCommand, .retryCommand) | select(. != null)' "$result")
+            fi
+          else
+            echo "::notice::Rosetta check returned HTTP $status without a JSON result."
+          fi
+        env:
+          ROSETTA_CHECK_TOKEN: ${{ secrets.ROSETTA_CHECK_TOKEN }}

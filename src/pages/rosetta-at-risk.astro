@@ -1,0 +1,98 @@
+---
+import { loadRosettaCatalog, summarizeRosettaCatalog } from '~/helpers/rosetta-catalog.js'
+import { rosettaPage404 } from '~/helpers/rosetta-launch.js'
+import { waitlists } from '~/helpers/subscription-interests.js'
+import InterestSubscribe from '~/src/components/interest-subscribe.astro'
+import Layout from '~/src/layouts/default.astro'
+
+export const prerender = false
+
+const unavailable = await rosettaPage404( Astro.rewrite )
+if ( unavailable ) return unavailable
+
+Astro.response.headers.set( 'Cache-Control', 'no-store' )
+let summary
+try {
+    const { apps } = await loadRosettaCatalog( fetch, { cacheOrigin: Astro.url.origin } )
+    summary = summarizeRosettaCatalog( apps )
+} catch {
+    Astro.response.status = 503
+}
+
+const numbers = new Intl.NumberFormat( 'en' )
+---
+<Layout
+    headOptions={ {
+        title: 'Mac apps at risk when Rosetta is removed | Does It ARM',
+        description: 'Find Mac apps reported to rely on Rosetta and see what Apple has announced about its removal.',
+        pathname: '/rosetta-at-risk'
+    } }
+>
+    <main class="mx-auto w-full max-w-4xl px-4 pt-24 pb-12 space-y-10 sm:px-6 sm:pt-32">
+        <header class="max-w-2xl space-y-4">
+            <h1 class="text-3xl font-semibold leading-tight sm:text-5xl">Mac apps at risk when Rosetta is removed</h1>
+            <p>
+                Rosetta 2 lets Apple silicon Macs run Intel apps. Apple says general-purpose Rosetta support lasts through macOS 27.
+                After that, Apple plans to retain some Rosetta functionality for older, unmaintained games that use Intel-based frameworks.
+                Without a native update, apps and features that depend on general-purpose Rosetta will stop working in later macOS releases.
+                Apple has not announced a release date for macOS 28.
+            </p>
+            <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <a class="underline" href="https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment">Apple’s Rosetta developer documentation</a>
+                <a class="underline" href="https://support.apple.com/en-us/102527">Apple Support on Intel-based apps</a>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <a class="underline font-semibold" href="/rosetta-checker">Check an app by name</a>
+                <a class="underline" href="#rosetta-news">Get Rosetta removal news by email</a>
+                <a class="underline" href="#waitlists">Join a waitlist</a>
+            </div>
+        </header>
+
+        { summary ? (
+            <section class="space-y-4" aria-labelledby="rosetta-catalog-heading">
+                <h2 id="rosetta-catalog-heading" class="text-2xl font-semibold">Reported compatibility</h2>
+                <p class="max-w-2xl">
+                    Does It ARM lists <strong>{ numbers.format( summary.atRisk ) } apps at risk</strong> based on reports that they rely on Rosetta.
+                    Another <strong>{ numbers.format( summary.unknown ) } listed apps have unknown compatibility</strong> and could still be affected.
+                    The reported status may cover a specific version or feature. Native apps can still rely on Intel-only plug-ins.
+                </p>
+                { summary.categories.length > 0 && (
+                    <nav aria-label="App categories">
+                        <ul role="list" class="flex flex-wrap gap-x-4 gap-y-1">
+                            { summary.categories.map( ({ slug, name }) => (
+                                <li><a class="inline-block py-1 underline" href={ `#category-${ slug }` }>{ name }</a></li>
+                            ) ) }
+                        </ul>
+                    </nav>
+                ) }
+                { summary.categories.map( ({ slug, name, apps }) => (
+                    <section id={ `category-${ slug }` } class="border-t border-gray-600 pt-5">
+                        <h3 class="text-lg font-semibold mb-2">{ name } ({ numbers.format( apps.length ) })</h3>
+                        <ul role="list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6">
+                            { apps.map( app => (
+                                <li><a class="inline-block break-words max-w-full py-1 underline" href={ app.endpoint }>{ app.name }</a></li>
+                            ) ) }
+                        </ul>
+                    </section>
+                ) ) }
+            </section>
+        ) : (
+            <p>The app list is temporarily unavailable. Try again in a moment.</p>
+        ) }
+
+        <section id="rosetta-news" class="space-y-4 border-t border-gray-600 pt-6">
+            <h2 class="text-2xl font-semibold">Rosetta removal news</h2>
+            <InterestSubscribe kind="rosetta-news" />
+        </section>
+
+        <section id="waitlists" class="space-y-4 border-t border-gray-600 pt-6">
+            <h2 class="text-2xl font-semibold">Waitlists</h2>
+            { Object.entries( waitlists ).map( ([key, interest]) => (
+                <section class="space-y-3">
+                    <h3 class="text-lg font-semibold">{ interest.title }</h3>
+                    <InterestSubscribe kind="waitlist" interestKey={ key } />
+                </section>
+            ) ) }
+        </section>
+    </main>
+</Layout>

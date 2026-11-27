@@ -1,0 +1,87 @@
+---
+import { getSubscriptionConsent } from '~/helpers/subscription-interests.js'
+
+interface Props {
+    kind: 'app-status' | 'rosetta-news' | 'waitlist'
+    interestKey?: string
+}
+
+const { kind, interestKey: key = '' } = Astro.props
+const id = `subscribe-${ kind }${ key ? `-${ key }` : '' }`
+const consent = getSubscriptionConsent( kind, key )
+const source = Astro.url.pathname
+---
+<form
+    action="https://doesitarm.com/api/subscriptions/interests"
+    method="post"
+    class="w-full max-w-lg space-y-3 text-left"
+    data-interest-form
+>
+    <p id={ `${ id }-consent` }>{ consent } Confirm using the link we email you. You can unsubscribe from updates at any time.</p>
+    <input type="hidden" name="kind" value={ kind } />
+    <input type="hidden" name="key" value={ key } />
+    <input type="hidden" name="source" value={ source } />
+    <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
+
+    <label for={ id } class="block font-medium">Email address</label>
+    <div class="flex flex-wrap gap-2">
+        <input
+            id={ id }
+            name="email"
+            type="email"
+            autocomplete="email"
+            aria-describedby={ `${ id }-consent` }
+            maxlength="254"
+            class="w-full min-w-0 rounded-md border border-gray-500 bg-darker px-3 py-2 text-white sm:w-auto sm:flex-1"
+            required
+        />
+        <button
+            type="submit"
+            class="rounded-md bg-white px-4 py-2 font-semibold text-black hover:bg-gray-200 disabled:opacity-50"
+        >{ kind === 'waitlist' ? 'Join the waitlist' : 'Subscribe' }</button>
+    </div>
+    <p role="status" class="text-sm" data-interest-feedback></p>
+</form>
+
+<script>
+    import { rosettaSignupsClosedMessage } from '~/helpers/rosetta-launch.js'
+
+    for ( const form of document.querySelectorAll<HTMLFormElement>( '[data-interest-form]' ) ) {
+        const feedback = form.querySelector<HTMLElement>( '[data-interest-feedback]' )
+        const button = form.querySelector<HTMLButtonElement>( 'button[type=submit]' )
+        if ( !feedback || !button ) continue
+
+        form.addEventListener( 'submit', async event => {
+            event.preventDefault()
+            if ( button.disabled ) return
+
+            const data = new URLSearchParams()
+            for ( const [name, value] of new FormData( form ) ) data.append( name, String( value ) )
+            button.disabled = true
+            feedback.textContent = 'Saving your signup…'
+
+            try {
+                const response = await fetch( form.action, {
+                    method: 'POST',
+                    headers: { Accept: 'application/json' },
+                    body: data
+                } )
+                if ( response.status === 404 ) {
+                    feedback.textContent = rosettaSignupsClosedMessage
+                    return
+                }
+
+                const result = await response.json()
+                feedback.textContent = result.error || 'Could not save your signup. Please try again.'
+                if ( response.ok && result.ok ) {
+                    form.reset()
+                    feedback.textContent = 'If confirmation is needed, use your latest Does It ARM confirmation email.'
+                }
+            } catch {
+                feedback.textContent = 'Could not save your signup. Please try again.'
+            } finally {
+                button.disabled = false
+            }
+        } )
+    }
+</script>

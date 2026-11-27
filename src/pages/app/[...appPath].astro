@@ -12,8 +12,11 @@ import {
     ListingDetails
 } from '~/helpers/listing-page.js'
 import { getPathPartsFromAstroRequest } from '~/helpers/url.js'
+import { rosettaLaunchEnabled } from '~/helpers/rosetta-launch.js'
+import { appListingPath } from '~/helpers/subscription-interests.js'
 
 import Layout from '~/src/layouts/default.astro'
+import InterestSubscribe from '~/src/components/interest-subscribe.astro'
 import Listing from '~/src/components/default-listing.astro'
 import VideoListing from '~/src/components/video-listing.astro'
 
@@ -44,6 +47,9 @@ const isBenchmarkPage = subSlug === 'benchmarks'
 
 // Request App data from API
 const appListing = await DoesItAPI.app( pathSlug ).get()
+const appKey = rosettaLaunchEnabled && subSlug === null
+    ? appListingPath.exec( appListing.endpoint )?.[1]
+    : undefined
 
 const listingDetails = new ListingDetails( appListing )
 
@@ -75,9 +81,9 @@ if ( isBenchmarkPage ) {
             listing={ appListing }
         />
     ) : (
-         <Listing
-            listing={ appListing }
-        />
+        <Listing listing={ appListing }>
+            { appKey && <InterestSubscribe kind="app-status" interestKey={ appKey } /> }
+        </Listing>
     )}
 
 </Layout>

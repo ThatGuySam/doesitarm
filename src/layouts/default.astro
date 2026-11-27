@@ -6,6 +6,7 @@ import '~/assets/css/carbon.css'
 import '@fontsource/inter/variable.css'
 
 import { PageHead } from '~/helpers/config-node.js'
+import { rosettaLaunchEnabled } from '~/helpers/rosetta-launch.js'
 
 import Navbar from '~/components/navbar.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
@@ -40,7 +41,7 @@ const currentYear = String( new Date().getFullYear() )
     <body>
 
         <div class="app-wrapper text-gray-300 bg-gradient-to-bl from-dark to-darker bg-fixed">
-            <Navbar />
+            <Navbar rosettaLaunchEnabled={ rosettaLaunchEnabled } />
             <div class="app-main min-h-screen flex items-center">
                 <slot />
             </div>
