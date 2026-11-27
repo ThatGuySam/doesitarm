@@ -51,6 +51,30 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # /ui is a side project that must never block the site deploy. Restore
+      # the last good build, rebuild only when ui-review/ changed, and keep the
+      # old assets if the rebuild fails.
+      - name: Restore /ui assets
+        id: ui-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: static/ui-assets
+          key: ui-assets-${{ hashFiles('ui-review/**', 'scripts/build-ui-isolated.mjs', '!ui-review/node_modules/**') }}
+          restore-keys: ui-assets-
+
+      - name: Build /ui assets (isolated, allowed to fail)
+        id: ui-build
+        if: steps.ui-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: pnpm build:ui:isolated
+
+      - name: Save /ui assets
+        if: steps.ui-build.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: static/ui-assets
+          key: ui-assets-${{ hashFiles('ui-review/**', 'scripts/build-ui-isolated.mjs', '!ui-review/node_modules/**') }}
+
       - name: Build and test Cloudflare frontend
         run: pnpm cloudflare-build
 

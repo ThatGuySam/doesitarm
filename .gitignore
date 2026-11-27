@@ -110,3 +110,4 @@ docs/data/
 
 # Local agent notes (machine-specific, not committed)
 AGENTS.local.md
+/.ui-build-tmp/
