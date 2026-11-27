@@ -14,7 +14,7 @@ const headers = {
 
 export const GET: APIRoute = () => {
     if ( !assets ) {
-        return new Response( 'UI review assets are missing. Run pnpm build:ui.', { status: 503, headers } )
+        return new Response( 'UI review assets are not available. Run pnpm build:ui.', { status: 503, headers } )
     }
 
     return new Response( `<!doctype html>
