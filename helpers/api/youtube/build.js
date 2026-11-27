@@ -1,5 +1,4 @@
 import fs from 'fs-extra'
-import { google } from 'googleapis'
 
 import { playlists, benchmarksPlaylistId } from './playlists.js'
 import { getJson } from '~/helpers/http.js'
@@ -8,66 +7,56 @@ import { getJson } from '~/helpers/http.js'
 export const youtubeVideoPath = './static/api/youtube-videos.json'
 
 
-async function getPlaylistsItems ( { playlistId } = {} ) {
-    const perPage = 50
+export const youtubePlaylistItemsEndpoint = 'https://www.googleapis.com/youtube/v3/playlistItems'
 
-    // Setup Youtube API V3 Service instance
-    const service = google.youtube('v3')
-
-    // Fetch data from the Youtube API
-    const { errors = null, data = null } = await service.playlistItems.list({
-        key: process.env.GOOGLE_API_KEY,
-        part: 'snippet,contentDetails',
-        playlistId,
-        maxResults: perPage
-    }).catch(({ errors }) => {
-
-        console.log('Error fetching playlist', errors)
-
-        return {
-            errors
-        }
-    })
-
-    // Send an error response if something went wrong
-    if (errors !== null) {
-        throw new Error(errors)
-
-        return
+// Calls the YouTube Data API v3 directly with fetch.
+// This replaced the googleapis package, whose auth chain
+// (google-auth-library -> jws -> jwa -> buffer-equal-constant-time)
+// reads buffer.SlowBuffer at import time. Node 26 removed SlowBuffer,
+// so merely importing googleapis crashed every API build.
+export async function getPlaylistsItems ( {
+    playlistId,
+    apiKey = process.env.GOOGLE_API_KEY,
+    perPage = 50
+} = {} ) {
+    if ( !playlistId ) {
+        throw new Error( 'getPlaylistsItems needs a playlistId' )
     }
 
-    const items = data.items
+    const items = []
+    let pageToken = null
 
-    // If there are more results then push them to our playlist
-    if (data.nextPageToken !== null) {
+    do {
+        const url = new URL( youtubePlaylistItemsEndpoint )
 
-        // Store the token for page #2 into our variable
-        let pageToken = data.nextPageToken
+        url.searchParams.set( 'key', apiKey )
+        url.searchParams.set( 'part', 'snippet,contentDetails' )
+        url.searchParams.set( 'playlistId', playlistId )
+        url.searchParams.set( 'maxResults', String( perPage ) )
 
-        while (pageToken !== null) {
-            // Fetch data from the Youtube API
-            const youtubePageResponse = await service.playlistItems.list({
-                key: process.env.GOOGLE_API_KEY,
-                part: 'snippet,contentDetails',
-                playlistId,
-                maxResults: perPage,
-                pageToken: pageToken
-            })
-
-            // Add the videos from this page on to our total items list
-            youtubePageResponse.data.items.forEach(item => items.push(item))
-
-            // Now that we're done set up the next page token or empty out the pageToken variable so our loop will stop
-            pageToken = ('nextPageToken' in youtubePageResponse.data) ? youtubePageResponse.data.nextPageToken : null
+        if ( pageToken ) {
+            url.searchParams.set( 'pageToken', pageToken )
         }
-    }
+
+        const data = await getJson( url ).catch( error => {
+            console.log( 'Error fetching playlist', playlistId, error?.response?.data ?? error )
+
+            throw error
+        } )
+
+        for ( const item of data?.items ?? [] ) {
+            items.push( item )
+        }
+
+        pageToken = data?.nextPageToken ?? null
+    } while ( pageToken )
 
     console.log(`Fetched ${items.length} videos from https://www.youtube.com/playlist?list=${ playlistId }`)
 
     return items
 }
 
-async function getYouTubeVideos ( options = {} ) {
+export async function getYouTubeVideos ( options = {} ) {
 
     const {
         // requestsDelay = 3600,

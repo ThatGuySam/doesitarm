@@ -106,7 +106,6 @@
     "file-api": "^0.10.4",
     "fs-extra": "^8.1.0",
     "get-file-object-from-local-path": "^1.0.2",
-    "googleapis": "^100.0.0",
     "gray-matter": "^4.0.3",
     "jsdom": "^16.4.0",
     "just-has": "^2.1.0",
