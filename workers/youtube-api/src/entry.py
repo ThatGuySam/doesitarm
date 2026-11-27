@@ -14,6 +14,7 @@ from workers import Response, WorkerEntrypoint
 import canary
 import loader
 from normalize import (
+    MAX_PLAYLIST_LIMIT,
     BadInput,
     normalize_playlist,
     normalize_video,
@@ -35,7 +36,10 @@ CORS = {
     "access-control-max-age": "86400",
 }
 POINTER_ACTIVE = "pointer:active"
-POINTER_LAST_GOOD = "pointer:last_good"
+# The bundled wheel (scripts/vendor.sh), reference for the release size checks.
+BUNDLED_WHEEL_SIZE = 3186416
+BUNDLED_WHEEL_FILES = 1056
+NEGATIVE_TTL = 60  # KV minimum; failures are cached this long
 RUN_LATEST = "run:latest"
 RUN_INDEX = "run:index"
 
@@ -134,7 +138,10 @@ async def activate(env, pointer):
         if loader.wheel_cached(version, sha):
             loader.use_wheel(version, sha)
         else:
-            obj = await env.WHEELS.get(pointer.get("key") or wheel_key(version))
+            key = pointer.get("key") or wheel_key(version)
+            if key != wheel_key(version):
+                raise ValueError(f"pointer key {key!r} is not {wheel_key(version)!r}")
+            obj = await env.WHEELS.get(key)
             if obj is None:
                 raise LookupError(f"R2 object {wheel_key(version)} missing")
             data = to_bytes(await obj.arrayBuffer())
@@ -217,48 +224,99 @@ def get_video(video_id, player_client=None):
         player_client=player_client,
         retries=0,
     )
-    return normalize_video(info), warnings, calls
+    video = normalize_video(info)
+    if not video.get("title"):
+        err = RuntimeError("video unavailable: extraction returned no title")
+        err.warnings, err.calls = warnings, calls
+        raise err
+    return video, warnings, calls
 
 
 # ---------------------------------------------------------------- daily job
 
-async def js_fetch_bytes(url):
+PYPI_JSON = "https://pypi.org/pypi/yt-dlp/json"
+PROVENANCE_URL = "https://pypi.org/integrity/yt-dlp/{version}/{filename}/provenance"
+
+
+async def js_get(url, max_bytes, accept=None):
+    """GET with a byte cap. Only used by the trusted daily job."""
     import js
-    reply = await js.fetch(url)
+    from pyodide.ffi import to_js
+    init = {"headers": {"accept": accept}} if accept else {}
+    reply = await js.fetch(url, to_js(init, dict_converter=js.Object.fromEntries))
     if int(reply.status) != 200:
         raise RuntimeError(f"GET {url} returned {reply.status}")
-    return to_bytes(await reply.arrayBuffer())
+    length = reply.headers.get("content-length")
+    if length and int(length) > max_bytes:
+        raise RuntimeError(f"GET {url}: {length} bytes is over the {max_bytes} cap")
+    data = to_bytes(await reply.arrayBuffer())
+    if len(data) > max_bytes:
+        raise RuntimeError(f"GET {url}: {len(data)} bytes is over the {max_bytes} cap")
+    return data
 
 
-async def js_fetch_json(url):
-    import js
-    reply = await js.fetch(url)
-    if int(reply.status) != 200:
-        raise RuntimeError(f"GET {url} returned {reply.status}")
-    return json.loads(str(await reply.text()))
+def bundled_reference():
+    """Size and file count of the bundled wheel, for the static size checks."""
+    return {"size": BUNDLED_WHEEL_SIZE, "files": BUNDLED_WHEEL_FILES}
 
 
-async def ensure_wheel(env, release):
-    """Store the release wheel in R2 (digest-checked) and record its pointer in KV."""
+async def vet_release(release):
+    """Attestation and static checks on a PyPI release. Returns (bytes, attestation, checks).
+    Nothing here stores or imports the wheel."""
     import hashlib
-    key = wheel_key(release["version"])
-    meta_key = f"wheel:{release['version']}"
-    meta = await kv_json(env, meta_key)
-    if meta and meta.get("sha256") == release["sha256"]:
-        return meta, False
-    data = await js_fetch_bytes(release["url"])
+    import provenance
+    import release as rel
+    rel.check_release_url(release)
+    prov = json.loads(await js_get(PROVENANCE_URL.format(**release), 2 * 1024 * 1024,
+                                   accept="application/vnd.pypi.integrity.v1+json"))
+    attestation = provenance.verify_provenance(prov, release["filename"], release["sha256"])
+    data = await js_get(release["url"], rel.MAX_WHEEL_BYTES)
     digest = hashlib.sha256(data).hexdigest()
     if digest != release["sha256"]:
         raise ValueError(f"PyPI wheel digest mismatch for {release['version']}: {digest}")
+    checks = rel.check_wheel(data, release["version"], bundled_reference())
+    return data, attestation, checks
+
+
+async def qualify_release(env, release):
+    """Vet, then store the wheel in R2 and record its pointer. Nothing here imports it."""
+    meta_key = f"wheel:{release['version']}"
+    meta = await kv_json(env, meta_key)
+    if meta and meta.get("sha256") == release["sha256"] and meta.get("attestation"):
+        return meta, False
+    data, attestation, checks = await vet_release(release)
+    digest = release["sha256"]
+    key = wheel_key(release["version"])
     await env.WHEELS.put(key, data, {
         "httpMetadata": {"contentType": "application/zip"},
         "customMetadata": {"sha256": digest, "version": release["version"]},
     })
     meta = {"version": release["version"], "source": "wheel", "sha256": digest, "key": key,
             "size": len(data), "url": release["url"], "uploaded": release.get("uploaded"),
-            "stored_at": now_iso()}
+            "stored_at": now_iso(), "attestation": attestation, "checks": checks}
     await kv_put_json(env, meta_key, meta)
     return meta, True
+
+
+async def check_release(version):
+    import release as rel
+    if not valid_version(version or ""):
+        raise BadInput("version must look like 2026.11.23")
+    pypi = json.loads(await js_get(PYPI_JSON, 16 * 1024 * 1024))
+    files = [f for f in (pypi.get("releases") or {}).get(version, [])
+             if f.get("filename") == f"yt_dlp-{version}-py3-none-any.whl"]
+    if not files:
+        raise BadInput(f"no py3-none-any wheel for {version}")
+    f = files[0]
+    release = {"version": version, "url": f["url"], "sha256": f["digests"]["sha256"], "size": f.get("size"),
+               "filename": f["filename"], "uploaded": f.get("upload_time_iso_8601")}
+    started = time.time()
+    try:
+        _data, attestation, checks = await vet_release(release)
+        return {"ok": True, "release": release, "attestation": attestation, "checks": checks,
+                "stable": rel.is_stable(version), "elapsed_ms": round((time.time() - started) * 1000)}
+    except Exception as err:  # noqa: BLE001
+        return {"ok": False, "release": release, "error": f"{type(err).__name__}: {err}"[:600]}
 
 
 async def call_canary(env, pointer):
@@ -286,47 +344,48 @@ async def call_canary(env, pointer):
     return result
 
 
-async def run_daily(env, channel="stable", promote=True):
-    started = now_iso()
-    record = {"started": started, "channel": channel, "promote_enabled": promote}
-    try:
-        pypi = await js_fetch_json("https://pypi.org/pypi/yt-dlp/json")
-        release = canary.pick_release(pypi, channel)
-        if release is None:
-            raise LookupError(f"no {channel} py3-none-any wheel on PyPI")
-        record["latest"] = {k: release[k] for k in ("version", "sha256", "uploaded")}
-        candidate, stored = await ensure_wheel(env, release)
-        record["candidate_stored_now"] = stored
+async def run_daily(env, promote=True):
+    """Qualify the newest eligible stable release and promote it if every gate passes.
 
+    Only the cron calls this with promote=True.
+    """
+    import release as rel
+    started = now_iso()
+    record = {"started": started, "channel": "stable", "promote_enabled": promote}
+    try:
         active = await kv_json(env, POINTER_ACTIVE) or bundled_pointer()
-        last_good = await kv_json(env, POINTER_LAST_GOOD)
         record["active_before"] = active
-        record["last_good_before"] = last_good
+        floor = max(active["version"], bundled_version(), key=rel.version_key)
+        pypi = json.loads(await js_get(PYPI_JSON, 16 * 1024 * 1024))
+        release, why = rel.pick_release(pypi, floor)
+        record["release_choice"] = why
+        candidate = None
+        if release is not None:
+            record["latest"] = {k: release[k] for k in ("version", "sha256", "uploaded")}
+            try:
+                candidate, stored = await qualify_release(env, release)
+                record["candidate_stored_now"] = stored
+            except Exception as err:  # noqa: BLE001 - a rejected wheel is a hold, not a crash
+                record["candidate_rejected"] = f"{type(err).__name__}: {err}"[:600]
 
         active_result = await call_canary(env, active)
-        candidate_result = None
-        if not canary.same(candidate, active):
-            candidate_result = await call_canary(env, candidate)
-        last_good_result = None
-        if not active_result.get("ok") and last_good and not canary.same(last_good, active) \
-                and not canary.same(last_good, candidate):
-            last_good_result = await call_canary(env, last_good)
+        candidate_result = await call_canary(env, candidate) if candidate else None
+        bundled_result = None
+        if not active_result.get("ok") and active.get("source") != "bundled":
+            bundled_result = await call_canary(env, bundled_pointer())
 
-        action, reason = canary.decide(active, active_result, candidate, candidate_result,
-                                       last_good, last_good_result)
+        action, reason = canary.decide(active, active_result, candidate, candidate_result, bundled_result)
+        if record.get("candidate_rejected") and action == "hold":
+            reason = f"candidate rejected before import ({record['candidate_rejected'][:200]}); {reason}"
         record.update(action=action, reason=reason, results={
-            "active": active_result, "candidate": candidate_result, "last_good": last_good_result})
+            "active": active_result, "candidate": candidate_result, "bundled": bundled_result})
         record["applied"] = bool(promote and action in ("promote", "rollback"))
         if promote and action == "promote":
-            # Only a version that just passed becomes the rollback target.
-            if active_result.get("ok"):
-                await kv_put_json(env, POINTER_LAST_GOOD, active)
             await kv_put_json(env, POINTER_ACTIVE, {**candidate, "promoted_at": now_iso()})
             record["active_after"] = candidate
         elif promote and action == "rollback":
-            await kv_put_json(env, POINTER_ACTIVE, {**last_good, "promoted_at": now_iso(),
-                                                    "rolled_back_from": active.get("version")})
-            record["active_after"] = last_good
+            await env.YT_STATE.delete(POINTER_ACTIVE)
+            record["active_after"] = bundled_pointer()
         else:
             record["active_after"] = active
     except Exception as err:  # noqa: BLE001
@@ -369,6 +428,20 @@ async def save_run(env, record):
 
 # ---------------------------------------------------------------- entrypoint
 
+def client_ip(request):
+    return request.headers.get("cf-connecting-ip") or "unknown"
+
+
+async def rate_ok(binding, key):
+    """Workers Rate Limiting binding. Missing binding (local tests) means allowed."""
+    if binding is None:
+        return True
+    import js
+    from pyodide.ffi import to_js
+    outcome = await binding.limit(to_js({"key": key}, dict_converter=js.Object.fromEntries))
+    return bool(outcome.success)
+
+
 class Default(WorkerEntrypoint):
 
     def authorized(self, request):
@@ -384,7 +457,7 @@ class Default(WorkerEntrypoint):
             return Response("", status=204, headers=CORS)
         try:
             if parts.path == "/health" and method == "GET":
-                return await self.health()
+                return await self.health(self.authorized(request) and query.get("detail") == "1")
             if parts.path in ("/video", "/playlist") and method == "GET":
                 return await self.read(parts.path[1:], query, request)
             if parts.path == "/internal/canary" and method == "GET":
@@ -392,13 +465,15 @@ class Default(WorkerEntrypoint):
                     return json_response({"error": "unauthorized"}, 401)
                 return await self.canary(query)
             if parts.path == "/admin/run-daily" and method == "POST":
+                # Dry run only: the cron is the only thing that promotes.
                 if not self.authorized(request):
                     return json_response({"error": "unauthorized"}, 401)
-                channel = query.get("channel", "stable")
-                if channel not in ("stable", "nightly"):
-                    raise BadInput("channel must be stable or nightly")
-                record = await run_daily(self.env, channel, promote=query.get("promote", "1") == "1")
-                return json_response(record)
+                return json_response(await run_daily(self.env, promote=False))
+            if parts.path == "/admin/check-release" and method == "POST":
+                # Vet any PyPI release (attestation + static checks) without storing it.
+                if not self.authorized(request):
+                    return json_response({"error": "unauthorized"}, 401)
+                return json_response(await check_release(query.get("version")))
             if parts.path == "/" and method == "GET":
                 return json_response({
                     "service": "doesitarm-youtube-api",
@@ -409,28 +484,29 @@ class Default(WorkerEntrypoint):
             return json_response({"error": str(err)}, 400)
 
     async def scheduled(self, controller, *args):
-        await run_daily(self.env, "stable", promote=True)
+        await run_daily(self.env, promote=True)
 
     def default_player_client(self):
         value = getattr(self.env, "PLAYER_CLIENT", None)
         return str(value) if value else None
 
-    async def health(self):
-        active = await kv_json(self.env, POINTER_ACTIVE)
-        return json_response({
-            "ok": True,
-            "api_version": API_VERSION,
-            "bundled_ytdlp": bundled_version(),
-            "player_client": self.default_player_client(),
-            "active": active or bundled_pointer(),
-            "last_good": await kv_json(self.env, POINTER_LAST_GOOD),
-            "loaded_in_this_isolate": loader.loaded(),
-            "last_run": await kv_json(self.env, RUN_LATEST),
-            "recent_runs": [
-                {k: r.get(k) for k in ("started", "channel", "action", "applied", "latest", "reason")}
-                for r in (await kv_json(self.env, RUN_INDEX) or [])[:7]
-            ],
-        }, extra={"cache-control": "no-store"})
+    async def health(self, detail=False):
+        active = await kv_json(self.env, POINTER_ACTIVE) or bundled_pointer()
+        body = {"ok": True, "ytdlp": {"version": active.get("version"), "source": active.get("source")}}
+        if detail:
+            body.update({
+                "api_version": API_VERSION,
+                "bundled_ytdlp": bundled_version(),
+                "player_client": self.default_player_client(),
+                "active": active,
+                "loaded_in_this_isolate": loader.loaded(),
+                "last_run": await kv_json(self.env, RUN_LATEST),
+                "recent_runs": [
+                    {k: r.get(k) for k in ("started", "action", "applied", "latest", "reason")}
+                    for r in (await kv_json(self.env, RUN_INDEX) or [])[:7]
+                ],
+            })
+        return json_response(body, extra={"cache-control": "no-store"})
 
     async def pointer_for(self, requested):
         if requested is None:
@@ -440,8 +516,8 @@ class Default(WorkerEntrypoint):
         if not valid_version(requested):
             raise BadInput("ytdlp must be a version like 2026.11.23 or 'bundled'")
         meta = await kv_json(self.env, f"wheel:{requested}")
-        if meta is None:
-            raise BadInput(f"no stored wheel for yt-dlp {requested}")
+        if meta is None or not meta.get("attestation"):
+            raise BadInput(f"no attested wheel stored for yt-dlp {requested}")
         return meta
 
     async def read(self, kind, query, request):
@@ -453,19 +529,44 @@ class Default(WorkerEntrypoint):
         if kind == "video":
             target = require_video_id(query.get("id"))
             limit = None
-            cache_key = f"cache:v{API_VERSION}:video:{target}"
             ttl = VIDEO_TTL
         else:
             target = require_playlist_id(query.get("id"))
             limit = parse_limit(query.get("limit"))
-            cache_key = f"cache:v{API_VERSION}:playlist:{target}:{limit}"
             ttl = PLAYLIST_TTL
+        # Playlists are always fetched and cached at the maximum, then sliced, so
+        # `limit` does not multiply cache keys.
+        cache_key = f"cache:v{API_VERSION}:{kind}:{target}"
+        fail_key = f"fail:v{API_VERSION}:{kind}:{target}"
+
+        def shape(data):
+            if kind == "playlist":
+                items = data.get("items", [])[:limit]
+                return {**data, "items": items, "count": len(items)}
+            return data
 
         use_cache = not (requested or player_client or query.get("fresh"))
         cached = await kv_json(self.env, cache_key) if use_cache else None
         if cached and time.time() - cached.get("fetched_epoch", 0) < ttl:
-            return json_response({**cached["data"], "meta": {**cached["meta"], "cache": "hit"}},
+            return json_response({**shape(cached["data"]), "meta": {**cached["meta"], "cache": "hit"}},
                                  extra={"cache-control": "public, max-age=300"})
+        if use_cache:
+            failure = await kv_json(self.env, fail_key)
+            if failure:
+                if cached:
+                    return json_response({**shape(cached["data"]), "meta": {
+                        **cached["meta"], "cache": "stale", "stale_reason": failure}})
+                return json_response({**failure, "cached_failure": True}, 502,
+                                     extra={"cache-control": f"public, max-age={NEGATIVE_TTL}"})
+        if not privileged:
+            ip = client_ip(request)
+            if not (await rate_ok(getattr(self.env, "MISS_PER_IP", None), ip)
+                    and await rate_ok(getattr(self.env, "MISS_GLOBAL", None), "all")):
+                if cached:
+                    return json_response({**shape(cached["data"]), "meta": {
+                        **cached["meta"], "cache": "stale", "stale_reason": "rate limited"}})
+                return json_response({"error": "rate limited: too many uncached requests, retry in a minute"},
+                                     429, extra={"retry-after": "60"})
 
         started = time.time()
         player_client = player_client or self.default_player_client()
@@ -475,30 +576,37 @@ class Default(WorkerEntrypoint):
             if kind == "video":
                 data, warnings, calls = get_video(target, player_client)
             else:
-                data, warnings, calls = get_playlist(target, limit, player_client)
+                data, warnings, calls = get_playlist(target, MAX_PLAYLIST_LIMIT, player_client)
         except Exception as err:  # noqa: BLE001
             text = f"{type(err).__name__}: {err}"[:600]
             failure = canary.classify(text, getattr(err, "warnings", []))
-            body = {"error": "extraction failed", "class": failure, "detail": text, "ytdlp": ytdlp}
+            body = {"error": "extraction failed", "class": failure, "detail": text,
+                    "ytdlp": {"version": ytdlp.get("version"), "source": ytdlp.get("source")}}
+            if use_cache:
+                await kv_put_json(self.env, fail_key, body, ttl=NEGATIVE_TTL)
             if privileged:
                 body["calls"] = getattr(err, "calls", [])
                 body["warnings"] = getattr(err, "warnings", [])
             if cached and use_cache:
-                return json_response({**cached["data"], "meta": {
+                return json_response({**shape(cached["data"]), "meta": {
                     **cached["meta"], "cache": "stale", "stale_reason": body}})
             return json_response(body, 502)
 
         if kind == "video":
             data["complete"] = bool(data.get("title") and data.get("duration") and data.get("upload_date"))
-        meta = {"fetched_at": now_iso(), "ytdlp": ytdlp, "player_client": player_client, "requests": len(calls),
+        meta = {"fetched_at": now_iso(), "ytdlp": {"version": ytdlp.get("version"), "source": ytdlp.get("source")},
+                "player_client": player_client, "requests": len(calls),
                 "elapsed_ms": round((time.time() - started) * 1000), "warnings": len(warnings)}
+        if ytdlp.get("fallback_reason"):
+            meta["ytdlp"]["fallback"] = True
         if use_cache:
             await kv_put_json(self.env, cache_key, {"data": data, "meta": meta,
                                                     "fetched_epoch": time.time()}, ttl=STALE_KEEP)
-        out = {**data, "meta": {**meta, "cache": "miss" if use_cache else "bypass"}}
+        out = {**shape(data), "meta": {**meta, "cache": "miss" if use_cache else "bypass"}}
         if privileged and query.get("debug"):
             out["meta"]["calls"] = calls
             out["meta"]["warning_text"] = warnings
+            out["meta"]["ytdlp"] = ytdlp
         return json_response(out, extra={"cache-control": "public, max-age=300"})
 
     async def canary(self, query):

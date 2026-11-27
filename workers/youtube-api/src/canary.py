@@ -34,7 +34,10 @@ NETWORK_PATTERNS = re.compile(
     re.IGNORECASE,
 )
 
+UNAVAILABLE_PATTERNS = re.compile(r"video unavailable|private video|has been removed|members-only", re.IGNORECASE)
+
 YOUTUBE_BLOCKED = "youtube_blocked"
+UNAVAILABLE = "unavailable"
 NETWORK = "network"
 UPSTREAM_BROKE = "upstream_broke"
 CONTRACT = "contract"
@@ -45,6 +48,8 @@ def classify(error_text, warnings=()):
     text = " ".join([error_text or "", *warnings])
     if BLOCKED_PATTERNS.search(text):
         return YOUTUBE_BLOCKED
+    if UNAVAILABLE_PATTERNS.search(error_text or ""):
+        return UNAVAILABLE
     if NETWORK_PATTERNS.search(error_text or ""):
         return NETWORK
     return UPSTREAM_BROKE
@@ -123,9 +128,11 @@ def same(a, b):
     return bool(a and b) and a.get("version") == b.get("version") and a.get("source") == b.get("source")
 
 
-def decide(active, active_result, candidate=None, candidate_result=None,
-           last_good=None, last_good_result=None):
-    """Return (action, reason). action is promote | rollback | hold."""
+def decide(active, active_result, candidate=None, candidate_result=None, bundled_result=None):
+    """Return (action, reason). action is promote | rollback | hold.
+
+    The bundled copy is the only rollback target: a downloaded wheel never becomes it.
+    """
     if candidate and candidate_result and not same(candidate, active):
         if candidate_result.get("ok"):
             return "promote", f"candidate {candidate['version']} ({candidate['source']}) passed all canaries"
@@ -133,41 +140,12 @@ def decide(active, active_result, candidate=None, candidate_result=None,
     if active_ok:
         if candidate_result and not candidate_result.get("ok"):
             return "hold", f"candidate failed ({', '.join(candidate_result.get('failure_classes', []))}); active still green"
-        return "hold", "active is green and there is no newer candidate"
+        return "hold", "active is green and there is no eligible candidate"
     classes = set(active_result.get("failure_classes", [])) if active_result else {"missing"}
+    if (active or {}).get("source") == "bundled":
+        return "hold", f"bundled copy failing ({', '.join(sorted(classes))}); nothing older to roll back to"
     if classes <= {YOUTUBE_BLOCKED, NETWORK}:
         return "hold", f"active failing for reasons outside yt-dlp ({', '.join(sorted(classes))}); not changing versions"
-    if last_good and last_good_result and last_good_result.get("ok") and not same(last_good, active):
-        return "rollback", f"active failing ({', '.join(sorted(classes))}) while last good {last_good['version']} passes"
-    return "hold", f"active failing ({', '.join(sorted(classes))}) and no green alternative"
-
-
-def version_key(version):
-    parts = re.findall(r"\d+", version.split(".dev")[0])
-    return tuple(int(p) for p in parts)
-
-
-def pick_release(pypi_json, channel="stable"):
-    """Choose the newest wheel from PyPI JSON for the channel. Returns dict or None."""
-    releases = pypi_json.get("releases", {})
-    if channel == "stable":
-        candidates = [pypi_json.get("info", {}).get("version")]
-    else:
-        candidates = sorted(releases, key=version_key, reverse=True)[:5]
-    for version in candidates:
-        if not version:
-            continue
-        if channel == "stable" and ".dev" in version:
-            continue
-        for file in releases.get(version, []):
-            if file.get("packagetype") == "bdist_wheel" and file.get("filename", "").endswith("py3-none-any.whl") \
-                    and not file.get("yanked"):
-                return {
-                    "version": version,
-                    "url": file["url"],
-                    "sha256": file["digests"]["sha256"],
-                    "size": file.get("size"),
-                    "filename": file["filename"],
-                    "uploaded": file.get("upload_time_iso_8601"),
-                }
-    return None
+    if bundled_result and bundled_result.get("ok"):
+        return "rollback", f"active failing ({', '.join(sorted(classes))}) while the bundled copy passes"
+    return "hold", f"active failing ({', '.join(sorted(classes))}) and the bundled copy is not green either"

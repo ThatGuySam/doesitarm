@@ -17,7 +17,7 @@
     // LOGIN_REQUIRED; tv_simply then web_embedded returned full metadata 5/5.
     "PLAYER_CLIENT": "tv_simply,web_embedded"
   },
-  // Daily qualify-and-promote job (UTC).
+  // Daily qualify-and-promote job (UTC). The only thing that can change versions.
   "triggers": { "crons": ["17 9 * * *"] },
   "kv_namespaces": [
     { "binding": "YT_STATE", "id": "cf44dc02a5e4472bb95fec0f0cf10080" }
@@ -27,6 +27,11 @@
   ],
   // The daily job calls its own /internal/canary so each yt-dlp version runs in
   // its own invocation with its own CPU and subrequest budget.
+  // Cache misses (real YouTube extractions) per client IP and in total, per location.
+  "ratelimits": [
+    { "name": "MISS_PER_IP", "namespace_id": "471101", "simple": { "limit": 10, "period": 60 } },
+    { "name": "MISS_GLOBAL", "namespace_id": "471102", "simple": { "limit": 60, "period": 60 } }
+  ],
   "services": [
     { "binding": "SELF", "service": "doesitarm-youtube-api" }
   ]

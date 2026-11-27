@@ -39,7 +39,13 @@ These need the `x-canary-key` header (the `CANARY_KEY` secret):
 - `player_client=a,b` overrides yt-dlp's YouTube player clients.
 - `fresh=1` skips the cache; `debug=1` adds the request log and yt-dlp warnings.
 - `GET /internal/canary?ytdlp=<version>` runs the canary suite for one version.
-- `POST /admin/run-daily?channel=stable|nightly&promote=1|0` runs the daily job now.
+- `POST /admin/run-daily` runs the daily job as a dry run (it never promotes; only the cron does).
+- `POST /admin/check-release?version=<v>` runs the attestation and static wheel checks without storing anything.
+
+Phase 1 gates (2026-11-27): stable releases only, at least 3 days old, strictly newer than the
+active version; a valid PEP 740 attestation from GitHub `yt-dlp/yt-dlp` `release.yml` for the
+exact wheel digest (`src/provenance.py`, verified in pure Python against pinned Sigstore keys);
+static wheel checks (`src/release.py`); the bundled copy is the only rollback target.
 
 ## How it works
 

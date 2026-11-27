@@ -10,6 +10,8 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(1, str(ROOT / "python_modules"))
 
 import canary  # noqa: E402
+import provenance  # noqa: E402
+import release  # noqa: E402
 import transport  # noqa: E402
 from normalize import (  # noqa: E402
     BadInput,
@@ -212,10 +214,11 @@ class CanaryTests(unittest.TestCase):
         self.assertEqual(canary.decide(self.A, green, self.C, green)[0], "promote")
         self.assertEqual(canary.decide(self.A, green, self.C, broke)[0], "hold")
         self.assertEqual(canary.decide(self.A, green, self.A, green)[0], "hold")
-        self.assertEqual(canary.decide(self.C, broke, self.C, None, self.G, green)[0], "rollback")
-        self.assertEqual(canary.decide(self.C, blocked, None, None, self.G, green)[0], "hold")
-        self.assertEqual(canary.decide(self.C, broke, None, None, self.G, broke)[0], "hold")
-
+        # Rollback goes to bundled only, and only when bundled passes.
+        self.assertEqual(canary.decide(self.C, broke, None, None, green)[0], "rollback")
+        self.assertEqual(canary.decide(self.C, broke, None, None, broke)[0], "hold")
+        self.assertEqual(canary.decide(self.C, blocked, None, None, green)[0], "hold")
+        self.assertEqual(canary.decide(self.A, broke, None, None, None)[0], "hold")
     def test_suite_marks_contract_failures(self):
         def playlist(pid, limit):
             case = next(c for c in canary.PLAYLIST_CASES if c["id"] == pid)
@@ -232,16 +235,146 @@ class CanaryTests(unittest.TestCase):
         self.assertEqual(result["passed"], 3)
         self.assertEqual(result["failure_classes"], [canary.CONTRACT, canary.YOUTUBE_BLOCKED])
 
-    def test_pick_release(self):
-        pypi = {"info": {"version": "2026.11.23"}, "releases": {
-            "2026.11.23": [{"packagetype": "bdist_wheel", "filename": "yt_dlp-2026.11.23-py3-none-any.whl",
-                            "url": "u", "digests": {"sha256": "s"}}],
-            "2026.11.24.232653.dev0": [{"packagetype": "bdist_wheel",
-                                        "filename": "yt_dlp-2026.11.24.232653.dev0-py3-none-any.whl",
-                                        "url": "n", "digests": {"sha256": "t"}}],
+
+
+def _file(version, uploaded, sha="s", size=3186416):
+    name = f"yt_dlp-{version}-py3-none-any.whl"
+    return {"packagetype": "bdist_wheel", "filename": name, "size": size,
+            "url": f"https://files.pythonhosted.org/packages/aa/bb/{name}", "digests": {"sha256": sha},
+            "upload_time_iso_8601": uploaded}
+
+
+class ReleaseTests(unittest.TestCase):
+    NOW = release.parse_iso("2026-11-27T12:00:00")
+
+    def pypi(self):
+        return {"releases": {
+            "2026.11.20": [_file("2026.11.20", "2026-11-20T10:00:00.1Z")],
+            "2026.11.23": [_file("2026.11.23", "2026-11-23T23:50:00.0Z")],
+            "2026.11.25": [_file("2026.11.25", "2026-11-25T08:00:00.0Z")],
+            "2026.11.26.232653.dev0": [_file("2026.11.26.232653.dev0", "2026-11-20T00:00:00Z")],
         }}
-        self.assertEqual(canary.pick_release(pypi, "stable")["version"], "2026.11.23")
-        self.assertEqual(canary.pick_release(pypi, "nightly")["version"], "2026.11.24.232653.dev0")
+
+    def test_stable_cooldown_and_strictly_newer(self):
+        pick, _ = release.pick_release(self.pypi(), "2026.11.20", now=self.NOW)
+        self.assertEqual(pick["version"], "2026.11.23")  # 2026.11.25 is too new, dev is ignored
+        pick, why = release.pick_release(self.pypi(), "2026.11.23", now=self.NOW)
+        self.assertIsNone(pick)
+        self.assertIn("cooldown", why)
+        pick, _ = release.pick_release(self.pypi(), "2026.11.25", now=self.NOW + 10 * 86400)
+        self.assertIsNone(pick)  # never the same or older
+        pick, _ = release.pick_release(self.pypi(), "2026.11.23", now=self.NOW + 3 * 86400)
+        self.assertEqual(pick["version"], "2026.11.25")
+
+    def test_url_check(self):
+        good = {"version": "2026.11.23", **_file("2026.11.23", "x")}
+        release.check_release_url(good)
+        for bad in ({**good, "url": "https://evil.example/yt_dlp-2026.11.23-py3-none-any.whl"},
+                    {**good, "url": "http://files.pythonhosted.org/p/yt_dlp-2026.11.23-py3-none-any.whl"},
+                    {**good, "size": 50 * 1024 * 1024}):
+            with self.assertRaises(release.WheelRejected):
+                release.check_release_url(bad)
+
+    def test_wheel_checks(self):
+        import io
+        import zipfile
+        wheel = ROOT / ".vendor" / "yt_dlp-2026.11.23-py3-none-any.whl"
+        data = wheel.read_bytes()
+        ref = {"size": len(data), "files": 1056}
+        self.assertEqual(release.check_wheel(data, "2026.11.23", ref)["files"], 1056)
+        with self.assertRaises(release.WheelRejected):
+            release.check_wheel(data, "2026.11.24", ref)  # version mismatch
+
+        def rebuilt(extra_name):
+            out = io.BytesIO()
+            with zipfile.ZipFile(data and io.BytesIO(data)) as src, zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as dst:
+                for info in src.infolist():
+                    dst.writestr(info, src.read(info))
+                dst.writestr(extra_name, b"import os")
+            return out.getvalue()
+
+        for name in ("evil.pth", "sitecustomize.py", "yt_dlp/_native.so", "../x.py",
+                     "yt_dlp-2026.11.23.data/purelib/x.py"):
+            with self.assertRaises(release.WheelRejected, msg=name):
+                release.check_wheel(rebuilt(name), "2026.11.23", ref)
+        with self.assertRaises(release.WheelRejected):
+            release.check_wheel(data, "2026.11.23", {"size": len(data) * 2, "files": 1056})
+
+
+class ProvenanceTests(unittest.TestCase):
+    NAME = "yt_dlp-2026.11.23-py3-none-any.whl"
+    SHA = "e9188e0c559905f7ee05acc1ba0b6fb3f310e7565bf6dea5f62b5300e0775e35"
+
+    def load(self):
+        import json
+        return json.loads((ROOT / "tests" / "fixtures" / "provenance-yt_dlp-2026.11.23.json").read_text())
+
+    def test_real_attestation_verifies(self):
+        summary = provenance.verify_provenance(self.load(), self.NAME, self.SHA)
+        self.assertTrue(summary["identity"].startswith(provenance.WORKFLOW_URI_PREFIX))
+
+    def test_pinned_intermediate_chains_to_root(self):
+        import base64
+        inter = provenance.parse_certificate(base64.b64decode(provenance.FULCIO_INTERMEDIATE_B64))
+        root = provenance.parse_certificate(base64.b64decode(provenance.FULCIO_ROOT_B64))
+        self.assertTrue(provenance.verify_cert_signature(inter, root))
+
+    def test_tampering_is_rejected(self):
+        import base64
+        import json
+
+        def flip_b64(value, index):
+            raw = bytearray(base64.b64decode(value))
+            raw[index] ^= 1
+            return base64.b64encode(bytes(raw)).decode()
+
+        def tamper(fn):
+            prov = self.load()
+            bundle = prov["attestation_bundles"][0]
+            att = bundle["attestations"][0]
+            fn(bundle, att, att["verification_material"]["transparency_entries"][0])
+            return prov
+
+        def publisher(bundle, att, entry):
+            bundle["publisher"]["repository"] = "evil/yt-dlp"
+
+        def signature(bundle, att, entry):
+            att["envelope"]["signature"] = flip_b64(att["envelope"]["signature"], 20)
+
+        def certificate(bundle, att, entry):
+            vm = att["verification_material"]
+            vm["certificate"] = flip_b64(vm["certificate"], 300)
+
+        def statement(bundle, att, entry):
+            st = json.loads(base64.b64decode(att["envelope"]["statement"]))
+            st["subject"][0]["digest"]["sha256"] = "0" * 64
+            att["envelope"]["statement"] = base64.b64encode(json.dumps(st).encode()).decode()
+
+        def set_sig(bundle, att, entry):
+            promise = entry["inclusionPromise"]
+            promise["signedEntryTimestamp"] = flip_b64(promise["signedEntryTimestamp"], 30)
+
+        def logged_time(bundle, att, entry):
+            entry["integratedTime"] = "1795400000"
+
+        def proof(bundle, att, entry):
+            entry["inclusionProof"]["hashes"].reverse()
+
+        cases = [
+            ("wrong digest", self.load(), self.NAME, "0" * 64),
+            ("wrong file", self.load(), "yt_dlp-2026.11.24-py3-none-any.whl", self.SHA),
+            ("publisher", tamper(publisher), self.NAME, self.SHA),
+            ("signature", tamper(signature), self.NAME, self.SHA),
+            ("certificate", tamper(certificate), self.NAME, self.SHA),
+            ("statement swap", tamper(statement), self.NAME, "0" * 64),
+            ("signed entry timestamp", tamper(set_sig), self.NAME, self.SHA),
+            ("logged time", tamper(logged_time), self.NAME, self.SHA),
+            ("inclusion proof", tamper(proof), self.NAME, self.SHA),
+            ("empty", {"version": 1, "attestation_bundles": []}, self.NAME, self.SHA),
+        ]
+        for label, prov, name, sha in cases:
+            with self.assertRaises(provenance.AttestationError, msg=label):
+                provenance.verify_provenance(prov, name, sha)
 
 
 if __name__ == "__main__":
