@@ -207,10 +207,10 @@ export function bindLocalInputs({ view, mode }) {
     if (!dragDepth) dropZone.classList.remove('dragging');
   });
   window.addEventListener('dragenter', (event) => {
-    if (hasFiles(event)) document.body.classList.add('drag-active');
+    if (hasFiles(event)) document.querySelector('.dia-scanner').classList.add('drag-active');
   });
   window.addEventListener('dragleave', (event) => {
-    if (!event.relatedTarget) document.body.classList.remove('drag-active');
+    if (!event.relatedTarget) document.querySelector('.dia-scanner').classList.remove('drag-active');
   });
   window.addEventListener('dragover', (event) => {
     if (!hasFiles(event)) return;
@@ -221,7 +221,7 @@ export function bindLocalInputs({ view, mode }) {
     if (!hasFiles(event)) return;
     event.preventDefault();
     dragDepth = 0;
-    document.body.classList.remove('drag-active');
+    document.querySelector('.dia-scanner').classList.remove('drag-active');
     dropZone.classList.remove('dragging');
     if (!dropZone.contains(event.target)) return;
     const { sources, files: dropped } = captureDrop(event.dataTransfer);

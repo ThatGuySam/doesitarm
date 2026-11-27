@@ -117,7 +117,12 @@ export function measureSpacing(config) {
     if (kind !== 'pill') stats.push({ selector: describe(el), kind, group, ...pad });
 
     const limit = limits[kind];
+    // Scroll containers (tables, JSON blocks, the dialog) clip or scroll their content on purpose; their
+    // cells and children carry their own padding.
     const scrolls = ['auto', 'scroll'].includes(style.overflowX) || ['auto', 'scroll'].includes(style.overflowY);
+    if (scrolls) continue;
+    // Rows with content-visibility: auto are not laid out off screen, so their text boxes are placeholders.
+    const lazy = [...el.children].some((child) => getComputedStyle(child).contentVisibility === 'auto');
     if (el.matches('input, select, textarea')) {
       // Native controls draw their own text; their computed padding is the measure.
       for (const [side, value] of Object.entries(pad)) {
@@ -140,14 +145,15 @@ export function measureSpacing(config) {
       const horizontal = side === 'left' || side === 'right';
       const min = horizontal ? limit.inline : limit.block;
       const rounded = Math.round(gap * 10) / 10;
-      if (gap < -1 && !(scrolls && horizontal)) report('overflow', el, { side, gap: rounded, kind });
+      if (lazy && !horizontal) continue;
+      if (gap < -1) report('overflow', el, { side, gap: rounded, kind });
       else if (gap < 1 && kind !== 'cell') report('edge-touch', el, { side, gap: rounded, min, kind });
       else if (gap < min - 0.5) report('padding-tight', el, { side, gap: rounded, min, kind });
     }
   }
 
   // Stacked visual blocks (bordered blocks, progress tracks, outcome bars) must share edges and keep a gutter.
-  const visualBlock = (el) => visible(el) && (['progress'].includes(el.localName) || el.matches('svg[role="img"]') || containerKind(el) === 'panel' || containerKind(el) === 'dialog');
+  const visualBlock = (el) => visible(el) && !['absolute', 'fixed'].includes(getComputedStyle(el).position) && el.localName !== 'dialog' && (['progress'].includes(el.localName) || el.matches('svg[role="img"]') || containerKind(el) === 'panel' || containerKind(el) === 'dialog');
   for (const parent of [root, ...root.querySelectorAll('*')]) {
     const style = getComputedStyle(parent);
     if (style.display === 'none' || (style.display.includes('flex') && !style.flexDirection.startsWith('column'))) continue;

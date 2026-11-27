@@ -71,7 +71,7 @@ test('device-aware entry and phase changes in a real Chromium page', { timeout: 
         assert.equal(await page.locator('#advanced').evaluate((node) => node.open), !mac);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), width);
         if (touches > 0) {
-          await page.evaluate(() => document.body.classList.add('drag-active'));
+          await page.evaluate(() => document.querySelector('.dia-scanner').classList.add('drag-active'));
           assert.equal(await page.locator('.drop-hint').isVisible(), false);
           await page.getByText('Scan files instead').click();
           assert.equal(await page.locator('.drag-copy').isVisible(), false);

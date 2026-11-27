@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { scannerFragment } from './fragment.mjs';
 import { stringifyRedacted } from '../public/path-privacy.js';
 import { withoutWasmNames } from '../../scripts/wasm-sections.mjs';
 import { writeBrowserBuildInfo } from '../../scripts/browser-build-info.mjs';
@@ -72,6 +73,7 @@ mkdirSync(join(dist, 'pkg'));
 for (const asset of ['scan_wasm.js', 'scan_wasm_bg.wasm']) {
   cpSync(join(scanner, 'pkg', asset), join(dist, 'pkg', asset));
 }
+writeFileSync(join(dist, 'scanner-fragment.html'), scannerFragment(readFileSync(join(web, 'public/index.html'), 'utf8')));
 const homebrew = JSON.parse(readFileSync(join(scanner, 'results/homebrew-edge-sample.json'), 'utf8'));
 writeFileSync(join(dist, 'homebrew-run-1.json'), stringifyRedacted(homebrew) + '\n');
 

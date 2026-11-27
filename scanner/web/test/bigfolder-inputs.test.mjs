@@ -52,7 +52,7 @@ test('read-only folder picker scans real OPFS handles and exports all local evid
     page.on('request', (request) => requests.push(request.url()));
     await page.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
     await page.goto(url);
-    await page.evaluate(() => { document.documentElement.dataset.level = 'research'; });
+    await page.evaluate(() => { document.querySelector('.dia-scanner').dataset.level = 'research'; });
     const executable = await readFile(new URL('../../fixtures/thin.macho', import.meta.url));
     await page.evaluate(fixturePicker, [...executable]);
     await page.evaluate(() => {

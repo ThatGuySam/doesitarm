@@ -44,7 +44,7 @@ export function configureScannerEntry() {
   zone.dataset.entry = entry;
   // Feature detection, not user-agent sniffing: Firefox and Safari take folders by drag and drop.
   get('choose-folder').hidden = typeof window.showDirectoryPicker !== 'function';
-  document.body.classList.toggle('touch-input', touch);
+  document.querySelector('.dia-scanner').classList.toggle('touch-input', touch);
   if (entry === 'url') {
     zone.prepend(urlDetails);
     urlDetails.open = true;

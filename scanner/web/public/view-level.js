@@ -42,7 +42,7 @@ export function drawOutcomes(svg, tones) {
   svg.setAttribute('aria-label', `Outcomes: ${words.join(', ')}`);
 }
 
-export function bindViewLevel({ storage = globalThis.localStorage, root = document.documentElement } = {}) {
+export function bindViewLevel({ storage = globalThis.localStorage, root = document.querySelector('.dia-scanner') } = {}) {
   const more = document.getElementById('more-options');
   const research = document.getElementById('research-view');
   const reset = document.getElementById('reset-view');

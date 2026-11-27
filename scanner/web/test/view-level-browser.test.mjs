@@ -17,8 +17,8 @@ test('view levels: Minimal by default, disclosure persists, reset returns to Min
     const page = await context.newPage();
     page.setDefaultTimeout(10_000);
     await page.goto(url);
-    const level = () => page.evaluate(() => document.documentElement.dataset.level);
-    const reach = (value) => page.waitForFunction((want) => document.documentElement.dataset.level === want, value);
+    const level = () => page.evaluate(() => document.querySelector('.dia-scanner').dataset.level);
+    const reach = (value) => page.waitForFunction((want) => document.querySelector('.dia-scanner').dataset.level === want, value);
     const stored = () => page.evaluate((key) => localStorage.getItem(key), KEY);
     assert.equal(await level(), 'minimal');
     assert.match(await page.locator('#drop-prompt').innerText(), /^Drag an app, a folder, or a folder of apps here\./);

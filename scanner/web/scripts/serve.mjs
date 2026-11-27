@@ -4,6 +4,7 @@ import { createServer } from 'node:http';
 import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
+import { scannerFragment, composeLayout } from './fragment.mjs';
 
 const dist = fileURLToPath(new URL('../dist', import.meta.url));
 // SCANNER_PUBLIC lets scripts/count-elements.mjs measure an older copy of public/.
@@ -22,7 +23,7 @@ const contentTypes = {
   wasm: 'application/wasm',
 };
 
-export async function startPreview({ port = 0, api = null, fromSource = false, extraAssets = new Map() } = {}) {
+export async function startPreview({ port = 0, api = null, fromSource = false, extraAssets = new Map(), siteHtml = null } = {}) {
   const root = fromSource ? source : dist;
   const lines = (await readFile(resolve(root, '_headers'), 'utf8')).trimEnd().split('\n');
   const headers = Object.fromEntries(lines.slice(1).map((line) => {
@@ -48,7 +49,18 @@ export async function startPreview({ port = 0, api = null, fromSource = false, e
         return;
       }
 
-      const pathname = url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname);
+      if (url.pathname === '/scanner-fragment.html' || url.pathname === '/layout/scanner-fragment.html') {
+        response.writeHead(200, { ...headers, 'Content-Type': contentTypes.html });
+        return response.end(scannerFragment(await readFile(resolve(root, 'index.html'), 'utf8')));
+      }
+      if (url.pathname === '/layout/' && siteHtml) {
+        const fragment = scannerFragment(await readFile(resolve(root, 'index.html'), 'utf8'));
+        response.writeHead(200, { 'Content-Type': contentTypes.html });
+        return response.end(composeLayout(await siteHtml(), fragment, { scannerBase: '/layout/' }));
+      }
+      // The layout harness lives at /layout/, so its relative scanner assets resolve like /apple-silicon-app-test/.
+      const mapped = url.pathname.startsWith('/layout/') ? url.pathname.slice('/layout'.length) : url.pathname;
+      const pathname = mapped === '/' ? '/index.html' : decodeURIComponent(mapped);
       const asset = extraAssets.get(pathname) ?? (fromSource ? sourceAssets.get(pathname) : undefined);
       const path = asset ? fileURLToPath(asset) : resolve(root, `.${pathname}`);
       if (!asset && !path.startsWith(`${root}${sep}`)) throw new Error();

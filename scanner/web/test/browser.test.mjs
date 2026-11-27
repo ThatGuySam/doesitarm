@@ -272,7 +272,7 @@ test('Chromium picker, directory drop, sparse ranges, URL scans and Homebrew com
       await privacyPage.route('**/app.js', (route) => route.fulfill({ contentType: 'text/javascript', body: '' }));
       await privacyPage.addInitScript(() => localStorage.setItem('doesitarm.scanner.view.v1', '{"level":"research"}'));
       await privacyPage.goto(url);
-      await privacyPage.evaluate(() => { document.documentElement.dataset.level = 'research'; });
+      await privacyPage.evaluate(() => { document.querySelector('.dia-scanner').dataset.level = 'research'; });
       await privacyPage.evaluate(async () => {
         const { ResultsList } = await import('/results-list.js');
         const { emptyResult } = await import('/scan-result.js');

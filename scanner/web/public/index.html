@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-level="minimal">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,7 @@
   <title>Apple Silicon App Test · Does It ARM</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./bigfolder.css">
+  <link rel="stylesheet" href="./shell.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -19,6 +20,9 @@
     </nav>
   </header>
 
+  <!--scanner:start-->
+  <div class="dia-scanner" data-level="minimal">
+  <!--scanner-switch-->
   <aside id="crash-notice" class="crash-notice" role="status" hidden>
     <p>The last scan ended unexpectedly.</p>
     <button type="button" id="crash-download" class="quiet-button">Download crash report</button>
@@ -27,7 +31,7 @@
 
   <main id="main">
     <section id="scan" class="hero" aria-labelledby="scan-title">
-      <h1 id="scan-title">Apple Silicon App Test</h1>
+      <div class="title-wrap"><h1 id="scan-title">Apple Silicon App Test</h1><span class="beta-pill" data-pill>Beta</span></div>
 
       <div id="drop-zone" class="drop-zone">
         <p class="drop-prompt" id="drop-prompt"><span class="drag-copy">Drag an app, a folder, or a folder of apps here.<br></span><span class="privacy">Files stay in this browser.</span></p>
@@ -188,5 +192,7 @@
       <button type="button" class="quiet-button cancel-button">Cancel</button>
     </li>
   </template>
+  </div>
+  <!--scanner:end-->
 </body>
 </html>

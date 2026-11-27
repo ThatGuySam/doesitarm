@@ -11,6 +11,12 @@ import { emulateMac, requireBrowserHeadroom } from './browser-helpers.mjs';
 import { fixture } from './helpers.mjs';
 import { LIMITS, measureSpacing } from './padding-measure.mjs';
 
+export async function liveSiteHtml() {
+  const response = await fetch('https://doesitarm.com/apple-silicon-app-test');
+  if (!response.ok) throw new Error(`Site page returned ${response.status}`);
+  return response.text();
+}
+
 const WIDTHS = {
   desktop: { width: 1440, height: 900 },
   tablet: { width: 820, height: 1180 },
@@ -201,10 +207,10 @@ export async function runCheck({ target = 'standalone', url: liveUrl, widths = O
   let preview;
   let base = liveUrl;
   if (!base) {
-    preview = await startPreview({ fromSource: true });
+    preview = await startPreview({ fromSource: true, siteHtml: target === 'layout' ? liveSiteHtml : null });
     base = target === 'layout' ? `${preview.url}${layoutRoute ?? '/layout/'}` : preview.url;
   }
-  const rootSelector = target === 'layout' || liveUrl?.includes('v=3') ? '.dia-scanner' : '.dia-scanner, body';
+  const rootSelector = '.dia-scanner';
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/usr/bin/chromium' });
   const violations = [];
   const stats = [];
