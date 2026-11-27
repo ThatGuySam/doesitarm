@@ -34,3 +34,5 @@ export function CodeBlockHighlightedLines() {
     </div>
   )
 }
+
+export default CodeBlockHighlightedLines

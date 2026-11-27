@@ -142,3 +142,5 @@ export function TraceCommit() {
     </Trace>
   )
 }
+
+export default TraceCommit

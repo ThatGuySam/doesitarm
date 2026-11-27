@@ -93,4 +93,4 @@ export function CodeBlockShowMoreScroll() {
   )
 }
 
-export default Chat
+export default CodeBlockShowMoreScroll

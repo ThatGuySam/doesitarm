@@ -91,4 +91,4 @@ export function CodeBlockShowMore() {
   )
 }
 
-export default Chat
+export default CodeBlockShowMore

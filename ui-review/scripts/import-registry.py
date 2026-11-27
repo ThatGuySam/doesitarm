@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import tempfile
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -218,15 +219,6 @@ def vendor_file(path, content):
     output.write_text(rewrite(content, path))
 
 
-def prefer_default(path, source):
-    if re.search(r"\bexport\s+default\s", source):
-        return source
-    name = next(iter(re.findall(r"^export (?:function|const|class) ([A-Z]\w*)", source, flags=re.M)), None)
-    if name is None:
-        raise ValueError(f"No preview export in {path}")
-    return f"{source.rstrip()}\n\nexport default {name}\n"
-
-
 def label(slug):
     return " ".join({"ai": "AI", "kbd": "Kbd", "otp": "OTP", "rtl": "RTL", "url": "URL"}.get(word, word.capitalize()) for word in slug.split("-"))
 
@@ -244,7 +236,7 @@ def sample(id, title, source):
 
 
 def register_sample(previews, row, path, source):
-    vendor_file(path, prefer_default(path, source))
+    vendor_file(path, source)
     previews[row["id"]] = path
     return row
 
@@ -491,6 +483,12 @@ def write_catalog(cache, indexes):
     apps = publish_apps(cache, previews)
     publish_support(cache)
     assets = publish_public_assets(cache)
+    subprocess.run(
+        ["node", str(REVIEW / "scripts" / "ensure-preview-exports.mjs")],
+        input=json.dumps(list(previews.values())),
+        text=True,
+        check=True,
+    )
 
     layout_blocks.sort(key=lambda row: (not row["id"].endswith("dashboard-01"), row["id"]))
     compositions = [

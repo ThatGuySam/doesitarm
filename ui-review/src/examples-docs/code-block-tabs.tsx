@@ -90,4 +90,4 @@ export function CodeBlockTabs() {
   )
 }
 
-export default Chat
+export default CodeBlockTabs

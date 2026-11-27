@@ -40,4 +40,4 @@ export function MarkdownDemo() {
   )
 }
 
-export default Greeting
+export default MarkdownDemo
