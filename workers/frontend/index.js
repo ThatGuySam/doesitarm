@@ -22,6 +22,12 @@ function redirectPreview ( url ) {
     } ) )
 }
 
+function plainHeaders ( source ) {
+    const headers = new Headers( source )
+    for ( const name of [ 'If-Modified-Since', 'If-None-Match', 'Range', 'Authorization' ] ) headers.delete( name )
+    return headers
+}
+
 function fetchScanner ( scanner, request, url, assetPath ) {
     if ( assetPath ) {
         url.pathname = assetPath
@@ -32,7 +38,7 @@ function fetchScanner ( scanner, request, url, assetPath ) {
     const headers = new Headers( request.headers )
     headers.delete( 'Authorization' )
     headers.delete( 'Cookie' )
-    if ( assetPath === '/' ) {
+    if ( assetPath === '/' || assetPath === '/scanner-fragment' ) {
         headers.delete( 'If-Modified-Since' )
         headers.delete( 'If-None-Match' )
         headers.delete( 'Range' )
@@ -46,22 +52,30 @@ function fetchScanner ( scanner, request, url, assetPath ) {
     } ) )
 }
 
-function scannerPreview ( response ) {
-    const notice = `<aside class="scanner-version-notice" aria-label="Scanner version">
-        <span>You are using scanner v3 (preview).</span>
-        <a href="?v=1">Switch to v1</a>
-        <button type="button" aria-label="Dismiss scanner version notice" hidden>Dismiss</button>
-    </aside>`
+const scannerAssets = `<link rel="stylesheet" href="${ scannerPage }/style.css"><link rel="stylesheet" href="${ scannerPage }/bigfolder.css">
+    <script type="module" src="${ scannerPage }/app.js"></script>`
+
+// Mount the scanner inside the site's own rendered page: the layout's head, navbar,
+// footer and analytics stay as the default page renders them.
+function mountScanner ( page, fragment ) {
+    const switcher = `<p class="scanner-switch"><span>Scanner v3 (preview)</span> · <a href="?v=1">Switch to v1</a></p>`
+    let mounted = false
 
     return new HTMLRewriter()
         .on( 'head', { element: element => element.append(
-            `<meta name="robots" content="noindex"><link rel="canonical" href="https://doesitarm.com${ scannerPage }">
-            <link rel="stylesheet" href="/scanner-version.css"><script src="/scanner-version.js" defer></script>`,
+            `<meta name="robots" content="noindex">${ scannerAssets }`,
             { html: true }
         ) } )
-        .on( 'main', { element: element => element.before( notice, { html: true } ) } )
+        .on( 'link[rel="canonical"]', { element: element => element.setAttribute( 'href', `https://doesitarm.com${ scannerPage }` ) } )
         .on( 'nav a[aria-current="page"]', { element: element => element.setAttribute( 'href', '?v=3' ) } )
-        .transform( response )
+        .on( 'div.app-main', { element: element => {
+            if ( mounted ) return
+            mounted = true
+            element.setInnerContent( fragment
+                .replace( '<div class="dia-scanner"', '<div class="dia-scanner" data-embedded' )
+                .replace( '<!--scanner-switch-->', switcher ), { html: true } )
+        } } )
+        .transform( page )
 }
 
 export default {
@@ -87,18 +101,24 @@ export default {
                     return redirectPreview( url )
                 }
 
-                const upstream = await fetchScanner( scanner, request, url, '/' )
-                if ( !upstream.ok ) {
+                const [ upstream, page ] = await Promise.all( [
+                    fetchScanner( scanner, request, new URL( url ), '/scanner-fragment' ),
+                    handle( new Request( new URL( scannerPage, url ), {
+                        method: 'GET',
+                        headers: plainHeaders( request.headers )
+                    } ), env, context )
+                ] )
+                if ( !upstream.ok || !page.ok ) {
                     return uncached( new Response( 'Scanner v3 is temporarily unavailable. Return to the scanner page with ?v=1.', {
                         status: 502,
                         headers: { 'Content-Type': 'text/plain; charset=utf-8' }
                     } ) )
                 }
-                // Keep the scanner CSP and discard validators for the rewritten body.
-                const response = uncached( upstream, 'no-store, no-transform' )
+                const response = uncached( page, 'no-store, no-transform' )
                 response.headers.delete( 'ETag' )
                 response.headers.delete( 'Last-Modified' )
-                return request.method === 'HEAD' ? response : scannerPreview( response )
+                response.headers.delete( 'Content-Length' )
+                return request.method === 'HEAD' ? response : mountScanner( response, await upstream.text() )
             }
 
             if ( version === '1' && searchParams.has( 'version' ) ) {
