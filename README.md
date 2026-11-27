@@ -658,6 +658,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Skitch](https://evernote.com/products/skitch) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/821#issue-1059058802)
 * [Slidepad](https://slidepad.app/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/slidepad)
 * [SnagIt](https://www.techsmith.com/download/snagit/) - ✳️ Yes, works via Rosetta 2 but without video capture - [Source](https://github.com/ThatGuySam/doesitarm/issues/413) [Official documentation](https://support.techsmith.com/hc/en-us/articles/360052555611-Snagit-and-Apple-Silicon-Compatibility-Info)
+* [Sponge](https://sponge.computer/mac) - ✅ Yes, Native Apple Silicon Support as of v1.0.1 - [Verification](https://sponge.computer/mac)
 * [Studies for Mac](https://www.studiesapp.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344468/5114)
 * [Synology Drive Client](https://www.synology.com/en-us/support/download/DDSM#utilities) - ✅ Yes, Native Apple Silicon Support reported as of v3.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/1015#issue-1698388317)
 * [Tablecruncher](https://tablecruncher.com/download/) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://tablecruncher.com/blog/2020/version-1.5.1-apple-silicon-ready/)
