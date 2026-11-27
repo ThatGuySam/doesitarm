@@ -348,6 +348,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Lightroom Classic](https://www.adobe.com/products/photoshop-lightroom-classic.html) - ✅ Yes, Native Apple Silicon Support as of v10.3 - [Official Adobe Status Page](https://helpx.adobe.com/download-install/kb/apple-silicon-m1-chip.html)
 * [Linearity Curve](https://www.linearity.io/curve/) - ✅ Yes, it was shown at the November 10th, 2021 event - [Apple Nov 10 Event](https://youtu.be/5AwdkGKmZ0I?t=1300)
 * [Logoist 4](https://www.syniumsoftware.com/logoist) - ✅ Yes, Full Native Apple Silicon Support as of v4.1 - [Official News](https://www.syniumsoftware.com/synium-blog/apple-silicon-is-here-and-we-are-ready)
+* [Louppe](https://louppe.eu/) - ✅ Yes, Native Apple Silicon Support in v1.14.1 - [Release](https://github.com/murlexander/louppe-media-culler/releases/tag/v1.14.1)
 * [Luminar](https://skylum.com/luminar) - ✳️ Yes, works via Rosetta 2 - [Source](https://youtu.be/CKA1YW9l8j0?t=43)
 * [MacTeX](https://www.tug.org/mactex/mactex-download.html) - ✅ Yes, Full Native Apple Silicon Support as of MacTeX-2021 - [Official FAQ](https://www.tug.org/mactex/faq/index.html#qm08)
 * [Mail Designer 365](https://maildesigner365.com) - ✅ Yes, fully native support as of v2.0 - [Official page](https://www.maildesigner365.com/new-mail-designer-365-2-0-with-big-sur-optimization/)
@@ -424,6 +425,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Vuo](https://vuo.org/download) - ✅ Yes, Full Native Apple Silicon Support as of v2.3.0 - [Release Notes](https://vuo.org/release/2.3.0)
 * [WebTorrent](https://webtorrent.io/desktop/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/494#issuecomment-759525123)
 * [Wondershare Filmora](https://apps.apple.com/us/app/filmora-video-editor/id1516822341?mt=12) - ✅ Yes, Full Native Apple Silicon Support - [Official Post](https://filmora.wondershare.com/filmora-supports-apple-arm.html)
+* [Yaptake](https://yaptake.com/) - ✅ Yes, Native Apple Silicon Support as of v0.1.0 - [System requirements](https://yaptake.com/)
 
 
 
@@ -587,6 +589,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Jump Desktop](https://jumpdesktop.com/) - ✅ Yes, Full Native Apple Silicon Support as of v8.7.15 - [Changelog](https://changelog.jumpdesktop.com/jump-desktop-8.7.15-for-mac-3cSLeM)
 * [Keep It](https://reinventedsoftware.com/keepit/) - ✅ Yes, Full Native Apple Silicon Support as of v1.9 - [Official News](https://reinventedsoftware.com/news/)
 * [Key Codes](https://manytricks.com/keycodes/) - ✅ Yes, Full Native Apple Silicon Support as of v2.2 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
+* [Kimiko](https://kimiko.app/) - ✅ Native Apple Silicon support in v0.9.12 - [Release notes](https://docs.kimiko.app/changelog/#v0912) [Issue](https://github.com/ThatGuySam/doesitarm/issues/1126)
 * [Lacona](https://lacona.app/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/344402/5114)
 * [Later](https://getlater.app/) - ✅ Yes, Native Apple Silicon Support - [Verfication](https://github.com/ThatGuySam/doesitarm/issues/971)
 * [LaunchBar](https://www.obdev.at/products/launchbar/download.html) - ✅ Yes, Full Native Apple Silicon Support - [Source](https://github.com/ThatGuySam/doesitarm/issues/320)
@@ -746,6 +749,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Vienna](https://github.com/ViennaRSS/vienna-rss/releases/latest) - ✅ Yes, Full Native Apple Silicon Support as of v3.6 - [Release Notes](https://github.com/ViennaRSS/vienna-rss/releases/tag/v/3.6.0)
 * [VLC](https://www.videolan.org/vlc/download-macosx.html) - ✅ Yes, Full Native Apple Silicon Support as of v3.0.12 - [Release Notes](https://www.videolan.org/news.html#news-2021-01-12)
 * [Xbox Game Pass for PC](https://www.xbox.com/en-US/xbox-game-pass/pc-games) - ✳️ Yes, works via Parallels virtualization - [Download Parallels](https://prf.hn/l/6qOdLPB)
+* [Zenaria](https://zenaria.ru/en/mac) - ✅ Native Apple Silicon support in v11.21.8, ad hoc signed - [Mac requirements](https://zenaria.ru/en/mac) [Official download](https://zenaria.ru/download/mac) [Issue](https://github.com/ThatGuySam/doesitarm/issues/1122)
 * [Zwift](https://www.zwift.com/eu-de/download) - ✳️ Yes, works via Rosetta 2 as of v1.0 (25) - [Source](https://forums.zwift.com/t/m1-apple-silicon-compatibility/514491/81) [Verification](https://raw.githubusercontent.com/steve1878/images_does_it_arm/main/zwift_1.0_25.png)
 
 
@@ -884,6 +888,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Juicy](https://getjuicy.app) - ✅ Yes, Native Apple Silicon Support as of v1.5.6 - [Official Compatibility](https://getjuicy.app/#faq) [Release Notes](https://getjuicy.app/changelog/)
 * [Jumpcut](https://snark.github.io/jumpcut) - ✅ Yes, Native Apple Silicon Support as of v0.74 - [GitHub Issue](https://github.com/snark/jumpcut/issues/59#issuecomment-854313788)
 * [Karabiner-Elements](https://karabiner-elements.pqrs.org/) - ✅ Yes, Full Native Apple Silicon Support as of v13.0.0 - [Release Notes](https://karabiner-elements.pqrs.org/docs/releasenotes/#karabiner-elements-1300)
+* [KarmaDisk](https://apps.apple.com/us/app/karmadisk-photos-storage/id6816219976) - ✅ Native Apple Silicon support reported in v1.2.0 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/1119)
 * [Keka](https://mas.keka.io/) - ✅ Yes, Full Native Apple Silicon Support as of v1.2.2 - [App Store Link](https://mas.keka.io/)
 * [LaCie RAID Manager](https://www.lacie.com/support/software/lacie-raid-manager/) - ✳️ Yes, works via Rosetta 2 translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/715#issue-934314512)
 * [Logitech G HUB](https://www.logitechg.com/en-us/innovation/g-hub.html) - ✳️ Yes, works via Rosetta 2 Translation - [Verification](https://github.com/ThatGuySam/doesitarm/issues/683#issue-912290618)
@@ -902,6 +907,7 @@ Builds - [Java on M1 Benchmarks](https://docs.google.com/spreadsheets/d/1g4U7LAI
 * [Moom](https://manytricks.com/moom/) - ✅ Yes, Full Native Apple Silicon Support as of v3.2.20 - [Official Tweet](https://twitter.com/manytricks/status/1333456606449774595)
 * [Mosaic for Mac](https://www.lightpillar.com/mosaic.html) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [Release Notes](https://lightpillar.com/appdata/mosaic/features/version-history.html) [View on Setapp](https://setapp.sjv.io/mosaic)
 * [NoNotify](https://nonotify.com/) - ✳️ Yes, works via Rosetta 2 translation - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/nonotify)
+* [NotchNook](https://lo.cafe/notchnook/) - ✅ Native Apple Silicon Support reported as of v1.5.5 - [Website update](https://github.com/ThatGuySam/doesitarm/issues/1115)
 * [One Switch](https://fireball.studio/oneswitch/) - ✅ Yes, Full Native Apple Silicon Support - [Article](https://setapp.sjv.io/apple-silicon-supported-apps) [View on Setapp](https://setapp.sjv.io/c/2708043/635280/5114)
 * [OnyX for macOS](https://titanium-software.fr/en/onyx.html) - ✅ Yes, Full Native Apple Silicon Support reported as of v3.9.2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/622#issue-849839262) [Release Notes](https://titanium-software.fr/en/release_onyx.html)
 * [Pacifist](https://www.charlessoft.com/) - ✳️ Yes, works via Rosetta 2 - [Verification](https://github.com/ThatGuySam/doesitarm/issues/573#issue-812045761)
