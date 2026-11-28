@@ -1,0 +1,12 @@
+{
+  "name": "doesitarm",
+  "version": "1.0.0",
+  "description": "Look up Apple Silicon compatibility for Mac apps, games, and Homebrew packages, check a list of apps, or check a Mac software inventory export, using the public Does It ARM catalog.",
+  "author": { "name": "Sam Carlton Creative LLC", "email": "hello@doesitarm.com" },
+  "homepage": "https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md",
+  "repository": "https://github.com/ThatGuySam/doesitarm",
+  "license": "Apache-2.0",
+  "keywords": ["apple-silicon", "macos", "rosetta", "homebrew", "mac-admin", "inventory"],
+  "logo": "assets/logo.png",
+  "skills": "skills/"
+}

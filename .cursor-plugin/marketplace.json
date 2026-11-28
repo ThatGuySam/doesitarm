@@ -1,0 +1,8 @@
+{
+  "name": "doesitarm",
+  "owner": { "name": "Sam Carlton Creative LLC", "email": "hello@doesitarm.com" },
+  "metadata": { "description": "Does It ARM plugins for Cursor" },
+  "plugins": [
+    { "name": "doesitarm", "source": "plugins/cursor", "description": "Apple Silicon compatibility lookups for Mac apps, games, Homebrew packages and Mac inventories." }
+  ]
+}
