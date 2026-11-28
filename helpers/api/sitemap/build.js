@@ -8,6 +8,7 @@ import {
 import { getSiteUrl } from '~/helpers/url.js'
 
 const astroPageTemplatePath = './src/pages'
+const unlistedPages = new Set([ '/plugin-scanner' ])
 
 export async function getUrlsForAstroDefinedPages () {
     const siteUrl = getSiteUrl()
@@ -22,7 +23,7 @@ export async function getUrlsForAstroDefinedPages () {
             .replace( '/index', '/' )
 
         // Skip any paths for templates that include '['
-        if ( urlPath.includes( '[' ) ) continue
+        if ( urlPath.includes( '[' ) || unlistedPages.has( urlPath ) ) continue
 
         console.log( 'urlPath', urlPath )
 

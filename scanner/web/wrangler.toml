@@ -1,0 +1,34 @@
+name = "doesitarm-scanner-preview"
+main = "worker/index.js"
+account_id = "8d4ef8fe891f53e5658d3fdd5a4c7630"
+compatibility_date = "2026-11-24"
+compatibility_flags = ["global_fetch_strictly_public"]
+workers_dev = true
+preview_urls = false
+
+[limits]
+cpu_ms = 5000
+subrequests = 36
+
+[vars]
+SCAN_MAX_BUDGET = "8388608"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[[ratelimits]]
+name = "SCAN_LIMIT"
+namespace_id = "1795500007"
+simple = { limit = 12, period = 60 }
+
+[[ratelimits]]
+name = "DOWNLOAD_HOST_LIMIT"
+namespace_id = "1795500008"
+simple = { limit = 60, period = 60 }
+
+[[ratelimits]]
+name = "DOWNLOAD_GLOBAL_LIMIT"
+namespace_id = "1795500009"
+simple = { limit = 120, period = 60 }

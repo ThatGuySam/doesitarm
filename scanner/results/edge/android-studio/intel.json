@@ -1,0 +1,313 @@
+{
+  "token": "android-studio-intel",
+  "version": "2026.2.2.10",
+  "url": "https://edgedl.me.gvt1.com/android/studio/install/2026.2.2.10/android-studio-rabbit2-patch2-mac.dmg",
+  "before": "research_baseline",
+  "curl": "200 1542370765 application/x-apple-diskimage",
+  "size": 1542370765,
+  "magic": "6276786e0002000025000000680100f0fff097e4feffffee0004400b01e4ffff",
+  "list_error": "",
+  "volume": [
+    "Type = Dmg",
+    "Method = Zero2 LZFSE CRC",
+    "Blocks = 3591",
+    "Cluster Size = 1048576",
+    "Method = LZFSE CRC",
+    "Blocks = 1",
+    "Cluster Size = 512",
+    "Method = LZFSE CRC",
+    "Blocks = 1",
+    "Cluster Size = 512",
+    "Method = LZFSE CRC",
+    "Blocks = 1",
+    "Cluster Size = 16384",
+    "Method = Zero2 CRC",
+    "Blocks = 1",
+    "Cluster Size = 0",
+    "Method = LZFSE CRC",
+    "Blocks = 200",
+    "Cluster Size = 1048576",
+    "Method = Zero2 LZFSE CRC",
+    "Blocks = 3384",
+    "Cluster Size = 1048576"
+  ],
+  "matches": [],
+  "fixed": {
+    "format": "dmg",
+    "status": "complete",
+    "architectures": [
+      {
+        "name": "x86_64",
+        "cpu_type": 16777223,
+        "cpu_subtype": 3,
+        "offset": 16384,
+        "size": 865568,
+        "header_verified": true,
+        "min_macos": "10.15",
+        "code_signature_present": true
+      },
+      {
+        "name": "arm64",
+        "cpu_type": 16777228,
+        "cpu_subtype": 0,
+        "offset": 884736,
+        "size": 874096,
+        "header_verified": true,
+        "min_macos": "11.0",
+        "code_signature_present": true
+      }
+    ],
+    "bundle_path": "Android Studio.app",
+    "bundle_id": "com.google.android.studio",
+    "version": "2026.2",
+    "name": "Android Studio",
+    "min_macos": "10.13",
+    "executable_name": "studio",
+    "executable_size": 1758832,
+    "executable_path": "Android Studio.app/Contents/MacOS/studio",
+    "installer": null,
+    "bytes_read": 12558206,
+    "bytes_requested": 47691209,
+    "decoded_bytes": 144076800,
+    "reads": 141,
+    "total_size": 1542370765,
+    "error": null,
+    "inventory": {
+      "complete": true,
+      "incomplete_reason": null,
+      "all_arm64_capable": false,
+      "has_x86_64_only": true,
+      "binary_count": 70,
+      "samples": [
+        {
+          "path": "Contents/MacOS/studio",
+          "role": "main",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 16384,
+              "size": 865568,
+              "header_verified": true,
+              "min_macos": "10.15",
+              "code_signature_present": true
+            },
+            {
+              "name": "arm64",
+              "cpu_type": 16777228,
+              "cpu_subtype": 0,
+              "offset": 884736,
+              "size": 874096,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jar",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jarsigner",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33600,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/java",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33552,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/javac",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/javadoc",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/javap",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jcmd",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jdb",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jdeprscan",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33600,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jdeps",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        },
+        {
+          "path": "Contents/jbr/Contents/Home/bin/jfr",
+          "role": "runtime",
+          "architectures": [
+            {
+              "name": "x86_64",
+              "cpu_type": 16777223,
+              "cpu_subtype": 3,
+              "offset": 0,
+              "size": 33584,
+              "header_verified": true,
+              "min_macos": "11.0",
+              "code_signature_present": true
+            }
+          ]
+        }
+      ],
+      "x86_64_only_sample": [
+        "Contents/jbr/Contents/Home/bin/jar",
+        "Contents/jbr/Contents/Home/bin/jarsigner",
+        "Contents/jbr/Contents/Home/bin/java",
+        "Contents/jbr/Contents/Home/bin/javac",
+        "Contents/jbr/Contents/Home/bin/javadoc",
+        "Contents/jbr/Contents/Home/bin/javap",
+        "Contents/jbr/Contents/Home/bin/jcmd",
+        "Contents/jbr/Contents/Home/bin/jdb",
+        "Contents/jbr/Contents/Home/bin/jdeprscan",
+        "Contents/jbr/Contents/Home/bin/jdeps",
+        "Contents/jbr/Contents/Home/bin/jfr",
+        "Contents/jbr/Contents/Home/bin/jhsdb",
+        "Contents/jbr/Contents/Home/bin/jimage",
+        "Contents/jbr/Contents/Home/bin/jinfo",
+        "Contents/jbr/Contents/Home/bin/jlink",
+        "Contents/jbr/Contents/Home/bin/jmap",
+        "Contents/jbr/Contents/Home/bin/jmod",
+        "Contents/jbr/Contents/Home/bin/jnativescan",
+        "Contents/jbr/Contents/Home/bin/jps",
+        "Contents/jbr/Contents/Home/bin/jrunscript",
+        "Contents/jbr/Contents/Home/bin/jstack",
+        "Contents/jbr/Contents/Home/bin/jstat",
+        "Contents/jbr/Contents/Home/bin/jwebserver",
+        "Contents/jbr/Contents/Home/bin/keytool"
+      ]
+    }
+  }
+}

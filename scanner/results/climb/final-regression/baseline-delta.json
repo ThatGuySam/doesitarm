@@ -1,0 +1,407 @@
+{
+  "matched_artifacts": 100,
+  "outcome_transitions": [
+    {
+      "before": "budget_hit",
+      "after": "budget_hit",
+      "count": 2
+    },
+    {
+      "before": "budget_hit",
+      "after": "other_source_error",
+      "count": 1
+    },
+    {
+      "before": "budget_hit",
+      "after": "script_executable",
+      "count": 1
+    },
+    {
+      "before": "budget_hit",
+      "after": "verified",
+      "count": 17
+    },
+    {
+      "before": "budget_hit",
+      "after": "verified_executable",
+      "count": 5
+    },
+    {
+      "before": "host_200_to_range",
+      "after": "budget_hit",
+      "count": 1
+    },
+    {
+      "before": "host_200_to_range",
+      "after": "html_response",
+      "count": 1
+    },
+    {
+      "before": "host_200_to_range",
+      "after": "other_source_error",
+      "count": 1
+    },
+    {
+      "before": "host_200_to_range",
+      "after": "verified",
+      "count": 2
+    },
+    {
+      "before": "host_200_to_range",
+      "after": "verified_executable",
+      "count": 1
+    },
+    {
+      "before": "http_404",
+      "after": "http_404",
+      "count": 1
+    },
+    {
+      "before": "other",
+      "after": "script_executable",
+      "count": 1
+    },
+    {
+      "before": "other_source_error",
+      "after": "verified",
+      "count": 1
+    },
+    {
+      "before": "plist_not_found",
+      "after": "budget_hit",
+      "count": 1
+    },
+    {
+      "before": "plist_not_found",
+      "after": "multi_executable",
+      "count": 1
+    },
+    {
+      "before": "plist_not_found",
+      "after": "plist_not_found",
+      "count": 1
+    },
+    {
+      "before": "plist_not_found",
+      "after": "verified_executable",
+      "count": 2
+    },
+    {
+      "before": "unsupported_container",
+      "after": "executable_not_found",
+      "count": 1
+    },
+    {
+      "before": "unsupported_container",
+      "after": "other",
+      "count": 1
+    },
+    {
+      "before": "unsupported_container",
+      "after": "unsupported_container",
+      "count": 1
+    },
+    {
+      "before": "unsupported_container",
+      "after": "verified",
+      "count": 3
+    },
+    {
+      "before": "verified",
+      "after": "verified",
+      "count": 54
+    }
+  ],
+  "changed_representation": [],
+  "metadata_changes": [],
+  "same_validator_first_attempt_byte_deltas": [
+    {
+      "cask": "phoenix",
+      "before": 3997848,
+      "after": 3997854,
+      "difference": 6
+    },
+    {
+      "cask": "claude",
+      "before": 122570,
+      "after": 122570,
+      "difference": 0
+    },
+    {
+      "cask": "cursor",
+      "before": 2236728,
+      "after": 2236728,
+      "difference": 0
+    },
+    {
+      "cask": "visual-studio-code",
+      "before": 723062,
+      "after": 723062,
+      "difference": 0
+    },
+    {
+      "cask": "appcleaner",
+      "before": 332755,
+      "after": 332755,
+      "difference": 0
+    },
+    {
+      "cask": "signal",
+      "before": 84504,
+      "after": 84504,
+      "difference": 0
+    },
+    {
+      "cask": "zed",
+      "before": 905357,
+      "after": 905357,
+      "difference": 0
+    },
+    {
+      "cask": "raycast",
+      "before": 853572,
+      "after": 853572,
+      "difference": 0
+    },
+    {
+      "cask": "timing",
+      "before": 1481791,
+      "after": 1481791,
+      "difference": 0
+    },
+    {
+      "cask": "little-snitch",
+      "before": 1001246,
+      "after": 1001246,
+      "difference": 0
+    },
+    {
+      "cask": "google-chrome",
+      "before": 2118484,
+      "after": 2118484,
+      "difference": 0
+    },
+    {
+      "cask": "firefox",
+      "before": 770031,
+      "after": 770031,
+      "difference": 0
+    },
+    {
+      "cask": "rider",
+      "before": 1229298,
+      "after": 1229298,
+      "difference": 0
+    },
+    {
+      "cask": "vlc",
+      "before": 728379,
+      "after": 728379,
+      "difference": 0
+    },
+    {
+      "cask": "gimp",
+      "before": 1893085,
+      "after": 1893085,
+      "difference": 0
+    },
+    {
+      "cask": "slack",
+      "before": 712749,
+      "after": 712749,
+      "difference": 0
+    },
+    {
+      "cask": "alfred@5",
+      "before": 5308421,
+      "after": 5308421,
+      "difference": 0
+    },
+    {
+      "cask": "gitbutler",
+      "before": 327685,
+      "after": 327685,
+      "difference": 0
+    },
+    {
+      "cask": "openpencil",
+      "before": 327685,
+      "after": 327685,
+      "difference": 0
+    },
+    {
+      "cask": "bloom",
+      "before": 1109959,
+      "after": 1109959,
+      "difference": 0
+    },
+    {
+      "cask": "monocle-app",
+      "before": 609467,
+      "after": 609467,
+      "difference": 0
+    },
+    {
+      "cask": "dockfix",
+      "before": 1232934,
+      "after": 1232934,
+      "difference": 0
+    },
+    {
+      "cask": "metashapepro",
+      "before": 1380575,
+      "after": 1380575,
+      "difference": 0
+    },
+    {
+      "cask": "popchar",
+      "before": 3250522,
+      "after": 3250522,
+      "difference": 0
+    },
+    {
+      "cask": "youku",
+      "before": 923966,
+      "after": 923966,
+      "difference": 0
+    },
+    {
+      "cask": "rightfont",
+      "before": 2276046,
+      "after": 2276046,
+      "difference": 0
+    },
+    {
+      "cask": "clipgrab",
+      "before": 1247855,
+      "after": 1247855,
+      "difference": 0
+    },
+    {
+      "cask": "readyapi",
+      "before": 424821,
+      "after": 424821,
+      "difference": 0
+    },
+    {
+      "cask": "kindavim",
+      "before": 895109,
+      "after": 895109,
+      "difference": 0
+    },
+    {
+      "cask": "unite",
+      "before": 2306528,
+      "after": 2306528,
+      "difference": 0
+    },
+    {
+      "cask": "monero-wallet",
+      "before": 518938,
+      "after": 518938,
+      "difference": 0
+    },
+    {
+      "cask": "sourcetree",
+      "before": 2626662,
+      "after": 2626662,
+      "difference": 0
+    },
+    {
+      "cask": "local@beta",
+      "before": 952044,
+      "after": 952044,
+      "difference": 0
+    },
+    {
+      "cask": "framer",
+      "before": 113906,
+      "after": 113906,
+      "difference": 0
+    },
+    {
+      "cask": "discord",
+      "before": 1049978,
+      "after": 1049978,
+      "difference": 0
+    },
+    {
+      "cask": "4k-video-to-mp3",
+      "before": 928094,
+      "after": 928094,
+      "difference": 0
+    },
+    {
+      "cask": "sublime-merge@dev",
+      "before": 5359343,
+      "after": 5359343,
+      "difference": 0
+    },
+    {
+      "cask": "camerabag-photo",
+      "before": 1315453,
+      "after": 1315453,
+      "difference": 0
+    },
+    {
+      "cask": "label-live",
+      "before": 1056934,
+      "after": 1056934,
+      "difference": 0
+    },
+    {
+      "cask": "netviews",
+      "before": 7434020,
+      "after": 7434020,
+      "difference": 0
+    },
+    {
+      "cask": "merlin-project",
+      "before": 401673,
+      "after": 401673,
+      "difference": 0
+    },
+    {
+      "cask": "ricoh-theta",
+      "before": 211701,
+      "after": 211701,
+      "difference": 0
+    },
+    {
+      "cask": "sidenotes",
+      "before": 3517742,
+      "after": 3517742,
+      "difference": 0
+    },
+    {
+      "cask": "sleep-aid",
+      "before": 8257500,
+      "after": 8257500,
+      "difference": 0
+    },
+    {
+      "cask": "paragon-extfs@11",
+      "before": 1098098,
+      "after": 1098098,
+      "difference": 0
+    },
+    {
+      "cask": "hyper",
+      "before": 69073,
+      "after": 69073,
+      "difference": 0
+    },
+    {
+      "cask": "jollysfastvnc",
+      "before": 709083,
+      "after": 709083,
+      "difference": 0
+    },
+    {
+      "cask": "balsamiq-wireframes",
+      "before": 1307055,
+      "after": 1307055,
+      "difference": 0
+    }
+  ]
+}

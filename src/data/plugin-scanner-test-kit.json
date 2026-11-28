@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Surge XT 1.3.4",
+        "formats": "AU, VST3, CLAP",
+        "verdict": "Universal",
+        "url": "https://github.com/surge-synthesizer/releases-xt/releases/download/1.3.4/surge-xt-macos-1.3.4-pluginsonly.zip"
+    },
+    {
+        "name": "Dexed 1.1.1",
+        "formats": "AU, VST3, CLAP",
+        "verdict": "Universal",
+        "url": "https://github.com/asb2m10/dexed/releases/download/v1.1.1/Dexed-1.1.1-macOS.zip"
+    },
+    {
+        "name": "CHOWTapeModel 2.11.4",
+        "formats": "AU, VST3, CLAP",
+        "verdict": "Universal",
+        "url": "https://github.com/jatinchowdhury18/AnalogTapeModel/releases/download/v2.11.4/ChowTapeModel-Mac-2.11.4.dmg"
+    },
+    {
+        "name": "NeuralNote 2.2.0 (Mac x64)",
+        "formats": "AU, VST3",
+        "verdict": "Intel only",
+        "url": "https://github.com/DamRsn/NeuralNote/releases/download/v2.2.0/NeuralNote_Installer_Mac_x64.pkg"
+    },
+    {
+        "name": "ZL Equalizer 2 1.4.2 (macOS x86-64)",
+        "formats": "AU, VST3",
+        "verdict": "Intel only",
+        "url": "https://github.com/ZL-Audio/ZLEqualizer/releases/download/1.4.2/ZL.Equalizer.2-1.4.2-macOS-x86-64.dmg"
+    }
+]

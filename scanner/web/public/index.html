@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Apple Silicon App Test · Does It ARM</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./bigfolder.css">
+  <link rel="stylesheet" href="./shell.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the scanner</a>
+  <header class="navbar">
+    <a class="logo" href="https://doesitarm.com/" aria-label="Does It ARM home"><span aria-hidden="true">🦾</span></a>
+    <nav aria-label="Does It ARM">
+      <a href="https://doesitarm.com/kind/homebrew"><span aria-hidden="true">🍺</span> Homebrew</a>
+      <a href="./" aria-current="page"><span aria-hidden="true">🧪</span> App Test</a>
+    </nav>
+  </header>
+
+  <!--scanner:start-->
+  <div class="dia-scanner" data-level="minimal">
+  <!--scanner-switch-->
+
+  <main id="main">
+    <section id="scan" class="hero" aria-labelledby="scan-title">
+      <div class="title-wrap"><h1 id="scan-title"><span data-app-only>Apple Silicon App Test</span><span data-plugin-only>Audio Plug-in Scanner</span></h1><span class="beta-pill" data-pill>Beta</span></div>
+
+      <div id="drop-zone" class="drop-zone">
+        <p class="drop-prompt" id="drop-prompt"><span class="drag-copy" data-app-only>Drag an app, a folder, or a folder of apps here.<br></span><span data-plugin-only>Drag a plug-in bundle or folder here.<br></span><span class="privacy">Files stay in this browser.</span></p>
+        <details id="device-files" class="device-files" open>
+          <summary data-app-only>Scan files from this device</summary>
+          <div class="device-picker">
+            <button type="button" id="choose-files" class="select-apps">Select Apps</button>
+            <button type="button" id="choose-folder" class="text-button">Choose folder</button>
+            <button type="button" id="choose-flat-files" class="quiet-button" hidden>Select files or archives</button>
+          </div>
+        </details>
+        <details id="plugin-folders" class="inline-details">
+          <summary><span data-app-only>Scan audio plug-ins</span><span data-plugin-only>Find plug-in folders</span></summary>
+          <div class="panel">
+            <p><strong data-plugin-only>Safari.</strong> In Finder, press <kbd>⇧⌘G</kbd> (Go to Folder). Open one of these paths and drag the folder here.</p>
+            <ul>
+              <li>Audio Units (AU) <code>/Library/Audio/Plug-Ins/Components</code> or <code>~/Library/Audio/Plug-Ins/Components</code></li>
+              <li>VST2, VST3 or CLAP. Open <code>/Library/Audio/Plug-Ins</code> or <code>~/Library/Audio/Plug-Ins</code>, then drag <code>VST</code>, <code>VST3</code> or <code>CLAP</code>.</li>
+              <li>AAX <code>/Library/Application Support/Avid/Audio/Plug-Ins</code></li>
+            </ul>
+            <p id="plugin-picker-hint" hidden><strong data-plugin-only>Chrome.</strong> You can also use <strong>Choose folder</strong>. If it blocks <code>~/Library</code>, drag the format folder from Finder.</p>
+            <p>Custom plug-in folders work by drag and drop too. The scan checks the declared executable’s architecture. Host loading and activation need a separate check.</p>
+          </div>
+        </details>
+        <div id="scan-options" class="more-actions">
+          <details id="more-options" class="inline-details">
+            <summary>More options</summary>
+            <div class="panel">
+              <p class="hint" id="formats">Mac apps, Mach-O files, DMG, ZIP, PKG and tar.gz archives, and Windows installers.</p>
+              <details id="advanced" class="inline-details">
+                <summary>Scan a download link</summary>
+                <div class="panel">
+                  <form id="url-form" class="url-form" novalidate>
+                    <label for="scan-url" class="visually-hidden">Paste a download link or the app's download page</label>
+                    <div class="url-row">
+                      <input id="scan-url" type="url" placeholder="https://…" required
+                        autocomplete="off" spellcheck="false">
+                      <button type="submit" class="quiet-button">Scan URL</button>
+                    </div>
+                    <p id="url-phase" class="url-phase" role="status" tabindex="-1"></p>
+                  </form>
+                  <div id="download-options"></div>
+                  <div id="scan-settings" class="setting">
+                    <label class="check"><input type="checkbox" id="gentle"> Gentle</label>
+                    <p class="hint">Scan one app at a time to keep this device responsive. <span id="mode-status" role="status"></span></p>
+                  </div>
+                </div>
+              </details>
+              <details id="how" class="inline-details">
+                <summary>Scan help</summary>
+                <div id="scan-help" class="panel prose">
+                  <p>The scanner reads executable headers and package metadata to identify processor architecture. It reads only the ranges it needs, even for large downloads. Local files never leave this browser.</p>
+                  <p>Disk images, ZIP, PKG and tar.gz files are opened in place. Folders and <code>.app</code> bundles are checked by the executable named in their <code>Info.plist</code>.</p>
+                  <p>If your browser cannot open a folder with <strong>Choose folder</strong>, drag the folder or individual <code>.app</code> bundles into the scanner.</p>
+                  <p><strong>✓ Apple Silicon native</strong> means the main executable has a verified arm64 or arm64e slice. <strong>Universal</strong> means it also has a verified 64-bit Intel slice. <strong>◆ Intel only</strong> means only an x86_64 slice was found; the app may run through Rosetta 2, usually slower and with more battery use. Rosetta will be limited in future macOS releases, so native apps are the safer choice.</p>
+                  <p><strong>? Unknown</strong> means the scanner stopped before it could verify an architecture: the file was damaged or unsupported, the browser could not read it, or a read limit was reached. Open the row's <strong>Details</strong> for the reason. If a scan never seems to end, try fewer apps at once or scan the app inside the disk image.</p>
+                </div>
+              </details>
+              <details id="research-view" class="inline-details">
+                <summary>Research view</summary>
+                <p class="hint">Shows evidence, filters, exports and the recorded Homebrew run.</p>
+              </details>
+              <button type="button" id="reset-view" class="text-button">Reset view</button>
+            </div>
+          </details>
+        </div>
+        <input id="files" type="file" multiple hidden>
+        <p class="drop-hint" aria-hidden="true">Drop to scan</p>
+      </div>
+      <noscript><p data-app-only>Enable JavaScript to scan files and download links. If a folder picker is unavailable, drag a folder or individual .app bundles here after enabling JavaScript.</p><p data-plugin-only>Enable JavaScript to scan a plug-in folder.</p></noscript>
+      <div id="folder-loader" class="folder-loader">
+        <span aria-hidden="true" hidden></span><span aria-hidden="true"></span>
+        <span class="visually-hidden" role="status"></span>
+      </div>
+      <p id="scan-roots" class="hint" role="status" hidden></p>
+      <p id="input-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+      <section class="scanner-notifications" aria-label="Scanner notifications">
+        <ol data-sonner-toaster role="list"></ol>
+      </section>
+    </section>
+
+    <section id="results" aria-labelledby="results-title" hidden>
+      <div class="totals">
+        <h2 id="results-title" class="totals-line" tabindex="-1"><span class="visually-hidden">Results: </span><span id="results-count"></span><span id="batch-metrics"></span></h2>
+        <button type="button" id="cancel-all" class="quiet-button" hidden>Cancel all</button>
+        <button type="button" id="clear-results" class="quiet-button" hidden>Clear results</button>
+      </div>
+      <progress id="overall-progress" aria-label="Batch progress by scans finished"></progress>
+      <svg id="outcome-strip" class="outcome-strip" role="img" aria-label="" viewBox="0 0 100 10" preserveAspectRatio="none"></svg>
+      <p id="batch-notice" class="visually-hidden" role="status"></p>
+      <p id="timer-notice" class="visually-hidden" role="status"></p>
+      <div id="plugin-exports" hidden>
+        <button type="button" id="export-plugins-csv" class="quiet-button">Export plug-ins as CSV</button>
+        <button type="button" id="export-plugins-json" class="quiet-button">Export plug-ins as JSON</button>
+      </div>
+      <ul id="scan-results" class="result-list" role="list" data-app-only></ul>
+      <div id="plugin-results" class="table-scroll" role="region" aria-label="Plug-in results" tabindex="0" hidden>
+        <table>
+          <thead><tr><th scope="col">Name</th><th scope="col">Version</th><th scope="col">Format</th><th scope="col">Architecture</th><th scope="col">Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <details id="saved-folders" class="section-details" hidden>
+      <summary>Saved folder scans</summary>
+    </details>
+
+    <section class="more" aria-label="Recorded runs and questions">
+      <details id="homebrew" class="section-details">
+        <summary>Recorded Homebrew run <span id="run-date" class="summary-note"></span></summary>
+        <div class="panel">
+          <p id="run-status" role="status">Loading the recorded scan results…</p>
+          <p id="run-description" class="hint" hidden>Choose a cask to scan its recorded download URL in the Cloudflare Worker. Publishers may update or remove those URLs.</p>
+          <div id="cask-region" class="table-scroll" role="region" aria-labelledby="cask-caption" tabindex="0" hidden>
+            <table>
+              <caption id="cask-caption" class="visually-hidden">Recorded Homebrew cask scan results</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Cask</th>
+                  <th scope="col">Format</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Architectures</th>
+                  <th scope="col">Bundle ID</th>
+                  <th scope="col">App version</th>
+                  <th scope="col">Min macOS</th>
+                  <th scope="col">Bytes read</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Binary inventory</th>
+                </tr>
+              </thead>
+              <tbody id="cask-results"></tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+    </section>
+  </main>
+
+  <dialog id="scan-dialog" aria-labelledby="scan-dialog-title">
+    <div class="dialog-head">
+      <h2 id="scan-dialog-title" tabindex="-1">Scan details</h2>
+      <form method="dialog"><button type="submit" class="quiet-button" id="dialog-close">Close</button></form>
+    </div>
+    <dl id="dialog-facts" class="facts"></dl>
+    <p class="dialog-links"><a id="dialog-review" href="https://github.com/ThatGuySam/doesitarm/issues">Request a review</a></p>
+    <details id="dialog-json">
+      <summary>Raw JSON</summary>
+      <pre></pre>
+    </details>
+  </dialog>
+
+  <template id="result-card">
+    <li class="result" data-state="queued">
+      <progress class="row-progress" hidden></progress>
+      <span class="result-monogram" aria-hidden="true"></span>
+      <div class="result-content">
+        <div class="result-line">
+          <h3 tabindex="-1"></h3><span class="result-size"></span><span class="result-time"></span><span class="scan-status">Queued</span><span class="result-readout"><span class="result-metrics"></span><span class="result-timer" hidden></span><span class="result-estimate"></span></span>
+        </div>
+        <span class="result-read-label visually-hidden">Source reads</span>
+        <p class="result-verdict" hidden><span class="verdict-icon" aria-hidden="true"></span><span class="verdict-text"></span><span class="result-arch"></span></p>
+        <details class="result-details" hidden>
+          <summary><span class="sum-verdict"></span><span class="sum-detail">Details</span></summary>
+          <div class="panel">
+            <p class="result-speed"></p>
+            <dl class="facts">
+              <div><dt>Architectures</dt><dd data-field="architectures"></dd></div>
+              <div><dt>Bundle ID</dt><dd data-field="bundle_id"></dd></div>
+              <div><dt>App version</dt><dd data-field="version"></dd></div>
+              <div><dt>Min macOS</dt><dd data-field="min_macos"></dd></div>
+              <div><dt>Signing</dt><dd data-field="signing"></dd></div>
+              <div><dt>Format</dt><dd data-field="format"></dd></div>
+              <div><dt>Source</dt><dd data-field="source"></dd></div>
+              <div><dt>Bytes read</dt><dd data-field="bytes_read"></dd></div>
+              <div><dt>Status</dt><dd data-field="status"></dd></div>
+            </dl>
+            <p class="result-error error" hidden></p>
+            <button type="button" class="quiet-button open-dialog">View full scan details</button>
+          </div>
+        </details>
+      </div>
+      <button type="button" class="quiet-button cancel-button">Cancel</button>
+    </li>
+  </template>
+  </div>
+  <!--scanner:end-->
+</body>
+</html>

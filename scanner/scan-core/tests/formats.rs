@@ -1,0 +1,1719 @@
+use scan_core::{
+    Profile, ReadAt, Result, ScanError, ScanLimits, ScanResult, Status, Target, scan, scan_target,
+    scan_target_with_deadline, scan_target_with_limits, scan_with_limits,
+};
+use std::{
+    future::Future,
+    io::{Read, Write},
+    pin::pin,
+    task::{Context, Poll, Waker},
+};
+
+struct Memory<'a>(&'a [u8]);
+
+impl ReadAt for Memory<'_> {
+    fn size(&self) -> u64 {
+        self.0.len() as u64
+    }
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        self.0
+            .get(offset as usize..offset as usize + len)
+            .map(<[u8]>::to_vec)
+            .ok_or(ScanError::Invalid("fixture range"))
+    }
+}
+
+struct Sparse<'a> {
+    size: u64,
+    spans: Vec<(u64, &'a [u8])>,
+}
+
+impl ReadAt for Sparse<'_> {
+    fn size(&self) -> u64 {
+        self.size
+    }
+
+    async fn read_at(&mut self, offset: u64, len: usize) -> Result<Vec<u8>> {
+        let end = offset + len as u64;
+        if end > self.size {
+            return Err(ScanError::Invalid("sparse fixture range"));
+        }
+        let mut bytes = vec![0; len];
+        for (start, data) in &self.spans {
+            let first = (*start).max(offset);
+            let last = (*start + data.len() as u64).min(end);
+            if first < last {
+                bytes[(first - offset) as usize..(last - offset) as usize]
+                    .copy_from_slice(&data[(first - start) as usize..(last - start) as usize]);
+            }
+        }
+        Ok(bytes)
+    }
+}
+
+fn ready<T>(f: impl Future<Output = T>) -> T {
+    match pin!(f).poll(&mut Context::from_waker(Waker::noop())) {
+        Poll::Ready(value) => value,
+        Poll::Pending => panic!("in-memory I/O must be immediately ready"),
+    }
+}
+
+fn run(data: &[u8], budget: u64) -> ScanResult {
+    ready(scan(&mut Memory(data), budget))
+}
+
+const THIN: &[u8] = include_bytes!("../../fixtures/thin.macho");
+const FAT: &[u8] = include_bytes!("../../fixtures/fat.macho");
+const FAT64: &[u8] = include_bytes!("../../fixtures/fat64.macho");
+
+#[test]
+fn thin_reports_architecture_minimum_and_signature_presence() {
+    let result = run(THIN, u64::MAX);
+    assert!(matches!(result.status, Status::Complete));
+    assert_eq!(result.format, Some("macho"));
+    assert_eq!(result.total_size, THIN.len() as u64);
+    let arm = &result.architectures[0];
+    assert_eq!(arm.name, "arm64e");
+    assert!(arm.header_verified);
+    assert_eq!(arm.min_macos.as_deref(), Some("13.1"));
+    assert_eq!(arm.code_signature_present, Some(true));
+}
+
+#[test]
+fn fat32_and_fat64_seek_to_thin_headers_in_file_order() {
+    for input in [FAT, FAT64] {
+        let result = run(input, u64::MAX);
+        assert!(matches!(result.status, Status::Complete));
+        let intel = &result.architectures[0];
+        assert_eq!(intel.name, "x86_64");
+        assert_eq!(intel.min_macos.as_deref(), Some("10.15.7"));
+        assert_eq!(intel.code_signature_present, Some(false));
+        assert_eq!(result.architectures[1].name, "arm64e");
+        assert!(result.bytes_read < result.total_size / 4);
+        assert_eq!(result.reads, 9);
+    }
+}
+
+#[test]
+fn host_loadable_macho_headers_verify_without_a_launcher_or_load_commands() {
+    const MH_BUNDLE: u32 = 8;
+    const ARM64: u32 = 0x0100_000c;
+    const X86_64: u32 = 0x0100_0007;
+
+    let thin = |cpu: u32, subtype: u32| {
+        let words = [0xfeed_facf, cpu, subtype, MH_BUNDLE, 0, 0, 0, 0];
+        words.into_iter().flat_map(u32::to_le_bytes).collect::<Vec<_>>()
+    };
+    for (cpu, subtype, expected) in [(ARM64, 2, "arm64e"), (X86_64, 3, "x86_64")] {
+        let result = run(&thin(cpu, subtype), u64::MAX);
+        assert!(matches!(result.status, Status::Complete));
+        assert_eq!(result.architectures[0].name, expected);
+        assert_eq!(result.architectures[0].file_type, Some(MH_BUNDLE));
+        assert!(result.architectures[0].header_verified);
+    }
+
+    let fat_words: [u32; 12] = [0xcafe_babe, 2, ARM64, 2, 48, 32, 0, X86_64, 3, 80, 32, 0];
+    let mut fat: Vec<u8> = fat_words.into_iter().flat_map(u32::to_be_bytes).collect();
+    fat.extend(thin(ARM64, 2));
+    fat.extend(thin(X86_64, 3));
+    let result = run(&fat, u64::MAX);
+    assert!(matches!(result.status, Status::Complete));
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|slice| slice.header_verified));
+
+    fat[84..88].copy_from_slice(&ARM64.to_le_bytes());
+    let mismatch = run(&fat, u64::MAX);
+    assert!(matches!(mismatch.status, Status::Invalid));
+    assert!(mismatch.architectures[0].header_verified);
+    assert!(!mismatch.architectures[1].header_verified);
+}
+
+#[test]
+fn budget_preserves_fat_table_architectures_and_accounts_for_reads() {
+    let result = run(FAT, 52);
+    assert!(matches!(result.status, Status::BudgetExhausted));
+    assert_eq!(result.bytes_requested, 52);
+    assert_eq!(result.reads, 3);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(
+        result
+            .architectures
+            .iter()
+            .all(|arch| !arch.header_verified)
+    );
+}
+
+#[test]
+fn repeated_magic_probe_counts_once_in_unique_bytes() {
+    let result = run(FAT, 52);
+    assert_eq!(result.bytes_read, 48);
+}
+
+#[test]
+fn bundle_rejects_deep_xml_and_binary_plist_collections() {
+    let mut dictionary = plist::Dictionary::new();
+    dictionary.insert("CFBundleExecutable".into(), "FixtureBinary".into());
+    let mut nested = plist::Value::Boolean(true);
+    for _ in 0..65 {
+        nested = plist::Value::Array(vec![nested]);
+    }
+    dictionary.insert("NestedMetadata".into(), nested);
+    let value = plist::Value::Dictionary(dictionary);
+    let mut xml = Vec::new();
+    let mut binary = Vec::new();
+    value.to_writer_xml(&mut xml).unwrap();
+    value.to_writer_binary(&mut binary).unwrap();
+
+    for bytes in [&xml, &binary] {
+        let result = scan_core::bundle_metadata(bytes, "Fixture.app");
+        assert!(matches!(result.status, Status::Invalid), "{result:?}");
+        assert!(result.error.unwrap().contains("nesting"));
+    }
+}
+
+#[test]
+fn dmg_rejects_deep_udif_plist_index() {
+    let mut index = String::from("<plist><dict><key>extra</key>");
+    index.push_str(&"<array>".repeat(65));
+    index.push_str(&"</array>".repeat(65));
+    index.push_str("</dict></plist>");
+    let mut trailer = [0; 512];
+    trailer[..12].copy_from_slice(b"koly\0\0\0\x04\0\0\x02\0");
+    trailer[224..232].copy_from_slice(&(index.len() as u64).to_be_bytes());
+    let mut image = index.into_bytes();
+    image.extend_from_slice(&trailer);
+    let result = run(&image, u64::MAX);
+    assert_eq!(result.format, Some("dmg"));
+    assert!(matches!(result.status, Status::Invalid), "{result:?}");
+    assert!(result.error.unwrap().contains("nesting"));
+}
+
+#[test]
+fn refuses_out_of_bounds_fat_slice() {
+    let result = run(&FAT[..1040], u64::MAX);
+    assert!(matches!(result.status, Status::Invalid));
+    assert!(result.architectures.is_empty());
+}
+
+const ZIP: &[u8] = include_bytes!("../../fixtures/stored.zip");
+const ZIP64: &[u8] = include_bytes!("../../fixtures/deflated-zip64.zip");
+
+#[test]
+fn zip_recovers_a_wrapped_directory_and_individual_member_offsets() {
+    const WRAP: u64 = 1 << 32;
+    let number = |bytes: &[u8]| u32::from_le_bytes(bytes.try_into().unwrap()) as usize;
+    let short = |bytes: &[u8]| u16::from_le_bytes(bytes.try_into().unwrap()) as usize;
+    let end = ZIP.len() - 22;
+    let directory = number(&ZIP[end + 16..end + 20]);
+    let name = b"Fixture.app/Contents/Info.plist";
+    let record = ZIP[directory..end]
+        .windows(46 + name.len())
+        .find(|bytes| bytes.starts_with(b"PK\x01\x02") && &bytes[46..] == name)
+        .unwrap();
+    let plist_at = number(&record[42..46]);
+    let local = &ZIP[plist_at..];
+    let plist_end =
+        plist_at + 30 + short(&local[26..28]) + short(&local[28..30]) + number(&record[20..24]);
+    // Leave the launcher below 4 GiB. Only the plist and directory wrap.
+    let mut source = Sparse {
+        size: WRAP + ZIP.len() as u64,
+        spans: vec![
+            (0, &ZIP[..plist_at]),
+            (plist_end as u64, &ZIP[plist_end..directory]),
+            (WRAP + plist_at as u64, &ZIP[plist_at..plist_end]),
+            (WRAP + directory as u64, &ZIP[directory..]),
+        ],
+    };
+    let result = ready(scan(&mut source, 16 * 1024));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_bundle(&result);
+    assert!(result.bytes_read < 2048);
+}
+
+fn assert_bundle(result: &ScanResult) {
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+    assert_eq!(result.version.as_deref(), Some("4.2"));
+    assert_eq!(result.name.as_deref(), Some("Scanner Fixture"));
+    assert_eq!(result.min_macos.as_deref(), Some("11.0"));
+    assert_eq!(result.executable_name.as_deref(), Some("FixtureBinary"));
+    assert_eq!(result.executable_size, Some(FAT.len() as u64));
+    assert_eq!(result.architectures[0].name, "x86_64");
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
+#[test]
+fn stored_zip_seeks_to_bundle_executable() {
+    let result = run(ZIP, u64::MAX);
+    assert_eq!(result.format, Some("zip"));
+    assert_bundle(&result);
+    assert!(result.bytes_read < result.total_size * 3 / 4);
+}
+
+#[test]
+fn declared_targets_verify_named_bundles_and_binaries() {
+    for artifact in [
+        ZIP,
+        include_bytes!("../../fixtures/app.tar.gz"),
+        include_bytes!("../../fixtures/hfsx.dmg"),
+        include_bytes!("../../fixtures/apfs.dmg"),
+        include_bytes!("../../fixtures/gzip-newc.pkg"),
+    ] {
+        let result = ready(scan_target(
+            &mut Memory(artifact),
+            u64::MAX,
+            Target::Bundle("Fixture.app"),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+        let binary = ready(scan_target(
+            &mut Memory(artifact),
+            u64::MAX,
+            Target::Executable(path),
+        ));
+        assert!(matches!(binary.status, Status::Complete), "{binary:?}");
+        assert_eq!(binary.executable_path.as_deref(), Some(path));
+        assert!(binary.bundle_id.is_none());
+        assert_eq!(binary.architectures.len(), 2);
+    }
+    let missing = ready(scan_target(
+        &mut Memory(ZIP),
+        u64::MAX,
+        Target::Bundle("Different.app"),
+    ));
+    assert!(matches!(missing.status, Status::NotFound));
+}
+
+#[test]
+fn nested_packages_and_images_keep_the_outer_format_and_named_app() {
+    for (format, inside, artifact) in [
+        (
+            "dmg",
+            "Fixture.pkg",
+            include_bytes!("../../fixtures/nested-pkg.dmg").as_slice(),
+        ),
+        (
+            "pkg",
+            "Component.pkg",
+            include_bytes!("../../fixtures/nested-flat.pkg").as_slice(),
+        ),
+        (
+            "zip",
+            "Wrapper/Fixture.dmg",
+            include_bytes!("../../fixtures/nested-dmg.zip").as_slice(),
+        ),
+        (
+            "zip",
+            "Fixture.pkg/Contents/Archive.pax.gz",
+            include_bytes!("../../fixtures/nested-legacy.zip").as_slice(),
+        ),
+    ] {
+        let result = ready(scan_target(
+            &mut Memory(artifact),
+            1024 * 1024,
+            Target::Bundle("Fixture.app"),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some(format));
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.nested_artifacts, [inside]);
+        assert_eq!(result.architectures.len(), 2);
+    }
+}
+
+#[test]
+fn installer_distribution_exposes_a_remote_component_without_scanning_it() {
+    let artifact = include_bytes!("../../fixtures/remote-component.xar");
+    let result = run(artifact, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported));
+    assert_eq!(
+        result.error.as_deref(),
+        Some("unsupported: installer Distribution references remote package components")
+    );
+    assert_eq!(
+        result.installer.unwrap().remote_components,
+        ["https://example.invalid/component.pkg"]
+    );
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn zip_supports_bzip2_and_zip_framed_lzma_members() {
+    for artifact in [
+        include_bytes!("../../fixtures/bzip2.zip").as_slice(),
+        include_bytes!("../../fixtures/lzma.zip").as_slice(),
+    ] {
+        let result = run(artifact, 64 * 1024);
+        assert_eq!(result.format, Some("zip"));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
+fn zip64_with_comment_reads_binary_plist_and_deflated_executable() {
+    let result = run(ZIP64, ZIP64.len() as u64 - 1);
+    assert_eq!(result.format, Some("zip"));
+    assert_bundle(&result);
+    assert!(result.bytes_read < result.total_size);
+}
+
+#[test]
+fn zip_reads_each_local_header_and_filename_in_one_request() {
+    let result = ready(scan_with_limits(
+        &mut Memory(ZIP64),
+        ScanLimits::for_profile(Profile::RemoteCli),
+    ));
+    assert_bundle(&result);
+    assert!(result.reads <= 8, "{} source reads", result.reads);
+}
+
+#[test]
+fn zip_budget_preserves_bundle_fields_before_executable() {
+    let full = run(ZIP, u64::MAX);
+    let result = run(ZIP, full.bytes_requested - 48);
+    assert!(matches!(result.status, Status::BudgetExhausted));
+    assert_eq!(result.bundle_id, full.bundle_id);
+    assert_eq!(result.executable_name, full.executable_name);
+    assert!(result.bytes_requested <= full.bytes_requested - 48);
+}
+
+const TAR: &[u8] = include_bytes!("../../fixtures/app.tar.gz");
+const TAR_REVERSED: &[u8] = include_bytes!("../../fixtures/app-binary-first.tar.gz");
+
+#[test]
+fn tar_walks_plain_bzip2_and_xz_headers() {
+    for (format, artifact) in [
+        ("tar", include_bytes!("../../fixtures/app.tar").as_slice()),
+        (
+            "tar.bz2",
+            include_bytes!("../../fixtures/app.tar.bz2").as_slice(),
+        ),
+        (
+            "tar.xz",
+            include_bytes!("../../fixtures/app.tar.xz").as_slice(),
+        ),
+    ] {
+        let result = run(artifact, 8 * 1024);
+        assert_eq!(result.format, Some(format));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
+fn pkg_recovers_bom_checked_late_plist_and_scans_the_named_binary() {
+    let artifact = include_bytes!("../../fixtures/late-bom.pkg");
+    let budget = 600 * 1024;
+    let result = run(artifact, budget);
+    assert_bundle(&result);
+    assert_eq!(
+        result.bundle_metadata_source,
+        Some("bom_verified_gzip_cpio_tail")
+    );
+    assert!(result.bytes_read < budget);
+
+    let mut changed = artifact.to_vec();
+    let identifier = b"org.doesitarm.fixture</string>";
+    let at = changed
+        .windows(identifier.len())
+        .position(|window| window == identifier)
+        .unwrap();
+    changed[at] = b'x';
+    let rejected = run(&changed, budget);
+    assert!(matches!(rejected.status, Status::BudgetExhausted));
+    assert!(rejected.bundle_id.is_none());
+    assert!(rejected.bundle_metadata_source.is_none());
+}
+
+#[test]
+fn pkg_uses_bom_identity_when_cpio_and_bom_orders_differ() {
+    let artifact = include_bytes!("../../fixtures/late-bom-reordered.pkg");
+    let result = run(artifact, 600 * 1024);
+    assert_bundle(&result);
+    assert_eq!(
+        result.bundle_metadata_source,
+        Some("bom_verified_gzip_cpio_tail")
+    );
+}
+
+#[test]
+fn tar_keeps_the_main_when_inventory_reaches_the_byte_budget() {
+    let result = run(TAR, 68 * 1024);
+    assert_eq!(result.format, Some("tar.gz"));
+    assert_bundle(&result);
+    assert!(result.total_size > result.bytes_read);
+    assert!(!result.inventory.as_ref().unwrap().complete);
+}
+
+#[test]
+fn tar_reuses_earlier_executable_evidence_after_pax_path_and_plist() {
+    let result = run(TAR_REVERSED, 2048);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert!(
+        result
+            .bundle_path
+            .as_deref()
+            .unwrap()
+            .ends_with("/Fixture.app")
+    );
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.architectures.len(), 2);
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.bytes_read <= 2048);
+}
+
+#[test]
+fn tar_reports_budget_exhaustion_if_compressed_prefix_is_too_short() {
+    let result = run(TAR, 80);
+    assert!(matches!(result.status, Status::BudgetExhausted));
+    assert_eq!(result.bytes_read, 76);
+    assert_eq!(result.bytes_requested, 80);
+    assert_eq!(result.format, Some("tar.gz"));
+}
+
+const DMG: &[u8] = include_bytes!("../../fixtures/hfsx.dmg");
+
+#[test]
+fn hfs_uses_the_embedded_name_from_development_region_strings() {
+    let image = include_bytes!("../../fixtures/localized-name.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.name.as_deref(), Some("Localized Fixture"));
+        assert_eq!(result.version.as_deref(), Some("1.15.0"));
+        assert_eq!(result.min_macos, None);
+        assert_eq!(result.architectures[0].name, "ppc");
+        assert!(result.architectures[0].header_verified);
+    }
+}
+
+#[test]
+fn dmg_uses_hfsx_catalog_and_overflow_extents_across_udif_codecs() {
+    let result = run(DMG, u64::MAX);
+    assert_eq!(result.format, Some("dmg"));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.executable_name.as_deref(), Some("FixtureBinary"));
+    assert_eq!(result.executable_size, Some(4096 + 48));
+    assert_eq!(result.architectures[0].offset, 4096);
+    assert_eq!(result.architectures[0].name, "x86_64");
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    assert!(result.bytes_read < result.total_size / 4);
+}
+
+#[test]
+fn dmg_footer_wins_over_first_bzip2_chunk_magic() {
+    let image = include_bytes!("../../fixtures/bzip2-prefix.dmg");
+    assert!(image.starts_with(b"BZh"));
+    let result = run(image, 1024 * 1024);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.format, Some("dmg"));
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+}
+
+#[test]
+fn dmg_with_zero_footer_sector_count_uses_block_map_geometry() {
+    let mut image = include_bytes!("../../fixtures/bzip2-prefix.dmg").to_vec();
+    let footer = image.len() - 512;
+    image[footer + 492..footer + 500].fill(0);
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(&image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn dmg_verifies_the_bundle_named_by_rock_ridge_records() {
+    let image = include_bytes!("../../fixtures/rock-ridge.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("dmg"));
+        assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+        assert_bundle(&result);
+    }
+}
+
+#[test]
+fn dmg_rejects_segmented_udif() {
+    let mut data = DMG.to_vec();
+    let segment_count = data.len() - 512 + 60;
+    data[segment_count + 3] = 2;
+    let result = run(&data, u64::MAX);
+    assert_eq!(result.format, Some("dmg"));
+    assert!(matches!(result.status, Status::Unsupported));
+    assert_eq!(result.reads, 2);
+}
+
+#[test]
+fn identifies_encrypted_apple_disk_images_by_header_or_trailer() {
+    let mut modern = [0; 4096];
+    modern[..12].copy_from_slice(b"encrcdsa\0\0\0\x02");
+    let mut legacy = [0; 4096];
+    legacy[4088..].copy_from_slice(b"cdsaencr");
+    for image in [&modern, &legacy] {
+        let result = run(image, 8192);
+        assert_eq!(result.format, Some("dmg"));
+        assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+        assert_eq!(
+            result.error.as_deref(),
+            Some("unsupported: encrypted Apple disk image")
+        );
+        assert!(result.architectures.is_empty());
+    }
+}
+
+#[test]
+fn sparse_image_seeks_hfs_through_unordered_bands_and_an_apple_partition_map() {
+    let image = include_bytes!("../../fixtures/apm.sparseimage");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("dmg"));
+        assert_eq!(result.bundle_path.as_deref(), Some("Fixture.app"));
+        assert_eq!(result.executable_size, Some(4144));
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        assert!(result.bytes_read < result.total_size / 2);
+    }
+}
+
+#[test]
+fn hfs_auto_finds_an_app_in_the_single_visible_root_directory() {
+    let image = include_bytes!("../../fixtures/wrapped-hfs.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_path.as_deref(), Some("Suite/Fixture.app"));
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn hfs_selects_the_declared_app_across_install_and_remove_packages() {
+    let image = include_bytes!("../../fixtures/install-remove.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(
+            result.bundle_path.as_deref(),
+            Some("Applications/Fixture.app")
+        );
+        assert_eq!(result.nested_artifacts, ["Install.pkg"]);
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn hfs_preserves_ambiguity_when_two_packages_contain_apps() {
+    let image = include_bytes!("../../fixtures/competing-packages.dmg");
+    let result = run(image, 8192);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert_eq!(
+        result.error.as_deref(),
+        Some("unsupported: multiple nested PKGs in HFS volume")
+    );
+    assert_eq!(result.nested_artifacts, ["Install.pkg", "Other.pkg"]);
+    assert!(result.bundle_path.is_none());
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn hfs_finds_a_declared_executable_inside_the_package() {
+    let image = include_bytes!("../../fixtures/nested-pkg.dmg");
+    let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+    let result = ready(scan_target(
+        &mut Memory(image),
+        8192,
+        Target::Executable(path),
+    ));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.executable_path.as_deref(), Some(path));
+    assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
+#[test]
+fn apfs_finds_a_declared_executable_inside_the_package() {
+    let image = include_bytes!("../../fixtures/apfs-nested-pkg.dmg");
+    let path = "Fixture.app/Contents/MacOS/FixtureBinary";
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_target_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+            Target::Executable(path),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.executable_path.as_deref(), Some(path));
+        assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+const PKG: &[u8] = include_bytes!("../../fixtures/gzip-newc.pkg");
+const PKG_ODC: &[u8] = include_bytes!("../../fixtures/stored-odc.pkg");
+
+#[test]
+fn pkg_reads_installer_metadata_and_gzip_or_stored_cpio() {
+    for data in [PKG, PKG_ODC] {
+        let scanned = run(data, u64::MAX);
+        assert_eq!(scanned.format, Some("pkg"));
+        assert_bundle(&scanned);
+        let meta = scanned.installer.unwrap();
+        assert_eq!(meta.title.as_deref(), Some("Fixture Installer"));
+        assert_eq!(meta.host_architectures, ["x86_64", "arm64"]);
+        assert_eq!(
+            meta.package_id.as_deref(),
+            Some("org.doesitarm.fixture-installer")
+        );
+        assert_eq!(meta.package_version.as_deref(), Some("5"));
+        assert_eq!(meta.min_macos.as_deref(), Some("11.0"));
+    }
+}
+
+#[test]
+fn pkg_auto_selects_the_product_in_packageinfo_bundle_version() {
+    let package = include_bytes!("../../fixtures/product-bundle-version.pkg");
+    let result = run(package, 8192);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    let path = "Library/Audio/Plug-Ins/VST3/Fixture.vst3";
+    assert_eq!(result.bundle_kind, Some("audio_plugin"));
+    assert_eq!(result.bundle_path.as_deref(), Some(path));
+    assert_eq!(result.installer.unwrap().payload_bundles, [path]);
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+}
+
+#[test]
+fn pkg_mounts_contents_relative_payload_in_the_declared_plugin() {
+    let zip = include_bytes!("../../fixtures/mounted-plugin.zip");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(zip),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.format, Some("zip"));
+        assert_eq!(result.nested_artifacts, ["Fixture.pkg"]);
+        assert_eq!(result.bundle_kind, Some("audio_plugin"));
+        assert_eq!(
+            result.bundle_path.as_deref(),
+            Some("Library/Application Support/Avid/Audio/Plug-Ins/Fixture.aaxplugin")
+        );
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn pkg_verifies_the_single_app_package_stored_with_postinstall() {
+    let artifact = include_bytes!("../../fixtures/pkg-in-scripts.pkg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(artifact),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(
+            result.nested_artifacts,
+            ["Fixture.pkg/Scripts/Application.pkg"]
+        );
+        assert_eq!(result.architectures.len(), 2);
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    }
+}
+
+#[test]
+fn pkg_returns_installer_metadata_when_payload_budget_runs_out() {
+    let result = run(PKG, 550);
+    assert!(
+        matches!(result.status, Status::BudgetExhausted),
+        "{result:?}"
+    );
+    let info = result.installer.unwrap();
+    assert_eq!(info.host_architectures, ["x86_64", "arm64"]);
+    assert!(result.architectures.is_empty());
+}
+
+const APFS: &[u8] = include_bytes!("../../fixtures/apfs.dmg");
+
+#[test]
+fn apfs_dmg_uses_latest_checkpoint_and_seeks_through_file_extents() {
+    let result = run(APFS, u64::MAX);
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.format, Some("dmg"));
+    assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+    assert_eq!(result.executable_size, Some(4096 + 48));
+    assert_eq!(result.architectures[0].offset, 4096);
+    assert_eq!(result.architectures[1].name, "arm64e");
+    assert!(result.architectures.iter().all(|arch| arch.header_verified));
+    assert!(result.bytes_read < result.total_size / 10);
+}
+
+#[test]
+fn apfs_dmg_verifies_macho_slices_in_lzvn_resource_fork_chunks() {
+    let image = include_bytes!("../../fixtures/apfs-lzvn.dmg");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(image),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_id.as_deref(), Some("org.doesitarm.fixture"));
+        assert_eq!(result.executable_size, Some(65_536 + 48));
+        assert_eq!(result.architectures[0].offset, 65_536);
+        assert_eq!(result.architectures[0].name, "x86_64");
+        assert_eq!(result.architectures[1].name, "arm64e");
+        assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        assert!(result.bytes_read < result.total_size / 10);
+    }
+}
+
+const PBZX: &[u8] = include_bytes!("../../fixtures/pbzx.pkg");
+
+#[test]
+fn pbzx_pkg_skips_unneeded_chunks_and_reads_a_mixed_raw_and_xz_payload() {
+    let result = run(PBZX, 8192);
+    assert_bundle(&result);
+    assert!(result.bytes_read < result.total_size / 2);
+}
+
+#[test]
+fn decoded_budget_is_shared_across_members_and_leaves_partial_results() {
+    for (input, format) in [
+        (TAR, "tar.gz"),
+        (ZIP64, "zip"),
+        (DMG, "dmg"),
+        (PKG, "pkg"),
+        (PBZX, "pkg"),
+    ] {
+        let full = run(input, 8192);
+        assert!(matches!(full.status, Status::Complete), "{full:?}");
+        let limit = full.decoded_bytes - 1;
+        let partial = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits {
+                byte_budget: 8192,
+                decoded_byte_budget: limit,
+                ..ScanLimits::new(8192)
+            },
+        ));
+        assert_eq!(partial.format, Some(format));
+        let message = "scan limit: decoded-byte budget reached";
+        assert!(partial.decoded_bytes <= limit);
+        assert_eq!(partial.bundle_id, full.bundle_id);
+        assert_eq!(partial.architectures.len(), full.architectures.len());
+        if matches!(partial.status, Status::Complete) {
+            let inventory = partial.inventory.as_ref().unwrap();
+            assert!(!inventory.complete);
+            assert_eq!(inventory.incomplete_reason.as_deref(), Some(message));
+            assert!(
+                partial
+                    .architectures
+                    .iter()
+                    .all(|arch| arch.header_verified)
+            );
+        } else {
+            assert!(
+                matches!(partial.status, Status::LimitReached),
+                "{partial:?}"
+            );
+            assert_eq!(partial.error.as_deref(), Some(message));
+            assert!(
+                partial
+                    .architectures
+                    .iter()
+                    .any(|arch| arch.code_signature_present.is_none())
+            );
+        }
+    }
+}
+
+#[test]
+fn budget_preserves_an_unconfirmed_executable_candidate_before_the_plist() {
+    let mut evidence = None;
+    for budget in 100..2048 {
+        let result = run(TAR_REVERSED, budget);
+        if matches!(result.status, Status::BudgetExhausted)
+            && result
+                .candidate_executables
+                .iter()
+                .any(|exe| !exe.architectures.is_empty())
+        {
+            evidence = Some(result);
+            break;
+        }
+    }
+    let result =
+        evidence.expect("a compressed prefix that reaches the candidate but not the plist");
+    assert!(result.architectures.is_empty());
+    assert!(result.bundle_id.is_none());
+    assert!(
+        result.candidate_executables[0]
+            .path
+            .ends_with("/Contents/MacOS/FixtureBinary")
+    );
+}
+
+fn padded_tar(mut compressor: impl Write, size: u64) {
+    let mut header = [0_u8; 512];
+    header[..7].copy_from_slice(b"padding");
+    header[124..136].copy_from_slice(format!("{size:011o}\0").as_bytes());
+    header[148..156].fill(b' ');
+    header[156] = b'0';
+    header[257..263].copy_from_slice(b"ustar\0");
+    let checksum: u64 = header.iter().map(|byte| u64::from(*byte)).sum();
+    header[148..156].copy_from_slice(format!("{checksum:06o}\0 ").as_bytes());
+    compressor.write_all(&header).unwrap();
+    let mut zeros = std::io::repeat(0).take(size);
+    std::io::copy(&mut zeros, &mut compressor).unwrap();
+    compressor
+        .write_all(include_bytes!("../../fixtures/app.tar"))
+        .unwrap();
+}
+
+#[test]
+fn local_scans_large_output_while_worker_enforces_decoded_and_ratio_limits() {
+    let mut gzip = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+    padded_tar(&mut gzip, 2 * 1024 * 1024);
+    let gzip = gzip.finish().unwrap();
+    let mut bzip = bzip2::write::BzEncoder::new(Vec::new(), bzip2::Compression::fast());
+    padded_tar(&mut bzip, 1024 * 1024);
+    let bzip = bzip.finish().unwrap();
+
+    for (artifact, worker_decoded_budget, policy) in [
+        (gzip.as_slice(), 1024 * 1024, "decoded-byte budget reached"),
+        (
+            bzip.as_slice(),
+            scan_core::DEFAULT_DECODED_BYTE_BUDGET,
+            "compression expansion ratio exceeded",
+        ),
+    ] {
+        let local = ScanLimits {
+            byte_budget: 1,
+            decoded_byte_budget: 1,
+            ..ScanLimits::for_profile(Profile::Local)
+        };
+        let result = ready(scan_with_limits(&mut Memory(artifact), local));
+        assert_bundle(&result);
+        assert!(result.decoded_bytes > 1024 * 1024);
+
+        let remote = ScanLimits {
+            decoded_byte_budget: 1,
+            ..ScanLimits::for_profile(Profile::RemoteCli)
+        };
+        assert_bundle(&ready(scan_with_limits(&mut Memory(artifact), remote)));
+
+        let worker = ready(scan_with_limits(
+            &mut Memory(artifact),
+            ScanLimits {
+                decoded_byte_budget: worker_decoded_budget,
+                ..ScanLimits::for_profile(Profile::Worker)
+            },
+        ));
+        assert!(matches!(worker.status, Status::LimitReached), "{worker:?}");
+        assert_eq!(
+            worker.error.as_deref(),
+            Some(format!("scan limit: {policy}").as_str())
+        );
+    }
+}
+
+#[test]
+fn worker_stops_at_explicit_deadline_and_profiles_keep_container_bounds() {
+    let limited = ready(scan_target_with_deadline(
+        &mut Memory(THIN),
+        ScanLimits::for_profile(Profile::Worker),
+        Target::Auto,
+        Some(&|| true),
+    ));
+    assert!(matches!(limited.status, Status::LimitReached));
+    assert_eq!(limited.reads, 0);
+    assert_eq!(
+        limited.error.as_deref(),
+        Some("scan limit: scan deadline reached")
+    );
+
+    let mut truncated = FAT.to_vec();
+    truncated.truncate(128);
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(&truncated),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::Invalid), "{result:?}");
+    }
+}
+
+#[test]
+fn local_diagnostics_preserve_embedded_plists_executable_prefixes_and_commands() {
+    for input in [
+        ZIP,
+        ZIP64,
+        DMG,
+        APFS,
+        PKG,
+        TAR,
+        TAR_REVERSED,
+        include_bytes!("../../fixtures/nested-pkg.dmg"),
+        include_bytes!("../../fixtures/late-bom.pkg"),
+    ] {
+        let result = ready(scan_core::scan_target_with_diagnostics(
+            &mut Memory(input),
+            ScanLimits::for_profile(Profile::Local),
+            Target::Auto,
+            None,
+        ));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        let diagnostic = result
+            .diagnostic
+            .expect("archive subresult dropped diagnostic collection");
+        assert!(
+            diagnostic
+                .info_plist_path
+                .unwrap()
+                .ends_with("/Contents/Info.plist")
+        );
+        assert!(diagnostic.info_plist_size.unwrap() > 0);
+        assert_eq!(
+            diagnostic.info_plist.unwrap().as_dictionary().unwrap()["CFBundleExecutable"]
+                .as_string(),
+            Some("FixtureBinary")
+        );
+        assert_eq!(
+            diagnostic.executable.executable_prefix_hex.unwrap().len(),
+            128
+        );
+        assert_eq!(
+            diagnostic.executable.load_commands.len(),
+            result.architectures.len()
+        );
+        assert!(
+            diagnostic
+                .executable
+                .load_commands
+                .iter()
+                .all(|list| !list.truncated && !list.commands.is_empty())
+        );
+    }
+}
+
+#[test]
+fn archives_verify_a_same_stem_macho_when_the_app_plist_has_no_executable_key() {
+    let fixtures: &[&[u8]] = &[
+        include_bytes!("../../fixtures/bundles/missing-key.zip"),
+        include_bytes!("../../fixtures/bundles/missing-key.tar.gz"),
+        include_bytes!("../../fixtures/bundles/missing-key.dmg"),
+    ];
+    for input in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.version.as_deref(), Some("3.8.2"));
+            assert_eq!(
+                result.executable_path.as_deref(),
+                Some("AgentSessions.app/Contents/MacOS/AgentSessions")
+            );
+            assert_eq!(result.executable_resolution, Some("bundle_name_fallback"));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn a_same_stem_script_does_not_verify_an_undeclared_main() {
+    let input = include_bytes!("../../fixtures/bundles/missing-key-helper.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::NotFound), "{result:?}");
+    assert!(result.architectures.is_empty());
+    assert!(result.executable_resolution.is_none());
+    assert!(
+        result
+            .inventory
+            .unwrap()
+            .binaries
+            .iter()
+            .any(|entry| entry.path == "Contents/MacOS/Helper"),
+        "observed helper still belongs in the inventory"
+    );
+}
+
+#[test]
+fn disk_images_resolve_a_contents_relative_executable_after_the_declared_lookup() {
+    let fixtures: &[(&[u8], &str)] = &[
+        (
+            include_bytes!("../../fixtures/bundles/contents-relative-hfs.dmg"),
+            "Sci-Hub EVA.app/Contents/MacOS/Sci-Hub EVA",
+        ),
+        (
+            include_bytes!("../../fixtures/bundles/contents-relative-apfs.dmg"),
+            "Fixture.app/Contents/MacOS/FixtureBinary",
+        ),
+    ];
+    for (input, path) in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.executable_path.as_deref(), Some(*path));
+            assert_eq!(result.executable_resolution, Some("contents_relative"));
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+            let inventory = result.inventory.unwrap();
+            assert_eq!(inventory.binaries.len(), 1);
+            assert_eq!(inventory.binaries[0].role, "main");
+        }
+    }
+}
+
+#[test]
+fn reads_encrypted_macho_headers_without_reading_encrypted_code() {
+    let words: [u32; 20] = [
+        0xfeedfacf, 0x0100000c, 0, 2, 2, 48, 0, 0, // Mach-O header
+        0x32, 24, 2, 0x00110000, 0, 0, // iOS build version
+        0x2c, 24, 4096, 64, 1, 0, // encryption info
+    ];
+    let mut data: Vec<u8> = words.into_iter().flat_map(u32::to_le_bytes).collect();
+    data.resize(4160, 0xa5);
+    let result = ready(scan_core::scan_target_with_diagnostics(
+        &mut Memory(&data),
+        ScanLimits::for_profile(Profile::Local),
+        Target::Auto,
+        None,
+    ));
+    assert!(matches!(result.status, Status::Complete), "{result:?}");
+    assert_eq!(result.architectures[0].name, "arm64");
+    assert!(result.architectures[0].header_verified);
+    assert!(result.architectures[0].min_macos.is_none());
+    assert_eq!(result.bytes_read, 80, "the opaque code must remain unread");
+    let diagnostic = result.diagnostic.unwrap();
+    let encryption = &diagnostic.executable.load_commands[0].commands[1];
+    assert_eq!(encryption.fields.get("encryption_id"), Some(&1));
+    assert_eq!(encryption.fields.get("encrypted_offset"), Some(&4096));
+    assert_eq!(result.architectures[0].encrypted, Some(true));
+
+    // A zero id is an unencrypted placeholder even when the command exists.
+    data[72..76].copy_from_slice(&0u32.to_le_bytes());
+    let clear = run(&data, u64::MAX);
+    assert_eq!(clear.architectures[0].encrypted, Some(false));
+
+    data[72..76].copy_from_slice(&1u32.to_le_bytes());
+    data.truncate(4159);
+    let truncated = run(&data, u64::MAX);
+    assert!(matches!(truncated.status, Status::Invalid), "{truncated:?}");
+    assert_eq!(truncated.architectures[0].encrypted, None);
+}
+
+#[test]
+fn zip_wrapper_resolves_the_flat_inner_application_and_its_own_inventory() {
+    let input = include_bytes!("../../fixtures/bundles/wrapped-flat.zip");
+    for target in [
+        Target::Auto,
+        Target::Bundle("Outer.app"),
+        Target::Bundle("Inner.app"),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_core::scan_target_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+                target,
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(
+                result.bundle_path.as_deref(),
+                Some("Outer.app/Wrapper/Inner.app")
+            );
+            assert_eq!(result.bundle_kind, Some("app"));
+            assert_eq!(result.wrapper_path.as_deref(), Some("Outer.app"));
+            assert_eq!(
+                result.executable_path.as_deref(),
+                Some("Outer.app/Wrapper/Inner.app/Inner")
+            );
+            let inventory = result.inventory.unwrap();
+            assert!(
+                inventory
+                    .binaries
+                    .iter()
+                    .any(|entry| entry.role == "framework")
+            );
+            assert!(inventory.binaries.iter().any(|entry| entry.role == "main"));
+        }
+    }
+
+    let local = ready(scan_core::scan_target_with_diagnostics(
+        &mut Memory(input),
+        ScanLimits::for_profile(Profile::Local),
+        Target::Auto,
+        None,
+    ));
+    assert_eq!(
+        local.diagnostic.unwrap().info_plist_path.as_deref(),
+        Some("Outer.app/Wrapper/Inner.app/Info.plist")
+    );
+}
+
+#[test]
+fn zip_resource_only_bundle_reports_no_executable() {
+    let input = include_bytes!("../../fixtures/bundles/resources-only.zip");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(matches!(result.status, Status::NoExecutable), "{result:?}");
+        assert_eq!(result.bundle_kind, Some("resource_only"));
+        assert!(result.architectures.is_empty());
+        assert!(result.inventory.unwrap().complete);
+    }
+}
+
+#[test]
+fn zip_product_selection_skips_resource_bundle_in_front_of_app_or_installer() {
+    let inputs: &[(&[u8], &str)] = &[
+        (
+            include_bytes!("../../fixtures/bundles/resources-and-app.zip"),
+            "Z Tool.app",
+        ),
+        (
+            include_bytes!("../../fixtures/bundles/resources-and-installer.zip"),
+            "Fixture.app",
+        ),
+    ];
+    for (input, expected) in inputs {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(matches!(result.status, Status::Complete), "{result:?}");
+            assert_eq!(result.bundle_path.as_deref(), Some(*expected));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn zip_product_selection_requests_a_target_for_independent_apps() {
+    let input = include_bytes!("../../fixtures/bundles/independent-apps.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.error.unwrap().contains("multi-app"));
+    assert_eq!(
+        result.candidate_bundle_paths,
+        ["A Utility.app", "Z Tool.app"]
+    );
+    assert!(result.architectures.is_empty());
+
+    let selected = ready(scan_target(
+        &mut Memory(input),
+        u64::MAX,
+        Target::Bundle("Z Tool.app"),
+    ));
+    assert!(matches!(selected.status, Status::Complete), "{selected:?}");
+    assert_eq!(selected.bundle_path.as_deref(), Some("Z Tool.app"));
+}
+
+#[test]
+fn hfs_suite_finds_the_product_named_by_its_enclosing_directory() {
+    let input = include_bytes!("../../fixtures/bundles/hfs-suite.dmg");
+    let path = "NetLogo 7.0.4/NetLogo 7.0.4.app";
+    for target in [
+        Target::Auto,
+        Target::Bundle(path),
+        Target::Bundle("NetLogo 7.0.4.app"),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_core::scan_target_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+                target,
+            ));
+            assert!(matches!(result.status, Status::Complete), "{result:?}");
+            assert_eq!(result.bundle_path.as_deref(), Some(path));
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn hfs_suite_with_no_primary_product_preserves_its_candidates() {
+    let input = include_bytes!("../../fixtures/bundles/hfs-suite-ambiguous.dmg");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.error.unwrap().contains("multi-app"));
+    assert_eq!(
+        result.candidate_bundle_paths,
+        [
+            "NetLogo 7.0.4/BehaviorSearch 7.0.4.app",
+            "NetLogo 7.0.4/HubNet Client 7.0.4.app",
+        ]
+    );
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn cli_only_archives_verify_the_unique_regular_macho_executable() {
+    for input in [
+        include_bytes!("../../fixtures/bundles/cli-only.zip").as_slice(),
+        include_bytes!("../../fixtures/bundles/cli-only.tar.gz").as_slice(),
+    ] {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.executable_path.as_deref(), Some("Widget/bin/widget"));
+            assert_eq!(result.architectures.len(), 2);
+            assert!(result.architectures.iter().all(|arch| arch.header_verified));
+        }
+    }
+}
+
+#[test]
+fn cli_only_script_keeps_its_packaged_runtime_separate_from_primary_architectures() {
+    let input = include_bytes!("../../fixtures/bundles/cli-script-runtime.tar.gz");
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let result = ready(scan_with_limits(
+            &mut Memory(input),
+            ScanLimits::for_profile(profile),
+        ));
+        assert!(
+            matches!(result.status, Status::Unsupported),
+            "{profile:?}: {result:?}"
+        );
+        assert_eq!(
+            result.executable_path.as_deref(),
+            Some("dist-package/cursor-agent")
+        );
+        assert!(result.architectures.is_empty());
+        let runtime = result.script_runtime.unwrap();
+        assert_eq!(runtime.path, "dist-package/node");
+        assert!(runtime.architectures[0].header_verified);
+    }
+}
+
+#[test]
+fn cli_only_archives_request_a_target_when_several_executables_verify() {
+    let input = include_bytes!("../../fixtures/bundles/cli-ambiguous.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(
+        result
+            .error
+            .unwrap()
+            .contains("multiple standalone executables")
+    );
+    assert!(result.architectures.is_empty());
+    assert_eq!(
+        result
+            .candidate_executables
+            .iter()
+            .map(|entry| entry.path.as_str())
+            .collect::<Vec<_>>(),
+        ["bin/first", "bin/second"]
+    );
+}
+
+#[test]
+fn zip_resource_category_checks_for_code_in_nonstandard_paths() {
+    let input = include_bytes!("../../fixtures/bundles/resources-with-binary.zip");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::NotFound), "{result:?}");
+    assert_ne!(result.bundle_kind, Some("resource_only"));
+    assert!(result.architectures.is_empty());
+    assert_eq!(
+        result.inventory.unwrap().binaries[0].path,
+        "Contents/Unexpected/tool"
+    );
+}
+
+#[test]
+fn zip_outer_app_with_its_own_launcher_keeps_the_wrapped_app_as_nested_code() {
+    let input = include_bytes!("../../fixtures/bundles/wrapper-with-own-launcher.zip");
+    for target in [Target::Auto, Target::Bundle("Outer.app")] {
+        let result = ready(scan_target(&mut Memory(input), u64::MAX, target));
+        assert!(matches!(result.status, Status::Complete), "{result:?}");
+        assert_eq!(result.bundle_path.as_deref(), Some("Outer.app"));
+        assert_eq!(
+            result.executable_path.as_deref(),
+            Some("Outer.app/Contents/MacOS/Outer")
+        );
+        assert!(result.wrapper_path.is_none());
+        assert!(result.inventory.unwrap().binaries.iter().any(|entry| {
+            entry.path == "Wrapper/Inner.app/Inner" && entry.role == "nested_app"
+        }));
+    }
+}
+
+#[test]
+fn jdk_installer_verifies_the_named_library_behind_a_recorded_cpio_link() {
+    let fixtures: &[&[u8]] = &[
+        include_bytes!("../../fixtures/bundles/jdk-link-before-plist.pkg"),
+        include_bytes!("../../fixtures/bundles/jdk-link-after-plist.pkg"),
+    ];
+    let root = "Library/Java/JavaVirtualMachines/microsoft-11.jdk";
+    for input in fixtures {
+        for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+            let result = ready(scan_with_limits(
+                &mut Memory(input),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{profile:?}: {result:?}"
+            );
+            assert_eq!(result.bundle_path.as_deref(), Some(root));
+            assert_eq!(result.bundle_kind, Some("runtime"));
+            assert_eq!(result.executable_name.as_deref(), Some("libjli.dylib"));
+            assert_eq!(
+                result.executable_path,
+                Some(format!("{root}/Contents/Home/lib/jli/libjli.dylib"))
+            );
+            assert_eq!(result.executable_resolution, Some("archive_symlink"));
+            assert_eq!(result.architectures[0].name, "x86_64");
+            assert!(result.architectures[0].header_verified);
+        }
+    }
+}
+
+#[test]
+fn jdk_installer_does_not_promote_an_escaping_cpio_link() {
+    let input = include_bytes!("../../fixtures/bundles/jdk-link-escaping.pkg");
+    let result = run(input, u64::MAX);
+    assert!(matches!(result.status, Status::Unsupported), "{result:?}");
+    assert!(result.architectures.is_empty());
+}
+
+#[test]
+fn targeted_tar_script_verifies_an_earlier_runtime_with_one_source_pass() {
+    let input = include_bytes!("../../fixtures/bundles/cli-script-runtime.tar.gz");
+    let target = Target::Executable("dist-package/cursor-agent");
+    let one_pass = input.len() as u64 + 4;
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let mut limits = ScanLimits::for_profile(profile);
+        limits.byte_budget = one_pass;
+        let result = ready(scan_core::scan_target_with_limits(
+            &mut Memory(input),
+            limits,
+            target,
+        ));
+        assert!(
+            matches!(result.status, Status::Unsupported),
+            "{profile:?}: {result:?}"
+        );
+        assert!(result.architectures.is_empty());
+        let runtime = result.script_runtime.unwrap();
+        assert_eq!(runtime.path, "dist-package/node");
+        assert_eq!(
+            runtime.architectures.len(),
+            1,
+            "{profile:?} missed the earlier runtime"
+        );
+        assert!(runtime.architectures[0].header_verified);
+        assert!(
+            result.bytes_requested <= one_pass,
+            "{profile:?} reread the source"
+        );
+    }
+}
+
+macro_rules! windows_fixture {
+    ($name:literal) => {
+        &include_bytes!(concat!("../../fixtures/windows/", $name))[..]
+    };
+}
+
+#[test]
+fn windows_pe_reports_architecture_and_hybrid_evidence_in_every_profile() {
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        for (bytes, arch) in [
+            (windows_fixture!("arm64.exe"), "arm64"),
+            (windows_fixture!("x64.exe"), "x64"),
+            (windows_fixture!("x86.exe"), "x86"),
+            (windows_fixture!("arm64ec.exe"), "arm64ec"),
+            (windows_fixture!("arm64x-v1.dll"), "arm64x"),
+            (windows_fixture!("arm64x-v2.dll"), "arm64x"),
+            (windows_fixture!("other-relocation.dll"), "arm64"),
+        ] {
+            let result = ready(scan_with_limits(
+                &mut Memory(bytes),
+                ScanLimits::for_profile(profile),
+            ));
+            assert!(
+                matches!(result.status, Status::Complete),
+                "{:?}",
+                result.error
+            );
+            assert_eq!(result.platform, scan_core::Platform::Windows);
+            assert_eq!(result.format, Some("pe"));
+            assert!(result.architectures.is_empty());
+            assert!(result.bytes_read < result.total_size);
+            let windows = result.windows.unwrap();
+            assert_eq!(windows.architectures, [arch]);
+            assert_eq!(windows.main_architecture, Some(arch));
+            assert_eq!(windows.native_arm64, matches!(arch, "arm64" | "arm64x"));
+            assert_eq!(windows.arm64ec, matches!(arch, "arm64ec" | "arm64x"));
+            assert_eq!(windows.arm64x, arch == "arm64x");
+            assert_eq!(windows.emulated_only, matches!(arch, "x86" | "x64"));
+            assert_eq!(windows.subsystem, Some(2));
+        }
+    }
+}
+
+#[test]
+fn windows_pe_version_resource_and_privacy() {
+    let windows = run(windows_fixture!("arm64.exe"), 4096).windows.unwrap();
+    assert_eq!(windows.product_name.as_deref(), Some("Fixture Product"));
+    assert_eq!(windows.publisher.as_deref(), Some("Fixture Publisher"));
+    assert_eq!(windows.version.as_deref(), Some("1.2.3"));
+    let windows = run(windows_fixture!("redacted.exe"), 4096).windows.unwrap();
+    assert_eq!(windows.product_name, None);
+    assert_eq!(windows.publisher, None);
+}
+
+#[test]
+fn windows_pe_managed_flags_distinguish_anycpu_required_and_preferred() {
+    for (bytes, arch, required, preferred) in [
+        (windows_fixture!("anycpu.exe"), "anycpu", false, false),
+        (windows_fixture!("required32.exe"), "x86", true, false),
+        (windows_fixture!("preferred32.exe"), "anycpu", false, true),
+    ] {
+        let windows = run(bytes, 4096).windows.unwrap();
+        assert_eq!(windows.main_architecture, Some(arch));
+        let dotnet = windows.dotnet.unwrap();
+        assert!(dotnet.il_only);
+        assert_eq!(dotnet.any_cpu, arch == "anycpu");
+        assert_eq!(dotnet.requires_32bit, required);
+        assert_eq!(dotnet.prefers_32bit, preferred);
+    }
+}
+
+#[test]
+fn windows_requires_valid_pe_and_keeps_worker_budget() {
+    let result = run(windows_fixture!("invalid-mz.exe"), 4096);
+    assert!(matches!(result.status, Status::Invalid));
+    assert_eq!(result.platform, scan_core::Platform::Unknown);
+    let result = run(windows_fixture!("arm64.exe"), 180);
+    assert!(matches!(result.status, Status::BudgetExhausted));
+    assert!(result.bytes_requested <= 180);
+    assert_eq!(run(THIN, 4096).platform, scan_core::Platform::Macos);
+}
+
+#[test]
+fn windows_installers_do_not_assign_stub_architecture_to_payload() {
+    for (bytes, kind) in [
+        (windows_fixture!("inno.exe"), "inno_setup"),
+        (windows_fixture!("nsis.exe"), "nsis"),
+        (windows_fixture!("burn.exe"), "wix_burn"),
+        (windows_fixture!("squirrel.exe"), "squirrel"),
+        (windows_fixture!("squirrel-resource.exe"), "squirrel"),
+        (windows_fixture!("sfx.exe"), "7z_sfx"),
+        (windows_fixture!("generic-setup.exe"), "exe_installer"),
+    ] {
+        let result = run(bytes, 4096);
+        assert!(
+            matches!(result.status, Status::Complete),
+            "{:?}",
+            result.error
+        );
+        let windows = result.windows.unwrap();
+        assert_eq!(windows.installer_kind, Some(kind));
+        assert_eq!(windows.bootstrapper_architecture, Some("x86"));
+        assert_eq!(windows.main_architecture, None);
+        assert!(windows.architectures.is_empty());
+        assert!(!windows.emulated_only);
+        assert_eq!(
+            windows.payload_status,
+            Some("unknown, installer payload not inspectable")
+        );
+    }
+}
+
+#[test]
+fn windows_msi_reads_ministream_template_and_product_table() {
+    for (bytes, arch) in [
+        (windows_fixture!("arm64.msi"), "arm64"),
+        (windows_fixture!("x86.msi"), "x86"),
+    ] {
+        let result = run(bytes, 8192);
+        assert!(
+            matches!(result.status, Status::Complete),
+            "{:?}",
+            result.error
+        );
+        assert_eq!(result.format, Some("msi"));
+        let windows = result.windows.unwrap();
+        assert_eq!(windows.architectures, [arch]);
+        assert_eq!(windows.main_architecture, None);
+        assert!(!windows.emulated_only);
+        assert_eq!(windows.product_name.as_deref(), Some("Fixture MSI"));
+        assert_eq!(windows.publisher.as_deref(), Some("Fixture Publisher"));
+        assert_eq!(windows.version.as_deref(), Some("1.2.3"));
+    }
+    let rejected = run(windows_fixture!("invalid-msi.cfb"), 8192);
+    assert_eq!(rejected.platform, scan_core::Platform::Unknown);
+    assert!(matches!(rejected.status, Status::Unsupported));
+}
+
+#[test]
+fn windows_appx_manifests_report_application_architectures() {
+    for profile in [Profile::Local, Profile::RemoteCli, Profile::Worker] {
+        let limits = ScanLimits::for_profile(profile);
+        let package = ready(scan_with_limits(
+            &mut Memory(windows_fixture!("fixture.msix")),
+            limits,
+        ));
+        assert!(
+            matches!(package.status, Status::Complete),
+            "{:?}",
+            package.error
+        );
+        let windows = package.windows.unwrap();
+        assert_eq!(windows.architectures, ["arm64"]);
+        assert_eq!(windows.main_architecture, Some("arm64"));
+        assert_eq!(windows.product_name.as_deref(), Some("Fixture MSIX"));
+        assert_eq!(windows.publisher.as_deref(), Some("Fixture Publisher"));
+        assert_eq!(windows.version.as_deref(), Some("1.2.3.4"));
+        let bundle = ready(scan_with_limits(
+            &mut Memory(windows_fixture!("fixture.appxbundle")),
+            limits,
+        ));
+        assert!(
+            matches!(bundle.status, Status::Complete),
+            "{:?}",
+            bundle.error
+        );
+        let windows = bundle.windows.unwrap();
+        assert_eq!(windows.architectures, ["x64", "arm64"]);
+        assert_eq!(windows.main_architecture, None);
+    }
+    let rejected = run(windows_fixture!("bogus.appx"), 8192);
+    assert!(matches!(rejected.status, Status::Invalid));
+}
+
+#[test]
+fn windows_archive_members_verify_pe_and_do_not_guess_main() {
+    for (bytes, container, arch) in [
+        (
+            windows_fixture!("portable.zip"),
+            "zip",
+            &["arm64", "x64"][..],
+        ),
+        (windows_fixture!("portable.7z"), "7z", &["arm64"][..]),
+        (windows_fixture!("stored.cab"), "cab", &["arm64"][..]),
+    ] {
+        let result = run(bytes, 8192);
+        assert!(
+            matches!(result.status, Status::Complete),
+            "{container}: {:?}",
+            result.error
+        );
+        let windows = result.windows.unwrap();
+        assert_eq!(windows.installer_kind, Some(container));
+        assert_eq!(windows.architectures, arch);
+        assert_eq!(windows.main_architecture, Some("arm64"));
+        assert_eq!(windows.product_name.as_deref(), Some("Fixture Product"));
+        assert!(result.executable_path.is_none());
+    }
+    let ambiguous = run(windows_fixture!("ambiguous.zip"), 8192)
+        .windows
+        .unwrap();
+    assert_eq!(ambiguous.architectures, ["arm64", "x64"]);
+    assert_eq!(ambiguous.main_architecture, None);
+    let opaque = run(windows_fixture!("opaque.cab"), 8192).windows.unwrap();
+    assert!(opaque.payload_status.is_some());
+    assert!(opaque.architectures.is_empty());
+}
+
+#[test]
+fn windows_compressed_prefix_leaves_deep_product_and_hybrid_evidence_unknown() {
+    let result = run(windows_fixture!("deep-version.zip"), 8192);
+    assert!(
+        matches!(result.status, Status::Complete),
+        "{:?}",
+        result.error
+    );
+    assert!(result.decoded_bytes < 64 * 1024);
+    let windows = result.windows.unwrap();
+    assert_eq!(windows.main_architecture, Some("arm64"));
+    assert!(windows.product_name.is_none());
+
+    let result = run(windows_fixture!("deep-hybrid.zip"), 8192);
+    assert!(
+        matches!(result.status, Status::Complete),
+        "{:?}",
+        result.error
+    );
+    assert!(result.decoded_bytes < 64 * 1024);
+    let windows = result.windows.unwrap();
+    assert_eq!(windows.architectures, ["x64"]);
+    assert_eq!(windows.main_architecture, None);
+    assert_eq!(windows.architecture_source, Some("archive_pe_machine"));
+    assert!(!windows.emulated_only);
+}
+
+#[test]
+fn windows_archive_setup_cannot_stand_in_for_an_opaque_package() {
+    let result = run(windows_fixture!("wrapped-msi.zip"), 8192);
+    assert!(
+        matches!(result.status, Status::Complete),
+        "{:?}",
+        result.error
+    );
+    let windows = result.windows.unwrap();
+    assert_eq!(windows.architectures, ["x64"]);
+    assert_eq!(windows.main_architecture, None);
+    assert!(!windows.emulated_only);
+    assert_eq!(
+        windows.payload_status,
+        Some("unknown, installer payload not inspectable")
+    );
+}

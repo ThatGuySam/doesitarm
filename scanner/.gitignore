@@ -1,0 +1,4 @@
+/target/
+/pkg/
+/fixtures/__pycache__/
+/scripts/__pycache__/

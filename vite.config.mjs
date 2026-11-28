@@ -9,9 +9,16 @@
 // import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
 
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { scannerFragment } from './scanner/web/scripts/fragment.mjs'
 // import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 
 import { makeViteDefinitions } from './helpers/public-runtime-config.mjs'
+
+const scannerHtml = fileURLToPath( new URL( './scanner/web/public/index.html', import.meta.url ) )
+const fragmentId = 'virtual:scanner-fragment'
+const resolvedFragmentId = `\0${ fragmentId }`
 
 
 export default {
@@ -22,6 +29,18 @@ export default {
     },
     plugins: [
         tsconfigPaths(),
+        {
+            // Publish the shared markup as a JS module for both Astro adapters.
+            name: 'scanner-fragment',
+            resolveId ( id ) {
+                if ( id === fragmentId ) return resolvedFragmentId
+            },
+            load ( id ) {
+                if ( id !== resolvedFragmentId ) return
+                this.addWatchFile( scannerHtml )
+                return `export default ${ JSON.stringify( scannerFragment( readFileSync( scannerHtml, 'utf8' ) ) ) }`
+            }
+        },
         // viteCommonjs()
     ],
     resolve: {

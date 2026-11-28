@@ -1,0 +1,2999 @@
+{
+  "started_at": "2026-11-24T19:03:40+00:00",
+  "scanner_commit": "11a817bc4b5d42214da7853eddbdd170059549be",
+  "cli_sha256": "a01be60eb8c0fd14bde36e0056995973b0eda0a745051c9e7fe113e8071e28f6",
+  "manifest_sha256": "0216a406c00b21c94759144e1dd4d6520a996b15afda0c70f75fe2aa77cf248f",
+  "apps": [
+    {
+      "cask": "claude",
+      "cask_version": "6.28899.6,2f5fc59b2d1c672dd9dced86720c50f48cca0cf9",
+      "url": "https://downloads.claude.ai/releases/darwin/universal/6.28899.6/Claude-2f5fc59b2d1c672dd9dced86720c50f48cca0cf9.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 2.225,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 2147483651,
+            "offset": 16384,
+            "size": 34096,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 65536,
+            "size": 54528,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Claude.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.anthropic.claudefordesktop",
+        "version": "6.28899.6",
+        "name": "Claude",
+        "min_macos": "13.0",
+        "executable_name": "Claude",
+        "executable_size": 120064,
+        "executable_path": "Claude.app/Contents/MacOS/Claude",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Claude",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 2147483651,
+                  "offset": 16384,
+                  "size": 34096,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 65536,
+                  "size": 54528,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/app.asar.unpacked/resources/github-mcp/github-mcp-server",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 25888784,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 25919488,
+                  "size": 23788352,
+                  "header_verified": false,
+                  "min_macos": null,
+                  "code_signature_present": null
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 8388607,
+        "bytes_requested": 8388608,
+        "decoded_bytes": 24828006,
+        "reads": 66,
+        "total_size": 404693227,
+        "error": null,
+        "source_etag": "\"c7a23cd93021289e2fe46d3de3ca8c60\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "codex-app",
+      "cask_version": "26.623.141536",
+      "url": "https://persistent.oaistatic.com/codex-app-prod/Codex-darwin-arm64-26.623.141536.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 4.853,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 69984,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Codex.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.openai.codex",
+        "version": "26.623.141536",
+        "name": "Codex",
+        "min_macos": "12.0",
+        "executable_name": "Codex",
+        "executable_size": 69984,
+        "executable_path": "Codex.app/Contents/MacOS/Codex",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Codex",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 69984,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/PlugIns/CodexDockTilePlugin.plugin/Contents/MacOS/CodexDockTilePlugin",
+              "role": "plugin",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 73600,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/avatar-overlay.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 399824,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/bare-modifier-monitor",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 184912,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/browser-use-peer-authorization.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 106064,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/devicecheck.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 106096,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/input-monitoring-permission.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 79152,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/launch-services-helper",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 134048,
+                  "header_verified": true,
+                  "min_macos": "26.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/remote-control-device-key.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 137264,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/sky.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 540624,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/native/sparkle.node",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 213296,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/plugins/openai-bundled/plugins/latex/bin/tectonic",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 50610784,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 2721203,
+        "bytes_requested": 2721204,
+        "decoded_bytes": 57820,
+        "reads": 154,
+        "total_size": 534731967,
+        "error": null,
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "telegram",
+      "cask_version": "13.2.0,283494",
+      "url": "https://osx.telegram.org/updates/Telegram-13.2.0.283494.app.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 14.864,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 141961040,
+            "header_verified": true,
+            "min_macos": "10.13",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 141983744,
+            "size": 123660672,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Telegram.app",
+        "bundle_kind": "app",
+        "bundle_id": "ru.keepcoder.Telegram",
+        "version": "13.2.0",
+        "name": "Telegram",
+        "min_macos": "10.13",
+        "executable_name": "Telegram",
+        "executable_size": 265644416,
+        "executable_path": "Telegram.app/Contents/MacOS/Telegram",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Telegram",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 141961040,
+                  "header_verified": true,
+                  "min_macos": "10.13",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 141983744,
+                  "size": 123660672,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/PlugIns/TelegramShare.appex/Contents/MacOS/TelegramShare",
+              "role": "plugin",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 45160768,
+                  "header_verified": true,
+                  "min_macos": "10.13",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 45187072,
+                  "size": 40057440,
+                  "header_verified": false,
+                  "min_macos": null,
+                  "code_signature_present": null
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 67108863,
+        "bytes_requested": 67108864,
+        "decoded_bytes": 150901380,
+        "reads": 47,
+        "total_size": 169551059,
+        "error": null,
+        "source_etag": "\"6af62c81-a1b24d3\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "cursor",
+      "cask_version": "3.31.15,3eb8c13390837371c7c2f2013dc57fdbc802c753",
+      "url": "https://downloads.cursor.com/production/3eb8c13390837371c7c2f2013dc57fdbc802c753/darwin/arm64/Cursor-darwin-arm64.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 4.606,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 53184,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Cursor.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.todesktop.230313mzl4w4u92",
+        "version": "3.31.15",
+        "name": "Cursor",
+        "min_macos": "12.0",
+        "executable_name": "Cursor",
+        "executable_size": 53184,
+        "executable_path": "Cursor.app/Contents/MacOS/Cursor",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Cursor",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 53184,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Resources/app/bin/cursor-tunnel",
+              "role": "resource",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 11688192,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 3511388,
+        "bytes_requested": 3511389,
+        "decoded_bytes": 43537,
+        "reads": 154,
+        "total_size": 313833006,
+        "error": null,
+        "source_etag": "\"1919bbe8cb988dc697ad8e83a2be35a2-38\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "macwhisper",
+      "cask_version": "15.11,1594",
+      "url": "https://cdn.macwhisper.com/macwhisper/MacWhisper-1594.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 5.752,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 48131120,
+            "header_verified": true,
+            "min_macos": "15.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 48152576,
+            "size": 47914720,
+            "header_verified": true,
+            "min_macos": "15.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "MacWhisper.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.goodsnooze.MacWhisper",
+        "version": "15.11",
+        "name": "MacWhisper",
+        "min_macos": "15.0",
+        "executable_name": "MacWhisper",
+        "executable_size": 96067296,
+        "executable_path": "MacWhisper.app/Contents/MacOS/MacWhisper",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/MacWhisper",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 48131120,
+                  "header_verified": true,
+                  "min_macos": "15.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 48152576,
+                  "size": 47914720,
+                  "header_verified": true,
+                  "min_macos": "15.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/mw",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 1373280,
+                  "header_verified": true,
+                  "min_macos": "15.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 1392640,
+                  "size": 1342720,
+                  "header_verified": true,
+                  "min_macos": "15.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/PlugIns/MacWhisper-ShareExtension.appex/Contents/MacOS/MacWhisper-ShareExtension",
+              "role": "plugin",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 80256,
+                  "header_verified": true,
+                  "min_macos": "14.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 98304,
+                  "size": 112672,
+                  "header_verified": true,
+                  "min_macos": "14.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 22219621,
+        "bytes_requested": 22219622,
+        "decoded_bytes": 49680103,
+        "reads": 170,
+        "total_size": 169400912,
+        "error": null,
+        "source_etag": "\"41123be2d3180380b30a3fb563a75816-4\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "visual-studio-code",
+      "cask_version": "1.147.0",
+      "url": "https://update.code.visualstudio.com/1.147.0/darwin-arm64/stable",
+      "expected_format": "zip",
+      "elapsed_seconds": 3.757,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 67840,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Visual Studio Code.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.microsoft.VSCode",
+        "version": "1.147.0",
+        "name": "Code",
+        "min_macos": "12.0",
+        "executable_name": "Code",
+        "executable_size": 67840,
+        "executable_path": "Visual Studio Code.app/Contents/MacOS/Code",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Code",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 67840,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 1662442,
+        "bytes_requested": 1662443,
+        "decoded_bytes": 37081,
+        "reads": 154,
+        "total_size": 393619875,
+        "error": null,
+        "source_etag": "\"0xF6022CD51C22CFF46C000AA91537F20E65C47B0E4DCFF29C5FFDE695991704D8\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "appcleaner",
+      "cask_version": "3.7",
+      "url": "https://www.freemacsoft.net/downloads/AppCleaner_3.7.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 8.533,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 414976,
+            "header_verified": true,
+            "min_macos": "15.6",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 442368,
+            "size": 423072,
+            "header_verified": true,
+            "min_macos": "15.6",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "AppCleaner.app",
+        "bundle_kind": "app",
+        "bundle_id": "net.freemacsoft.AppCleaner",
+        "version": "3.7.0",
+        "name": "AppCleaner",
+        "min_macos": "15.6",
+        "executable_name": "AppCleaner",
+        "executable_size": 865440,
+        "executable_path": "AppCleaner.app/Contents/MacOS/AppCleaner",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/AppCleaner",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 414976,
+                  "header_verified": true,
+                  "min_macos": "15.6",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 442368,
+                  "size": 423072,
+                  "header_verified": true,
+                  "min_macos": "15.6",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/achelper",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 41600,
+                  "header_verified": true,
+                  "min_macos": "15.6",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 65536,
+                  "size": 70496,
+                  "header_verified": true,
+                  "min_macos": "15.6",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 710579,
+        "bytes_requested": 710580,
+        "decoded_bytes": 518347,
+        "reads": 155,
+        "total_size": 4148798,
+        "error": null,
+        "source_etag": "\"6aac50ec-3f4e3e\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "iterm2",
+      "cask_version": "3.7.9",
+      "url": "https://iterm2.com/downloads/stable/iTerm2-3_7_9.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 6.116,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 73133680,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 73154560,
+            "size": 70590832,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "iTerm.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.googlecode.iterm2",
+        "version": "3.7.9",
+        "name": "iTerm2",
+        "min_macos": "13.0",
+        "executable_name": "iTerm2",
+        "executable_size": 143745392,
+        "executable_path": "iTerm.app/Contents/MacOS/iTerm2",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/iTerm2",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 73133680,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 73154560,
+                  "size": 70590832,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/iTerm2ImportStatus.app/Contents/MacOS/iTerm2ImportStatus",
+              "role": "nested_app",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 72464,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 98304,
+                  "size": 109104,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/iterm2-bitwarden-adapter",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 771456,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 802816,
+                  "size": 783856,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/iterm2-keeper-adapter",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 993840,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 1015808,
+                  "size": 988640,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 26559522,
+        "bytes_requested": 26559523,
+        "decoded_bytes": 75108528,
+        "reads": 171,
+        "total_size": 78118306,
+        "error": null,
+        "source_etag": "\"4a7fda2-660c10f9b79b2\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "signal",
+      "cask_version": "8.36.0",
+      "url": "https://updates.signal.org/desktop/signal-desktop-mac-arm64-8.36.0.zip",
+      "expected_format": "zip",
+      "elapsed_seconds": 4.435,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 65536,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Signal.app",
+        "bundle_kind": "app",
+        "bundle_id": "org.whispersystems.signal-desktop",
+        "version": "8.36.0",
+        "name": "Signal",
+        "min_macos": "13.0",
+        "executable_name": "Signal",
+        "executable_size": 65536,
+        "executable_path": "Signal.app/Contents/MacOS/Signal",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/Frameworks/Electron Framework.framework/Electron Framework",
+              "role": "framework",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 207667200,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Frameworks/Electron Framework.framework/Helpers/app_shim_loader",
+              "role": "framework",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 81920,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Frameworks/Electron Framework.framework/Helpers/chrome_crashpad_handler",
+              "role": "framework",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 1245184,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Frameworks/Electron Framework.framework/Libraries/libffmpeg.dylib",
+              "role": "framework",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 2310144,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Frameworks/Electron Framework.framework/Libraries/libvk_swiftshader.dylib",
+              "role": "framework",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 16498688,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/Signal",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 65536,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 915580,
+        "bytes_requested": 915581,
+        "decoded_bytes": 27256,
+        "reads": 154,
+        "total_size": 145574721,
+        "error": null,
+        "source_etag": "\"30e11e92b42f7dc99b24bb646ad1fb00-18\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "zed",
+      "cask_version": "1.29.3",
+      "url": "https://github.com/zed-industries/zed/releases/download/v1.29.3/Zed-aarch64.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 0.832,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 178670432,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Zed.app",
+        "bundle_kind": "app",
+        "bundle_id": "dev.zed.Zed",
+        "version": "1.29.3",
+        "name": "Zed",
+        "min_macos": "12.0",
+        "executable_name": "zed",
+        "executable_size": 178670432,
+        "executable_path": "Zed.app/Contents/MacOS/zed",
+        "installer": null,
+        "inventory": {
+          "complete": true,
+          "incomplete_reason": null,
+          "binaries": [
+            {
+              "path": "Contents/MacOS/cli",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 2771664,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/git",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 3236496,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/zed",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 178670432,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": true,
+          "has_x86_64_only": false,
+          "x86_64_only": []
+        },
+        "bytes_read": 2433979,
+        "bytes_requested": 2433980,
+        "decoded_bytes": 5395456,
+        "reads": 11,
+        "total_size": 88779557,
+        "error": null,
+        "source_etag": "\"0x8DF471EA28BD124\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "raycast",
+      "cask_version": "2.13.1.0",
+      "url": "https://x.raycast-releases.com/download?platform=macos&architecture=arm64&version=2.13.1.0",
+      "expected_format": "dmg",
+      "elapsed_seconds": 0.995,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 17493120,
+            "header_verified": true,
+            "min_macos": "26.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Raycast.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.raycast.macos",
+        "version": "2.13.1.0",
+        "name": "Raycast",
+        "min_macos": "26.0",
+        "executable_name": "Raycast",
+        "executable_size": 17493120,
+        "executable_path": "Raycast.app/Contents/MacOS/Raycast",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Raycast",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 17493120,
+                  "header_verified": true,
+                  "min_macos": "26.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/XPCServices/Raycast Accessibility.xpc/Contents/MacOS/com.raycast.macos.Accessibility",
+              "role": "xpc_service",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 7315632,
+                  "header_verified": true,
+                  "min_macos": "26.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/XPCServices/Raycast Pasteboard.xpc/Contents/Frameworks/Sentry.framework/Versions/A/Sentry",
+              "role": "xpc_service",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 16384,
+                  "size": 34960,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/XPCServices/Raycast Pasteboard.xpc/Contents/MacOS/com.raycast.macos.Pasteboard",
+              "role": "xpc_service",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 7182144,
+                  "header_verified": true,
+                  "min_macos": "26.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 2283991,
+        "bytes_requested": 3232671,
+        "decoded_bytes": 11059200,
+        "reads": 16,
+        "total_size": 158040066,
+        "error": null,
+        "source_etag": "\"ac471d36a71bb9534fd33923444e3bfd\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "warp",
+      "cask_version": "0.2026.11.18.08.17.stable_04",
+      "url": "https://app.warp.dev/download/brew?version=v0.2026.11.18.08.17.stable_04&package=dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 0.145,
+      "scan": {
+        "format": null,
+        "status": "source_error",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "installer": null,
+        "bytes_read": 0,
+        "bytes_requested": 1,
+        "decoded_bytes": 0,
+        "reads": 1,
+        "total_size": 0,
+        "error": "source: range 0-0: HTTP 404 Not Found (expected 206)"
+      }
+    },
+    {
+      "cask": "timing",
+      "cask_version": "2026.6.1",
+      "url": "https://updates.timingapp.com/download/Timing-2026.6.1.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 3.525,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 7312816,
+            "header_verified": true,
+            "min_macos": "14.4",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 7340032,
+            "size": 7084064,
+            "header_verified": true,
+            "min_macos": "14.4",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Timing.app",
+        "bundle_kind": "app",
+        "bundle_id": "info.eurocomp.Timing2",
+        "version": "2026.6.1",
+        "name": "Timing",
+        "min_macos": "14.4",
+        "executable_name": "Timing",
+        "executable_size": 14424096,
+        "executable_path": "Timing.app/Contents/MacOS/Timing",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/Library/LoginItems/TimingHelper.app/Contents/Frameworks/TimingLegacy.framework/Versions/A/TimingLegacy",
+              "role": "login_item",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 560928,
+                  "header_verified": true,
+                  "min_macos": "14.4",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 589824,
+                  "size": 556928,
+                  "header_verified": true,
+                  "min_macos": "14.4",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/Library/LoginItems/TimingHelper.app/Contents/Frameworks/libswiftCompatibilitySpan.dylib",
+              "role": "login_item",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 40896,
+                  "header_verified": true,
+                  "min_macos": "10.14.4",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 65536,
+                  "size": 57136,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64e",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 2147483650,
+                  "offset": 131072,
+                  "size": 57136,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/Timing",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 7312816,
+                  "header_verified": true,
+                  "min_macos": "14.4",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 7340032,
+                  "size": 7084064,
+                  "header_verified": true,
+                  "min_macos": "14.4",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 1913542,
+        "bytes_requested": 3713415,
+        "decoded_bytes": 11841536,
+        "reads": 16,
+        "total_size": 43927236,
+        "error": null,
+        "source_etag": "\"29e46c4-660280b1d2c49\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "little-snitch",
+      "cask_version": "6.5",
+      "url": "https://www.obdev.at/downloads/littlesnitch/LittleSnitch-6.5.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 3.427,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 8039136,
+            "header_verified": true,
+            "min_macos": "14.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 8060928,
+            "size": 7783872,
+            "header_verified": true,
+            "min_macos": "14.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Little Snitch.app",
+        "bundle_kind": "app",
+        "bundle_id": "at.obdev.littlesnitch",
+        "version": "6.5",
+        "name": "Little Snitch",
+        "min_macos": "14.0",
+        "executable_name": "Little Snitch",
+        "executable_size": 15844800,
+        "executable_path": "Little Snitch.app/Contents/MacOS/Little Snitch",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Little Snitch",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 8039136,
+                  "header_verified": true,
+                  "min_macos": "14.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 8060928,
+                  "size": 7783872,
+                  "header_verified": true,
+                  "min_macos": "14.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 2801397,
+        "bytes_requested": 3371826,
+        "decoded_bytes": 11022336,
+        "reads": 16,
+        "total_size": 38377961,
+        "error": null,
+        "source_etag": "\"24999e9-65aa71f928c00\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "google-chrome",
+      "cask_version": "158.0.8127.89",
+      "url": "https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 0.582,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 2147483651,
+            "offset": 16384,
+            "size": 268896,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 294912,
+            "size": 54240,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Google Chrome.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.google.Chrome",
+        "version": "158.0.8127.89",
+        "name": "Google Chrome",
+        "min_macos": "13.0",
+        "executable_name": "Google Chrome",
+        "executable_size": 349152,
+        "executable_path": "Google Chrome.app/Contents/MacOS/Google Chrome",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Google Chrome",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 2147483651,
+                  "offset": 16384,
+                  "size": 268896,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 294912,
+                  "size": 54240,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 2118483,
+        "bytes_requested": 2118484,
+        "decoded_bytes": 4194304,
+        "reads": 5,
+        "total_size": 289260301,
+        "error": null,
+        "source_etag": "\"7343922\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "firefox",
+      "cask_version": "160.0.1",
+      "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/160.0.1/mac/en-US/Firefox%20160.0.1.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 1.127,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 64176,
+            "header_verified": true,
+            "min_macos": "10.15",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 81920,
+            "size": 93008,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Firefox.app",
+        "bundle_kind": "app",
+        "bundle_id": "org.mozilla.firefox",
+        "version": "160.0.1",
+        "name": "Firefox",
+        "min_macos": "10.15.0",
+        "executable_name": "firefox",
+        "executable_size": 174928,
+        "executable_path": "Firefox.app/Contents/MacOS/firefox",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/firefox",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 64176,
+                  "header_verified": true,
+                  "min_macos": "10.15",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 81920,
+                  "size": 93008,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 3080786,
+        "bytes_requested": 3563831,
+        "decoded_bytes": 9437184,
+        "reads": 13,
+        "total_size": 165761466,
+        "error": null,
+        "source_etag": "\"a3d2d4bc0b169de8cae8a7f3183d7ae9\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "rider",
+      "cask_version": "2026.3.0.1,263.7307.325",
+      "url": "https://download.jetbrains.com/rider/JetBrains.Rider-2026.3.0.1-aarch64.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 1.137,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 839424,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Rider.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.jetbrains.rider",
+        "version": "2026.3.0.1",
+        "name": "JetBrains Rider",
+        "min_macos": "10.13",
+        "executable_name": "rider",
+        "executable_size": 839424,
+        "executable_path": "Rider.app/Contents/MacOS/rider",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/rider",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 839424,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 3172119,
+        "bytes_requested": 3770625,
+        "decoded_bytes": 11046912,
+        "reads": 16,
+        "total_size": 2286054263,
+        "error": null,
+        "source_etag": "\"80c7a0cbe7510e48da4440d3d01682d6\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "vlc",
+      "cask_version": "3.0.24",
+      "url": "https://get.videolan.org/vlc/3.0.24/macosx/vlc-3.0.24-arm64.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 6.763,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 89648,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "VLC.app",
+        "bundle_kind": "app",
+        "bundle_id": "org.videolan.vlc",
+        "version": "3.0.24",
+        "name": "VLC",
+        "min_macos": "10.7.5",
+        "executable_name": "VLC",
+        "executable_size": 89648,
+        "executable_path": "VLC.app/Contents/MacOS/VLC",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/VLC",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 89648,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 3102369,
+        "bytes_requested": 3130381,
+        "decoded_bytes": 8302592,
+        "reads": 13,
+        "total_size": 56960605,
+        "error": null,
+        "source_etag": "\"6ab1643c-365265d\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "gimp",
+      "cask_version": "3.2.8",
+      "url": "https://download.gimp.org/gimp/v3.2/macos/gimp-3.2.8-arm64.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 2.121,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 9593680,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "GIMP.app",
+        "bundle_kind": "app",
+        "bundle_id": "org.gimp.gimp",
+        "version": "3.2.8",
+        "name": "GIMP",
+        "min_macos": "11.0",
+        "executable_name": "gimp-3.2",
+        "executable_size": 9593680,
+        "executable_path": "GIMP.app/Contents/MacOS/gimp-3.2",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/gimp-3.2",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 9593680,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 3185493,
+        "bytes_requested": 4274891,
+        "decoded_bytes": 11894784,
+        "reads": 17,
+        "total_size": 185827254,
+        "error": null,
+        "source_etag": "\"6ae90a22-b137fb6\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "slack",
+      "cask_version": "4.53.292",
+      "url": "https://downloads.slack-edge.com/desktop-releases/mac/arm64/4.53.292/Slack-4.53.292-macOS.dmg",
+      "expected_format": "dmg",
+      "elapsed_seconds": 0.846,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 54624,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Slack.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.tinyspeck.slackmacgap",
+        "version": "4.53.292",
+        "name": "Slack",
+        "min_macos": "13.0",
+        "executable_name": "Slack",
+        "executable_size": 54624,
+        "executable_path": "Slack.app/Contents/MacOS/Slack",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Slack",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 54624,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 1563493,
+        "bytes_requested": 2932753,
+        "decoded_bytes": 9818112,
+        "reads": 14,
+        "total_size": 116783604,
+        "error": null,
+        "source_etag": "\"220b5fca728983bd12da5f2e41050feb\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "alfred@5",
+      "cask_version": "5.8.2,2353",
+      "url": "https://cachefly.alfredapp.com/Alfred_5.8.2_2353.tar.gz",
+      "expected_format": "tar.gz",
+      "elapsed_seconds": 0.836,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 192064,
+            "header_verified": true,
+            "min_macos": "10.14",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 212992,
+            "size": 203840,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Alfred 5.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.runningwithcrayons.Alfred",
+        "version": "5.8.2",
+        "name": "Alfred",
+        "min_macos": "10.14",
+        "executable_name": "Alfred",
+        "executable_size": 416832,
+        "executable_path": "Alfred 5.app/Contents/MacOS/Alfred",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "bundle entries before the primary executable were skipped",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Alfred",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 192064,
+                  "header_verified": true,
+                  "min_macos": "10.14",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 212992,
+                  "size": 203840,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 5620946,
+        "bytes_requested": 5620951,
+        "decoded_bytes": 17931776,
+        "reads": 12,
+        "total_size": 5620946,
+        "error": null,
+        "source_etag": "\"6aff0e2c-55c4d2\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "gitbutler",
+      "cask_version": "0.23.5,3373",
+      "url": "https://releases.gitbutler.com/releases/release/0.23.5-3373/macos/aarch64/GitButler.app.tar.gz",
+      "expected_format": "tar.gz",
+      "elapsed_seconds": 0.983,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 115826272,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "GitButler.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.gitbutler.app",
+        "version": "0.23.5",
+        "name": "GitButler",
+        "min_macos": "10.13",
+        "executable_name": "gitbutler-tauri",
+        "executable_size": 115826272,
+        "executable_path": "GitButler.app/Contents/MacOS/gitbutler-tauri",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/gitbutler-tauri",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 115826272,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 8388603,
+        "bytes_requested": 8388608,
+        "decoded_bytes": 17008183,
+        "reads": 14,
+        "total_size": 49036839,
+        "error": null,
+        "source_etag": "\"54a494c2d1399a4de297973390dcc0d3-10\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "kunkun",
+      "cask_version": "0.1.37",
+      "url": "https://download.kunkun.sh/Kunkun-v0.1.37/kunkun_aarch64.app.tar.gz",
+      "expected_format": "tar.gz",
+      "elapsed_seconds": 2.37,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 51795456,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "kunkun.app",
+        "bundle_kind": "app",
+        "bundle_id": "sh.kunkun.desktop",
+        "version": "0.1.37",
+        "name": "kunkun",
+        "min_macos": "10.15",
+        "executable_name": "kunkun",
+        "executable_size": 51795456,
+        "executable_path": "kunkun.app/Contents/MacOS/kunkun",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/kunkun",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 51795456,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 7405568,
+        "bytes_requested": 7405568,
+        "decoded_bytes": 19062500,
+        "reads": 1,
+        "total_size": 20219853,
+        "error": null,
+        "source_transport": "stream",
+        "source_content_type": "application/octet-stream"
+      }
+    },
+    {
+      "cask": "phoenix",
+      "cask_version": "4.0.1",
+      "url": "https://github.com/kasper/phoenix/releases/download/4.0.1/phoenix-4.0.1.tar.gz",
+      "expected_format": "tar.gz",
+      "elapsed_seconds": 0.857,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 207312,
+            "header_verified": true,
+            "min_macos": "10.14.6",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 229376,
+            "size": 219504,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Phoenix.app",
+        "bundle_kind": "app",
+        "bundle_id": "org.khirviko.Phoenix",
+        "version": "4.0.1",
+        "name": "Phoenix",
+        "min_macos": "10.14.6",
+        "executable_name": "Phoenix",
+        "executable_size": 448880,
+        "executable_path": "Phoenix.app/Contents/MacOS/Phoenix",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "bundle entries before the primary executable were skipped",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Phoenix",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 207312,
+                  "header_verified": true,
+                  "min_macos": "10.14.6",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 229376,
+                  "size": 219504,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 3997849,
+        "bytes_requested": 3997854,
+        "decoded_bytes": 6680576,
+        "reads": 10,
+        "total_size": 3997849,
+        "error": null,
+        "source_etag": "\"0x8DC89982AAEA52F\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "openpencil",
+      "cask_version": "0.17.0",
+      "url": "https://github.com/open-pencil/open-pencil/releases/download/v0.17.0/OpenPencil_aarch64.app.tar.gz",
+      "expected_format": "tar.gz",
+      "elapsed_seconds": 1.202,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 37149536,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "OpenPencil.app",
+        "bundle_kind": "app",
+        "bundle_id": "net.dannote.open-pencil",
+        "version": "0.17.0",
+        "name": "OpenPencil",
+        "min_macos": "13.0",
+        "executable_name": "OpenPencil",
+        "executable_size": 37149536,
+        "executable_path": "OpenPencil.app/Contents/MacOS/OpenPencil",
+        "installer": null,
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/OpenPencil",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 37149536,
+                  "header_verified": true,
+                  "min_macos": "13.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 8388603,
+        "bytes_requested": 8388608,
+        "decoded_bytes": 17441325,
+        "reads": 14,
+        "total_size": 19700167,
+        "error": null,
+        "source_etag": "\"0x8DF489449FDCFE3\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "zoom",
+      "cask_version": "7.2.5.90525",
+      "url": "https://cdn.zoom.us/prod/7.2.5.90525/arm64/zoomusInstallerFull.pkg",
+      "expected_format": "pkg",
+      "elapsed_seconds": 0.963,
+      "scan": {
+        "format": "pkg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 103632,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "zoom.us.app",
+        "bundle_kind": "app",
+        "bundle_id": "us.zoom.xos",
+        "version": "7.2.5 (90525)",
+        "name": "zoom.us",
+        "min_macos": "11.0",
+        "executable_name": "zoom.us",
+        "executable_size": 103632,
+        "executable_path": "zoom.us.app/Contents/MacOS/zoom.us",
+        "bundle_metadata_source": "bom_verified_gzip_cpio_tail",
+        "installer": {
+          "title": "Zoom Workplace",
+          "host_architectures": [
+            "x86_64",
+            "arm64"
+          ],
+          "package_id": "us.zoom.pkg.videomeeting",
+          "package_version": "7.2.5.90525",
+          "install_location": "/Applications",
+          "script_entries": [
+            "preinstall",
+            "postinstall"
+          ],
+          "min_macos": null
+        },
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "scan limit: binary inventory budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/zoom.us",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 103632,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/PlugIns/ZoomAudioDevice.driver/Contents/MacOS/ZoomAudioDevice",
+              "role": "plugin",
+              "architectures": [
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 0,
+                  "size": 83264,
+                  "header_verified": true,
+                  "min_macos": "11.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 2800578,
+        "bytes_requested": 3062733,
+        "decoded_bytes": 9297034,
+        "reads": 17,
+        "total_size": 217246784,
+        "error": null,
+        "source_etag": "\"0cf3922a133638f4c86ab6b79ceb4ccc-26\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "microsoft-teams",
+      "cask_version": "26289.204.5281.6363",
+      "url": "https://statics.teams.cdn.office.net/production-osx/26289.204.5281.6363/MicrosoftTeams.pkg",
+      "expected_format": "pkg",
+      "elapsed_seconds": 5.499,
+      "scan": {
+        "format": "pkg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 32745984,
+            "header_verified": true,
+            "min_macos": "14.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 32768000,
+            "size": 29122144,
+            "header_verified": true,
+            "min_macos": "14.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Microsoft Teams.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.microsoft.teams2",
+        "version": "26289.204.5281.6363",
+        "name": "Microsoft Teams",
+        "min_macos": "14.0",
+        "executable_name": "MSTeams",
+        "executable_size": 61890144,
+        "executable_path": "Microsoft Teams.app/Contents/MacOS/MSTeams",
+        "bundle_metadata_source": "bom_verified_pbzx_cpio_tail",
+        "installer": {
+          "title": "Microsoft Teams",
+          "host_architectures": [
+            "arm64",
+            "x86_64"
+          ],
+          "package_id": "com.microsoft.teams2",
+          "package_version": "26289.204.5281.6363",
+          "install_location": "/Applications",
+          "payload_bundles": [
+            "Microsoft Teams.app"
+          ],
+          "script_entries": [
+            "preinstall",
+            "postinstall"
+          ],
+          "min_macos": null
+        },
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/MSTeams",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 32745984,
+                  "header_verified": true,
+                  "min_macos": "14.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 32768000,
+                  "size": 29122144,
+                  "header_verified": true,
+                  "min_macos": "14.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 8126377,
+        "bytes_requested": 8388608,
+        "decoded_bytes": 40410121,
+        "reads": 113,
+        "total_size": 375145288,
+        "error": null,
+        "source_etag": "\"0x8DF33AE359B95BF\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "teamviewer",
+      "cask_version": "15.82.6",
+      "url": "https://dl.teamviewer.com/download/version_15x/update/15.82.6/TeamViewer.pkg",
+      "expected_format": "pkg",
+      "elapsed_seconds": 3.559,
+      "scan": {
+        "format": "pkg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 82013440,
+            "header_verified": true,
+            "min_macos": "13.5",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 82034688,
+            "size": 79380048,
+            "header_verified": true,
+            "min_macos": "13.5",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "TeamViewer.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.teamviewer.TeamViewer",
+        "version": "15.82.6",
+        "name": "TeamViewer",
+        "min_macos": "13.5",
+        "executable_name": "TeamViewer",
+        "executable_size": 161414736,
+        "executable_path": "TeamViewer.app/Contents/MacOS/TeamViewer",
+        "bundle_metadata_source": "bom_verified_pbzx_cpio_tail",
+        "installer": {
+          "title": "TeamViewer",
+          "host_architectures": [
+            "x86_64",
+            "arm64"
+          ],
+          "package_id": "com.teamviewer.teamviewer",
+          "package_version": "15.82.6",
+          "install_location": "/Applications/",
+          "payload_bundles": [
+            "TeamViewer.app"
+          ],
+          "script_entries": [
+            "preinstall",
+            "postinstall"
+          ],
+          "min_macos": null
+        },
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "byte budget reached",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/TeamViewer",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 82013440,
+                  "header_verified": true,
+                  "min_macos": "13.5",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 82034688,
+                  "size": 79380048,
+                  "header_verified": true,
+                  "min_macos": "13.5",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 8126281,
+        "bytes_requested": 8388608,
+        "decoded_bytes": 30788355,
+        "reads": 75,
+        "total_size": 134650593,
+        "error": null,
+        "source_etag": "\"0x8DF1E3AC14C5B57\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "mullvad-vpn",
+      "cask_version": "2026.5",
+      "url": "https://cdn.mullvad.net/app/desktop/releases/2026.5/MullvadVPN-2026.5.pkg",
+      "expected_format": "pkg",
+      "elapsed_seconds": 24.485,
+      "scan": {
+        "format": "pkg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 2147483651,
+            "offset": 16384,
+            "size": 32544,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 49152,
+            "size": 53168,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Mullvad VPN.app",
+        "bundle_kind": "app",
+        "bundle_id": "net.mullvad.vpn",
+        "version": "2026.5",
+        "name": "Mullvad VPN",
+        "min_macos": "12.0",
+        "executable_name": "Mullvad VPN",
+        "executable_size": 102320,
+        "executable_path": "Mullvad VPN.app/Contents/MacOS/Mullvad VPN",
+        "installer": {
+          "title": "Mullvad VPN",
+          "host_architectures": [
+            "arm64",
+            "x86_64"
+          ],
+          "package_id": "net.mullvad.vpn",
+          "package_version": "2026.5",
+          "install_location": "/Applications",
+          "payload_bundles": [
+            "Mullvad VPN.app"
+          ],
+          "script_entries": [
+            "preinstall",
+            "preinstall",
+            "postinstall",
+            "postinstall"
+          ],
+          "min_macos": "12.0"
+        },
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "bundle entries before the primary executable were skipped",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Mullvad VPN",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 2147483651,
+                  "offset": 16384,
+                  "size": 32544,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 49152,
+                  "size": 53168,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 253954469,
+        "bytes_requested": 253954480,
+        "decoded_bytes": 612183095,
+        "reads": 78,
+        "total_size": 254034014,
+        "error": null,
+        "source_etag": "\"6aa3e988-f24405e\"",
+        "source_transport": "range"
+      }
+    },
+    {
+      "cask": "microsoft-auto-update",
+      "cask_version": "4.86.26110224",
+      "url": "https://res.public.onecdn.static.microsoft/mro1cdnstorage/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/Microsoft_AutoUpdate_4.86.26110224_Updater.pkg",
+      "expected_format": "pkg",
+      "elapsed_seconds": 0.798,
+      "scan": {
+        "format": "pkg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 1202784,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 1228800,
+            "size": 1186784,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Microsoft AutoUpdate.app",
+        "bundle_kind": "app",
+        "bundle_id": "com.microsoft.autoupdate2",
+        "version": "4.86",
+        "name": "Microsoft AutoUpdate",
+        "min_macos": "12.0",
+        "executable_name": "Microsoft AutoUpdate",
+        "executable_size": 2415584,
+        "executable_path": "Microsoft AutoUpdate.app/Contents/MacOS/Microsoft AutoUpdate",
+        "installer": {
+          "title": "Microsoft AutoUpdate",
+          "host_architectures": [
+            "arm64",
+            "x86_64"
+          ],
+          "package_id": "com.microsoft.package.Microsoft_AutoUpdate.app",
+          "package_version": "4.86.26110224",
+          "install_location": "/Library/Application Support/Microsoft/MAU2.0",
+          "payload_bundles": [
+            "Microsoft AutoUpdate.app/Contents/SharedSupport/Microsoft Error Reporting.app",
+            "Microsoft AutoUpdate.app",
+            "Microsoft AutoUpdate.app/Contents/MacOS/Microsoft Update Assistant.app"
+          ],
+          "script_entries": [
+            "preinstall",
+            "postinstall"
+          ],
+          "min_macos": null
+        },
+        "inventory": {
+          "complete": false,
+          "incomplete_reason": "bundle entries before the primary executable were skipped",
+          "binaries": [
+            {
+              "path": "Contents/MacOS/Microsoft AutoUpdate",
+              "role": "main",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 1202784,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 1228800,
+                  "size": 1186784,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            },
+            {
+              "path": "Contents/MacOS/msupdate",
+              "role": "helper",
+              "architectures": [
+                {
+                  "name": "x86_64",
+                  "cpu_type": 16777223,
+                  "cpu_subtype": 3,
+                  "offset": 16384,
+                  "size": 98320,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                },
+                {
+                  "name": "arm64",
+                  "cpu_type": 16777228,
+                  "cpu_subtype": 0,
+                  "offset": 131072,
+                  "size": 122672,
+                  "header_verified": true,
+                  "min_macos": "12.0",
+                  "code_signature_present": true
+                }
+              ]
+            }
+          ],
+          "all_arm64_capable": null,
+          "has_x86_64_only": null,
+          "x86_64_only": []
+        },
+        "bytes_read": 4464469,
+        "bytes_requested": 4464480,
+        "decoded_bytes": 11184320,
+        "reads": 16,
+        "total_size": 4521461,
+        "error": null,
+        "source_transport": "range"
+      }
+    }
+  ]
+}

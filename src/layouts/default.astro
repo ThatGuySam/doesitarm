@@ -34,6 +34,7 @@ const currentYear = String( new Date().getFullYear() )
         <!-- Hello Ivan K (CON-4) from Express VPN -->
         <title>{ pageHead.title }</title>
         <Fragment set:html={ pageHead.allHeadMarkup } />
+        <slot name="head" />
 
     </head>
     <body>

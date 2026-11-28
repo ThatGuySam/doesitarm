@@ -1,0 +1,120 @@
+{
+  "manifest_sha256": "5054b5f448a7e82e6659f96581169586fcac1f507ee145e7c21ab8af2c635b16",
+  "catalog_sha256": "78e2e5fc666464ff8857c5f5bbd58aad901c95381469eb4a249405911d895e72",
+  "manifest_count": 1,
+  "manifest_casks": 1,
+  "cli_sha256": "f288ee8ab236baa1a557a26e3637a8e9a892b5a68acf7e8a171bbaca3657a78f",
+  "budget": 8388608,
+  "escalate": [],
+  "timeout": 45,
+  "cli_options": [
+    "--allow-stream"
+  ],
+  "host_cooldown": 1.0,
+  "use_cask_targets": false,
+  "scanner_commit_at_start": "226ca1fd6df8901f1560b802c22c927979eed97d",
+  "started_at": "2026-11-24T07:35:41+00:00",
+  "updated_at": "2026-11-24T07:35:41+00:00",
+  "totals": {
+    "checked": 1,
+    "by_outcome": {
+      "verified": 1
+    },
+    "by_container": {
+      "pkg": {
+        "verified": 1
+      }
+    },
+    "architecture_hints": {
+      "agrees": 1
+    },
+    "accepted_bytes": 965581,
+    "reported_reads": 12,
+    "attempts_with_unknown_bytes": 0
+  },
+  "artifacts": [
+    {
+      "cask": "zoom",
+      "url": "https://cdn.zoom.us/prod/7.2.5.90525/arm64/zoomusInstallerFull.pkg",
+      "version": "7.2.5.90525",
+      "sha256": "4c26ebed8bd29ce258ac9dbe0f2b327fad0a0734246ea588339a2cc5fd10533e",
+      "expected_format": "pkg",
+      "artifact_types": [
+        "pkg"
+      ],
+      "declared_apps": [],
+      "architecture_hints": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all"
+        }
+      ],
+      "host": "cdn.zoom.us",
+      "category": "verified",
+      "comparison": [
+        {
+          "source": "URL path",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "observed": [
+            "arm64"
+          ],
+          "verdict": "agrees"
+        }
+      ],
+      "attempts": [
+        {
+          "budget": 8388608,
+          "elapsed_seconds": 0.505,
+          "exit_code": 0,
+          "category": "verified",
+          "scan": {
+            "format": "pkg",
+            "status": "complete",
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 103632,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ],
+            "bundle_path": "zoom.us.app",
+            "bundle_id": "us.zoom.xos",
+            "version": "7.2.5 (90525)",
+            "name": "zoom.us",
+            "min_macos": "11.0",
+            "executable_name": "zoom.us",
+            "executable_size": 103632,
+            "bundle_metadata_source": "bom_verified_gzip_cpio_tail",
+            "installer": {
+              "title": "Zoom Workplace",
+              "host_architectures": [
+                "x86_64",
+                "arm64"
+              ],
+              "package_id": "us.zoom.pkg.videomeeting",
+              "package_version": "7.2.5.90525",
+              "min_macos": null
+            },
+            "bytes_read": 965581,
+            "reads": 12,
+            "total_size": 217246784,
+            "error": null,
+            "source_etag": "\"0cf3922a133638f4c86ab6b79ceb4ccc-26\"",
+            "source_transport": "range"
+          }
+        }
+      ]
+    }
+  ]
+}

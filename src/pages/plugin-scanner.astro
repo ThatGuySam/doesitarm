@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/default.astro'
+import ScannerNext from '../components/scanner-next.astro'
+import testKit from '../data/plugin-scanner-test-kit.json'
+
+const enabled = Astro.url.searchParams.get( 'scanner' ) === 'next'
+Astro.response.headers.set( 'Cache-Control', 'no-store' )
+Astro.response.headers.set( 'Cloudflare-CDN-Cache-Control', 'no-store' )
+Astro.response.headers.set( 'X-Robots-Tag', 'noindex' )
+---
+
+<Layout headOptions={ {
+    title: 'Audio Plug-in Scanner - Does It ARM',
+    description: 'Check installed Mac audio plug-ins for Intel and Apple Silicon support.',
+    pathname: '/plugin-scanner/'
+} }>
+    <script slot="head" is:inline src="/scanner-preference.js" defer></script>
+    <meta slot="head" name="robots" content="noindex" />
+    { enabled ? (
+        <ScannerNext pluginsOnly>
+            <section class="mx-auto max-w-3xl px-6 pb-12" aria-labelledby="plugin-test-kit">
+                <h2 id="plugin-test-kit" class="text-2xl font-semibold">Test kit</h2>
+                <p class="mt-3">Download these free builds from their publishers. Unzip or mount the download, then drag the extracted plug-in bundles or the folder containing them. For installers, scan the installed bundles.</p>
+                <ul class="mt-4 list-disc space-y-2 pl-5">
+                    { testKit.map( ( { name, formats, verdict, url } ) => (
+                        <li><a class="underline" href={ url }>{ name }</a> · { formats } · { verdict }</li>
+                    ) ) }
+                </ul>
+                <p class="mt-6">For help testing these plug-ins in your DAW, see the <a class="underline" href="/services/studio-upgrade-audit/">Studio Upgrade Audit</a>.</p>
+            </section>
+        </ScannerNext>
+    ) : (
+        <main class="mx-auto max-w-3xl px-6 py-24">
+            <h1 class="text-3xl font-semibold">Audio Plug-in Scanner</h1>
+            <p class="mt-4">Coming soon.</p>
+        </main>
+    ) }
+</Layout>

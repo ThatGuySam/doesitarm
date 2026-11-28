@@ -1,0 +1,5 @@
+{"version":"2.1.0","platforms":{
+  "darwin-aarch64":{"url":"https://api.github.com/repos/example/Viewer/releases/assets/42","signature":"test"},
+  "darwin-x86_64":{"url":"Viewer-x64.app.tar.gz","signature":"test"},
+  "linux-x86_64":{"url":"Viewer.AppImage","signature":"test"}
+}}

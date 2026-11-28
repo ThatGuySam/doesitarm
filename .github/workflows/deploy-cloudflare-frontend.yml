@@ -51,6 +51,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Install scanner toolchain
+        run: |
+          rustup toolchain install 1.99.1 --profile minimal --target wasm32-unknown-unknown
+          rustup override set 1.99.1
+          cargo install --locked -j2 wasm-bindgen-cli --version 0.2.130
+
       # /ui is a side project that must never block the site deploy. Restore
       # the last good build, rebuild only when ui-review/ changed, and keep the
       # old assets if the rebuild fails.
@@ -77,6 +83,12 @@ jobs:
 
       - name: Build and test Cloudflare frontend
         run: pnpm cloudflare-build
+
+      - name: Verify scanner assets in the deployment
+        run: |
+          test -s dist/client/scanner-next/scan-worker.js
+          test -s dist/client/scanner-next/pkg/scan_wasm.js
+          test -s dist/client/scanner-next/pkg/scan_wasm_bg.wasm
 
       - name: Deploy exact commit
         run: >-

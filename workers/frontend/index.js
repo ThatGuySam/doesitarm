@@ -101,7 +101,7 @@ export default {
 
         if ( pathname === scannerPage || pathname === `${ scannerPage }/` ) {
             const version = searchParams.get( 'v' )
-            if ( version === '3' ) {
+            if ( version === '3' && searchParams.get( 'scanner' ) !== 'next' ) {
                 if ( pathname === scannerPage ) {
                     url.pathname = `${ scannerPage }/`
                     return redirectPreview( url )

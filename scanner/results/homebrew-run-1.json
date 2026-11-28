@@ -1,0 +1,1908 @@
+{
+  "started_at": "2026-11-24T00:14:46-06:00",
+  "scanner_commit": "1744123f21dbcdb1453610fa85e8e8653f7b7042",
+  "cli_sha256": "6ab0690ee96853f6c085bb406e475bb5a22468808abf5173deb48019499c70f5",
+  "catalog": {
+    "url": "https://formulae.brew.sh/api/cask.json",
+    "bytes": 19541738,
+    "sha256": "78e2e5fc666464ff8857c5f5bbd58aad901c95381469eb4a249405911d895e72",
+    "cask_count": 7851,
+    "requested_cask_unavailable": [
+      "gifski"
+    ]
+  },
+  "maximum_bytes_per_artifact": 8388608,
+  "body_budget_maximum": 271199978,
+  "totals": {
+    "statuses": {
+      "complete": 21,
+      "budget_exhausted": 7,
+      "source_error": 2
+    },
+    "sample_formats": {
+      "zip": 9,
+      "dmg": 11,
+      "tar.gz": 5,
+      "pkg": 5
+    },
+    "hosts": 28,
+    "accepted_artifact_bytes": 90273187,
+    "attempted_reads_with_reported_counts": 365,
+    "casks_with_unknown_counts": 0
+  },
+  "apps": [
+    {
+      "cask": "claude",
+      "cask_version": "6.28899.6,2f5fc59b2d1c672dd9dced86720c50f48cca0cf9",
+      "cask_deprecated": false,
+      "homepage": "https://claude.com/download",
+      "url": "https://downloads.claude.ai/releases/darwin/universal/6.28899.6/Claude-2f5fc59b2d1c672dd9dced86720c50f48cca0cf9.zip",
+      "host": "downloads.claude.ai",
+      "expected_format": "zip",
+      "cask_sha256": "ae58c31858b41dd2a3bca78da26433f4f17c044ce3c2486128fb82a82e457f16",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.395,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 2147483651,
+            "offset": 16384,
+            "size": 34096,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 65536,
+            "size": 54528,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Claude.app",
+        "bundle_id": "com.anthropic.claudefordesktop",
+        "version": "6.28899.6",
+        "name": "Claude",
+        "min_macos": "13.0",
+        "executable_name": "Claude",
+        "executable_size": 120064,
+        "installer": null,
+        "bytes_read": 122570,
+        "reads": 10,
+        "total_size": 404693227,
+        "error": null,
+        "source_etag": "\"c7a23cd93021289e2fe46d3de3ca8c60\""
+      }
+    },
+    {
+      "cask": "codex-app",
+      "cask_version": "26.623.141536",
+      "cask_deprecated": true,
+      "homepage": "https://openai.com/codex",
+      "url": "https://persistent.oaistatic.com/codex-app-prod/Codex-darwin-arm64-26.623.141536.zip",
+      "host": "persistent.oaistatic.com",
+      "expected_format": "zip",
+      "cask_sha256": "d948dc36b8358f5a2924b033fbf08398eea7860dc9e97cb5ab9b354490283a0a",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 1,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.623,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 69984,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Codex.app",
+        "bundle_id": "com.openai.codex",
+        "version": "26.623.141536",
+        "name": "Codex",
+        "min_macos": "12.0",
+        "executable_name": "Codex",
+        "executable_size": 69984,
+        "installer": null,
+        "bytes_read": 1933201,
+        "reads": 10,
+        "total_size": 534731967,
+        "error": null
+      }
+    },
+    {
+      "cask": "telegram",
+      "cask_version": "13.2.0,283494",
+      "cask_deprecated": false,
+      "homepage": "https://macos.telegram.org/",
+      "url": "https://osx.telegram.org/updates/Telegram-13.2.0.283494.app.zip",
+      "host": "osx.telegram.org",
+      "expected_format": "zip",
+      "cask_sha256": "614418f797eb875fafecfcbcc21cc23a61cfab98c70012cefe6b94a338478c91",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 5.492,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "zip",
+        "status": "budget_exhausted",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 141961040,
+            "header_verified": true,
+            "min_macos": "10.13",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 141983744,
+            "size": 123660672,
+            "header_verified": false,
+            "min_macos": null,
+            "code_signature_present": null
+          }
+        ],
+        "bundle_path": "Telegram.app",
+        "bundle_id": "ru.keepcoder.Telegram",
+        "version": "13.2.0",
+        "name": "Telegram",
+        "min_macos": "10.13",
+        "executable_name": "Telegram",
+        "executable_size": 265644416,
+        "installer": null,
+        "bytes_read": 8388608,
+        "reads": 21,
+        "total_size": 169551059,
+        "error": "byte budget reached",
+        "source_etag": "\"6af62c81-a1b24d3\""
+      }
+    },
+    {
+      "cask": "cursor",
+      "cask_version": "3.31.15,3eb8c13390837371c7c2f2013dc57fdbc802c753",
+      "cask_deprecated": false,
+      "homepage": "https://www.cursor.com/",
+      "url": "https://downloads.cursor.com/production/3eb8c13390837371c7c2f2013dc57fdbc802c753/darwin/arm64/Cursor-darwin-arm64.zip",
+      "host": "downloads.cursor.com",
+      "expected_format": "zip",
+      "cask_sha256": "0a25a373ca8f4fbc365ec4661da68acd8c29a4123195cb4660b17bbf065ac54f",
+      "artifact_types": [
+        "app",
+        "binary",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 3,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.621,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 53184,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Cursor.app",
+        "bundle_id": "com.todesktop.230313mzl4w4u92",
+        "version": "3.31.15",
+        "name": "Cursor",
+        "min_macos": "12.0",
+        "executable_name": "Cursor",
+        "executable_size": 53184,
+        "installer": null,
+        "bytes_read": 2236728,
+        "reads": 10,
+        "total_size": 313833006,
+        "error": null,
+        "source_etag": "\"1919bbe8cb988dc697ad8e83a2be35a2-38\""
+      }
+    },
+    {
+      "cask": "macwhisper",
+      "cask_version": "15.11,1594",
+      "cask_deprecated": false,
+      "homepage": "https://goodsnooze.gumroad.com/l/macwhisper",
+      "url": "https://cdn.macwhisper.com/macwhisper/MacWhisper-1594.zip",
+      "host": "cdn.macwhisper.com",
+      "expected_format": "zip",
+      "cask_sha256": "0bffab6e82ca9b5d2d04d6683a98f65d2b04d9af4c190190a49a3166d3664f09",
+      "artifact_types": [
+        "app",
+        "binary",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 1.44,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "zip",
+        "status": "budget_exhausted",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 48131120,
+            "header_verified": true,
+            "min_macos": "15.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 48152576,
+            "size": 47914720,
+            "header_verified": false,
+            "min_macos": null,
+            "code_signature_present": null
+          }
+        ],
+        "bundle_path": "MacWhisper.app",
+        "bundle_id": "com.goodsnooze.MacWhisper",
+        "version": "15.11",
+        "name": "MacWhisper",
+        "min_macos": "15.0",
+        "executable_name": "MacWhisper",
+        "executable_size": 96067296,
+        "installer": null,
+        "bytes_read": 8388608,
+        "reads": 21,
+        "total_size": 169400912,
+        "error": "byte budget reached",
+        "source_etag": "\"41123be2d3180380b30a3fb563a75816-4\""
+      }
+    },
+    {
+      "cask": "visual-studio-code",
+      "cask_version": "1.147.0",
+      "cask_deprecated": false,
+      "homepage": "https://code.visualstudio.com/",
+      "url": "https://update.code.visualstudio.com/1.147.0/darwin-arm64/stable",
+      "host": "update.code.visualstudio.com",
+      "expected_format": "zip",
+      "cask_sha256": "149d944feb599b076b48406b174e1c3cd1d510e9d673854777a20a6f4116a59a",
+      "artifact_types": [
+        "app",
+        "binary",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 5,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.632,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 67840,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Visual Studio Code.app",
+        "bundle_id": "com.microsoft.VSCode",
+        "version": "1.147.0",
+        "name": "Code",
+        "min_macos": "12.0",
+        "executable_name": "Code",
+        "executable_size": 67840,
+        "installer": null,
+        "bytes_read": 723062,
+        "reads": 10,
+        "total_size": 393619875,
+        "error": null,
+        "source_etag": "\"0xF6022CD51C22CFF46C000AA91537F20E65C47B0E4DCFF29C5FFDE695991704D8\""
+      }
+    },
+    {
+      "cask": "appcleaner",
+      "cask_version": "3.7",
+      "cask_deprecated": false,
+      "homepage": "https://freemacsoft.net/appcleaner/",
+      "url": "https://www.freemacsoft.net/downloads/AppCleaner_3.7.zip",
+      "host": "www.freemacsoft.net",
+      "expected_format": "zip",
+      "cask_sha256": "3d7fa6146fb57da955dca408587fc658ac14aeb86eda7907763ae66397c9e65e",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 1.214,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 414976,
+            "header_verified": true,
+            "min_macos": "15.6",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 442368,
+            "size": 423072,
+            "header_verified": true,
+            "min_macos": "15.6",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "AppCleaner.app",
+        "bundle_id": "net.freemacsoft.AppCleaner",
+        "version": "3.7.0",
+        "name": "AppCleaner",
+        "min_macos": "15.6",
+        "executable_name": "AppCleaner",
+        "executable_size": 865440,
+        "installer": null,
+        "bytes_read": 332755,
+        "reads": 11,
+        "total_size": 4148798,
+        "error": null,
+        "source_etag": "\"6aac50ec-3f4e3e\""
+      }
+    },
+    {
+      "cask": "iterm2",
+      "cask_version": "3.7.9",
+      "cask_deprecated": false,
+      "homepage": "https://iterm2.com/",
+      "url": "https://iterm2.com/downloads/stable/iTerm2-3_7_9.zip",
+      "host": "iterm2.com",
+      "expected_format": "zip",
+      "cask_sha256": "beb96a1089b061c80e030101947aee13d54ba5e4058ad00b82e79633be29d3d2",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 1.688,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "zip",
+        "status": "budget_exhausted",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 73133680,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 73154560,
+            "size": 70590832,
+            "header_verified": false,
+            "min_macos": null,
+            "code_signature_present": null
+          }
+        ],
+        "bundle_path": "iTerm.app",
+        "bundle_id": "com.googlecode.iterm2",
+        "version": "3.7.9",
+        "name": "iTerm2",
+        "min_macos": "13.0",
+        "executable_name": "iTerm2",
+        "executable_size": 143745392,
+        "installer": null,
+        "bytes_read": 8388608,
+        "reads": 21,
+        "total_size": 78118306,
+        "error": "byte budget reached",
+        "source_etag": "\"4a7fda2-660c10f9b79b2\""
+      }
+    },
+    {
+      "cask": "signal",
+      "cask_version": "8.36.0",
+      "cask_deprecated": false,
+      "homepage": "https://signal.org/",
+      "url": "https://updates.signal.org/desktop/signal-desktop-mac-arm64-8.36.0.zip",
+      "host": "updates.signal.org",
+      "expected_format": "zip",
+      "cask_sha256": "2a5f42c7c9bd8fbb10ac082877832a76842ce82e4eb1389de335df11e13d08e3",
+      "artifact_types": [
+        "app",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 3,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.444,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "zip",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 65536,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Signal.app",
+        "bundle_id": "org.whispersystems.signal-desktop",
+        "version": "8.36.0",
+        "name": "Signal",
+        "min_macos": "13.0",
+        "executable_name": "Signal",
+        "executable_size": 65536,
+        "installer": null,
+        "bytes_read": 84504,
+        "reads": 10,
+        "total_size": 145574721,
+        "error": null,
+        "source_etag": "\"30e11e92b42f7dc99b24bb646ad1fb00-18\""
+      }
+    },
+    {
+      "cask": "zed",
+      "cask_version": "1.29.3",
+      "cask_deprecated": false,
+      "homepage": "https://zed.dev/",
+      "url": "https://github.com/zed-industries/zed/releases/download/v1.29.3/Zed-aarch64.dmg",
+      "host": "github.com",
+      "expected_format": "dmg",
+      "cask_sha256": "b692c9effdfcec874c47f56c3b27df069a63c6b3d23ecd070ffec9238a708bb8",
+      "artifact_types": [
+        "app",
+        "binary",
+        "generate_completions_from_executable",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 3,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.805,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 178670432,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Zed.app",
+        "bundle_id": "dev.zed.Zed",
+        "version": "1.29.3",
+        "name": "Zed",
+        "min_macos": "12.0",
+        "executable_name": "zed",
+        "executable_size": 178670432,
+        "installer": null,
+        "bytes_read": 905357,
+        "reads": 7,
+        "total_size": 88779557,
+        "error": null,
+        "source_etag": "\"0x8DF471EA28BD124\""
+      }
+    },
+    {
+      "cask": "raycast",
+      "cask_version": "2.13.1.0",
+      "cask_deprecated": false,
+      "homepage": "https://raycast.com/",
+      "url": "https://x.raycast-releases.com/download?platform=macos&architecture=arm64&version=2.13.1.0",
+      "host": "x.raycast-releases.com",
+      "expected_format": "dmg",
+      "cask_sha256": "e62777491febe5bfadf461d3f9a1ce761c2e661e635bc13e6921a16d75660c77",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 6,
+      "comparison": [
+        {
+          "source": "depends_on.arch",
+          "expected": [
+            "arm64"
+          ],
+          "match": "any",
+          "verdict": "consistent"
+        },
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.682,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 17493120,
+            "header_verified": true,
+            "min_macos": "26.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Raycast.app",
+        "bundle_id": "com.raycast.macos",
+        "version": "2.13.1.0",
+        "name": "Raycast",
+        "min_macos": "26.0",
+        "executable_name": "Raycast",
+        "executable_size": 17493120,
+        "installer": null,
+        "bytes_read": 853572,
+        "reads": 9,
+        "total_size": 158040066,
+        "error": null,
+        "source_etag": "\"ac471d36a71bb9534fd33923444e3bfd\""
+      }
+    },
+    {
+      "cask": "warp",
+      "cask_version": "0.2026.11.18.08.17.stable_04",
+      "cask_deprecated": false,
+      "homepage": "https://www.warp.dev/terminal",
+      "url": "https://app.warp.dev/download/brew?version=v0.2026.11.18.08.17.stable_04&package=dmg",
+      "host": "app.warp.dev",
+      "expected_format": "dmg",
+      "cask_sha256": "ff5127346cb10c63b499ad177f2c3916848234001cebe23420b53f0313131969",
+      "artifact_types": [
+        "app",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 2,
+      "comparison": [],
+      "elapsed_seconds": 0.156,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": null,
+        "status": "source_error",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "installer": null,
+        "bytes_read": 0,
+        "reads": 1,
+        "total_size": 0,
+        "error": "source: range 0-0: HTTP 404 Not Found (expected 206)"
+      }
+    },
+    {
+      "cask": "timing",
+      "cask_version": "2026.6.1",
+      "cask_deprecated": false,
+      "homepage": "https://timingapp.com/",
+      "url": "https://updates.timingapp.com/download/Timing-2026.6.1.dmg",
+      "host": "updates.timingapp.com",
+      "expected_format": "dmg",
+      "cask_sha256": "643b740355d6cbecfcdf8223bc6c244e12f7b414aa3334bc44452578a8309612",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 2.729,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 7312816,
+            "header_verified": true,
+            "min_macos": "14.4",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 7340032,
+            "size": 7084064,
+            "header_verified": true,
+            "min_macos": "14.4",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Timing.app",
+        "bundle_id": "info.eurocomp.Timing2",
+        "version": "2026.6.1",
+        "name": "Timing",
+        "min_macos": "14.4",
+        "executable_name": "Timing",
+        "executable_size": 14424096,
+        "installer": null,
+        "bytes_read": 1481791,
+        "reads": 10,
+        "total_size": 43927236,
+        "error": null,
+        "source_etag": "\"29e46c4-660280b1d2c49\""
+      }
+    },
+    {
+      "cask": "little-snitch",
+      "cask_version": "6.5",
+      "cask_deprecated": false,
+      "homepage": "https://www.obdev.at/products/littlesnitch/index.html",
+      "url": "https://www.obdev.at/downloads/littlesnitch/LittleSnitch-6.5.dmg",
+      "host": "www.obdev.at",
+      "expected_format": "dmg",
+      "cask_sha256": "a83763bbf416676231bcd9c414b16a36c31cc85c14aa0de43cabaf1ef97fa8ba",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 2.502,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 8039136,
+            "header_verified": true,
+            "min_macos": "14.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 8060928,
+            "size": 7783872,
+            "header_verified": true,
+            "min_macos": "14.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Little Snitch.app",
+        "bundle_id": "at.obdev.littlesnitch",
+        "version": "6.5",
+        "name": "Little Snitch",
+        "min_macos": "14.0",
+        "executable_name": "Little Snitch",
+        "executable_size": 15844800,
+        "installer": null,
+        "bytes_read": 1001246,
+        "reads": 9,
+        "total_size": 38377961,
+        "error": null,
+        "source_etag": "\"24999e9-65aa71f928c00\""
+      }
+    },
+    {
+      "cask": "google-chrome",
+      "cask_version": "158.0.8127.89",
+      "cask_deprecated": false,
+      "homepage": "https://www.google.com/chrome/",
+      "url": "https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg",
+      "host": "dl.google.com",
+      "expected_format": "dmg",
+      "cask_sha256": "no_check",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64",
+            "x86_64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 1.011,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 2147483651,
+            "offset": 16384,
+            "size": 268896,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 294912,
+            "size": 54240,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Google Chrome.app",
+        "bundle_id": "com.google.Chrome",
+        "version": "158.0.8127.89",
+        "name": "Google Chrome",
+        "min_macos": "13.0",
+        "executable_name": "Google Chrome",
+        "executable_size": 349152,
+        "installer": null,
+        "bytes_read": 2118484,
+        "reads": 5,
+        "total_size": 289260301,
+        "error": null,
+        "source_etag": "\"7343922\""
+      }
+    },
+    {
+      "cask": "firefox",
+      "cask_version": "160.0.1",
+      "cask_deprecated": false,
+      "homepage": "https://www.mozilla.org/firefox/",
+      "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/160.0.1/mac/en-US/Firefox%20160.0.1.dmg",
+      "host": "download-installer.cdn.mozilla.net",
+      "expected_format": "dmg",
+      "cask_sha256": "db9a522291d82cbe9a2b2922822def4db0a79d4fa3e614979039d705b13b1c25",
+      "artifact_types": [
+        "app",
+        "command_wrapper",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 0.79,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 64176,
+            "header_verified": true,
+            "min_macos": "10.15",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 81920,
+            "size": 93008,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Firefox.app",
+        "bundle_id": "org.mozilla.firefox",
+        "version": "160.0.1",
+        "name": "Firefox",
+        "min_macos": "10.15.0",
+        "executable_name": "firefox",
+        "executable_size": 174928,
+        "installer": null,
+        "bytes_read": 770031,
+        "reads": 8,
+        "total_size": 165761466,
+        "error": null,
+        "source_etag": "\"a3d2d4bc0b169de8cae8a7f3183d7ae9\""
+      }
+    },
+    {
+      "cask": "rider",
+      "cask_version": "2026.3.0.1,263.7307.325",
+      "cask_deprecated": false,
+      "homepage": "https://www.jetbrains.com/rider/",
+      "url": "https://download.jetbrains.com/rider/JetBrains.Rider-2026.3.0.1-aarch64.dmg",
+      "host": "download.jetbrains.com",
+      "expected_format": "dmg",
+      "cask_sha256": "16ec16fc16a2cbaf32102086adf7f26182574d81ebed6dfc775ac3767ca8e5ab",
+      "artifact_types": [
+        "app",
+        "command_wrapper",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 1,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.744,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 839424,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Rider.app",
+        "bundle_id": "com.jetbrains.rider",
+        "version": "2026.3.0.1",
+        "name": "JetBrains Rider",
+        "min_macos": "10.13",
+        "executable_name": "rider",
+        "executable_size": 839424,
+        "installer": null,
+        "bytes_read": 1229298,
+        "reads": 10,
+        "total_size": 2286054263,
+        "error": null,
+        "source_etag": "\"80c7a0cbe7510e48da4440d3d01682d6\""
+      }
+    },
+    {
+      "cask": "vlc",
+      "cask_version": "3.0.24",
+      "cask_deprecated": false,
+      "homepage": "https://www.videolan.org/vlc/",
+      "url": "https://get.videolan.org/vlc/3.0.24/macosx/vlc-3.0.24-arm64.dmg",
+      "host": "get.videolan.org",
+      "expected_format": "dmg",
+      "cask_sha256": "64a89d93cdd30b0e97131743e246373db82d6826ea882d265d46d74b136da2b7",
+      "artifact_types": [
+        "app",
+        "command_wrapper",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 1,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 2.513,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 89648,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "VLC.app",
+        "bundle_id": "org.videolan.vlc",
+        "version": "3.0.24",
+        "name": "VLC",
+        "min_macos": "10.7.5",
+        "executable_name": "VLC",
+        "executable_size": 89648,
+        "installer": null,
+        "bytes_read": 728379,
+        "reads": 8,
+        "total_size": 56960605,
+        "error": null,
+        "source_etag": "\"6ab1643c-365265d\""
+      }
+    },
+    {
+      "cask": "gimp",
+      "cask_version": "3.2.8",
+      "cask_deprecated": false,
+      "homepage": "https://www.gimp.org/",
+      "url": "https://download.gimp.org/gimp/v3.2/macos/gimp-3.2.8-arm64.dmg",
+      "host": "download.gimp.org",
+      "expected_format": "dmg",
+      "cask_sha256": "06404a375106b7613ba3a14c7d8d9a7cbe18b9b9e2b2050bb72f3162cbcfc395",
+      "artifact_types": [
+        "app",
+        "command_wrapper",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 3,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 1.316,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 9593680,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "GIMP.app",
+        "bundle_id": "org.gimp.gimp",
+        "version": "3.2.8",
+        "name": "GIMP",
+        "min_macos": "11.0",
+        "executable_name": "gimp-3.2",
+        "executable_size": 9593680,
+        "installer": null,
+        "bytes_read": 1893085,
+        "reads": 12,
+        "total_size": 185827254,
+        "error": null,
+        "source_etag": "\"6ae90a22-b137fb6\""
+      }
+    },
+    {
+      "cask": "slack",
+      "cask_version": "4.53.292",
+      "cask_deprecated": false,
+      "homepage": "https://slack.com/",
+      "url": "https://downloads.slack-edge.com/desktop-releases/mac/arm64/4.53.292/Slack-4.53.292-macOS.dmg",
+      "host": "downloads.slack-edge.com",
+      "expected_format": "dmg",
+      "cask_sha256": "b358a20e933a889e76faa46c581e3d9c59f036dd3be1692eb593db900646006a",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 5,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.557,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "dmg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 54624,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Slack.app",
+        "bundle_id": "com.tinyspeck.slackmacgap",
+        "version": "4.53.292",
+        "name": "Slack",
+        "min_macos": "13.0",
+        "executable_name": "Slack",
+        "executable_size": 54624,
+        "installer": null,
+        "bytes_read": 712749,
+        "reads": 8,
+        "total_size": 116783604,
+        "error": null,
+        "source_etag": "\"220b5fca728983bd12da5f2e41050feb\""
+      }
+    },
+    {
+      "cask": "alfred@5",
+      "cask_version": "5.8.2,2353",
+      "cask_deprecated": false,
+      "homepage": "https://www.alfredapp.com/",
+      "url": "https://cachefly.alfredapp.com/Alfred_5.8.2_2353.tar.gz",
+      "host": "cachefly.alfredapp.com",
+      "expected_format": "tar.gz",
+      "cask_sha256": "2ed591779a7afb41dc5770516d91ec7093d23371bc939862eb8c148f98519a59",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 2.553,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 192064,
+            "header_verified": true,
+            "min_macos": "10.14",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 212992,
+            "size": 203840,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Alfred 5.app",
+        "bundle_id": "com.runningwithcrayons.Alfred",
+        "version": "5.8.2",
+        "name": "Alfred",
+        "min_macos": "10.14",
+        "executable_name": "Alfred",
+        "executable_size": 416832,
+        "installer": null,
+        "bytes_read": 5308421,
+        "reads": 11,
+        "total_size": 5620946,
+        "error": null,
+        "source_etag": "\"6aff0e2c-55c4d2\""
+      }
+    },
+    {
+      "cask": "gitbutler",
+      "cask_version": "0.23.5,3373",
+      "cask_deprecated": false,
+      "homepage": "https://gitbutler.com/",
+      "url": "https://releases.gitbutler.com/releases/release/0.23.5-3373/macos/aarch64/GitButler.app.tar.gz",
+      "host": "releases.gitbutler.com",
+      "expected_format": "tar.gz",
+      "cask_sha256": "783a91ef5da43e28fab6b672bf9e65d0d49e9671489daaac9646c5429d9122f4",
+      "artifact_types": [
+        "app",
+        "binary",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 1,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.308,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 115826272,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "GitButler.app",
+        "bundle_id": "com.gitbutler.app",
+        "version": "0.23.5",
+        "name": "GitButler",
+        "min_macos": "10.13",
+        "executable_name": "gitbutler-tauri",
+        "executable_size": 115826272,
+        "installer": null,
+        "bytes_read": 327685,
+        "reads": 4,
+        "total_size": 49036839,
+        "error": null,
+        "source_etag": "\"54a494c2d1399a4de297973390dcc0d3-10\""
+      }
+    },
+    {
+      "cask": "kunkun",
+      "cask_version": "0.1.37",
+      "cask_deprecated": false,
+      "homepage": "https://kunkun.sh/",
+      "url": "https://download.kunkun.sh/Kunkun-v0.1.37/kunkun_aarch64.app.tar.gz",
+      "host": "download.kunkun.sh",
+      "expected_format": "tar.gz",
+      "cask_sha256": "d93fcacc2e8a1c364f1cfaa2be3b1664401e17ddf3a33c4e5caea7f4dd386aa1",
+      "artifact_types": [
+        "app",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 1,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "unavailable"
+        }
+      ],
+      "elapsed_seconds": 1.33,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": null,
+        "status": "source_error",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "installer": null,
+        "bytes_read": 0,
+        "reads": 1,
+        "total_size": 0,
+        "error": "source: range 0-0: HTTP 200 OK (expected 206)"
+      }
+    },
+    {
+      "cask": "phoenix",
+      "cask_version": "4.0.1",
+      "cask_deprecated": false,
+      "homepage": "https://github.com/kasper/phoenix/",
+      "url": "https://github.com/kasper/phoenix/releases/download/4.0.1/phoenix-4.0.1.tar.gz",
+      "host": "github.com",
+      "expected_format": "tar.gz",
+      "cask_sha256": "7d194ca75f33f6c018fe8fb974e372544a61a058222d62d57e6c929fe91949c3",
+      "artifact_types": [
+        "app",
+        "target",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 1.47,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 207312,
+            "header_verified": true,
+            "min_macos": "10.14.6",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 229376,
+            "size": 219504,
+            "header_verified": true,
+            "min_macos": "11.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Phoenix.app",
+        "bundle_id": "org.khirviko.Phoenix",
+        "version": "4.0.1",
+        "name": "Phoenix",
+        "min_macos": "10.14.6",
+        "executable_name": "Phoenix",
+        "executable_size": 448880,
+        "installer": null,
+        "bytes_read": 3997848,
+        "reads": 10,
+        "total_size": 3997849,
+        "error": null,
+        "source_etag": "\"0x8DC89982AAEA52F\""
+      }
+    },
+    {
+      "cask": "openpencil",
+      "cask_version": "0.17.0",
+      "cask_deprecated": false,
+      "homepage": "https://openpencil.dev/",
+      "url": "https://github.com/open-pencil/open-pencil/releases/download/v0.17.0/OpenPencil_aarch64.app.tar.gz",
+      "host": "github.com",
+      "expected_format": "tar.gz",
+      "cask_sha256": "a8d90e57335c05178e26c939e616f512d8a330a3b41bf6ea0813dbafcf7cb315",
+      "artifact_types": [
+        "app",
+        "target",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 2,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "consistent"
+        }
+      ],
+      "elapsed_seconds": 0.621,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "tar.gz",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 0,
+            "size": 37149536,
+            "header_verified": true,
+            "min_macos": "13.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "OpenPencil.app",
+        "bundle_id": "net.dannote.open-pencil",
+        "version": "0.17.0",
+        "name": "OpenPencil",
+        "min_macos": "13.0",
+        "executable_name": "OpenPencil",
+        "executable_size": 37149536,
+        "installer": null,
+        "bytes_read": 327685,
+        "reads": 4,
+        "total_size": 19700167,
+        "error": null,
+        "source_etag": "\"0x8DF489449FDCFE3\""
+      }
+    },
+    {
+      "cask": "zoom",
+      "cask_version": "7.2.5.90525",
+      "cask_deprecated": false,
+      "homepage": "https://www.zoom.us/",
+      "url": "https://cdn.zoom.us/prod/7.2.5.90525/arm64/zoomusInstallerFull.pkg",
+      "host": "cdn.zoom.us",
+      "expected_format": "pkg",
+      "cask_sha256": "4c26ebed8bd29ce258ac9dbe0f2b327fad0a0734246ea588339a2cc5fd10533e",
+      "artifact_types": [
+        "pkg",
+        "postflight_steps",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 2,
+      "comparison": [
+        {
+          "source": "cask URL",
+          "expected": [
+            "arm64"
+          ],
+          "match": "all",
+          "verdict": "unavailable"
+        }
+      ],
+      "elapsed_seconds": 4.921,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "pkg",
+        "status": "budget_exhausted",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "candidate_executables": [
+          {
+            "path": "zoom.us.app/Contents/MacOS/zoom.us",
+            "size": 103632,
+            "architectures": [
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 0,
+                "size": 103632,
+                "header_verified": true,
+                "min_macos": "11.0",
+                "code_signature_present": true
+              }
+            ]
+          }
+        ],
+        "installer": {
+          "title": "Zoom Workplace",
+          "host_architectures": [
+            "x86_64",
+            "arm64"
+          ],
+          "package_id": "us.zoom.pkg.videomeeting",
+          "package_version": "7.2.5.90525",
+          "min_macos": null
+        },
+        "bytes_read": 8388608,
+        "reads": 19,
+        "total_size": 217246784,
+        "error": "byte budget reached",
+        "source_etag": "\"0cf3922a133638f4c86ab6b79ceb4ccc-26\""
+      }
+    },
+    {
+      "cask": "microsoft-teams",
+      "cask_version": "26289.204.5281.6363",
+      "cask_deprecated": false,
+      "homepage": "https://www.microsoft.com/en/microsoft-teams/group-chat-software/",
+      "url": "https://statics.teams.cdn.office.net/production-osx/26289.204.5281.6363/MicrosoftTeams.pkg",
+      "host": "statics.teams.cdn.office.net",
+      "expected_format": "pkg",
+      "cask_sha256": "393e25369198068c2715f3f32ad200de712a74d9184934c39ce1d5c42b39cc2c",
+      "artifact_types": [
+        "pkg",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 2.714,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "pkg",
+        "status": "budget_exhausted",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "candidate_executables": [
+          {
+            "path": "Microsoft Teams.app/Contents/MacOS/MSTeams",
+            "size": 61890144,
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 32745984,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 32768000,
+                "size": 29122144,
+                "header_verified": true,
+                "min_macos": "14.0",
+                "code_signature_present": true
+              }
+            ]
+          }
+        ],
+        "installer": {
+          "title": "Microsoft Teams",
+          "host_architectures": [
+            "arm64",
+            "x86_64"
+          ],
+          "package_id": "com.microsoft.teams2",
+          "package_version": "26289.204.5281.6363",
+          "min_macos": null
+        },
+        "bytes_read": 8388608,
+        "reads": 30,
+        "total_size": 375145288,
+        "error": "byte budget reached",
+        "source_etag": "\"0x8DF33AE359B95BF\""
+      }
+    },
+    {
+      "cask": "teamviewer",
+      "cask_version": "15.82.6",
+      "cask_deprecated": false,
+      "homepage": "https://www.teamviewer.com/",
+      "url": "https://dl.teamviewer.com/download/version_15x/update/15.82.6/TeamViewer.pkg",
+      "host": "dl.teamviewer.com",
+      "expected_format": "pkg",
+      "cask_sha256": "9acd5a6cefe859e81f85001b1b90279e02495f3829ced8df1a3b9d37f3d5bcf1",
+      "artifact_types": [
+        "pkg",
+        "postflight_steps",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 2,
+      "comparison": [],
+      "elapsed_seconds": 3.526,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "pkg",
+        "status": "budget_exhausted",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "candidate_executables": [
+          {
+            "path": "TeamViewer.app/Contents/MacOS/TeamViewer_Desktop_Proxy",
+            "size": 176448,
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 57824,
+                "header_verified": true,
+                "min_macos": "13.5",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 81920,
+                "size": 94528,
+                "header_verified": true,
+                "min_macos": "13.5",
+                "code_signature_present": true
+              }
+            ]
+          },
+          {
+            "path": "TeamViewer.app/Contents/MacOS/TeamViewer",
+            "size": 161414736,
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 82013440,
+                "header_verified": true,
+                "min_macos": "13.5",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 82034688,
+                "size": 79380048,
+                "header_verified": true,
+                "min_macos": "13.5",
+                "code_signature_present": true
+              }
+            ]
+          },
+          {
+            "path": "TeamViewer.app/Contents/MacOS/TeamViewer_Service",
+            "size": 48033584,
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 3,
+                "offset": 16384,
+                "size": 24572752,
+                "header_verified": true,
+                "min_macos": "13.5",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 24592384,
+                "size": 23441200,
+                "header_verified": false,
+                "min_macos": null,
+                "code_signature_present": null
+              }
+            ]
+          }
+        ],
+        "installer": {
+          "title": "TeamViewer",
+          "host_architectures": [
+            "x86_64",
+            "arm64"
+          ],
+          "package_id": "com.teamviewer.teamviewer",
+          "package_version": "15.82.6",
+          "min_macos": null
+        },
+        "bytes_read": 8388608,
+        "reads": 40,
+        "total_size": 134650593,
+        "error": "byte budget reached",
+        "source_etag": "\"0x8DF1E3AC14C5B57\""
+      }
+    },
+    {
+      "cask": "mullvad-vpn",
+      "cask_version": "2026.5",
+      "cask_deprecated": false,
+      "homepage": "https://mullvad.net/",
+      "url": "https://cdn.mullvad.net/app/desktop/releases/2026.5/MullvadVPN-2026.5.pkg",
+      "host": "cdn.mullvad.net",
+      "expected_format": "pkg",
+      "cask_sha256": "7c68dd93ae01c1b56ce29c48b293a6ecb29ad61769ee90619887fa71a7dd867b",
+      "artifact_types": [
+        "pkg",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 8.516,
+      "cli_exit_code": 1,
+      "scan": {
+        "format": "pkg",
+        "status": "budget_exhausted",
+        "architectures": [],
+        "bundle_path": null,
+        "bundle_id": null,
+        "version": null,
+        "name": null,
+        "min_macos": null,
+        "executable_name": null,
+        "executable_size": null,
+        "candidate_executables": [
+          {
+            "path": "Mullvad VPN.app/Contents/MacOS/Mullvad VPN",
+            "size": 102320,
+            "architectures": [
+              {
+                "name": "x86_64",
+                "cpu_type": 16777223,
+                "cpu_subtype": 2147483651,
+                "offset": 16384,
+                "size": 32544,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              },
+              {
+                "name": "arm64",
+                "cpu_type": 16777228,
+                "cpu_subtype": 0,
+                "offset": 49152,
+                "size": 53168,
+                "header_verified": true,
+                "min_macos": "12.0",
+                "code_signature_present": true
+              }
+            ]
+          }
+        ],
+        "installer": {
+          "title": "Mullvad VPN",
+          "host_architectures": [
+            "arm64",
+            "x86_64"
+          ],
+          "package_id": "net.mullvad.vpn",
+          "package_version": "2026.5",
+          "min_macos": "12.0"
+        },
+        "bytes_read": 8388608,
+        "reads": 19,
+        "total_size": 254034014,
+        "error": "byte budget reached",
+        "source_etag": "\"6aa3e988-f24405e\""
+      }
+    },
+    {
+      "cask": "microsoft-auto-update",
+      "cask_version": "4.86.26110224",
+      "cask_deprecated": false,
+      "homepage": "https://docs.microsoft.com/officeupdates/release-history-microsoft-autoupdate",
+      "url": "https://res.public.onecdn.static.microsoft/mro1cdnstorage/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/Microsoft_AutoUpdate_4.86.26110224_Updater.pkg",
+      "host": "res.public.onecdn.static.microsoft",
+      "expected_format": "pkg",
+      "cask_sha256": "9f0b5b7b697a187175aa86efb6aa83071d91d39a8d4bc8bd1ff9509cd6bc21a7",
+      "artifact_types": [
+        "pkg",
+        "uninstall",
+        "zap"
+      ],
+      "distinct_cask_variation_urls": 0,
+      "comparison": [],
+      "elapsed_seconds": 2.129,
+      "cli_exit_code": 0,
+      "scan": {
+        "format": "pkg",
+        "status": "complete",
+        "architectures": [
+          {
+            "name": "x86_64",
+            "cpu_type": 16777223,
+            "cpu_subtype": 3,
+            "offset": 16384,
+            "size": 1202784,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          },
+          {
+            "name": "arm64",
+            "cpu_type": 16777228,
+            "cpu_subtype": 0,
+            "offset": 1228800,
+            "size": 1186784,
+            "header_verified": true,
+            "min_macos": "12.0",
+            "code_signature_present": true
+          }
+        ],
+        "bundle_path": "Microsoft AutoUpdate.app",
+        "bundle_id": "com.microsoft.autoupdate2",
+        "version": "4.86",
+        "name": "Microsoft AutoUpdate",
+        "min_macos": "12.0",
+        "executable_name": "Microsoft AutoUpdate",
+        "executable_size": 2415584,
+        "installer": {
+          "title": "Microsoft AutoUpdate",
+          "host_architectures": [
+            "arm64",
+            "x86_64"
+          ],
+          "package_id": "com.microsoft.package.Microsoft_AutoUpdate.app",
+          "package_version": "4.86.26110224",
+          "min_macos": null
+        },
+        "bytes_read": 4464480,
+        "reads": 16,
+        "total_size": 4521461,
+        "error": null
+      }
+    }
+  ]
+}

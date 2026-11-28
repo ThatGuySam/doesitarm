@@ -1,0 +1,20 @@
+---
+import scannerFragment from 'virtual:scanner-fragment'
+
+const { pluginsOnly = false } = Astro.props
+const switcher = pluginsOnly
+    ? '<a href="/apple-silicon-app-test?scanner=next">App test</a>'
+    : '<a href="/plugin-scanner/?scanner=next">Audio plug-in scanner</a>'
+const fragment = scannerFragment
+    .replace( '<div class="dia-scanner"', `<div class="dia-scanner" data-embedded${ pluginsOnly ? ' data-plugin-page' : '' }` )
+    .replace( '<!--scanner-switch-->', `<p class="scanner-switch">${ switcher } · <a href="?scanner=stable">Exit scanner preview</a></p>` )
+    .replace( 'id="plugin-folders"', pluginsOnly ? 'id="plugin-folders" open' : 'id="plugin-folders"' )
+---
+
+<div class="w-full">
+    <link rel="stylesheet" href="/scanner-next/style.css" />
+    <link rel="stylesheet" href="/scanner-next/bigfolder.css" />
+    <Fragment set:html={ fragment } />
+    <slot />
+    <script is:inline type="module" src="/scanner-next/app.js"></script>
+</div>

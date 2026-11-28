@@ -1,0 +1,27 @@
+{
+  "name": "doesitarm-scanner-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test --test-concurrency=1 test/worker.test.mjs test/ui.test.mjs test/totals.test.mjs test/folder-walk.test.mjs test/path-privacy.test.mjs test/page-worker.test.mjs test/device-entry.test.mjs test/windows-result.test.mjs test/ffcrash.test.mjs test/crash-journal.test.mjs test/view-level.test.mjs test/notifications.test.mjs test/plugin-result.test.mjs test/plugin-scan.test.mjs",
+    "test:browser": "node --test --test-concurrency=1 test/browser.test.mjs test/bigfolder-*.test.mjs test/pages.browser.test.mjs test/ffcrash-recovery.test.mjs test/crash-report.test.mjs test/view-level-browser.test.mjs && npm run test:isolation && npm run test:padding:quick",
+    "test:firefox": "node --test --test-concurrency=1 test/firefox-inputs.browser.test.mjs",
+    "test:pages-corpus": "node scripts/replay-pages.mjs --verify",
+    "test:ui": "node scripts/ui-smoke.mjs",
+    "test:a11y": "node scripts/a11y-check.mjs",
+    "count": "node scripts/count-elements.mjs",
+    "screenshots": "node scripts/count-elements.mjs --shots screenshots",
+    "test:padding": "node test/padding-check.mjs",
+    "test:padding:quick": "node test/padding-check.mjs --widths desktop,phone --levels minimal,research --states empty-expanded,results,saved,url",
+    "test:padding:layout": "node test/padding-check.mjs --target layout",
+    "test:isolation": "node test/isolation-check.mjs"
+  },
+  "dependencies": {
+    "ipaddr.js": "2.5.0"
+  },
+  "devDependencies": {
+    "playwright-core": "1.58.2"
+  }
+}

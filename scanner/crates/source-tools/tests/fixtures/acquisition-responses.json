@@ -1,0 +1,41 @@
+{
+  "responses": [
+    {
+      "url": "https://www.segger.com/downloads/jlink/JLink_MacOSX_V996a_universal.pkg",
+      "mode": "bytes=0-0",
+      "status": 200,
+      "headers": {"content-type": "text/html; charset=UTF-8", "server": "Apache"},
+      "body_text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">"
+    },
+    {
+      "url": "https://api.github.com/repositories/1274703665/releases/assets/779574227",
+      "mode": "bytes=0-0",
+      "status": 206,
+      "headers": {
+        "content-range": "bytes 0-0/1491",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body_hex": "7b"
+    },
+    {
+      "url": "https://downloads.example.org/download",
+      "mode": "bytes=0-0",
+      "status": 206,
+      "headers": {
+        "content-range": "bytes 0-0/100",
+        "content-disposition": "attachment; filename=\"fallback.zip\"; filename*=utf-8'en'folder%2FViewer%20%C3%A9dition.zip"
+      },
+      "body_hex": "50"
+    },
+    {
+      "url": "https://downloads.example.org/latest",
+      "mode": "bytes=0-0",
+      "status": 206,
+      "headers": {
+        "content-range": "bytes 0-0/120",
+        "content-disposition": "ATTACHMENT; Filename=\"Viewer; macOS.dmg\"; filename*=unknown''foobar"
+      },
+      "body_hex": "78"
+    }
+  ]
+}

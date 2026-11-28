@@ -1,0 +1,14 @@
+{
+  "tag_name": "v1.5.0",
+  "draft": false,
+  "prerelease": false,
+  "assets": [
+    {
+      "id": 770796900,
+      "state": "uploaded",
+      "name": "Not-Boring-Notch-v1.5.0.dmg",
+      "size": 14846117,
+      "browser_download_url": "https://github.com/AllenReder/not-boring-notch/releases/download/v1.5.0/Not-Boring-Notch-v1.5.0.dmg"
+    }
+  ]
+}

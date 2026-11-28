@@ -1,0 +1,43 @@
+/* Standalone shell only (the preview Worker page). Inside doesitarm.com the site layout supplies all of this
+   and none of it is loaded. The scanner itself is styled by style.css, scoped under .dia-scanner. */
+body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 20px; line-height: 1.5; color: #d1d5db; }
+a { color: inherit; }
+html {
+  font-size: 20px;
+  color-scheme: dark;
+  scroll-padding-top: 1rem;
+  background: #191a1d;
+}
+.skip-link { position: absolute; inset-inline-start: .5rem; inset-block-start: -3rem; padding: .4rem .8rem; background: #121416; z-index: 10; }
+.skip-link:focus { inset-block-start: .5rem; }
+/* Navbar: the site's 🦾 home mark and emoji + label links, without the fixed overlay. */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-inline-size: 80rem;
+  margin-inline: auto;
+  padding: .4rem 1rem;
+}
+.logo { font-size: 2.2rem; line-height: 1; text-decoration: none; padding: .3rem .4rem; border-radius: .4rem; }
+.logo:hover { background: #191a1d; box-shadow: -.25rem -.25rem .5rem #ffffff12, .25rem .25rem .5rem #0000001f, -.75rem -.75rem 1.75rem #ffffff12, .75rem .75rem 1.75rem #0000001f; }
+.navbar nav { display: flex; gap: .25rem; }
+.navbar nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-block-size: 2.2rem;
+  padding: .3rem .6rem;
+  border-radius: .3rem;
+  font-size: .7rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.navbar nav a:hover { background: #191a1d; box-shadow: -.25rem -.25rem .5rem #ffffff12, .25rem .25rem .5rem #0000001f, -.75rem -.75rem 1.75rem #ffffff12, .75rem .75rem 1.75rem #0000001f; }
+.navbar nav a[aria-current="page"] { color: #f3f4f6; }
+body {
+  margin: 0;
+  min-block-size: 100vh;
+  background: linear-gradient(to bottom left, #34393f, #191a1d) fixed;
+}

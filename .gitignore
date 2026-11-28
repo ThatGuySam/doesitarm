@@ -95,6 +95,7 @@ dist
 /static/**/*.st
 /static/pagefind/
 /static/ui-assets/
+/static/scanner-next/
 /commits-data.json
 /static/tailwind.css
 

@@ -7,6 +7,7 @@ import {
 import Layout from '../layouts/default.astro'
 
 import AppTestPage from '~/pages/apple-silicon-app-test.vue'
+import ScannerNext from '~/src/components/scanner-next.astro'
 
 // Component Script:
 // You can write any JavaScript/TypeScript that you'd like here.
@@ -17,7 +18,14 @@ import AppTestPage from '~/pages/apple-silicon-app-test.vue'
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 
-applyResponseDefaults( Astro )
+const nextScanner = Astro.url.searchParams.get( 'scanner' ) === 'next'
+if ( nextScanner ) {
+    Astro.response.headers.set( 'Cache-Control', 'no-store' )
+    Astro.response.headers.set( 'Cloudflare-CDN-Cache-Control', 'no-store' )
+    Astro.response.headers.set( 'X-Robots-Tag', 'noindex' )
+} else {
+    applyResponseDefaults( Astro )
+}
 
 ---
 <Layout
@@ -33,10 +41,9 @@ applyResponseDefaults( Astro )
     } }
 >
 
-	<AppTestPage
-        config={ publicRuntimeConfig }
-        client:load
-    />
+    <script slot="head" is:inline src="/scanner-preference.js" defer></script>
+
+    { nextScanner ? <ScannerNext /> : <AppTestPage config={ publicRuntimeConfig } client:load /> }
 
 	<!--
 
