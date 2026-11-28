@@ -2,7 +2,10 @@
 // Smoke test for a deployed Does It ARM MCP server.
 // Usage: node scripts/smoke.mjs [https://mcp.doesitarm.com/mcp]
 // Runs initialize, tools/list and a few tools/call requests, checks that real
-// data comes back, and fails if raw scan data (Info.plist / Mach-O) leaks.
+// data comes back, that structuredContent matches each tool's outputSchema,
+// and fails if raw scan data (Info.plist / Mach-O) leaks.
+
+import { AjvJsonSchemaValidator } from '@modelcontextprotocol/sdk/validation/ajv'
 
 const endpoint = process.argv[2] || process.env.MCP_URL || 'https://mcp.doesitarm.com/mcp'
 const RAW_MARKERS = [ 'Macho Meta', 'Info Plist', 'CFBundleIdentifier', 'loadCommandsInfo', 'cputype', '.app.zip' ]
@@ -16,7 +19,7 @@ async function rpc ( method, params ) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/event-stream',
-            'Mcp-Protocol-Version': '2025-06-18',
+            'Mcp-Protocol-Version': '2025-11-25',
         },
         body: JSON.stringify({ jsonrpc: '2.0', id: ++id, method, params }),
     })
@@ -38,20 +41,33 @@ function noLeak ( label, raw ) {
     check( `${ label } has no raw scan dump`, leaked.length === 0, leaked.join(', ') )
 }
 
+const validator = new AjvJsonSchemaValidator()
+const outputSchemas = {}
+
 async function call ( name, args ) {
     const { result, raw } = await rpc( 'tools/call', { name, arguments: args } )
     noLeak( name, raw )
+    if ( !result.isError && outputSchemas[ name ] ) {
+        const { valid, errorMessage } = validator.getValidator( outputSchemas[ name ] )( result.structuredContent )
+        check( `${ name } structuredContent matches outputSchema`, valid, errorMessage )
+    }
     return { result, text: result.content?.[0]?.text || '', raw }
 }
 
 console.log( `Smoke testing ${ endpoint }` )
 
-const init = await rpc( 'initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.0.0' } } )
+const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.1.0' } } )
 check( 'initialize', init.result.serverInfo?.name === 'doesitarm', `${ init.result.serverInfo?.name } ${ init.result.serverInfo?.version }, protocol ${ init.result.protocolVersion }` )
+check( 'initialize description and instructions', Boolean( init.result.serverInfo?.description ) && /Apple Silicon/.test( init.result.instructions || '' ), init.result.serverInfo?.description )
 
 const list = await rpc( 'tools/list', {} )
-const names = list.result.tools.map( tool => tool.name )
-check( 'tools/list', names.length >= 6, names.join(', ') )
+const tools = list.result.tools
+const names = tools.map( tool => tool.name )
+check( 'tools/list', names.length === 7, names.join(', ') )
+for ( const tool of tools ) {
+    outputSchemas[ tool.name ] = tool.outputSchema
+    check( `${ tool.name } metadata`, Boolean( tool.title ) && tool.annotations?.title === tool.title && tool.annotations?.readOnlyHint === true && tool.outputSchema?.type === 'object', tool.title )
+}
 
 const search = await call( 'search_apps', { query: 'Spotify', limit: 3 } )
 check( 'search_apps Spotify', search.text.includes('https://doesitarm.com/app/spotify'), search.text.split('\n')[1] )
@@ -76,6 +92,15 @@ check( 'list_devices', devices.result.structuredContent?.results?.length > 0, `$
 
 const formula = await call( 'get_app', { app: 'ffmpeg', kind: 'homebrew' } )
 check( 'get_app ffmpeg (homebrew)', formula.text.includes('/formula/ffmpeg'), formula.text.split('\n')[1] )
+
+const miss = await call( 'search_apps', { query: 'Definitely Not A Real App 123' } )
+check( 'search_apps miss is an ordinary result', !miss.result.isError && miss.result.structuredContent?.total === 0, miss.text )
+
+const blank = await call( 'check_apps', { names: [ ' ' ] } )
+check( 'check_apps all blank is a recoverable error', blank.result.isError === true && blank.text.includes('non-blank'), blank.text )
+
+const range = await call( 'search_apps', { query: 'Spotify', limit: 500 } )
+check( 'search_apps limit out of range names the field', range.result.isError === true && range.text.includes('limit must be a whole number from 1 to 50'), range.text.split('\n').pop() )
 
 console.log( failures === 0 ? 'All smoke checks passed.' : `${ failures } smoke check(s) failed.` )
 process.exit( failures === 0 ? 0 : 1 )
