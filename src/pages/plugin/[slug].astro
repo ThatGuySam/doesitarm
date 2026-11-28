@@ -1,0 +1,118 @@
+---
+import '~/assets/css/audio-plugins.css'
+import '~/assets/css/status-headline.css'
+
+import Layout from '~/src/layouts/default.astro'
+import BuildTable from '~/src/components/plugins/build-table.astro'
+import ProductHosts from '~/src/components/plugins/product-hosts.astro'
+import ServiceCard from '~/src/components/service-card.astro'
+import {
+    directoryPath, formats, productBySlug, productPath, productReleases, productSummary, releaseName, vendorFor, vendorPath
+} from '~/helpers/plugins/catalog.mjs'
+
+const plugin = productBySlug.get(Astro.params.slug ?? '')
+if (!plugin) return Astro.rewrite('/404')
+const pathname = productPath(plugin)
+const canonical = new URL(pathname, Astro.site).href
+const vendor = vendorFor(plugin)
+const summary = productSummary(plugin)
+const [highlighted, ...releases] = productReleases(plugin).filter(release => release.formats.length)
+const highlightedFormats = [...new Set(highlighted.formats.filter(group => group.format !== 'standalone').map(group => formats[group.format]))]
+const description = `${plugin.name} by ${vendor.name}. ${summary.headline} in the scanned macOS builds. See ${highlightedFormats.join(', ')} formats and publisher evidence.`
+const selectedRelease = releaseName(highlighted)
+const isPreview = ['rolling preview', 'publisher beta'].includes(highlighted.channel)
+const publisherName = vendor.name === vendor.observedVendor && !vendor.url ? null : vendor.name
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [{
+        '@type': 'SoftwareApplication',
+        '@id': canonical,
+        url: canonical,
+        name: plugin.name,
+        applicationCategory: 'MultimediaApplication',
+        operatingSystem: 'macOS',
+        ...(publisherName && {
+            publisher: {
+                '@type': ['Thomas Mundt'].includes(vendor.name) ? 'Person' : 'Organization',
+                name: publisherName,
+                ...(vendor.url && { url: vendor.url })
+            }
+        }),
+        ...(summary.softwareVersion && { softwareVersion: summary.softwareVersion })
+    }, {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Audio plug-ins', item: new URL(directoryPath, Astro.site).href },
+            { '@type': 'ListItem', position: 2, name: plugin.name, item: canonical }
+        ]
+    }]
+}
+const reportUrl = new URL('https://github.com/ThatGuySam/doesitarm/issues/new')
+reportUrl.searchParams.set('title', `Plug-in compatibility: ${plugin.name}`)
+reportUrl.searchParams.set('body', 'Plug-in version and format:\nPublisher or evidence URL:\nHost, host version and process mode:\nMac model and macOS version:\nWhat happened:\n')
+---
+<Layout headOptions={{
+    title: `Does ${plugin.name} work on Apple Silicon? - Does It ARM`,
+    description,
+    pathname,
+    structuredData: plugin.indexable ? structuredData : null,
+    meta: plugin.indexable ? [] : [{ name: 'robots', content: 'noindex,follow' }]
+}}>
+    <main class="plugin-page space-y-7">
+        <header class="mx-auto flex max-w-[40rem] flex-col items-center gap-3 text-center">
+            <nav aria-label="Breadcrumb" class="text-sm text-gray-400">
+                <a class="plugin-link" href={ directoryPath }>Audio plug-ins</a>
+                <span aria-hidden="true"> / </span>
+                <span aria-current="page">{ plugin.name }</span>
+            </nav>
+            <div class="space-y-1">
+                <h1 class="title text-3xl md:text-4xl font-hairline text-white">{ plugin.name }</h1>
+                <a class="plugin-link text-sm" href={ vendorPath(vendor) } rel="nofollow">{ vendor.name }</a>
+            </div>
+            <h2 class="status-headline" data-testid="status-headline">{ summary.headline }</h2>
+            <p class="text-sm text-gray-300">
+                Scanned { highlightedFormats.join(', ') } builds from { selectedRelease.charAt(0).toLowerCase() + selectedRelease.slice(1) }.
+            </p>
+            <div class="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+                <a class="plugin-link" href={ plugin.publisherUrl }>Publisher site</a>
+                <a class="plugin-link" href="/apple-silicon-app-test">Check your own copy</a>
+            </div>
+        </header>
+
+        <section class="space-y-3" aria-labelledby="scanned-formats">
+            <div>
+                <h2 id="scanned-formats" class="text-xl font-semibold text-white">Scanned formats</h2>
+                <p class="mt-1 text-sm text-gray-400">{ selectedRelease }{ isPreview && ` · ${highlighted.channel}` }</p>
+            </div>
+            <BuildTable release={ highlighted } />
+            <p class="text-xs text-gray-400">Declared macOS minimums come from bundle metadata and Mach-O headers. Loading may also depend on the host, dependencies and authorization.</p>
+            { plugin.identityReview.length > 0 && (
+                <ul class="space-y-1 text-sm text-gray-300" aria-label="Bundle identity notes">
+                    { plugin.identityReview.map(note => <li>{ note }</li>) }
+                </ul>
+            ) }
+            { releases.length > 0 && (
+                <section class="space-y-2 pt-2" aria-labelledby="scan-history">
+                    <h3 id="scan-history" class="font-semibold text-white">Other scanned releases</h3>
+                    { releases.map(release => (
+                        <details class="rounded-lg border border-white/10 p-3">
+                            <summary class="cursor-pointer font-medium">{ releaseName(release) } · { release.channel }</summary>
+                            <div class="pt-2"><BuildTable release={ release } /></div>
+                        </details>
+                    )) }
+                </section>
+            ) }
+        </section>
+
+        <ProductHosts product={ plugin } />
+
+        <div class="mx-auto w-full max-w-[40rem] text-center">
+            <ServiceCard type="audio" appName={ plugin.name } appSlug={ plugin.slug } />
+        </div>
+
+        <p class="text-sm text-gray-400">
+            Have a newer build or a host test? Include the exact plug-in version, format and setup.
+            <a class="plugin-link" href={ reportUrl.href }>Report an update</a>
+        </p>
+    </main>
+</Layout>

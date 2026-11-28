@@ -1,0 +1,29 @@
+---
+import { buildAnchor, productPath } from '~/helpers/plugins/catalog.mjs'
+import { verifiedPluginsForHost } from '~/helpers/plugins/host-compatibility.mjs'
+import VerifiedConfiguration from '~/src/components/plugins/verified-configuration.astro'
+
+interface Props {
+    endpoint: string
+}
+const { endpoint } = Astro.props
+const matches = verifiedPluginsForHost(endpoint)
+---
+{ matches.length > 0 && (
+    <section class="w-full space-y-3 text-left" aria-labelledby="verified-plugins">
+        <h2 id="verified-plugins" class="text-xl font-semibold">Verified plug-ins</h2>
+        <ul class="divide-y divide-white/10">
+            { matches.map(([first, ...rest]) => (
+                <li class="space-y-2 py-3">
+                    <a class="font-semibold underline" href={ productPath(first.product) }>{ first.product.name }</a>
+                    { [first, ...rest].map(match => (
+                        <div class="space-y-1">
+                            <VerifiedConfiguration match={ match } />
+                            <a class="text-sm underline" href={ `${productPath(match.product)}#${buildAnchor(match.build)}` }>Scanned build</a>
+                        </div>
+                    )) }
+                </li>
+            )) }
+        </ul>
+    </section>
+) }

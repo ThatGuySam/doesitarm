@@ -228,6 +228,11 @@ export default {
                     url: '/games',
                 },
                 {
+                    emoji: '🎛️',
+                    label: 'Audio plug-ins',
+                    url: '/audio-plugins/',
+                },
+                {
                     emoji: '🧪',
                     label: 'App Test',
                     url: '/apple-silicon-app-test',

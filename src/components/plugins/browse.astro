@@ -1,0 +1,163 @@
+---
+import '~/assets/css/audio-plugins.css'
+
+import Layout from '~/src/layouts/default.astro'
+import {
+    architectureFilters, directoryPath, formats, productFormats, productPath, productSummary, vendors, vendorFor, vendorPath
+} from '~/helpers/plugins/catalog.mjs'
+import { browsePath, browsePlugins } from '~/helpers/plugins/browse.mjs'
+
+interface Props {
+    browse: NonNullable<ReturnType<typeof browsePlugins>>
+}
+
+const { browse } = Astro.props
+const { page, pageCount, products, filters, total, hasFilters, pathname } = browse
+const pageTitle = page === 1 ? 'Audio plug-ins' : `Audio plug-ins, page ${page}`
+const vendor = vendors.find(vendor => vendor.slug === filters.vendor)
+const description = 'Browse Apple Silicon compatibility for macOS audio plug-ins. Filter scanned versions by AU, VST, CLAP, AAX, architecture, or vendor.'
+const pagination = (target: number) => browsePath(target, filters)
+---
+<Layout headOptions={{
+    title: `${pageTitle} for Apple Silicon Macs - Does It ARM`,
+    description,
+    pathname: pathname.split('?')[0],
+    search: new URL(pathname, Astro.url).search,
+    meta: hasFilters ? [{ name: 'robots', content: 'noindex,follow' }] : []
+}}>
+    <main class="plugin-page space-y-6">
+        <header class="max-w-[36rem] space-y-2">
+            <h1 class="title text-3xl md:text-5xl font-hairline leading-tight text-white">Audio plug-ins</h1>
+            <p class="text-gray-300">Check which macOS plug-in builds have Apple Silicon or Intel support. Browse Audio Units, VST, CLAP and AAX.</p>
+        </header>
+
+        <search aria-label="Audio plug-in filters">
+            <form class="filters rounded-xl border border-white/10 bg-black/20 p-3" action={ directoryPath } method="get">
+                <div class="field">
+                    <label for="plugin-format">Format</label>
+                    <select id="plugin-format" name="format">
+                        <option value="">All formats</option>
+                        { Object.entries(formats).map(([value, name]) => (
+                            <option value={ value } selected={ filters.format === value }>{ name }</option>
+                        )) }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="plugin-architecture">Architecture</label>
+                    <select id="plugin-architecture" name="arch">
+                        <option value="">All architectures</option>
+                        { Object.entries(architectureFilters).map(([value, name]) => (
+                            <option value={ value } selected={ filters.arch === value }>{ name }</option>
+                        )) }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="plugin-vendor">Vendor</label>
+                    <select id="plugin-vendor" name="vendor">
+                        <option value="">All vendors</option>
+                        { vendors.map(vendor => (
+                            <option value={ vendor.slug } selected={ filters.vendor === vendor.slug }>{ vendor.name }</option>
+                        )) }
+                    </select>
+                </div>
+                <button class="rounded-md bg-indigo-200 px-3 font-semibold text-indigo-900" type="submit">Apply filters</button>
+            </form>
+        </search>
+
+        <section aria-labelledby="plugin-results">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/10 pb-2">
+                <h2 id="plugin-results" class="text-lg font-semibold text-white">
+                    { total } { total === 1 ? 'plug-in' : 'plug-ins' }{ vendor && ` by ${vendor.name}` }
+                </h2>
+                { hasFilters && <a class="plugin-link text-sm" href={ directoryPath }>Clear filters</a> }
+            </div>
+            { filters.arch && (
+                <p class="py-2 text-sm text-gray-400">Architecture filters match any scanned build in the selected format. Each headline summarizes the highlighted release.</p>
+            ) }
+            { !products.length && <p class="py-5 text-gray-300">No scanned builds match these filters.</p> }
+            <ul class="divide-y divide-white/10">
+                { products.map(product => {
+                    const vendor = vendorFor(product)
+                    const summary = productSummary(product)
+                    return (
+                        <li class="result">
+                            <div class="min-w-0">
+                                <a class="plugin-link font-semibold" href={ productPath(product) }>{ product.name }</a>
+                                <a class="vendor-link block text-sm text-gray-400" href={ vendorPath(vendor) } rel="nofollow">{ vendor.name }</a>
+                            </div>
+                            <div class="min-w-0 text-sm">
+                                <p>{ summary.headline }</p>
+                                <p class="text-xs text-gray-400">{ productFormats(product).map(format => formats[format]).join(' · ') }</p>
+                            </div>
+                        </li>
+                    )
+                }) }
+            </ul>
+
+            { pageCount > 1 && (
+                <nav aria-label="Plug-in directory pages" class="flex flex-wrap justify-between items-center gap-3 border-t border-white/10 pt-3 text-sm">
+                    <span class="text-gray-400">Page { page } of { pageCount }</span>
+                    <div class="flex flex-wrap gap-4">
+                        { page > 1 && <a class="plugin-link" href={ pagination(page - 1) } rel={ hasFilters ? 'nofollow' : undefined }>Previous</a> }
+                        { page < pageCount && <a class="plugin-link" href={ pagination(page + 1) } rel={ hasFilters ? 'nofollow' : undefined }>Next</a> }
+                    </div>
+                </nav>
+            ) }
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
+        align-items: end;
+        gap: 0.65rem;
+    }
+
+    .field {
+        min-inline-size: 0;
+    }
+
+    label {
+        @apply mb-1 block text-sm font-medium text-gray-300;
+    }
+
+    select {
+        @apply rounded-md border border-gray-500 bg-gray-900 px-2 text-gray-100;
+        inline-size: 100%;
+    }
+
+    select, button {
+        min-block-size: 48px;
+    }
+
+    button:active {
+        @apply bg-indigo-300;
+    }
+
+    .result {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+        gap: 0.3rem 1rem;
+        padding-block: 0.65rem;
+    }
+
+    .vendor-link {
+        inline-size: fit-content;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .vendor-link:hover {
+            text-decoration: underline;
+        }
+
+        button:hover {
+            @apply bg-indigo-100;
+        }
+    }
+
+    .vendor-link:active {
+        @apply text-white;
+    }
+</style>

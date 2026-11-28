@@ -1,0 +1,11 @@
+---
+import Browse from '~/src/components/plugins/browse.astro'
+import { browsePlugins } from '~/helpers/plugins/browse.mjs'
+
+const browse = browsePlugins(Astro.url.searchParams, Astro.params.page)
+if (!browse) return Astro.rewrite('/404')
+if (browse.page === 1 || browse.hasFilters || Astro.url.searchParams.has('page')) {
+    return Astro.redirect(browse.pathname, 301)
+}
+---
+<Browse browse={ browse } />

@@ -1,0 +1,33 @@
+.plugin-page {
+    inline-size: 100%;
+    max-inline-size: 55rem;
+    margin-inline: auto;
+    padding-inline: clamp(0.8rem, 4vw, 2rem);
+    padding-block: clamp(4.5rem, 11vw, 6.5rem) 3rem;
+    overflow-wrap: anywhere;
+    color-scheme: dark;
+}
+
+.plugin-page a:focus-visible,
+.plugin-page :is(button, select, summary):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+.plugin-link {
+    @apply text-indigo-300 underline underline-offset-2;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .plugin-link:hover {
+        @apply text-white;
+    }
+}
+
+.plugin-link:active {
+    @apply text-white;
+}
+
+.plugin-page [id] {
+    scroll-margin-block-start: 5.5rem;
+}

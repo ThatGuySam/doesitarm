@@ -17,6 +17,7 @@ import { appListingPath } from '~/helpers/subscription-interests.js'
 
 import Layout from '~/src/layouts/default.astro'
 import InterestSubscribe from '~/src/components/interest-subscribe.astro'
+import HostPlugins from '~/src/components/listing-parts/host-plugins.astro'
 import Listing from '~/src/components/default-listing.astro'
 import VideoListing from '~/src/components/video-listing.astro'
 
@@ -82,6 +83,7 @@ if ( isBenchmarkPage ) {
         />
     ) : (
         <Listing listing={ appListing }>
+            { subSlug === null && <HostPlugins endpoint={ appListing.endpoint } /> }
             { appKey && <InterestSubscribe kind="app-status" interestKey={ appKey } /> }
         </Listing>
     )}

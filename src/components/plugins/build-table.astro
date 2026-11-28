@@ -1,0 +1,127 @@
+---
+import { assetFor, buildAnchor, formats, groupsInFormatOrder, products, verdicts } from '~/helpers/plugins/catalog.mjs'
+
+type Release = (typeof products)[number]['releases'][number]
+interface Props {
+    release: Release
+}
+const { release } = Astro.props
+const groups = groupsInFormatOrder(release)
+---
+<div class="build-table">
+    <table class="w-full text-sm" aria-label="Scanned plug-in formats and builds" role="table">
+        <thead role="rowgroup">
+            <tr role="row">
+                <th scope="col">Format / bundle version</th>
+                <th scope="col">Build verdict</th>
+                <th scope="col">CPU slices / declared macOS minimum</th>
+                <th scope="col">Evidence</th>
+            </tr>
+        </thead>
+        <tbody role="rowgroup">
+            { groups.flatMap(group => group.builds.map((build, index) => {
+                const asset = assetFor(build)
+                return (
+                    <tr role="row">
+                        <th scope="row" role="rowheader">
+                            <span class="text-white">{ formats[group.format] }</span>
+                            <span class="block text-xs font-normal text-gray-400">
+                                { group.bundleVersion || 'Bundle version unknown' }
+                            </span>
+                        </th>
+                        <td role="cell">
+                            <span class="mobile-label" aria-hidden="true">Build verdict</span>
+                            { verdicts[build.verdict] }
+                            { index === 0 && group.builds.length > 1 && group.verdict !== build.verdict && (
+                                <span class="block text-xs text-gray-400">{ verdicts[group.verdict] }</span>
+                            ) }
+                        </td>
+                        <td role="cell">
+                            <span class="mobile-label" aria-hidden="true">CPU slices / declared macOS minimum</span>
+                            { build.slices.map(slice => (
+                                <div>{ slice.arch } <span class="text-gray-400">· { slice.minMacOS ? `macOS ${slice.minMacOS}` : 'Minimum unknown' }</span></div>
+                            )) }
+                            { !build.slices.length && 'Unknown' }
+                            { build.bundleMinMacOS && <span class="block text-xs text-gray-400">Bundle declares macOS { build.bundleMinMacOS }</span> }
+                        </td>
+                        <td role="cell">
+                            <span class="mobile-label" aria-hidden="true">Evidence</span>
+                            <details id={ buildAnchor(build) }>
+                                <summary class="cursor-pointer text-indigo-300">Scan details <time class="block text-xs text-gray-400" datetime={ build.checkedOn }>{ build.checkedOn }</time></summary>
+                                <dl class="mt-2 space-y-2 text-xs">
+                                    <div><dt class="font-semibold">Publisher archive</dt><dd>{ asset.filename }</dd></div>
+                                    <div><dt class="font-semibold">Archive SHA-256</dt><dd><code>{ asset.sha256 }</code></dd></div>
+                                    { build.bundleId && <div><dt class="font-semibold">Bundle identifier</dt><dd>{ build.bundleId }</dd></div> }
+                                    <div>
+                                        <dt class="font-semibold">Method</dt>
+                                        <dd>Static Mach-O scan{ build.metadataBasis === 'Info.plist' ? ' with bundle metadata' : ' using the matching executable filename' }</dd>
+                                    </div>
+                                    <div><dt class="font-semibold">Source</dt><dd><a class="plugin-link" href={ asset.sourceUrl }>Publisher release or download page</a></dd></div>
+                                </dl>
+                            </details>
+                        </td>
+                    </tr>
+                )
+            })) }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .build-table {
+        container-type: inline-size;
+    }
+
+    table {
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding-block: 0.55rem;
+        padding-inline: 0.55rem;
+        text-align: start;
+        vertical-align: top;
+        border-block-end: 1px solid oklch(100% 0 none / 10%);
+    }
+
+    thead th {
+        @apply bg-white/5 text-xs font-medium text-gray-300;
+    }
+
+    thead th:nth-child(3) {
+        inline-size: 31%;
+    }
+
+    .mobile-label {
+        display: none;
+    }
+
+    summary time {
+        padding-inline-start: 0.85rem;
+    }
+
+    @container (width < 33rem) {
+        table, thead, tbody, tr, th, td {
+            display: block;
+        }
+
+        thead {
+            @apply sr-only;
+        }
+
+        tbody tr {
+            border-block-end: 1px solid oklch(100% 0 none / 14%);
+            padding-block: 0.6rem;
+        }
+
+        th, td {
+            padding-block: 0.2rem;
+            border: 0;
+        }
+
+        .mobile-label {
+            @apply block text-xs text-gray-400;
+        }
+    }
+</style>

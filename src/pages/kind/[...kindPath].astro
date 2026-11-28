@@ -21,6 +21,7 @@ import Layout from '../../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 import AdInline from '~/components/ad-inline.vue'
 import ServiceCard from '~/src/components/service-card.astro'
+import { directoryPath } from '~/helpers/plugins/catalog.mjs'
 import { audioCategorySlug } from '~/helpers/service-offers.js'
 
 
@@ -127,6 +128,7 @@ const adName = (() => {
             >
                 { categorySlug === audioCategorySlug && (
                     <div class="w-full pb-6">
+                        <a class="mb-4 inline-block text-indigo-300 underline" href={ directoryPath }>Browse audio plug-ins</a>
                         <ServiceCard type="audio" />
                     </div>
                 )}

@@ -1,0 +1,60 @@
+---
+import { formats, products, productFormats } from '~/helpers/plugins/catalog.mjs'
+import { hostCapabilitiesForFormat, verifiedHostsForProduct } from '~/helpers/plugins/host-compatibility.mjs'
+import VerifiedConfiguration from './verified-configuration.astro'
+
+interface Props {
+    product: (typeof products)[number]
+}
+const { product } = Astro.props
+const formatRules = productFormats(product).flatMap(format => {
+    const rules = hostCapabilitiesForFormat(format)
+    return rules.length ? [{ format, rules }] : []
+})
+const matches = verifiedHostsForProduct(product)
+---
+{ matches.length > 0 && (
+    <section class="space-y-3" aria-labelledby="verified-hosts">
+        <h2 id="verified-hosts" class="text-xl font-semibold text-white">Verified hosts</h2>
+        <ul class="space-y-3">
+            { matches.map(match => (
+                <li>
+                    <a class="plugin-link font-semibold" href={ match.rule.endpoint }>{ match.rule.hostName }</a>
+                    <VerifiedConfiguration match={ match } />
+                </li>
+            )) }
+        </ul>
+    </section>
+) }
+
+{ formatRules.length > 0 && (
+    <section class="space-y-3" aria-labelledby="host-formats">
+        <h2 id="host-formats" class="text-xl font-semibold text-white">Host format support</h2>
+        <p class="text-sm text-gray-300">
+            These hosts document support for the listed formats. Check the host version, settings and CPU requirements for your build.
+            { matches.length === 0 && ' Loading this plug-in in these hosts is unverified.' }
+        </p>
+        <div class="divide-y divide-white/10 rounded-lg border border-white/10 bg-black/20">
+            { formatRules.map(({ format, rules }) => (
+                <details class="p-3">
+                    <summary class="cursor-pointer font-semibold text-white">
+                        { formats[format] } format loads in { new Set(rules.map(rule => rule.endpoint)).size } documented hosts
+                    </summary>
+                    <ul class="mt-3 divide-y divide-white/10 text-sm">
+                        { rules.map(rule => (
+                            <li class="space-y-1 py-3">
+                                <p><a class="plugin-link font-semibold" href={ rule.endpoint }>{ rule.hostName }</a> · { rule.versions }</p>
+                                <p class="text-gray-300">{ rule.conditions }</p>
+                                <p class="text-gray-400">{ rule.loaderScope }</p>
+                                <p class="text-xs">
+                                    <a class="plugin-link" href={ rule.sourceUrl }>Host documentation</a>
+                                    { rule.supportingSourceUrl && <> · <a class="plugin-link" href={ rule.supportingSourceUrl }>Additional documentation</a></> }
+                                </p>
+                            </li>
+                        )) }
+                    </ul>
+                </details>
+            )) }
+        </div>
+    </section>
+) }

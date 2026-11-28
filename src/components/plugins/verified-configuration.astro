@@ -1,0 +1,26 @@
+---
+import { formats } from '~/helpers/plugins/catalog.mjs'
+import { collectVerifiedHostMatches, describeHostMatch } from '~/helpers/plugins/host-compatibility.mjs'
+
+interface Props {
+    match: ReturnType<typeof collectVerifiedHostMatches>[number]
+}
+const { match } = Astro.props
+const { outcome, profile, recallFailure } = match
+---
+<div class="space-y-1">
+    <p>{ formats[outcome.format] } { describeHostMatch(match) }</p>
+    <p class="text-sm text-gray-400">
+        { outcome.role } · { outcome.insertContext }
+        { profile.requirements.length > 0 && ` · ${profile.requirements.join(' · ')}` }
+    </p>
+    <p class="text-sm">
+        <a class="underline" href={ outcome.proof.sourceUrl }>
+            { outcome.proof.method === 'reproduced-runtime' ? 'Runtime test' : 'Vendor qualification' }
+        </a>
+        · <time datetime={ outcome.proof.checkedOn }>{ outcome.proof.checkedOn }</time>
+        { recallFailure && (
+            <> · <a class="underline" href={ recallFailure.proof.sourceUrl }>Session recall failed</a></>
+        ) }
+    </p>
+</div>

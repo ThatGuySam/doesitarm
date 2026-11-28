@@ -172,9 +172,13 @@ export function makeDescription ( listing ) {
     return `Latest reported support status of ${ listing.name } on Apple Silicon and ${ publicRuntimeConfig.processorsVerbiage } Processors.`
 }
 
+function escapeAttribute ( value ) {
+    return String( value ).replaceAll( '&', '&amp;' ).replaceAll( '"', '&quot;' ).replaceAll( '<', '&lt;' )
+}
+
 function makeTag ( tag, tagName = 'meta' ) {
 
-    const attributes = Object.entries(tag).map( ([ name, value ]) => `${name}="${value}"` ).join(' ')
+    const attributes = Object.entries(tag).map( ([ name, value ]) => `${name}="${escapeAttribute( value )}"` ).join(' ')
 
     return `<${tagName} ${attributes}>`
 }
@@ -223,6 +227,7 @@ export class PageHead {
 
             domain = getSiteUrl(),
             pathname = '',
+            search = '',
         } = options
 
         this.title = title
@@ -233,12 +238,14 @@ export class PageHead {
 
         this.domain = domain
         this.pathname = pathname
+        this.search = search
     }
 
     get pageUrl () {
         const urlInstance = new URL( this.domain )
 
         urlInstance.pathname = this.pathname
+        urlInstance.search = this.search
 
         return urlInstance
     }
@@ -290,15 +297,15 @@ export class PageHead {
         // Get description from data
         if ( this.description ) {
             // Set meta description
-            metaTags['name-description'] = `<meta hid="description" name="description" content="${ this.description }">`
+            metaTags['name-description'] = `<meta hid="description" name="description" content="${ escapeAttribute( this.description ) }">`
             // Set twitter description
-            metaTags['property-twitter:description'] = `<meta hid="twitter:description" property="twitter:description" content="${ this.description }">`
+            metaTags['property-twitter:description'] = `<meta hid="twitter:description" property="twitter:description" content="${ escapeAttribute( this.description ) }">`
         }
 
         // Get title from data
         if ( this.title ) {
             // Set twitter title
-            metaTags['property-twitter:title'] = `<meta hid="twitter:title" property="twitter:title" content="${ this.title }">`
+            metaTags['property-twitter:title'] = `<meta hid="twitter:title" property="twitter:title" content="${ escapeAttribute( this.title ) }">`
         }
 
 
@@ -340,11 +347,10 @@ export class PageHead {
         // console.log( 'this.routeType', this.routeType, this.pathname )
 
         const hasStructuredData = this.structuredData !== null
-        // Route is primarily for video
-        const videoRouteType = [ 'tv', 'benchmarks' ].includes( this.routeType )
+        const schemaRouteType = [ 'tv', 'benchmarks', 'plugin' ].includes( this.routeType )
 
-        if ( hasStructuredData && videoRouteType ) {
-            const structuredDataJson = JSON.stringify( this.structuredData )
+        if ( hasStructuredData && schemaRouteType ) {
+            const structuredDataJson = JSON.stringify( this.structuredData ).replaceAll( '<', '\\u003c' )
 
             return `<script type="application/ld+json">${ structuredDataJson }</script>`
         }
