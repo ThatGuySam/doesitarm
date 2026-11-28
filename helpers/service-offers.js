@@ -93,25 +93,25 @@ export const serviceCards = {
     'audio': {
         offer: 'studio-upgrade-audit',
         experiment: 'audio-headlines-v2',
-        subhead: 'We check your plug-ins and sessions and hand you a clear upgrade plan.',
-        primary: { label: 'Check my setup', href: auditPagePath },
+        subhead: 'Logic first. We review other hosts case by case.',
+        primary: { label: 'See audit scope', href: auditPagePath },
         secondary: { label: 'Email me when audits open' }
     },
     // DAWs and hosts other than Logic, native or not (REAPER, Ableton, Pro Tools, Audacity...)
     'daw': {
         offer: 'studio-upgrade-audit',
         experiment: 'audio-headlines-v2',
-        subhead: 'We check your plug-ins and one project, then give you a plan.',
-        primary: { label: 'Check my setup', href: auditPagePath },
+        subhead: 'Logic first. We review other hosts case by case.',
+        primary: { label: 'See audit scope', href: auditPagePath },
         secondary: { label: 'Email me when audits open' }
     },
     // Logic Pro and MainStage
     'logic-native': {
         offer: 'studio-upgrade-audit',
         experiment: 'logic-headlines-v2',
-        subhead: 'We check what your sessions load and hand you a clear upgrade plan.',
-        primary: { label: 'Check my Logic setup', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' }
+        subhead: 'One Logic session and its plug-ins.',
+        primary: { label: 'Logic upgrade audit', href: auditPagePath },
+        secondary: { label: 'Audit waitlist' }
     },
     // Discontinued apps (data/revival-apps.json or a listing that says discontinued)
     'revival': {
@@ -157,8 +157,7 @@ export const audioCategorySlug = 'music-and-audio-tools'
 // Logic itself keeps the Logic-specific card
 export const logicAppSlugs = [ 'logic-pro', 'mainstage' ]
 
-// DAWs and hosts other than Logic, native or not. They get the 'daw' card,
-// which can name the app and never mentions Logic.
+// DAWs and hosts other than Logic, native or not. The 'daw' headline can name the app.
 export const dawAppSlugs = [
     'ableton', 'avid-pro-tools', 'cubase', 'fl-studio', 'studio-one', 'reaper',
     'bitwig-studio', 'garageband', 'reason', 'n-track-studio', 'ardour', 'audacity',

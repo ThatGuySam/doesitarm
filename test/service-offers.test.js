@@ -44,10 +44,10 @@ describe( 'service card placement', () => {
         expect( getServiceCardType( { endpoint: '/app/some-cubase-build', name: 'Cubase Pro 13', status: 'no' } ) ).toBe( 'daw' )
     } )
 
-    it( 'never shows Logic copy outside the Logic card', () => {
+    it( 'sets Logic-first scope on other audio cards while keeping their headlines host-neutral', () => {
         for ( const type of [ 'audio', 'daw' ] ) {
             const card = serviceCards[ type ]
-            expect( card.subhead ).not.toMatch( /logic/i )
+            expect( card.subhead ).toMatch( /Logic first.*other hosts case by case/i )
             expect( card.primary.label ).not.toMatch( /logic/i )
             for ( const variant of getCardVariants( type ) ) expect( variant.headline, variant.id ).not.toMatch( /logic/i )
         }
