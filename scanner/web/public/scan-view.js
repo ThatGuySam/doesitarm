@@ -165,7 +165,28 @@ export class ScanCards {
       this.#showResult(row, card, elapsed);
     }
     if (status === 'canceled') return;
+    this.#showUpgrade(row, card);
     this.#showInventory(row, card);
+  }
+
+  #showUpgrade({ upgrade }, card) {
+    if (!upgrade) return;
+    const line = card.el.querySelector('.result-support');
+    if (line.hasChildNodes()) return;
+    if (upgrade.unavailable) {
+      line.textContent = 'Online check unavailable';
+      return;
+    }
+    line.textContent = upgrade.version
+      ? `Apple Silicon supported as of v${upgrade.version}`
+      : 'No compatible version found in the online check';
+    if (upgrade.link) {
+      const link = document.createElement('a');
+      link.href = upgrade.link.href;
+      link.textContent = upgrade.link.label;
+      link.rel = 'noreferrer';
+      line.append(' · ', link);
+    }
   }
 
   #showResult(row, card, elapsed) {

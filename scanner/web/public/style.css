@@ -270,6 +270,7 @@
 .dia-scanner .result-verdict[data-tone="native"] { color: var(--native); }
 .dia-scanner .result-verdict[data-tone="intel"] { color: var(--gold); }
 .dia-scanner .result-verdict[data-tone="unknown"] { color: var(--text); }
+.dia-scanner .result-support:not(:empty) { margin-block-start: .15rem; font-size: .75rem; color: var(--muted); }
 .dia-scanner .result-arch code {
   margin-inline-start: .45rem;
   padding: .05rem .35rem;
@@ -403,6 +404,12 @@
 }
 
 .dia-scanner .device-picker { display: grid; justify-items: center; gap: .8rem; }
+.dia-scanner .upgrade-choice { max-inline-size: 28rem; font-size: .8rem; }
+.dia-scanner .upgrade-choice .check input { flex: none; }
+.dia-scanner .upgrade-disclosure { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .75rem; }
+.dia-scanner .upgrade-disclosure details[open] { inline-size: 100%; }
+.dia-scanner .upgrade-disclosure .panel { text-align: start; overflow-wrap: anywhere; }
+.dia-scanner .upgrade-disclosure ul { list-style: disc; padding-inline-start: 1.25rem; margin-block: .4rem; }
 .dia-scanner .device-files > summary { min-block-size: 1.6rem; cursor: pointer; font-size: .8rem; }
 .dia-scanner .drop-zone[data-entry="files"] .device-files > summary,
 .dia-scanner .drop-zone[data-entry="url"] #advanced > summary { display: none; }

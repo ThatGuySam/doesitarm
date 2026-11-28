@@ -108,6 +108,8 @@ export class ResultsList {
   #tools;
   #diagnostics;
   #summary;
+  #checkUpgrade;
+  #upgradeConsent;
   #filters;
   #nav;
   #page = 0;
@@ -116,9 +118,11 @@ export class ResultsList {
   #searchDirty = false;
   #searching = false;
 
-  constructor(pool, mode) {
+  constructor(pool, mode, { checkUpgrade, upgradeConsent } = {}) {
     this.#pool = pool;
     this.#mode = mode;
+    this.#checkUpgrade = checkUpgrade;
+    this.#upgradeConsent = upgradeConsent;
     crash.attach(() => this.crashSnapshot(), buildInfo);
     this.#cards = new ScanCards((id) => this.#pool.cancel(id), (row) => this.#inventory(row));
     const change = () => {
@@ -212,6 +216,12 @@ export class ResultsList {
       ended: null, canceled: false, appCount: 0, bytes: 0, active: 0, peak: 0, finished: 0,
       pending: 0, listing: 0, rows: [], children: new Map(), bundles: new Map(), bundleCoverage: new Map(), modes: new Set([this.#modeLabel(mode)]),
     };
+    const consent = this.#upgradeConsent?.();
+    if (consent) {
+      const upgrades = new AbortController();
+      consent.addEventListener('abort', () => upgrades.abort(), { once: true, signal: upgrades.signal });
+      run.upgrades = upgrades;
+    }
     const { field, input } = this.#runsByChoice;
     const value = String(this.#runs.length);
     run.option = new Option(redactPath(stats.folder_name || stats.method), value);
@@ -348,7 +358,10 @@ export class ResultsList {
   }
 
   cancelAll() {
-    for (const run of this.#runs) if (run.ended === null) run.canceled = true;
+    for (const run of this.#runs) {
+      if (run.ended === null) run.canceled = true;
+      run.upgrades?.abort();
+    }
     for (const listing of this.#artifactListings) listing.abort();
     this.#pool.cancelAll();
   }
@@ -394,11 +407,22 @@ export class ResultsList {
       this.#read(row, run, event.bytes ?? row.result.bytes_read, row.planned);
       row.samples = null;
       row.eta = null;
+      // Before #saveRow, which drops the evidence that holds the parsed Info.plist.
+      if (run.upgrades) this.#lookupUpgrade(row, run.upgrades.signal);
       if (run.journal) void this.#saveRow(run, row).then(() => this.#finishResult(row, run));
       else this.#finishResult(row, run);
     }
     if (this.#rendered.has(row.id)) this.#dirty.add(row.id);
     this.#requestRefresh();
+  }
+
+  #lookupUpgrade(row, signal) {
+    this.#checkUpgrade?.(row, signal)?.then((upgrade) => {
+      if (!upgrade || signal.aborted) return;
+      row.upgrade = upgrade;
+      if (this.#rendered.has(row.id)) this.#dirty.add(row.id);
+      this.#requestRefresh();
+    });
   }
 
   #finishResult(row, run) {
@@ -616,6 +640,7 @@ export class ResultsList {
 
   clear() {
     if (this.#busy) return;
+    for (const run of this.#runs) run.upgrades?.abort();
     this.#rowCount = 0;
     this.#runs = [];
     this.#runsByChoice.input.replaceChildren();

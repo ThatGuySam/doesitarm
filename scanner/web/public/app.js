@@ -8,6 +8,7 @@ import { ResultsList } from './results-list.js';
 import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
 import { architectures, get, prettyBytes, statuses } from './scan-view.js';
+import { createUpgradeCheck } from './contribution.js';
 
 const entry = configureScannerEntry();
 bindViewLevel();
@@ -34,7 +35,17 @@ function currentMode() {
 
 let mode = currentMode();
 const pool = new ScanPool(mode);
-const view = new ResultsList(pool, () => mode);
+const upgradeToggle = get('check-upgrades');
+upgradeToggle.checked = false;
+let upgradeConsent;
+upgradeToggle.addEventListener('change', () => {
+  upgradeConsent?.abort();
+  upgradeConsent = upgradeToggle.checked ? new AbortController() : undefined;
+});
+const view = new ResultsList(pool, () => mode, {
+  checkUpgrade: createUpgradeCheck(),
+  upgradeConsent: () => upgradeConsent?.signal,
+});
 
 function updateMode() {
   const next = currentMode();

@@ -38,6 +38,40 @@
         <details id="device-files" class="device-files" open>
           <summary>Scan files from this device</summary>
           <div class="device-picker">
+            <div class="upgrade-choice">
+              <label class="check" for="check-upgrades">
+                <input type="checkbox" id="check-upgrades" aria-describedby="upgrade-hint" autocomplete="off">
+                <span>Also check for Apple Silicon upgrades and download links</span>
+              </label>
+              <p class="hint" id="upgrade-hint">Sends public app and version IDs for this check. Files stay here.</p>
+              <div class="upgrade-disclosure hint">
+                <details class="inline-details">
+                  <summary>What gets sent?</summary>
+                  <div class="panel">
+                    <p>These details are added to Does It ARM’s compatibility data. Turn this on only for publicly available apps.</p>
+                    <p>Fields from Info.plist (<code>infoPlist</code>) are sent when present as text, a number, or true/false.</p>
+                    <ul>
+                      <li><code>CFBundleIdentifier</code></li>
+                      <li><code>CFBundleName</code></li>
+                      <li><code>CFBundleDisplayName</code></li>
+                      <li><code>CFBundleShortVersionString</code></li>
+                      <li><code>CFBundleVersion</code></li>
+                      <li><code>CFBundlePackageType</code></li>
+                      <li><code>LSMinimumSystemVersion</code></li>
+                      <li><code>LSMinimumSystemVersionByArchitecture</code></li>
+                      <li><code>LSArchitecturePriority</code></li>
+                      <li><code>LSRequiresNativeExecution</code></li>
+                      <li><code>NSHumanReadableCopyright</code></li>
+                      <li><code>DTSDKName</code></li>
+                      <li><code>DTXcode</code></li>
+                    </ul>
+                    <p>The request also includes <code>appVersion</code>, the bundle name without its folder path (<code>filename</code>), the Apple Silicon compatibility <code>result</code>, and the verified processor types (<code>architectures</code>, also repeated in <code>machoMeta</code> for the result store). Text is limited to 256 characters.</p>
+                  </div>
+                </details>
+                <a href="https://doesitarm.com/terms">Terms</a>
+                <a href="https://doesitarm.com/privacy#scanner">Privacy</a>
+              </div>
+            </div>
             <button type="button" id="choose-files" class="select-apps">Select Apps</button>
             <button type="button" id="choose-folder" class="text-button">Choose folder</button>
           </div>
@@ -169,6 +203,7 @@
         </div>
         <span class="result-read-label visually-hidden">Source reads</span>
         <p class="result-verdict" hidden><span class="verdict-icon" aria-hidden="true"></span><span class="verdict-text"></span><span class="result-arch"></span></p>
+        <p class="result-support" role="status"></p>
         <details class="result-details" hidden>
           <summary><span class="sum-verdict"></span><span class="sum-detail">Details</span></summary>
           <div class="panel">
