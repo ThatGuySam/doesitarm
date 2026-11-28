@@ -4,7 +4,7 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 
 import { createDataSource } from './data.js'
-import { SERVER_INFO, SERVER_INSTRUCTIONS, createMcpServer } from './server.js'
+import { SERVER_DESCRIPTION, SERVER_INFO, SERVER_INSTRUCTIONS, TOOL_COPY, TOOL_NAMES, createMcpServer } from './server.js'
 
 const CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
@@ -14,7 +14,8 @@ const CORS_HEADERS = {
     'Access-Control-Max-Age': '86400',
 }
 
-const TOOL_NAMES = [ 'search_apps', 'get_app', 'check_apps', 'list_categories', 'list_by_category', 'recent_updates', 'list_devices' ]
+// Protocol versions exercised end to end with tool calls and structured results.
+export const SUPPORTED_PROTOCOL_VERSIONS = [ '2025-11-25', '2025-06-18' ]
 
 // One data source per isolate so lists are shared between requests.
 let sharedData = null
@@ -32,16 +33,19 @@ function json ( body, status = 200, extra = {} ) {
     })
 }
 
+// Legacy server card at /.well-known/mcp/server-card.json, kept for anyone
+// who already reads it. Its format came from an earlier, closed proposal and
+// has no resolvable schema, so it carries no $schema and no capability
+// claims. Live tools/list is the source of truth for tools.
 export function serverCard ( origin ) {
     return {
-        $schema: 'https://static.modelcontextprotocol.io/schemas/mcp-server-card/v1.json',
         version: '1.0',
-        protocolVersion: '2025-06-18',
+        protocolVersion: SUPPORTED_PROTOCOL_VERSIONS[0],
+        supportedProtocolVersions: SUPPORTED_PROTOCOL_VERSIONS,
         serverInfo: SERVER_INFO,
-        description: 'Check whether Mac apps, games and Homebrew formulae run natively on Apple silicon, through Rosetta 2, or not at all.',
+        description: SERVER_DESCRIPTION,
         documentationUrl: 'https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md',
         transport: { type: 'streamable-http', endpoint: `${ origin }/mcp` },
-        capabilities: { tools: { listChanged: false } },
         authentication: { required: false },
         instructions: SERVER_INSTRUCTIONS,
         tools: TOOL_NAMES,
@@ -53,11 +57,11 @@ function infoPage ( origin ) {
     const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Does It ARM MCP server</title>
-<meta name="description" content="Public, read-only MCP server for Apple silicon app compatibility from Does It ARM.">
+<meta name="description" content="${ SERVER_DESCRIPTION } Public, read-only MCP server from Does It ARM.">
 <style>body{font:16px/1.5 system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#e5e7eb;background:#111827}a{color:#93c5fd}code,pre{background:#1f2937;border-radius:6px;padding:.15rem .35rem}pre{padding:.75rem;overflow:auto}</style>
 </head><body>
 <h1>🦾 Does It ARM MCP server</h1>
-<p>A public, read-only <a href="https://modelcontextprotocol.io">Model Context Protocol</a> server for <a href="https://doesitarm.com">Does It ARM</a>. It lets AI assistants check whether Mac apps, games and Homebrew formulae run natively on Apple silicon. No sign-in or API key.</p>
+<p>${ SERVER_DESCRIPTION } The public <a href="https://doesitarm.com">Does It ARM</a> <a href="https://modelcontextprotocol.io">MCP</a> server is read-only and requires no account. Connect over Streamable HTTP at the endpoint below. See the <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">tool reference and examples</a>.</p>
 <p>Endpoint (Streamable HTTP): <code>${ endpoint }</code></p>
 <h2>Install</h2>
 <p><b>Claude</b> (Settings → Connectors → Add custom connector): paste <code>${ endpoint }</code></p>
@@ -66,8 +70,8 @@ function infoPage ( origin ) {
 <p><b>Cursor</b> (<code>~/.cursor/mcp.json</code>) / <b>VS Code</b> (<code>.vscode/mcp.json</code>, use <code>"servers"</code>)</p>
 <pre>{ "mcpServers": { "doesitarm": { "url": "${ endpoint }" } } }</pre>
 <h2>Tools</h2>
-<ul>${ TOOL_NAMES.map( name => `<li><code>${ name }</code></li>` ).join('') }</ul>
-<p>Results link back to the matching doesitarm.com page. Docs: <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">docs/mcp.md</a> · <a href="/.well-known/mcp/server-card.json">server card</a></p>
+<ul>${ TOOL_NAMES.map( name => `<li><code>${ name }</code> — ${ TOOL_COPY[ name ].title }</li>` ).join('') }</ul>
+<p>Results link back to the matching doesitarm.com page. Docs: <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">docs/mcp.md</a> · <a href="/.well-known/mcp/server-card.json">legacy server card</a></p>
 </body></html>`
 
     return new Response( html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } } )

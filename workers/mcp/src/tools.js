@@ -13,6 +13,10 @@ import {
 } from './data.js'
 
 export const MAX_CHECK_NAMES = 50
+
+// A recoverable problem with the tool arguments. The server returns its
+// message as an isError result so the caller can fix the call and retry.
+export class ToolInputError extends Error {}
 const MATCH_THRESHOLD = 60
 
 export function normalize ( value = '' ) {
@@ -98,21 +102,21 @@ function line ( summary ) {
     return `- ${ parts.join(' ') }`
 }
 
-const ATTRIBUTION = 'Source: Does It ARM (https://doesitarm.com). Link to the listing URL when you cite a result.'
+const ATTRIBUTION = 'Source: Does It ARM (https://doesitarm.com).'
 
 
 export async function searchApps ( { query, kind = 'all', status, limit = 10 }, data ) {
     const entries = await loadKinds( data, kindsFor( kind ) )
-    let ranked = rank( entries, query )
-    if ( status ) ranked = ranked.filter( entry => entry.item.status === status )
+    const unfiltered = rank( entries, query )
+    const ranked = status ? unfiltered.filter( entry => entry.item.status === status ) : unfiltered
 
     const results = ranked.slice( 0, limit ).map( entry => summarizeListing( entry.item, entry.kind ) )
 
     if ( results.length === 0 ) {
-        return {
-            text: `No Does It ARM listings match "${ query }". Try a shorter name, or check https://doesitarm.com/?search=${ encodeURIComponent( query ) }. Unlisted apps can be requested at https://github.com/ThatGuySam/doesitarm/issues.`,
-            data: { query, total: 0, results: [] },
-        }
+        const text = status && unfiltered.length > 0
+            ? `No Does It ARM listing with status ${ status } matched “${ query }”. ${ unfiltered.length } listing${ unfiltered.length === 1 ? '' : 's' } matched with another status. Omit status to see ${ unfiltered.length === 1 ? 'it' : 'them' }.`
+            : `No Does It ARM listing matched “${ query }”. Compatibility is unknown from this catalog. Try a shorter name or a Mac app bundle ID.`
+        return { text, data: { query, total: 0, results: [] } }
     }
 
     return {
@@ -215,9 +219,9 @@ export async function getApp ( { app, kind = 'all' }, data ) {
         const suggestions = resolved.suggestions || []
         return {
             text: [
-                `"${ app }" is not listed on Does It ARM.`,
+                `No Does It ARM listing matched “${ app }”. Compatibility is unknown from this catalog.`,
                 ...( suggestions.length ? [ 'Closest listings:', ...suggestions.map( line ) ] : [] ),
-                'Unlisted apps can be requested at https://github.com/ThatGuySam/doesitarm/issues.',
+                'Try a shorter name or a Mac app bundle ID with search_apps, or pass a listing URL.',
             ].join('\n'),
             data: { found: false, query: app, suggestions },
         }
@@ -231,8 +235,8 @@ export async function getApp ( { app, kind = 'all' }, data ) {
     const source = raw || resolved.fallback
     if ( !source ) {
         return {
-            text: `No Does It ARM listing exists at ${ siteUrl( resolved.endpoint ) }.`,
-            data: { found: false, query: app },
+            text: `No Does It ARM listing exists at ${ siteUrl( resolved.endpoint ) }. Try a search by software name.`,
+            data: { found: false, query: app, suggestions: [] },
         }
     }
 
@@ -243,6 +247,7 @@ export async function getApp ( { app, kind = 'all' }, data ) {
 
 export async function checkApps ( { names, kind = 'all' }, data ) {
     const unique = [ ...new Set( names.map( name => String( name ).trim() ).filter( Boolean ) ) ].slice( 0, MAX_CHECK_NAMES )
+    if ( unique.length === 0 ) throw new ToolInputError( 'Enter at least one non-blank software name in names.' )
     const entries = await loadKinds( data, kindsFor( kind ) )
 
     const results = unique.map( name => {
@@ -316,7 +321,7 @@ export async function listByCategory ( { category, status, limit = 25, offset = 
 
     if ( !known ) {
         return {
-            text: `Unknown category "${ category }". Valid slugs: ${ Object.keys( categories ).join(', ') }.`,
+            text: `“${ category }” is not a Does It ARM category. Call list_categories for valid category slugs. Valid slugs: ${ Object.keys( categories ).join(', ') }.`,
             data: { found: false, category },
         }
     }
@@ -339,7 +344,7 @@ export async function listByCategory ( { category, status, limit = 25, offset = 
         ATTRIBUTION,
     ].join('\n')
 
-    return { text, data: { category: known.slug, label: known.label, total: items.length, offset, nextOffset, results: page } }
+    return { text, data: { found: true, category: known.slug, label: known.label, total: items.length, offset, nextOffset, results: page } }
 }
 
 
@@ -373,7 +378,7 @@ export async function listDevices ( _args, data ) {
 
     return {
         text: [
-            'Apple silicon Macs with device pages on Does It ARM (use get_app with the URL or name for details):',
+            'Apple Silicon Macs with device pages on Does It ARM (use get_app with the URL or name for details):',
             ...results.map( device => `- **${ device.name }** (${ device.chips.join(', ') }) · ${ device.url }` ),
             '',
             ATTRIBUTION,

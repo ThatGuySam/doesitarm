@@ -72,7 +72,8 @@ describe( 'search_apps', () => {
 
     it( 'explains when nothing matches', async () => {
         const { text } = await searchApps( { query: 'zzzz-not-an-app' }, data )
-        expect( text ).toContain('No Does It ARM listings match')
+        expect( text ).toContain('No Does It ARM listing matched')
+        expect( text ).toContain('Compatibility is unknown from this catalog')
     })
 })
 
@@ -113,7 +114,7 @@ describe( 'get_app', () => {
     it( 'suggests close matches for unknown apps', async () => {
         const { data: result, text } = await getApp( { app: 'Totally Unknown App' }, data )
         expect( result.found ).toBe( false )
-        expect( text ).toContain('not listed')
+        expect( text ).toContain('No Does It ARM listing matched')
     })
 })
 
@@ -183,7 +184,7 @@ describe( 'Worker HTTP handler', () => {
         expect( init.status ).toBe( 200 )
         const initBody = await init.json()
         expect( initBody.result.serverInfo.name ).toBe('doesitarm')
-        expect( initBody.result.instructions ).toContain('Apple silicon')
+        expect( initBody.result.instructions ).toContain('Apple Silicon')
 
         const list = await post({ jsonrpc: '2.0', id: 2, method: 'tools/list' })
         const tools = ( await list.json() ).result.tools

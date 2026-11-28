@@ -1,8 +1,10 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { z } from 'zod'
 
+import { OUTPUT_SCHEMAS } from './schemas.js'
 import {
     MAX_CHECK_NAMES,
+    ToolInputError,
     checkApps,
     getApp,
     listByCategory,
@@ -12,22 +14,30 @@ import {
     searchApps,
 } from './tools.js'
 
+export const SERVER_DESCRIPTION = 'Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.'
+
 export const SERVER_INFO = {
     name: 'doesitarm',
     title: 'Does It ARM',
-    version: '1.0.0',
+    version: '1.1.0',
+    description: SERVER_DESCRIPTION,
     websiteUrl: 'https://doesitarm.com',
 }
 
-export const SERVER_INSTRUCTIONS = `Does It ARM (https://doesitarm.com) tracks whether Mac apps, games and Homebrew formulae run natively on Apple silicon (M-series and A-series Macs), run through Rosetta 2, or are unsupported.
+export const SERVER_INSTRUCTIONS = 'Does It ARM is a read-only catalog of reported Apple Silicon compatibility for Mac apps, games, and Homebrew formulae, with reference pages for Mac models. Results link to the relevant catalog pages when available. A missing listing means compatibility is unknown from this catalog. Unreported means native support has yet to be reported.'
 
-- Use search_apps to find listings by name, alias or bundle ID; check_apps to check a whole list of apps at once (up to ${ MAX_CHECK_NAMES }); get_app for one listing's full page details.
-- Statuses: native = runs natively on Apple silicon; rosetta = runs through Rosetta 2 translation; no = not supported; no-in-progress = not supported yet, support in progress; unreported = no native report yet.
-- Every result includes the canonical doesitarm.com URL. Cite and link it when you share a result.
-- Data is read-only and refreshed from the public site; if an app is not listed, suggest requesting it at https://github.com/ThatGuySam/doesitarm/issues.`
+export const UNAVAILABLE_TEXT = 'The Does It ARM catalog is temporarily unavailable. Retry in a moment, or consult https://doesitarm.com/.'
+
+const STATUS_DESCRIPTION = 'Filter by reported status. native means native support, rosetta means Rosetta 2, no means unsupported, no-in-progress means support is in progress, and unreported means native support has yet to be reported. Omit to include any status.'
+const KIND_DESCRIPTION = 'Limit results to app (Mac app), game, or homebrew (formula). Defaults to all, which covers all three.'
 
 const STATUS = z.enum([ 'native', 'rosetta', 'no', 'no-in-progress', 'unreported' ])
 const SEARCH_KIND = z.enum([ 'app', 'game', 'homebrew', 'all' ])
+
+function limitSchema ( max, fallback, description ) {
+    const error = `limit must be a whole number from 1 to ${ max }. Omit it to use the default of ${ fallback }.`
+    return z.number({ error }).int({ error }).min( 1, { error } ).max( max, { error } ).default( fallback ).describe( description )
+}
 
 const READ_ONLY = {
     readOnlyHint: true,
@@ -36,7 +46,80 @@ const READ_ONLY = {
     openWorldHint: true,
 }
 
-function wrap ( handler, data ) {
+// Title and description for each tool. The title goes in both tool.title and
+// annotations.title so clients that read either field show the same label.
+export const TOOL_COPY = {
+    search_apps: {
+        title: 'Search Apple Silicon Compatibility',
+        description: 'Find Does It ARM listings for a Mac app, game, or Homebrew formula by name, alias, or bundle ID. Returns ranked candidates with reported Apple Silicon status and listing links. Useful when the exact listing is unclear.',
+    },
+    get_app: {
+        title: 'Get Compatibility Listing Details',
+        description: 'Read one Does It ARM listing for a Mac app, game, Homebrew formula, or Mac model. App and game records can include version or device evidence, game reports, and related benchmarks. A Does It ARM listing URL selects the exact page.',
+    },
+    check_apps: {
+        title: 'Check an Apple Silicon Migration List',
+        description: `Compare Apple Silicon compatibility for up to ${ MAX_CHECK_NAMES } names in one call when planning a Mac migration. Returns the best catalog match, reported status, and listing link for each distinct name, or marks it as not listed. Accepts software names supplied in the request.`,
+    },
+    list_categories: {
+        title: 'List Compatibility Categories',
+        description: 'Discover the categories available in the Does It ARM catalog. Returns each category’s slug, listing count, and page link, plus compatibility percentages across Mac apps, games, and formulae when available.',
+    },
+    list_by_category: {
+        title: 'Browse Compatibility by Category',
+        description: 'Browse Mac apps, games, or Homebrew formulae in one Does It ARM category. Optionally filter by reported Apple Silicon status. Each page includes listing links and returns the next offset when more results are available.',
+    },
+    recent_updates: {
+        title: 'List Recent App Compatibility Updates',
+        description: 'See the latest dated Mac app compatibility updates in the Does It ARM catalog. Returns Apple Silicon status and listing links, newest update first.',
+    },
+    list_devices: {
+        title: 'List Apple Silicon Mac Models',
+        description: 'Find the Apple Silicon Mac models covered by Does It ARM. Returns model names, chips, availability dates when present, and links to the device pages. The listing detail tool can read a selected device page.',
+    },
+}
+
+export const TOOL_NAMES = Object.keys( TOOL_COPY )
+
+const INPUT_SCHEMAS = {
+    search_apps: {
+        query: z.string().min( 1 ).max( 200 ).describe( 'Mac app, game, or Homebrew formula name or alias, or a Mac app bundle ID such as com.spotify.client.' ),
+        kind: SEARCH_KIND.default( 'all' ).describe( KIND_DESCRIPTION ),
+        status: STATUS.optional().describe( STATUS_DESCRIPTION ),
+        limit: limitSchema( 50, 10, 'Maximum number of ranked matches to return, from 1 to 50. Defaults to 10.' ),
+    },
+    get_app: {
+        app: z.string().min( 1 ).max( 300 ).describe( 'One listing name, slug, or Does It ARM page path or URL, such as Spotify, /app/spotify, or https://doesitarm.com/app/spotify/.' ),
+        kind: z.enum([ 'app', 'game', 'homebrew', 'device', 'all' ]).default( 'all' ).describe( 'For a name or slug, narrow the lookup to app, game, homebrew (formula), or device (Mac model). Defaults to all, which covers all four. A listing path or URL determines its own kind.' ),
+    },
+    check_apps: {
+        names: z.array( z.string().max( 200 ) ).min( 1 ).max( MAX_CHECK_NAMES ).describe( `One to ${ MAX_CHECK_NAMES } software names, one per array item, such as Spotify or Docker. Blank entries are skipped and identical trimmed names are checked once.` ),
+        kind: SEARCH_KIND.default( 'all' ).describe( KIND_DESCRIPTION ),
+    },
+    list_categories: {},
+    list_by_category: {
+        category: z.string().min( 1 ).max( 100 ).describe( 'Category slug or label from list_categories, such as music-and-audio-tools or Homebrew.' ),
+        status: STATUS.optional().describe( STATUS_DESCRIPTION ),
+        limit: limitSchema( 100, 25, 'Maximum listings per page, from 1 to 100. Defaults to 25.' ),
+        offset: z.number().int().min( 0 ).default( 0 ).describe( 'Number of matching listings to skip. Defaults to 0. For the next page, use nextOffset with the same category and status. A null nextOffset means the last page.' ),
+    },
+    recent_updates: {
+        limit: limitSchema( 100, 20, 'Maximum updated app listings to return, from 1 to 100. Defaults to 20.' ),
+    },
+    list_devices: {},
+}
+
+const HANDLERS = {
+    search_apps: searchApps,
+    get_app: getApp,
+    check_apps: checkApps,
+    list_categories: listCategories,
+    list_by_category: listByCategory,
+    recent_updates: recentUpdates,
+    list_devices: listDevices,
+}
+
+function wrap ( name, handler, data ) {
     return async ( args ) => {
         try {
             const { text, data: structured } = await handler( args || {}, data )
@@ -45,10 +128,12 @@ function wrap ( handler, data ) {
                 structuredContent: structured,
             }
         } catch ( error ) {
-            return {
-                isError: true,
-                content: [ { type: 'text', text: `Does It ARM data is temporarily unavailable: ${ error.message }` } ],
+            if ( error instanceof ToolInputError ) {
+                return { isError: true, content: [ { type: 'text', text: error.message } ] }
             }
+            // Keep upstream details in the logs, not in the model-visible result.
+            console.error( `doesitarm-mcp ${ name } failed:`, error )
+            return { isError: true, content: [ { type: 'text', text: UNAVAILABLE_TEXT } ] }
         }
     }
 }
@@ -56,72 +141,20 @@ function wrap ( handler, data ) {
 export function createMcpServer ( data ) {
     const server = new McpServer( SERVER_INFO, { instructions: SERVER_INSTRUCTIONS } )
 
-    server.registerTool( 'search_apps', {
-        title: 'Search Apple silicon compatibility',
-        description: 'Search Does It ARM listings by app name, alias or bundle ID and return each match\'s Apple silicon status (native, Rosetta, unsupported) with a link to its doesitarm.com page.',
-        inputSchema: {
-            query: z.string().min( 1 ).max( 200 ).describe( 'App, game or Homebrew formula name, alias, or bundle ID, e.g. "Photoshop" or "com.spotify.client"' ),
-            kind: SEARCH_KIND.default( 'all' ).describe( 'Limit to Mac apps, games, Homebrew formulae, or all' ),
-            status: STATUS.optional().describe( 'Only return listings with this status' ),
-            limit: z.number().int().min( 1 ).max( 50 ).default( 10 ).describe( 'Maximum results' ),
-        },
-        annotations: { title: 'Search apps', ...READ_ONLY },
-    }, wrap( searchApps, data ) )
+    for ( const name of TOOL_NAMES ) {
+        const { title, description } = TOOL_COPY[ name ]
+        server.registerTool( name, {
+            title,
+            description,
+            inputSchema: INPUT_SCHEMAS[ name ],
+            outputSchema: OUTPUT_SCHEMAS[ name ],
+            annotations: { title, ...READ_ONLY },
+        }, wrap( name, HANDLERS[ name ], data ) )
+    }
 
-    server.registerTool( 'get_app', {
-        title: 'Get one listing',
-        description: 'Get the full public details for one Does It ARM listing: status headline, category, aliases, last update, links, per-device support, bundle version history with architectures, game reports and related benchmark videos. Accepts a name, slug, or doesitarm.com URL. Also works for Mac device pages.',
-        inputSchema: {
-            app: z.string().min( 1 ).max( 300 ).describe( 'Name, slug, or URL, e.g. "Spotify", "spotify", or "https://doesitarm.com/app/spotify"' ),
-            kind: z.enum([ 'app', 'game', 'homebrew', 'device', 'all' ]).default( 'all' ).describe( 'Which kind of listing to look up when a name is ambiguous' ),
-        },
-        annotations: { title: 'Get app details', ...READ_ONLY },
-    }, wrap( getApp, data ) )
-
-    server.registerTool( 'check_apps', {
-        title: 'Check many apps at once',
-        description: `Check Apple silicon status for a list of up to ${ MAX_CHECK_NAMES } app names in one call, for example everything in someone's Applications folder before they move to an Apple silicon Mac. Returns the best match and status for each name, or "not listed".`,
-        inputSchema: {
-            names: z.array( z.string().min( 1 ).max( 200 ) ).min( 1 ).max( MAX_CHECK_NAMES ).describe( 'App names to check' ),
-            kind: SEARCH_KIND.default( 'all' ).describe( 'Limit to Mac apps, games, Homebrew formulae, or all' ),
-        },
-        annotations: { title: 'Check apps', ...READ_ONLY },
-    }, wrap( checkApps, data ) )
-
-    server.registerTool( 'list_categories', {
-        title: 'List categories',
-        description: 'List Does It ARM categories with listing counts and overall native/Rosetta/unsupported percentages.',
-        inputSchema: {},
-        annotations: { title: 'List categories', ...READ_ONLY },
-    }, wrap( listCategories, data ) )
-
-    server.registerTool( 'list_by_category', {
-        title: 'List apps in a category',
-        description: 'List Does It ARM listings in one category (for example music-and-audio-tools, developer-tools, games, homebrew), optionally filtered by status, with paging.',
-        inputSchema: {
-            category: z.string().min( 1 ).max( 100 ).describe( 'Category slug or label from list_categories' ),
-            status: STATUS.optional().describe( 'Only return listings with this status' ),
-            limit: z.number().int().min( 1 ).max( 100 ).default( 25 ).describe( 'Maximum results' ),
-            offset: z.number().int().min( 0 ).default( 0 ).describe( 'Results to skip, for paging' ),
-        },
-        annotations: { title: 'List by category', ...READ_ONLY },
-    }, wrap( listByCategory, data ) )
-
-    server.registerTool( 'recent_updates', {
-        title: 'Recently updated apps',
-        description: 'List the most recently updated app listings on Does It ARM, newest first.',
-        inputSchema: {
-            limit: z.number().int().min( 1 ).max( 100 ).default( 20 ).describe( 'Maximum results' ),
-        },
-        annotations: { title: 'Recent updates', ...READ_ONLY },
-    }, wrap( recentUpdates, data ) )
-
-    server.registerTool( 'list_devices', {
-        title: 'List Apple silicon Macs',
-        description: 'List the Apple silicon Mac models that have device compatibility pages on Does It ARM.',
-        inputSchema: {},
-        annotations: { title: 'List devices', ...READ_ONLY },
-    }, wrap( listDevices, data ) )
+    // The tool list is fixed and this stateless server has no stream for
+    // list_changed notifications, so do not advertise them.
+    server.server.registerCapabilities({ tools: { listChanged: false } })
 
     return server
 }
