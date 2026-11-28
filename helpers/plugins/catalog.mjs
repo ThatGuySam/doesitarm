@@ -21,10 +21,10 @@ export const verdicts = {
     unknown: 'Unverified'
 }
 export const architectureFilters = {
-    native: 'Apple Silicon native',
+    native: 'Apple Silicon',
     universal: verdicts.universal,
     'intel-only': verdicts['intel-only'],
-    legacy: verdicts.legacy
+    legacy: '32-bit / PPC'
 }
 
 export const products = catalog.products

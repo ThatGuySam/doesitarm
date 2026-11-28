@@ -45,7 +45,7 @@ const pagination = (target: number) => browsePath(target, filters)
                 <div class="field">
                     <label for="plugin-architecture">Architecture</label>
                     <select id="plugin-architecture" name="arch">
-                        <option value="">All architectures</option>
+                        <option value="">All builds</option>
                         { Object.entries(architectureFilters).map(([value, name]) => (
                             <option value={ value } selected={ filters.arch === value }>{ name }</option>
                         )) }
