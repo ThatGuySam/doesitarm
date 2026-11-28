@@ -127,3 +127,31 @@ const adName = (() => {
     />
 
 </section>
+
+<style>
+    .listing-actions :global(.carbon-inline-wide) {
+        --carbon-label-space: 1rem;
+        block-size: calc(90px + var(--carbon-label-space));
+    }
+
+    .listing-actions :global(#carbonads) {
+        @apply border-white/10;
+        padding-block-start: var(--carbon-label-space);
+    }
+
+    .listing-actions :global(#carbonads)::before {
+        @apply text-gray-400;
+        content: "Ad · via Carbon";
+        position: absolute;
+        inset-block-start: 0.1rem;
+        inset-inline-start: 0.25rem;
+        font-size: 0.7rem;
+        line-height: 1;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .listing-actions :global(#carbonads .carbon-text) {
+        @apply text-gray-300 opacity-100;
+    }
+</style>
