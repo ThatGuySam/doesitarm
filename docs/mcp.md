@@ -32,6 +32,13 @@ gemini extensions install https://github.com/ThatGuySam/doesitarm
 
 Confirm the extension install. Run `gemini mcp list` to check the `doesitarm` connection.
 
+If Gemini CLI reports a `GIT_CONFIG_SYSTEM` error during installation, clone the repo and install from the local checkout. Confirm the folder trust prompt after reviewing the checkout. [Gemini CLI issue #30416](https://github.com/google-gemini/gemini-cli/issues/30416)
+
+```sh
+git clone --depth 1 https://github.com/ThatGuySam/doesitarm doesitarm-gemini
+gemini extensions install ./doesitarm-gemini
+```
+
 **Cursor** (`~/.cursor/mcp.json`):
 
 ```json
