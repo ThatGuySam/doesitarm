@@ -2,6 +2,7 @@
 
 Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. The public Does It ARM [MCP](https://modelcontextprotocol.io) server is read-only and requires no account. Connect over Streamable HTTP at `https://mcp.doesitarm.com/mcp`.
 
+- **[Connect to Claude](https://claude.ai/directory/connectors/doesitarm)**: listed in the Claude connector directory
 - Endpoint (Streamable HTTP): `https://mcp.doesitarm.com/mcp`
 - Inventory REST endpoint: `POST https://mcp.doesitarm.com/v1/inventory`
 - Fallback: `https://doesitarm-mcp.samcarlton.workers.dev/mcp`
@@ -13,7 +14,7 @@ Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Th
 
 ## Install
 
-**Claude (claude.ai, desktop and mobile):** Settings → Connectors → Add custom connector, then paste `https://mcp.doesitarm.com/mcp`.
+**Claude (claude.ai, desktop and mobile):** open the [Does It ARM listing in the Claude connector directory](https://claude.ai/directory/connectors/doesitarm) and select Connect. You can also add it by URL: Settings → Connectors → Add custom connector, then paste `https://mcp.doesitarm.com/mcp`.
 
 **Claude Code:**
 
