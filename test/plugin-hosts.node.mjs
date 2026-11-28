@@ -128,3 +128,30 @@ test('all corpus headlines fit the copy limit and preserve the release qualifica
     assert.match(productSummary(productBySlug.get('surge-xt')).headline, /preview/)
     assert.equal(productSummary(productBySlug.get('mverb')).softwareVersion, null)
 })
+
+test('browse routes bound pagination and normalize shareable filters', async () => {
+    const { browsePlugins } = await import('../helpers/plugins/browse.mjs')
+    const browse = (search = '', page) => browsePlugins(new URLSearchParams(search), page)
+    assert.equal(browse().pageCount, 8)
+    assert.equal(browse('', '2').pathname, '/audio-plugins/page/2/')
+    assert.equal(browse('vendor=guitarml&arch=intel-only&format=aax').pathname,
+        '/audio-plugins/?format=aax&arch=intel-only&vendor=guitarml')
+    assert.ok(browse('vendor=guitarml&arch=intel-only&format=aax').products.some(product => product.slug === 'proteus'))
+    assert.equal(browse('', '9'), null)
+    assert.equal(browse('format=__proto__'), null)
+})
+
+test('search records and sitemap derive from the same canonical products', async () => {
+    const { pluginPagefindEntries, pluginSitemapEntries, renderPluginSitemap, addPluginSitemapToIndex }
+        = await import('../helpers/plugins/discovery.mjs')
+    const origin = 'https://doesitarm.com'
+    const entries = pluginSitemapEntries()
+    const urls = new Set(entries.map(entry => entry.route))
+    assert.equal(urls.size, entries.length)
+    assert.equal(pluginPagefindEntries().filter(entry => entry.route.startsWith('/plugin/')).length,
+        entries.filter(entry => entry.route.startsWith('/plugin/')).length)
+    for (const entry of pluginPagefindEntries()) assert.ok(urls.has(entry.route))
+    assert.ok(renderPluginSitemap(origin).includes('<loc>https://doesitarm.com/plugin/dexed/</loc>'))
+    const index = addPluginSitemapToIndex('<sitemapindex><sitemap><loc>https://doesitarm.com/sitemap-0.xml</loc></sitemap></sitemapindex>', origin)
+    assert.equal(addPluginSitemapToIndex(index, origin), index)
+})

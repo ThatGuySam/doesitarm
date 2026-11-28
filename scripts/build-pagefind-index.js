@@ -7,8 +7,16 @@ import {
     writePagefindIndex
 } from '~/helpers/pagefind/index.js'
 
+import { pluginPagefindEntries } from '~/helpers/plugins/discovery.mjs'
+
 ;(async () => {
-    const sitemapEndpoints = await loadSitemapEndpoints()
+    const plugins = pluginPagefindEntries()
+    const pluginRoutes = new Set( plugins.map( entry => entry.route.replace( /\/$/, '' ) ) )
+    const baseEndpoints = await loadSitemapEndpoints()
+    const sitemapEndpoints = [
+        ...baseEndpoints.filter( entry => !pluginRoutes.has( entry.route.replace( /\/$/, '' ) ) ),
+        ...plugins
+    ]
     const {
         outputPath,
         recordCount

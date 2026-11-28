@@ -17,7 +17,8 @@ const searchableListingKeys = [
 const searchablePayloadKeys = [
     'app',
     'listing',
-    'video'
+    'video',
+    'plugin'
 ]
 
 function compactListing ( listing ) {

@@ -17,7 +17,7 @@ import {
 } from '~/helpers/pagefind/config.js'
 
 function getSearchListing ( sitemapEntry ) {
-    return sitemapEntry.payload.app || sitemapEntry.payload.listing || sitemapEntry.payload.video || null
+    return sitemapEntry.payload.app || sitemapEntry.payload.listing || sitemapEntry.payload.video || sitemapEntry.payload.plugin || null
 }
 
 function pushContentPart ( parts, value ) {

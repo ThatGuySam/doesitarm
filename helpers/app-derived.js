@@ -82,6 +82,8 @@ export function getIconForListing ( listing ) {
 
     if ( routeType === 'tv' || routeType === 'benchmarks' ) return '▶️'
 
+    if ( ['audio-plugins', 'plugin'].includes( routeType ) ) return '🎛️'
+
     if ( routeType === 'device' ) return '🖥'
 
     if ( routeType === 'formula' ) return categories.homebrew.icon

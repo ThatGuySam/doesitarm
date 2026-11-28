@@ -1,6 +1,6 @@
 # Does It ARM
 
-> Does It ARM catalogs reported Apple Silicon compatibility for Mac apps, games, and Homebrew formulae, with reference pages for Mac models.
+> Does It ARM catalogs reported Apple Silicon compatibility for Mac apps, games, Homebrew formulae, and audio plug-ins, with reference pages for Mac models.
 
 Software listings are under `/app/`, `/game/`, and `/formula/` on https://doesitarm.com. They carry a reported status when available and may include per-device evidence, related links, and benchmark videos. Mac model reference pages are under `/device/`. A missing listing means compatibility is unknown from this catalog. An `unreported` status means native support has yet to be reported.
 
@@ -12,6 +12,7 @@ Software listings are under `/app/`, `/game/`, and `/formula/` on https://doesit
 ## Browse
 
 - [Categories](https://doesitarm.com/categories/)
+- [Audio plug-ins](https://doesitarm.com/audio-plugins/) — Scanned macOS architecture and format evidence by product, with verified host configurations where available.
 - [Games](https://doesitarm.com/games/)
 - [Homebrew](https://doesitarm.com/kind/homebrew)
 - [Devices](https://doesitarm.com/devices)

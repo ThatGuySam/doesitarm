@@ -10,6 +10,7 @@ import { getListedDeviceListings } from '~/helpers/device-catalog.js'
 import { replaceDeviceUrlsInSitemap } from '~/helpers/api/sitemap/devices.js'
 import { parseSitemapXml } from '~/helpers/api/sitemap/parse.js'
 import { getText } from '~/helpers/http.js'
+import { addPluginSitemapToIndex, pluginSitemapPath, renderPluginSitemap } from '~/helpers/plugins/discovery.mjs'
 import { getSiteUrl } from '~/helpers/url.js'
 
 
@@ -21,9 +22,7 @@ import { getSiteUrl } from '~/helpers/url.js'
     // Fetch Sitemap Index
     const sitemapIndexXML = await getText( sitemapIndexUrl.href )
 
-    // Save Sitemap Index
     const sitemapIndexFilePath = `${ sitemapLocation }${ sitemapIndexFileName }`
-    await fs.writeFile( sitemapIndexFilePath, sitemapIndexXML )
 
     const urlEntries = parseSitemapXml( sitemapIndexXML )
 
@@ -35,6 +34,7 @@ import { getSiteUrl } from '~/helpers/url.js'
 
         // Build Sitemap Index URL
         const sitemapUrl = new URL( entry.loc )
+        if ( sitemapUrl.pathname === pluginSitemapPath ) continue
         const apiSitemapUrl = new URL( sitemapUrl.pathname, process.env.PUBLIC_API_DOMAIN )
 
         // sitemapUrl.origin = process.env.PUBLIC_API_DOMAIN
@@ -71,6 +71,9 @@ import { getSiteUrl } from '~/helpers/url.js'
         await fs.writeFile( sitemapPath, updatedSitemapXml )
     }
 
+
+    await fs.writeFile( `${ sitemapLocation }${ pluginSitemapPath.slice(1) }`, renderPluginSitemap( siteUrl ) )
+    await fs.writeFile( sitemapIndexFilePath, addPluginSitemapToIndex( sitemapIndexXML, siteUrl ) )
 
     process.exit()
 })()
