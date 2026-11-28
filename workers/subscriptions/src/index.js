@@ -4,12 +4,14 @@ import { subscribeToKit } from './kit.js'
 import { acceptRosettaReview, previewRosettaReview, runRosettaCheck } from './notifications.js'
 import { rosettaLaunchEnabled, rosettaSignupsClosedMessage } from '../../../helpers/rosetta-launch.js'
 import {
+    notifyServiceRequest,
     parseServiceEvent,
     parseServiceRequest,
     saveServiceEvent,
     saveServiceRequest,
     serviceEventsPath,
-    serviceRequestsPath
+    serviceRequestsPath,
+    verifyTurnstile
 } from './services.js'
 
 const allowedOrigins = new Set([
@@ -319,7 +321,7 @@ async function handleServiceEvent ( request, env ) {
     return makeJsonResponse( request, { ok: true } )
 }
 
-async function handleServiceRequest ( request, env ) {
+async function handleServiceRequest ( request, env, context ) {
     const tooManyRequests = () => makeJsonResponse( request, {
         error: 'Too many attempts. Try again in a minute.', ok: false
     }, 429, { 'Retry-After': '60' } )
@@ -338,7 +340,19 @@ async function handleServiceRequest ( request, env ) {
     const serviceRequest = parseServiceRequest( parsed.body, parsed.email )
     if ( !serviceRequest ) return makeJsonResponse( request, { error: 'Check the form and try again.', ok: false }, 422 )
 
-    await saveServiceRequest( env.SUBSCRIPTIONS_DB, serviceRequest )
+    if ( !await verifyTurnstile( env, parsed.body.turnstile, request.headers.get( 'CF-Connecting-IP' ) ) ) {
+        return makeJsonResponse( request, {
+            error: 'Could not check that you’re human. Please try again.', ok: false
+        }, 403 )
+    }
+
+    const saved = await saveServiceRequest( env.SUBSCRIPTIONS_DB, serviceRequest )
+
+    // The request is saved, so a failed email must not fail it
+    const notification = notifyServiceRequest( env, serviceRequest, saved )
+    if ( context?.waitUntil ) context.waitUntil( notification )
+    else await notification
+
     return makeJsonResponse( request, { ok: true } )
 }
 
@@ -527,7 +541,7 @@ export async function handleRequest ( request, env, context ) {
     }
 
     if ( pathname === serviceEventsPath ) return await handleServiceEvent( request, env )
-    if ( pathname === serviceRequestsPath ) return await handleServiceRequest( request, env )
+    if ( pathname === serviceRequestsPath ) return await handleServiceRequest( request, env, context )
 
     return await handleSubscriptionRequest( request, env )
 }

@@ -1,0 +1,108 @@
+---
+// Short service pages. Copy lives in helpers/service-offers.js (servicePages).
+// /services/studio-upgrade-audit/ has its own page and takes precedence over this route.
+import { applyResponseDefaults } from '~/helpers/astro/request.js'
+import { servicePages, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
+
+import Layout from '~/src/layouts/default.astro'
+import '~/assets/css/service-page.css'
+
+const slug = Astro.params.offer || ''
+const page = Object.hasOwn( servicePages, slug ) ? servicePages[ slug ] : null
+
+if ( !page ) {
+    const notFound = await Astro.rewrite( '/404' )
+    notFound.headers.set( 'Cache-Control', 'no-store' )
+    return notFound
+}
+
+applyResponseDefaults( Astro )
+
+const isRevival = page.offer === 'app-revival'
+---
+<Layout
+    headOptions={ {
+        title: `${ page.title } - Does It ARM`,
+        description: page.subhead,
+        pathname: `/services/${ slug }/`
+    } }
+>
+    <main class="svc-page container py-32 w-full" data-svc-card="service-page" data-svc-page data-svc-variant="direct">
+        <div class="max-w-3xl mx-auto space-y-16">
+
+            <section class="space-y-6 text-center">
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ page.headline }</h1>
+                <p class="subtitle md:text-xl text-gray-300">{ page.subhead }</p>
+                <p class="text-white font-semibold">{ page.price }</p>
+                <div class="flex flex-wrap justify-center items-center gap-4">
+                    <a href="#interest" class="svc-page-button" data-svc-control="primary">{ page.form.submit }</a>
+                    <a href="/services/" class="text-indigo-200 underline hover:text-white">All services</a>
+                </div>
+            </section>
+
+            <section class="grid gap-4 md:grid-cols-3">
+                { page.points.map( point => (
+                    <div class="rounded-xl border border-gray-700 bg-gradient-to-br from-darker to-dark p-5 space-y-2">
+                        <h2 class="font-bold text-white">{ point.title }</h2>
+                        <p class="text-sm text-gray-300 leading-relaxed">{ point.text }</p>
+                    </div>
+                ) ) }
+            </section>
+
+            <section id="interest" class="svc-panel space-y-4">
+                <div class="space-y-1">
+                    <h2 class="text-2xl font-bold text-white">{ page.form.heading }</h2>
+                    <p class="text-sm text-gray-300">{ page.form.intro }</p>
+                </div>
+                <form
+                    class="grid gap-4 sm:grid-cols-2"
+                    action={ serviceRequestsEndpoint }
+                    method="post"
+                    data-svc-form
+                    data-svc-submit={ isRevival ? 'revival' : 'waitlist' }
+                    data-svc-success={ page.form.success }
+                >
+                    <input type="hidden" name="offer" value={ page.offer } />
+                    <input type="hidden" name="kind" value={ isRevival ? 'revival' : 'waitlist' } />
+                    <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
+                    <label class="svc-field sm:col-span-2">
+                        <span>Email</span>
+                        <input type="email" name="email" autocomplete="email" maxlength="254" required />
+                    </label>
+                    { isRevival && (
+                        <label class="svc-field sm:col-span-2">
+                            <span>{ page.form.appLabel }</span>
+                            <input type="text" name="appName" maxlength="120" required />
+                        </label>
+                    ) }
+                    <label class="svc-field sm:col-span-2">
+                        <span>{ page.form.noteLabel }</span>
+                        <input type="text" name="note" maxlength="500" placeholder={ page.form.notePlaceholder } />
+                    </label>
+                    <div class="sm:col-span-2 svc-turnstile" data-svc-turnstile></div>
+                    <div class="sm:col-span-2 flex flex-wrap items-center gap-4">
+                        <button type="submit" class="svc-page-button">{ page.form.submit }</button>
+                        <p class="text-sm text-gray-300" role="status" data-svc-status></p>
+                    </div>
+                </form>
+            </section>
+
+            <section class="space-y-6">
+                { page.faq.map( item => (
+                    <div class="space-y-1">
+                        <h2 class="font-bold text-white">{ item.question }</h2>
+                        <p class="text-sm text-gray-300 leading-relaxed">{ item.answer }</p>
+                    </div>
+                ) ) }
+            </section>
+
+        </div>
+    </main>
+</Layout>
+
+<script>
+    import { serviceEventsEndpoint, turnstileSiteKey } from '~/helpers/service-offers.js'
+    import { initServicePage } from '~/helpers/service-cards-browser.js'
+
+    initServicePage( { eventsEndpoint: serviceEventsEndpoint, turnstileSiteKey } )
+</script>
