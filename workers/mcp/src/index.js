@@ -1,6 +1,8 @@
 // doesitarm-mcp: public, read-only, stateless remote MCP server for Does It ARM.
 // Streamable HTTP endpoint at /mcp, no auth.
 
+const OPENAI_APPS_CHALLENGE = 'hq_KyAhk0VbVSvNvSQbX-RJK9SXWW1-JfraQ9UDwedg'
+
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 
 import { createDataSource } from './data.js'
@@ -206,6 +208,11 @@ export async function handleRequest ( request, env = {} ) {
 
     if ( url.pathname === '/.well-known/mcp/server-card.json' || url.pathname === '/.well-known/mcp.json' ) {
         return withCors( json( serverCard( origin ) ) )
+    }
+
+    // OpenAI plugin directory domain verification for this MCP host.
+    if ( url.pathname === '/.well-known/openai-apps-challenge' ) {
+        return new Response( OPENAI_APPS_CHALLENGE, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' } } )
     }
 
     if ( url.pathname === '/health' ) return withCors( json( { ok: true }, 200, { 'Cache-Control': 'no-store' } ) )
