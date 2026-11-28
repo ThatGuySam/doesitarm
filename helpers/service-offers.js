@@ -14,6 +14,16 @@ export const auditPagePath = '/services/studio-upgrade-audit/'
 // Set this to '' to turn the widget off; the Worker skips the check while its secret is unset.
 export const turnstileSiteKey = '0x4AAAAAAGWhwBrgzHSl1Hff'
 
+// These alerts can come from a dependency even when the listed app is native.
+const intelDependencyVariants = [
+    { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?', active: false },
+    { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?', active: false },
+    { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?', active: false },
+    { id: 'intel-plugin', headline: 'Does macOS flag a plug-in as Intel-only?' },
+    { id: 'rosetta-plugin', headline: 'Does an older plug-in still need Rosetta?' },
+    { id: 'rosetta-installer', headline: 'Does a plug-in installer ask for Rosetta?' }
+]
+
 // Headline experiments. Each browser gets ONE variant per experiment, picked at
 // random from the active variants and kept in localStorage under the experiment
 // id, so it sees the same headline on every page and card type in that experiment.
@@ -52,9 +62,7 @@ export const serviceExperiments = {
             },
             { id: 'nm1', headline: 'Ordering a new Mac?' },
             { id: 'cp1', headline: 'Is your Mac ready to reopen that client project?' },
-            { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?' },
-            { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?' },
-            { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?' }
+            ...intelDependencyVariants
         ]
     },
     // Logic Pro and MainStage pages
@@ -73,9 +81,7 @@ export const serviceExperiments = {
             { id: 'cw1', headline: 'Will last year’s client mixes still open?' },
             { id: 'nm1', headline: 'Ordering a new Mac?' },
             { id: 'cp1', headline: 'Is your Mac ready to reopen that client project?' },
-            { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?' },
-            { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?' },
-            { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?' }
+            ...intelDependencyVariants
         ]
     },
     'revival-v1': {
@@ -173,8 +179,19 @@ export const audioAppSlugs = [
     'spectrasonics-trilian', 'spectrasonics-stylus-rmx', 'waves-central', 'spitfire-audio',
     'ilok-license-manager', 'ua-connect', 'universal-audio-software', 'arturia-software-center',
     'amplitube-5', 'toontrack-product-manager', 'superior-drummer-3', 'addictive-drums-2',
-    'xln-online-installer', 'slate-digital-connect', 'focusrite-control', 'universal-control', 'splice'
+    'xln-online-installer', 'slate-digital-connect', 'focusrite-control', 'universal-control', 'splice',
+    'vital', 'surge-xt', 'loopback'
 ]
+
+// Playback, listening, practice and standalone diagnostics were reviewed by app.
+// Uninstallers are excluded by role even when a vendor name matches audioNameTerms.
+const studioAuditExcludedSlugs = new Set([
+    'airfoil', 'auralia-5-student', 'bitperfect', 'capo', 'colibri', 'colibri-dac-dsd-test',
+    'foobar2000', 'forscore', 'fretello', 'instuner', 'kugoumusic', 'midi-player',
+    'motu-audio-tools', 'noizio', 'pine-player', 'silicio', 'somafm', 'tunesart',
+    'ultimate-guitar-chords-and-tabs', 'whatson'
+])
+const uninstallerPattern = /^(?:remove[ -])|\buninstall(?:er)?\b/
 
 // Whole-word matches on a listing's name or aliases
 const audioNameTerms = [
@@ -256,6 +273,9 @@ export function getServiceCardType ( listing ) {
     if ( !slug ) return null
 
     if ( isAbandonedListing( listing ) ) return 'revival'
+
+    if ( studioAuditExcludedSlugs.has( slug ) || uninstallerPattern.test( slug ) ||
+        listingNames( listing ).some( name => uninstallerPattern.test( name ) ) ) return null
 
     if ( !isAudioListing( listing ) ) return null
 

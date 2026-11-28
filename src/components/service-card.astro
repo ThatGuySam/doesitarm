@@ -18,9 +18,10 @@ interface Props {
 }
 
 const { type, appName = '', appSlug = '', startHidden = false } = Astro.props
+const displayName = new Map( [ [ 'ableton', 'Ableton Live' ], [ 'garageband', 'GarageBand' ] ] ).get( appSlug ) || appName
 const card = serviceCards[ type ]
 const hasSheet = type === 'logic-native' && appSlug === 'logic-pro'
-const fill = text => fillServiceCopy( text, { app: appName || 'this app' } )
+const fill = text => fillServiceCopy( text, { app: displayName || 'this app' } )
 const formKind = type === 'revival' ? 'revival' : 'waitlist'
 const variants = getCardVariants( type )
 const variantIds = variants.map( variant => variant.id ).join( ' ' )
