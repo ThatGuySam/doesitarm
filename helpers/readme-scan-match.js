@@ -57,6 +57,8 @@ export const SEPARATE_PRODUCTS = new Map( [
     [ 'Dolphin', [ 'com.aldelaro5.dolphin-memory-engine' ] ],
     [ 'Surge', [ 'org.surge-synth-team.surge-xt' ] ],
     [ 'Vienna', [ 'at.co.vsl.viennaensemblepro', 'at.co.vsl.viennaensemblepro.au3', 'at.co.vsl.standalone' ] ],
+    // The vendor's uninstaller is a separate binary from the UAD software it removes.
+    [ 'Universal Audio Software', [ 'com.uaudio.uninstaller' ] ],
     // A community build of Signal Desktop, not Signal's own release
     [ 'Signal', [ 'com.dennisameling.signal-desktop' ] ],
     // Testlum Desktop is built on IntelliJ Community and keeps its bundle ID

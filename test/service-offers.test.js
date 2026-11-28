@@ -4,6 +4,7 @@ import { apps as revivalApps } from '~/data/revival-apps.json'
 import {
     appSlugPattern,
     fillServiceCopy,
+    getAuditRequestPath,
     getCardVariants,
     getRevivalRequestPath,
     getServiceCardType,
@@ -36,6 +37,18 @@ describe( 'service card placement', () => {
         expect( getServiceCardType( { endpoint: '/app/mainstage', name: 'MainStage', status: 'native' } ) ).toBe( 'logic-native' )
     } )
 
+    it( 'keeps playback, practice, diagnostics and uninstallers out of the studio audit', () => {
+        for ( const slug of [ 'whatson', 'foobar2000', 'fretello', 'motu-audio-tools', 'melodyne-uninstaller', 'remove-soundtoys' ] ) {
+            expect( getServiceCardType( { endpoint: `/app/${ slug }`, category: audio } ), slug ).toBeNull()
+        }
+        expect( getServiceCardType( {
+            endpoint: '/app/waves-utility', name: 'Waves Central Utility', aliases: [ 'Waves Central Uninstaller' ]
+        } ) ).toBeNull()
+        for ( const slug of [ 'vital', 'surge-xt', 'loopback' ] ) {
+            expect( getServiceCardType( { endpoint: `/app/${ slug }` } ), slug ).toBe( 'audio' )
+        }
+    } )
+
     it( 'gives every other DAW the DAW card, native or not', () => {
         expect( getServiceCardType( { endpoint: '/app/ableton', name: 'Ableton', status: 'native' } ) ).toBe( 'daw' )
         expect( getServiceCardType( { endpoint: '/app/avid-pro-tools', name: 'Avid Pro Tools', status: 'native', category: audio } ) ).toBe( 'daw' )
@@ -50,6 +63,18 @@ describe( 'service card placement', () => {
             expect( card.subhead ).toMatch( /Logic first.*other hosts case by case/i )
             expect( card.primary.label ).not.toMatch( /logic/i )
             for ( const variant of getCardVariants( type ) ) expect( variant.headline, variant.id ).not.toMatch( /logic/i )
+        }
+    } )
+
+    it( 'scopes the remaining Rosetta questions to plug-ins and their installers', () => {
+        for ( const type of [ 'audio', 'daw', 'logic-native' ] ) {
+            const variants = getCardVariants( type )
+            expect( variants.map( variant => variant.id ) ).not.toContain( 'rq1' )
+            expect( variants.map( variant => variant.id ) ).not.toContain( 'rq2' )
+            expect( variants.map( variant => variant.id ) ).not.toContain( 'mq1' )
+            for ( const variant of variants.filter( variant => /Rosetta|Intel/.test( variant.headline ) ) ) {
+                expect( variant.headline ).toMatch( /plug-in/ )
+            }
         }
     } )
 
@@ -170,6 +195,12 @@ describe( 'service copy', () => {
 } )
 
 describe( 'service pages', () => {
+    it( 'carries only valid listing slugs into audit links', () => {
+        expect( getAuditRequestPath( 'reaper' ) ).toBe( '/services/studio-upgrade-audit/?app=reaper' )
+        expect( getAuditRequestPath( 'reaper&v=other' ) ).toBe( '/services/studio-upgrade-audit/' )
+        expect( getAuditRequestPath() ).toBe( '/services/studio-upgrade-audit/' )
+    } )
+
     it( 'lists every page on /services/ and uses offers the Worker accepts', () => {
         const hrefs = servicesIndex.offers.map( offer => offer.href )
         for ( const [ slug, page ] of Object.entries( servicePages ) ) {

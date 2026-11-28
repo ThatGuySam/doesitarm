@@ -2,10 +2,11 @@
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 
-import { DoesItAPI } from '~/helpers/api/client.js'
+import { getListing } from '~/helpers/api/client.js'
 import {
     catchRedirectResponse,
-    applyResponseDefaults
+    applyResponseDefaults,
+    renderNotFound
 } from '~/helpers/astro/request.js'
 import {
     getVideoImages,
@@ -41,7 +42,8 @@ const isBenchmarkPage = subSlug === 'benchmarks'
 // https://docs.astro.build/en/reference/api-reference/#astrorequests
 
 // Request App data from API
-const appListing = await DoesItAPI.game( pathSlug ).get()
+const appListing = await getListing( 'game', pathSlug )
+if ( appListing === null ) return renderNotFound( Astro )
 
 const listingDetails = new ListingDetails( appListing )
 

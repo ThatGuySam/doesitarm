@@ -81,7 +81,12 @@ async function parseResponseBody ( response, responseType ) {
         return null
     }
 
-    return JSON.parse( text )
+    try {
+        return JSON.parse( text )
+    } catch ( error ) {
+        if ( response.ok ) throw error
+        return text
+    }
 }
 
 function buildRequestInit ( {

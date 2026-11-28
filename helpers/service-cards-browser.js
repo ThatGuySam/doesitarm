@@ -95,11 +95,13 @@ function loadTurnstile () {
         const script = document.createElement( 'script' )
         script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
         script.async = true
-        script.onload = () => window.turnstile ? resolve( window.turnstile ) : reject( new Error( 'Turnstile missing' ) )
-        script.onerror = () => {
+        const loadFailed = () => {
+            script.remove()
             turnstileLoading = null
             reject( new Error( 'Turnstile failed to load' ) )
         }
+        script.onload = () => window.turnstile ? resolve( window.turnstile ) : loadFailed()
+        script.onerror = loadFailed
         document.head.appendChild( script )
     } )
 
@@ -119,7 +121,7 @@ function widgetFor ( form ) {
                 sitekey: siteKey,
                 action: 'service-request',
                 appearance: 'interaction-only',
-                size: 'flexible',
+                size: form.clientWidth < 300 ? 'compact' : 'flexible',
                 callback: token => {
                     state.token = token
                     state.waiters.splice( 0 ).forEach( resolve => resolve( token ) )
@@ -131,6 +133,7 @@ function widgetFor ( form ) {
                 }
             } )
         } ).catch( () => {
+            widgets.delete( form )
             state.waiters.splice( 0 ).forEach( resolve => resolve( '' ) )
         } )
     }

@@ -46,9 +46,23 @@ Context moved out of the status headlines on September 7, 2026. These are the ex
 
 ## Universal Audio Software
 
-✳️ Yes, by setting the "Reduced Security option" security policy using macOS Recovery
+Universal Audio lists UAD Software as native on Apple Silicon. The driver for
+UAD-2 hardware such as Apollo, Satellite and UAD-2 PCIe cards requires Reduced
+Security in macOS Recovery and approval of the system extension. Volt and other
+devices that do not use UAD-2 do not require that setup. Check the compatibility
+matrix for FireWire models and legacy plug-ins.
 
-[Knowledgebase Article](https://help.uaudio.com/hc/en-us/articles/360057137692-Apple-Silicon-M1-Compatibility-Info)
+[UA native compatibility](https://help.uaudio.com/hc/en-us/articles/9314999013652-Native-Apple-Silicon-Compatibility) · [UAD-2 installation guide](https://help.uaudio.com/hc/en-us/articles/360057137692-Apple-Silicon-Compatibility-with-Universal-Audio-Products)
+
+## rekordbox
+
+The official macOS 7.2.20 installer contains a universal rekordbox executable.
+The 6.8.8 installer contains an Intel executable that uses Rosetta 2 on Apple
+Silicon. AlphaTheta announced native support in the 7.0 beta. The first stable
+native build is unverified. Check AlphaTheta’s device list for your controller
+and the download page for current macOS requirements.
+
+[v7.2.20 macOS installer](https://cdn.rekordbox.com/files/20261119142403/Install_rekordbox_7_2_20.pkg_.zip) · [v6 download archive](https://rekordbox.com/en/support/faq/v6/#faq-q600141) · [v7 beta notes](https://rekordbox.com/en/2024/02/rekordbox-ver-7-beta/) · [Compatible DJ units](https://rekordbox.com/en/support/link/) · [macOS requirements](https://rekordbox.com/en/download/#system)
 
 ## Folx
 

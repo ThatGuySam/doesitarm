@@ -10,7 +10,11 @@ describe( 'site middleware', () => {
     it.each([
         [ '/categories', '/categories/' ],
         [ '/games', '/games/' ],
-        [ '/app/node', '/app/nodejs' ]
+        [ '/app/node', '/app/nodejs' ],
+        [ '/app/obs-studio', '/app/obs/' ],
+        [ '/app/obs-studio/', '/app/obs/' ],
+        [ '/app/visual-studio-code', '/app/vs-code/' ],
+        [ '/app/visual-studio-code/', '/app/vs-code/' ]
     ])( 'redirects %s to %s', ( path, expectedLocation ) => {
         const rule = getRedirectRule( path )
 

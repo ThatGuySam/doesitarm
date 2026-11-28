@@ -1,13 +1,17 @@
 ---
 // Logic upgrade audit. Copy lives in helpers/service-offers.js (auditPage).
 import { applyResponseDefaults } from '~/helpers/astro/request.js'
-import { auditPage as page, auditPagePath, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
+import { appSlugPattern, auditPage as page, auditPagePath, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
 
 import ServiceSituations from '~/src/components/service-situations.astro'
 import Layout from '~/src/layouts/default.astro'
 import '~/assets/css/service-page.css'
 
 applyResponseDefaults( Astro )
+
+const requestedApp = Astro.url.searchParams.get( 'app' ) || ''
+const sourceApp = appSlugPattern.test( requestedApp ) ? requestedApp : ''
+const dawPrefill = !sourceApp || sourceApp === 'logic-pro' ? 'Logic Pro ' : ''
 
 const url = new URL( auditPagePath, Astro.site ).href
 const structuredData = {
@@ -45,6 +49,7 @@ const structuredData = {
                 <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ page.title }</h1>
                 <p class="subtitle md:text-xl text-gray-300">{ page.scopeSummary }</p>
                 <p class="text-white font-semibold">{ page.price }</p>
+                <p class="text-sm text-gray-300">{ page.availability }</p>
                 <div class="flex flex-wrap justify-center items-center gap-4">
                     <a href="#scope" class="svc-page-button" data-svc-control="primary">{ page.primary }</a>
                     <a href="#waitlist" class="text-indigo-200 underline hover:text-white" data-svc-control="secondary">{ page.secondary }</a>
@@ -91,6 +96,7 @@ const structuredData = {
                 >
                     <input type="hidden" name="offer" value="studio-upgrade-audit" />
                     <input type="hidden" name="kind" value="scope" />
+                    <input type="hidden" name="app" value={ sourceApp } />
                     <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
                     <label class="svc-field sm:col-span-2">
                         <span>Email</span>
@@ -102,7 +108,7 @@ const structuredData = {
                     </label>
                     <label class="svc-field">
                         <span>DAW and version</span>
-                        <input type="text" name="daw" maxlength="80" value="Logic Pro " />
+                        <input type="text" name="daw" maxlength="80" value={ dawPrefill } />
                     </label>
                     <label class="svc-field sm:col-span-2">
                         <span>One plug-in you can’t lose</span>
@@ -131,8 +137,9 @@ const structuredData = {
                 >
                     <input type="hidden" name="offer" value="studio-upgrade-audit" />
                     <input type="hidden" name="kind" value="waitlist" />
+                    <input type="hidden" name="app" value={ sourceApp } />
                     <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
-                    <label class="svc-field flex-1" style="min-width: 14rem;">
+                    <label class="svc-field flex-1" style="min-width: min(14rem, 100%);">
                         <span>Email</span>
                         <input type="email" name="email" autocomplete="email" maxlength="254" required />
                     </label>

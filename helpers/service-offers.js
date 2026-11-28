@@ -14,6 +14,16 @@ export const auditPagePath = '/services/studio-upgrade-audit/'
 // Set this to '' to turn the widget off; the Worker skips the check while its secret is unset.
 export const turnstileSiteKey = '0x4AAAAAAGWhwBrgzHSl1Hff'
 
+// These alerts can come from a dependency even when the listed app is native.
+const intelDependencyVariants = [
+    { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?', active: false },
+    { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?', active: false },
+    { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?', active: false },
+    { id: 'intel-plugin', headline: 'Does macOS flag a plug-in as Intel-only?' },
+    { id: 'rosetta-plugin', headline: 'Does an older plug-in still need Rosetta?' },
+    { id: 'rosetta-installer', headline: 'Does a plug-in installer ask for Rosetta?' }
+]
+
 // Headline experiments. Each browser gets ONE variant per experiment, picked at
 // random from the active variants and kept in localStorage under the experiment
 // id, so it sees the same headline on every page and card type in that experiment.
@@ -52,9 +62,7 @@ export const serviceExperiments = {
             },
             { id: 'nm1', headline: 'Ordering a new Mac?' },
             { id: 'cp1', headline: 'Is your Mac ready to reopen that client project?' },
-            { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?' },
-            { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?' },
-            { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?' }
+            ...intelDependencyVariants
         ]
     },
     // Logic Pro and MainStage pages
@@ -73,9 +81,7 @@ export const serviceExperiments = {
             { id: 'cw1', headline: 'Will last year’s client mixes still open?' },
             { id: 'nm1', headline: 'Ordering a new Mac?' },
             { id: 'cp1', headline: 'Is your Mac ready to reopen that client project?' },
-            { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?' },
-            { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?' },
-            { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?' }
+            ...intelDependencyVariants
         ]
     },
     'revival-v1': {
@@ -94,16 +100,16 @@ export const serviceCards = {
         offer: 'studio-upgrade-audit',
         experiment: 'audio-headlines-v2',
         subhead: 'Logic first. We review other hosts case by case.',
-        primary: { label: 'See audit scope', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' }
+        primary: { label: 'Request a scope check', href: auditPagePath },
+        secondary: { label: 'Get audit availability updates' }
     },
     // DAWs and hosts other than Logic, native or not (REAPER, Ableton, Pro Tools, Audacity...)
     'daw': {
         offer: 'studio-upgrade-audit',
         experiment: 'audio-headlines-v2',
         subhead: 'Logic first. We review other hosts case by case.',
-        primary: { label: 'See audit scope', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' }
+        primary: { label: 'Request a scope check', href: auditPagePath },
+        secondary: { label: 'Get audit availability updates' }
     },
     // Logic Pro and MainStage
     'logic-native': {
@@ -173,8 +179,19 @@ export const audioAppSlugs = [
     'spectrasonics-trilian', 'spectrasonics-stylus-rmx', 'waves-central', 'spitfire-audio',
     'ilok-license-manager', 'ua-connect', 'universal-audio-software', 'arturia-software-center',
     'amplitube-5', 'toontrack-product-manager', 'superior-drummer-3', 'addictive-drums-2',
-    'xln-online-installer', 'slate-digital-connect', 'focusrite-control', 'universal-control', 'splice'
+    'xln-online-installer', 'slate-digital-connect', 'focusrite-control', 'universal-control', 'splice',
+    'vital', 'surge-xt', 'loopback'
 ]
+
+// Playback, listening, practice and standalone diagnostics were reviewed by app.
+// Uninstallers are excluded by role even when a vendor name matches audioNameTerms.
+const studioAuditExcludedSlugs = new Set([
+    'airfoil', 'auralia-5-student', 'bitperfect', 'capo', 'colibri', 'colibri-dac-dsd-test',
+    'foobar2000', 'forscore', 'fretello', 'instuner', 'kugoumusic', 'midi-player',
+    'motu-audio-tools', 'noizio', 'pine-player', 'silicio', 'somafm', 'tunesart',
+    'ultimate-guitar-chords-and-tabs', 'whatson'
+])
+const uninstallerPattern = /^(?:remove[ -])|\buninstall(?:er)?\b/
 
 // Whole-word matches on a listing's name or aliases
 const audioNameTerms = [
@@ -257,6 +274,9 @@ export function getServiceCardType ( listing ) {
 
     if ( isAbandonedListing( listing ) ) return 'revival'
 
+    if ( studioAuditExcludedSlugs.has( slug ) || uninstallerPattern.test( slug ) ||
+        listingNames( listing ).some( name => uninstallerPattern.test( name ) ) ) return null
+
     if ( !isAudioListing( listing ) ) return null
 
     // Logic copy only ever shows on Logic Pro and MainStage
@@ -267,6 +287,10 @@ export function getServiceCardType ( listing ) {
 
 // Same shape the subscriptions Worker accepts for app_slug
 export const appSlugPattern = /^[a-z0-9-]{1,40}$/
+
+export function getAuditRequestPath ( appSlug = '' ) {
+    return appSlugPattern.test( appSlug ) ? `${ auditPagePath }?app=${ appSlug }` : auditPagePath
+}
 
 // /services/abandoned-app-revival/?app=true-fi prefills the request form for that listing
 export function getRevivalRequestPath ( appSlug = '' ) {
@@ -285,8 +309,9 @@ export const auditPage = {
     subhead: 'We reopen a copy of one Logic session and check the plug-ins it needs to play. Then you get a plan: update, print or wait.',
     scopeSummary: 'We check a copy of one Logic session and up to 15 plug-in versions on one Mac with one target macOS and Logic version.',
     price: '$500 scoped audit',
-    primary: 'Check my Logic setup',
-    secondary: 'Email me when audits open',
+    availability: 'Scope requests are open. We schedule audits after confirming scope with you.',
+    primary: 'Request a scope check',
+    secondary: 'Get audit availability updates',
     // Set src to an image or video URL to show it. The page shows no media slot while src is empty.
     media: {
         type: 'image',
@@ -308,16 +333,16 @@ export const auditPage = {
         }
     ],
     scope: {
-        heading: 'Check my Logic setup',
-        intro: 'Tell us about your setup. We reply by email to confirm scope before anything is paid.',
+        heading: 'Request a scope check',
+        intro: 'Tell us about your setup. We start with Logic and review other hosts case by case. We reply by email to confirm scope before anything is paid.',
         submit: 'Send my setup',
         success: 'Thanks. We’ll reply by email to confirm the scope.'
     },
     waitlist: {
         heading: 'Not ready yet?',
-        intro: 'Get one email when audits open.',
-        submit: 'Email me when audits open',
-        success: 'You’re on the list. We’ll email you when audits open.'
+        intro: 'Get an email when new audit appointments are available.',
+        submit: 'Email me about availability',
+        success: 'You’re on the list. We’ll email you when new audit appointments are available.'
     },
     faq: [
         {
@@ -539,7 +564,7 @@ export const servicesIndex = {
             icon: '🎚️',
             title: 'Logic upgrade audit',
             text: 'Check your plug-ins and one real session before you move Macs or upgrade macOS.',
-            status: '$500 scoped audit · Taking requests',
+            status: '$500 scoped audit · Scope requests open',
             href: auditPagePath
         },
         ...Object.entries( servicePages ).map( ( [ slug, page ] ) => ( {

@@ -91,6 +91,14 @@ describe( 'http helper', () => {
         await expect( getText( 'https://doesitarm.com/sitemap.xml' ) ).resolves.toBe( '<xml />' )
     } )
 
+    it( 'preserves the HTTP error when the API returns a plain text miss', async () => {
+        fetchMock.mockResolvedValueOnce( new Response( 'The page could not be found', { status: 404 } ) )
+
+        await expect( getJson( 'https://api.doesitarm.com/api/app/missing.json' ) ).rejects.toMatchObject({
+            response: { status: 404, data: 'The page could not be found' }
+        })
+    } )
+
     it( 'posts JSON payloads and parses JSON responses', async () => {
         fetchMock.mockResolvedValueOnce( new Response( JSON.stringify({
             supportedVersionNumber: '2.1.0'
