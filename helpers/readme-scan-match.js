@@ -51,6 +51,7 @@ export const SEPARATE_PRODUCTS = new Map( [
     [ 'start for Mac', [ 'com.tencent.start.mac.Start' ] ],
     [ 'AdBlock Pro for Safari', [ 'com.betafish.adblock-mac' ] ],
     [ 'Remote Buddy', [ 'com.sony.Remote' ] ],
+    [ 'Studio One', [ 'com.BrickLink.Studio' ] ],
     // Scan name = README name + extra words, from another vendor
     [ 'Anki', [ 'maccatalyst.social.street.MemoryAssistant' ] ],
     [ 'Dolphin', [ 'com.aldelaro5.dolphin-memory-engine' ] ],
