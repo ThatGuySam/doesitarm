@@ -41,3 +41,19 @@ describe( 'inventory helpers', () => {
         expect( scanVerdict( split, [ '9.9' ] ) ).toBeNull()
     })
 })
+
+describe( 'published architecture lists', async () => {
+    const { scannedVersions } = await import( '../src/data.js' )
+
+    it( 'reads the plain architectures list the public API now publishes', () => {
+        const raw = { bundles: [ [ 'com.example.app', [
+            [ '2.0', { 'App Version': '2.0', 'Result': '✅', architectures: [ 'arm64', 'x86_64', 'ppc' ], minimumMacOS: '11.0' } ],
+        ] ] ] }
+
+        expect( scannedVersions( raw, 'com.example.app' ) ).toEqual( [ { version: '2.0', architectures: [ 'arm64', 'x86_64' ] } ] )
+    } )
+
+    it( 'treats i386 as Intel', () => {
+        expect( scanVerdict( [ { version: '1.0', architectures: [ 'i386' ] } ], [ '1.0' ] ).status ).toBe( 'rosetta' )
+    } )
+} )

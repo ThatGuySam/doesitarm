@@ -4,6 +4,7 @@ import * as zip from '@zip.js/zip.js'
 
 import { isString } from './check-types.js'
 import { postJson } from './http.js'
+import { buildScanSubmission } from './scan-allowlist.js'
 import parseMacho from './macho/index.js'
 
 // Vite Web Workers - https://vitejs.dev/guide/features.html#web-workers
@@ -331,13 +332,14 @@ export default class AppFilesScanner {
 
         // console.log( 'this.testResultStore', this.testResultStore )
 
-        const responseData = await postJson( this.testResultStore, {
+        // Only the allowlisted fields leave the browser (helpers/scan-allowlist.js)
+        const responseData = await postJson( this.testResultStore, buildScanSubmission({
             filename,
             appVersion,
             result,
-            machoMeta: JSON.stringify( machoMeta ),
-            infoPlist: JSON.stringify( infoPlist )
-        } )
+            machoMeta,
+            infoPlist
+        }) )
             .catch(function (error) {
                 console.error(error)
 
@@ -576,22 +578,8 @@ export default class AppFilesScanner {
             filename: file.name,
             appVersion: file.appVersion,
             result: binarySupportsNative ? '✅' : '🔶',
-            machoMeta: {
-                ...mainExecutableMeta,
-                file: undefined,
-                architectures: mainExecutableMeta.architectures.map( architecture => {
-                    return {
-                        bits: architecture.bits,
-                        fileType: architecture.fileType,
-                        header: architecture.header,
-                        loadCommandsInfo: architecture.loadCommandsInfo,
-                        magic: architecture.magic,
-                        offset: architecture.offset,
-                        processorSubType: architecture.processorSubType,
-                        processorType: architecture.processorType,
-                    }
-                })
-            },
+            // Only the architecture names are derived and sent
+            machoMeta: mainExecutableMeta,
             infoPlist: info
         })
 

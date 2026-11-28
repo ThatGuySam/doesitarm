@@ -14,6 +14,7 @@ import {
     cliOptions
 } from '~/helpers/cli-options.js'
 import { getJson } from './http.js'
+import { toPublicScanReport } from './scan-allowlist.js'
 
 const md = new MarkdownIt()
 
@@ -328,6 +329,18 @@ function generateTagsSetFromGenres( bundleId, bundleGenres ) {
 }
 
 
+// Reduce a scans-feed `versions` object ({ [version]: scanRow }) to the
+// fields we publish. Anything else in the feed is dropped here.
+export function projectScanVersions ( versions ) {
+    if ( versions === null || typeof versions !== 'object' ) return {}
+
+    return Object.fromEntries(
+        Object.entries( versions )
+            .map( ([ version, report ]) => [ version, toPublicScanReport( report ) ] )
+            .filter( ([ , report ]) => report !== null )
+    )
+}
+
 // Turn the scans feed into listings keyed by slug. When two scans share a slug,
 // the later one in the feed wins unless the earlier one has a clearly stronger
 // claim to the name (see laterScanTakesSlug).
@@ -445,8 +458,9 @@ export default async function () {
                     // bundleId as key
                     appScan.bundleIdentifier,
 
-                    // Versions as value
-                    appScan.versions
+                    // Versions as value, reduced to the published fields
+                    // (helpers/scan-allowlist.js). Raw scan data stays private.
+                    projectScanVersions( appScan.versions )
                 ])
 
             }

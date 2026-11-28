@@ -3,6 +3,26 @@ import { applyResponseDefaults } from '~/helpers/astro/request.js'
 
 import Layout from '~/src/layouts/default.astro'
 import LegalPage from '~/src/components/legal-page.astro'
+import { INFO_PLIST_ALLOWED_KEYS, MAX_VALUE_LENGTH } from '~/helpers/scan-allowlist.js'
+
+// One row per key in helpers/scan-allowlist.js, so this table cannot drift from what the scanner sends.
+const keyDescriptions = {
+    CFBundleIdentifier: 'The app\'s bundle ID, for example com.tinyspeck.slackmacgap',
+    CFBundleName: 'The app\'s short name',
+    CFBundleDisplayName: 'The app\'s display name',
+    CFBundleShortVersionString: 'The app\'s version, for example 4.41',
+    CFBundleVersion: 'The app\'s build number',
+    CFBundlePackageType: 'The bundle type, for example APPL for an app',
+    LSMinimumSystemVersion: 'The oldest macOS version the app supports',
+    LSMinimumSystemVersionByArchitecture: 'The oldest macOS version per processor type (only when it is a single text value)',
+    LSArchitecturePriority: 'Which processor type the app prefers (only when it is a single text value)',
+    LSRequiresNativeExecution: 'Whether the app refuses to run under Rosetta 2',
+    NSHumanReadableCopyright: 'The app\'s copyright notice',
+    DTSDKName: 'The macOS SDK the app was built with',
+    DTXcode: 'The Xcode version the app was built with',
+}
+
+const collectedKeys = INFO_PLIST_ALLOWED_KEYS.map( key => [ key, keyDescriptions[ key ] || '' ] )
 
 applyResponseDefaults( Astro )
 ---
@@ -15,7 +35,7 @@ applyResponseDefaults( Astro )
 >
     <LegalPage title="Privacy Policy" effective="November 27, 2026">
 
-        <p>Does It ARM is a free site that tracks which Mac apps run natively on Apple Silicon. It is run by Sam Carlton ("we", "us"). This policy covers doesitarm.com, the App Scanner, our email lists and the Does It ARM MCP server at mcp.doesitarm.com. It explains what we collect, why, who handles it, and your choices.</p>
+        <p>Does It ARM is a free site that tracks which Mac apps run natively on Apple Silicon. It is run by Sam Carlton Creative LLC, an Oklahoma limited liability company, doing business as Does It ARM ("we", "us"). This policy covers doesitarm.com, the App Scanner, our email lists and the Does It ARM MCP server at mcp.doesitarm.com. It explains what we collect, why, who handles it, and your choices.</p>
 
         <p>The short version: there are no accounts. We collect little, and we never sell your personal data. Questions go to <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>.</p>
 
@@ -41,13 +61,29 @@ applyResponseDefaults( Astro )
         <p>To slow down spam, signups are rate limited using your IP address and email address. These limits are checked with hashed values and are not saved with your signup. Every email we send has an unsubscribe link, or you can email us to unsubscribe.</p>
 
         <h3>The App Scanner</h3>
-        <p>The App Scanner checks apps in your browser. <strong>Your app files are never uploaded.</strong></p>
+        <p>The App Scanner checks apps in your browser. <strong>Your app files are never uploaded.</strong> We do not collect the app's files, its full Info.plist, the contents of its program files, or file and folder paths on your Mac.</p>
+
+        <p>When a scan is shared with us, it contains only these details:</p>
+        <table class="legal-table">
+            <thead>
+                <tr><th scope="col">Detail</th><th scope="col">What it is</th></tr>
+            </thead>
+            <tbody>
+                { collectedKeys.map( ([ key, description ]) => (
+                    <tr><td><code>{ key }</code></td><td>{ description }</td></tr>
+                )) }
+                <tr><td><code>architectures</code></td><td>The processor types the app's main program is built for (arm64, arm64e, x86_64, x86_64h or i386), read from its Mach-O header</td></tr>
+                <tr><td><code>result</code></td><td>Whether the scan found native Apple Silicon support</td></tr>
+                <tr><td><code>appVersion</code>, <code>filename</code></td><td>The app's version and the app's name with no folder path, for example "Slack.app", so we can match scans of the same app</td></tr>
+            </tbody>
+        </table>
+        <p>The first {collectedKeys.length} details come from the app's Info.plist, the standard settings file inside every Mac app. We keep only text, number and true/false values, each cut to {MAX_VALUE_LENGTH} characters, and drop anything else. We do not collect any other Info.plist keys, such as update feed URLs, nor Mach-O load commands, code signing data or other metadata. In return for a scan, we tell you if we know of a version of that app that runs natively.</p>
         <ul>
-            <li><strong>What the current scanner sends.</strong> For each app you scan, the default scanner sends us the app's file name (not its folder path), its version, the scan result, technical details of its main program (Mach-O metadata, such as which processor types it supports) and the app's full Info.plist. Info.plist is the standard settings file inside every Mac app. It holds things like the app's name, bundle ID, version and minimum macOS version. In return, we tell you if we know of a version of that app that runs natively.</li>
-            <li><strong>Where it goes.</strong> Scan reports are stored by a function on Vercel in a Google Sheet. We do not store your name, an account or your IP address with a scan report.</li>
-            <li><strong>Scan reports are published.</strong> Scan reports, including the Info.plist, the Mach-O metadata, the file name, the version and the scan date, can appear on the app's public Does It ARM page (under "Bundle Version History") and in our public data files.</li>
+            <li><strong>The current scanner.</strong> The default App Scanner sends the details above every time you scan an app. It has no setting to turn this off. It will be replaced by the newer scanner described below. If you do not want to share, use the newer scanner with sharing turned off.</li>
+            <li><strong>The newer scanner.</strong> The newer App Scanner (available with <code>?v=3</code> on the scanner page) has a setting called "Use my data to improve Does It ARM". When it is on, the scanner sends the same details listed above, and nothing more. It starts on for most visitors. It starts off for visitors in the European Union and European Economic Area, the UK and Switzerland, based on the country that Cloudflare reports for your request. Anyone can change it in the scanner settings. Scanning while offline sends nothing.</li>
+            <li><strong>Where it goes.</strong> Scan reports are stored by a function on Vercel in a Google Sheet. We do not store your name, an account or your IP address with a scan report. Older scan reports in that sheet, sent before November 27, 2026, include more detail (the full Info.plist and Mach-O metadata). They stay private and are no longer published.</li>
+            <li><strong>What we publish.</strong> An app's public Does It ARM page and our public data files show only a few fields from scan reports: the app version, the bundle ID, the processor types (shown as Universal, Apple Silicon or Intel), the minimum macOS version and the scan result.</li>
             <li><strong>Scanning a URL.</strong> If you scan a download link, our servers or your browser fetch that public URL to read the app's details.</li>
-            <li><strong>The newer scanner.</strong> The newer App Scanner (available with <code>?v=3</code> on the scanner page) currently keeps scan results on your device and sends nothing about the apps you scan from your own files. Where offered, a scanner setting called "Use my data to improve Does It ARM" sends the same kind of app details to help us. It is on by default and you can turn it off in the scanner settings. Scanning while offline sends nothing.</li>
         </ul>
         <p><strong>Why we collect app details.</strong> App details help us keep the public compatibility list accurate and find newer versions of an app that run natively. We have a legitimate interest in this, and it benefits everyone who uses the list. You can object at any time: use the newer scanner with the setting turned off, scan offline, or email us to ask us to remove a report.</p>
         <p><strong>Public apps only.</strong> We want details about publicly available apps, not internal or confidential ones. Please do not scan apps that contain confidential information, such as in-house company apps, while sharing is on. We may delete scan data that looks like it comes from a non-public app.</p>
@@ -102,7 +138,7 @@ applyResponseDefaults( Astro )
         <p>We will update this policy when our practices change and refresh the date at the top. For significant changes, we will also take other reasonable steps to let people know. This page's full history is public on GitHub.</p>
 
         <h2>Contact</h2>
-        <p>Sam Carlton, Does It ARM. Email <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>. Also see our <a href="/terms">Terms of Use</a>.</p>
+        <p>Sam Carlton Creative LLC, doing business as Does It ARM. Email <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>. Also see our <a href="/terms">Terms of Use</a>.</p>
 
     </LegalPage>
 </Layout>

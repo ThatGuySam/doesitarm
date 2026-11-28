@@ -3,8 +3,8 @@
 // Everything comes from the existing public API (api.doesitarm.com), the same
 // JSON the website is built from. Listing details are reduced to an explicit
 // allowlist of fields a visitor sees when a page first loads. Raw scan data
-// (Info.plist and Mach-O metadata, shown on the site only behind "Full Info
-// Plist" / "Full Meta Details" toggles) is never copied into MCP output.
+// (Info.plist and Mach-O metadata) is never copied into MCP output; the public
+// API itself now publishes only the fields in helpers/scan-allowlist.js.
 
 export const SITE_URL = 'https://doesitarm.com'
 export const DEFAULT_API_URL = 'https://api.doesitarm.com'
@@ -99,9 +99,17 @@ function scanStatusText ( result = '' ) {
         : '🔶 App has not yet been reported to be native to Apple Silicon'
 }
 
-// Mirrors helpers/bundles.js supportedArchitectures(). Only the derived
-// architecture names leave this function, never the Mach-O metadata itself.
+// Mirrors helpers/bundles.js supportedArchitectures(). Published reports carry
+// a plain `architectures` list of names (helpers/scan-allowlist.js). Older API
+// builds still nest them under Mach-O metadata; only the derived names leave
+// this function, never the metadata itself.
+const ARCHITECTURE_NAMES = new Set([ 'arm64', 'arm64e', 'x86_64', 'x86_64h', 'i386' ])
+
 function scanArchitectures ( report = {} ) {
+    if ( Array.isArray( report?.architectures ) ) {
+        return report.architectures.filter( name => ARCHITECTURE_NAMES.has( name ) )
+    }
+
     const architectures = report?.['Macho Meta']?.architectures
     if ( !Array.isArray( architectures ) ) return []
 

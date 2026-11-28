@@ -51,6 +51,28 @@ const { title, effective } = Astro.props
     .legal :global(strong) {
         color: #fff;
     }
+    .legal :global(.legal-table) {
+        border-collapse: collapse;
+        display: block;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        width: 100%;
+    }
+    .legal :global(.legal-table th),
+    .legal :global(.legal-table td) {
+        border-bottom: 1px solid #374151;
+        padding: 0.5rem 0.75rem 0.5rem 0;
+        text-align: left;
+        vertical-align: top;
+    }
+    .legal :global(.legal-table th) {
+        color: #fff;
+        font-weight: 600;
+    }
+    .legal :global(.legal-table code) {
+        overflow-wrap: anywhere;
+    }
     .legal-credit {
         border-top: 1px solid #374151;
         color: #9ca3af;

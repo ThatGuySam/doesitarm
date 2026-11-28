@@ -115,7 +115,9 @@ describe( 'Apple Silicon app test page', () => {
         expect( rowText ).toContain( 'com.doesitarm.playwright-native-app' )
 
         expect( submittedScans.length, devServer.output.text ).toBe( 1 )
-        expect( submittedScans[ 0 ]?.filename, JSON.stringify( submittedScans[ 0 ] ) ).toBe( 'Playwright Native App.app.zip' )
+        expect( submittedScans[ 0 ]?.filename, JSON.stringify( submittedScans[ 0 ] ) ).toBe( 'Playwright Native App.app' )
+        expect( Object.keys( submittedScans[ 0 ] ).sort() ).toEqual( [ 'appVersion', 'architectures', 'filename', 'infoPlist', 'machoMeta', 'result' ] )
+        expect( JSON.parse( String( submittedScans[ 0 ]?.machoMeta ) ) ).toEqual( { architectures: submittedScans[ 0 ]?.architectures } )
         expect( submittedScans[ 0 ]?.result, JSON.stringify( submittedScans[ 0 ] ) ).toBe( '✅' )
         expect( pageErrors, devServer.output.text ).toEqual( [] )
         expect( consoleErrors, devServer.output.text ).toEqual( [] )

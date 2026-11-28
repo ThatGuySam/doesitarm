@@ -151,7 +151,7 @@ The server returns what a visitor sees when a listing page first loads: name, st
 
 `check_inventory` reuses the same ten-version projection and adds nothing from the raw scan.
 
-It never returns the raw scan data that pages keep behind the **Full Info Plist** and **Full Meta Details** toggles (Info.plist contents and Mach-O metadata), or upload file names and scan dates.
+It never returns raw scan data (Info.plist contents, Mach-O metadata), upload file names or scan dates. Since November 27, 2026 the public API itself publishes only the scan fields in [`helpers/scan-allowlist.js`](../helpers/scan-allowlist.js), and architectures are names such as `arm64` and `x86_64`.
 
 ## How it works
 

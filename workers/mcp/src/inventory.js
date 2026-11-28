@@ -228,7 +228,7 @@ export function compareVersions ( a, b ) {
 }
 
 const hasArm = architectures => architectures.some( arch => /^arm/i.test( arch ) )
-const hasIntel = architectures => architectures.some( arch => /^x86/i.test( arch ) )
+const hasIntel = architectures => architectures.some( arch => /^(x86|i386)/i.test( arch ) )
 
 // Classifies an exact installed version from the scanned-version history.
 export function scanVerdict ( versions, installed = [] ) {
