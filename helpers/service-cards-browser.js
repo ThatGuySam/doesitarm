@@ -167,6 +167,10 @@ const formObserver = typeof IntersectionObserver === 'function'
     : null
 
 export function refreshServiceCards () {
+    if ( typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal === 'function' ) {
+        for ( const trigger of document.querySelectorAll( '[data-svc-sheet-open][hidden]' ) ) trigger.hidden = false
+    }
+
     for ( const card of document.querySelectorAll( '[data-svc-card]' ) ) {
         if ( seen.has( card ) ) continue
         if ( card.hasAttribute( 'data-svc-page' ) ) {
@@ -263,9 +267,18 @@ export function initServiceCards ( { eventsEndpoint, turnstileSiteKey = '' } ) {
         if ( !info ) return
 
         const name = control.getAttribute( 'data-svc-control' )
+        if ( control.hasAttribute( 'data-svc-sheet-open' ) ) {
+            const sheet = document.getElementById( control.getAttribute( 'aria-controls' ) )
+            if ( !( sheet instanceof HTMLDialogElement ) || sheet.open ) return
+            control.focus( { preventScroll: true } )
+            sheet.showModal()
+            sheet.querySelector( '[data-svc-sheet-body]' )?.scrollTo( 0, 0 )
+        }
+
         sendEvent( 'click', info.type, info.variant, name, info.experiment )
 
-        if ( control instanceof HTMLAnchorElement && control.pathname.startsWith( '/services/' ) && !control.hash ) {
+        if ( control instanceof HTMLAnchorElement && control.pathname.startsWith( '/services/' ) &&
+            ( !control.hash || control.pathname !== window.location.pathname ) ) {
             const url = new URL( control.href )
             url.searchParams.set( 'card', info.type )
             url.searchParams.set( 'v', info.variant )

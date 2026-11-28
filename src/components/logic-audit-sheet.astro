@@ -1,0 +1,127 @@
+---
+import { auditPagePath } from '~/helpers/service-offers.js'
+import ServiceSituations from './service-situations.astro'
+---
+<dialog id="logic-audit-sheet" class="service-sheet" aria-labelledby="logic-audit-sheet-title" closedby="any">
+    <header class="sheet-header">
+        <span class="sheet-handle" aria-hidden="true"></span>
+        <div class="sheet-heading">
+            <h2 id="logic-audit-sheet-title" tabindex="-1" autofocus>When this helps</h2>
+            <form method="dialog">
+                <button type="submit" data-svc-control="sheet-close">Close</button>
+            </form>
+        </div>
+    </header>
+    <div class="sheet-body" role="region" aria-label="Situations" tabindex="0" data-svc-sheet-body>
+        <ServiceSituations rescueControl="sheet-rescue" />
+    </div>
+    <footer class="sheet-actions">
+        <a href={ auditPagePath } data-svc-control="sheet-audit">See audit scope</a>
+        <a href={ `${ auditPagePath }#waitlist` } data-svc-control="sheet-waitlist">Join the audit waitlist</a>
+    </footer>
+</dialog>
+
+<style>
+    .service-sheet {
+        --sheet-surface: #171b2e;
+        --sheet-border: rgb(165 180 252 / 30%);
+        --sheet-gutter: clamp(1rem, 4vw, 1.5rem);
+        position: fixed;
+        inset: auto 0 0;
+        margin: 0 auto;
+        width: min(100%, 42rem);
+        max-width: 100%;
+        max-height: 85vh;
+        max-height: 85dvh;
+        padding: 0;
+        overflow: auto;
+        border: 1px solid var(--sheet-border);
+        border-bottom: 0;
+        border-radius: 1rem 1rem 0 0;
+        background: var(--sheet-surface);
+        color: #fff;
+        text-align: left;
+    }
+    .service-sheet[open] {
+        display: flex;
+        flex-direction: column;
+    }
+    .service-sheet:not([open]) { display: none; }
+    .service-sheet:modal { overscroll-behavior: contain; }
+    .service-sheet::backdrop {
+        background: rgb(0 0 0 / 65%);
+        overflow: hidden;
+        overscroll-behavior: contain;
+    }
+    .sheet-header, .sheet-body, .sheet-actions {
+        padding-inline: max(var(--sheet-gutter), env(safe-area-inset-left))
+                        max(var(--sheet-gutter), env(safe-area-inset-right));
+    }
+    .sheet-header {
+        flex: none;
+        border-bottom: 1px solid var(--sheet-border);
+        padding-block: 0.5rem;
+    }
+    .sheet-handle {
+        display: block;
+        width: 2rem;
+        height: 0.25rem;
+        margin: 0 auto 0.5rem;
+        border-radius: 999px;
+        background: #9ca3af;
+    }
+    .sheet-heading, .sheet-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem 1rem;
+    }
+    .sheet-heading { justify-content: space-between; }
+    h2 {
+        font-size: clamp(1.125rem, 4vw, 1.5rem);
+        font-weight: 700;
+        line-height: 1.25;
+    }
+    .sheet-body {
+        overflow: auto;
+        overscroll-behavior: contain;
+        padding-block: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.45;
+    }
+    .sheet-actions {
+        flex: none;
+        flex-wrap: wrap;
+        border-top: 1px solid var(--sheet-border);
+        padding-block: 0.25rem max(0.25rem, env(safe-area-inset-bottom));
+    }
+    button, .sheet-actions a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.25rem;
+        color: #c7d2fe;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    button {
+        padding-inline: 0.75rem;
+        border: 1px solid var(--sheet-border);
+        border-radius: 0.5rem;
+    }
+    .sheet-actions a { text-decoration: underline; }
+    button:hover, a:hover { color: #fff; }
+    h2:focus-visible, button:focus-visible, a:focus-visible {
+        outline: 2px solid #c7d2fe;
+        outline-offset: 3px;
+    }
+    .sheet-body:focus-visible { outline: 2px solid #c7d2fe; outline-offset: -2px; }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .service-sheet[open] {
+            animation: sheet-enter 220ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+        }
+        @keyframes sheet-enter {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    }
+</style>
