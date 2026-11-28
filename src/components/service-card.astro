@@ -7,7 +7,7 @@ import {
 } from '~/helpers/service-offers.js'
 
 interface Props {
-    type: 'audio' | 'audio-native' | 'revival'
+    type: 'audio' | 'audio-native' | 'daw-native' | 'revival'
     appName?: string
     appSlug?: string
     // Rendered hidden and shown later by page script (home search)
@@ -46,6 +46,7 @@ if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApp
     data-svc-card={ type }
     data-svc-offer={ card.offer }
     data-svc-variants={ variantIds }
+    data-svc-experiment={ card.experiment }
     data-svc-variant={ card.variants[0].id }
     data-svc-app={ appSlug }
     hidden={ startHidden }
@@ -81,6 +82,7 @@ if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApp
                 <input type="text" name="note" maxlength="500" />
             </label>
         ) }
+        <div class="svc-turnstile" data-svc-turnstile></div>
         <button type="submit" class="svc-button">{ type === 'revival' ? 'Count me in' : 'Email me' }</button>
         <p class="svc-status" role="status" data-svc-status></p>
     </form>
@@ -88,10 +90,10 @@ if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApp
 <script is:inline set:html={ applyVariantScript }></script>
 
 <script>
-    import { serviceEventsEndpoint } from '~/helpers/service-offers.js'
+    import { serviceEventsEndpoint, turnstileSiteKey } from '~/helpers/service-offers.js'
     import { initServiceCards } from '~/helpers/service-cards-browser.js'
 
-    initServiceCards( { eventsEndpoint: serviceEventsEndpoint } )
+    initServiceCards( { eventsEndpoint: serviceEventsEndpoint, turnstileSiteKey } )
 </script>
 
 <style>
@@ -178,6 +180,8 @@ if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApp
         font-size: 0.875rem;
         padding: 7px 10px;
     }
+    .svc-turnstile { flex-basis: 100%; }
+    .svc-turnstile:empty { display: none; }
     .svc-status {
         flex-basis: 100%;
         font-size: 0.8125rem;

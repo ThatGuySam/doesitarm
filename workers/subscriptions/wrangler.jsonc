@@ -5,6 +5,15 @@
   "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
   "compatibility_date": "2026-07-25",
   "keep_vars": true,
+  // Service request notifications go out through Email Routing on doesitarm.com.
+  // The destination is the Worker secret SERVICE_NOTIFY_TO (a verified Email Routing
+  // destination), kept out of this public repo. TURNSTILE_SECRET is also a secret.
+  "vars": {
+    "SERVICE_NOTIFY_FROM": "services@doesitarm.com"
+  },
+  "send_email": [
+    { "name": "SERVICE_EMAIL" }
+  ],
   "triggers": {
     "crons": ["0 14 * * *"]
   },

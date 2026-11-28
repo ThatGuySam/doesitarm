@@ -4,8 +4,11 @@ import {
     fillServiceCopy,
     getServiceCardType,
     isAudioSearchQuery,
-    serviceCards
+    serviceCards,
+    servicePages,
+    servicesIndex
 } from '~/helpers/service-offers.js'
+import { serviceOffers } from '~/workers/subscriptions/src/services.js'
 
 const audio = { slug: 'music-and-audio-tools' }
 
@@ -17,6 +20,24 @@ describe( 'service card placement', () => {
 
     it( 'shows the native card on native audio apps', () => {
         expect( getServiceCardType( { endpoint: '/app/logic-pro', status: 'native', category: audio } ) ).toBe( 'audio-native' )
+    } )
+
+    it( 'finds audio apps outside the category by slug or name', () => {
+        expect( getServiceCardType( { endpoint: '/app/melodyne', name: 'Melodyne', status: 'native' } ) ).toBe( 'audio-native' )
+        expect( getServiceCardType( { endpoint: '/app/native-access', name: 'Native Access', status: 'rosetta', category: { slug: 'homebrew' } } ) ).toBe( 'audio' )
+        expect( getServiceCardType( { endpoint: '/app/kontakt-8', name: 'Kontakt 8', status: 'rosetta' } ) ).toBe( 'audio' )
+        expect( getServiceCardType( { endpoint: '/app/izotope-portal', name: 'Portal', aliases: [ 'iZotope Product Portal' ], status: 'native' } ) ).toBe( 'audio-native' )
+        expect( getServiceCardType( { endpoint: '/app/luna-display', name: 'Luna Display', status: 'native' } ) ).toBeNull()
+        expect( getServiceCardType( { endpoint: '/app/brainwaves', name: 'Brainwaves', status: 'native' } ) ).toBeNull()
+    } )
+
+    it( 'gives native DAWs other than Logic the DAW-neutral card', () => {
+        expect( getServiceCardType( { endpoint: '/app/ableton', name: 'Ableton', status: 'native' } ) ).toBe( 'daw-native' )
+        expect( getServiceCardType( { endpoint: '/app/avid-pro-tools', name: 'Avid Pro Tools', status: 'native', category: audio } ) ).toBe( 'daw-native' )
+        expect( getServiceCardType( { endpoint: '/app/logic-pro', name: 'Logic Pro', status: 'native' } ) ).toBe( 'audio-native' )
+        expect( getServiceCardType( { endpoint: '/app/reaper', name: 'REAPER', status: 'rosetta', category: audio } ) ).toBe( 'audio' )
+        expect( serviceCards['daw-native'].subhead ).not.toMatch( /logic/i )
+        expect( serviceCards['daw-native'].primary.label ).not.toMatch( /logic/i )
     } )
 
     it( 'shows the revival card only on the allowlist', () => {
@@ -57,7 +78,26 @@ describe( 'service copy', () => {
         }
     } )
 
+    it( 'gives every card an experiment id and keeps the four audio headlines', () => {
+        for ( const card of Object.values( serviceCards ) ) expect( card.experiment ).toMatch( /^[a-z0-9-]{1,40}$/ )
+        expect( serviceCards.audio.experiment ).toBe( 'audio-headlines-v1' )
+        expect( serviceCards.audio.variants.map( variant => variant.id ) ).toEqual( [ 'a1', 'b1', 'c1', 'd1' ] )
+    } )
+
     it( 'fills the app name', () => {
         expect( fillServiceCopy( '{app} runs natively. Do your sessions?', { app: 'Logic Pro' } ) ).toBe( 'Logic Pro runs natively. Do your sessions?' )
+    } )
+} )
+
+describe( 'service pages', () => {
+    it( 'lists every page on /services/ and uses offers the Worker accepts', () => {
+        const hrefs = servicesIndex.offers.map( offer => offer.href )
+        for ( const [ slug, page ] of Object.entries( servicePages ) ) {
+            expect( hrefs ).toContain( `/services/${ slug }/` )
+            expect( serviceOffers.has( page.offer ), page.offer ).toBe( true )
+            expect( page.price ).toBeTruthy()
+        }
+        expect( servicePages['abandoned-app-revival'].offer ).toBe( 'app-revival' )
+        expect( servicePages['abandoned-app-revival'].price ).toMatch( /free/i )
     } )
 } )
