@@ -17,9 +17,6 @@ importers:
       '@astrojs/netlify':
         specifier: ^7.0.2
         version: 7.0.2(@types/node@24.12.0)(astro@6.4.8(@netlify/blobs@10.7.2)(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.0)(yaml@2.8.2))(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.0)(yaml@2.8.2)
-      '@astrojs/partytown':
-        specifier: ^2.1.5
-        version: 2.1.5
       '@astrojs/vue':
         specifier: ^6.0.0
         version: 6.0.0(@types/node@24.12.0)(astro@6.4.8(@netlify/blobs@10.7.2)(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.0)(yaml@2.8.2))(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)(vue@3.5.30(typescript@5.7.3))(yaml@2.8.2)
@@ -53,9 +50,6 @@ importers:
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
-      can-autoplay:
-        specifier: ^3.0.0
-        version: 3.0.0
       chance:
         specifier: ^1.1.7
         version: 1.1.7
@@ -349,9 +343,6 @@ packages:
     resolution: {integrity: sha512-f5DNt0goHcksPq5MXca8s+sRbrMlMmK84BAUYsG5RxEaiPCEylhXKOMWR/Xx2BEVt88ugZEnWXEV4jaS8HuTJA==}
     peerDependencies:
       astro: ^6.0.0-alpha.0
-
-  '@astrojs/partytown@2.1.5':
-    resolution: {integrity: sha512-Uo2Uqmvjh/5w08wGoVAspdj14hUoE28uQH8SkzaBMw9bTBNIviEkPi3VkJi+tj1ZYAY9oX7OSkRDJ48QRtMhlw==}
 
   '@astrojs/prism@4.0.2':
     resolution: {integrity: sha512-KTivpmnz6lDsC6o9H4+DNm2SrE/GHzw8cNAvEJwAvUT+eoaEnn/4NtbDNfRRaxaJHdp15gf+tfHAWiXR4wB3BA==}
@@ -1735,11 +1726,6 @@ packages:
   '@poppinss/exception@1.2.3':
     resolution: {integrity: sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==}
 
-  '@qwik.dev/partytown@0.11.2':
-    resolution: {integrity: sha512-795y49CqBiKiwKAD+QBZlzlqEK275hVcazZ7wBPSfgC23L+vWuA7PJmMpgxojOucZHzYi5rAAQ+IP1I3BKVZxw==}
-    engines: {node: '>=18.0.0'}
-    hasBin: true
-
   '@readme/better-ajv-errors@2.4.0':
     resolution: {integrity: sha512-9WODaOAKSl/mU+MYNZ2aHCrkoRSvmQ+1YkLj589OEqqjOAhbn8j7Z+ilYoiTu/he6X63/clsxxAB4qny9/dDzg==}
     engines: {node: '>=18'}
@@ -2805,9 +2791,6 @@ packages:
   camelcase@5.3.1:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
-
-  can-autoplay@3.0.0:
-    resolution: {integrity: sha512-qQXGGYPWgF8nPjEt305o3TJ/BkN15l6/wG+VU4N93YYXD3OtYkBBx+l5un7ihIk2UU1OLytAVJjW7ZR39j/CAQ==}
 
   caniuse-api@3.0.0:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
@@ -9003,11 +8986,6 @@ snapshots:
       - uploadthing
       - yaml
 
-  '@astrojs/partytown@2.1.5':
-    dependencies:
-      '@qwik.dev/partytown': 0.11.2
-      mrmime: 2.0.1
-
   '@astrojs/prism@4.0.2':
     dependencies:
       prismjs: 1.30.0
@@ -10479,10 +10457,6 @@ snapshots:
 
   '@poppinss/exception@1.2.3': {}
 
-  '@qwik.dev/partytown@0.11.2':
-    dependencies:
-      dotenv: 16.4.7
-
   '@readme/better-ajv-errors@2.4.0(ajv@8.18.0)':
     dependencies:
       '@babel/code-frame': 7.29.0
@@ -11693,8 +11667,6 @@ snapshots:
   camelcase@4.1.0: {}
 
   camelcase@5.3.1: {}
-
-  can-autoplay@3.0.0: {}
 
   caniuse-api@3.0.0:
     dependencies:

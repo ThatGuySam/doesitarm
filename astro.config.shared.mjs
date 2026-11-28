@@ -1,4 +1,3 @@
-import partytown from '@astrojs/partytown'
 import tailwind from '@astrojs/tailwind'
 import vue from '@astrojs/vue'
 
@@ -11,12 +10,7 @@ export function makeSharedAstroConfig () {
         site: 'https://doesitarm.com/',
         integrations: [
             vue(),
-            tailwind(),
-            partytown({
-                config: {
-                    forward: [ 'dataLayer.push' ]
-                }
-            })
+            tailwind()
         ],
         vite: viteConfig
     }

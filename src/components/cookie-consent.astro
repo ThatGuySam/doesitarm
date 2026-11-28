@@ -27,18 +27,19 @@ const vendors = dataRecipients.filter( recipient => recipient.euConsent === cook
         margin-inline: auto;
         width: fit-content;
         max-width: calc(100% - 1.5rem);
-        padding: 0.625rem 0.75rem;
+        padding: 0.4rem 0.65rem;
         border: 1px solid #4b5563;
         border-radius: 0.5rem;
         background: #171a21;
         color: #e5e7eb;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
+        line-height: 1.35;
     }
     .cookie-consent:not([hidden]) {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.5rem 1rem;
+        gap: 0.4rem 0.75rem;
     }
     .cookie-consent a {
         text-decoration: underline;
@@ -48,8 +49,8 @@ const vendors = dataRecipients.filter( recipient => recipient.euConsent === cook
         gap: 0.5rem;
     }
     .cookie-actions button {
-        min-height: 2rem;
-        min-width: 4.5rem;
+        min-height: 1.75rem;
+        min-width: 4rem;
         padding: 0.25rem 0.75rem;
         border: 1px solid #9ca3af;
         border-radius: 0.25rem;

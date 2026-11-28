@@ -44,8 +44,9 @@
                         </div>
 
 
-                        <div class="play-circle bg-white-2 bg-blur flex justify-center items-center outline-0 rounded-full ease p-4">
+                        <button type="button" aria-label="Play video" class="play-circle bg-white-2 bg-blur flex justify-center items-center rounded-full ease p-4">
                             <svg
+                                aria-hidden="true"
                                 viewBox="0 0 18 18"
                                 style="width:18px;height:18px;margin-left:3px"
                             >
@@ -54,7 +55,7 @@
                                     d="M15.562 8.1L3.87.225c-.818-.562-1.87 0-1.87.9v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8z"
                                 />
                             </svg>
-                        </div>
+                        </button>
 
                         <div class="cover-bottom h-full">
 
