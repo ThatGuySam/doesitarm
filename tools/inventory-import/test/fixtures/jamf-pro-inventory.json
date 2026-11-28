@@ -1,0 +1,49 @@
+{
+  "totalCount": 2,
+  "results": [
+    {
+      "id": "9001",
+      "general": {
+        "name": "SYNTHETIC-MAC-01"
+      },
+      "applications": [
+        {
+          "name": "Firefox.app",
+          "path": "/Applications/Firefox.app",
+          "version": "128.0",
+          "cfBundleShortVersionString": "128.0",
+          "bundleId": "org.mozilla.firefox"
+        },
+        {
+          "name": "VLC.app",
+          "path": "/Applications/VLC.app",
+          "version": "3.0.21",
+          "cfBundleShortVersionString": "3.0.21",
+          "bundleId": "org.videolan.vlc"
+        }
+      ]
+    },
+    {
+      "id": "9002",
+      "general": {
+        "name": "SYNTHETIC-MAC-02"
+      },
+      "applications": [
+        {
+          "name": "Firefox.app",
+          "path": "/Applications/Firefox.app",
+          "version": "128.0",
+          "cfBundleShortVersionString": "128.0",
+          "bundleId": "org.mozilla.firefox"
+        },
+        {
+          "name": "Visual Studio Code.app",
+          "path": "/Applications/Visual Studio Code.app",
+          "version": "1.96.0",
+          "cfBundleShortVersionString": "1.96.0",
+          "bundleId": "com.microsoft.VSCode"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+ApplicationName,Platform,ApplicationVersion,DeviceCount,ApplicationPublisher
+Firefox,macOS,128.0,2,Mozilla
+VLC,macOS,3.0.21,1,VideoLAN
+Visual Studio Code,macOS,1.96.0,1,Microsoft

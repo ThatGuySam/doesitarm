@@ -1,0 +1,4 @@
+device__name,device__user_email,serial_number,name,version,short_version,bundle_id,path
+SYNTHETIC-MAC-01,synthetic-1@example.invalid,SYNTHETIC-01,Firefox,128.0,128.0,org.mozilla.firefox,/Users/synthetic-1/Applications/Firefox.app
+SYNTHETIC-MAC-02,synthetic-2@example.invalid,SYNTHETIC-02,Firefox,128.0,128.0,org.mozilla.firefox,/Users/synthetic-2/Applications/Firefox.app
+SYNTHETIC-MAC-01,synthetic-1@example.invalid,SYNTHETIC-01,Visual Studio Code,1.96.0,1.96.0,com.microsoft.VSCode,/Users/synthetic-1/Applications/Visual Studio Code.app

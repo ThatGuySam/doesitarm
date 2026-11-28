@@ -1,0 +1,12 @@
+{
+  "name": "doesitarm-inventory-import",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test test/*.test.mjs" },
+  "dependencies": {
+    "csv-parse": "6.1.0",
+    "saxes": "6.0.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "SPApplicationsDataType": [
+    {
+      "_name": "Firefox",
+      "arch_kind": "arch_arm_i64",
+      "obtained_from": "identified_developer",
+      "path": "/Applications/Firefox.app",
+      "version": "128.0"
+    },
+    {
+      "_name": "VLC",
+      "arch_kind": "arch_arm",
+      "obtained_from": "identified_developer",
+      "path": "/Applications/VLC.app",
+      "version": "3.0.21"
+    },
+    {
+      "_name": "Visual Studio Code",
+      "arch_kind": "arch_i64",
+      "obtained_from": "identified_developer",
+      "path": "/Users/synthetic-01/Applications/Visual Studio Code.app",
+      "version": "1.96.0"
+    }
+  ]
+}

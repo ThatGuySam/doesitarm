@@ -1,0 +1,4 @@
+"SystemID","SystemName","Hostname","SystemOS","ApplicationPlatform","SoftwareName","SoftwareVersion","SoftwareVendor","SoftwareInstalledDate","SoftwareLastOpened"
+"000000000000000000009001","SYNTHETIC-MAC-01","synthetic-mac-01","macOS","","Firefox","128.0","Mozilla","",""
+"000000000000000000009002","SYNTHETIC-MAC-02","synthetic-mac-02","macOS","","Firefox","128.0","Mozilla","",""
+"000000000000000000009001","SYNTHETIC-MAC-01","synthetic-mac-01","macOS","","VLC","3.0.21","VideoLAN","",""
