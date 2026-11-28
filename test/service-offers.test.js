@@ -4,6 +4,7 @@ import { apps as revivalApps } from '~/data/revival-apps.json'
 import {
     appSlugPattern,
     fillServiceCopy,
+    getAuditRequestPath,
     getCardVariants,
     getRevivalRequestPath,
     getServiceCardType,
@@ -194,6 +195,12 @@ describe( 'service copy', () => {
 } )
 
 describe( 'service pages', () => {
+    it( 'carries only valid listing slugs into audit links', () => {
+        expect( getAuditRequestPath( 'reaper' ) ).toBe( '/services/studio-upgrade-audit/?app=reaper' )
+        expect( getAuditRequestPath( 'reaper&v=other' ) ).toBe( '/services/studio-upgrade-audit/' )
+        expect( getAuditRequestPath() ).toBe( '/services/studio-upgrade-audit/' )
+    } )
+
     it( 'lists every page on /services/ and uses offers the Worker accepts', () => {
         const hrefs = servicesIndex.offers.map( offer => offer.href )
         for ( const [ slug, page ] of Object.entries( servicePages ) ) {

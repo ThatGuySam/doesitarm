@@ -2,6 +2,9 @@
 // One service call to action. Copy and headline pools live in helpers/service-offers.js.
 import {
     fillServiceCopy,
+    appSlugPattern,
+    auditPage,
+    getAuditRequestPath,
     getCardVariants,
     getRevivalRequestPath,
     serviceCards,
@@ -21,6 +24,7 @@ const { type, appName = '', appSlug = '', startHidden = false } = Astro.props
 const displayName = new Map( [ [ 'ableton', 'Ableton Live' ], [ 'garageband', 'GarageBand' ] ] ).get( appSlug ) || appName
 const card = serviceCards[ type ]
 const hasSheet = type === 'logic-native' && appSlug === 'logic-pro'
+const auditHref = `${ getAuditRequestPath( appSlug ) }${ type === 'logic-native' ? '' : '#scope' }`
 const fill = text => fillServiceCopy( text, { app: displayName || 'this app' } )
 const formKind = type === 'revival' ? 'revival' : 'waitlist'
 const variants = getCardVariants( type )
@@ -64,7 +68,7 @@ window.diaSvcApply = window.diaSvcApply || function ( card ) {
     <p class="svc-subhead">{ fill( card.subhead ) }</p>
     <div class="svc-actions">
         { card.primary.href ? (
-            <a class="svc-button" href={ card.primary.href } data-svc-control="primary">{ card.primary.label }</a>
+            <a class="svc-button" href={ auditHref } data-svc-control="primary">{ card.primary.label }</a>
         ) : (
             <button type="button" class="svc-button" data-svc-control="primary" data-svc-open>{ card.primary.label }</button>
         ) }
@@ -78,10 +82,10 @@ window.diaSvcApply = window.diaSvcApply || function ( card ) {
             <button type="button" class="svc-link" data-svc-control="secondary" data-svc-open>{ card.secondary.label }</button>
         ) }
     </div>
-    <form class="svc-form" action={ serviceRequestsEndpoint } method="post" data-svc-form hidden>
+    <form class="svc-form" action={ serviceRequestsEndpoint } method="post" data-svc-form data-svc-success={ type === 'revival' ? undefined : auditPage.waitlist.success } hidden>
         <input type="hidden" name="offer" value={ card.offer } />
         <input type="hidden" name="kind" value={ formKind } />
-        <input type="hidden" name="app" value={ type === 'revival' ? appSlug : '' } />
+        <input type="hidden" name="app" value={ appSlugPattern.test( appSlug ) ? appSlug : '' } />
         <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
         <label class="svc-label">
             <span>Email</span>
@@ -97,7 +101,7 @@ window.diaSvcApply = window.diaSvcApply || function ( card ) {
         <button type="submit" class="svc-button">{ type === 'revival' ? 'Count me in' : 'Email me' }</button>
         <p class="svc-status" role="status" data-svc-status></p>
     </form>
-    { hasSheet && <LogicAuditSheet /> }
+    { hasSheet && <LogicAuditSheet appSlug={ appSlug } /> }
 </div>
 <script is:inline set:html={ applyVariantScript }></script>
 
@@ -179,6 +183,7 @@ window.diaSvcApply = window.diaSvcApply || function ( card ) {
         flex-direction: column;
         gap: 4px;
         flex: 1 1 14rem;
+        min-width: 0;
         font-size: 0.75rem;
         color: #c7d2fe;
     }

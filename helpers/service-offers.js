@@ -100,16 +100,16 @@ export const serviceCards = {
         offer: 'studio-upgrade-audit',
         experiment: 'audio-headlines-v2',
         subhead: 'Logic first. We review other hosts case by case.',
-        primary: { label: 'See audit scope', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' }
+        primary: { label: 'Request a scope check', href: auditPagePath },
+        secondary: { label: 'Get audit availability updates' }
     },
     // DAWs and hosts other than Logic, native or not (REAPER, Ableton, Pro Tools, Audacity...)
     'daw': {
         offer: 'studio-upgrade-audit',
         experiment: 'audio-headlines-v2',
         subhead: 'Logic first. We review other hosts case by case.',
-        primary: { label: 'See audit scope', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' }
+        primary: { label: 'Request a scope check', href: auditPagePath },
+        secondary: { label: 'Get audit availability updates' }
     },
     // Logic Pro and MainStage
     'logic-native': {
@@ -288,6 +288,10 @@ export function getServiceCardType ( listing ) {
 // Same shape the subscriptions Worker accepts for app_slug
 export const appSlugPattern = /^[a-z0-9-]{1,40}$/
 
+export function getAuditRequestPath ( appSlug = '' ) {
+    return appSlugPattern.test( appSlug ) ? `${ auditPagePath }?app=${ appSlug }` : auditPagePath
+}
+
 // /services/abandoned-app-revival/?app=true-fi prefills the request form for that listing
 export function getRevivalRequestPath ( appSlug = '' ) {
     const path = `/services/abandoned-app-revival/`
@@ -305,8 +309,9 @@ export const auditPage = {
     subhead: 'We reopen a copy of one Logic session and check the plug-ins it needs to play. Then you get a plan: update, print or wait.',
     scopeSummary: 'We check a copy of one Logic session and up to 15 plug-in versions on one Mac with one target macOS and Logic version.',
     price: '$500 scoped audit',
-    primary: 'Check my Logic setup',
-    secondary: 'Email me when audits open',
+    availability: 'Scope requests are open. We schedule audits after confirming scope with you.',
+    primary: 'Request a scope check',
+    secondary: 'Get audit availability updates',
     // Set src to an image or video URL to show it. The page shows no media slot while src is empty.
     media: {
         type: 'image',
@@ -328,16 +333,16 @@ export const auditPage = {
         }
     ],
     scope: {
-        heading: 'Check my Logic setup',
-        intro: 'Tell us about your setup. We reply by email to confirm scope before anything is paid.',
+        heading: 'Request a scope check',
+        intro: 'Tell us about your setup. We start with Logic and review other hosts case by case. We reply by email to confirm scope before anything is paid.',
         submit: 'Send my setup',
         success: 'Thanks. We’ll reply by email to confirm the scope.'
     },
     waitlist: {
         heading: 'Not ready yet?',
-        intro: 'Get one email when audits open.',
-        submit: 'Email me when audits open',
-        success: 'You’re on the list. We’ll email you when audits open.'
+        intro: 'Get an email when new audit appointments are available.',
+        submit: 'Email me about availability',
+        success: 'You’re on the list. We’ll email you when new audit appointments are available.'
     },
     faq: [
         {
@@ -559,7 +564,7 @@ export const servicesIndex = {
             icon: '🎚️',
             title: 'Logic upgrade audit',
             text: 'Check your plug-ins and one real session before you move Macs or upgrade macOS.',
-            status: '$500 scoped audit · Taking requests',
+            status: '$500 scoped audit · Scope requests open',
             href: auditPagePath
         },
         ...Object.entries( servicePages ).map( ( [ slug, page ] ) => ( {

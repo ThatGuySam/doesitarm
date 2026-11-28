@@ -1,6 +1,7 @@
 ---
-import { auditPagePath } from '~/helpers/service-offers.js'
+import { getAuditRequestPath } from '~/helpers/service-offers.js'
 import ServiceSituations from './service-situations.astro'
+const auditHref = getAuditRequestPath( Astro.props.appSlug )
 ---
 <dialog id="logic-audit-sheet" class="service-sheet" aria-labelledby="logic-audit-sheet-title" closedby="any">
     <header class="sheet-header">
@@ -16,8 +17,8 @@ import ServiceSituations from './service-situations.astro'
         <ServiceSituations rescueControl="sheet-rescue" />
     </div>
     <footer class="sheet-actions">
-        <a href={ auditPagePath } data-svc-control="sheet-audit">See audit scope</a>
-        <a href={ `${ auditPagePath }#waitlist` } data-svc-control="sheet-waitlist">Join the audit waitlist</a>
+        <a href={ auditHref } data-svc-control="sheet-audit">See audit scope</a>
+        <a href={ `${ auditHref }#waitlist` } data-svc-control="sheet-waitlist">Join the audit waitlist</a>
     </footer>
 </dialog>
 
