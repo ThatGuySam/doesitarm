@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "doesitarm": {
+      "type": "http",
+      "url": "https://mcp.doesitarm.com/mcp"
+    }
+  }
+}
