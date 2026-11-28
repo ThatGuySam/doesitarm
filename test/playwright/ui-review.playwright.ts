@@ -98,6 +98,11 @@ describe( 'UI review', () => {
         try {
             await openReview( page )
             await page.getByRole( 'button', { name: 'View scan details', exact: true } ).waitFor()
+            // The compositions toolbar mounts lazily; wait for it so axe sees the selects and the frame.
+            await page.locator( '#compositions' ).scrollIntoViewIfNeeded()
+            await page.getByRole( 'combobox', { name: 'Collection', exact: true } ).waitFor()
+            await page.getByRole( 'combobox', { name: 'Composition', exact: true } ).waitFor()
+            await page.locator( 'iframe.review-composition-frame' ).waitFor()
             await page.addScriptTag({ path: resolve( 'ui-review/node_modules/axe-core/axe.min.js' ) })
             const auditShell = () => page.evaluate( async () => {
                 const { axe } = window as typeof window & {
@@ -107,7 +112,7 @@ describe( 'UI review', () => {
                 }
                 const { violations } = await axe.run({
                     include: [ 'html' ],
-                    exclude: [ '.review-composition-frame', '.review-live-demo' ]
+                    exclude: [ '.review-live-demo' ]
                 }, { runOnly: [ 'wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa' ] })
                 return violations.map( ({ id, nodes }) => ({ id, targets: nodes.map( ({ target }) => target ) }) )
             })

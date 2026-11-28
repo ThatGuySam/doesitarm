@@ -1,4 +1,3 @@
-@import "@fontsource/inter/variable.css";
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -54,7 +53,23 @@
 }
 
 .shadcn-scope {
-  --review-font: InterVariable, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* The exact stack the classic site renders with; no web font is loaded. */
+  --review-font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Classic Does It ARM tokens, measured on https://doesitarm.com/ at 1440 px (computed styles, 2026-11-27) */
+  --classic-pill-height: 34px;
+  --classic-pill-radius: 10px;
+  --classic-pill-border: 2px;
+  --classic-pill-padding: 5px 10px;
+  --classic-pill-font-size: 15px;
+  --classic-pill-shadow: inset -5px -5px 10px #ffffff12, inset 5px 5px 10px #0000001f, inset -15px -15px 35px #ffffff12, inset 15px 15px 35px #0000001f;
+  --classic-badge-height: 25px;
+  --classic-badge-bg: #fff3;
+  --classic-input-height: 32px;
+  --classic-input-radius: 7.5px;
+  --classic-input-padding: 5px 15px;
+  --classic-input-bg: #191a1d;
+  --classic-input-shadow: -5px -5px 10px #ffffff12, 5px 5px 10px #0000001f, -15px -15px 35px #ffffff12, 15px 15px 35px #0000001f, inset 160px 160px 160px #0000000d, inset -160px -160px 160px #ffffff0d;
   --background: #191a1d;
   --foreground: #d1d5db;
   --card: #26292e;
@@ -136,6 +151,10 @@
   --review-shadow-small: -2px -2px 6px #fff8, 2px 3px 7px #3025211a;
   --review-shadow: -5px -5px 14px #fff8, 5px 8px 18px #30252120;
   --review-shadow-overlay: 0 20px 60px #30252135;
+  --classic-pill-shadow: inset -5px -5px 10px #fff9, inset 5px 5px 10px #3025211a;
+  --classic-badge-bg: #3025211f;
+  --classic-input-bg: #deded8;
+  --classic-input-shadow: inset 2px 2px 6px #30252124, inset -2px -2px 6px #fff9;
 
   color-scheme: light;
 }
@@ -156,38 +175,188 @@
   outline-offset: 3px;
 }
 
-.shadcn-scope :where([data-slot="button"]:is([data-variant="default"], [data-variant="outline"])) {
+/*
+ * Looks. The default look is the classic Does It ARM pill and field. The
+ * "scanner" look (scanner v3) applies inside any element marked
+ * data-look="scanner". Every selector is zero specificity, so the
+ * scanner rules below win by source order.
+ */
+.shadcn-scope :where([data-slot="button"], [data-slot="badge"], [data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  font-weight: 400;
+}
+
+/* Classic buttons: transparent pill, soft inset shadow */
+.shadcn-scope :where([data-slot="button"]:not([data-size^="icon"])):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  box-sizing: border-box;
+  block-size: var(--classic-pill-height);
+  border: var(--classic-pill-border) solid transparent;
+  border-radius: var(--classic-pill-radius);
+  padding: var(--classic-pill-padding);
+  font-size: var(--classic-pill-font-size);
+  line-height: 20px;
+  background: transparent;
+  color: var(--foreground);
+  box-shadow: var(--classic-pill-shadow);
+}
+
+.shadcn-scope :where([data-slot="button"][data-size^="icon"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  box-sizing: border-box;
+  border: var(--classic-pill-border) solid transparent;
+  border-radius: var(--classic-pill-radius);
+  background: transparent;
+  color: var(--foreground);
+  box-shadow: var(--classic-pill-shadow);
+}
+
+.shadcn-scope :where([data-slot="button"][data-size="default"], [data-slot="button"][data-size="icon"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  inline-size: auto;
+}
+
+.shadcn-scope :where([data-slot="button"][data-size="icon"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  inline-size: var(--classic-pill-height);
+  block-size: var(--classic-pill-height);
+  padding: 0;
+}
+
+.shadcn-scope :where([data-slot="button"][data-size="sm"], [data-slot="button"][data-size="icon-sm"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  block-size: 28px;
+}
+
+.shadcn-scope :where([data-slot="button"][data-size="icon-sm"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  inline-size: 28px;
+  padding: 0;
+}
+
+.shadcn-scope :where([data-slot="button"][data-size="lg"], [data-slot="button"][data-size="icon-lg"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  block-size: 40px;
+}
+
+.shadcn-scope :where([data-slot="button"][data-size="lg"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  padding-inline: 16px;
+}
+
+.shadcn-scope :where([data-slot="button"][data-variant="outline"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  border-color: var(--border);
+}
+
+.shadcn-scope :where([data-slot="button"][data-variant="secondary"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  background: var(--classic-badge-bg);
+  box-shadow: none;
+}
+
+.shadcn-scope :where([data-slot="button"]:is([data-variant="ghost"], [data-variant="link"])):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  box-shadow: none;
+}
+
+.shadcn-scope :where([data-slot="button"][data-variant="destructive"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  border-color: var(--destructive);
+  background: transparent;
+  color: var(--destructive);
+}
+
+/* Classic badges: muted pill like the site's video and beta pills */
+.shadcn-scope :where([data-slot="badge"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  box-sizing: border-box;
+  min-block-size: var(--classic-badge-height);
+  padding: 0 10px;
+  font-size: var(--classic-pill-font-size);
+  line-height: 20px;
+}
+
+.shadcn-scope :where([data-slot="badge"]:is([data-variant="default"], [data-variant="secondary"])):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  border-color: transparent;
+  background: var(--classic-badge-bg);
+  color: var(--foreground);
+}
+
+.shadcn-scope :where([data-slot="badge"]:is([data-variant="outline"], [data-variant="destructive"])):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  background: transparent;
+}
+
+.shadcn-scope :where([data-slot="badge"][data-variant="outline"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.shadcn-scope :where([data-slot="badge"][data-variant="destructive"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  border-color: var(--destructive);
+  color: var(--destructive);
+}
+
+/* Classic fields: dark inset input with the neumorphic shadow */
+.shadcn-scope :where([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  border: 1px solid transparent;
+  border-radius: var(--classic-input-radius);
+  background: var(--classic-input-bg);
+  box-shadow: var(--classic-input-shadow);
+  color: var(--foreground);
+  font-size: var(--classic-pill-font-size);
+}
+
+.shadcn-scope :where([data-slot="input"], [data-slot="select-trigger"], [data-slot="native-select"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  box-sizing: border-box;
+  block-size: var(--classic-input-height);
+  padding: var(--classic-input-padding);
+  line-height: 20px;
+}
+
+.shadcn-scope :where([data-slot="native-select"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  padding-inline-end: 36px;
+}
+
+.shadcn-scope :where([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"])[aria-invalid="true"] {
+  border-color: var(--destructive);
+}
+
+.shadcn-scope :where([data-slot="button"]:not([data-variant="link"], [data-variant="ghost"]):hover, [data-review-state="hover"]):not(:where([data-look="scanner"], [data-look="scanner"] *)) {
+  background: var(--classic-badge-bg);
+}
+
+/* Scanner look (scanner v3): recessed fields, bordered buttons, larger controls */
+.shadcn-scope :where([data-look="scanner"] [data-slot="button"]:is([data-variant="default"], [data-variant="outline"])) {
   border: 1px solid var(--input);
   background: var(--review-recessed);
   color: var(--foreground);
 }
 
-.shadcn-scope :where([data-slot="button"][data-variant="default"]) {
+.shadcn-scope :where([data-look="scanner"] [data-slot="button"][data-variant="default"]) {
   box-shadow: var(--review-shadow-small);
 }
 
-.shadcn-scope :where([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]) {
+.shadcn-scope :where([data-look="scanner"] :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"])) {
   background: var(--review-recessed);
 }
 
-.shadcn-scope :where([data-variant="destructive"]:is([data-slot="button"], [data-slot="badge"])) {
+.shadcn-scope :where([data-look="scanner"] [data-variant="destructive"]:is([data-slot="button"], [data-slot="badge"])) {
   background: var(--destructive);
   color: var(--destructive-foreground);
 }
 
+.shadcn-scope :where([data-look="scanner"] [data-slot="badge"][data-variant="default"]) {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
 @media (hover: hover) and (pointer: fine) {
-  .shadcn-scope :where([data-slot="button"]:is([data-variant="default"], [data-variant="outline"]):hover, [data-review-state="hover"]) {
+  .shadcn-scope :where([data-look="scanner"] [data-slot="button"]:is([data-variant="default"], [data-variant="outline"]):hover, [data-look="scanner"] [data-review-state="hover"]) {
     background: var(--accent);
     color: var(--accent-foreground);
   }
 }
 
-.shadcn-scope :where([data-slot="button"]:is([data-variant="default"], [data-variant="outline"]):active) {
+.shadcn-scope :where([data-look="scanner"] [data-slot="button"]:is([data-variant="default"], [data-variant="outline"]):active) {
   box-shadow: inset 0 1px 5px #0004;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .shadcn-scope :where(*, *::before, *::after) {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .shadcn-scope :where([data-slot="skeleton"], [data-slot="spinner"]) {
-    animation: none;
+    animation: none !important;
   }
 }

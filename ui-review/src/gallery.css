@@ -129,6 +129,7 @@
 .review-local-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  align-items: start;
   gap: .7rem;
 }
 
@@ -221,12 +222,16 @@
 }
 
 .review-field input[type="search"] {
+  box-sizing: border-box;
   width: min(15rem, 100%);
-  border: 1px solid var(--input);
-  border-radius: var(--radius);
-  padding: .3rem .45rem;
-  background: var(--background);
+  block-size: var(--classic-input-height);
+  border: 1px solid transparent;
+  border-radius: var(--classic-input-radius);
+  padding: var(--classic-input-padding);
+  background: var(--classic-input-bg);
+  box-shadow: var(--classic-input-shadow);
   color: var(--foreground);
+  font-size: var(--classic-pill-font-size);
 }
 
 .review-source-link {
@@ -399,4 +404,28 @@
   .review-header-inner > button {
     justify-self: end;
   }
+}
+
+/* Reserve the height of the toolbar plus the 560px frame so the section does not
+   grow when it mounts; this keeps deep links such as #does-it-arm in place. */
+.review-compositions {
+  min-block-size: 33rem;
+}
+
+.review-scope-pair {
+  display: grid;
+  gap: .6rem;
+}
+
+.review-look-label {
+  color: var(--muted-foreground);
+  font-size: .68rem;
+  font-weight: 650;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.review-look-scanner {
+  border-block-start: 1px dashed var(--border);
+  padding-block-start: .6rem;
 }

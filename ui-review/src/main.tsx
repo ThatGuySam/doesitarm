@@ -104,7 +104,7 @@ function AtomCard({ atom, Preview }: { atom: ComponentGroup; Preview: ComponentT
       <div className="review-preview-stage"><Preview /></div>
       {atom.exampleCount > 0 && (
         <details className="review-atom-variants" onToggle={event => setOpen(event.currentTarget.open)}>
-          <summary>Official examples <ChevronDown size={16} aria-hidden="true" /></summary>
+          <summary><span>Official examples<span className="sr-only"> for {atom.label}</span></span> <ChevronDown size={16} aria-hidden="true" /></summary>
           {open && <Suspense fallback={<LoadingPreview />}><ExampleControl group={atom} /></Suspense>}
         </details>
       )}
@@ -210,6 +210,26 @@ function CompositionGallery() {
   )
 }
 
+// A deep link such as #does-it-arm lands on content above it that mounts late.
+// Re-align whenever the page height changes, until the reader scrolls or a few
+// seconds pass.
+function keepDeepLinkInView() {
+  const id = decodeURIComponent(window.location.hash.slice(1))
+  const target = id ? document.getElementById(id) : null
+  if (!target) return
+  target.scrollIntoView()
+  const settle = new ResizeObserver(() => target.scrollIntoView())
+  const stop = () => {
+    settle.disconnect()
+    window.clearTimeout(timer)
+    for (const type of ["wheel", "touchstart", "keydown", "pointerdown"]) window.removeEventListener(type, stop)
+  }
+  const timer = window.setTimeout(stop, 4000)
+  for (const type of ["wheel", "touchstart", "keydown", "pointerdown"]) window.addEventListener(type, stop, { passive: true })
+  settle.observe(document.body)
+  return stop
+}
+
 function Gallery() {
   const { theme } = useTheme()
   const [filter, setFilter] = useState("")
@@ -221,9 +241,7 @@ function Gallery() {
   })
   const components = catalog.components.filter(item => item.label.toLowerCase().includes(filter.trim().toLowerCase()))
 
-  useEffect(() => {
-    document.getElementById(window.location.hash.slice(1))?.scrollIntoView()
-  }, [])
+  useEffect(() => keepDeepLinkInView(), [])
 
   return (
     <>
