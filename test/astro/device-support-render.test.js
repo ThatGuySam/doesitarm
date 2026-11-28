@@ -1,4 +1,5 @@
 import { experimental_AstroContainer as AstroContainer } from 'astro/container'
+import { parse } from 'node-html-parser'
 import { describe, expect, it } from 'vitest'
 
 import Devices from '../../src/components/listing-parts/devices.astro'
@@ -11,15 +12,22 @@ describe( 'app page device support', () => {
             props: { listing: { name: 'Pro Tools', text: '✅ Yes, Native Apple Silicon Support' } }
         } )
         const devices = getListedDeviceListings()
+        const rows = parse( html ).querySelectorAll( 'ul.device-support-apps li' )
 
         expect( devices.length ).toBeGreaterThan( 0 )
-        for ( const device of devices ) {
-            expect( html ).toContain( `✅ ${ device.name }` )
-            expect( html ).toContain( getDeviceAmazonUrl( device ).replaceAll( '&', '&amp;' ) )
-            expect( html ).toContain( device.productUrl )
+        expect( rows ).toHaveLength( devices.length )
+        for ( const [ index, device ] of devices.entries() ) {
+            const [ name, pricing, specs ] = rows[ index ].querySelectorAll( 'a' )
+
+            expect( name.text ).toBe( `✅ ${ device.name }` )
+            expect( name.getAttribute( 'href' ) ).toBe( device.endpoint )
+            expect( pricing.text ).toBe( 'Check Pricing' )
+            expect( pricing.getAttribute( 'href' ) ).toBe( getDeviceAmazonUrl( device ) )
+            expect( pricing.getAttribute( 'rel' ) ).toBe( 'sponsored nofollow noopener' )
+            expect( specs.text ).toBe( 'Specs' )
+            expect( specs.getAttribute( 'href' ) ).toBe( device.productUrl )
+            expect( specs.getAttribute( 'aria-label' ) ).toContain( 'Apple Specs' )
         }
-        expect( html.match( /rel="sponsored nofollow noopener"/g ) ).toHaveLength( devices.length )
-        expect( html ).toContain( 'Apple specs' )
         expect( html ).toContain( 'As an Amazon Associate' )
     } )
 

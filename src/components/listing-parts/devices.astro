@@ -25,25 +25,25 @@ const hasDeviceSupport = deviceSupport.length > 0
 
         <Heading text='💻 Device Support' />
 
-        <div class="device-support-apps md:inline-flex md:w-full max-w-4xl overflow-x-auto overflow-y-visible md:whitespace-no-wrap border rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-700 space-y-3 md:space-y-0 py-4 px-3">
+        <ul class="device-support-apps mx-auto grid max-w-[56rem] grid-cols-1 gap-x-6 text-left md:grid-cols-[repeat(auto-fill,minmax(min(100%,14rem),1fr))]" role="list">
 
             { deviceSupport.map( device => (
-                <div class="device-container w-full md:w-auto inline-flex flex-col space-y-2 px-2">
+                <li class="flex items-baseline justify-between gap-3 border-b border-white/[0.06] py-2 text-sm">
                     <a
                         href={ device.endpoint }
-                        role="button"
-                        class="device-link block rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow p-2"
+                        class="device-link min-w-0 [overflow-wrap:anywhere] hover:underline focus-visible:underline"
                         aria-label={ device.ariaLabel }
                     >{ device.label }</a>
 
-                    <span class="device-shop-links flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs pb-3">
-                        <a href={ device.amazonUrl } target="_blank" class="underline whitespace-nowrap" rel="sponsored nofollow noopener" data-device-amazon>Check Pricing</a>
-                        <a href={ device.productUrl } target="_blank" class="underline whitespace-nowrap text-gray-400" rel="noopener">Apple specs</a>
+                    <span class="device-shop-links shrink-0 text-right text-xs text-gray-400">
+                        <a href={ device.amazonUrl } target="_blank" class="whitespace-nowrap underline hover:text-white" rel="sponsored nofollow noopener" aria-label={ `Check Pricing for ${ device.name } on Amazon` } data-device-amazon>Check Pricing</a>
+                        <span aria-hidden="true"> · </span>
+                        <a href={ device.productUrl } target="_blank" class="whitespace-nowrap underline hover:text-white" rel="noopener" aria-label={ `Apple Specs for ${ device.name }` }>Specs</a>
                     </span>
-                </div>
+                </li>
             )) }
 
-        </div>
+        </ul>
 
         <p class="text-xs text-gray-500 mt-2">As an Amazon Associate, Does It ARM earns from qualifying purchases.</p>
 
