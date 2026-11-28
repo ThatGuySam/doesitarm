@@ -5,6 +5,7 @@ edition.workspace = true
 
 [dependencies]
 serde.workspace = true
+json5 = "1.3.7"
 flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 plist = { version = "1", features = ["enable_unstable_features_that_may_break_with_minor_version_bumps"] }
 bzip2 = "0.6"

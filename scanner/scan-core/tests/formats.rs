@@ -95,6 +95,40 @@ fn fat32_and_fat64_seek_to_thin_headers_in_file_order() {
 }
 
 #[test]
+fn host_loadable_macho_headers_verify_without_a_launcher_or_load_commands() {
+    const MH_BUNDLE: u32 = 8;
+    const ARM64: u32 = 0x0100_000c;
+    const X86_64: u32 = 0x0100_0007;
+
+    let thin = |cpu: u32, subtype: u32| {
+        let words = [0xfeed_facf, cpu, subtype, MH_BUNDLE, 0, 0, 0, 0];
+        words.into_iter().flat_map(u32::to_le_bytes).collect::<Vec<_>>()
+    };
+    for (cpu, subtype, expected) in [(ARM64, 2, "arm64e"), (X86_64, 3, "x86_64")] {
+        let result = run(&thin(cpu, subtype), u64::MAX);
+        assert!(matches!(result.status, Status::Complete));
+        assert_eq!(result.architectures[0].name, expected);
+        assert_eq!(result.architectures[0].file_type, Some(MH_BUNDLE));
+        assert!(result.architectures[0].header_verified);
+    }
+
+    let fat_words: [u32; 12] = [0xcafe_babe, 2, ARM64, 2, 48, 32, 0, X86_64, 3, 80, 32, 0];
+    let mut fat: Vec<u8> = fat_words.into_iter().flat_map(u32::to_be_bytes).collect();
+    fat.extend(thin(ARM64, 2));
+    fat.extend(thin(X86_64, 3));
+    let result = run(&fat, u64::MAX);
+    assert!(matches!(result.status, Status::Complete));
+    assert_eq!(result.architectures.len(), 2);
+    assert!(result.architectures.iter().all(|slice| slice.header_verified));
+
+    fat[84..88].copy_from_slice(&ARM64.to_le_bytes());
+    let mismatch = run(&fat, u64::MAX);
+    assert!(matches!(mismatch.status, Status::Invalid));
+    assert!(mismatch.architectures[0].header_verified);
+    assert!(!mismatch.architectures[1].header_verified);
+}
+
+#[test]
 fn budget_preserves_fat_table_architectures_and_accounts_for_reads() {
     let result = run(FAT, 52);
     assert!(matches!(result.status, Status::BudgetExhausted));

@@ -1,3 +1,4 @@
+use crate::plugin::AudioComponent;
 use crate::{ScanError, ScanResult, Status, bundle, diagnostic::plist_encoding, plist_value};
 use plist::Value;
 use serde::{
@@ -17,6 +18,8 @@ pub struct LocalBundleMetadata {
     pub info_plist_keys: Vec<String>,
     #[serde(serialize_with = "serialize_plist")]
     pub info_plist: Option<Value>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub audio_components: Vec<AudioComponent>,
 }
 
 pub fn local_bundle_metadata(
@@ -26,9 +29,12 @@ pub fn local_bundle_metadata(
     nested: bool,
     role_hint: &str,
 ) -> LocalBundleMetadata {
+    let format = bundle::plugin_format(bundle_path);
     let mut metadata = LocalBundleMetadata {
         result: ScanResult::new(bytes.len() as u64),
-        bundle_role: if role_hint == "wrapper" {
+        bundle_role: if format.is_some() {
+            "audio_plugin"
+        } else if role_hint == "wrapper" {
             "wrapper"
         } else if nested {
             "nested_app"
@@ -41,9 +47,14 @@ pub fn local_bundle_metadata(
         info_plist_encoding: plist_encoding(bytes),
         info_plist_keys: Vec::new(),
         info_plist: None,
+        audio_components: Vec::new(),
     };
     let result = &mut metadata.result;
-    result.format = Some("app");
+    result.format = Some(format.unwrap_or("app"));
+    if format.is_some() {
+        result.platform = crate::Platform::Macos;
+        result.bundle_kind = Some("audio_plugin");
+    }
     result.bundle_path = Some(bundle_path.into());
     if result.total_size > bundle::MAX_PLIST {
         result.set_error(ScanError::Limit("bundle Info.plist size"));
@@ -67,15 +78,31 @@ pub fn local_bundle_metadata(
     let Some(dict) = value.as_dictionary() else {
         result.set_error(ScanError::Invalid("Info.plist is not a dictionary"));
         metadata.error_class = Some("invalid_info_plist");
-        metadata.info_plist = Some(value);
+        if format.is_none() {
+            metadata.info_plist = Some(value);
+        }
         return metadata;
     };
     bundle::apply_properties(dict, bundle_path, result);
-    metadata.info_plist_keys = dict.keys().cloned().collect();
+    if format == Some("au") {
+        metadata.audio_components = AudioComponent::from_plist(dict);
+    }
+    if format.is_none() {
+        metadata.info_plist_keys = dict.keys().cloned().collect();
+    }
 
     if let Some(executable) = bundle::string(dict, "CFBundleExecutable") {
         result.executable_name = Some(executable.into());
-        match bundle::resolve_executable(executable, plist_path == "Info.plist") {
+        let relative = if format.is_some()
+            && (executable.contains('/') || matches!(executable, "." | ".."))
+        {
+            Err(ScanError::Invalid(
+                "CFBundleExecutable must name a file in Contents/MacOS",
+            ))
+        } else {
+            bundle::resolve_executable(executable, format.is_none() && plist_path == "Info.plist")
+        };
+        match relative {
             Ok(relative) => {
                 result.executable_path = Some(format!("{bundle_path}/{relative}"));
                 metadata.executable_relative_path = Some(relative);
@@ -86,6 +113,10 @@ pub fn local_bundle_metadata(
                 metadata.error_class = Some("invalid_executable_path");
             }
         }
+    } else if format.is_some() {
+        result.status = Status::NoExecutable;
+        result.error = Some("Info.plist has no nonempty CFBundleExecutable.".into());
+        metadata.error_class = Some("missing_executable_key");
     } else {
         result.status = Status::NoExecutable;
         let (class, reason) = match role_hint {
@@ -118,7 +149,9 @@ pub fn local_bundle_metadata(
         metadata.error_class = Some(class);
         result.error = Some(reason.into());
     }
-    metadata.info_plist = Some(value);
+    if format.is_none() {
+        metadata.info_plist = Some(value);
+    }
     metadata
 }
 

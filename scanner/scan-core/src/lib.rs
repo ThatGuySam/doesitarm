@@ -20,6 +20,7 @@ mod nested;
 mod pbzx;
 mod pkg;
 mod plist_value;
+mod plugin;
 mod sevenz;
 mod sparse_dmg;
 mod stream_bundle;
@@ -36,6 +37,7 @@ pub use inventory::{
 };
 pub use launcher::ScriptRuntime;
 pub use local_bundle::{LocalBundleMetadata, local_bundle_metadata};
+pub use plugin::{Vst3ModuleInfo, vst3_module_info};
 
 use serde::Serialize;
 use std::{collections::BTreeMap, fmt, future::Future, pin::Pin, str::FromStr};

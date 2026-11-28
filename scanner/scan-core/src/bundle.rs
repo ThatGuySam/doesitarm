@@ -273,12 +273,32 @@ pub(crate) fn installed_bundle_kind(path: &str) -> Option<&'static str> {
     if extension.contains('/') {
         return None;
     }
+    if extension.eq_ignore_ascii_case("app") {
+        return Some("app");
+    }
+    if plugin_format(path).is_some() {
+        return Some("audio_plugin");
+    }
     match extension {
-        "app" => Some("app"),
-        "vst" | "vst3" | "component" | "aaxplugin" => Some("audio_plugin"),
         "kext" | "dext" | "driver" | "systemextension" => Some("driver"),
         "bundle" if path.contains("SmartCardServices/drivers/") => Some("driver"),
         "jdk" => Some("runtime"),
+        _ => None,
+    }
+}
+
+pub(crate) fn plugin_format(path: &str) -> Option<&'static str> {
+    let leaf = path.rsplit('/').next()?;
+    let (stem, extension) = leaf.rsplit_once('.')?;
+    if stem.is_empty() || stem.starts_with("._") {
+        return None;
+    }
+    match extension.to_ascii_lowercase().as_str() {
+        "component" => Some("au"),
+        "vst" => Some("vst2"),
+        "vst3" => Some("vst3"),
+        "clap" => Some("clap"),
+        "aaxplugin" => Some("aax"),
         _ => None,
     }
 }

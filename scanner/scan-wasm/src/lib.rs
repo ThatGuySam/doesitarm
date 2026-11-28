@@ -253,6 +253,14 @@ pub fn local_bundle_metadata(
     serde_json::to_string(&metadata).map_err(|error| JsValue::from_str(&error.to_string()))
 }
 
+/// Read the optional class identities and compatibility declarations in VST3 moduleinfo.
+#[wasm_bindgen]
+pub fn vst3_module_info(bytes: &[u8]) -> std::result::Result<String, JsValue> {
+    let info = scan_core::vst3_module_info(bytes)
+        .map_err(|error| JsValue::from_str(&error.to_string()))?;
+    serde_json::to_string(&info).map_err(|error| JsValue::from_str(&error.to_string()))
+}
+
 /// Parse a bounded page or feed and return ranked public URL hints as JSON.
 #[cfg(feature = "page-resolution")]
 #[wasm_bindgen]
