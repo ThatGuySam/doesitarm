@@ -1,0 +1,61 @@
+---
+// Shared shell for /privacy and /terms: title, effective date, prose styles and the CC BY credit.
+const { title, effective } = Astro.props
+---
+<main class="container py-32 w-full">
+    <article class="legal max-w-3xl mx-auto">
+        <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ title }</h1>
+        <p class="text-gray-400">Effective { effective }</p>
+
+        <slot />
+
+        <p class="legal-credit">
+            Adapted from the <a href="https://github.com/basecamp/policies">37signals (Basecamp) policies</a>,
+            used under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+            Rewritten and shortened for Does It ARM. See every change to this page in the
+            <a href="https://github.com/ThatGuySam/doesitarm/commits/master/src/pages">site's public repository</a>.
+        </p>
+    </article>
+</main>
+
+<style>
+    .legal :global(h2) {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+    }
+    .legal :global(h3) {
+        color: #fff;
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .legal :global(p),
+    .legal :global(ul) {
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+    .legal :global(ul) {
+        list-style: disc;
+        padding-left: 1.5rem;
+    }
+    .legal :global(li) {
+        margin-bottom: 0.5rem;
+    }
+    .legal :global(a) {
+        text-decoration: underline;
+    }
+    .legal :global(strong) {
+        color: #fff;
+    }
+    .legal-credit {
+        border-top: 1px solid #374151;
+        color: #9ca3af;
+        font-size: 0.875rem;
+        margin-top: 4rem;
+        padding-top: 1.5rem;
+    }
+</style>

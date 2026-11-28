@@ -21,3 +21,8 @@ Software listings are under `/app/`, `/game/`, and `/formula/` on https://doesit
 ## Request an app
 
 - [GitHub issues](https://github.com/ThatGuySam/doesitarm/issues)
+
+## Policies
+
+- [Privacy Policy](https://doesitarm.com/privacy)
+- [Terms of Use](https://doesitarm.com/terms)

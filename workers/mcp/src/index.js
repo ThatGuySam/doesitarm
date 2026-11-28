@@ -105,6 +105,7 @@ function infoPage ( origin ) {
 <h2>Tools</h2>
 <ul>${ TOOL_NAMES.map( name => `<li><code>${ name }</code> — ${ TOOL_COPY[ name ].title }</li>` ).join('') }</ul>
 <p>Results link back to the matching doesitarm.com page. Docs: <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">docs/mcp.md</a> · <a href="/mcp/server-card">server card</a> · <a href="/.well-known/mcp/server-card.json">legacy server card</a></p>
+<p><a href="https://doesitarm.com/privacy">Privacy Policy</a> · <a href="https://doesitarm.com/terms">Terms of Use</a></p>
 </body></html>`
 
     return new Response( html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } } )

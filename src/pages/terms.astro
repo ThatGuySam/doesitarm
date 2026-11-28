@@ -1,0 +1,69 @@
+---
+import { applyResponseDefaults } from '~/helpers/astro/request.js'
+
+import Layout from '~/src/layouts/default.astro'
+import LegalPage from '~/src/components/legal-page.astro'
+
+applyResponseDefaults( Astro )
+---
+<Layout
+    headOptions={ {
+        title: 'Terms of Use - Does It ARM',
+        description: 'The terms for using Does It ARM, the App Scanner, its data and the MCP server, including the no-warranty notice for compatibility information.',
+        pathname: '/terms'
+    } }
+>
+    <LegalPage title="Terms of Use" effective="November 27, 2026">
+
+        <p>Thanks for using Does It ARM. These terms apply to doesitarm.com, the App Scanner, our public data files and API, our emails and the Does It ARM MCP server at mcp.doesitarm.com (together, the "Services"). Does It ARM is run by Sam Carlton ("we", "us"). By using the Services, you agree to these terms and to our <a href="/privacy">Privacy Policy</a>. If you do not agree, please do not use the Services.</p>
+
+        <p><strong>These terms include a disclaimer of warranties and a limit on our liability.</strong></p>
+
+        <h2>Compatibility information is not a guarantee</h2>
+        <p>Does It ARM collects compatibility information from developers, contributors, automated scans and public sources. It can be incomplete, out of date or wrong. A listing that says an app runs natively, runs under Rosetta 2 or does not work is our best information at the time, not a promise about how the app will run on your Mac.</p>
+        <p>Before you buy hardware, roll out Macs to a team, or make another decision that matters, check with the app's developer and test it yourself. Nothing on Does It ARM is legal, financial or other professional advice. Does It ARM is not affiliated with Apple or with the developers of the apps it lists. App names and trademarks belong to their owners.</p>
+
+        <h2>Using the Services</h2>
+        <ul>
+            <li>The Services are free and need no account.</li>
+            <li>Do not use the Services for anything illegal, and do not try to break, overload or get around their security or rate limits.</li>
+            <li>Automated access is welcome if it is reasonable. For bulk data, use our public data files, API or MCP server rather than scraping pages heavily.</li>
+            <li>Do not send other people's personal data to the Services, for example in an MCP inventory or a form.</li>
+            <li>We may change, limit, suspend or stop any part of the Services at any time. We may block access that harms the Services or other users.</li>
+        </ul>
+
+        <h2>Our content and data</h2>
+        <p>Unless noted otherwise, the compatibility list is available under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 License</a>, and the site's code is available under the <a href="https://opensource.org/licenses/Apache-2.0">Apache 2.0 License</a>, as described in our <a href="https://github.com/ThatGuySam/doesitarm">public repository</a>. You can reuse them under those licenses. Please credit Does It ARM and link back. The Does It ARM name and logo are not covered by those licenses.</p>
+
+        <h2>What you contribute</h2>
+        <p>Contributions include app details sent by the App Scanner, app suggestions and corrections, and anything else you send us. You keep any rights you have in them. You give us a worldwide, royalty-free, perpetual and irrevocable license to use, copy, modify, publish and share your contributions and the compatibility data we derive from them, including as part of the public compatibility list under the licenses above.</p>
+        <p>You confirm that you have the right to share what you contribute. Only contribute details of publicly available apps. Do not scan apps that contain confidential or internal information while sharing is turned on. We may edit, decline or remove any contribution, and we may discard data that looks like it comes from a non-public app.</p>
+
+        <h2>The App Scanner</h2>
+        <p>The App Scanner reads apps in your browser and never uploads the app files themselves. What it sends is described in our <a href="/privacy">Privacy Policy</a>. Only scan apps and URLs you are allowed to access. Scan results come from automated checks and can be wrong.</p>
+
+        <h2>The MCP server and API</h2>
+        <p>The MCP server and API give read-only access to the same public information as the website, with rate limits. AI assistants that use them can misread or misquote results, so check important answers against the linked Does It ARM page. We may change tools, data formats and limits over time.</p>
+
+        <h2>Ads, affiliate links and other sites</h2>
+        <p>Does It ARM is supported by ads and affiliate links. We may earn a commission when you buy through a link. We are not responsible for other websites, products or services that we link to or show ads for. Their own terms and policies apply.</p>
+
+        <h2>No warranties</h2>
+        <p>The Services are provided "as is" and "as available", without warranties of any kind, express or implied. This includes warranties of accuracy, fitness for a particular purpose, merchantability and non-infringement, to the fullest extent the law allows. We do not promise that the Services will be error-free or always available.</p>
+
+        <h2>Limitation of liability</h2>
+        <p>To the fullest extent the law allows, we are not liable to you or to anyone else for any indirect, incidental, special, consequential, punitive or exemplary damages, or for lost profits, data, goodwill or other intangible losses, arising from your use of, or inability to use, the Services. This applies whatever the legal theory, including contract, tort (including negligence) or otherwise, even if we were told such damages were possible. If we are liable to you for anything, our total liability is limited to US$50.</p>
+        <p>In other words: Does It ARM is a free, community-supported resource. Use it as one input to your decisions, not the only one.</p>
+        <p>Some places do not allow some of these limits. In those places, they apply only as far as the law allows, and nothing in these terms limits rights you have that cannot be waived.</p>
+
+        <h2>Changes to these terms</h2>
+        <p>We may update these terms. When we do, we will refresh the date at the top. This page's full history is public on GitHub. If you keep using the Services after a change, you accept the updated terms.</p>
+
+        <h2>Governing law</h2>
+        <p>These terms are governed by the laws of the State of Oklahoma, USA, without regard to its conflict of law rules. Any dispute will be handled in the state or federal courts located in Oklahoma, unless the law where you live gives you the right to bring it elsewhere. If any part of these terms cannot be enforced, the rest still applies. If we do not enforce a term, we have not waived it.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about these terms? Email <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>.</p>
+
+    </LegalPage>
+</Layout>

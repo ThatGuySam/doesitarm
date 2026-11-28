@@ -1,0 +1,108 @@
+---
+import { applyResponseDefaults } from '~/helpers/astro/request.js'
+
+import Layout from '~/src/layouts/default.astro'
+import LegalPage from '~/src/components/legal-page.astro'
+
+applyResponseDefaults( Astro )
+---
+<Layout
+    headOptions={ {
+        title: 'Privacy Policy - Does It ARM',
+        description: 'What Does It ARM collects on the website, App Scanner, email lists and MCP server, why, who handles it, and your rights.',
+        pathname: '/privacy'
+    } }
+>
+    <LegalPage title="Privacy Policy" effective="November 27, 2026">
+
+        <p>Does It ARM is a free site that tracks which Mac apps run natively on Apple Silicon. It is run by Sam Carlton ("we", "us"). This policy covers doesitarm.com, the App Scanner, our email lists and the Does It ARM MCP server at mcp.doesitarm.com. It explains what we collect, why, who handles it, and your choices.</p>
+
+        <p>The short version: there are no accounts. We collect little, and we never sell your personal data. Questions go to <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>.</p>
+
+        <h2>What we collect and why</h2>
+
+        <h3>Visiting the website</h3>
+        <ul>
+            <li><strong>Hosting logs.</strong> The site runs on Cloudflare, and a few data functions run on Vercel. Like any web host, they process your IP address, browser user agent and the pages you request so they can deliver the site and protect it from abuse. Their logs are kept under their own policies.</li>
+            <li><strong>Analytics.</strong> We use Google Analytics to understand which pages are useful. It sets cookies and collects the pages you visit, the referring site, your browser and device type, and your approximate location. It also records clicks and form submissions on our service offers.</li>
+            <li><strong>Offer tests.</strong> On some pages we test different headlines for our service offers. Your browser's local storage remembers which headline you saw. We count views, clicks and submissions with only the offer, the headline version and the page path. No IP address, user agent or email address is stored with those counts.</li>
+            <li><strong>Search.</strong> Site search runs in your browser. Your search terms are not sent to us.</li>
+            <li><strong>Ads and affiliate links.</strong> Some pages show an ad from Carbon Ads, which loads from Carbon's servers and may receive your IP address, browser details and the page you are on. Some links are affiliate links, for example to Amazon. If you click one and buy something, the retailer may pay us a commission and may set its own cookies. We do not get personal information about you from these partners.</li>
+            <li><strong>Videos.</strong> Video thumbnails load from YouTube's image servers. The YouTube player loads when you press play, using YouTube's privacy-enhanced (no-cookie) domain where we can. Google's privacy policy applies to YouTube.</li>
+        </ul>
+        <p>You can block cookies, analytics and ads in your browser or with a content blocker. The site still works.</p>
+
+        <h3>Email signups</h3>
+        <ul>
+            <li><strong>App updates newsletter.</strong> When you sign up in the site footer, we store your email address, when you signed up and where on the site, in a Cloudflare database. We send the newsletter through Kit (kit.com). We pass your address to Kit, which sends you a confirmation email first and handles unsubscribes and bounces.</li>
+            <li><strong>App alerts and waitlists (where offered).</strong> If you sign up for alerts about an app or for a waitlist, we store your email address, what you signed up for and the page you used. You must confirm by clicking a link in an email before we send you anything else. Unconfirmed signups are deleted after about 72 hours. These emails are sent through Cloudflare Email Sending.</li>
+            <li><strong>Service requests.</strong> If you use a form on our services pages, we store your email address, the offer, any app and details you enter, and the page you used, so we can reply.</li>
+        </ul>
+        <p>To slow down spam, signups are rate limited using your IP address and email address. These limits are checked with hashed values and are not saved with your signup. Every email we send has an unsubscribe link, or you can email us to unsubscribe.</p>
+
+        <h3>The App Scanner</h3>
+        <p>The App Scanner checks apps in your browser. <strong>Your app files are never uploaded.</strong></p>
+        <ul>
+            <li><strong>What the current scanner sends.</strong> For each app you scan, the default scanner sends us the app's file name (not its folder path), its version, the scan result, technical details of its main program (Mach-O metadata, such as which processor types it supports) and the app's full Info.plist. Info.plist is the standard settings file inside every Mac app. It holds things like the app's name, bundle ID, version and minimum macOS version. In return, we tell you if we know of a version of that app that runs natively.</li>
+            <li><strong>Where it goes.</strong> Scan reports are stored by a function on Vercel in a Google Sheet. We do not store your name, an account or your IP address with a scan report.</li>
+            <li><strong>Scan reports are published.</strong> Scan reports, including the Info.plist, the Mach-O metadata, the file name, the version and the scan date, can appear on the app's public Does It ARM page (under "Bundle Version History") and in our public data files.</li>
+            <li><strong>Scanning a URL.</strong> If you scan a download link, our servers or your browser fetch that public URL to read the app's details.</li>
+            <li><strong>The newer scanner.</strong> The newer App Scanner (available with <code>?v=3</code> on the scanner page) currently keeps scan results on your device and sends nothing about the apps you scan from your own files. Where offered, a scanner setting called "Use my data to improve Does It ARM" sends the same kind of app details to help us. It is on by default and you can turn it off in the scanner settings. Scanning while offline sends nothing.</li>
+        </ul>
+        <p><strong>Why we collect app details.</strong> App details help us keep the public compatibility list accurate and find newer versions of an app that run natively. We have a legitimate interest in this, and it benefits everyone who uses the list. You can object at any time: use the newer scanner with the setting turned off, scan offline, or email us to ask us to remove a report.</p>
+        <p><strong>Public apps only.</strong> We want details about publicly available apps, not internal or confidential ones. Please do not scan apps that contain confidential information, such as in-house company apps, while sharing is on. We may delete scan data that looks like it comes from a non-public app.</p>
+
+        <h3>The MCP server</h3>
+        <p>The Does It ARM MCP server lets AI assistants look up compatibility data. It is read-only and has no accounts.</p>
+        <ul>
+            <li>We do not store or log what you send to its tools, such as app names or inventory rows. Errors are logged with details about our own data source, not your request.</li>
+            <li>Your IP address is used briefly to limit each connection to 120 requests a minute. It is not stored by us.</li>
+            <li>Cloudflare, which runs the server, processes standard request data under its own policies.</li>
+            <li>The AI app you use with the server, such as Claude or ChatGPT, has its own privacy policy.</li>
+        </ul>
+
+        <h3>Emailing us and contributing</h3>
+        <p>If you email us, we keep the conversation so we can refer back to it. If you suggest an app on GitHub, your post is public on GitHub and GitHub's privacy policy applies.</p>
+
+        <h2>Who we share data with</h2>
+        <p>We use these service providers to run Does It ARM. Each one handles data only for the purposes above:</p>
+        <ul>
+            <li><strong>Cloudflare:</strong> hosting, databases, the MCP server and email delivery.</li>
+            <li><strong>Vercel:</strong> data functions, including the scan report store.</li>
+            <li><strong>Google:</strong> Google Analytics, Google Sheets (scan reports) and YouTube.</li>
+            <li><strong>Kit:</strong> the newsletter.</li>
+            <li><strong>Carbon Ads and affiliate partners:</strong> ads and affiliate links, as described above.</li>
+        </ul>
+        <p>We may also share information if the law requires it, to protect Does It ARM or its users from abuse, or as part of a transfer if Does It ARM changes hands. In that last case, this policy would continue to apply to data collected under it. The compatibility list itself is public, and anyone may use it.</p>
+        <p><strong>We do not sell your personal data.</strong></p>
+
+        <h2>How long we keep it</h2>
+        <ul>
+            <li>Newsletter: while you are subscribed. After you unsubscribe, we may keep your address marked as unsubscribed so we do not email you again. Ask us if you want it deleted completely.</li>
+            <li>Unconfirmed alert signups: about 72 hours.</li>
+            <li>Service requests and emails: as long as we need them to reply and keep a record, or until you ask us to delete them.</li>
+            <li>Scan reports: as long as they are useful to the public compatibility list.</li>
+            <li>Hosting logs and analytics: as set by each provider's retention settings.</li>
+        </ul>
+
+        <h2>Your rights</h2>
+        <p>Wherever you live, you can ask us to tell you what personal data we have about you, to correct it, to delete it, or to stop using it. Email <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>. We may need to confirm the request comes from you, for example by replying from the email address involved.</p>
+        <p>If you are in the European Economic Area, the UK or Switzerland, the GDPR gives you the rights to access, correct, delete, restrict, object to and move your personal data, and to complain to your data protection authority. We rely on your consent for the newsletter and alerts, and you can withdraw it at any time. We rely on our legitimate interests to run and protect the site and to collect app details from the scanner. You have the right to object to that, as described above.</p>
+
+        <h2>Children</h2>
+        <p>Does It ARM is not directed at children under 13 (or under 16 in the EEA and UK). We do not knowingly collect their personal data. If you think a child has given us personal data, email us and we will delete it.</p>
+
+        <h2>Where data is processed</h2>
+        <p>Does It ARM is run from the United States. Our providers may process data in the United States and in other countries where they operate.</p>
+
+        <h2>Security</h2>
+        <p>The site uses HTTPS everywhere, and we collect as little as we can. No system is perfectly secure, but we work to protect what we have.</p>
+
+        <h2>Changes</h2>
+        <p>We will update this policy when our practices change and refresh the date at the top. For significant changes, we will also take other reasonable steps to let people know. This page's full history is public on GitHub.</p>
+
+        <h2>Contact</h2>
+        <p>Sam Carlton, Does It ARM. Email <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>. Also see our <a href="/terms">Terms of Use</a>.</p>
+
+    </LegalPage>
+</Layout>

@@ -7,6 +7,8 @@ Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Th
 - Info page: <https://mcp.doesitarm.com/>
 - Server card: <https://mcp.doesitarm.com/mcp/server-card> (experimental extension format; see [Server card](#server-card))
 - Legacy server card: <https://mcp.doesitarm.com/.well-known/mcp/server-card.json> (kept for existing readers)
+- Privacy Policy: <https://doesitarm.com/privacy> (the server stores no tool inputs; see "The MCP server")
+- Terms of Use: <https://doesitarm.com/terms>
 
 ## Install
 
