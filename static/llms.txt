@@ -6,7 +6,7 @@ Each listing has a page at https://doesitarm.com/app/<slug>, /game/<slug> or /fo
 
 ## MCP server
 
-- [Does It ARM MCP server](https://mcp.doesitarm.com/mcp): public, read-only Streamable HTTP MCP endpoint, no auth. Tools: search_apps, get_app, check_apps, list_categories, list_by_category, recent_updates, list_devices.
+- [Does It ARM MCP server](https://mcp.doesitarm.com/mcp): check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Public, read-only Streamable HTTP endpoint, no account. Tools: search_apps, get_app, check_apps, list_categories, list_by_category, recent_updates, list_devices.
 - [Install guide](https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md): Claude Code `claude mcp add --transport http doesitarm https://mcp.doesitarm.com/mcp`
 
 ## Browse
