@@ -95,7 +95,7 @@ export const dataRecipients = [
     },
     {
         name: 'Amazon Associates',
-        purpose: 'Attribute referrals and purchases through Amazon links (amzn.to).',
+        purpose: 'Attribute referrals and purchases through Amazon links (amazon.com and amzn.to).',
         data: 'Referral ID and request metadata. Amazon handles any purchase details.',
         surfaces: [ 'Website' ],
         cookies: 'May set cookies after you follow the link.',

@@ -234,6 +234,18 @@ describe( 'service request offers', () => {
         expect( env.SUBSCRIPTIONS_DB.calls[0].bindings[3] ).toBe( '' )
         expect( JSON.parse( env.SUBSCRIPTIONS_DB.calls[0].bindings[4] ) ).toEqual( { appName: 'Aperture', note: 'Old libraries' } )
     } )
+
+    it( 'stores the app slug from a prefilled revival page with the app name', async () => {
+        const env = makeEnv()
+        const response = await handleRequest( post( '/api/subscriptions/service-requests', {
+            email: 'fan@example.com', offer: 'app-revival', kind: 'revival', app: 'true-fi', appName: 'True-Fi',
+            card: 'service-page', variant: 'r1', source: '/services/abandoned-app-revival/'
+        } ), env )
+
+        expect( response.status ).toBe( 200 )
+        expect( env.SUBSCRIPTIONS_DB.calls[0].bindings.slice( 1, 4 ) ).toEqual( [ 'app-revival', 'revival', 'true-fi' ] )
+        expect( JSON.parse( env.SUBSCRIPTIONS_DB.calls[0].bindings[4] ) ).toEqual( { appName: 'True-Fi' } )
+    } )
 } )
 
 describe( 'service request Turnstile', () => {

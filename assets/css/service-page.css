@@ -22,16 +22,6 @@
     aspect-ratio: 16 / 9;
     max-width: 100%;
 }
-.svc-media-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    border: 1px dashed rgba(165, 180, 252, 0.45);
-    border-radius: 14px;
-    background: linear-gradient(180deg, rgba(67, 56, 202, 0.18), rgba(17, 24, 39, 0.5));
-}
 .svc-panel {
     border: 1px solid rgba(129, 140, 248, 0.55);
     border-radius: 14px;

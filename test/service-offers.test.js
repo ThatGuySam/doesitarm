@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
+import { apps as revivalApps } from '~/data/revival-apps.json'
 import {
+    appSlugPattern,
     fillServiceCopy,
     getCardVariants,
+    getRevivalRequestPath,
     getServiceCardType,
+    isAbandonedListing,
+    revivalAllowlist,
     isAudioSearchQuery,
     serviceCards,
     serviceExperiments,
@@ -48,9 +53,40 @@ describe( 'service card placement', () => {
         }
     } )
 
-    it( 'shows the revival card only on the allowlist', () => {
+    it( 'shows the revival card on reviewed abandoned apps and listings that say discontinued', () => {
         expect( getServiceCardType( { endpoint: '/app/true-fi', status: 'no', category: { slug: 'entertainment-and-media-apps' } } ) ).toBe( 'revival' )
+        for ( const slug of [ 'atom', 'sequel-pro', 'azure-data-studio', 'finale-music', 'saffire-mixcontrol' ] ) {
+            expect( getServiceCardType( { endpoint: `/app/${ slug }`, status: 'rosetta' } ), slug ).toBe( 'revival' )
+        }
+        expect( getServiceCardType( { endpoint: '/app/old-tool', status: 'rosetta', text: '✳️ Works via Rosetta 2; no longer maintained' } ) ).toBe( 'revival' )
+        expect( getServiceCardType( { endpoint: '/app/old-ide', status: 'native', text: '✅ Native in 2022; Old IDE is retired' } ) ).toBe( 'revival' )
         expect( getServiceCardType( { endpoint: '/app/some-other-app', status: 'no', category: { slug: 'entertainment-and-media-apps' } } ) ).toBeNull()
+        expect( getServiceCardType( { endpoint: '/app/some-other-app', status: 'no', text: '🚫 No, not yet supported' } ) ).toBeNull()
+    } )
+
+    it( 'keeps the revival card off maintained apps the research list rejected', () => {
+        for ( const slug of [ 'final-cut-pro', 'quicken', 'labview', 'nisus-writer-pro', 'brackets' ] ) {
+            expect( revivalAllowlist, slug ).not.toContain( slug )
+            expect( isAbandonedListing( { endpoint: `/app/${ slug }`, text: '✅ Yes, Native Apple Silicon Support' } ), slug ).toBe( false )
+        }
+        expect( getServiceCardType( { endpoint: '/app/avid-pro-tools', name: 'Avid Pro Tools', status: 'native' } ) ).toBe( 'daw' )
+    } )
+
+    it( 'keeps a reason and evidence link for every reviewed revival app', () => {
+        expect( revivalApps.length ).toBeGreaterThanOrEqual( 20 )
+        expect( new Set( revivalAllowlist ).size ).toBe( revivalAllowlist.length )
+        for ( const app of revivalApps ) {
+            expect( app.slug, app.slug ).toMatch( appSlugPattern )
+            expect( app.reason, app.slug ).toBeTruthy()
+            expect( app.evidence, app.slug ).toMatch( /^https:\/\// )
+        }
+    } )
+
+    it( 'links the revival card to a prefilled request page', () => {
+        expect( getRevivalRequestPath( 'true-fi' ) ).toBe( '/services/abandoned-app-revival/?app=true-fi' )
+        expect( getRevivalRequestPath( '../x' ) ).toBe( '/services/abandoned-app-revival/' )
+        expect( getRevivalRequestPath() ).toBe( '/services/abandoned-app-revival/' )
+        expect( serviceCards.revival.secondary.href ).toBe( '/services/abandoned-app-revival/' )
     } )
 
     it( 'shows nothing on games, formulas or other categories', () => {

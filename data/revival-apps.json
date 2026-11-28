@@ -1,0 +1,40 @@
+{
+  "reviewed": "2026-11-27",
+  "policy": "Apps that show the free revival interest card. Each entry is an existing /app/ slug matched by exact name or alias (vendor prefixes and version or edition suffixes dropped only where the rest is the same product). Listings whose own text says discontinued, abandoned, retired, end of life or no longer maintained also show the card without being listed here. Do not add an app that is still maintained.",
+  "research": "notes-search/docs/research/agentic-discovery-2026-11-27/d-dead-apps/apps.csv",
+  "apps": [
+    { "slug": "true-fi", "source": "site", "match": "True-Fi", "reason": "Listing says discontinued; Sonarworks ended True-Fi.", "evidence": "https://forum.headphones.com/t/sonarworks-reference-true-fi/2278/50" },
+    { "slug": "visual-studio-for-mac", "source": "site", "match": "Visual Studio for Mac", "reason": "Listing says retired; Microsoft retired Visual Studio for Mac on 2024-08-31.", "evidence": "https://devblogs.microsoft.com/visualstudio/visual-studio-for-mac-retirement-announcement/" },
+    { "slug": "barrier-kvm", "source": "site", "match": "Barrier KVM", "reason": "Listing says no longer maintained; last release 2.4.0 in 2021 and its maintainers moved to the Input Leap fork.", "evidence": "https://github.com/debauchee/barrier/releases" },
+    { "slug": "gopro-fusion-studio", "source": "site+research", "match": "GoPro Fusion Studio", "reason": "GoPro stopped Fusion platform and camera support on 2020-11-18.", "evidence": "https://gopro.com/en/us/news/fusion-end-of-life" },
+    { "slug": "azure-data-studio", "source": "research", "match": "Azure Data Studio", "reason": "Microsoft retired it on 2026-02-28 and archived the repository.", "evidence": "https://learn.microsoft.com/en-us/sql/tools/whats-happening-azure-data-studio?view=sql-server-ver17" },
+    { "slug": "drobo-dashboard", "source": "research", "match": "Drobo Dashboard", "reason": "Drobo ended sales and support in January 2023; StorCentric went to Chapter 7.", "evidence": "https://tidbits.com/2023/05/16/storcentric-and-drobo-in-chapter-7-start-looking-for-drobo-replacements/" },
+    { "slug": "atom", "source": "research", "match": "Atom", "reason": "GitHub sunset and archived Atom; last stable 1.60.0.", "evidence": "https://api.github.com/repos/atom/atom" },
+    { "slug": "appcode", "source": "research", "match": "JetBrains AppCode (alias)", "reason": "JetBrains ended sales and support; final bug-fix 2023.1.5.", "evidence": "https://blog.jetbrains.com/appcode/2022/12/appcode-2022-3-release-and-end-of-sales-and-support/" },
+    { "slug": "macdown", "source": "research", "match": "MacDown", "reason": "Last stable 0.7.3 in January 2020; forks carry it on.", "evidence": "https://github.com/MacDownApp/macdown/releases" },
+    { "slug": "onivim2", "source": "research", "match": "Onivim 2 (alias)", "reason": "Repository last pushed August 2022; project-status issue documents the stop.", "evidence": "https://github.com/onivim/oni2/issues/3811" },
+    { "slug": "sequel-pro", "source": "research", "match": "Sequel Pro", "reason": "Last tagged stable 1.1.2 in 2016.", "evidence": "https://api.github.com/repos/sequelpro/sequelpro/releases" },
+    { "slug": "spectacle", "source": "research", "match": "Spectacle", "reason": "Repository archived; maintainer points users to alternatives.", "evidence": "https://github.com/eczarny/spectacle" },
+    { "slug": "totalfinder", "source": "research", "match": "TotalFinder", "reason": "BinaryAge ended development; only a volunteer build remains.", "evidence": "https://blog.binaryage.com/totalfinder-totalspaces-future/" },
+    { "slug": "finale-music", "source": "research", "match": "Finale 27 / Finale (alias Finale)", "reason": "MakeMusic ended Finale development and sales on 2024-08-26 and support on 2025-08-25.", "evidence": "https://makemusic.zendesk.com/hc/en-us/articles/25843888130839-Finale-Sunset-FAQ" },
+    { "slug": "macupdater", "source": "research", "match": "MacUpdater 3", "reason": "CoreCode ended support on 2026-01-01 and plans to shut the server down after 2026.", "evidence": "https://www.corecode.io/macupdater/faq.html" },
+    { "slug": "scansnap-manager", "source": "research", "match": "ScanSnap Manager", "reason": "PFU ended ScanSnap Manager support on 2024-11-07 (replaced by ScanSnap Home).", "evidence": "https://scansnap-faq.pfu.ricoh.com/hc/en-us/articles/20358805131417-Windows-Discontinued-Models" },
+    { "slug": "xamarin", "source": "research", "match": "Xamarin.Forms / Xamarin", "reason": "Microsoft ended support for all Xamarin SDKs on 2024-05-01.", "evidence": "https://learn.microsoft.com/en-us/lifecycle/faq/developer-tools" },
+    { "slug": "aptana-studio", "source": "research", "match": "Aptana Studio 3 (alias Aptana Studio)", "reason": "Axway says the repository is no longer maintained; last release 3.7.2 in 2018.", "evidence": "https://intercom.help/axway/en/articles/7265182-where-to-find-aptana-3" },
+    { "slug": "robo-3t-formerly-robomongo", "source": "research", "match": "Robo 3T", "reason": "Studio 3T stopped Robo 3T at 1.4.4 (2021, Intel only).", "evidence": "https://studio3t.com/whats-new/were-launching-a-free-edition-of-studio-3t/" },
+    { "slug": "premiere-rush", "source": "research", "match": "Adobe Premiere Rush Desktop", "reason": "Adobe ended downloads on 2025-09-30 and support and access on 2026-09-30.", "evidence": "https://helpx.adobe.com/premiere-rush/premiere-rush-discontinuation.html" },
+    { "slug": "saffire-mixcontrol", "source": "research", "match": "Focusrite Saffire Pro 24/40 MixControl (alias Saffire MixControl)", "reason": "Focusrite ended development for the Saffire FireWire range in October 2019.", "evidence": "https://support.focusrite.com/hc/en-gb/articles/360009743339-Saffire-FireWire-range-end-of-development-support" }
+  ],
+  "rejected": [
+    { "name": "Final Cut Pro 7", "slug": "final-cut-pro", "reason": "Only version 7 is dead; Final Cut Pro is maintained." },
+    { "name": "Quicken for Mac 2007", "slug": "quicken", "reason": "Only the 2007 edition is dead; Quicken is maintained." },
+    { "name": "TI-Nspire Computer Link 3.9", "slug": "ti-nspire", "reason": "TI-Nspire software is maintained." },
+    { "name": "LabVIEW Professional for macOS 2023 Q3", "slug": "labview", "reason": "LabVIEW is maintained and a Mac Community edition returned in 2025 Q3." },
+    { "name": "Microsoft Visual Studio LightSwitch", "slug": "visual-studio-for-mac", "reason": "Different product (matched on retired listing instead)." },
+    { "name": "Nisus Writer Pro 3", "slug": "nisus-writer-pro", "reason": "Vendor still sells and supports it; end of upstream maintenance unconfirmed." },
+    { "name": "HyperDock", "slug": "hyperdock", "reason": "Official end of life unconfirmed." },
+    { "name": "Sound Radix 32 Lives", "slug": "32-lives", "reason": "Vendor still lists it for sale; end of life unverified." },
+    { "name": "Adobe Brackets 1.14", "slug": "brackets", "reason": "A community continuation of Brackets exists." },
+    { "name": "Apogee Duet/Ensemble FireWire Maestro 2", "slug": "apogee-maestro-2", "reason": "Maestro 2 is still maintained for other Apogee devices." }
+  ]
+}

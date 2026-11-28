@@ -2,7 +2,8 @@
 // Short service pages. Copy lives in helpers/service-offers.js (servicePages).
 // /services/studio-upgrade-audit/ has its own page and takes precedence over this route.
 import { applyResponseDefaults } from '~/helpers/astro/request.js'
-import { servicePages, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
+import { DoesItAPI } from '~/helpers/api/client.js'
+import { appSlugPattern, servicePages, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
 
 import Layout from '~/src/layouts/default.astro'
 import '~/assets/css/service-page.css'
@@ -19,6 +20,21 @@ if ( !page ) {
 applyResponseDefaults( Astro )
 
 const isRevival = page.offer === 'app-revival'
+
+// ?app=<slug> prefills the revival form with that listing's name and sends the slug as app_slug
+async function getPrefillApp () {
+    const slug = Astro.url.searchParams.get( 'app' ) || ''
+    if ( !isRevival || !appSlugPattern.test( slug ) ) return null
+
+    try {
+        const listing = await DoesItAPI.app( slug ).get()
+        return typeof listing?.name === 'string' && listing.name ? { slug, name: listing.name } : null
+    } catch {
+        return null
+    }
+}
+
+const prefillApp = await getPrefillApp()
 ---
 <Layout
     headOptions={ {
@@ -31,7 +47,7 @@ const isRevival = page.offer === 'app-revival'
         <div class="max-w-3xl mx-auto space-y-16">
 
             <section class="space-y-6 text-center">
-                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ page.headline }</h1>
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ prefillApp ? `Still need ${ prefillApp.name }?` : page.headline }</h1>
                 <p class="subtitle md:text-xl text-gray-300">{ page.subhead }</p>
                 <p class="text-white font-semibold">{ page.price }</p>
                 <div class="flex flex-wrap justify-center items-center gap-4">
@@ -64,6 +80,7 @@ const isRevival = page.offer === 'app-revival'
                 >
                     <input type="hidden" name="offer" value={ page.offer } />
                     <input type="hidden" name="kind" value={ isRevival ? 'revival' : 'waitlist' } />
+                    { prefillApp && <input type="hidden" name="app" value={ prefillApp.slug } /> }
                     <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
                     <label class="svc-field sm:col-span-2">
                         <span>Email</span>
@@ -72,7 +89,7 @@ const isRevival = page.offer === 'app-revival'
                     { isRevival && (
                         <label class="svc-field sm:col-span-2">
                             <span>{ page.form.appLabel }</span>
-                            <input type="text" name="appName" maxlength="120" required />
+                            <input type="text" name="appName" maxlength="120" required value={ prefillApp?.name } />
                         </label>
                     ) }
                     <label class="svc-field sm:col-span-2">

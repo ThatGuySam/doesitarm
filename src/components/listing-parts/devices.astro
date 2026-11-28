@@ -1,6 +1,6 @@
 ---
 import Heading from './heading.astro'
-import { getListedDeviceListings } from '~/helpers/device-catalog.js'
+import { getDeviceAmazonUrl, getListedDeviceListings } from '~/helpers/device-catalog.js'
 import { deviceSupportsApp } from '~/helpers/devices.js'
 
 const {
@@ -12,7 +12,8 @@ const deviceSupport = getListedDeviceListings().map( device => {
 
     return {
         ...device,
-        emoji: supportsApp ? '✅' : '🚫',
+        label: `${ supportsApp ? '✅' : '🚫' } ${ device.name }`,
+        amazonUrl: getDeviceAmazonUrl( device ),
         ariaLabel: `${ listing.name } has ${ supportsApp ? '' : 'not ' }been reported to work on ${ device.name }`
     }
 } )
@@ -33,13 +34,18 @@ const hasDeviceSupport = deviceSupport.length > 0
                         role="button"
                         class="device-link block rounded-md text-sm font-medium leading-5 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out text-gray-300 hover:bg-darker hover:neumorphic-shadow p-2"
                         aria-label={ device.ariaLabel }
-                    >{ device.emoji } { device.name }</a>
+                    >{ device.label }</a>
 
-                    <a href={ device.productUrl } target="_blank" class="underline text-xs pb-3" rel="noopener">Apple specs</a>
+                    <span class="device-shop-links flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs pb-3">
+                        <a href={ device.amazonUrl } target="_blank" class="underline whitespace-nowrap" rel="sponsored nofollow noopener" data-device-amazon>Check Pricing</a>
+                        <a href={ device.productUrl } target="_blank" class="underline whitespace-nowrap text-gray-400" rel="noopener">Apple specs</a>
+                    </span>
                 </div>
             )) }
 
         </div>
+
+        <p class="text-xs text-gray-500 mt-2">As an Amazon Associate, Does It ARM earns from qualifying purchases.</p>
 
     </div>
 )}

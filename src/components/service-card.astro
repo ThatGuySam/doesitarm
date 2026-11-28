@@ -3,6 +3,7 @@
 import {
     fillServiceCopy,
     getCardVariants,
+    getRevivalRequestPath,
     serviceCards,
     serviceRequestsEndpoint
 } from '~/helpers/service-offers.js'
@@ -64,7 +65,10 @@ window.diaSvcApply = window.diaSvcApply || function ( card ) {
         ) : (
             <button type="button" class="svc-button" data-svc-control="primary" data-svc-open>{ card.primary.label }</button>
         ) }
-        { card.secondary && (
+        { card.secondary?.href && (
+            <a class="svc-link" href={ type === 'revival' ? getRevivalRequestPath( appSlug ) : card.secondary.href } data-svc-control="secondary">{ card.secondary.label }</a>
+        ) }
+        { card.secondary && !card.secondary.href && (
             <button type="button" class="svc-link" data-svc-control="secondary" data-svc-open>{ card.secondary.label }</button>
         ) }
     </div>

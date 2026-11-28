@@ -193,6 +193,11 @@ async function submitForm ( form ) {
     body.source = window.location.pathname
     delete body['cf-turnstile-response']
 
+    // A prefilled listing slug only counts while the prefilled app name is unchanged
+    const appName = form.elements.namedItem( 'appName' )
+    if ( body.app && appName instanceof HTMLInputElement && appName.defaultValue &&
+        appName.value.trim() !== appName.defaultValue.trim() ) delete body.app
+
     if ( button ) button.disabled = true
     if ( status ) status.textContent = 'Sending…'
 

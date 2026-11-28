@@ -2,6 +2,8 @@
 // Edit wording here. Variant ids are stored with every impression and click,
 // so give a reworded headline a new id instead of reusing an old one.
 
+import { apps as revivalApps } from '~/data/revival-apps.json'
+
 export const serviceEventsEndpoint = 'https://doesitarm.com/api/subscriptions/service-events'
 export const serviceRequestsEndpoint = 'https://doesitarm.com/api/subscriptions/service-requests'
 
@@ -111,12 +113,14 @@ export const serviceCards = {
         primary: { label: 'Check my Logic setup', href: auditPagePath },
         secondary: { label: 'Email me when audits open' }
     },
-    // Discontinued apps on the revival allowlist
+    // Discontinued apps (data/revival-apps.json or a listing that says discontinued)
     'revival': {
         offer: 'app-revival',
         experiment: 'revival-v1',
         subhead: 'It’s discontinued. Tell us what you still use it for.',
-        primary: { label: 'I still need this app' }
+        primary: { label: 'I still need this app' },
+        // The listing slug is added as ?app=, which prefills the request form there
+        secondary: { label: 'How revival requests work', href: '/services/abandoned-app-revival/' }
     }
 }
 
@@ -131,11 +135,22 @@ export function getCardVariants ( type ) {
         .map( variant => ( { id: variant.id, headline: variant.byCard?.[ type ] || variant.headline } ) )
 }
 
-// Discontinued apps that show the free revival interest card.
-// Keep this short and add an app only when it is clearly abandoned.
-export const revivalAllowlist = [
-    'true-fi'
-]
+// Discontinued apps that show the free revival interest card. The reviewed list
+// with the evidence for each app is data/revival-apps.json. Add an app only when
+// it is clearly abandoned, never one that is still maintained.
+export const revivalAllowlist = /* @__PURE__ */ revivalApps.map( app => app.slug )
+
+// A listing whose own status text says the app is dead also gets the revival card,
+// e.g. "🚫 Reported not working on Apple Silicon; discontinued"
+const abandonedTextPattern = /\b(?:discontinued|abandoned|retired|end[- ]of[- ]life|no longer (?:maintained|developed|in development))\b/i
+
+export function isAbandonedListing ( listing ) {
+    const slug = getListingSlug( listing )
+    if ( !slug ) return false
+    if ( revivalAllowlist.includes( slug ) ) return true
+
+    return typeof listing?.text === 'string' && abandonedTextPattern.test( listing.text )
+}
 
 export const audioCategorySlug = 'music-and-audio-tools'
 
@@ -241,7 +256,7 @@ export function getServiceCardType ( listing ) {
     const slug = getListingSlug( listing )
     if ( !slug ) return null
 
-    if ( revivalAllowlist.includes( slug ) ) return 'revival'
+    if ( isAbandonedListing( listing ) ) return 'revival'
 
     if ( !isAudioListing( listing ) ) return null
 
@@ -249,6 +264,16 @@ export function getServiceCardType ( listing ) {
     if ( logicAppSlugs.includes( slug ) ) return 'logic-native'
 
     return isDawListing( listing ) ? 'daw' : 'audio'
+}
+
+// Same shape the subscriptions Worker accepts for app_slug
+export const appSlugPattern = /^[a-z0-9-]{1,40}$/
+
+// /services/abandoned-app-revival/?app=true-fi prefills the request form for that listing
+export function getRevivalRequestPath ( appSlug = '' ) {
+    const path = `/services/abandoned-app-revival/`
+
+    return appSlugPattern.test( appSlug ) ? `${ path }?app=${ appSlug }` : path
 }
 
 export function fillServiceCopy ( text, { app = '' } = {} ) {
@@ -263,11 +288,11 @@ export const auditPage = {
     price: '$500 scoped audit',
     primary: 'Check my Logic setup',
     secondary: 'Email me when audits open',
-    // Set src to an image or video URL to replace the placeholder
+    // Set src to an image or video URL to show it. The page shows no media slot while src is empty.
     media: {
-        type: 'placeholder',
+        type: 'image',
         src: '',
-        label: 'Logic session walkthrough coming soon'
+        label: 'Logic session walkthrough'
     },
     points: [
         {

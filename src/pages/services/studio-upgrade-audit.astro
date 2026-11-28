@@ -28,20 +28,16 @@ applyResponseDefaults( Astro )
                 </div>
             </section>
 
-            <!-- Media slot: set auditPage.media.src in helpers/service-offers.js to show a screenshot or video -->
-            <section class="svc-media" data-service-media>
-                { page.media.src && page.media.type === 'video' && (
-                    <video src={ page.media.src } controls playsinline preload="metadata" class="w-full h-full rounded-xl" />
-                ) }
-                { page.media.src && page.media.type !== 'video' && (
-                    <img src={ page.media.src } alt={ page.media.label } class="w-full h-full object-cover rounded-xl" />
-                ) }
-                { !page.media.src && (
-                    <div class="svc-media-placeholder">
-                        <span class="text-sm text-gray-400">{ page.media.label }</span>
-                    </div>
-                ) }
-            </section>
+            <!-- Media slot: set auditPage.media.src in helpers/service-offers.js to show a screenshot or video. Renders nothing until then. -->
+            { page.media.src && (
+                <section class="svc-media" data-service-media>
+                    { page.media.type === 'video' ? (
+                        <video src={ page.media.src } controls playsinline preload="metadata" class="w-full h-full rounded-xl" />
+                    ) : (
+                        <img src={ page.media.src } alt={ page.media.label } class="w-full h-full object-cover rounded-xl" />
+                    ) }
+                </section>
+            ) }
 
             <section class="grid gap-4 md:grid-cols-3">
                 { page.points.map( point => (
