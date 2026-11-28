@@ -9,6 +9,8 @@ Any comments, suggestions? [Let us know!](https://github.com/ThatGuySam/doesitar
 
 [Does It ARM MCP server](docs/mcp.md) for read-only Apple Silicon compatibility lookups, with connection instructions and tool examples.
 
+Install the [Does It ARM inventory Agent Skill](skills/doesitarm-inventory/SKILL.md) by copying its directory to `.claude/skills/` for Claude Code or `.agents/skills/` for Codex in your project.
+
 
 
 [Do you want to help with Apple Silicon testing?](https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+is%3Aopen+label%3A%22Needs+M1+Testing%22+)

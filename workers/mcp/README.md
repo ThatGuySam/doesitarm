@@ -6,6 +6,8 @@ See [docs/mcp.md](../../docs/mcp.md) for install snippets, tools, data rules and
 
 ## Bulk inventory
 
+Use the [local inventory importer](../../tools/inventory-import/README.md) to prepare and review MDM exports before lookup. The [inventory Agent Skill](../../skills/doesitarm-inventory/SKILL.md) documents the workflow for Claude Code and Codex.
+
 `check_inventory` checks up to 250 rows from a Mac app inventory export (structured `rows` or a headered CSV/TSV string, 64 KiB max), matching bundle ID first. It returns whole-batch counts for native, Rosetta, unsupported and unknown plus paged per-row results with evidence and listing links. Name-only rows stay unknown with the latest listing as a hint. Batches with unknown rows include a fixed reference to [App Scanner v3 (preview)](https://doesitarm.com/apple-silicon-app-test/?v=3), whose local scan results are not added to the public catalog. Rows are not logged or cached.
 
 Fleet / osquery export (paste the CSV with headers as `csv`):

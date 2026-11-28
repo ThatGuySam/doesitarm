@@ -71,13 +71,17 @@ Recoverable argument problems come back as `isError: true` with the field and va
 - "Find the Homebrew formula ffmpeg" → `get_app { "app": "ffmpeg", "kind": "homebrew" }`
 - "Check Spotify and Docker before I switch Macs" → `check_apps { "names": ["Spotify", "Docker"] }`
 - "What chips are in the Macs you cover?" → `list_devices {}`
-- "Here is our osquery app export, which apps block the macOS 28 upgrade?" → `check_inventory { "csv": "name,bundle_identifier,bundle_short_version,bundle_version\nSlack,com.tinyspeck.slackmacgap,4.41.105,441050", "target_macos": 28 }`
+- "Here is our reviewed osquery app projection, which apps need validation for macOS 28?" → `check_inventory { "csv": "name,bundle_identifier,bundle_short_version,bundle_version\nSlack,com.tinyspeck.slackmacgap,4.41.105,441050", "target_macos": 28 }`
 
 If an app you need is not listed, you can request it at <https://github.com/ThatGuySam/doesitarm/issues>.
 
 ## Bulk inventory (`check_inventory`)
 
-`check_inventory` takes a Mac app inventory that an admin pastes or attaches as tool arguments and checks every row against the public app catalog. It is additive: `check_apps` stays the simple 50-name lookup.
+`check_inventory` checks a reviewed Mac app inventory against the public app catalog. Start with the [local inventory importer](../tools/inventory-import/README.md) for Jamf Pro, Iru Prism, Intune, Fleet, JumpCloud, MunkiReport, and System Information exports. It writes a local projection for review, groups duplicates, and retains device counts and app architecture on the workstation. After removing private app tuples, use `--dry-run` to inspect the request, `--emit` to export rows JSON or CSV, or `--lookup` to join catalog evidence to the local report.
+
+The [Does It ARM inventory Agent Skill](../skills/doesitarm-inventory/SKILL.md) guides the same review and lookup in Claude Code or Codex. Copy its directory into your project's `.claude/skills/` or `.agents/skills/` respectively.
+
+For a simple lookup of up to 50 titles, use `check_apps`.
 
 ### Input and limits
 
