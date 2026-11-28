@@ -1,0 +1,20 @@
+---
+import { makeLastUpdatedFriendly } from '~/helpers/parse-date.js'
+
+const {
+  listing
+} = Astro.props
+
+const hasMultipleAliases = Array.isArray( listing.aliases ) && listing.aliases.length > 1
+const lastUpdatedFriendly = makeLastUpdatedFriendly( listing.lastUpdated )
+
+const listFormatter = new Intl.ListFormat('en', { style: 'short', type: 'disjunction' })
+
+---
+{ ( hasMultipleAliases || lastUpdatedFriendly ) && (
+    <small class:list={ [ 'listing-meta text-xs text-gray-400', { '-mt-4': !hasMultipleAliases } ] }>
+        { hasMultipleAliases && <>May also be known as { listFormatter.format( listing.aliases ) }</> }
+        { hasMultipleAliases && lastUpdatedFriendly && <span aria-hidden="true"> · </span> }
+        { lastUpdatedFriendly && <time datetime={ listing.lastUpdated.raw }>Updated { lastUpdatedFriendly }</time> }
+    </small>
+) }

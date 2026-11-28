@@ -22,13 +22,16 @@ const getRelativeTime = function (d1, d2 = new Date()) {
 
 export function makeLastUpdatedFriendly ( lastUpdated ) {
 
-    if ( !lastUpdated ) return null
-
-    const options = { month: "long", day: "numeric", year: "numeric" }
+    if ( !lastUpdated?.raw ) return null
     const date = new Date( lastUpdated.raw )
-    const americanDate = new Intl.DateTimeFormat("en-US", options).format(date)
+    if ( Number.isNaN( date.getTime() ) ) return null
 
-    return americanDate
+    return new Intl.DateTimeFormat( 'en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC'
+    } ).format( date )
 }
 
 export default function (rawDate) {

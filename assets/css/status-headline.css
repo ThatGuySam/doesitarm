@@ -2,9 +2,11 @@
 .status-headline {
     width: 100%;
     max-width: 100%;
-    font-size: clamp(1rem, 4vw, 2.4rem);
-    line-height: 1.2;
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    line-height: 1.15;
     font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #fff;
     overflow-wrap: anywhere;
-    text-wrap: pretty;
+    text-wrap: balance;
 }
