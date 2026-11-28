@@ -46,12 +46,12 @@ RUN_INDEX = "run:index"
 RUN_HISTORY = 20
 PYPI_JSON = "https://pypi.org/pypi/yt-dlp/json"
 PROVENANCE_URL = "https://pypi.org/integrity/yt-dlp/{version}/{filename}/provenance"
-DAILY_CRON = "17 9 * * *"
+DAILY_CRON = "37 1 * * *"
 SNAPSHOT_KEY = "snapshot/youtube-videos.json"
 SNAPSHOT_PREV_KEY = "snapshot/youtube-videos.prev.json"
 SNAPSHOT_STATE_KEY = "snapshot/state.json"
 SNAPSHOT_STATUS_KEY = "snapshot/status.json"
-SWEEP_EVERY = 20 * 3600
+SWEEP_EVERY = 24 * 3600  # Used only when a manual run leaves sweep unspecified.
 VIDEOS_PER_RUN = 40
 VIDEOS_PER_CALL = 20
 
@@ -480,10 +480,10 @@ class Default(WorkerEntrypoint):
     async def scheduled(self, controller, *args):
         cron = str(getattr(controller, "cron", "") or "")
         if cron == DAILY_CRON:
-            await run_daily(self.env, promote=True)
-            await snapshot_step(self.env, sweep=True)
-        else:
-            await snapshot_step(self.env)
+            try:
+                await run_daily(self.env, promote=True)
+            finally:
+                await snapshot_step(self.env, sweep=True)
 
     async def internal_event(self, request):
         """Events reported by the API (it has no storage of its own)."""

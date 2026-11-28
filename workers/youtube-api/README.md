@@ -99,15 +99,16 @@ videos, newest 2023-01-19) keep their original data until refreshed.
 
 **Sources:** `src/sources.py`. Add a playlist (`{"id", "name", "tags"?}`; `"tags":
 ["benchmark"]` feeds the benchmark tag), deploy the updater (`cd updater && $W
-deploy`), then run a snapshot step with `sweep=1` (below) or wait for the 09:17 UTC
+deploy`), then run a snapshot step with `sweep=1` (below) or wait for the 01:37 UTC
 sweep. Three historical playlists no longer exist on YouTube (status lists them under
 `playlists_failing`); their last known videos are kept.
 
 **How it updates** (`snapshot_step` in `src/updater.py`):
 
-- 09:17 UTC: after the version job, sweep every source playlist (flat listing, one
-  extractor call each). A failed or sharply shrunk listing keeps the previous list.
-- Every hour at :41: extract up to 40 videos (batches of 20): new videos first, then
+- Daily at 01:37 UTC, ahead of the API rebuild: check for a yt-dlp release, then sweep
+  every source playlist (flat listing, one extractor call each). A failed or sharply
+  shrunk listing keeps the previous list.
+- After the sweep, extract up to 40 videos (batches of 20): new videos first, then
   entries due for refresh (every 90 days; carried-over entries are spread over that
   window). It stops early if YouTube starts challenging the egress. A new video that is
   unavailable three times is skipped for good.
@@ -120,7 +121,7 @@ sweep. Three historical playlists no longer exist on YouTube (status lists them 
 
 ## Releases: how yt-dlp updates itself
 
-Daily at 09:17 UTC the updater:
+Daily at 01:37 UTC, before refreshing the snapshot, the updater:
 
 1. Picks the newest **stable** PyPI release that is at least **3 days old** and
    **strictly newer** than the active and bundled versions (`release.pick_release`).

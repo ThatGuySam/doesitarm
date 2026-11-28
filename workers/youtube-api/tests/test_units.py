@@ -4,6 +4,8 @@ import gzip
 import sys
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
@@ -480,6 +482,31 @@ class SnapshotTests(unittest.TestCase):
         for key in ("publishedAt", "channelTitle", "channelId", "thumbnails"):
             self.assertIsNotNone(snip[key], key)
         self.assertEqual(snip["thumbnails"]["default"]["url"], "https://i.ytimg.com/vi/3SG5e4z-Ygg/default.jpg")
+
+
+def load_updater():
+    # The Workers SDK runs under Pyodide. The entrypoint tests replace its I/O.
+    workers = SimpleNamespace(Response=object, WorkerEntrypoint=object)
+    with patch.dict(sys.modules, {"workers": workers}):
+        import updater
+    return updater
+
+
+class ScheduleTests(unittest.IsolatedAsyncioTestCase):
+    async def test_only_daily_cron_checks_release_then_forces_sweep(self):
+        updater = load_updater()
+        worker = updater.Default()
+        worker.env = object()
+        jobs = AsyncMock()
+        with patch.multiple(updater, run_daily=jobs.release, snapshot_step=jobs.snapshot):
+            await worker.scheduled(SimpleNamespace(cron="41 * * * *"))
+            jobs.assert_not_called()
+            self.assertEqual(jobs.mock_calls, [])
+            await worker.scheduled(SimpleNamespace(cron=updater.DAILY_CRON))
+        self.assertEqual(jobs.mock_calls, [
+            unittest.mock.call.release(worker.env, promote=True),
+            unittest.mock.call.snapshot(worker.env, sweep=True),
+        ])
 
 
 if __name__ == "__main__":
