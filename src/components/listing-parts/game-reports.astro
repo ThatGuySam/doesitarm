@@ -31,11 +31,11 @@ function getSourceUrl ( report ) {
         text='📚 Reports'
     />
 
-    <ul class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4 mb-4">
+    <ul class="flex flex-col flex-wrap gap-4 mb-4 md:flex-row">
 
         { listing.reports.map( report => (
             <li
-                class="col-span-1 rounded-lg border w-full md:w-64"
+                class="col-span-1 rounded-lg border w-full md:w-64 [overflow-wrap:anywhere]"
             >
                 <div class="w-full flex items-center justify-between p-6">
                     <div class="flex-1">
