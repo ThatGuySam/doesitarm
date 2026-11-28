@@ -93,8 +93,14 @@ const listingDetail = z.looseObject({
 const inventoryStatus = z.enum([ 'native', 'rosetta', 'unsupported', 'unknown' ])
 
 const inventoryFinding = z.looseObject({
-    row: z.number().describe( 'One-based input row (CSV data row, excluding the header) of the first row with this identity, version and build.' ),
+    row: z.number().describe( 'First input row for the tuple. Raw CSV uses the file line at the end of the record. App-only inputs and raw JSON use one-based app row positions.' ),
     duplicate_rows: z.number().describe( 'Additional input rows collapsed into this one.' ),
+    app: z.strictObject({
+        name: z.string().nullable(),
+        bundle_id: z.string().nullable(),
+        publisher: z.string().nullable(),
+    }).optional().describe( 'App identity from a raw export.' ),
+    device_count: z.number().int().nonnegative().nullable().optional().describe( 'Device count for the raw export tuple. Null when the export lacks enough information for a reliable count.' ),
     match: z.enum([ 'bundle_id', 'name', 'alias', 'ambiguous', 'none' ]).describe( 'How the row was matched to the catalog. Only bundle_id establishes identity for a status.' ),
     status: inventoryStatus,
     unknown_reason: z.enum([ 'unlisted', 'ambiguous_identity', 'bundle_id_conflict', 'version_missing', 'version_unverified', 'conflicting_variants', 'stale_evidence', 'insufficient_evidence' ]).nullable().describe( 'Why status is unknown. Null otherwise.' ),
@@ -175,6 +181,7 @@ export const OUTPUT_SCHEMAS = {
     }),
 
     check_inventory: z.looseObject({
+        format: z.string().optional().describe( 'Profile used to read a recognized raw export.' ),
         catalog_revision: z.string().describe( 'Catalog revision these results come from. Pass it back with later pages.' ),
         target_macos: z.number().nullable(),
         counts: z.looseObject({

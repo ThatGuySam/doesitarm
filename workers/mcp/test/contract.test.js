@@ -64,7 +64,7 @@ async function callValid ( name, args = {} ) {
 
 describe( 'server identity', () => {
     it( 'reports identity, instructions and fixed tool list', () => {
-        expect( client.getServerVersion() ).toMatchObject({ name: 'com.doesitarm/mcp', title: 'Does It ARM', version: '1.3.0', description: SERVER_DESCRIPTION })
+        expect( client.getServerVersion() ).toMatchObject({ name: 'com.doesitarm/mcp', title: 'Does It ARM', version: '1.4.0', description: SERVER_DESCRIPTION })
         expect( client.getServerVersion().icons ).toEqual([ { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] } ])
         expect( client.getInstructions() ).toBe( SERVER_INSTRUCTIONS )
         expect( SERVER_INSTRUCTIONS.length ).toBeLessThan( 512 )
@@ -218,7 +218,7 @@ describe( 'legacy server card', () => {
         const card = await response.json()
         expect( card.$schema ).toBeUndefined()
         expect( card.capabilities ).toBeUndefined()
-        expect( card.serverInfo.version ).toBe('1.3.0')
+        expect( card.serverInfo.version ).toBe('1.4.0')
         expect( card.serverInfo.name ).toBe('com.doesitarm/mcp')
         expect( card.serverInfo.icons ).toEqual( SERVER_ICONS )
         expect( card.description ).toBe( SERVER_DESCRIPTION )
@@ -285,14 +285,16 @@ describe( 'check_inventory', () => {
     it( 'publishes the memo title, annotations, limits and a strict input schema', () => {
         const tool = tools.check_inventory
         expect( tool.title ).toBe('Check Mac App Inventory for Apple Silicon')
-        expect( tool.description ).toContain('Checks up to 250 installed macOS app rows from an inventory export against Does It ARM\'s public catalog.')
+        expect( tool.description ).toContain('Check Apple Silicon compatibility for installed Mac apps')
         expect( tool.description ).toContain('ten most recent scanned versions per bundle ID')
         expect( tool.inputSchema.additionalProperties ).toBe( false )
         expect( tool.inputSchema.properties.rows ).toMatchObject({ minItems: 1, maxItems: 250 })
         expect( tool.inputSchema.properties.rows.items.additionalProperties ).toBe( false )
         expect( tool.inputSchema.properties.limit ).toMatchObject({ minimum: 1, maximum: 50, default: 20 })
-        expect( tool.inputSchema.properties.offset ).toMatchObject({ minimum: 0, maximum: 249, default: 0 })
-        expect( tool.inputSchema.properties.csv.maxLength ).toBe( 65536 )
+        expect( tool.inputSchema.properties.offset ).toMatchObject({ minimum: 0, maximum: 4999, default: 0 })
+        expect( tool.inputSchema.properties.csv.maxLength ).toBe( 1048576 )
+        expect( tool.inputSchema.properties.format.enum ).toHaveLength( 8 )
+        expect( tool.outputSchema.properties.results.items.properties.device_count ).toBeDefined()
         expect( tool.inputSchema.properties.catalog_revision.maxLength ).toBe( 128 )
     })
 
@@ -405,8 +407,8 @@ describe( 'check_inventory', () => {
     const SECRET = 'SENTINEL-acme-payroll-7731'
 
     it( 'limit and shape errors name the bound without echoing values', async () => {
-        expect( await fails({}) ).toBe('Provide exactly one of rows or csv.')
-        expect( await fails({ rows: [ { name: 'Slack' } ], csv: 'name\nSlack' }) ).toBe('Provide exactly one of rows or csv.')
+        expect( await fails({}) ).toBe('Provide exactly one of rows, csv or json.')
+        expect( await fails({ rows: [ { name: 'Slack' } ], csv: 'name\nSlack' }) ).toBe('Provide exactly one of rows, csv or json.')
         expect( await fails({ rows: [] }) ).toContain('rows must be an array of 1 to 250 objects')
         expect( await fails({ rows: Array.from( { length: 251 }, ( _, index ) => ({ name: `App ${ index }` }) ) }) ).toContain('rows must be an array of 1 to 250 objects')
         expect( await fails({ rows: [ { name: 'Slack', host: SECRET } ] }) ).not.toContain( SECRET )

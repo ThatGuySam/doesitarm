@@ -14,13 +14,14 @@ import {
     searchApps,
 } from './tools.js'
 import { FIELD_LIMITS, FILTERS, INVENTORY_LIMITS, TARGETS, checkInventory } from './inventory.js'
+import { RAW_FORMATS, RAW_FORMAT_ERROR, RAW_LIMITS, RAW_SIZE_ERROR } from './raw-inventory.js'
 
 export const SERVER_DESCRIPTION = 'Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.'
 
 // Registry name, also reported as the runtime serverInfo.name so the
 // protocol identity, server.json and the server card agree.
 export const SERVER_NAME = 'com.doesitarm/mcp'
-export const SERVER_VERSION = '1.3.0'
+export const SERVER_VERSION = '1.4.0'
 
 export const SERVER_ICONS = [
     { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] },
@@ -90,7 +91,7 @@ export const TOOL_COPY = {
     },
     check_inventory: {
         title: 'Check Mac App Inventory for Apple Silicon',
-        description: `Checks up to ${ INVENTORY_LIMITS.maxRows } installed macOS app rows from an inventory export against Does It ARM's public catalog. Matches by bundle ID and installed version where evidence is available. Returns counts for native, Rosetta, unsupported, and unknown, with evidence and paged results for Mac migration or macOS upgrade planning. Version evidence comes from the catalog's version-scoped native statements and its ten most recent scanned versions per bundle ID. Rows matched by name alone stay unknown, with the latest listing as a hint.`,
+        description: `Check Apple Silicon compatibility for installed Mac apps from Jamf Pro, Iru Prism, Intune, Fleet, JumpCloud, MunkiReport, or system_profiler exports, or from up to ${ INVENTORY_LIMITS.maxRows } app-only rows. Raw exports are grouped by app, version and build and return device counts where available. Results include paged verdicts and evidence from version-scoped catalog statements and the ten most recent scanned versions per bundle ID. Name-only matches remain unknown and include a catalog hint where available.`,
     },
 }
 
@@ -128,7 +129,8 @@ const INPUT_SCHEMAS = {
 function inventoryInputSchema () {
     const field = ( name, description ) => z.string({ error: `${ name } must be a string.` }).optional().describe( `${ description } Up to ${ FIELD_LIMITS[ name ] } characters after trimming; longer values mark the row invalid.` )
     const rowsError = `rows must be an array of 1 to ${ INVENTORY_LIMITS.maxRows } objects with only name, bundle_id, version, build and publisher string fields.`
-    const offsetError = `offset must be a whole number from 0 to ${ INVENTORY_LIMITS.maxOffset }. Omit it to start at 0.`
+    const offsetError = `offset must be a whole number from 0 to ${ RAW_LIMITS.maxRows - 1 }. Omit it to start at 0.`
+    const jsonError = 'json must be JSON text, an object, or an array.'
 
     return z.strictObject({
         rows: z.array( z.strictObject({
@@ -138,14 +140,18 @@ function inventoryInputSchema () {
             build: field( 'build', 'Installed CFBundleVersion, as a string.' ),
             publisher: field( 'publisher', 'Publisher or vendor name. Used only to group rows that have no bundle ID.' ),
         }, { error: rowsError }), { error: rowsError }).min( 1, { error: rowsError } ).max( INVENTORY_LIMITS.maxRows, { error: rowsError } ).optional()
-            .describe( `Structured inventory rows, 1 to ${ INVENTORY_LIMITS.maxRows }. Each row needs a nonblank name or bundle_id. Provide rows or csv, not both.` ),
-        csv: z.string({ error: 'csv must be a string.' }).max( INVENTORY_LIMITS.maxInputBytes, { error: `csv must be at most ${ INVENTORY_LIMITS.maxInputBytes } bytes of UTF-8 text.` } ).optional()
-            .describe( `Headered CSV or TSV text with at most ${ INVENTORY_LIMITS.maxRows } data rows and ${ INVENTORY_LIMITS.maxInputBytes / 1024 } KiB. Headers: name, bundle_id, version, build, publisher, or the export aliases listed in the docs (osquery bundle_identifier, bundle_short_version, bundle_version; Jamf/Iru bundleId, cfBundleShortVersionString, cfBundleVersion; Intune ApplicationName, ApplicationVersion, ApplicationPublisher). Other columns are rejected. Provide rows or csv, not both.` ),
+            .describe( `App-only input, 1 to ${ INVENTORY_LIMITS.maxRows } rows with a nonblank name or bundle_id. Mutually exclusive with csv and json.` ),
+        csv: z.string({ error: 'csv must be a string.' }).max( RAW_LIMITS.maxBytes, { error: RAW_SIZE_ERROR } ).optional()
+            .describe( `Delimited export text. Recognized raw formats support 1 MiB and ${ RAW_LIMITS.maxRows } rows. App-only CSV or TSV supports ${ INVENTORY_LIMITS.maxRows } rows and 64 KiB. Mutually exclusive with rows and json.` ),
+        json: z.union([ z.string().max( RAW_LIMITS.maxBytes, { error: RAW_SIZE_ERROR } ), z.looseObject({}), z.array( z.unknown() ) ], { error: jsonError }).optional()
+            .describe( `Jamf Pro inventory or system_profiler export as JSON text, an object, or an array. Maximum 1 MiB and ${ RAW_LIMITS.maxRows } rows. Mutually exclusive with rows and csv.` ),
+        format: z.enum( RAW_FORMATS, { error: RAW_FORMAT_ERROR } ).optional()
+            .describe( 'Raw export profile for csv or json. Omission enables detection from the export headers or JSON shape.' ),
         target_macos: z.union( TARGETS.map( value => z.literal( value ) ), { error: `target_macos must be one of ${ TARGETS.join(', ') }. Omit it for architecture evidence only.` } ).optional()
             .describe( 'macOS major version to assess, 26, 27 or 28. 28 is the first release without general-purpose Rosetta 2. Omit for architecture evidence only.' ),
         filter: z.enum( FILTERS, { error: `filter must be one of ${ FILTERS.join(', ') }.` } ).default( 'all' ).describe( 'Return only rows with this status. Defaults to all. Counts always cover the whole batch.' ),
-        offset: z.number({ error: offsetError }).int({ error: offsetError }).min( 0, { error: offsetError } ).max( INVENTORY_LIMITS.maxOffset, { error: offsetError } ).default( 0 )
-            .describe( 'Number of filtered unique rows to skip. Defaults to 0. For the next page, resend the same rows or csv, target_macos, filter and catalog_revision with next_offset.' ),
+        offset: z.number({ error: offsetError }).int({ error: offsetError }).min( 0, { error: offsetError } ).max( RAW_LIMITS.maxRows - 1, { error: offsetError } ).default( 0 )
+            .describe( 'Number of filtered unique rows to skip. Defaults to 0. Maximum 249 for app-only input and 4999 for raw exports. next_offset refers to the same input, target_macos, filter and catalog_revision.' ),
         limit: limitSchema( INVENTORY_LIMITS.maxLimit, INVENTORY_LIMITS.defaultLimit, `Maximum rows per page, from 1 to ${ INVENTORY_LIMITS.maxLimit }. Defaults to ${ INVENTORY_LIMITS.defaultLimit }.` ),
         catalog_revision: z.string({ error: 'catalog_revision must be a string.' }).max( INVENTORY_LIMITS.maxRevisionLength, { error: `catalog_revision must be at most ${ INVENTORY_LIMITS.maxRevisionLength } characters.` } ).optional()
             .describe( 'catalog_revision from the first page. A changed catalog returns an error so pages are not mixed across revisions.' ),
@@ -175,8 +181,8 @@ function wrap ( name, handler, data ) {
             if ( error instanceof ToolInputError ) {
                 return { isError: true, content: [ { type: 'text', text: error.message } ] }
             }
-            // Keep upstream details in the logs, not in the model-visible result.
-            console.error( `doesitarm-mcp ${ name } failed:`, error )
+            if ( name === 'check_inventory' ) console.error( 'doesitarm-mcp check_inventory failed' )
+            else console.error( `doesitarm-mcp ${ name } failed:`, error )
             return { isError: true, content: [ { type: 'text', text: UNAVAILABLE_TEXT } ] }
         }
     }

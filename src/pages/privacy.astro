@@ -79,7 +79,7 @@ applyResponseDefaults( Astro )
         <p>The first {collectedKeys.length} details come from the app's Info.plist, the standard settings file inside every Mac app. We keep only text, number and true/false values, each cut to {MAX_VALUE_LENGTH} characters, and drop anything else. We do not collect any other Info.plist keys, such as update feed URLs, nor Mach-O load commands, code signing data or other metadata. In return for a scan, we tell you if we know of a version of that app that runs natively.</p>
         <ul>
             <li><strong>The current scanner.</strong> The default App Scanner sends the details above every time you scan an app. It has no setting to turn this off. It will be replaced by the newer scanner described below. If you do not want to share, use the newer scanner with sharing turned off.</li>
-            <li><strong>The newer scanner.</strong> The newer App Scanner (available with <code>?v=3</code> on the scanner page) currently keeps scans on your device and sends nothing. Where we add a way to share scan details, it will send only the details listed above, you will be able to choose whether to share, and we will update this policy first. Scanning while offline sends nothing.</li>
+            <li><strong>The newer scanner.</strong> Where offered, the newer App Scanner has an unchecked checkbox, “Also check for Apple Silicon upgrades and download links”. Only if you check it, the scanner sends the details listed above for each app so we can return a newer compatible version and link, and those details are added to Does It ARM's compatibility data under our <a href="/terms">Terms</a>. Unchecked, nothing is sent.</li>
             <li><strong>Where it goes.</strong> Scan reports are stored by a function on Vercel in a Google Sheet. We do not store your name, an account or your IP address with a scan report. Older scan reports in that sheet, sent before November 27, 2026, include more detail (the full Info.plist and Mach-O metadata). They stay private and are no longer published.</li>
             <li><strong>What we publish.</strong> An app's public Does It ARM page and our public data files show only a few fields from scan reports: the app version, the bundle ID, the processor types (shown as Universal, Apple Silicon or Intel), the minimum macOS version and the scan result.</li>
             <li><strong>Scanning a URL.</strong> If you scan a download link, our servers or your browser fetch that public URL to read the app's details.</li>
@@ -87,11 +87,11 @@ applyResponseDefaults( Astro )
         <p><strong>Why we collect app details.</strong> App details help us keep the public compatibility list accurate and find newer versions of an app that run natively. We have a legitimate interest in this, and it benefits everyone who uses the list. You can object at any time: use the newer scanner with the setting turned off, scan offline, or email us to ask us to remove a report.</p>
         <p><strong>Public apps only.</strong> We want details about publicly available apps, not internal or confidential ones. Please do not scan apps that contain confidential information, such as in-house company apps, while sharing is on. We may delete scan data that looks like it comes from a non-public app.</p>
 
-        <h3>The MCP server</h3>
-        <p>The Does It ARM MCP server lets AI assistants look up compatibility data. It is read-only and has no accounts.</p>
+        <h3>The MCP server and inventory API</h3>
+        <p>The Does It ARM MCP server lets AI assistants look up compatibility data. The REST inventory endpoint at <code>mcp.doesitarm.com/v1/inventory</code> provides the same inventory check over HTTP. Both are read-only and require no account.</p>
         <ul>
-            <li>We do not store or log what you send to its tools, such as app names or inventory rows. Errors are logged with details about our own data source, not your request.</li>
-            <li>Your IP address is used briefly to limit each connection to 120 requests a minute. It is not stored by us.</li>
+            <li>We do not store, cache, or log what you send to the MCP tools or REST inventory endpoint, including raw export files. We use device IDs or labels only to count devices in the current request. Device details are removed from results.</li>
+            <li>Your IP address is used briefly to limit MCP and REST traffic to a combined 120 requests a minute per IP address. It is not stored by us.</li>
             <li>Cloudflare, which runs the server, processes standard request data under its own policies.</li>
             <li>The AI app you use with the server, such as Claude or ChatGPT, has its own privacy policy.</li>
         </ul>

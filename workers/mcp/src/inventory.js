@@ -1,10 +1,12 @@
 // check_inventory: match a Mac app inventory export against the public app
-// catalog. Rows come only from the tool arguments. They are never logged,
+// catalog. Rows come from MCP or REST requests. They are never logged,
 // cached or stored; only upstream catalog JSON is cached (see data.js).
 // Error messages name the field, row number or bound and never echo values.
 
 import { scannedVersions, siteUrl } from './data.js'
 import { ToolInputError } from './tools.js'
+import { RAW_LIMITS, parseRawInventory } from './raw-inventory.js'
+import { countDevices, tupleKey } from 'doesitarm-inventory-import/inventory'
 
 export const INVENTORY_LIMITS = {
     maxRows: 250,
@@ -343,26 +345,27 @@ function findingLine ( finding ) {
     return `- Row ${ finding.row }${ finding.duplicate_rows ? ` (+${ finding.duplicate_rows } duplicate${ finding.duplicate_rows === 1 ? '' : 's' })` : '' }: ${ label }${ version } → ${ statusLabel( finding.status ) } (${ detail })${ finding.target_assessment ? `, target: ${ finding.target_assessment }` : '' }${ url ? ` · ${ url }` : '' }`
 }
 
-export async function checkInventory ( args, data ) {
-    const {
-        rows,
-        csv,
-        target_macos: target = null,
-        filter = 'all',
-        offset = 0,
-        limit = INVENTORY_LIMITS.defaultLimit,
-        catalog_revision: requestedRevision,
-    } = args
-
-    if ( ( rows === undefined ) === ( csv === undefined ) ) {
-        throw new ToolInputError( 'Provide exactly one of rows or csv.' )
+// Finish grouping synchronously so only app tuples and numeric device counts
+// reach the catalog lookup. The adapter projects only fields used in grouping.
+function prepareInventory ( args ) {
+    const { rows, csv, json, format, offset = 0 } = args
+    if ( [ rows, csv, json ].filter( value => value !== undefined ).length !== 1 ) {
+        throw new ToolInputError( 'Provide exactly one of rows, csv or json.' )
     }
-    if ( byteLength( JSON.stringify( args ) ) > INVENTORY_LIMITS.maxArgumentBytes ) {
+    if ( rows !== undefined && format !== undefined ) throw new ToolInputError( 'format applies to csv or json input.' )
+
+    const report = rows === undefined ? parseRawInventory( args, byteLength ) : null
+    const maxOffset = report ? RAW_LIMITS.maxRows - 1 : INVENTORY_LIMITS.maxOffset
+    if ( offset > maxOffset ) throw new ToolInputError( `offset must be a whole number from 0 to ${ maxOffset }.` )
+    if ( !report && byteLength( JSON.stringify( args ) ) > INVENTORY_LIMITS.maxArgumentBytes ) {
         throw new ToolInputError( `check_inventory arguments must be at most ${ INVENTORY_LIMITS.maxArgumentBytes } bytes when serialized.` )
     }
 
+    const installs = report ? new Map( report.records.map( record => [ record.ref, record ] ) ) : null
     let rawRows
-    if ( rows !== undefined ) {
+    if ( report ) {
+        rawRows = report.records.map( record => ({ row: record.ref, values: record.row }) )
+    } else if ( rows !== undefined ) {
         if ( rows.length > INVENTORY_LIMITS.maxRows ) throw new ToolInputError( `rows accepts at most ${ INVENTORY_LIMITS.maxRows } records; it has ${ rows.length }.` )
         if ( byteLength( JSON.stringify( rows ) ) > INVENTORY_LIMITS.maxInputBytes ) {
             throw new ToolInputError( `rows must total at most ${ INVENTORY_LIMITS.maxInputBytes } bytes of UTF-8 text.` )
@@ -373,26 +376,46 @@ export async function checkInventory ( args, data ) {
     }
 
     const { accepted, invalid } = validateRows( rawRows )
+    if ( report?.unresolved.length ) {
+        invalid.push( ...report.unresolved.map( entry => ({ row: entry.row, code: 'invalid_field' }) ) )
+        invalid.sort( ( a, b ) => a.row - b.row )
+    }
     if ( accepted.length === 0 ) {
         throw new ToolInputError( `No valid rows. Each row needs a nonblank name or bundle_id within the field limits (name ${ FIELD_LIMITS.name }, bundle_id ${ FIELD_LIMITS.bundle_id }, version ${ FIELD_LIMITS.version }, build ${ FIELD_LIMITS.build }, publisher ${ FIELD_LIMITS.publisher } characters). Invalid rows: ${ invalid.slice( 0, INVENTORY_LIMITS.maxInvalidPreview ).map( entry => entry.row ).join(', ') }${ invalid.length > INVENTORY_LIMITS.maxInvalidPreview ? ` and ${ invalid.length - INVENTORY_LIMITS.maxInvalidPreview } more` : '' }.` )
     }
 
+    // Deduplicate by identity, version and build, keeping first position.
+    const byKey = new Map()
+    for ( const row of accepted ) {
+        const key = report ? tupleKey( row ) : dedupeKey( row )
+        if ( !byKey.has( key ) ) byKey.set( key, { row, duplicates: -1, installs: [] } )
+        const entry = byKey.get( key )
+        entry.duplicates += 1
+        if ( report ) entry.installs.push( installs.get( row.row ) )
+    }
+    const unique = Array.from( byKey.values(), ( { row, duplicates, installs } ) => {
+        if ( !report ) return { row, duplicates }
+        const devices = countDevices( installs )
+        const deviceCount = report.format === 'system-profiler-json' ? 1 : devices.kind === 'rows' ? null : devices.count
+        return { row, duplicates, deviceCount }
+    })
+    return { unique, invalid, acceptedCount: accepted.length, format: report?.format }
+}
+
+export async function checkInventory ( args, data ) {
+    const {
+        target_macos: target = null,
+        filter = 'all',
+        offset = 0,
+        limit = INVENTORY_LIMITS.defaultLimit,
+        catalog_revision: requestedRevision,
+    } = args
+
+    const { unique, invalid, acceptedCount, format } = prepareInventory( args )
     const apps = await data.list('app')
     const index = catalogIndex( apps )
     if ( requestedRevision !== undefined && requestedRevision !== index.revision ) {
         throw new ToolInputError( 'catalog_revision no longer matches the current catalog. Restart from offset 0 without catalog_revision to get results for the current revision.' )
-    }
-
-    // Deduplicate by identity, version and build, keeping first position.
-    const unique = []
-    const byKey = new Map()
-    for ( const row of accepted ) {
-        const key = dedupeKey( row )
-        const existing = byKey.get( key )
-        if ( existing ) { existing.duplicates += 1; continue }
-        const entry = { row, duplicates: 0 }
-        byKey.set( key, entry )
-        unique.push( entry )
     }
 
     // First pass: identity and catalog statements.
@@ -401,6 +424,10 @@ export async function checkInventory ( args, data ) {
         const { row } = entry
         const finding = emptyFinding( row )
         finding.duplicate_rows = entry.duplicates
+        if ( format ) {
+            finding.app = { name: row.name, bundle_id: row.bundle_id, publisher: row.publisher }
+            finding.device_count = entry.deviceCount
+        }
         const matched = matchRow( row, apps, index )
         finding.match = matched.match
         finding.candidates = matched.candidates || []
@@ -436,10 +463,12 @@ export async function checkInventory ( args, data ) {
     const endpoints = [ ...new Set( pending.map( task => task.item.endpoint ) ) ].slice( 0, INVENTORY_LIMITS.maxDetailLookups )
     const details = new Map( await Promise.all( endpoints.map( async endpoint => [ endpoint, await data.detail( endpoint ).catch( () => null ) ] ) ) )
 
+    const versionsByBundle = new Map()
     for ( const { entry, item, bundleId } of pending ) {
         const raw = details.get( item.endpoint )
         if ( !raw ) continue
-        const verdict = scanVerdict( scannedVersions( raw, bundleId ), [ entry.row.version, entry.row.build ] )
+        if ( !versionsByBundle.has( bundleId ) ) versionsByBundle.set( bundleId, scannedVersions( raw, bundleId ) )
+        const verdict = scanVerdict( versionsByBundle.get( bundleId ), [ entry.row.version, entry.row.build ] )
         if ( !verdict ) continue
         const finding = entry.finding
         finding.evidence = {
@@ -461,10 +490,10 @@ export async function checkInventory ( args, data ) {
     })
 
     const counts = {
-        received: rawRows.length,
-        accepted: accepted.length,
+        received: acceptedCount + invalid.length,
+        accepted: acceptedCount,
         invalid: invalid.length,
-        duplicates: accepted.length - unique.length,
+        duplicates: acceptedCount - unique.length,
         unique: unique.length,
         native: 0,
         rosetta: 0,
@@ -482,7 +511,7 @@ export async function checkInventory ( args, data ) {
         `Checked ${ counts.received } inventory row${ counts.received === 1 ? '' : 's' } against the Does It ARM catalog (revision ${ index.revision }): ${ counts.unique } unique app version${ counts.unique === 1 ? '' : 's' }, ${ counts.native } native, ${ counts.rosetta } Rosetta, ${ counts.unsupported } unsupported, ${ counts.unknown } unknown.${ counts.duplicates ? ` ${ counts.duplicates } duplicate row${ counts.duplicates === 1 ? '' : 's' } collapsed.` : '' }${ counts.invalid ? ` ${ counts.invalid } invalid row${ counts.invalid === 1 ? '' : 's' } (${ invalid.slice( 0, INVENTORY_LIMITS.maxInvalidPreview ).map( entry => `row ${ entry.row }: ${ entry.code }` ).join(', ') }).` : '' }${ target !== null ? ` Target: macOS ${ target }.` : '' }`,
         `${ filter === 'all' ? 'Results' : `Results with status ${ filter }` } ${ page.length ? `${ offset + 1 }–${ offset + page.length }` : 'none' } of ${ filtered.length }:`,
         ...page.map( findingLine ),
-        ...( nextOffset !== null ? [ `Next page: offset ${ nextOffset } with the same rows, target_macos, filter and catalog_revision ${ index.revision }.` ] : [] ),
+        ...( nextOffset !== null ? [ `Next page: offset ${ nextOffset } with the same ${ format ? 'export' : 'rows' }, target_macos, filter and catalog_revision ${ index.revision }.` ] : [] ),
         ...( scanner ? [ '', `${ SCANNER_TEXT } ${ SCANNER_REFERENCE.url }` ] : [] ),
         '',
         'Source: Does It ARM (https://doesitarm.com).',
@@ -491,6 +520,7 @@ export async function checkInventory ( args, data ) {
     return {
         text,
         data: {
+            ...( format ? { format } : {} ),
             catalog_revision: index.revision,
             target_macos: target,
             counts,

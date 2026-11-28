@@ -1,10 +1,10 @@
 {
   // Public, read-only remote MCP server for doesitarm.com.
-  // Stateless Streamable HTTP at https://mcp.doesitarm.com/mcp. Reads the
+  // Stateless MCP at /mcp and REST inventory uploads at /v1/inventory. Reads the
   // public API only; no bindings to the site's KV, D1 or other Workers.
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "doesitarm-mcp",
-  "main": "src/index.js",
+  "main": "src/worker.js",
   "account_id": "8d4ef8fe891f53e5658d3fdd5a4c7630",
   "compatibility_date": "2026-07-25",
   "compatibility_flags": ["nodejs_compat"],

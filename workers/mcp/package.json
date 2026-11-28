@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "doesitarm-mcp",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Public, read-only remote MCP server for Does It ARM",
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
+    "doesitarm-inventory-import": "file:../../tools/inventory-import",
     "zod": "^4.6.7"
   },
   "devDependencies": {
