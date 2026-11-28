@@ -1,0 +1,1663 @@
+{
+  "author": "ThatGuySam",
+  "authorUrl": "https://github.com/ThatGuySam",
+  "cloudEndpoint": "https://mcp.doesitarm.com/mcp",
+  "description": "Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.",
+  "homepage": "https://doesitarm.com",
+  "icon": "https://doesitarm.com/images/mcp-icon-256.png",
+  "identifier": "thatguysam-doesitarm",
+  "name": "Does It ARM",
+  "prompts": [],
+  "resources": [],
+  "tools": [
+    {
+      "name": "search_apps",
+      "title": "Search Apple Silicon Compatibility",
+      "description": "Find Does It ARM listings for a Mac app, game, or Homebrew formula by name, alias, or bundle ID. Returns ranked candidates with reported Apple Silicon status and listing links. Useful when the exact listing is unclear.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Mac app, game, or Homebrew formula name or alias, or a Mac app bundle ID such as com.spotify.client."
+          },
+          "kind": {
+            "default": "all",
+            "description": "Limit results to app (Mac app), game, or homebrew (formula). Defaults to all, which covers all three.",
+            "type": "string",
+            "enum": [
+              "app",
+              "game",
+              "homebrew",
+              "all"
+            ]
+          },
+          "status": {
+            "description": "Filter by reported status. native means native support, rosetta means Rosetta 2, no means unsupported, no-in-progress means support is in progress, and unreported means native support has yet to be reported. Omit to include any status.",
+            "type": "string",
+            "enum": [
+              "native",
+              "rosetta",
+              "no",
+              "no-in-progress",
+              "unreported"
+            ]
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum number of ranked matches to return, from 1 to 50. Defaults to 10.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number",
+            "description": "Number of matching listings. Can be larger than the number returned."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Canonical doesitarm.com page for this listing."
+                },
+                "status": {
+                  "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "statusText": {
+                  "description": "Status headline shown on the listing page.",
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "description": "Date of the last listing update, when the source has one.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Device description. Only on device listings.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "kind",
+                "url"
+              ],
+              "additionalProperties": {}
+            },
+            "description": "Ranked candidates, best first. Empty when nothing matched."
+          }
+        },
+        "required": [
+          "query",
+          "total",
+          "results"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "Search Apple Silicon Compatibility",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_app",
+      "title": "Get Compatibility Listing Details",
+      "description": "Read one Does It ARM listing for a Mac app, game, Homebrew formula, or Mac model. A Does It ARM listing path or URL identifies the catalog record directly. A name or slug can resolve to the best catalog match. A miss may include suggestions. Details can include app version history, device support, game reports, related videos, or Mac model specifications.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "app": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "One listing name, slug, or Does It ARM page path or URL, such as Spotify, /app/spotify, or https://doesitarm.com/app/spotify/."
+          },
+          "kind": {
+            "default": "all",
+            "description": "For a name or slug, narrow the lookup to app, game, homebrew (formula), or device (Mac model). Defaults to all, which covers all four. A listing path or URL determines its own kind.",
+            "type": "string",
+            "enum": [
+              "app",
+              "game",
+              "homebrew",
+              "device",
+              "all"
+            ]
+          }
+        },
+        "required": [
+          "app"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "found": {
+            "type": "boolean",
+            "description": "True when a listing was found. Then listing is set; otherwise query and suggestions are set."
+          },
+          "listing": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+              },
+              "url": {
+                "type": "string",
+                "description": "Canonical doesitarm.com page for this listing."
+              },
+              "status": {
+                "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "statusText": {
+                "type": "string"
+              },
+              "category": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "slug": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "label",
+                      "slug",
+                      "url"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastUpdated": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "links": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "url"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "deviceSupport": {
+                "description": "Per-device results shown on the listing page.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "device": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "device",
+                    "result",
+                    "summary",
+                    "url"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "relatedVideos": {
+                "description": "Up to 10 related videos.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "channel": {
+                      "type": "string"
+                    },
+                    "benchmark": {
+                      "type": "boolean"
+                    },
+                    "published": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "youtubeUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "channel",
+                    "benchmark",
+                    "published",
+                    "url",
+                    "youtubeUrl"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "relatedVideoCount": {
+                "type": "number"
+              },
+              "bundleIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "versionHistory": {
+                "description": "Mac app bundle version history. Only on app listings.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bundleId": {
+                      "type": "string"
+                    },
+                    "totalVersions": {
+                      "type": "number"
+                    },
+                    "versions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "architectures": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "status",
+                          "architectures"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "description": "Up to 10 newest scanned versions."
+                    }
+                  },
+                  "required": [
+                    "bundleId",
+                    "totalVersions",
+                    "versions"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "reports": {
+                "description": "Game reports. Only on game listings.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              },
+              "attribution": {
+                "type": "string"
+              },
+              "installedVia": {
+                "type": "string"
+              },
+              "shortName": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "chips": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "releaseYear": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ]
+              },
+              "announcedDate": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "availableDate": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "appleSpecsUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "intro": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "value"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "comparison": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "heading": {
+                        "type": "string"
+                      },
+                      "body": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "heading",
+                      "body",
+                      "url"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "decisionGuide": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "heading": {
+                        "type": "string"
+                      },
+                      "summary": {
+                        "type": "string"
+                      },
+                      "points": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "heading",
+                      "summary",
+                      "points"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "buyerProfile": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "primaryReason": {
+                        "type": "string"
+                      },
+                      "evidenceSummary": {
+                        "type": "string"
+                      },
+                      "useCases": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "description"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      }
+                    },
+                    "required": [
+                      "primaryReason",
+                      "evidenceSummary",
+                      "useCases"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "officialSources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "url"
+                  ],
+                  "additionalProperties": {}
+                }
+              }
+            },
+            "required": [
+              "name",
+              "kind",
+              "url"
+            ],
+            "additionalProperties": {}
+          },
+          "query": {
+            "type": "string"
+          },
+          "suggestions": {
+            "description": "Closest listings when nothing matched.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Canonical doesitarm.com page for this listing."
+                },
+                "status": {
+                  "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "statusText": {
+                  "description": "Status headline shown on the listing page.",
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "description": "Date of the last listing update, when the source has one.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Device description. Only on device listings.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "kind",
+                "url"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "found"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "Get Compatibility Listing Details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "check_apps",
+      "title": "Compare Apple Silicon Compatibility",
+      "description": "Check reported Apple Silicon compatibility for up to 50 software names in one call, including lists for a Mac migration. Returns the best Does It ARM catalog match, reported status, and listing link for each distinct name. Names without a sufficiently close match are marked as not listed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "One to 50 software names, one per array item, such as Spotify or Docker. Blank entries are skipped and identical trimmed names are checked once."
+          },
+          "kind": {
+            "default": "all",
+            "description": "Limit results to app (Mac app), game, or homebrew (formula). Defaults to all, which covers all three.",
+            "type": "string",
+            "enum": [
+              "app",
+              "game",
+              "homebrew",
+              "all"
+            ]
+          }
+        },
+        "required": [
+          "names"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "counts": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Number of names per reported status, plus not-listed."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Canonical doesitarm.com page for this listing."
+                },
+                "status": {
+                  "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "statusText": {
+                  "description": "Status headline shown on the listing page.",
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "description": "Date of the last listing update, when the source has one.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Device description. Only on device listings.",
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string",
+                  "description": "The name as checked, trimmed."
+                },
+                "found": {
+                  "type": "boolean"
+                },
+                "closest": {
+                  "description": "Up to two closest listing names when found is false.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "query",
+                "found"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "counts",
+          "results"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "Compare Apple Silicon Compatibility",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_categories",
+      "title": "List Compatibility Categories",
+      "description": "Discover the categories available in the Does It ARM catalog. Returns each category’s slug, listing count, and page link, plus compatibility percentages across Mac apps, games, and formulae when available.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "number"
+                  },
+                  "nativePercent": {
+                    "type": "number"
+                  },
+                  "rosettaPercent": {
+                    "type": "number"
+                  },
+                  "unreportedPercent": {
+                    "type": "number"
+                  },
+                  "unsupportedPercent": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": {}
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Percentages across Mac apps, games and formulae. Null when unavailable."
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug",
+                "label",
+                "count",
+                "url"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "summary",
+          "categories"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "List Compatibility Categories",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_by_category",
+      "title": "Browse Compatibility by Category",
+      "description": "Browse Mac apps, games, or Homebrew formulae in one Does It ARM category. Optionally filter by reported Apple Silicon status. Each page includes listing links and returns the next offset when more results are available.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Category slug or label from list_categories, such as music-and-audio-tools or Homebrew."
+          },
+          "status": {
+            "description": "Filter by reported status. native means native support, rosetta means Rosetta 2, no means unsupported, no-in-progress means support is in progress, and unreported means native support has yet to be reported. Omit to include any status.",
+            "type": "string",
+            "enum": [
+              "native",
+              "rosetta",
+              "no",
+              "no-in-progress",
+              "unreported"
+            ]
+          },
+          "limit": {
+            "default": 25,
+            "description": "Maximum listings per page, from 1 to 100. Defaults to 25.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of matching listings to skip. Defaults to 0. For the next page, use nextOffset with the same category and status. A null nextOffset means the last page.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "found": {
+            "type": "boolean",
+            "description": "False when the category is unknown. Then only category is set."
+          },
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          },
+          "nextOffset": {
+            "description": "Offset for the next page, or null on the last page.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Canonical doesitarm.com page for this listing."
+                },
+                "status": {
+                  "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "statusText": {
+                  "description": "Status headline shown on the listing page.",
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "description": "Date of the last listing update, when the source has one.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Device description. Only on device listings.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "kind",
+                "url"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "found",
+          "category"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "Browse Compatibility by Category",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "recent_updates",
+      "title": "List Recent App Compatibility Updates",
+      "description": "See the latest dated Mac app compatibility updates in the Does It ARM catalog. Returns Apple Silicon status and listing links, newest update first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Maximum updated app listings to return, from 1 to 100. Defaults to 20.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Canonical doesitarm.com page for this listing."
+                },
+                "status": {
+                  "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "statusText": {
+                  "description": "Status headline shown on the listing page.",
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "description": "Date of the last listing update, when the source has one.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Device description. Only on device listings.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "kind",
+                "url"
+              ],
+              "additionalProperties": {}
+            },
+            "description": "Mac app listings, newest update first."
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "List Recent App Compatibility Updates",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_devices",
+      "title": "List Apple Silicon Mac Models",
+      "description": "Find the Apple Silicon Mac models covered by Does It ARM. Returns model names, chips, availability dates when present, and links to the device pages. The listing detail tool can read a selected device page.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Listing kind: app (Mac app), game, homebrew (formula) or device (Mac model)."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Canonical doesitarm.com page for this listing."
+                },
+                "status": {
+                  "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "statusText": {
+                  "description": "Status headline shown on the listing page.",
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "lastUpdated": {
+                  "description": "Date of the last listing update, when the source has one.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Device description. Only on device listings.",
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "chips": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "availableDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "kind",
+                "url",
+                "slug",
+                "chips",
+                "availableDate"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "List Apple Silicon Mac Models",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "check_inventory",
+      "title": "Check Mac App Inventory for Apple Silicon",
+      "description": "Checks up to 250 installed macOS app rows from an inventory export against Does It ARM's public catalog. Matches by bundle ID and installed version where evidence is available. Returns counts for native, Rosetta, unsupported, and unknown, with evidence and paged results for Mac migration or macOS upgrade planning. Version evidence comes from the catalog's version-scoped native statements and its ten most recent scanned versions per bundle ID. Rows matched by name alone stay unknown, with the latest listing as a hint.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "description": "Structured inventory rows, 1 to 250. Each row needs a nonblank name or bundle_id. Provide rows or csv, not both.",
+            "minItems": 1,
+            "maxItems": 250,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "App name as shown in the inventory, such as Slack or Slack.app. Up to 160 characters after trimming; longer values mark the row invalid.",
+                  "type": "string"
+                },
+                "bundle_id": {
+                  "description": "CFBundleIdentifier, such as com.tinyspeck.slackmacgap. Matched before the name. Up to 255 characters after trimming; longer values mark the row invalid.",
+                  "type": "string"
+                },
+                "version": {
+                  "description": "Installed CFBundleShortVersionString, as a string. Up to 80 characters after trimming; longer values mark the row invalid.",
+                  "type": "string"
+                },
+                "build": {
+                  "description": "Installed CFBundleVersion, as a string. Up to 80 characters after trimming; longer values mark the row invalid.",
+                  "type": "string"
+                },
+                "publisher": {
+                  "description": "Publisher or vendor name. Used only to group rows that have no bundle ID. Up to 160 characters after trimming; longer values mark the row invalid.",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "csv": {
+            "description": "Headered CSV or TSV text with at most 250 data rows and 64 KiB. Headers: name, bundle_id, version, build, publisher, or the export aliases listed in the docs (osquery bundle_identifier, bundle_short_version, bundle_version; Jamf/Iru bundleId, cfBundleShortVersionString, cfBundleVersion; Intune ApplicationName, ApplicationVersion, ApplicationPublisher). Other columns are rejected. Provide rows or csv, not both.",
+            "type": "string",
+            "maxLength": 65536
+          },
+          "target_macos": {
+            "description": "macOS major version to assess, 26, 27 or 28. 28 is the first release without general-purpose Rosetta 2. Omit for architecture evidence only.",
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 26
+              },
+              {
+                "type": "number",
+                "const": 27
+              },
+              {
+                "type": "number",
+                "const": 28
+              }
+            ]
+          },
+          "filter": {
+            "default": "all",
+            "description": "Return only rows with this status. Defaults to all. Counts always cover the whole batch.",
+            "type": "string",
+            "enum": [
+              "all",
+              "native",
+              "rosetta",
+              "unsupported",
+              "unknown"
+            ]
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of filtered unique rows to skip. Defaults to 0. For the next page, resend the same rows or csv, target_macos, filter and catalog_revision with next_offset.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 249
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum rows per page, from 1 to 50. Defaults to 20.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "catalog_revision": {
+            "description": "catalog_revision from the first page. A changed catalog returns an error so pages are not mixed across revisions.",
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "catalog_revision": {
+            "type": "string",
+            "description": "Catalog revision these results come from. Pass it back with later pages."
+          },
+          "target_macos": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "number"
+              },
+              "accepted": {
+                "type": "number"
+              },
+              "invalid": {
+                "type": "number"
+              },
+              "duplicates": {
+                "type": "number"
+              },
+              "unique": {
+                "type": "number"
+              },
+              "native": {
+                "type": "number"
+              },
+              "rosetta": {
+                "type": "number"
+              },
+              "unsupported": {
+                "type": "number"
+              },
+              "unknown": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "received",
+              "accepted",
+              "invalid",
+              "duplicates",
+              "unique",
+              "native",
+              "rosetta",
+              "unsupported",
+              "unknown"
+            ],
+            "additionalProperties": {},
+            "description": "Whole-batch counts: received = accepted + invalid, unique = accepted - duplicates, and the four statuses sum to unique."
+          },
+          "invalid_rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "row": {
+                  "type": "number"
+                },
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "missing_identity",
+                    "invalid_field"
+                  ]
+                }
+              },
+              "required": [
+                "row",
+                "code"
+              ],
+              "additionalProperties": {}
+            },
+            "description": "Up to 10 invalid row numbers with reason codes."
+          },
+          "filtered_count": {
+            "type": "number",
+            "description": "Unique rows matching filter."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "row": {
+                  "type": "number",
+                  "description": "One-based input row (CSV data row, excluding the header) of the first row with this identity, version and build."
+                },
+                "duplicate_rows": {
+                  "type": "number",
+                  "description": "Additional input rows collapsed into this one."
+                },
+                "match": {
+                  "type": "string",
+                  "enum": [
+                    "bundle_id",
+                    "name",
+                    "alias",
+                    "ambiguous",
+                    "none"
+                  ],
+                  "description": "How the row was matched to the catalog. Only bundle_id establishes identity for a status."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "rosetta",
+                    "unsupported",
+                    "unknown"
+                  ]
+                },
+                "unknown_reason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "unlisted",
+                        "ambiguous_identity",
+                        "bundle_id_conflict",
+                        "version_missing",
+                        "version_unverified",
+                        "conflicting_variants",
+                        "stale_evidence",
+                        "insufficient_evidence"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Why status is unknown. Null otherwise."
+                },
+                "target_assessment": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "rosetta_available_if_installed",
+                        "rosetta_unavailable",
+                        "explicitly_unsupported",
+                        "needs_validation",
+                        "unknown"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Assessment for target_macos. Null when no target was given."
+                },
+                "requested_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "requested_build": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "evidence": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "basis": {
+                          "type": "string",
+                          "enum": [
+                            "catalog_statement",
+                            "binary_architecture",
+                            "vendor_statement",
+                            "runtime_test"
+                          ],
+                          "description": "catalog_statement: the listing reports native support as of observed_version. binary_architecture: a catalog scan of exactly observed_version found these Mach-O architectures."
+                        },
+                        "observed_version": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "observed_build": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "observed_at": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "architectures": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "source_url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "basis",
+                        "observed_version",
+                        "observed_build",
+                        "observed_at",
+                        "architectures",
+                        "source_url"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "catalog_hint": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "reported_status": {
+                          "description": "Reported status: native, rosetta, no (unsupported), no-in-progress (support in progress) or unreported (native support not yet reported). Null when the source has none.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "url",
+                        "reported_status"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Latest catalog listing and status for triage. It does not describe the installed version."
+                },
+                "candidates": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "url"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  "description": "Up to three catalog listings for an ambiguous or conflicting row."
+                }
+              },
+              "required": [
+                "row",
+                "duplicate_rows",
+                "match",
+                "status",
+                "unknown_reason",
+                "target_assessment",
+                "requested_version",
+                "requested_build",
+                "evidence",
+                "catalog_hint",
+                "candidates"
+              ],
+              "additionalProperties": {}
+            },
+            "description": "One page of unique rows in input order."
+          },
+          "next_offset": {
+            "description": "Offset of the next page, or null on the last page.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "scanner_reference": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "type": "string"
+                  },
+                  "catalog_submission": {
+                    "type": "string"
+                  },
+                  "unknown_rows": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url",
+                  "scope",
+                  "catalog_submission",
+                  "unknown_rows"
+                ],
+                "additionalProperties": {}
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Fixed Does It ARM App Scanner v3 (preview) reference, present when the batch has unknown rows. Scanner results stay on the local Mac; catalog_submission is unavailable."
+          }
+        },
+        "required": [
+          "catalog_revision",
+          "target_macos",
+          "counts",
+          "invalid_rows",
+          "filtered_count",
+          "results",
+          "next_offset",
+          "scanner_reference"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": {}
+      },
+      "annotations": {
+        "title": "Check Mac App Inventory for Apple Silicon",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ],
+  "version": "1.3.0"
+}
