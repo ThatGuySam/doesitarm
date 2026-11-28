@@ -14,6 +14,8 @@ Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Th
 
 ## Install
 
+[Add to VS Code](https://insiders.vscode.dev/redirect/mcp/install?name=doesitarm&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.doesitarm.com%2Fmcp%22%7D) · [Add to Cursor](https://cursor.com/install-mcp?name=doesitarm&config=eyJ1cmwiOiJodHRwczovL21jcC5kb2VzaXRhcm0uY29tL21jcCJ9)
+
 **Claude (claude.ai, desktop and mobile):** open the [Does It ARM listing in the Claude connector directory](https://claude.ai/directory/connectors/doesitarm) and select Connect. You can also add it by URL: Settings → Connectors → Add custom connector, then paste `https://mcp.doesitarm.com/mcp`.
 
 **Claude Code:**

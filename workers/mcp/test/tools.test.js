@@ -166,7 +166,17 @@ describe( 'Worker HTTP handler', () => {
     it( 'serves an info page and CORS preflight', async () => {
         const page = await handleRequest( new Request('https://mcp.doesitarm.com/') )
         expect( page.status ).toBe( 200 )
-        expect( await page.text() ).toContain('claude mcp add --transport http doesitarm')
+        const html = await page.text()
+        expect( html ).toContain('claude mcp add --transport http doesitarm')
+
+        const vscode = new URL( html.match(/href="([^"]+)">Add to VS Code<\/a>/)[1].replace( '&amp;', '&' ) )
+        const cursor = new URL( html.match(/href="([^"]+)">Add to Cursor<\/a>/)[1].replace( '&amp;', '&' ) )
+        expect( vscode.origin + vscode.pathname ).toBe('https://insiders.vscode.dev/redirect/mcp/install')
+        expect( cursor.origin + cursor.pathname ).toBe('https://cursor.com/install-mcp')
+        expect( vscode.searchParams.get('name') ).toBe('doesitarm')
+        expect( cursor.searchParams.get('name') ).toBe('doesitarm')
+        expect( JSON.parse( vscode.searchParams.get('config') ) ).toEqual({ type: 'http', url: 'https://mcp.doesitarm.com/mcp' })
+        expect( JSON.parse( atob( cursor.searchParams.get('config') ) ) ).toEqual({ url: 'https://mcp.doesitarm.com/mcp' })
 
         const preflight = await handleRequest( new Request( 'https://mcp.doesitarm.com/mcp', { method: 'OPTIONS' } ) )
         expect( preflight.status ).toBe( 204 )

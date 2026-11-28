@@ -91,6 +91,8 @@ export function serverCardV1 () {
 
 function infoPage ( origin ) {
     const endpoint = `${ origin }/mcp`
+    const vscodeConfig = encodeURIComponent( JSON.stringify({ type: 'http', url: endpoint }) )
+    const cursorConfig = encodeURIComponent( btoa( JSON.stringify({ url: endpoint }) ) )
     const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Does It ARM MCP server</title>
@@ -102,6 +104,7 @@ function infoPage ( origin ) {
 <p>${ SERVER_DESCRIPTION } The public <a href="https://doesitarm.com">Does It ARM</a> <a href="https://modelcontextprotocol.io">MCP</a> server is read-only and requires no account. Connect over Streamable HTTP at the endpoint below. See the <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">tool reference and examples</a>.</p>
 <p>Endpoint (Streamable HTTP): <code>${ endpoint }</code></p>
 <h2>Install</h2>
+<p><a href="https://insiders.vscode.dev/redirect/mcp/install?name=doesitarm&amp;config=${ vscodeConfig }">Add to VS Code</a> · <a href="https://cursor.com/install-mcp?name=doesitarm&amp;config=${ cursorConfig }">Add to Cursor</a></p>
 <p><b>Claude</b> (Settings → Connectors → Add custom connector): paste <code>${ endpoint }</code></p>
 <p><b>Claude Code</b></p>
 <pre>claude mcp add --transport http doesitarm ${ endpoint }</pre>
