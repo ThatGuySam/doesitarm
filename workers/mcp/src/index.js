@@ -4,7 +4,7 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 
 import { createDataSource } from './data.js'
-import { SERVER_DESCRIPTION, SERVER_INFO, SERVER_INSTRUCTIONS, TOOL_COPY, TOOL_NAMES, createMcpServer } from './server.js'
+import { SERVER_DESCRIPTION, SERVER_ICONS, SERVER_INFO, SERVER_INSTRUCTIONS, SERVER_NAME, SERVER_VERSION, TOOL_COPY, TOOL_NAMES, createMcpServer } from './server.js'
 
 const CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
@@ -52,15 +52,48 @@ export function serverCard ( origin ) {
     }
 }
 
+// Server card from the MCP server card extension (SEP-2127), served at the
+// reserved <endpoint>/server-card location. The extension is still marked
+// experimental and its $schema URL does not resolve yet, so the card is not
+// advertised in an AI Catalog. It describes identity and transport only;
+// live tools/list stays the source of truth for tools.
+export const SERVER_CARD_SCHEMA = 'https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json'
+export const SERVER_CARD_CONTENT_TYPE = 'application/mcp-server-card+json'
+
+export function serverCardV1 () {
+    return {
+        $schema: SERVER_CARD_SCHEMA,
+        name: SERVER_NAME,
+        title: SERVER_INFO.title,
+        description: SERVER_DESCRIPTION,
+        version: SERVER_VERSION,
+        websiteUrl: SERVER_INFO.websiteUrl,
+        icons: SERVER_ICONS,
+        repository: {
+            url: 'https://github.com/ThatGuySam/doesitarm',
+            source: 'github',
+            subfolder: 'workers/mcp',
+        },
+        remotes: [
+            {
+                type: 'streamable-http',
+                url: 'https://mcp.doesitarm.com/mcp',
+                supportedProtocolVersions: SUPPORTED_PROTOCOL_VERSIONS,
+            },
+        ],
+    }
+}
+
 function infoPage ( origin ) {
     const endpoint = `${ origin }/mcp`
     const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Does It ARM MCP server</title>
 <meta name="description" content="${ SERVER_DESCRIPTION } Public, read-only MCP server from Does It ARM.">
+<link rel="icon" type="image/png" sizes="256x256" href="${ SERVER_ICONS[0].src }">
 <style>body{font:16px/1.5 system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#e5e7eb;background:#111827}a{color:#93c5fd}code,pre{background:#1f2937;border-radius:6px;padding:.15rem .35rem}pre{padding:.75rem;overflow:auto}</style>
 </head><body>
-<h1>🦾 Does It ARM MCP server</h1>
+<h1><img src="${ SERVER_ICONS[0].src }" alt="" width="48" height="48" style="vertical-align:middle;border-radius:10px;margin-right:.5rem">Does It ARM MCP server</h1>
 <p>${ SERVER_DESCRIPTION } The public <a href="https://doesitarm.com">Does It ARM</a> <a href="https://modelcontextprotocol.io">MCP</a> server is read-only and requires no account. Connect over Streamable HTTP at the endpoint below. See the <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">tool reference and examples</a>.</p>
 <p>Endpoint (Streamable HTTP): <code>${ endpoint }</code></p>
 <h2>Install</h2>
@@ -71,7 +104,7 @@ function infoPage ( origin ) {
 <pre>{ "mcpServers": { "doesitarm": { "url": "${ endpoint }" } } }</pre>
 <h2>Tools</h2>
 <ul>${ TOOL_NAMES.map( name => `<li><code>${ name }</code> — ${ TOOL_COPY[ name ].title }</li>` ).join('') }</ul>
-<p>Results link back to the matching doesitarm.com page. Docs: <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">docs/mcp.md</a> · <a href="/.well-known/mcp/server-card.json">legacy server card</a></p>
+<p>Results link back to the matching doesitarm.com page. Docs: <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">docs/mcp.md</a> · <a href="/mcp/server-card">server card</a> · <a href="/.well-known/mcp/server-card.json">legacy server card</a></p>
 </body></html>`
 
     return new Response( html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } } )
@@ -127,6 +160,10 @@ export async function handleRequest ( request, env = {} ) {
 
     if ( request.method === 'OPTIONS' ) {
         return new Response( null, { status: 204, headers: CORS_HEADERS } )
+    }
+
+    if ( url.pathname === '/mcp/server-card' && ( request.method === 'GET' || request.method === 'HEAD' ) ) {
+        return withCors( json( serverCardV1(), 200, { 'Content-Type': `${ SERVER_CARD_CONTENT_TYPE }; charset=utf-8` } ) )
     }
 
     if ( url.pathname === '/mcp' || url.pathname === '/mcp/' ) {

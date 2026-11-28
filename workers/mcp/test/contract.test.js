@@ -8,8 +8,8 @@ import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
 import { AjvJsonSchemaValidator } from '@modelcontextprotocol/sdk/validation/ajv'
 
 import { createDataSource } from '../src/data.js'
-import { SERVER_DESCRIPTION, SERVER_INFO, SERVER_INSTRUCTIONS, TOOL_NAMES, UNAVAILABLE_TEXT, createMcpServer } from '../src/server.js'
-import { handleRequest } from '../src/index.js'
+import { SERVER_DESCRIPTION, SERVER_ICONS, SERVER_INFO, SERVER_INSTRUCTIONS, TOOL_NAMES, UNAVAILABLE_TEXT, createMcpServer } from '../src/server.js'
+import { SUPPORTED_PROTOCOL_VERSIONS, handleRequest } from '../src/index.js'
 
 const fixture = name => JSON.parse( readFileSync( new URL( `./fixtures/${ name }.json`, import.meta.url ), 'utf8' ) )
 const serverJson = JSON.parse( readFileSync( new URL( '../server.json', import.meta.url ), 'utf8' ) )
@@ -63,7 +63,8 @@ async function callValid ( name, args = {} ) {
 
 describe( 'server identity', () => {
     it( 'reports identity, instructions and fixed tool list', () => {
-        expect( client.getServerVersion() ).toMatchObject({ name: 'doesitarm', title: 'Does It ARM', version: '1.1.0', description: SERVER_DESCRIPTION })
+        expect( client.getServerVersion() ).toMatchObject({ name: 'com.doesitarm/mcp', title: 'Does It ARM', version: '1.2.0', description: SERVER_DESCRIPTION })
+        expect( client.getServerVersion().icons ).toEqual([ { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] } ])
         expect( client.getInstructions() ).toBe( SERVER_INSTRUCTIONS )
         expect( SERVER_INSTRUCTIONS.length ).toBeLessThan( 512 )
         expect( client.getServerCapabilities().tools.listChanged ).toBe( false )
@@ -71,6 +72,9 @@ describe( 'server identity', () => {
 
     it( 'matches server.json', () => {
         expect( serverJson.name ).toBe('com.doesitarm/mcp')
+        expect( serverJson.name ).toBe( SERVER_INFO.name )
+        expect( serverJson.title ).toBe( SERVER_INFO.title )
+        expect( serverJson.icons ).toEqual( SERVER_ICONS )
         expect( serverJson.version ).toBe( SERVER_INFO.version )
         expect( serverJson.description ).toBe( SERVER_DESCRIPTION )
         expect( serverJson.description.length ).toBeLessThanOrEqual( 100 )
@@ -213,9 +217,30 @@ describe( 'legacy server card', () => {
         const card = await response.json()
         expect( card.$schema ).toBeUndefined()
         expect( card.capabilities ).toBeUndefined()
-        expect( card.serverInfo.version ).toBe('1.1.0')
+        expect( card.serverInfo.version ).toBe('1.2.0')
+        expect( card.serverInfo.name ).toBe('com.doesitarm/mcp')
+        expect( card.serverInfo.icons ).toEqual( SERVER_ICONS )
         expect( card.description ).toBe( SERVER_DESCRIPTION )
         expect( card.transport.endpoint ).toBe('https://mcp.doesitarm.com/mcp')
         expect( card.tools ).toEqual( TOOL_NAMES )
+    })
+})
+
+describe( 'server card', () => {
+    it( 'serves the extension card at <endpoint>/server-card, consistent with server.json', async () => {
+        const response = await handleRequest( new Request('https://mcp.doesitarm.com/mcp/server-card') )
+        expect( response.status ).toBe( 200 )
+        expect( response.headers.get('Content-Type') ).toContain('application/mcp-server-card+json')
+        expect( response.headers.get('Access-Control-Allow-Origin') ).toBe('*')
+        const card = await response.json()
+        expect( card.$schema ).toBe('https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json')
+        expect( card.name ).toBe( SERVER_INFO.name )
+        expect( card.version ).toBe( SERVER_INFO.version )
+        expect( card.description ).toBe( SERVER_DESCRIPTION )
+        expect( card.description.length ).toBeLessThanOrEqual( 100 )
+        expect( card.icons ).toEqual( serverJson.icons )
+        expect( card.repository ).toEqual( serverJson.repository )
+        expect( card.remotes ).toEqual([ { ...serverJson.remotes[0], supportedProtocolVersions: SUPPORTED_PROTOCOL_VERSIONS } ])
+        expect( card.tools ).toBeUndefined()
     })
 })

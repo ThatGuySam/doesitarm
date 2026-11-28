@@ -183,7 +183,8 @@ describe( 'Worker HTTP handler', () => {
         const init = await post({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'test', version: '0' } } })
         expect( init.status ).toBe( 200 )
         const initBody = await init.json()
-        expect( initBody.result.serverInfo.name ).toBe('doesitarm')
+        expect( initBody.result.serverInfo.name ).toBe('com.doesitarm/mcp')
+        expect( initBody.result.serverInfo.icons[0].src ).toBe('https://doesitarm.com/images/mcp-icon-256.png')
         expect( initBody.result.instructions ).toContain('Apple Silicon')
 
         const list = await post({ jsonrpc: '2.0', id: 2, method: 'tools/list' })

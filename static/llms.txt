@@ -1,8 +1,8 @@
 # Does It ARM
 
-> Does It ARM tracks whether Mac apps, games and Homebrew formulae run natively on Apple silicon (M-series and A-series Macs), run through Rosetta 2, or are unsupported.
+> Does It ARM catalogs reported Apple Silicon compatibility for Mac apps, games, and Homebrew formulae, with reference pages for Mac models.
 
-Each listing has a page at https://doesitarm.com/app/<slug>, /game/<slug> or /formula/<slug> with a status headline, per-device support, links and related benchmark videos.
+Software listings are under `/app/`, `/game/`, and `/formula/` on https://doesitarm.com. They carry a reported status when available and may include per-device evidence, related links, and benchmark videos. Mac model reference pages are under `/device/`. A missing listing means compatibility is unknown from this catalog. An `unreported` status means native support has yet to be reported.
 
 ## MCP server
 

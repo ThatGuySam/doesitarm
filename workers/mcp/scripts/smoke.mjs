@@ -56,8 +56,9 @@ async function call ( name, args ) {
 
 console.log( `Smoke testing ${ endpoint }` )
 
-const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.1.0' } } )
-check( 'initialize', init.result.serverInfo?.name === 'doesitarm', `${ init.result.serverInfo?.name } ${ init.result.serverInfo?.version }, protocol ${ init.result.protocolVersion }` )
+const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.2.0' } } )
+check( 'initialize', init.result.serverInfo?.name === 'com.doesitarm/mcp', `${ init.result.serverInfo?.name } ${ init.result.serverInfo?.version }, protocol ${ init.result.protocolVersion }` )
+check( 'initialize icons', init.result.serverInfo?.icons?.[0]?.mimeType === 'image/png', init.result.serverInfo?.icons?.[0]?.src )
 check( 'initialize description and instructions', Boolean( init.result.serverInfo?.description ) && /Apple Silicon/.test( init.result.instructions || '' ), init.result.serverInfo?.description )
 
 const list = await rpc( 'tools/list', {} )

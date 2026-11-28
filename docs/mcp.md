@@ -5,7 +5,8 @@ Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Th
 - Endpoint (Streamable HTTP): `https://mcp.doesitarm.com/mcp`
 - Fallback: `https://doesitarm-mcp.samcarlton.workers.dev/mcp`
 - Info page: <https://mcp.doesitarm.com/>
-- Legacy server card: <https://mcp.doesitarm.com/.well-known/mcp/server-card.json> (kept for existing readers; see [Server card](#server-card))
+- Server card: <https://mcp.doesitarm.com/mcp/server-card> (experimental extension format; see [Server card](#server-card))
+- Legacy server card: <https://mcp.doesitarm.com/.well-known/mcp/server-card.json> (kept for existing readers)
 
 ## Install
 
@@ -39,13 +40,13 @@ claude mcp add --transport http doesitarm https://mcp.doesitarm.com/mcp
 
 ## Tools
 
-Server version 1.1.0. The live `tools/list` response is the source of truth; this table mirrors it.
+Server `com.doesitarm/mcp` version 1.2.0. The live `tools/list` response is the source of truth; this table mirrors it.
 
 | Tool | Title | What it does |
 | --- | --- | --- |
 | `search_apps` | Search Apple Silicon Compatibility | Find listings for a Mac app, game, or Homebrew formula by name, alias, or bundle ID. Returns ranked candidates with status and links. Inputs: `query`, `kind` (app, game, homebrew, all; default all), `status`, `limit` (1–50, default 10). `total` can exceed the number returned. |
-| `get_app` | Get Compatibility Listing Details | Read one listing for a Mac app, game, formula, or Mac model by name, slug, path or doesitarm.com URL. A URL selects the exact page. Inputs: `app`, `kind` (app, game, homebrew, device, all). Version history and related videos are capped at 10 entries each. |
-| `check_apps` | Check an Apple Silicon Migration List | Check up to 50 names in one call. Returns the best match and status for each distinct name, or marks it as not listed with up to two closest names. Blank entries are skipped; identical trimmed names are checked once. |
+| `get_app` | Get Compatibility Listing Details | Read one listing for a Mac app, game, formula, or Mac model. A Does It ARM listing path or URL identifies the catalog record directly. A name or slug can resolve to the best catalog match. Inputs include `app` and `kind` (`app`, `game`, `homebrew`, `device`, `all`). Results include up to 10 scanned versions per bundle and up to 10 related videos per listing, where available. |
+| `check_apps` | Compare Apple Silicon Compatibility | Check up to 50 names in one call. Returns the best match and status for each distinct name, or marks it as not listed with up to two closest names. Blank entries are skipped; identical trimmed names are checked once. |
 | `list_categories` | List Compatibility Categories | Category slugs, listing counts and page links, plus overall percentages when available. |
 | `list_by_category` | Browse Compatibility by Category | One category page, optional `status` filter, `limit` (1–100, default 25) and `offset`. Pass `nextOffset` back as `offset` for the next page; `null` means the last page. |
 | `recent_updates` | List Recent App Compatibility Updates | Most recently updated Mac app listings, newest first. `limit` 1–100, default 20. |
@@ -92,8 +93,12 @@ Pushes to `master` that touch `workers/mcp/**` run the tests, deploy, and smoke 
 
 ## Server card
 
-`/.well-known/mcp/server-card.json` is a legacy card from an earlier, closed proposal. It stays up for existing readers, now without the dead `$schema` URL or capability claims. The newer server card extension (`<endpoint>/server-card` plus `/.well-known/ai-catalog.json`) is still experimental and its schema URL returns 404, so it is not served yet. Add it once the schema resolves and a client can read it.
+`https://mcp.doesitarm.com/mcp/server-card` serves a card in the [server card extension](https://github.com/modelcontextprotocol/ext-server-card) format (SEP-2127) as `application/mcp-server-card+json`. It carries the same name, version, description, icon, repository and remote as `server.json`, plus the two tested protocol versions, and validates against the extension repository's schema. The extension is still marked experimental and its `$schema` URL does not resolve yet, so the card is not advertised through `/.well-known/ai-catalog.json`. Add the AI Catalog once the schema resolves and a client can read the card. Live `tools/list` stays the source of truth for tools.
+
+`/.well-known/mcp/server-card.json` is a legacy card from an earlier, closed proposal. It stays up for existing readers, without the dead `$schema` URL or capability claims.
+
+Since 1.2.0 the runtime `serverInfo.name` is `com.doesitarm/mcp` (it was `doesitarm`), matching the registry and the card. The title stays "Does It ARM". `serverInfo` also carries the 256x256 PNG icon at `https://doesitarm.com/images/mcp-icon-256.png`.
 
 ## Registry entry
 
-`workers/mcp/server.json` is the entry for the [official MCP registry](https://registry.modelcontextprotocol.io) as `com.doesitarm/mcp` (domain auth over HTTP at doesitarm.com). It validates against the 2025-12-11 server schema and its version matches the runtime `serverInfo.version`. It has not been published. Registry versions are immutable, so bump the version in `server.json`, `src/server.js` and `package.json` together before publishing.
+`workers/mcp/server.json` is the entry for the [official MCP registry](https://registry.modelcontextprotocol.io) as `com.doesitarm/mcp` (domain auth over HTTP at doesitarm.com). It validates against the 2025-12-11 server schema and its name, version and icon match the runtime `serverInfo`. Version 1.2.0 is the first published version. Registry versions are immutable, so bump the version in `server.json`, `src/server.js` and `package.json` together before publishing.

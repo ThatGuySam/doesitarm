@@ -16,12 +16,22 @@ import {
 
 export const SERVER_DESCRIPTION = 'Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.'
 
+// Registry name, also reported as the runtime serverInfo.name so the
+// protocol identity, server.json and the server card agree.
+export const SERVER_NAME = 'com.doesitarm/mcp'
+export const SERVER_VERSION = '1.2.0'
+
+export const SERVER_ICONS = [
+    { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] },
+]
+
 export const SERVER_INFO = {
-    name: 'doesitarm',
+    name: SERVER_NAME,
     title: 'Does It ARM',
-    version: '1.1.0',
+    version: SERVER_VERSION,
     description: SERVER_DESCRIPTION,
     websiteUrl: 'https://doesitarm.com',
+    icons: SERVER_ICONS,
 }
 
 export const SERVER_INSTRUCTIONS = 'Does It ARM is a read-only catalog of reported Apple Silicon compatibility for Mac apps, games, and Homebrew formulae, with reference pages for Mac models. Results link to the relevant catalog pages when available. A missing listing means compatibility is unknown from this catalog. Unreported means native support has yet to be reported.'
@@ -55,11 +65,11 @@ export const TOOL_COPY = {
     },
     get_app: {
         title: 'Get Compatibility Listing Details',
-        description: 'Read one Does It ARM listing for a Mac app, game, Homebrew formula, or Mac model. App and game records can include version or device evidence, game reports, and related benchmarks. A Does It ARM listing URL selects the exact page.',
+        description: 'Read one Does It ARM listing for a Mac app, game, Homebrew formula, or Mac model. A Does It ARM listing path or URL identifies the catalog record directly. A name or slug can resolve to the best catalog match. A miss may include suggestions. Details can include app version history, device support, game reports, related videos, or Mac model specifications.',
     },
     check_apps: {
-        title: 'Check an Apple Silicon Migration List',
-        description: `Compare Apple Silicon compatibility for up to ${ MAX_CHECK_NAMES } names in one call when planning a Mac migration. Returns the best catalog match, reported status, and listing link for each distinct name, or marks it as not listed. Accepts software names supplied in the request.`,
+        title: 'Compare Apple Silicon Compatibility',
+        description: `Check reported Apple Silicon compatibility for up to ${ MAX_CHECK_NAMES } software names in one call, including lists for a Mac migration. Returns the best Does It ARM catalog match, reported status, and listing link for each distinct name. Names without a sufficiently close match are marked as not listed.`,
     },
     list_categories: {
         title: 'List Compatibility Categories',

@@ -3,8 +3,17 @@
   "name": "com.doesitarm/mcp",
   "title": "Does It ARM",
   "description": "Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "websiteUrl": "https://doesitarm.com",
+  "icons": [
+    {
+      "src": "https://doesitarm.com/images/mcp-icon-256.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "256x256"
+      ]
+    }
+  ],
   "repository": {
     "url": "https://github.com/ThatGuySam/doesitarm",
     "source": "github",
