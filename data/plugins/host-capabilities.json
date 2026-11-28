@@ -1,0 +1,2110 @@
+[
+  {
+    "id": "5f97e1c1336dbb722d8af355",
+    "endpoint": "/app/ableton",
+    "hostName": "Ableton Live",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Live 11.1+ Apple Silicon profile",
+    "loaderScope": "ARM; Apple AU translation; legacy whole-host Rosetta",
+    "status": "conditional",
+    "sourceUrl": "https://help.ableton.com/hc/en-us/articles/4410323149074-Plug-ins-on-Mac-in-Live-11-1-and-later",
+    "supportingSourceUrl": null,
+    "conditions": "Enable AUv2 and verify the exact component. Some Intel AUs need translated Live.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "5ce13241d2ba22b569cc7ace",
+    "endpoint": "/app/ableton",
+    "hostName": "Ableton Live",
+    "format": "auv3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Live 11.2+; macOS 10.15+ format floor",
+    "loaderScope": "ARM; no Intel bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://www.ableton.com/en/release-notes/live-11/",
+    "supportingSourceUrl": "https://help.ableton.com/hc/en-us/articles/5937501570460-Supported-Plug-in-Formats",
+    "conditions": "11.2 versioned notes resolve conflicting 11.3 prose. Intersect with host OS support.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b4479db166eb4318e8bbbab2",
+    "endpoint": "/app/ableton",
+    "hostName": "Ableton Live",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Live 11.1+ native profile; VST3 since 10.1",
+    "loaderScope": "ARM native; x86_64 under translated Live if supported",
+    "status": "conditional",
+    "sourceUrl": "https://help.ableton.com/hc/en-us/articles/4410323149074-Plug-ins-on-Mac-in-Live-11-1-and-later",
+    "supportingSourceUrl": null,
+    "conditions": "Enable the exact format. Native Live requires Apple Silicon VST2/VST3. Verify mode and OS on each claimed host build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "ca3d87d09e2f41e2c3eabda2",
+    "endpoint": "/app/ableton",
+    "hostName": "Ableton Live",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Live 11.1+ native profile; VST3 since 10.1",
+    "loaderScope": "ARM native; x86_64 under translated Live if supported",
+    "status": "conditional",
+    "sourceUrl": "https://help.ableton.com/hc/en-us/articles/4410323149074-Plug-ins-on-Mac-in-Live-11-1-and-later",
+    "supportingSourceUrl": null,
+    "conditions": "Enable the exact format. Native Live requires Apple Silicon VST2/VST3. Verify mode and OS on each claimed host build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "979e7ae0bbc15521775f6a45",
+    "endpoint": "/app/acoustica",
+    "hostName": "Acon Digital Acoustica",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "8; earlier version-specific check",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://acondigital.com/help/acoustica8/using-audio-plug-ins/",
+    "supportingSourceUrl": null,
+    "conditions": "This is standalone effect hosting. ARA/plug-in edition is a separate path.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "7efaaaa5155a8636c6cc54e8",
+    "endpoint": "/app/acoustica",
+    "hostName": "Acon Digital Acoustica",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "8; earlier version-specific check",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://acondigital.com/help/acoustica8/using-audio-plug-ins/",
+    "supportingSourceUrl": null,
+    "conditions": "This is standalone effect hosting. ARA/plug-in edition is a separate path.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "0a04a0e138a53f657bd7a803",
+    "endpoint": "/app/acoustica",
+    "hostName": "Acon Digital Acoustica",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "8; earlier version-specific check",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://acondigital.com/help/acoustica8/using-audio-plug-ins/",
+    "supportingSourceUrl": null,
+    "conditions": "This is standalone effect hosting. ARA/plug-in edition is a separate path.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "8227bbb2bebed7beb930691b",
+    "endpoint": "/app/adobe-audition",
+    "hostName": "Adobe Audition",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Current docs; 24.0+ Rosetta retirement",
+    "loaderScope": "ARM native; Intel Mac where supported",
+    "status": "documented",
+    "sourceUrl": "https://helpx.adobe.com/audition/using/adding-third-party-plug-ins.html",
+    "supportingSourceUrl": "https://helpx.adobe.com/after-effects/desktop/get-started/technical-requirements/after-effects-apple-silicon.html",
+    "conditions": "Use Audio Plug-In Manager; 24.0+ general Adobe audio/video policy removes translated host mode. Verify the build, effect and OS.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "592390edef2c4e98c4399cb9",
+    "endpoint": "/app/adobe-audition",
+    "hostName": "Adobe Audition",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Current docs; 24.0+ Rosetta retirement",
+    "loaderScope": "ARM native; Intel Mac where supported",
+    "status": "documented",
+    "sourceUrl": "https://helpx.adobe.com/audition/using/adding-third-party-plug-ins.html",
+    "supportingSourceUrl": "https://helpx.adobe.com/after-effects/desktop/get-started/technical-requirements/after-effects-apple-silicon.html",
+    "conditions": "Use Audio Plug-In Manager; 24.0+ general Adobe audio/video policy removes translated host mode. Verify the build, effect and OS.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "3318d909e32a287c049cec76",
+    "endpoint": "/app/adobe-audition",
+    "hostName": "Adobe Audition",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Current docs; 24.0+ Rosetta retirement",
+    "loaderScope": "ARM native; Intel Mac where supported",
+    "status": "documented",
+    "sourceUrl": "https://helpx.adobe.com/audition/using/adding-third-party-plug-ins.html",
+    "supportingSourceUrl": "https://helpx.adobe.com/after-effects/desktop/get-started/technical-requirements/after-effects-apple-silicon.html",
+    "conditions": "Use Audio Plug-In Manager; 24.0+ general Adobe audio/video policy removes translated host mode. Verify the build, effect and OS.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "4949bd17f4c11b50f86708d5",
+    "endpoint": "/app/adobe-media-encoder",
+    "hostName": "Adobe Media Encoder",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "sequence_render"
+    ],
+    "versions": "2026 audio effects guide; exact minimum unresolved",
+    "loaderScope": "Render/import sequence natively",
+    "status": "conditional",
+    "sourceUrl": "https://helpx.adobe.com/no/media-encoder/desktop/encoding-quick-start-and-basics/adding-third-party-plugins.html",
+    "supportingSourceUrl": null,
+    "conditions": "Effects applied in Premiere and scanned for native sequence import/render. No generic insert claims.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "8da1215c70c86dee20809d83",
+    "endpoint": "/app/adobe-media-encoder",
+    "hostName": "Adobe Media Encoder",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "sequence_render"
+    ],
+    "versions": "2026 audio effects guide; exact minimum unresolved",
+    "loaderScope": "Render/import sequence natively",
+    "status": "conditional",
+    "sourceUrl": "https://helpx.adobe.com/no/media-encoder/desktop/encoding-quick-start-and-basics/adding-third-party-plugins.html",
+    "supportingSourceUrl": null,
+    "conditions": "Effects applied in Premiere and scanned for native sequence import/render. No generic insert claims.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "2ba733027c82c936c7f2fe67",
+    "endpoint": "/app/adobe-media-encoder",
+    "hostName": "Adobe Media Encoder",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "sequence_render"
+    ],
+    "versions": "2026 audio effects guide; exact minimum unresolved",
+    "loaderScope": "Render/import sequence natively",
+    "status": "conditional",
+    "sourceUrl": "https://helpx.adobe.com/no/media-encoder/desktop/encoding-quick-start-and-basics/adding-third-party-plugins.html",
+    "supportingSourceUrl": null,
+    "conditions": "Effects applied in Premiere and scanned for native sequence import/render. No generic insert claims.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "8434a5736d76c610328ff5a4",
+    "endpoint": "/app/amadeus-pro",
+    "hostName": "Amadeus Pro",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "2.8.4+ translated family; 3.0 native beta observed",
+    "loaderScope": "x86_64 whole-host Rosetta in v2; exact v3 profile required",
+    "status": "conditional",
+    "sourceUrl": "https://www.hairersoft.com/pro.html",
+    "supportingSourceUrl": "https://www.hairersoft.com/forum/viewtopic.php?t=7999",
+    "conditions": "Confirm distributor build and selected effect context.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "da2e6cba162e3434f60104f8",
+    "endpoint": "/app/amadeus-pro",
+    "hostName": "Amadeus Pro",
+    "format": "auv3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.0 beta",
+    "loaderScope": "ARM candidate; exact preview required",
+    "status": "hold",
+    "sourceUrl": "https://www.hairersoft.com/forum/viewtopic.php?t=7999",
+    "supportingSourceUrl": null,
+    "conditions": "Beta announcement. Do not transfer to stable v2 builds.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "708d7e99078788199bb21c27",
+    "endpoint": "/app/amadeus-pro",
+    "hostName": "Amadeus Pro",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Legacy VST in manual; exact build must be qualified",
+    "loaderScope": "x86_64 candidate under supported whole-host Rosetta",
+    "status": "hold",
+    "sourceUrl": "https://www.hairersoft.com/AmadeusPro/Manual/manual_de.html",
+    "supportingSourceUrl": null,
+    "conditions": "Manual documents VST folder and historical effects. Validate exact version and window behavior.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b9acc4b737f172aa4e9792ec",
+    "endpoint": "/app/ardour",
+    "hostName": "Ardour",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Current manual and version-specific build",
+    "loaderScope": "ARM macOS 11+; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://manual.ardour.org/working-with-plugins/",
+    "supportingSourceUrl": "https://manual.ardour.org/preferences-and-session-properties/preferences-dialog/",
+    "conditions": "Check built-in format support and scanning preferences in the selected Mac build. CLAP pending in Nov 2026 maintainer discussion.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b124b46c511f7606bb00f435",
+    "endpoint": "/app/ardour",
+    "hostName": "Ardour",
+    "format": "lv2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Current manual and version-specific build",
+    "loaderScope": "ARM macOS 11+; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://manual.ardour.org/working-with-plugins/",
+    "supportingSourceUrl": "https://manual.ardour.org/preferences-and-session-properties/preferences-dialog/",
+    "conditions": "Check built-in format support and scanning preferences in the selected Mac build. CLAP pending in Nov 2026 maintainer discussion.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "0069f55509647a7b172c7319",
+    "endpoint": "/app/ardour",
+    "hostName": "Ardour",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Current manual and version-specific build",
+    "loaderScope": "ARM macOS 11+; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://manual.ardour.org/working-with-plugins/",
+    "supportingSourceUrl": "https://manual.ardour.org/preferences-and-session-properties/preferences-dialog/",
+    "conditions": "Check built-in format support and scanning preferences in the selected Mac build. CLAP pending in Nov 2026 maintainer discussion.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "06582aacf0783387f8582b3b",
+    "endpoint": "/app/ardour",
+    "hostName": "Ardour",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Current manual and version-specific build",
+    "loaderScope": "ARM macOS 11+; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://manual.ardour.org/working-with-plugins/",
+    "supportingSourceUrl": "https://manual.ardour.org/preferences-and-session-properties/preferences-dialog/",
+    "conditions": "Check built-in format support and scanning preferences in the selected Mac build. CLAP pending in Nov 2026 maintainer discussion.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "87e92e4bcf6d2916e68f711d",
+    "endpoint": "/app/audacity",
+    "hostName": "Audacity",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.2+ for modern realtime path; verify format and build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://support.audacityteam.org/audio-editing/using-realtime-effects",
+    "supportingSourceUrl": null,
+    "conditions": "Audio effects only for join. LADSPA/LV2 need separate artifact evidence. No VST instruments.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "7e6fc0adbecf510d7a0bb3de",
+    "endpoint": "/app/audacity",
+    "hostName": "Audacity",
+    "format": "ladspa",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.2+ for modern realtime path; verify format and build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://support.audacityteam.org/audio-editing/using-realtime-effects",
+    "supportingSourceUrl": null,
+    "conditions": "Audio effects only for join. LADSPA/LV2 need separate artifact evidence. No VST instruments.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "c304b3161e1400dc88e12159",
+    "endpoint": "/app/audacity",
+    "hostName": "Audacity",
+    "format": "lv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.2+ for modern realtime path; verify format and build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://support.audacityteam.org/audio-editing/using-realtime-effects",
+    "supportingSourceUrl": null,
+    "conditions": "Audio effects only for join. LADSPA/LV2 need separate artifact evidence. No VST instruments.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "e30886bf0639c1bcb31f97c0",
+    "endpoint": "/app/audacity",
+    "hostName": "Audacity",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.2+ for modern realtime path; verify format and build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://support.audacityteam.org/audio-editing/using-realtime-effects",
+    "supportingSourceUrl": null,
+    "conditions": "Audio effects only for join. LADSPA/LV2 need separate artifact evidence. No VST instruments.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "56eb1b9163c0ab6a05bae427",
+    "endpoint": "/app/audacity",
+    "hostName": "Audacity",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.2+ for modern realtime path; verify format and build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://support.audacityteam.org/audio-editing/using-realtime-effects",
+    "supportingSourceUrl": null,
+    "conditions": "Audio effects only for join. LADSPA/LV2 need separate artifact evidence. No VST instruments.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "cbc02137f5ec589f7419fcdc",
+    "endpoint": "/app/audio-hijack",
+    "hostName": "Audio Hijack",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "3.8.0 documents emulated AU; 3.8.11 separate host process",
+    "loaderScope": "ARM; documented translated reader where supported",
+    "status": "conditional",
+    "sourceUrl": "https://rogueamoeba.com/support/releasenotes/?product=Audio+Hijack",
+    "supportingSourceUrl": "https://www.rogueamoeba.com/support/knowledgebase/?product=Audio+Hijack&showArticle=AH-Third-Party-Audio-Units",
+    "conditions": "Scope to Audio Unit Effects blocks and verified version/mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "1301d5ea57fc94f88140357c",
+    "endpoint": "/app/avid-media-composer",
+    "hostName": "Avid Media Composer",
+    "format": "aax",
+    "roles": [
+      "effect"
+    ],
+    "versions": "AAX guide covers Media Composer; native release and edition qualification needed",
+    "loaderScope": "ARM or Intel subject to exact software qualification",
+    "status": "conditional",
+    "sourceUrl": "https://resources.avid.com/SupportFiles/PT/Audio_Plug-Ins_Guide_2023.3.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Require Media Composer effect/AudioSuite-specific qualification. Pro Tools certification, instrument and HDX do not transfer.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "e628fd92f36daa88cfb42771",
+    "endpoint": "/app/avid-pro-tools",
+    "hostName": "Avid Pro Tools",
+    "format": "aax",
+    "roles": [
+      "effect",
+      "instrument",
+      "AudioSuite"
+    ],
+    "versions": "2023.3+ qualified native; 2022.12 public beta separate",
+    "loaderScope": "ARM AAX or supported whole-host Rosetta with x86_64",
+    "status": "conditional",
+    "sourceUrl": "https://kb.avid.com/pkb/articles/en_US/Knowledge/Pro-Tools-Apple-Silicon-Support-FAQ",
+    "supportingSourceUrl": "https://resources.avid.com/SupportFiles/PT/Audio_Plug-Ins_Guide_2023.3.pdf",
+    "conditions": "Require AAX Native/AudioSuite registration and use evidence. AAX DSP is hardware-specific. Observe actual host process mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b00a0fd97dd6dbef74136bdc",
+    "endpoint": "/app/avid-sibelius",
+    "hostName": "Avid Sibelius",
+    "format": "auv2",
+    "roles": [
+      "playback_instrument",
+      "mixer_effect"
+    ],
+    "versions": "2026.5 docs confirm existing support",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://resources.avid.com/SupportFiles/Sibelius/2026.5/Whats_New_in_Sibelius.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Check the exact Playback Configuration or Mixer scope and edition.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d0c5442784775bc4c932c0d7",
+    "endpoint": "/app/avid-sibelius",
+    "hostName": "Avid Sibelius",
+    "format": "vst2",
+    "roles": [
+      "playback_instrument",
+      "mixer_effect"
+    ],
+    "versions": "2026.5 docs confirm existing support",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://resources.avid.com/SupportFiles/Sibelius/2026.5/Whats_New_in_Sibelius.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Check the exact Playback Configuration or Mixer scope and edition.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "c29eb0b1e55529831d81366e",
+    "endpoint": "/app/avid-sibelius",
+    "hostName": "Avid Sibelius",
+    "format": "vst3",
+    "roles": [
+      "playback_instrument",
+      "mixer_effect"
+    ],
+    "versions": "2026.5+",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://resources.avid.com/SupportFiles/Sibelius/2026.5/Whats_New_in_Sibelius.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "VST3 introduced in 2026.5.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "f7e3967fa99ddd41f72501e5",
+    "endpoint": "/app/bitwig-studio",
+    "hostName": "Bitwig Studio",
+    "format": "clap",
+    "roles": [
+      "effect",
+      "instrument",
+      "note_effect"
+    ],
+    "versions": "4.3+",
+    "loaderScope": "ARM candidate; no Intel CLAP bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://downloads.bitwig.com/4.3/Release-Notes-4.3.html",
+    "supportingSourceUrl": null,
+    "conditions": "CLAP support includes per-note features. Check host and plug-in release for a given feature.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "0e51c4ac77e592fdb30839bf",
+    "endpoint": "/app/bitwig-studio",
+    "hostName": "Bitwig Studio",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "4.0+ native family; 4.0.1 notes",
+    "loaderScope": "ARM; Intel via Bitwig’s documented separate loader",
+    "status": "conditional",
+    "sourceUrl": "https://downloads.bitwig.com/stable/4.0.1/Release-Notes-4.0.1.html",
+    "supportingSourceUrl": "https://www.bitwig.com/learnings/plug-in-hosting-crash-protection-in-bitwig-studio-20/",
+    "conditions": "VST2.4 and VST3. Check hosting mode and Rosetta availability. No AU.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "a0361b20d2d05a279e7daf55",
+    "endpoint": "/app/bitwig-studio",
+    "hostName": "Bitwig Studio",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "4.0+ native family; 4.0.1 notes",
+    "loaderScope": "ARM; Intel via Bitwig’s documented separate loader",
+    "status": "conditional",
+    "sourceUrl": "https://downloads.bitwig.com/stable/4.0.1/Release-Notes-4.0.1.html",
+    "supportingSourceUrl": "https://www.bitwig.com/learnings/plug-in-hosting-crash-protection-in-bitwig-studio-20/",
+    "conditions": "VST2.4 and VST3. Check hosting mode and Rosetta availability. No AU.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "34062d0dcee3901b9769e480",
+    "endpoint": "/app/blue-cats-axiom",
+    "hostName": "Blue Cat’s Axiom",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current manual and selected host release",
+    "loaderScope": "ARM candidate; AU bridging only with release evidence",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_Axiom/",
+    "supportingSourceUrl": null,
+    "conditions": "Axiom effect chain versus Tools instrument slots.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "bf660337301145abda269780",
+    "endpoint": "/app/blue-cats-axiom",
+    "hostName": "Blue Cat’s Axiom",
+    "format": "auv3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "2.4+",
+    "loaderScope": "ARM candidate",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_Axiom/",
+    "supportingSourceUrl": null,
+    "conditions": "Axiom effect chain versus Tools instrument slots.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "30cd5985fdeb5bf1c27466e8",
+    "endpoint": "/app/blue-cats-axiom",
+    "hostName": "Blue Cat’s Axiom",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current manual and selected host release",
+    "loaderScope": "ARM candidate; AU bridging only with release evidence",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_Axiom/",
+    "supportingSourceUrl": null,
+    "conditions": "Axiom effect chain versus Tools instrument slots.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "dc0f522d125b98253b7f8269",
+    "endpoint": "/app/blue-cats-axiom",
+    "hostName": "Blue Cat’s Axiom",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current manual and selected host release",
+    "loaderScope": "ARM candidate; AU bridging only with release evidence",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_Axiom/",
+    "supportingSourceUrl": null,
+    "conditions": "Axiom effect chain versus Tools instrument slots.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "be0a7981b710d70ec94ff804",
+    "endpoint": "/app/blue-cats-patchwork",
+    "hostName": "Blue Cat’s PatchWork",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current manual and selected host release",
+    "loaderScope": "ARM candidate; AU bridging only with release evidence",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_PatchWork/",
+    "supportingSourceUrl": null,
+    "conditions": "Use standalone PatchWork limitations for this page. Nested DAW route is separate.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "9826cc8f90b1fb363b1737c8",
+    "endpoint": "/app/blue-cats-patchwork",
+    "hostName": "Blue Cat’s PatchWork",
+    "format": "auv3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "2.78+",
+    "loaderScope": "ARM candidate",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_PatchWork/",
+    "supportingSourceUrl": null,
+    "conditions": "Use standalone PatchWork limitations for this page. Nested DAW route is separate.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "36da2a732e21868aee782f43",
+    "endpoint": "/app/blue-cats-patchwork",
+    "hostName": "Blue Cat’s PatchWork",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current manual and selected host release",
+    "loaderScope": "ARM candidate; AU bridging only with release evidence",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_PatchWork/",
+    "supportingSourceUrl": null,
+    "conditions": "Use standalone PatchWork limitations for this page. Nested DAW route is separate.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "dd5c3d20880e7518c632eb17",
+    "endpoint": "/app/blue-cats-patchwork",
+    "hostName": "Blue Cat’s PatchWork",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current manual and selected host release",
+    "loaderScope": "ARM candidate; AU bridging only with release evidence",
+    "status": "conditional",
+    "sourceUrl": "https://www.bluecataudio.com/Doc/Product_PatchWork/",
+    "supportingSourceUrl": null,
+    "conditions": "Use standalone PatchWork limitations for this page. Nested DAW route is separate.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d0b7cc07b47467c4f082522d",
+    "endpoint": "/app/cubase",
+    "hostName": "Cubase",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11 legacy; 12–13 translated; 14+ opt in where shipped",
+    "loaderScope": "x86_64 legacy; no native ARM path",
+    "status": "conditional",
+    "sourceUrl": "https://helpcenter.steinberg.de/hc/en-us/articles/31858223176210-Using-VST-2-Plug-ins-in-Cubase-Nuendo-14-and-newer",
+    "supportingSourceUrl": "https://helpcenter.steinberg.de/hc/en-us/articles/32056309094290-Cubase-Nuendo-Using-the-native-Apple-Silicon-version",
+    "conditions": "Verify the released host build still has the VST2 option. Enable it from 14. General translation through macOS 27.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b7fd1dbb88583cb59f8cbc3d",
+    "endpoint": "/app/cubase",
+    "hostName": "Cubase",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "12+ native; 11 Rosetta-only on Apple Silicon",
+    "loaderScope": "ARM native or x86_64 in supported translated build",
+    "status": "documented",
+    "sourceUrl": "https://helpcenter.steinberg.de/hc/en-us/articles/32056309094290-Cubase-Nuendo-Using-the-native-Apple-Silicon-version",
+    "supportingSourceUrl": null,
+    "conditions": "Verify host edition and OS. Use actual process mode; version 12 default differed.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "9b644e3aa460be56edca9984",
+    "endpoint": "/app/davinci-resolve",
+    "hostName": "DaVinci Resolve",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "19.1 manual; verify later host build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://documents.blackmagicdesign.com/UserManuals/DaVinci_Resolve_19_Reference_Manual.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Fairlight effects; require compatible input/output configuration. Video OFX is a separate system.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "18af4ccb871a6cf09d0e55f9",
+    "endpoint": "/app/davinci-resolve",
+    "hostName": "DaVinci Resolve",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "19.1 manual; verify later host build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://documents.blackmagicdesign.com/UserManuals/DaVinci_Resolve_19_Reference_Manual.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Fairlight effects; require compatible input/output configuration. Video OFX is a separate system.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "5534ecaebe2973e8ec74f792",
+    "endpoint": "/app/davinci-resolve",
+    "hostName": "DaVinci Resolve",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "19.1 manual; verify later host build",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://documents.blackmagicdesign.com/UserManuals/DaVinci_Resolve_19_Reference_Manual.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Fairlight effects; require compatible input/output configuration. Video OFX is a separate system.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "23d3f279fcf5b8e038884f4f",
+    "endpoint": "/app/dorico",
+    "hostName": "Dorico",
+    "format": "vst2",
+    "roles": [
+      "playback_instrument"
+    ],
+    "versions": "6.2 guide; opt in where supported",
+    "loaderScope": "x86_64 whole-host Rosetta on Apple Silicon",
+    "status": "conditional",
+    "sourceUrl": "https://www.steinberg.help/r/dorico-pro/6.2/en/dorico/topics/play_mode/play_mode_vst_instruments_allow_block_t.html",
+    "supportingSourceUrl": null,
+    "conditions": "Check the allow-list and exact OS/host edition; native Apple Silicon mode uses VST3.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d1904c1224f5a5b8b5d66359",
+    "endpoint": "/app/dorico",
+    "hostName": "Dorico",
+    "format": "vst3",
+    "roles": [
+      "playback_instrument"
+    ],
+    "versions": "6.2 guide; 4 native family requires exact version review",
+    "loaderScope": "ARM native VST3",
+    "status": "documented",
+    "sourceUrl": "https://www.steinberg.help/r/dorico-pro/6.2/en/dorico/topics/play_mode/play_mode_vst_midi_panel_r.html",
+    "supportingSourceUrl": null,
+    "conditions": "Playback instrument context. Verify any mixer effect path separately.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "404784fd215257757f82baaa",
+    "endpoint": "/app/ecamm-live",
+    "hostName": "Ecamm Live",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "4.4+",
+    "loaderScope": "ARM candidate; bridge needs exact proof",
+    "status": "conditional",
+    "sourceUrl": "https://support.ecamm.com/en/articles/3280020-ecamm-modification-history",
+    "supportingSourceUrl": "https://support.ecamm.com/en/articles/3324007-adjusting-sound-levels",
+    "conditions": "Audio Filters on primary/secondary mic or Interview guest audio. Requires an effect component.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "aad93e7f6a34d7ca81469ee1",
+    "endpoint": "/app/final-cut-pro",
+    "hostName": "Final Cut Pro",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Apple Silicon support article; 12.4 current effect guide",
+    "loaderScope": "ARM; Apple AU translation when supported",
+    "status": "conditional",
+    "sourceUrl": "https://support.apple.com/en-gb/102082",
+    "supportingSourceUrl": "https://support.apple.com/guide/final-cut-pro/add-audio-effects-verb71ca88f/12.4/mac/26.6",
+    "conditions": "64-bit audio effects only. Use native Final Cut on Apple Silicon, with Apple AU translation where supported. Check mono/stereo slot and test.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "0a68d9f859eca80f50148234",
+    "endpoint": "/app/final-cut-pro",
+    "hostName": "Final Cut Pro",
+    "format": "auv3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Apple Silicon support article; 12.4 current effect guide",
+    "loaderScope": "ARM; Apple AU translation when supported",
+    "status": "conditional",
+    "sourceUrl": "https://support.apple.com/en-gb/102082",
+    "supportingSourceUrl": "https://support.apple.com/guide/final-cut-pro/add-audio-effects-verb71ca88f/12.4/mac/26.6",
+    "conditions": "64-bit audio effects only. Use native Final Cut on Apple Silicon, with Apple AU translation where supported. Check mono/stereo slot and test.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "9489167047b664999c699683",
+    "endpoint": "/app/finale-music",
+    "hostName": "Finale",
+    "format": "auv2",
+    "roles": [
+      "playback_instrument",
+      "effect"
+    ],
+    "versions": "v25–27 Mac; verify exact supported macOS",
+    "loaderScope": "Legacy profile; verify native/translated mode in release",
+    "status": "conditional",
+    "sourceUrl": "https://makemusic.zendesk.com/hc/en-us/articles/225103168-Using-3rd-party-VST-AU-libraries-with-Finale-and-PrintMusic",
+    "supportingSourceUrl": null,
+    "conditions": "Mac Audio Units Banks & Effects. Windows VST2 guidance does not apply.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "9fcbc3fa8ffff03347889cba",
+    "endpoint": "/app/fl-studio",
+    "hostName": "FL Studio",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "20.8.4+ native family; current manual",
+    "loaderScope": "ARM; Apple AU translation; translated FL where supported",
+    "status": "conditional",
+    "sourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/basics_externalplugins.htm",
+    "supportingSourceUrl": null,
+    "conditions": "64-bit AU and Verify plug-ins scan. No inferred MIDI-out or AUv3 support.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "05d69366705ed9c1992df9dc",
+    "endpoint": "/app/fl-studio",
+    "hostName": "FL Studio",
+    "format": "clap",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "2024.1+",
+    "loaderScope": "ARM candidate; no Intel CLAP bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/basics_externalplugins.htm",
+    "supportingSourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/plugins_supported.htm",
+    "conditions": "Check exact wrapper behavior. Documented Intel VST bridge does not establish CLAP bridging.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "ee4f35894e974037ae519cd2",
+    "endpoint": "/app/fl-studio",
+    "hostName": "FL Studio",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "20.8.4+ native family; verify bridge in target release",
+    "loaderScope": "ARM; Intel via FL VST bridge; translated FL where supported",
+    "status": "conditional",
+    "sourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/basics_externalplugins.htm",
+    "supportingSourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/plugins_supported.htm",
+    "conditions": "Rescan in each mode. Verify exact format and process. Intel bridging is not native plug-in execution.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "cfc9a85c0c85047e70f1bd58",
+    "endpoint": "/app/fl-studio",
+    "hostName": "FL Studio",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "20.8.4+ native family; verify bridge in target release",
+    "loaderScope": "ARM; Intel via FL VST bridge; translated FL where supported",
+    "status": "conditional",
+    "sourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/basics_externalplugins.htm",
+    "supportingSourceUrl": "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/plugins_supported.htm",
+    "conditions": "Rescan in each mode. Verify exact format and process. Intel bridging is not native plug-in execution.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "c11a2556c2493d4b1e095231",
+    "endpoint": "/app/foobar2000",
+    "hostName": "foobar2000 for Mac",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "playback_dsp"
+    ],
+    "versions": "v2.6 release notes confirm AU DSP",
+    "loaderScope": "ARM candidate; native Mac build supported",
+    "status": "documented",
+    "sourceUrl": "https://www.foobar2000.org/changelog-mac",
+    "supportingSourceUrl": "https://www.foobar2000.org/?page=Overview",
+    "conditions": "Scope to audio DSP effects in the Mac player. Windows VST adapter does not qualify Mac builds.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "454a84e40be2fd22716e8b94",
+    "endpoint": "/app/garageband",
+    "hostName": "GarageBand for Mac",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "10.4.14 guide and Apple installation article",
+    "loaderScope": "ARM candidate; Intel bridge needs separate proof",
+    "status": "conditional",
+    "sourceUrl": "https://support.apple.com/en-us/102239",
+    "supportingSourceUrl": "https://support.apple.com/guide/garageband/welcome/mac",
+    "conditions": "Enable Audio Units. Do not inherit Logic’s bridge rule or AUv3 claim.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "ca0f60155a5cd8dc31b25629",
+    "endpoint": "/app/gigperformer4-pa-full",
+    "hostName": "Gig Performer 4 Plugin Alliance Full",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Plugin Alliance 4.x unlocked edition; pin exact build",
+    "loaderScope": "ARM or translated host depending on PA build",
+    "status": "conditional",
+    "sourceUrl": "https://gigperformer.com/docs/GP4/Gig%20Performer%204%20User%20Guide.pdf",
+    "supportingSourceUrl": "https://test.gigperformer.com/docs/GP4UserManual/licensing-and-support-options.html",
+    "conditions": "Locked PA variant is limited to its own collection. Confirm the listed build is Unlocked and supports requested mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "2b89737935ab85f452368f09",
+    "endpoint": "/app/gigperformer4-pa-full",
+    "hostName": "Gig Performer 4 Plugin Alliance Full",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Plugin Alliance 4.x unlocked edition; pin exact build",
+    "loaderScope": "ARM or translated host depending on PA build",
+    "status": "conditional",
+    "sourceUrl": "https://gigperformer.com/docs/GP4/Gig%20Performer%204%20User%20Guide.pdf",
+    "supportingSourceUrl": "https://test.gigperformer.com/docs/GP4UserManual/licensing-and-support-options.html",
+    "conditions": "Locked PA variant is limited to its own collection. Confirm the listed build is Unlocked and supports requested mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "abfcd693e993fb1caf9f0051",
+    "endpoint": "/app/gigperformer4-pa-full",
+    "hostName": "Gig Performer 4 Plugin Alliance Full",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Plugin Alliance 4.x unlocked edition; pin exact build",
+    "loaderScope": "ARM or translated host depending on PA build",
+    "status": "conditional",
+    "sourceUrl": "https://gigperformer.com/docs/GP4/Gig%20Performer%204%20User%20Guide.pdf",
+    "supportingSourceUrl": "https://test.gigperformer.com/docs/GP4UserManual/licensing-and-support-options.html",
+    "conditions": "Locked PA variant is limited to its own collection. Confirm the listed build is Unlocked and supports requested mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "0579a7247aca21574aed5066",
+    "endpoint": "/app/hosting-au",
+    "hostName": "Hosting AU",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Vendor legacy/current family; installed build required",
+    "loaderScope": "Unproven Apple Silicon process capability",
+    "status": "hold",
+    "sourceUrl": "https://ju-x.com/hostingau.html",
+    "supportingSourceUrl": null,
+    "conditions": "App supports AU instruments and effects. Verify exact app binary/OS before linking.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "529c7d695ff0f0c5a7fc8a39",
+    "endpoint": "/app/hosting-au",
+    "hostName": "Hosting AU",
+    "format": "auv3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "1.5.0+; 64-bit on OS X 10.11+ format floor",
+    "loaderScope": "Unproven Apple Silicon process capability",
+    "status": "hold",
+    "sourceUrl": "https://ju-x.com/hostingau.html",
+    "supportingSourceUrl": null,
+    "conditions": "Historic format floor. Verify exact app binary/OS before linking.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "99050d711a137691006981a9",
+    "endpoint": "/app/izotope-rx-10",
+    "hostName": "iZotope RX 10 Audio Editor",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "RX 10.4.0+ for VST3",
+    "loaderScope": "ARM native or x86_64 in supported mode",
+    "status": "documented",
+    "sourceUrl": "https://izotope.com/pages/release-notes/rx-standard",
+    "supportingSourceUrl": null,
+    "conditions": "Offline selection-based module. Scope to RX 10 standalone Audio Editor and exact license/format.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b34e7e22a222ceaf0e3eccd2",
+    "endpoint": "/app/izotope-rx-10",
+    "hostName": "iZotope RX 10 Audio Editor",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "RX 10.4.0 release notes",
+    "loaderScope": "Intel Mac or RX in Rosetta; no ARM native VST2",
+    "status": "conditional",
+    "sourceUrl": "https://izotope.com/pages/release-notes/rx-standard",
+    "supportingSourceUrl": null,
+    "conditions": "Do not transfer newer RX version rules to RX 10.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "68970fc5dbcdbd11ffc063f0",
+    "endpoint": "/app/izotope-rx-10",
+    "hostName": "iZotope RX 10 Audio Editor",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "RX 10.4.0+ for VST3",
+    "loaderScope": "ARM native or x86_64 in supported mode",
+    "status": "documented",
+    "sourceUrl": "https://izotope.com/pages/release-notes/rx-standard",
+    "supportingSourceUrl": null,
+    "conditions": "Offline selection-based module. Scope to RX 10 standalone Audio Editor and exact license/format.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "89e300397f4468c315ee45f9",
+    "endpoint": "/app/logic-pro",
+    "hostName": "Logic Pro for Mac",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Apple Silicon releases covered by Apple KB; verify exact version",
+    "loaderScope": "ARM; Apple AU translation; verified whole-host Rosetta workflows",
+    "status": "conditional",
+    "sourceUrl": "https://support.apple.com/en-gb/102082",
+    "supportingSourceUrl": "https://support.apple.com/en-gb/121464",
+    "conditions": "Validated 64-bit components. ARA/version/session workflow is separate.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "9b268948afeb5714f0cd558a",
+    "endpoint": "/app/logic-pro",
+    "hostName": "Logic Pro for Mac",
+    "format": "auv3",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Apple Silicon releases covered by Apple KB; verify exact version",
+    "loaderScope": "ARM; Apple AU translation; verified whole-host Rosetta workflows",
+    "status": "conditional",
+    "sourceUrl": "https://support.apple.com/en-gb/102082",
+    "supportingSourceUrl": "https://support.apple.com/en-gb/121464",
+    "conditions": "Validated 64-bit components. ARA/version/session workflow is separate.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "8a8915ce69a06d80d1f96b61",
+    "endpoint": "/app/max",
+    "hostName": "Max",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Max 8.2+ native profile",
+    "loaderScope": "ARM or whole-host Rosetta in supported build",
+    "status": "conditional",
+    "sourceUrl": "https://docs.cycling74.com/reference/vst~/",
+    "supportingSourceUrl": "https://docs.cycling74.com/legacy/max8/vignettes/apple_arm64",
+    "conditions": "Use the vst~ object; Max for Live nesting is separate. 64-bit matches only on modern macOS.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "49840b0b7b82303912a9d7cb",
+    "endpoint": "/app/max",
+    "hostName": "Max",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Max 8.2+ native profile",
+    "loaderScope": "ARM or whole-host Rosetta in supported build",
+    "status": "conditional",
+    "sourceUrl": "https://docs.cycling74.com/reference/vst~/",
+    "supportingSourceUrl": "https://docs.cycling74.com/legacy/max8/vignettes/apple_arm64",
+    "conditions": "Use the vst~ object; Max for Live nesting is separate. 64-bit matches only on modern macOS.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "e38942bfe8aaf200316a9f05",
+    "endpoint": "/app/max",
+    "hostName": "Max",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Max 8.2+ native profile",
+    "loaderScope": "ARM or whole-host Rosetta in supported build",
+    "status": "conditional",
+    "sourceUrl": "https://docs.cycling74.com/reference/vst~/",
+    "supportingSourceUrl": "https://docs.cycling74.com/legacy/max8/vignettes/apple_arm64",
+    "conditions": "Use the vst~ object; Max for Live nesting is separate. 64-bit matches only on modern macOS.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "5bb5e0e992fc611ad9515b77",
+    "endpoint": "/app/mixbus32c-7",
+    "hostName": "Mixbus32C 7",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Version 7 only; adjacent vendor manuals are leads",
+    "loaderScope": "Exact v7 host build and OS mode unverified",
+    "status": "hold",
+    "sourceUrl": "https://support.harrisonaudio.com/hc/en-gb/articles/15402186175773-Mixbus-Downloads-Archive-Legacy-and-Older-versions",
+    "supportingSourceUrl": "https://support.harrisonaudio.com/hc/en-gb/articles/37115541298333-Mixbus-v12-System-Requirements",
+    "conditions": "Historical app; do not borrow v12 or Ardour guarantees. Verify 32C v7 manual and app artifact first.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "cc5942c631d4b5b73939a18b",
+    "endpoint": "/app/mixbus32c-7",
+    "hostName": "Mixbus32C 7",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Version 7 only; adjacent vendor manuals are leads",
+    "loaderScope": "Exact v7 host build and OS mode unverified",
+    "status": "hold",
+    "sourceUrl": "https://support.harrisonaudio.com/hc/en-gb/articles/15402186175773-Mixbus-Downloads-Archive-Legacy-and-Older-versions",
+    "supportingSourceUrl": "https://support.harrisonaudio.com/hc/en-gb/articles/37115541298333-Mixbus-v12-System-Requirements",
+    "conditions": "Historical app; do not borrow v12 or Ardour guarantees. Verify 32C v7 manual and app artifact first.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "f432469df619d0a1c23e4acd",
+    "endpoint": "/app/mixbus32c-7",
+    "hostName": "Mixbus32C 7",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Version 7 only; adjacent vendor manuals are leads",
+    "loaderScope": "Exact v7 host build and OS mode unverified",
+    "status": "hold",
+    "sourceUrl": "https://support.harrisonaudio.com/hc/en-gb/articles/15402186175773-Mixbus-Downloads-Archive-Legacy-and-Older-versions",
+    "supportingSourceUrl": "https://support.harrisonaudio.com/hc/en-gb/articles/37115541298333-Mixbus-v12-System-Requirements",
+    "conditions": "Historical app; do not borrow v12 or Ardour guarantees. Verify 32C v7 manual and app artifact first.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "92239b7e655ee044ec8a81a6",
+    "endpoint": "/app/motu-digital-performer",
+    "hostName": "MOTU Digital Performer",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11.3 guide; VST3 introduced in 10.1",
+    "loaderScope": "ARM from 11 family; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/dp/v113/Digital%20Performer%20Getting%20Started.pdf",
+    "supportingSourceUrl": "https://cdn-data.motu.com/site/docs/dp/v10/DP101ReadMe.pdf",
+    "conditions": "Choose or individually enable the correct format. Verify exact component/edition and Apple Silicon loader.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "a51e1e45088baba1442279dd",
+    "endpoint": "/app/motu-digital-performer",
+    "hostName": "MOTU Digital Performer",
+    "format": "mas",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Historical DP user guide; current target unverified",
+    "loaderScope": "No generic modern route",
+    "status": "hold",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/Digital%20Performer%20User%20Guide.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "MOTU’s proprietary MAS is outside corpus scope. Verify exact build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "6a9c7f4ccedb9b4e2bb6412f",
+    "endpoint": "/app/motu-digital-performer",
+    "hostName": "MOTU Digital Performer",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11.3 guide; VST3 introduced in 10.1",
+    "loaderScope": "ARM from 11 family; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/dp/v113/Digital%20Performer%20Getting%20Started.pdf",
+    "supportingSourceUrl": "https://cdn-data.motu.com/site/docs/dp/v10/DP101ReadMe.pdf",
+    "conditions": "Choose or individually enable the correct format. Verify exact component/edition and Apple Silicon loader.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "eb8adc9d32df7b9865a77774",
+    "endpoint": "/app/motu-digital-performer",
+    "hostName": "MOTU Digital Performer",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11.3 guide; VST3 introduced in 10.1",
+    "loaderScope": "ARM from 11 family; no bridge assumption",
+    "status": "conditional",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/dp/v113/Digital%20Performer%20Getting%20Started.pdf",
+    "supportingSourceUrl": "https://cdn-data.motu.com/site/docs/dp/v10/DP101ReadMe.pdf",
+    "conditions": "Choose or individually enable the correct format. Verify exact component/edition and Apple Silicon loader.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "541374f174f3556f0878d923",
+    "endpoint": "/app/n-track-studio",
+    "hostName": "n-Track Studio",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current Mac guide; first CLAP build unresolved",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://get.ntrack.com/help/manual.html?platform=mac",
+    "supportingSourceUrl": "https://ntrack.com/specs.php",
+    "conditions": "Use exact host release with the documented format. Check instrument versus effect mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d0c19a5e2b3c97b22cd541c3",
+    "endpoint": "/app/n-track-studio",
+    "hostName": "n-Track Studio",
+    "format": "clap",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current Mac guide; first CLAP build unresolved",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://get.ntrack.com/help/manual.html?platform=mac",
+    "supportingSourceUrl": "https://ntrack.com/specs.php",
+    "conditions": "Use exact host release with the documented format. Check instrument versus effect mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b59ce67971bd1a79c4fe37aa",
+    "endpoint": "/app/n-track-studio",
+    "hostName": "n-Track Studio",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current Mac guide; first CLAP build unresolved",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://get.ntrack.com/help/manual.html?platform=mac",
+    "supportingSourceUrl": "https://ntrack.com/specs.php",
+    "conditions": "Use exact host release with the documented format. Check instrument versus effect mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "87f9ea77e81050864bcacd7b",
+    "endpoint": "/app/n-track-studio",
+    "hostName": "n-Track Studio",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current Mac guide; first CLAP build unresolved",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://get.ntrack.com/help/manual.html?platform=mac",
+    "supportingSourceUrl": "https://ntrack.com/specs.php",
+    "conditions": "Use exact host release with the documented format. Check instrument versus effect mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "c10fd88bae97682f83657ee7",
+    "endpoint": "/app/nuendo",
+    "hostName": "Nuendo",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11 legacy; 12–13 translated; 14+ opt in where shipped",
+    "loaderScope": "x86_64 legacy; no native ARM path",
+    "status": "conditional",
+    "sourceUrl": "https://helpcenter.steinberg.de/hc/en-us/articles/31858223176210-Using-VST-2-Plug-ins-in-Cubase-Nuendo-14-and-newer",
+    "supportingSourceUrl": "https://helpcenter.steinberg.de/hc/en-us/articles/32056309094290-Cubase-Nuendo-Using-the-native-Apple-Silicon-version",
+    "conditions": "Verify the released host build still has the VST2 option. Enable it from 14. General translation through macOS 27.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "af90041a250fda37c938de51",
+    "endpoint": "/app/nuendo",
+    "hostName": "Nuendo",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "12+ native; 11 Rosetta-only on Apple Silicon",
+    "loaderScope": "ARM native or x86_64 in supported translated build",
+    "status": "documented",
+    "sourceUrl": "https://helpcenter.steinberg.de/hc/en-us/articles/32056309094290-Cubase-Nuendo-Using-the-native-Apple-Silicon-version",
+    "supportingSourceUrl": null,
+    "conditions": "Verify host edition and OS. Use actual process mode; version 12 default differed.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "3fa9ddec81d3cf05d5bc1a68",
+    "endpoint": "/app/obs",
+    "hostName": "OBS Studio",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "33.0.3 tagged release; Mac filter documented",
+    "loaderScope": "Match OBS architecture; Intel edition only for Intel VST2",
+    "status": "conditional",
+    "sourceUrl": "https://obsproject.com/kb/vst-2-x-plugin-filter",
+    "supportingSourceUrl": "https://github.com/obsproject/obs-studio/blob/33.0.3/plugins/CMakeLists.txt",
+    "conditions": "No MIDI control/input or shell VST. Unreleased VST3 source does not establish support in 33.0.3.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "7757898355ee2901da5a91e3",
+    "endpoint": "/app/ocenaudio",
+    "hostName": "ocenaudio",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Version-specific changelog; exact Mac build needed",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://www.ocenaudio.com/update/ocenaudio64",
+    "supportingSourceUrl": null,
+    "conditions": "Scope the evidence to Mac and effect workflow. Verify precise VST3 introduction before making minimum claims.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "0c9e3a31a24dbbf3e916424c",
+    "endpoint": "/app/ocenaudio",
+    "hostName": "ocenaudio",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Version-specific changelog; exact Mac build needed",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://www.ocenaudio.com/update/ocenaudio64",
+    "supportingSourceUrl": null,
+    "conditions": "Scope the evidence to Mac and effect workflow. Verify precise VST3 introduction before making minimum claims.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d9f057147a624b6e9a96d036",
+    "endpoint": "/app/performer-lite",
+    "hostName": "MOTU Performer Lite",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11.3 guide",
+    "loaderScope": "ARM candidate; exact build and OS required",
+    "status": "conditional",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/perflite/v113/Performer%20Lite%2011%20User%20Guide.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Choose or enable the exact format. Hardware/license entitlement applies. DP tests do not transfer.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b171163f74c3d0e30b17567a",
+    "endpoint": "/app/performer-lite",
+    "hostName": "MOTU Performer Lite",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11.3 guide",
+    "loaderScope": "ARM candidate; exact build and OS required",
+    "status": "conditional",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/perflite/v113/Performer%20Lite%2011%20User%20Guide.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Choose or enable the exact format. Hardware/license entitlement applies. DP tests do not transfer.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "70cb642e8e1b58f9f6e36c52",
+    "endpoint": "/app/performer-lite",
+    "hostName": "MOTU Performer Lite",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "11.3 guide",
+    "loaderScope": "ARM candidate; exact build and OS required",
+    "status": "conditional",
+    "sourceUrl": "https://cdn-data.motu.com/manuals/software/perflite/v113/Performer%20Lite%2011%20User%20Guide.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Choose or enable the exact format. Hardware/license entitlement applies. DP tests do not transfer.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "35a7ba88d89fc9c83c145c59",
+    "endpoint": "/app/plogue-bidule",
+    "hostName": "Plogue Bidule",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current 0.9793 family; verify edition",
+    "loaderScope": "ARM candidate; check Bidule and child process mode",
+    "status": "conditional",
+    "sourceUrl": "https://www.plogue.com/bidule/help/ch14.html",
+    "supportingSourceUrl": "https://www.plogue.com/bidule/latest/",
+    "conditions": "Use standalone evidence to establish inner hosting. Some marketing lists Bidule’s outputs as a plug-in.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "5d47736e9a4b353c7ca586c1",
+    "endpoint": "/app/plogue-bidule",
+    "hostName": "Plogue Bidule",
+    "format": "clap",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "0.9781 preliminary CLAP; verify exact Mac version/package",
+    "loaderScope": "ARM candidate; bridge undefined",
+    "status": "hold",
+    "sourceUrl": "https://www.plogue.com/bidule/help/ch14.html",
+    "supportingSourceUrl": null,
+    "conditions": "CLAP implementation mentioned. Validate on released standalone Mac binary before enabling the rule.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d12efbcc2e989fb38d63d934",
+    "endpoint": "/app/plogue-bidule",
+    "hostName": "Plogue Bidule",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current 0.9793 family; verify edition",
+    "loaderScope": "ARM candidate; check Bidule and child process mode",
+    "status": "conditional",
+    "sourceUrl": "https://www.plogue.com/bidule/help/ch14.html",
+    "supportingSourceUrl": "https://www.plogue.com/bidule/latest/",
+    "conditions": "Use standalone evidence to establish inner hosting. Some marketing lists Bidule’s outputs as a plug-in.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b93e02ced3463f2690163a54",
+    "endpoint": "/app/plogue-bidule",
+    "hostName": "Plogue Bidule",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Current 0.9793 family; verify edition",
+    "loaderScope": "ARM candidate; check Bidule and child process mode",
+    "status": "conditional",
+    "sourceUrl": "https://www.plogue.com/bidule/help/ch14.html",
+    "supportingSourceUrl": "https://www.plogue.com/bidule/latest/",
+    "conditions": "Use standalone evidence to establish inner hosting. Some marketing lists Bidule’s outputs as a plug-in.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "3650064e2e17e7d277c7b893",
+    "endpoint": "/app/plugindoctor",
+    "hostName": "DDMF Plugindoctor",
+    "format": "auv2",
+    "roles": [
+      "analysis_effect"
+    ],
+    "versions": "v2 manual and current product page",
+    "loaderScope": "ARM candidate; verify analysis context",
+    "status": "conditional",
+    "sourceUrl": "https://ddmf.eu/plugindoctor/",
+    "supportingSourceUrl": null,
+    "conditions": "Analysis of audio effects. AAX in which Plugindoctor ships is not an input hosting capability.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "e666190f6e99b6fa6f793892",
+    "endpoint": "/app/plugindoctor",
+    "hostName": "DDMF Plugindoctor",
+    "format": "vst2",
+    "roles": [
+      "analysis_effect"
+    ],
+    "versions": "v2 manual and current product page",
+    "loaderScope": "ARM candidate; verify analysis context",
+    "status": "conditional",
+    "sourceUrl": "https://ddmf.eu/plugindoctor/",
+    "supportingSourceUrl": null,
+    "conditions": "Analysis of audio effects. AAX in which Plugindoctor ships is not an input hosting capability.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "4e76107a748698d08609a069",
+    "endpoint": "/app/plugindoctor",
+    "hostName": "DDMF Plugindoctor",
+    "format": "vst3",
+    "roles": [
+      "analysis_effect"
+    ],
+    "versions": "v2 manual and current product page",
+    "loaderScope": "ARM candidate; verify analysis context",
+    "status": "conditional",
+    "sourceUrl": "https://ddmf.eu/plugindoctor/",
+    "supportingSourceUrl": null,
+    "conditions": "Analysis of audio effects. AAX in which Plugindoctor ships is not an input hosting capability.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "258280a70d002ceccfa18eca",
+    "endpoint": "/app/premiere-pro",
+    "hostName": "Adobe Premiere",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "2026 audio effects guide; verify exact build",
+    "loaderScope": "ARM native for 24.0+ Adobe policy; Intel Mac where supported",
+    "status": "documented",
+    "sourceUrl": "https://helpx.adobe.com/premiere/desktop/use-premiere-with-other-apps/plug-ins.html",
+    "supportingSourceUrl": "https://helpx.adobe.com/after-effects/desktop/get-started/technical-requirements/after-effects-apple-silicon.html",
+    "conditions": "Audio effects only. Confirm legacy VST with the targeted build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d1ae8671d194b3fd4e0d8a54",
+    "endpoint": "/app/premiere-pro",
+    "hostName": "Adobe Premiere",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "2026 audio effects guide; verify exact build",
+    "loaderScope": "ARM native for 24.0+ Adobe policy; Intel Mac where supported",
+    "status": "documented",
+    "sourceUrl": "https://helpx.adobe.com/premiere/desktop/use-premiere-with-other-apps/plug-ins.html",
+    "supportingSourceUrl": "https://helpx.adobe.com/after-effects/desktop/get-started/technical-requirements/after-effects-apple-silicon.html",
+    "conditions": "Audio effects only. Confirm legacy VST with the targeted build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "7c76485e28f8695620bda5e4",
+    "endpoint": "/app/premiere-pro",
+    "hostName": "Adobe Premiere",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "2026 audio effects guide; verify exact build",
+    "loaderScope": "ARM native for 24.0+ Adobe policy; Intel Mac where supported",
+    "status": "documented",
+    "sourceUrl": "https://helpx.adobe.com/premiere/desktop/use-premiere-with-other-apps/plug-ins.html",
+    "supportingSourceUrl": "https://helpx.adobe.com/after-effects/desktop/get-started/technical-requirements/after-effects-apple-silicon.html",
+    "conditions": "Audio effects only. Confirm legacy VST with the targeted build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "e57ef7a315526b6be64f4957",
+    "endpoint": "/app/reaper",
+    "hostName": "REAPER",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Universal build; exact release must be checked",
+    "loaderScope": "ARM or documented VST bridging where validated",
+    "status": "conditional",
+    "sourceUrl": "https://www.reaper.fm/about.php",
+    "supportingSourceUrl": "https://dlx.reaper.fm/userguide/ReaperUserGuide786c.pdf",
+    "conditions": "Test bridge per format and architecture. AU translation is not inherited from a VST bridge.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "b3305f0eb79908e3e554e91c",
+    "endpoint": "/app/reaper",
+    "hostName": "REAPER",
+    "format": "clap",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "6.71+",
+    "loaderScope": "ARM candidate; Intel bridge not assumed",
+    "status": "documented",
+    "sourceUrl": "https://www.reaper.fm/userguide/REAPER%20main%20changes%20669%20to%20673.pdf",
+    "supportingSourceUrl": "https://www.reaper.fm/about.php",
+    "conditions": "JSFX and REAPER extensions are separate ecosystems.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "858664f5cbe9d448050a96a1",
+    "endpoint": "/app/reaper",
+    "hostName": "REAPER",
+    "format": "lv2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Universal build; exact release must be checked",
+    "loaderScope": "ARM or documented VST bridging where validated",
+    "status": "conditional",
+    "sourceUrl": "https://www.reaper.fm/about.php",
+    "supportingSourceUrl": "https://dlx.reaper.fm/userguide/ReaperUserGuide786c.pdf",
+    "conditions": "Test bridge per format and architecture. AU translation is not inherited from a VST bridge.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "4036fe45db65fbce48fcce6b",
+    "endpoint": "/app/reaper",
+    "hostName": "REAPER",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Universal build; exact release must be checked",
+    "loaderScope": "ARM or documented VST bridging where validated",
+    "status": "conditional",
+    "sourceUrl": "https://www.reaper.fm/about.php",
+    "supportingSourceUrl": "https://dlx.reaper.fm/userguide/ReaperUserGuide786c.pdf",
+    "conditions": "Test bridge per format and architecture. AU translation is not inherited from a VST bridge.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "f2adf775f337fa049fc5ee0e",
+    "endpoint": "/app/reaper",
+    "hostName": "REAPER",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument",
+      "MIDI where supported"
+    ],
+    "versions": "Universal build; exact release must be checked",
+    "loaderScope": "ARM or documented VST bridging where validated",
+    "status": "conditional",
+    "sourceUrl": "https://www.reaper.fm/about.php",
+    "supportingSourceUrl": "https://dlx.reaper.fm/userguide/ReaperUserGuide786c.pdf",
+    "conditions": "Test bridge per format and architecture. AU translation is not inherited from a VST bridge.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "3689d99cdfb6f64444ae36e8",
+    "endpoint": "/app/reason",
+    "hostName": "Reason",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "VST3 12.5+; native 12.6+",
+    "loaderScope": "ARM native or x86_64 whole-host Rosetta where supported",
+    "status": "conditional",
+    "sourceUrl": "https://www.reasonstudios.com/reason/updates/release-notes",
+    "supportingSourceUrl": "https://help.reasonstudios.com/hc/en-us/articles/11294327356306-My-VSTs-are-missing-in-Reason-12-and-later-on-my-Apple-Silicon-Mac-what-s-up",
+    "conditions": "Standalone Reason only. Reason Rack Plugin and Rack Extensions use separate rules.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "fd4152ac2fc3e54f028295aa",
+    "endpoint": "/app/reason",
+    "hostName": "Reason",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "VST3 12.5+; native 12.6+",
+    "loaderScope": "ARM native or x86_64 whole-host Rosetta where supported",
+    "status": "conditional",
+    "sourceUrl": "https://www.reasonstudios.com/reason/updates/release-notes",
+    "supportingSourceUrl": "https://help.reasonstudios.com/hc/en-us/articles/11294327356306-My-VSTs-are-missing-in-Reason-12-and-later-on-my-Apple-Silicon-Mac-what-s-up",
+    "conditions": "Standalone Reason only. Reason Rack Plugin and Rack Extensions use separate rules.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "f560afc2f6806148557430db",
+    "endpoint": "/app/soundminer-v5pro",
+    "hostName": "Soundminer V5Pro",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "V5Pro",
+    "loaderScope": "Exact ARM/Intel host mode needs provenance",
+    "status": "conditional",
+    "sourceUrl": "https://info.soundminer.com/docs/dsp-rack",
+    "supportingSourceUrl": null,
+    "conditions": "64-bit AU2 and VST2.4 in DSPRack. No instrument implication.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d1b30601db5849f56b933909",
+    "endpoint": "/app/soundminer-v5pro",
+    "hostName": "Soundminer V5Pro",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "V5Pro",
+    "loaderScope": "Exact ARM/Intel host mode needs provenance",
+    "status": "conditional",
+    "sourceUrl": "https://info.soundminer.com/docs/dsp-rack",
+    "supportingSourceUrl": null,
+    "conditions": "64-bit AU2 and VST2.4 in DSPRack. No instrument implication.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "adf044441ad10dd065d0c98e",
+    "endpoint": "/app/soundsource",
+    "hostName": "SoundSource",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "5.2.0 documents emulated AU; 5.3.0 separate host process",
+    "loaderScope": "ARM; separate AU process and Intel translation on supported versions",
+    "status": "conditional",
+    "sourceUrl": "https://rogueamoeba.com/support/releasenotes/?product=&product=SoundSource",
+    "supportingSourceUrl": "https://rogueamoeba.com/support/manuals/soundsource/?page=audio-unit-effects",
+    "conditions": "Effects only. Check target release and OS availability of named mode.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "bfa3d75dcc741457a0a7bbce",
+    "endpoint": "/app/studio-one",
+    "hostName": "Studio One / Studio One Pro",
+    "format": "auv2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "5.4+ native; Pro 7 docs",
+    "loaderScope": "ARM native; Apple AU translation; supported translated Studio One",
+    "status": "conditional",
+    "sourceUrl": "https://support.presonus.com/hc/en-us/articles/29252556213773-Studio-One-Pro-7-How-can-I-get-my-3rd-party-plug-ins-to-show-up-in-Studio-One",
+    "supportingSourceUrl": "https://support.presonus.com/hc/en-us/articles/29252407194509-Studio-One-Pro-7-Support-for-Apple-Silicon-Macs-everything-you-need-to-know",
+    "conditions": "Match edition and enabled format. Native Intel-only VST unavailable. Keep Fender Studio Pro version as a reviewed alias/edition.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "87b2dca6696646b5a023ff2a",
+    "endpoint": "/app/studio-one",
+    "hostName": "Studio One / Studio One Pro",
+    "format": "clap",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Studio One Pro 7.0.0 introduced CLAP",
+    "loaderScope": "ARM candidate; no Intel bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://assets.ctfassets.net/b7gl3dxk4jyc/2RnD4exKaDajTrR1zGj9kh/2e44026185d2625d34fde7d10c702d57/Studio_One_7_-_Release_Notes.pdf",
+    "supportingSourceUrl": "https://feedback-software.fender.com/feedback/139438",
+    "conditions": "Pro edition. Verify the target macOS and host build and the matching plug-in component.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "c5415ba911d6fdfe69cf3545",
+    "endpoint": "/app/studio-one",
+    "hostName": "Studio One / Studio One Pro",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "5.4+ native; Pro 7 docs",
+    "loaderScope": "ARM native; Apple AU translation; supported translated Studio One",
+    "status": "conditional",
+    "sourceUrl": "https://support.presonus.com/hc/en-us/articles/29252556213773-Studio-One-Pro-7-How-can-I-get-my-3rd-party-plug-ins-to-show-up-in-Studio-One",
+    "supportingSourceUrl": "https://support.presonus.com/hc/en-us/articles/29252407194509-Studio-One-Pro-7-Support-for-Apple-Silicon-Macs-everything-you-need-to-know",
+    "conditions": "Match edition and enabled format. Native Intel-only VST unavailable. Keep Fender Studio Pro version as a reviewed alias/edition.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "129266214a01e3f64169c647",
+    "endpoint": "/app/studio-one",
+    "hostName": "Studio One / Studio One Pro",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "5.4+ native; Pro 7 docs",
+    "loaderScope": "ARM native; Apple AU translation; supported translated Studio One",
+    "status": "conditional",
+    "sourceUrl": "https://support.presonus.com/hc/en-us/articles/29252556213773-Studio-One-Pro-7-How-can-I-get-my-3rd-party-plug-ins-to-show-up-in-Studio-One",
+    "supportingSourceUrl": "https://support.presonus.com/hc/en-us/articles/29252407194509-Studio-One-Pro-7-Support-for-Apple-Silicon-Macs-everything-you-need-to-know",
+    "conditions": "Match edition and enabled format. Native Intel-only VST unavailable. Keep Fender Studio Pro version as a reviewed alias/edition.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "25486718044d74263c278682",
+    "endpoint": "/app/twistedwave",
+    "hostName": "TwistedWave for Mac",
+    "format": "auv2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "32.5+ exhibits all listed formats; check earlier release separately",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://twistedwave.com/store/changes?platform=mac",
+    "supportingSourceUrl": "https://twistedwave.com/mac",
+    "conditions": "Batch/selection processing. Match official Mac build rather than browser or iOS editions.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "fb47ed42656898951ec3029c",
+    "endpoint": "/app/twistedwave",
+    "hostName": "TwistedWave for Mac",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "32.5+ exhibits all listed formats; check earlier release separately",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://twistedwave.com/store/changes?platform=mac",
+    "supportingSourceUrl": "https://twistedwave.com/mac",
+    "conditions": "Batch/selection processing. Match official Mac build rather than browser or iOS editions.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "655c96788ec72b5b3ef575c2",
+    "endpoint": "/app/twistedwave",
+    "hostName": "TwistedWave for Mac",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "32.5+ exhibits all listed formats; check earlier release separately",
+    "loaderScope": "ARM candidate; no bridge assumption",
+    "status": "documented",
+    "sourceUrl": "https://twistedwave.com/store/changes?platform=mac",
+    "supportingSourceUrl": "https://twistedwave.com/mac",
+    "conditions": "Batch/selection processing. Match official Mac build rather than browser or iOS editions.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "6a0f912fd020c396cbc5d05b",
+    "endpoint": "/app/vcv-rack-2-free",
+    "hostName": "VCV Rack 2 Free",
+    "format": "vst2",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Rack 2 with a compatible VCV Host module",
+    "loaderScope": "Requires separately installed paid VCV Host module",
+    "status": "hold",
+    "sourceUrl": "https://vcvrack.com/Host",
+    "supportingSourceUrl": "https://vcvrack.com/Rack",
+    "conditions": "Nested path, excluded from direct hosts. Rack Pro outputs AU/CLAP but that does not establish inner hosting.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "1b4a45336cdcd5ce59d7167e",
+    "endpoint": "/app/vcv-rack-2-free",
+    "hostName": "VCV Rack 2 Free",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument"
+    ],
+    "versions": "Rack 2 with a compatible VCV Host module",
+    "loaderScope": "Requires separately installed paid VCV Host module",
+    "status": "hold",
+    "sourceUrl": "https://vcvrack.com/Host",
+    "supportingSourceUrl": "https://vcvrack.com/Rack",
+    "conditions": "Nested path, excluded from direct hosts. Rack Pro outputs AU/CLAP but that does not establish inner hosting.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "a59e0f62c81d7b880c3fca2a",
+    "endpoint": "/app/virtualdj",
+    "hostName": "VirtualDJ",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Legacy Mac .vst workflow; target release unresolved",
+    "loaderScope": "Check current Mac host architecture and API",
+    "status": "hold",
+    "sourceUrl": "https://virtualdj.com/manuals/virtualdj/interface/decks/decksadvanced/effects.html",
+    "supportingSourceUrl": null,
+    "conditions": "Manual describes a legacy Mac .vst path. Verify behavior in the targeted build.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "d7fb79f9ead3f29e34972f65",
+    "endpoint": "/app/virtualdj",
+    "hostName": "VirtualDJ",
+    "format": "vst3",
+    "roles": [
+      "effect",
+      "instrument where qualified"
+    ],
+    "versions": "Build 7651 lists VST3 instruments; current effects manual",
+    "loaderScope": "ARM candidate; verify build, channel, and license",
+    "status": "conditional",
+    "sourceUrl": "https://autoupdate.virtualdj.com/manuals/virtualdj/appendix/optionslist.html",
+    "supportingSourceUrl": "https://virtualdj.com/products/virtualdj/changelog.html",
+    "conditions": "Require exact effect/instrument and deck context. Check hardware and license if required.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "900f993350194dfc142e16b6",
+    "endpoint": "/app/wavelab-pro-100",
+    "hostName": "WaveLab Pro 10",
+    "format": "vst2",
+    "roles": [
+      "effect"
+    ],
+    "versions": "10.0.30 manual",
+    "loaderScope": "Legacy Apple Silicon launch path not qualified here",
+    "status": "hold",
+    "sourceUrl": "https://archive.steinberg.help/wavelab_pro/v10/en/WaveLab_Pro_10_Operation_Manual_en.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Version 10 exact listing. Verify Mac OS and host build before any supported claim.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "24282bed8081e46fb8a6ca4a",
+    "endpoint": "/app/wavelab-pro-100",
+    "hostName": "WaveLab Pro 10",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "10.0.30 manual",
+    "loaderScope": "Legacy Apple Silicon launch path not qualified here",
+    "status": "hold",
+    "sourceUrl": "https://archive.steinberg.help/wavelab_pro/v10/en/WaveLab_Pro_10_Operation_Manual_en.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "Version 10 exact listing. Verify Mac OS and host build before any supported claim.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "5014248205555b3860931d69",
+    "endpoint": "/app/wavepad-audio-editor",
+    "hostName": "WavePad Audio Editor",
+    "format": "vst-unspecified",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Vendor lists Mac VST; versions unresolved",
+    "loaderScope": "Unknown",
+    "status": "hold",
+    "sourceUrl": "https://www.nch.com.au/wavepad/kb/1381.html",
+    "supportingSourceUrl": null,
+    "conditions": "Do not convert unversioned VST documentation into a VST2 or VST3 allow rule.",
+    "checkedOn": "2026-11-27"
+  },
+  {
+    "id": "9856d9be1c46d8e0a79ba2c6",
+    "endpoint": "/app/wirecast",
+    "hostName": "Wirecast",
+    "format": "vst3",
+    "roles": [
+      "effect"
+    ],
+    "versions": "Wirecast resource guide; verify target release",
+    "loaderScope": "ARM candidate; native or translated mode needs exact release evidence",
+    "status": "documented",
+    "sourceUrl": "https://www.telestream.net/pdfs/technical/Wirecast-VST-Plugins-Resource-Guide.pdf",
+    "supportingSourceUrl": null,
+    "conditions": "VST3 effects only on audio sources. No VSTi.",
+    "checkedOn": "2026-11-27"
+  }
+]
