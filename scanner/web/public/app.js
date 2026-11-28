@@ -4,6 +4,7 @@ import { bindDownloadInput, configureScannerEntry } from './download-input.js';
 import { bindLocalInputs } from './local-inputs.js';
 import { bindViewLevel } from './view-level.js';
 import { showCrashNotice } from './crash-journal.js';
+import { notify } from './notifications.js';
 import { ResultsList } from './results-list.js';
 import { scanMode } from './scan-mode.js';
 import { ScanPool } from './worker-pool.js';
@@ -135,7 +136,13 @@ async function loadHomebrew() {
     get('cask-region').hidden = false;
     status.hidden = true;
   } catch {
-    status.textContent = 'The recorded Homebrew results could not be loaded.';
+    status.hidden = true;
+    const disclosure = get('homebrew');
+    const report = () => {
+      if (disclosure.open) notify.error('The recorded Homebrew results could not be loaded.');
+    };
+    disclosure.addEventListener('toggle', report);
+    report();
   }
 }
 

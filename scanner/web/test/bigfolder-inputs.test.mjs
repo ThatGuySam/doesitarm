@@ -63,7 +63,15 @@ test('read-only folder picker scans real OPFS handles and exports all local evid
       };
     });
     await page.getByRole('button', { name: 'Choose folder' }).click();
-    await page.locator('#input-status').getByText(/Drag your folder here/).waitFor();
+    const notice = page.locator('[data-sonner-toast]').filter({ hasText: 'Drag your folder here' });
+    await notice.waitFor();
+    assert.match(await page.locator('#input-status[aria-live=polite]').textContent(), /Drag your folder here/);
+    assert.equal(await notice.evaluate((element) => getComputedStyle(element).animationName), 'none');
+    const close = notice.getByRole('button', { name: /^Dismiss/ });
+    await close.focus();
+    await page.keyboard.press('Enter');
+    await notice.waitFor({ state: 'detached' });
+    assert.equal(await page.locator('#choose-folder').evaluate((button) => button === document.activeElement), true);
     await page.getByRole('button', { name: 'Choose folder' }).click();
     assert.equal(await page.evaluate(() => window.observedPickerMode), 'read');
     await page.evaluate(() => window.dispatchEvent(new Event('focus')));

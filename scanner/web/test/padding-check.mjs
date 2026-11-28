@@ -154,7 +154,14 @@ const STATES = {
       await open(page, '#saved-folders');
     },
   },
-  crash: { run: async (page) => { await page.evaluate(() => { document.getElementById('crash-notice').hidden = false; }); } },
+  crash: { run: async (page) => { await page.evaluate(async () => {
+    const { notify } = await import('./notifications.js');
+    const action = document.createElement('button');
+    action.type = 'button';
+    action.className = 'quiet-button';
+    action.textContent = 'Download crash report';
+    notify.error('The last scan ended unexpectedly.', null, { id: 'crash-notice', action });
+  }); } },
   homebrew: {
     levels: ['research'],
     run: async (page) => {

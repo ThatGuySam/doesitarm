@@ -1,4 +1,5 @@
 import { redactPath } from './path-privacy.js';
+import { notify } from './notifications.js';
 
 const get = (id) => document.getElementById(id);
 const PREFERENCE = 'scanner-entry';
@@ -147,7 +148,6 @@ function candidatePicker(candidates, pick) {
 export function bindDownloadInput({ view, remember }) {
   const form = get('url-form');
   const input = get('scan-url');
-  const error = get('url-error');
   const phase = get('url-phase');
   const options = get('download-options');
   let lookup;
@@ -166,7 +166,10 @@ export function bindDownloadInput({ view, remember }) {
       kind: 'url', url: candidate.url.href, label: redactPath(candidate.filename),
       forceWorker: resolvedDownload, resolvedDownload,
       onSettled: (event) => {
-        if (id === generation) status(event.type === 'canceled' ? 'Scan canceled.' : 'Scan finished. See results below.');
+        if (id === generation) {
+          if (event.type === 'canceled' || ['source_error', 'limit_reached'].includes(event.result?.status)) status('');
+          else status('Scan finished. See results below.');
+        }
       },
     }]);
   }
@@ -177,7 +180,6 @@ export function bindDownloadInput({ view, remember }) {
     lookup?.abort();
     const controller = new AbortController();
     lookup = controller;
-    error.textContent = '';
     input.removeAttribute('aria-invalid');
     options.replaceChildren();
     status('');
@@ -185,9 +187,9 @@ export function bindDownloadInput({ view, remember }) {
     try {
       target = publicDownload(input.value);
     } catch {
-      error.textContent = 'Enter a public HTTPS download link or download page.';
       input.setAttribute('aria-invalid', 'true');
       input.focus();
+      notify.error('Invalid download link.', 'Enter a public HTTPS download link or download page.');
       return;
     }
     remember('url');
@@ -203,9 +205,16 @@ export function bindDownloadInput({ view, remember }) {
         method: 'POST', headers: { 'X-Scan-Client': 'browser', 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: target.href }), credentials: 'omit', cache: 'no-store', signal: controller.signal,
       });
-      if (!response.headers.get('Content-Type')?.includes('application/json')) throw new Error();
-      const result = await response.json();
+      const json = response.headers.get('Content-Type')?.includes('application/json');
+      const result = json ? await response.json().catch(() => null) : null;
       if (id !== generation) return;
+      if (response.status === 429 || result?.reason === 'host_rate_limit') {
+        status('');
+        notify.error('Download requests are rate limited.',
+          result?.reason === 'host_rate_limit' ? MESSAGES.host_rate_limit : 'Try again in a minute.');
+        return;
+      }
+      if (!result) throw new Error();
       const candidates = ['resolved', 'ambiguous'].includes(result.decision)
         ? result.candidates.slice(0, 3).map(normalizeCandidate) : [];
       if (candidates.length) {
@@ -225,7 +234,9 @@ export function bindDownloadInput({ view, remember }) {
         }
       } else {
         const message = MESSAGES[result.reason] ?? 'No public macOS file could be verified. Try the publisher’s direct download link.';
-        status(message);
+        const handoff = result.reason === 'app_store' || result.decision === 'gated';
+        status(handoff ? message : '');
+        if (!handoff) notify.error('Could not find a download to scan.', message);
         if (result.reason === 'app_store' && result.handoff) {
           const store = publicDownload(result.handoff.url);
           if (['apps.apple.com', 'itunes.apple.com'].includes(store.hostname)) options.append(publicLink(store, 'Open Mac App Store listing'));
@@ -234,7 +245,10 @@ export function bindDownloadInput({ view, remember }) {
         }
       }
     } catch {
-      if (id === generation && !controller.signal.aborted) status('The scanner could not read this page. Try again or paste the direct download link.');
+      if (id === generation && !controller.signal.aborted) {
+        status('');
+        notify.error('The scanner could not read this page.', 'Try again or paste the direct download link.');
+      }
     }
   });
 }

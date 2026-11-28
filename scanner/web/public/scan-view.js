@@ -3,6 +3,7 @@ import { redactPath, stringifyRedacted } from './path-privacy.js';
 import { inventoryDetails } from './inventory-view.js';
 import { formatDuration } from './scan-progress.js';
 import { rowStatus } from './tail-state.js';
+import { notify } from './notifications.js';
 import {
   formatSeconds, formatSize, rowPhrase,
 } from './scan-totals.js';
@@ -238,7 +239,10 @@ export class ScanCards {
       link.href = candidate.url;
       link.textContent = candidate.title;
       status.replaceChildren(' · Possible Mac version · ', link, ` · Apple Silicon ${candidate.status}. Is this the same app?`);
-    }).catch(() => { status.textContent = ' · The Mac app list is unavailable.'; });
+    }).catch(() => {
+      status.textContent = '';
+      notify.error('The Mac app list is unavailable.');
+    });
   }
 
   #inventoryField(row) {

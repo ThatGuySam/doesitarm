@@ -23,11 +23,6 @@
   <!--scanner:start-->
   <div class="dia-scanner" data-level="minimal">
   <!--scanner-switch-->
-  <aside id="crash-notice" class="crash-notice" role="status" hidden>
-    <p>The last scan ended unexpectedly.</p>
-    <button type="button" id="crash-download" class="quiet-button">Download crash report</button>
-    <button type="button" id="crash-dismiss" class="quiet-button">Dismiss</button>
-  </aside>
 
   <main id="main">
     <section id="scan" class="hero" aria-labelledby="scan-title">
@@ -54,10 +49,9 @@
                     <label for="scan-url" class="visually-hidden">Paste a download link or the app's download page</label>
                     <div class="url-row">
                       <input id="scan-url" type="url" placeholder="https://…" required
-                        aria-describedby="url-error" autocomplete="off" spellcheck="false">
+                        autocomplete="off" spellcheck="false">
                       <button type="submit" class="quiet-button">Scan URL</button>
                     </div>
-                    <p id="url-error" class="error" role="alert"></p>
                     <p id="url-phase" class="url-phase" role="status" tabindex="-1"></p>
                   </form>
                   <div id="download-options"></div>
@@ -88,12 +82,15 @@
         <input id="files" type="file" multiple hidden>
         <p class="drop-hint" aria-hidden="true">Drop to scan</p>
       </div>
-      <noscript><p>Enable JavaScript to run the scanner.</p></noscript>
+      <noscript><p>Enable JavaScript to scan files and download links. If a folder picker is unavailable, drag a folder or individual .app bundles here after enabling JavaScript.</p></noscript>
       <div id="folder-loader" class="folder-loader">
         <span aria-hidden="true" hidden></span><span aria-hidden="true"></span>
         <span class="visually-hidden" role="status"></span>
       </div>
-      <p id="input-status" class="error" role="status"></p>
+      <p id="input-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+      <section class="scanner-notifications" aria-label="Scanner notifications">
+        <ol data-sonner-toaster></ol>
+      </section>
     </section>
 
     <section id="results" aria-labelledby="results-title" hidden>
@@ -109,7 +106,6 @@
       <ul id="scan-results" class="result-list" role="list"></ul>
     </section>
 
-    <p id="folder-storage-status" class="muted" role="status"></p>
     <details id="saved-folders" class="section-details" hidden>
       <summary>Saved folder scans</summary>
     </details>

@@ -191,9 +191,55 @@
 .dia-scanner .check { display: inline-flex; align-items: center; gap: .45rem; min-block-size: 1.6rem; font-weight: 600; cursor: pointer; }
 .dia-scanner .check input { inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--gold); }
 .dia-scanner .error { color: var(--danger); overflow-wrap: anywhere; }
-.dia-scanner .error:empty,
-.dia-scanner #input-status:empty { display: none; }
-.dia-scanner #input-status { margin-block-start: .6rem; font-size: .8rem; }
+.dia-scanner .error:empty { display: none; }
+
+.dia-scanner [data-sonner-toaster] {
+  position: fixed;
+  z-index: 1000;
+  inset-inline-end: var(--sp-3);
+  inset-block-end: max(var(--sp-3), env(safe-area-inset-bottom));
+  display: grid;
+  gap: var(--sp-1);
+  inline-size: min(24rem, calc(100% - 2 * var(--sp-3)));
+  max-block-size: min(70dvh, 28rem);
+  overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-1);
+}
+.dia-scanner [data-sonner-toaster]:empty { display: none; }
+.dia-scanner [data-sonner-toast] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: 1px solid var(--edge);
+  border-radius: .5rem;
+  background: var(--darker);
+  box-shadow: 0 .2rem .6rem #0006;
+  color: var(--strong);
+  text-align: start;
+  overflow-wrap: anywhere;
+  font-size: .8rem;
+}
+.dia-scanner [data-sonner-toast][data-type="error"] [data-title] { color: var(--danger); }
+.dia-scanner [data-sonner-toast] [data-title] { font-weight: 600; }
+.dia-scanner [data-sonner-toast] [data-description] { margin-block-start: var(--sp-0); color: var(--text); }
+.dia-scanner [data-sonner-toast] .quiet-button { margin-block-start: var(--sp-2); }
+.dia-scanner [data-sonner-toast] [data-close-button] {
+  inline-size: 2.2rem;
+  block-size: 2.2rem;
+  border: 1px solid transparent;
+  border-radius: .4rem;
+  background: none;
+  font-size: 1.2rem;
+}
+.dia-scanner [data-sonner-toast] [data-close-button]:hover { border-color: var(--edge); }
+@media (prefers-reduced-motion: no-preference) {
+  .dia-scanner [data-sonner-toast] { animation: dia-toast-in .15s ease-out; }
+  @keyframes dia-toast-in { from { opacity: 0; transform: translateY(.4rem); } }
+}
 
 /* Results: one totals sentence, then the framed, divided list from the original. */
 .dia-scanner #results { margin-block-start: 2rem; }
@@ -450,19 +496,6 @@
   text-align: center;
   color: var(--strong);
 }
-.dia-scanner .crash-notice {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: .3rem 1rem;
-  padding: var(--sp-2) var(--sp-3);
-  font-size: .8rem;
-  background: var(--darkest);
-  border-block-end: 1px solid #ffffff14;
-}
-.dia-scanner .crash-notice[hidden] { display: none; }
-.dia-scanner .crash-notice p { margin: 0; color: var(--strong); }
 
 /* View levels. Minimal is the default; More and Research disclose detail. The level is a
    presentation choice only, kept in localStorage (see view-level.js). */
@@ -518,7 +551,6 @@
 .dia-scanner #saved-folders label { display: grid; gap: var(--sp-0); justify-items: start; }
 .dia-scanner #saved-folders > .diagnostic-actions { margin: 0; }
 .dia-scanner #saved-folders > p { margin: 0; }
-.dia-scanner #folder-storage-status:empty { display: none; }
 
 /* Title with the site's Beta badge. */
 .dia-scanner .title-wrap { position: relative; display: inline-block; max-inline-size: 100%; }

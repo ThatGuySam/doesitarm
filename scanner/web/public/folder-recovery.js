@@ -1,5 +1,6 @@
 import { diagnosticControls } from './diagnostics.js';
 import { discardFolder, savedFolderRows, savedFolders } from './folder-journal.js';
+import { notify } from './notifications.js';
 
 export async function showSavedFolders(section) {
   let available = await savedFolders();
@@ -47,7 +48,7 @@ export async function showSavedFolders(section) {
       choice.selectedOptions[0].remove();
       update();
     } catch {
-      status.textContent = 'The browser could not discard this saved scan.';
+      notify.error('The browser could not discard this saved scan.');
     } finally {
       discard.disabled = choice.disabled = false;
     }

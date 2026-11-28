@@ -1,4 +1,5 @@
 import { redactPath, redactPaths, stringifyRedacted } from './path-privacy.js';
+import { notify } from './notifications.js';
 
 // A small breadcrumb journal for scans. A browser crash cannot be caught from
 // the page, so the journal is written often and cheaply to IndexedDB. A session
@@ -317,8 +318,6 @@ export async function crashReportBlob(session) {
 }
 
 export async function showCrashNotice() {
-  const notice = document.getElementById('crash-notice');
-  if (!notice) return;
   let sessions;
   try {
     sessions = await uncleanSessions();
@@ -327,21 +326,29 @@ export async function showCrashNotice() {
   }
   if (!sessions.length) return;
   const latest = sessions[0];
-  const download = document.getElementById('crash-download');
-  const dismiss = document.getElementById('crash-dismiss');
+  const download = document.createElement('button');
+  download.type = 'button';
+  download.className = 'quiet-button';
+  download.textContent = 'Download crash report';
   download.addEventListener('click', async () => {
-    const blob = await crashReportBlob(latest);
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'scanner-crash-report.ndjson.gz';
-    document.body.append(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 10_000);
+    try {
+      const blob = await crashReportBlob(latest);
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'scanner-crash-report.ndjson.gz';
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 10_000);
+    } catch {
+      notify.error('The browser could not prepare the crash report.');
+    }
   });
-  dismiss.addEventListener('click', async () => {
-    notice.hidden = true;
-    await discardSessions(sessions.map(({ id }) => id)).catch(() => {});
+  notify.error('The last scan ended unexpectedly.', null, {
+    id: 'crash-notice',
+    action: download,
+    onDismiss: () => void discardSessions(sessions.map(({ id }) => id)).catch(() => {
+      notify.error('The browser could not discard the crash report.');
+    }),
   });
-  notice.hidden = false;
 }

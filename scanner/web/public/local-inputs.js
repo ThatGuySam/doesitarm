@@ -1,5 +1,6 @@
 import { crash, memoryPressure } from './crash-journal.js';
 import { fileJob, FolderLimitError, folderStats, skipped, walkDirectory, walkFileList, yieldToPage } from './folder-walk.js';
+import { notify } from './notifications.js';
 
 const number = new Intl.NumberFormat();
 const MAX_FLAT_FILES = 512;
@@ -66,7 +67,6 @@ export function bindLocalInputs({ view, mode }) {
   const dropZone = get('drop-zone');
   const loader = get('folder-loader');
   const [throbber, label, announcement] = loader.children;
-  const notice = get('input-status');
   let active;
   let picker = false;
 
@@ -85,7 +85,7 @@ export function bindLocalInputs({ view, mode }) {
 
   async function discover(method, total, walk, folderName = null) {
     if (active) {
-      notice.textContent = 'Wait for the current folder to finish or cancel it before adding another.';
+      notify.info('A folder scan is in progress.', 'Wait for it to finish or cancel it before adding another.');
       return;
     }
     const controller = new AbortController();
@@ -102,7 +102,6 @@ export function bindLocalInputs({ view, mode }) {
       view.add(jobs.splice(0), run);
     }
     active = controller;
-    notice.textContent = '';
     reading(total ? `Preparing ${number.format(total)} files…` : 'Reading folder…');
     try {
       // Paint the loader before starting filesystem work.
@@ -132,18 +131,21 @@ export function bindLocalInputs({ view, mode }) {
         },
       });
       await flush();
-      if (stats.partial) notice.textContent = 'Some bundle members exceeded the scan limit. Scan the affected apps in smaller selections for more detail.';
-      else if (!discovered.size) notice.textContent = 'No apps, Mach-O files, or supported archives were found.';
+      if (stats.skipped_entries.unreadable || stats.skipped_entries.permission_denied) {
+        notify.error('The browser could not read some entries.', FEWER_FOLDERS);
+      }
+      if (stats.partial) notify.error('Some bundle members exceeded the scan limit.', 'Scan the affected apps in smaller selections for more detail.');
+      else if (!discovered.size) notify.info('No apps, Mach-O files, or supported archives were found.');
     } catch (error) {
       if (!controller.signal.aborted) {
         stats.partial = true;
         const reason = recoverableFolderError(error);
         if (error instanceof FolderLimitError) {
-          notice.textContent = 'This selection reached the scan limit. Scan smaller subfolders to check the remaining apps.';
+          notify.error('This selection reached the scan limit.', 'Scan smaller subfolders to check the remaining apps.');
         } else if (reason === 'memory_pressure' || reason === 'out_of_memory') {
-          notice.textContent = `The browser is running low on memory, so reading stopped early. ${FEWER_FOLDERS}`;
+          notify.error('The browser is running low on memory, so reading stopped early.', FEWER_FOLDERS);
         } else {
-          notice.textContent = `The browser could not finish reading this selection. ${FEWER_FOLDERS}`;
+          notify.error('The browser could not finish reading this selection.', FEWER_FOLDERS);
         }
         skipped(stats, reason, stats.folder_name);
         crash.error('folder_read_error', error, { reason, recovered: true });
@@ -159,15 +161,14 @@ export function bindLocalInputs({ view, mode }) {
   get('cancel-all').addEventListener('click', () => {
     active?.abort();
     view.cancelAll();
-    notice.textContent = '';
+    notify.info('Scan canceled.', 'Your finished results are kept.');
     reading('');
   });
   get('choose-files').addEventListener('click', () => files.click());
   chooser.addEventListener('click', async () => {
     if (picker) return;
-    notice.textContent = '';
     if (typeof window.showDirectoryPicker !== 'function') {
-      notice.textContent = FOLDER_GUIDANCE;
+      notify.info('Folder picker unavailable.', FOLDER_GUIDANCE);
       return;
     }
     picker = true;
@@ -177,7 +178,7 @@ export function bindLocalInputs({ view, mode }) {
       handle = await window.showDirectoryPicker({ mode: 'read' });
     } catch {
       // Chromium also reports protected directory selections as AbortError.
-      notice.textContent = FOLDER_GUIDANCE;
+      notify.error('Could not open the folder picker.', FOLDER_GUIDANCE);
     } finally {
       picker = false;
       if (!active) reading('');
@@ -188,7 +189,7 @@ export function bindLocalInputs({ view, mode }) {
 
   files.addEventListener('change', () => {
     if (files.files.length > MAX_FLAT_FILES) {
-      notice.textContent = 'Select up to 512 files at a time, or drag their folder here.';
+      notify.error('Too many files selected.', 'Select up to 512 files at a time, or drag their folder here.');
     } else {
       view.add(Array.from(files.files, (file) => fileJob(file)));
     }
@@ -229,12 +230,12 @@ export function bindLocalInputs({ view, mode }) {
     // explicit files captured above are used after that point.
     if (!sources) {
       if (dropped?.length > MAX_FLAT_FILES || !dropped) {
-        notice.textContent = 'Drop up to 512 items at a time, or drop their parent folder.';
+        notify.error('Too many items dropped.', 'Drop up to 512 items at a time, or drop their parent folder.');
       } else if (dropped.length) {
         const selection = Array.from(dropped);
         void discover('DataTransfer.files', selection.length, (options) => walkFileList(selection, options));
       } else {
-        notice.textContent = FOLDER_GUIDANCE;
+        notify.info('No readable files were dropped.', FOLDER_GUIDANCE);
       }
       return;
     }

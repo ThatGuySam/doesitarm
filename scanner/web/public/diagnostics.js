@@ -2,6 +2,7 @@ import { observedInventory } from './bundle-inventory.js';
 import { timeSlice } from './folder-walk.js';
 import { crash } from './crash-journal.js';
 import { prettyBytes } from './scan-view.js';
+import { notify } from './notifications.js';
 
 export const PLAIN_JSON_LIMIT = 5_000;
 
@@ -287,7 +288,7 @@ export function diagnosticControls(resolver, { idPrefix = '' } = {}) {
             ]);
             feedback.textContent = `Copied ${prettyBytes(blob.size)} of results JSON.`;
           } catch {
-            feedback.textContent = 'Clipboard access is unavailable. Save the prepared JSON instead.';
+            notify.error('Clipboard access is unavailable.', 'Save the prepared JSON instead.');
           }
         });
         feedback.append(' ', copy);
@@ -296,7 +297,7 @@ export function diagnosticControls(resolver, { idPrefix = '' } = {}) {
     } catch {
       if (version === exportVersion) {
         reset();
-        feedback.textContent = 'The browser could not prepare the export.';
+        notify.error('The browser could not prepare the export.');
       }
     } finally {
       if (version === exportVersion) {

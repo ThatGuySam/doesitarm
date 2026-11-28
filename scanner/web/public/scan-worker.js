@@ -321,8 +321,14 @@ async function requestWorker(url, resolvedDownload) {
   try {
     const response = await fetch(endpoint, options);
     if (response.headers.get('Content-Type')?.includes('application/json')) {
-      const result = await response.json();
-      if (typeof result.status === 'string' && Array.isArray(result.architectures)) return result;
+      const result = await response.clone().json().catch(() => null);
+      if (typeof result?.status === 'string' && Array.isArray(result.architectures)) {
+        if (response.status === 429) result.error_class = 'rate_limit';
+        return result;
+      }
+    }
+    if (response.status === 429) {
+      return { ...emptyResult('limit_reached', 'Too many requests. Try again in a minute.'), error_class: 'rate_limit' };
     }
 
     // Cloudflare can terminate an isolate before our handler can serialize a result.

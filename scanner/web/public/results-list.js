@@ -4,6 +4,7 @@ import { crash } from './crash-journal.js';
 import { FolderJournal } from './folder-journal.js';
 import { showSavedFolders } from './folder-recovery.js';
 import { folderStats, skipped, timeSlice } from './folder-walk.js';
+import { notify } from './notifications.js';
 import { formatDuration, estimateBatch, estimateRemaining, recordSample } from './scan-progress.js';
 import { emptyResult } from './scan-result.js';
 import { get, ScanCards, statuses, verdict } from './scan-view.js';
@@ -120,7 +121,10 @@ export class ResultsList {
     this.#pool = pool;
     this.#mode = mode;
     crash.attach(() => this.crashSnapshot(), buildInfo);
-    this.#cards = new ScanCards((id) => this.#pool.cancel(id), (row) => this.#inventory(row));
+    this.#cards = new ScanCards((id) => {
+      this.#pool.cancel(id);
+      notify.info('Scan canceled.', 'Your finished results are kept.');
+    }, (row) => this.#inventory(row));
     const change = () => {
       this.#page = 0;
       this.#searchVersion += 1;
@@ -384,6 +388,14 @@ export class ResultsList {
       if (row.started !== null) run.lastScan = now;
       row.result = event.result ?? emptyResult('canceled', null, row.size);
       row.status = row.result.status;
+      if (row.kind === 'url' && row.result.error_class === 'rate_limit') {
+        notify.error('Download requests are rate limited.', row.result.error);
+      } else if (row.kind === 'url' && (row.status === 'source_error' || row.status === 'limit_reached')) {
+        notify.error('Could not scan the download.', row.result.error);
+      } else if (row.status === 'source_error' && !run.reportedReadError) {
+        run.reportedReadError = true;
+        notify.error('The scanner could not read part of this selection.', 'Open the failed results for details.');
+      }
       if (row.size == null && row.kind === 'url' && row.result.total_size > 0) row.size = row.result.total_size;
       this.#invalidateInventories(row, run);
       row.source = event.source ?? null;
@@ -436,7 +448,7 @@ export class ResultsList {
       await run.journal.write(header, state, options);
       return true;
     } catch {
-      setText(get('folder-storage-status'), 'The browser could not save some folder results for recovery. Download results before closing this page.');
+      this.#notifyStorageError(run);
       return false;
     }
   }
@@ -450,8 +462,14 @@ export class ResultsList {
       if (!row.saved) row.savedFallback = data;
       row.evidence = row.directoryListings = row.relativeCandidates = row.nestedArtifacts = undefined;
     } catch {
-      setText(get('folder-storage-status'), 'The browser could not save some folder results for recovery. Download results before closing this page.');
+      this.#notifyStorageError(run);
     }
+  }
+
+  #notifyStorageError(run) {
+    if (run.reportedStorageError) return;
+    run.reportedStorageError = true;
+    notify.error('The browser could not save some folder results for recovery.', 'Download results before closing this page.');
   }
 
   async *#exportRows(run, length, cutoff) {
