@@ -1,4 +1,4 @@
-# Services: cards, A/B headlines and requests
+# Services: cards, headline experiments and requests
 
 Does It ARM offers a Logic upgrade audit (`/services/studio-upgrade-audit/`) and
 short interest pages for six more offers, all listed on `/services/`:
@@ -19,7 +19,7 @@ through `src/pages/services/[offer].astro`. Each has one interest form (kind
 ## Edit copy
 
 All wording lives in [`helpers/service-offers.js`](../helpers/service-offers.js):
-card headlines and subheads, the audit page, the services index, the revival
+headline pools (`serviceExperiments`), card subheads and buttons (`serviceCards`), the audit page, the services index, the revival
 allowlist and the home search terms. Give a reworded headline a **new variant id**
 so old and new results are not mixed.
 
@@ -30,16 +30,15 @@ To show a Logic screenshot or video on the audit page, set `auditPage.media.src`
 
 At most one card per page, chosen by `getServiceCardType()`:
 
-| Page | Card |
-| --- | --- |
-| Audio `/app/*`, not native | `audio` (4 headline variants) |
-| Logic Pro and MainStage | `audio-native` (3 variants) |
-| Native DAW other than Logic (Ableton, Pro Tools, Cubase, FL Studio, Studio One, Bitwig, GarageBand...) | `daw-native` (headline uses the app name, DAW-neutral subhead and button) |
-| Other native audio apps (e.g. Melodyne, Waves Central, Omnisphere) | `audio-native` |
-| `/app/*` on `revivalAllowlist` (e.g. True-Fi) | `revival` |
-| `/kind/music-and-audio-tools/` | `audio`, above the ad in the search slot |
-| `/` | `audio`, only while the search box text matches `audioSearchTerms` |
-| Games, formulas, other apps | none |
+| Page | Card | Experiment |
+| --- | --- | --- |
+| Logic Pro and MainStage (`logicAppSlugs`) | `logic-native` (the only card with Logic copy) | `logic-headlines-v2` |
+| Any other DAW or host, native or not (REAPER, Audacity, Ableton, Pro Tools, Cubase, FL Studio, Studio One, Bitwig, GarageBand...; `dawAppSlugs`, `dawNameTerms`) | `daw` (DAW-neutral subhead and button; some headlines use the app name) | `audio-headlines-v2` |
+| Other audio software, native or not (Native Access, Melodyne, Waves Central, Kontakt...) | `audio` (DAW-neutral, never names an app) | `audio-headlines-v2` |
+| `/app/*` on `revivalAllowlist` (e.g. True-Fi) | `revival` | `revival-v1` |
+| `/kind/music-and-audio-tools/` | `audio`, above the ad in the search slot | `audio-headlines-v2` |
+| `/` | `audio`, only while the search box text matches `audioSearchTerms` | `audio-headlines-v2` |
+| Games, formulas, other apps | none | |
 
 An `/app/*` listing counts as audio when it is in Music and Audio Tools, its
 slug is in `audioAppSlugs`, or its name or an alias contains one of
@@ -48,11 +47,36 @@ Waves Central) have no category, so the slug list and name terms matter.
 
 Non-native listings also show a subdued Parallels line. CrossOver links were removed.
 
-Each visitor gets one variant per card type, picked at random and kept in
-`localStorage` (`dia-svc-variant:<card>`). Each card type also has an
-`experiment` id in `serviceCards` (`audio-headlines-v1`, `audio-native-headlines-v1`,
-`daw-native-v1`, `revival-v1`). Start a new experiment id whenever a headline set
-changes, so results from different sets are never pooled.
+### Headline exploration (v2, from 2026-11-27)
+
+v1 (`audio-headlines-v1`, `audio-native-headlines-v1`, `daw-native-v1`) was a
+small A/B test keyed per card type. v2 is a multi-arm exploration: each
+experiment in `serviceExperiments` has a pool of headlines, and each browser gets
+**one** variant per experiment, picked uniformly at random from the active
+variants and kept in `localStorage` under `dia-svc-x:<experiment>`. The same
+browser therefore sees the same variant on every page and card type in that
+experiment (an Ableton page and a Native Access page both show, say, `op1`).
+The subhead and buttons stay fixed per card type, so the headline is what varies.
+
+- Every card type in an experiment has the same variant ids. A variant can carry
+  other words for one card type in `byCard` (for example `mv1` names the app on
+  the `daw` card). Tests check this.
+- Retire a variant with `active: false`; never reuse an id for new wording. A
+  changed pool (new or retired variants) is fine within exploration, but start a
+  new experiment id (`-v3`) before running a confirmatory head-to-head test.
+- `audio-headlines-v2` control is `d1` "Check your plug-ins before you upgrade.";
+  `logic-headlines-v2` control is `na1`. Pools and sources for the wording are in
+  the private copy research (`doesitarm-private/docs/research/audio-voc-2026-11-27/`).
+- Quoted macOS messages (`mq*`, `rq*`) use exact text: "Support Ending for
+  Intel-based Apps" is the title of the notification macOS 26.4 and later shows
+  when Intel code launches ([Six Colors](https://sixcolors.com/post/2026/08/preparing-for-next-years-rosetta-2-demise/));
+  "you need to install Rosetta" is from the alert "To open “App”, you need to
+  install Rosetta. Do you want to install it now?" ([Apple](https://support.apple.com/en-us/102527)
+  shows it as an image).
+
+With ~19 arms, expect weeks before any arm has enough clicking browsers. Use the
+exploration view below to browse, prune clear losers with `active: false`, and
+only then run a two-arm test on the leaders under a new experiment id.
 
 ## Spam protection and notifications
 
@@ -97,11 +121,101 @@ The Rosetta launch switch does not affect these endpoints.
 Cards also send GA4 events (`service_impression`, `service_click`,
 `service_submit`) with `service_card`, `service_variant` and `service_control`.
 
-## Read the A/B results
+## Read the results
 
 From a machine with Wrangler logged in to the Does It ARM account (on Sam's Linux
 desktop use `node /home/tiki/.npm/_npx/c943b712072b77c4/node_modules/wrangler/bin/wrangler.js`
 in place of `npx wrangler`).
+
+### v2 exploration (pooled across card types)
+
+**Exploration view, sorted by CTR.** One row per experiment and variant. A
+browser counts once per experiment, at its first exposure on any card type; a
+clicker is an exposed browser with a card click in the same experiment after that
+first exposure. `submitting_browsers` counts card form submits (the audit page
+scope form is in the service-page query further down).
+
+```sh
+npx wrangler d1 execute doesitarm-subscriptions --remote --config workers/subscriptions/wrangler.jsonc --command "
+WITH first_exposure AS (
+    SELECT experiment, browser, variant, MIN(created_at) AS first_at
+    FROM service_exposures
+    WHERE experiment LIKE '%-v2' AND card != 'service-page'
+    GROUP BY experiment, browser
+),
+acted AS (
+    SELECT f.experiment, f.browser,
+           MAX(e.event = 'click') AS clicked,
+           MAX(e.event = 'click' AND e.control = 'primary') AS clicked_primary,
+           MAX(e.event = 'submit') AS submitted
+    FROM first_exposure f
+    JOIN service_events e ON e.experiment = f.experiment AND e.browser = f.browser
+    WHERE e.created_at >= f.first_at AND e.card != 'service-page'
+    GROUP BY f.experiment, f.browser
+)
+SELECT f.experiment, f.variant,
+       COUNT(*) AS exposed_browsers,
+       COALESCE(SUM(a.clicked), 0) AS clicking_browsers,
+       COALESCE(SUM(a.clicked_primary), 0) AS primary_clicking_browsers,
+       COALESCE(SUM(a.submitted), 0) AS submitting_browsers,
+       ROUND(100.0 * COALESCE(SUM(a.clicked), 0) / COUNT(*), 2) AS ctr_pct,
+       ROUND(100.0 * COALESCE(SUM(a.clicked_primary), 0) / COUNT(*), 2) AS primary_ctr_pct
+FROM first_exposure f
+LEFT JOIN acted a ON a.experiment = f.experiment AND a.browser = f.browser
+GROUP BY f.experiment, f.variant
+ORDER BY f.experiment, ctr_pct DESC, exposed_browsers DESC"
+```
+
+`service_exposures` keeps one row per experiment, card type and browser, so
+`MIN(created_at)` with `GROUP BY experiment, browser` picks the first card the
+browser saw. Because the variant is sticky per experiment, all of a browser's
+rows in one experiment carry the same variant.
+
+**Per variant and card type** (same numbers split by `audio` and `daw`):
+
+```sh
+npx wrangler d1 execute doesitarm-subscriptions --remote --config workers/subscriptions/wrangler.jsonc --command "
+SELECT x.experiment, x.card, x.variant,
+       COUNT(*) AS exposed_browsers,
+       COUNT(c.browser) AS clicking_browsers,
+       ROUND(100.0 * COUNT(c.browser) / COUNT(*), 2) AS ctr_pct
+FROM service_exposures x
+LEFT JOIN (
+    SELECT DISTINCT e.experiment, e.card, e.browser FROM service_events e
+    JOIN service_exposures f USING (experiment, card, browser)
+    WHERE e.event = 'click' AND e.created_at >= f.created_at
+) c ON c.experiment = x.experiment AND c.card = x.card AND c.browser = x.browser
+WHERE x.experiment LIKE '%-v2' AND x.card != 'service-page'
+GROUP BY x.experiment, x.card, x.variant
+ORDER BY x.experiment, x.card, ctr_pct DESC"
+```
+
+**Sticky check.** Should return no rows. A row means one browser saw two
+variants in the same experiment (a delivery bug):
+
+```sh
+npx wrangler d1 execute doesitarm-subscriptions --remote --config workers/subscriptions/wrangler.jsonc --command "
+SELECT experiment, browser, COUNT(DISTINCT variant) AS variants
+FROM service_exposures WHERE experiment LIKE '%-v2'
+GROUP BY 1, 2 HAVING variants > 1 LIMIT 20"
+```
+
+**Arrivals and requests per v2 variant** (service page visits carry `?x=` and
+`?v=` from the card; requests store the card and variant):
+
+```sh
+npx wrangler d1 execute doesitarm-subscriptions --remote --config workers/subscriptions/wrangler.jsonc --command "
+SELECT experiment, variant, COUNT(DISTINCT browser) AS browsers_arriving
+FROM service_events WHERE card = 'service-page' AND event = 'impression' AND experiment LIKE '%-v2'
+GROUP BY 1, 2 ORDER BY browsers_arriving DESC"
+
+npx wrangler d1 execute doesitarm-subscriptions --remote --config workers/subscriptions/wrangler.jsonc --command "
+SELECT card, variant, offer, kind, COUNT(DISTINCT email) AS requesters
+FROM service_requests WHERE created_at >= '2026-11-27'
+GROUP BY 1, 2, 3, 4 ORDER BY requesters DESC"
+```
+
+### v1 A/B test (per card type)
 
 **Main result: unique browsers per variant.** Exposed browsers come from
 `service_exposures`. A clicker is an exposed browser with at least one card click

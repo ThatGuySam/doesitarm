@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import {
     fillServiceCopy,
+    getCardVariants,
     getServiceCardType,
     isAudioSearchQuery,
     serviceCards,
+    serviceExperiments,
     servicePages,
     servicesIndex
 } from '~/helpers/service-offers.js'
@@ -13,31 +15,37 @@ import { serviceOffers } from '~/workers/subscriptions/src/services.js'
 const audio = { slug: 'music-and-audio-tools' }
 
 describe( 'service card placement', () => {
-    it( 'shows the audit card on non-native audio apps', () => {
+    it( 'shows the generic audio card on audio tools that are not DAWs', () => {
         expect( getServiceCardType( { endpoint: '/app/native-access', status: 'rosetta', category: audio } ) ).toBe( 'audio' )
         expect( getServiceCardType( { endpoint: '/app/old-synth', status: 'no', category: audio } ) ).toBe( 'audio' )
-    } )
-
-    it( 'shows the native card on native audio apps', () => {
-        expect( getServiceCardType( { endpoint: '/app/logic-pro', status: 'native', category: audio } ) ).toBe( 'audio-native' )
-    } )
-
-    it( 'finds audio apps outside the category by slug or name', () => {
-        expect( getServiceCardType( { endpoint: '/app/melodyne', name: 'Melodyne', status: 'native' } ) ).toBe( 'audio-native' )
+        expect( getServiceCardType( { endpoint: '/app/melodyne', name: 'Melodyne', status: 'native' } ) ).toBe( 'audio' )
         expect( getServiceCardType( { endpoint: '/app/native-access', name: 'Native Access', status: 'rosetta', category: { slug: 'homebrew' } } ) ).toBe( 'audio' )
         expect( getServiceCardType( { endpoint: '/app/kontakt-8', name: 'Kontakt 8', status: 'rosetta' } ) ).toBe( 'audio' )
-        expect( getServiceCardType( { endpoint: '/app/izotope-portal', name: 'Portal', aliases: [ 'iZotope Product Portal' ], status: 'native' } ) ).toBe( 'audio-native' )
+        expect( getServiceCardType( { endpoint: '/app/izotope-portal', name: 'Portal', aliases: [ 'iZotope Product Portal' ], status: 'native' } ) ).toBe( 'audio' )
         expect( getServiceCardType( { endpoint: '/app/luna-display', name: 'Luna Display', status: 'native' } ) ).toBeNull()
         expect( getServiceCardType( { endpoint: '/app/brainwaves', name: 'Brainwaves', status: 'native' } ) ).toBeNull()
     } )
 
-    it( 'gives native DAWs other than Logic the DAW-neutral card', () => {
-        expect( getServiceCardType( { endpoint: '/app/ableton', name: 'Ableton', status: 'native' } ) ).toBe( 'daw-native' )
-        expect( getServiceCardType( { endpoint: '/app/avid-pro-tools', name: 'Avid Pro Tools', status: 'native', category: audio } ) ).toBe( 'daw-native' )
-        expect( getServiceCardType( { endpoint: '/app/logic-pro', name: 'Logic Pro', status: 'native' } ) ).toBe( 'audio-native' )
-        expect( getServiceCardType( { endpoint: '/app/reaper', name: 'REAPER', status: 'rosetta', category: audio } ) ).toBe( 'audio' )
-        expect( serviceCards['daw-native'].subhead ).not.toMatch( /logic/i )
-        expect( serviceCards['daw-native'].primary.label ).not.toMatch( /logic/i )
+    it( 'shows the Logic card only on Logic Pro and MainStage', () => {
+        expect( getServiceCardType( { endpoint: '/app/logic-pro', name: 'Logic Pro', status: 'native', category: audio } ) ).toBe( 'logic-native' )
+        expect( getServiceCardType( { endpoint: '/app/mainstage', name: 'MainStage', status: 'native' } ) ).toBe( 'logic-native' )
+    } )
+
+    it( 'gives every other DAW the DAW card, native or not', () => {
+        expect( getServiceCardType( { endpoint: '/app/ableton', name: 'Ableton', status: 'native' } ) ).toBe( 'daw' )
+        expect( getServiceCardType( { endpoint: '/app/avid-pro-tools', name: 'Avid Pro Tools', status: 'native', category: audio } ) ).toBe( 'daw' )
+        expect( getServiceCardType( { endpoint: '/app/reaper', name: 'REAPER', status: 'rosetta', category: audio } ) ).toBe( 'daw' )
+        expect( getServiceCardType( { endpoint: '/app/audacity', name: 'Audacity', status: 'rosetta', category: audio } ) ).toBe( 'daw' )
+        expect( getServiceCardType( { endpoint: '/app/some-cubase-build', name: 'Cubase Pro 13', status: 'no' } ) ).toBe( 'daw' )
+    } )
+
+    it( 'never shows Logic copy outside the Logic card', () => {
+        for ( const type of [ 'audio', 'daw' ] ) {
+            const card = serviceCards[ type ]
+            expect( card.subhead ).not.toMatch( /logic/i )
+            expect( card.primary.label ).not.toMatch( /logic/i )
+            for ( const variant of getCardVariants( type ) ) expect( variant.headline, variant.id ).not.toMatch( /logic/i )
+        }
     } )
 
     it( 'shows the revival card only on the allowlist', () => {
@@ -68,20 +76,56 @@ describe( 'home search audio match', () => {
 } )
 
 describe( 'service copy', () => {
-    it( 'has unique variant ids and one-line copy', () => {
-        const ids = Object.values( serviceCards ).flatMap( card => card.variants.map( variant => variant.id ) )
-        expect( new Set( ids ).size ).toBe( ids.length )
+    it( 'has unique variant ids per experiment and short copy', () => {
+        for ( const [ id, experiment ] of Object.entries( serviceExperiments ) ) {
+            const ids = experiment.variants.map( variant => variant.id )
+            expect( new Set( ids ).size, id ).toBe( ids.length )
+            expect( ids, id ).toContain( experiment.control )
+        }
 
-        for ( const card of Object.values( serviceCards ) ) {
+        for ( const [ type, card ] of Object.entries( serviceCards ) ) {
             expect( card.subhead.length ).toBeLessThanOrEqual( 80 )
-            for ( const variant of card.variants ) expect( variant.headline.length ).toBeLessThanOrEqual( 60 )
+            for ( const variant of getCardVariants( type ) ) {
+                // About two lines at 400px; the {app} name adds a little
+                expect( variant.headline.length, variant.id ).toBeLessThanOrEqual( 56 )
+            }
         }
     } )
 
-    it( 'gives every card an experiment id and keeps the four audio headlines', () => {
-        for ( const card of Object.values( serviceCards ) ) expect( card.experiment ).toMatch( /^[a-z0-9-]{1,40}$/ )
-        expect( serviceCards.audio.experiment ).toBe( 'audio-headlines-v1' )
-        expect( serviceCards.audio.variants.map( variant => variant.id ) ).toEqual( [ 'a1', 'b1', 'c1', 'd1' ] )
+    it( 'uses the v2 experiments, d1 as the audio control and retires the old ready and timing headlines', () => {
+        for ( const card of Object.values( serviceCards ) ) {
+            expect( card.experiment ).toMatch( /^[a-z0-9-]{1,40}$/ )
+            expect( serviceExperiments[ card.experiment ] ).toBeTruthy()
+        }
+        expect( serviceCards.audio.experiment ).toBe( 'audio-headlines-v2' )
+        expect( serviceCards.daw.experiment ).toBe( 'audio-headlines-v2' )
+        expect( serviceCards['logic-native'].experiment ).toBe( 'logic-headlines-v2' )
+        expect( serviceExperiments['audio-headlines-v2'].control ).toBe( 'd1' )
+        expect( getCardVariants( 'audio' )[0] ).toEqual( { id: 'd1', headline: 'Check your plug-ins before you upgrade.' } )
+
+        const allIds = Object.values( serviceExperiments ).flatMap( experiment => experiment.variants.map( variant => variant.id ) )
+        for ( const retired of [ 'b1', 'c1', 'nb1', 'nc1' ] ) expect( allIds ).not.toContain( retired )
+        for ( const text of Object.values( serviceExperiments ).flatMap( experiment => experiment.variants.map( variant => variant.headline ) ) ) {
+            expect( text ).not.toMatch( /apple silicon ready|macos 28/i )
+        }
+    } )
+
+    it( 'gives every card in an experiment the same variant ids, so the sticky choice fits all of them', () => {
+        const byExperiment = {}
+        for ( const type of Object.keys( serviceCards ) ) {
+            const ids = getCardVariants( type ).map( variant => variant.id ).join( ' ' )
+            const experiment = serviceCards[ type ].experiment
+            if ( !byExperiment[ experiment ] ) byExperiment[ experiment ] = ids
+            expect( ids, type ).toBe( byExperiment[ experiment ] )
+        }
+    } )
+
+    it( 'names the app only on the DAW card', () => {
+        const audioMove = getCardVariants( 'audio' ).find( variant => variant.id === 'mv1' )
+        const dawMove = getCardVariants( 'daw' ).find( variant => variant.id === 'mv1' )
+        expect( audioMove.headline ).not.toContain( '{app}' )
+        expect( fillServiceCopy( dawMove.headline, { app: 'REAPER' } ) ).toBe( 'Moving your REAPER projects to a new Mac?' )
+        for ( const variant of getCardVariants( 'audio' ) ) expect( variant.headline ).not.toContain( '{app}' )
     } )
 
     it( 'fills the app name', () => {
