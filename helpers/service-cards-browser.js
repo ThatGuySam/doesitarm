@@ -4,6 +4,8 @@
 let started = false
 let eventsUrl = ''
 const seen = new WeakSet()
+// Vue hydration can swap a card for a copy, so count one impression per card type per page view
+const impressionsSent = new Set()
 
 export function sendEvent ( event, card, variant, control = '' ) {
     const payload = JSON.stringify( {
@@ -42,7 +44,9 @@ const observer = typeof IntersectionObserver === 'function'
             if ( !entry.isIntersecting ) continue
             observer.unobserve( entry.target )
             const info = cardInfo( entry.target )
-            if ( info ) sendEvent( 'impression', info.type, info.variant )
+            if ( !info || impressionsSent.has( info.type ) ) continue
+            impressionsSent.add( info.type )
+            sendEvent( 'impression', info.type, info.variant )
         }
     }, { threshold: 0.5 } )
     : null
