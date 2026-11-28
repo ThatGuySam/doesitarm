@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "doesitarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Look up Apple Silicon compatibility for Mac apps, games, and Homebrew packages.",
   "author": {
     "name": "Sam Carlton Creative LLC",
@@ -17,7 +17,7 @@
       "interface": {
         "displayName": "Does It ARM",
         "shortDescription": "Apple Silicon compatibility",
-        "longDescription": "Check whether a Mac app or game runs on Apple Silicon. Look up reported native support, Rosetta compatibility, and other supported ways to run software where the catalog has evidence. Find Homebrew formula entries and related compatibility videos, check a list of apps at once, or check a software inventory export. Results come from the public Does It ARM catalog and link back to the relevant pages. Access is free and read-only, with no account required. Coverage varies by application, version, and macOS release.",
+        "longDescription": "Check whether a Mac app or game runs on Apple Silicon. Look up reported native support, Rosetta compatibility, and other supported ways to run software where the catalog has evidence. Find Homebrew formula entries and related compatibility videos, check a list of apps at once, or check a software inventory export. Results come from the public Does It ARM catalog and link back to the relevant pages. Access is read-only, with no account required. Coverage varies by application, version, and macOS release.",
         "developerName": "Sam Carlton Creative LLC",
         "category": "Developer Tools",
         "capabilities": ["Search apps", "Check app lists", "Check software inventories"],
