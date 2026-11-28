@@ -1,4 +1,4 @@
-// Copy, A/B headline variants and placement rules for Does It ARM services.
+// Copy, headline experiments and placement rules for Does It ARM services.
 // Edit wording here. Variant ids are stored with every impression and click,
 // so give a reworded headline a new id instead of reusing an old one.
 
@@ -12,57 +12,123 @@ export const auditPagePath = '/services/studio-upgrade-audit/'
 // Set this to '' to turn the widget off; the Worker skips the check while its secret is unset.
 export const turnstileSiteKey = '0x4AAAAAAGWhwBrgzHSl1Hff'
 
-export const serviceCards = {
-    // Music and audio listings that are not native
-    'audio': {
-        offer: 'studio-upgrade-audit',
-        // Stored with every event. Start a new id when the headline set changes.
-        experiment: 'audio-headlines-v1',
-        subhead: 'We check your plug-ins and sessions and hand you a clear upgrade plan.',
-        primary: { label: 'Check my Logic setup', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' },
+// Headline experiments. Each browser gets ONE variant per experiment, picked at
+// random from the active variants and kept in localStorage under the experiment
+// id, so it sees the same headline on every page and card type in that experiment.
+// Each card type in an experiment must have a headline for every variant: set
+// `headline`, and `byCard[<card type>]` where one card type needs other words.
+// Retire a variant with `active: false` (keep it here so its id is not reused).
+// macOS message quotes, checked 2026-11-27:
+// - "Support Ending for Intel-based Apps" is the title of the notification macOS
+//   26.4+ shows when Intel code launches (body: 'This version of "App" will not
+//   open in a future release of macOS.'). Six Colors, PaperCut KB, Adobe forum.
+//   https://sixcolors.com/post/2026/08/preparing-for-next-years-rosetta-2-demise/
+// - "you need to install Rosetta" is part of the alert 'To open "App", you need
+//   to install Rosetta. Do you want to install it now?' (Apple shows it as an
+//   image in https://support.apple.com/en-us/102527; text from WD support 49371).
+export const serviceExperiments = {
+    // Every non-Logic audio card: generic audio tools and non-Logic DAWs
+    'audio-headlines-v2': {
+        control: 'd1',
         variants: [
-            { id: 'a1', headline: 'Moving your Logic sessions to a new Mac?' },
-            { id: 'b1', headline: 'Get your Logic rig Apple Silicon ready.' },
-            { id: 'c1', headline: 'Get your plug-ins ready for macOS 28.' },
-            { id: 'd1', headline: 'Check your plug-ins before you upgrade.' }
+            { id: 'd1', headline: 'Check your plug-ins before you upgrade.' },
+            { id: 'op1', headline: 'Will your old projects still play?' },
+            { id: 'so1', headline: 'Will your sessions open on the new Mac?' },
+            { id: 'ks1', headline: 'Keep your saved settings when you move Macs.' },
+            { id: 'mw1', headline: 'Move now or wait? Get a clear answer.' },
+            { id: 'ri1', headline: 'Know what to reinstall before your new Mac.' },
+            { id: 'cw1', headline: 'Will last year’s client mixes still open?' },
+            { id: 'ls1', headline: 'Do your plug-ins load, not just show up?' },
+            { id: 'up1', headline: 'Update only the plug-ins you actually need.' },
+            { id: 'es1', headline: 'Will your old projects open with every sound?' },
+            { id: 'rs1', headline: 'Upgrading macOS? Check one real session first.' },
+            { id: 'rt1', headline: 'Retire the old Mac when you’re sure.' },
+            {
+                id: 'mv1',
+                headline: 'Moving your projects to a new Mac?',
+                byCard: { daw: 'Moving your {app} projects to a new Mac?' }
+            },
+            { id: 'nm1', headline: 'Ordering a new Mac?' },
+            { id: 'cp1', headline: 'Is your Mac ready to reopen that client project?' },
+            { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?' },
+            { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?' },
+            { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?' }
         ]
     },
-    // Native music and audio listings, such as Logic Pro
-    'audio-native': {
-        offer: 'studio-upgrade-audit',
-        experiment: 'audio-native-headlines-v1',
-        subhead: 'We check what your sessions load and hand you a clear upgrade plan.',
-        primary: { label: 'Check my Logic setup', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' },
+    // Logic Pro and MainStage pages
+    'logic-headlines-v2': {
+        control: 'na1',
         variants: [
             // {app} becomes the listing name, e.g. "Logic Pro runs natively."
             { id: 'na1', headline: '{app} runs natively. Do your sessions?' },
-            { id: 'nb1', headline: 'Make your whole Logic rig Apple Silicon ready.' },
-            { id: 'nc1', headline: 'Is every plug-in in your session ready for macOS 28?' }
+            { id: 'lp1', headline: 'Will your old Logic projects still play?' },
+            { id: 'a1', headline: 'Moving your Logic sessions to a new Mac?' },
+            { id: 'd1', headline: 'Check your plug-ins before you upgrade.' },
+            { id: 'so1', headline: 'Will your sessions open on the new Mac?' },
+            { id: 'mw1', headline: 'Move now or wait? Get a clear answer.' },
+            { id: 'up1', headline: 'Update only the plug-ins you actually need.' },
+            { id: 'ls1', headline: 'Do your plug-ins load, not just show up?' },
+            { id: 'cw1', headline: 'Will last year’s client mixes still open?' },
+            { id: 'nm1', headline: 'Ordering a new Mac?' },
+            { id: 'cp1', headline: 'Is your Mac ready to reopen that client project?' },
+            { id: 'mq1', headline: 'Seeing “Support Ending for Intel-based Apps”?' },
+            { id: 'rq1', headline: 'Seeing “you need to install Rosetta”?' },
+            { id: 'rq2', headline: 'Are you seeing “you need to install Rosetta”?' }
         ]
     },
-    // Native DAWs other than Logic, such as Ableton Live or Pro Tools
-    'daw-native': {
+    'revival-v1': {
+        control: 'r1',
+        variants: [
+            { id: 'r1', headline: 'Still depend on {app}?' }
+        ]
+    }
+}
+
+// One card per type. The subhead and buttons stay fixed within an experiment,
+// so the headline is the only thing that varies.
+export const serviceCards = {
+    // Other audio software: plug-in managers, instruments, editors. No DAW named.
+    'audio': {
         offer: 'studio-upgrade-audit',
-        experiment: 'daw-native-v1',
+        experiment: 'audio-headlines-v2',
         subhead: 'We check your plug-ins and sessions and hand you a clear upgrade plan.',
         primary: { label: 'Check my setup', href: auditPagePath },
-        secondary: { label: 'Email me when audits open' },
-        variants: [
-            { id: 'dn1', headline: '{app} runs natively. Do your sessions?' }
-        ]
+        secondary: { label: 'Email me when audits open' }
+    },
+    // DAWs and hosts other than Logic, native or not (REAPER, Ableton, Pro Tools, Audacity...)
+    'daw': {
+        offer: 'studio-upgrade-audit',
+        experiment: 'audio-headlines-v2',
+        subhead: 'We check your plug-ins and one project, then give you a plan.',
+        primary: { label: 'Check my setup', href: auditPagePath },
+        secondary: { label: 'Email me when audits open' }
+    },
+    // Logic Pro and MainStage
+    'logic-native': {
+        offer: 'studio-upgrade-audit',
+        experiment: 'logic-headlines-v2',
+        subhead: 'We check what your sessions load and hand you a clear upgrade plan.',
+        primary: { label: 'Check my Logic setup', href: auditPagePath },
+        secondary: { label: 'Email me when audits open' }
     },
     // Discontinued apps on the revival allowlist
     'revival': {
         offer: 'app-revival',
         experiment: 'revival-v1',
         subhead: 'It’s discontinued. Tell us what you still use it for.',
-        primary: { label: 'I still need this app' },
-        variants: [
-            { id: 'r1', headline: 'Still depend on {app}?' }
-        ]
+        primary: { label: 'I still need this app' }
     }
+}
+
+// Active headline variants for a card type, in pool order (control first)
+export function getCardVariants ( type ) {
+    const card = serviceCards[ type ]
+    const experiment = card && serviceExperiments[ card.experiment ]
+    if ( !experiment ) return []
+
+    return experiment.variants
+        .filter( variant => variant.active !== false )
+        .map( variant => ( { id: variant.id, headline: variant.byCard?.[ type ] || variant.headline } ) )
 }
 
 // Discontinued apps that show the free revival interest card.
@@ -73,13 +139,15 @@ export const revivalAllowlist = [
 
 export const audioCategorySlug = 'music-and-audio-tools'
 
-// Logic itself keeps the Logic-specific native card
+// Logic itself keeps the Logic-specific card
 export const logicAppSlugs = [ 'logic-pro', 'mainstage' ]
 
-// DAWs. Native ones get the DAW-neutral card headlined with the app name.
+// DAWs and hosts other than Logic, native or not. They get the 'daw' card,
+// which can name the app and never mentions Logic.
 export const dawAppSlugs = [
     'ableton', 'avid-pro-tools', 'cubase', 'fl-studio', 'studio-one', 'reaper',
-    'bitwig-studio', 'garageband', 'reason', 'n-track-studio', 'ardour'
+    'bitwig-studio', 'garageband', 'reason', 'n-track-studio', 'ardour', 'audacity',
+    'adobe-audition', 'mixcraft', 'digital-performer', 'renoise', 'hindenburg'
 ]
 
 // Audio apps outside Music and Audio Tools (many come from app scans and have
@@ -103,9 +171,14 @@ const audioNameTerms = [
     'universal audio', 'luna recording', 'arturia', 'spitfire', 'ilok', 'bitwig', 'fabfilter',
     'soundtoys', 'plugin alliance', 'slate digital', 'toontrack', 'superior drummer',
     'addictive drums', 'amplitube', 'auto-tune', 'antares', 'eventide', 'valhalla', 'u-he',
-    'output hub', 'eastwest', 'vienna symphonic'
+    'output hub', 'eastwest', 'vienna symphonic', 'audacity', 'ardour', 'adobe audition',
+    'digital performer', 'mixcraft', 'renoise', 'tracktion', 'hindenburg'
 ]
-const dawNameTerms = [ 'ableton', 'pro tools', 'cubase', 'nuendo', 'fl studio', 'studio one', 'reaper', 'bitwig', 'luna recording' ]
+const dawNameTerms = [
+    'ableton', 'pro tools', 'cubase', 'nuendo', 'fl studio', 'studio one', 'reaper', 'bitwig',
+    'luna recording', 'audacity', 'ardour', 'garageband', 'adobe audition', 'digital performer',
+    'mixcraft', 'renoise', 'tracktion', 'hindenburg'
+]
 
 // Home page search terms that show the audio card
 export const audioSearchTerms = [
@@ -172,10 +245,10 @@ export function getServiceCardType ( listing ) {
 
     if ( !isAudioListing( listing ) ) return null
 
-    if ( listing.status !== 'native' ) return 'audio'
-    if ( logicAppSlugs.includes( slug ) ) return 'audio-native'
+    // Logic copy only ever shows on Logic Pro and MainStage
+    if ( logicAppSlugs.includes( slug ) ) return 'logic-native'
 
-    return isDawListing( listing ) ? 'daw-native' : 'audio-native'
+    return isDawListing( listing ) ? 'daw' : 'audio'
 }
 
 export function fillServiceCopy ( text, { app = '' } = {} ) {
@@ -186,7 +259,7 @@ export function fillServiceCopy ( text, { app = '' } = {} ) {
 export const auditPage = {
     title: 'Logic upgrade audit',
     headline: 'Will your Logic sessions reopen after the upgrade?',
-    subhead: 'We check the plug-ins and sessions you depend on and hand you a clear upgrade plan.',
+    subhead: 'We reopen a copy of one Logic session and check the plug-ins it needs to play. Then you get a plan: update, print or wait.',
     price: '$500 scoped audit',
     primary: 'Check my Logic setup',
     secondary: 'Email me when audits open',
@@ -199,15 +272,15 @@ export const auditPage = {
     points: [
         {
             title: 'Your plug-ins',
-            text: 'Up to 15 plug-in versions, marked native, Rosetta, needs an update or unresolved.'
+            text: 'Up to 15 plug-in versions, each marked native, needs Rosetta, needs an update or unresolved.'
         },
         {
             title: 'One real session',
-            text: 'We reopen a copy and check the inserts, presets and bounce you can’t lose.'
+            text: 'We reopen a copy and check that the sounds, presets and settings you name still load.'
         },
         {
-            title: 'A clear plan',
-            text: 'What to update, what to print and whether to move now or wait.'
+            title: 'Move, wait or print',
+            text: 'What to update, what to print first, and whether to move now or keep the old Mac a while.'
         }
     ],
     scope: {
@@ -225,15 +298,35 @@ export const auditPage = {
     faq: [
         {
             question: 'What does it cost?',
-            answer: '$500 for one Mac, one target macOS and Logic version, and one session. We confirm scope before you pay.'
+            answer: '$500 for one Mac, one target macOS and Logic version, one session and up to 15 plug-in versions. We confirm scope before you pay. Plug-in updates are bought separately, and we tell you which ones you actually need.'
+        },
+        {
+            question: 'Free scanners already list my Intel plug-ins. Why pay?',
+            answer: 'Use one first. It’s a good start. A scanner reads the plug-in files. We open a copy of a real session and check that its saved sounds and settings load, which a file scan can’t show.'
+        },
+        {
+            question: 'What about iLok and other licenses?',
+            answer: 'You stay in control of them. You sign in or move authorizations on your own setup, and we never ask for passwords or license keys. We note which plug-ins are tied to a machine, a USB iLok or iLok Cloud.'
+        },
+        {
+            question: 'Can’t I just keep my old Mac?',
+            answer: 'Often, yes, for a while. If waiting is the right call, the plan says so, along with what to print or back up so you can switch later.'
         },
         {
             question: 'Do you need my project files?',
-            answer: 'Not to start. We work from a copy you choose to share, and you keep your working rig in service.'
+            answer: 'Not to start. Share a copy you’re allowed to share, a stripped-down version, or a screen share where you drive. You keep your working rig in service.'
+        },
+        {
+            question: 'What do I get at the end?',
+            answer: 'A dated written report: each plug-in, what we saw on which Mac, macOS and Logic version, and a next step. No badges and no guarantees, just what the test showed.'
+        },
+        {
+            question: 'I use Ableton, Pro Tools, Cubase or REAPER.',
+            answer: 'We start with Logic. Name your DAW in the form and we’ll tell you honestly whether we can scope it.'
         },
         {
             question: 'Can you say if macOS 28 will work?',
-            answer: 'Apple keeps general Rosetta support through macOS 27. We show what still depends on it and what to fix first.'
+            answer: 'Not yet. Apple says Rosetta stays available through macOS 27, and after that it plans to keep it only for certain older games. We show what depends on Rosetta today and what to fix first.'
         }
     ]
 }
@@ -265,7 +358,8 @@ export const servicePages = {
         },
         faq: [
             { question: 'Do you need MDM admin access?', answer: 'No. The report starts from your export. Hands-on testing is scoped and quoted separately.' },
-            { question: 'How is this different from an Intel inventory?', answer: 'It turns the inventory into decisions: upgrade, update, replace, test first or hold, each with a next step.' }
+            { question: 'Our MDM already reports Intel apps. Why pay?', answer: 'Keep using it. It tells you what’s installed. We turn that list into upgrade, update, replace, test first or hold, with the version and next step for each app.' },
+            { question: 'What about licensed and plug-in software?', answer: 'We note anything tied to a machine, a dongle or a license server so you can plan reactivation. We never need your license keys.' }
         ]
     },
     'audio-session-rescue': {
@@ -274,11 +368,11 @@ export const servicePages = {
         title: 'Old session rescue',
         tile: 'Get stems out of a project that won’t open.',
         headline: 'Get stems out of a session that won’t open.',
-        subhead: 'Start with one project and the last setup that opened it. We test a copy and tell you what can be recovered.',
+        subhead: 'Start with one old project and the last setup that opened it. We test a copy and tell you what can be recovered.',
         price: 'From $500 for one project',
         status: 'From $500 · Join the list',
         points: [
-            { title: 'A copy, not your original', text: 'We open a duplicate on an agreed licensed setup and note what loads.' },
+            { title: 'A copy, not your original', text: 'We open a duplicate on an agreed licensed setup and note what loads and what comes up empty.' },
             { title: 'The files you need', text: 'Stems, wet and dry versions or a mix reference, agreed up front.' },
             { title: 'A clear record', text: 'What’s missing, what was substituted and what still needs the old setup.' }
         ],
@@ -292,7 +386,9 @@ export const servicePages = {
         },
         faq: [
             { question: 'What if the old plug-in is gone?', answer: 'A licensed original, an old Mac that still runs it or a printed reference may be enough. We tell you what’s possible before quoting.' },
-            { question: 'Do I send my files now?', answer: 'No. Start with the versions and symptoms. If the job fits, we agree on a private way to share files.' }
+            { question: 'Do I send my files now?', answer: 'No. Start with the versions and symptoms. If the job fits, we agree on a private way to share files.' },
+            { question: 'Will a missing license wipe my inserts?', answer: 'It can. Some DAWs drop a plug-in from its slot when its license is missing. We only work on a copy, with your licenses signed in on your side.' },
+            { question: 'My old Mac still opens it. Do I need this?', answer: 'Maybe not. Print stems on the old Mac first. This is for when that can’t give you everything, or the old Mac is already gone.' }
         ]
     },
     'legacy-studio-hardware': {
@@ -301,7 +397,7 @@ export const servicePages = {
         title: 'Studio interface check',
         tile: 'See if your audio interface makes the move.',
         headline: 'Will your audio interface work with a new Mac?',
-        subhead: 'We check your exact interface, adapters and macOS version against the inputs, clock and controls you use.',
+        subhead: 'We check your exact interface, adapters and macOS against the inputs, clock and controls you actually use.',
         price: 'From $1,000 for one interface and one target Mac',
         status: 'From $1,000 · Join the list',
         points: [
@@ -319,6 +415,8 @@ export const servicePages = {
         },
         faq: [
             { question: 'Will every FireWire interface work?', answer: 'No. It depends on the model, firmware, adapters, macOS and driver. We scope your exact combination first.' },
+            { question: 'Isn’t the maker’s compatibility page enough?', answer: 'Check it first. If it lists your model, macOS and Mac, you may not need us. We help when it’s silent, out of date or your setup uses adapters.' },
+            { question: 'Should I just keep my old Mac for this interface?', answer: 'Sometimes that’s the right call. You get keep, bridge or replace, with rollback steps either way.' },
             { question: 'Can you repair a broken interface?', answer: 'No. This checks working hardware. We point you to a repair shop for physical faults.' }
         ]
     },
@@ -346,7 +444,8 @@ export const servicePages = {
         },
         faq: [
             { question: 'Do I need to supply the laptop?', answer: 'Yes, for a hands-on result. Lend or ship the shortlisted model, or ask for an evidence review instead.' },
-            { question: 'Can emulation cover a missing driver?', answer: 'Emulation runs many Intel apps, but drivers need their own Arm version. We test each one separately.' }
+            { question: 'Can emulation cover a missing driver?', answer: 'Emulation runs many Intel apps, but drivers need their own Arm version. We test each one separately.' },
+            { question: 'Can’t we just buy one and try it?', answer: 'You can, and that’s what we do, with a written result per workflow so the decision doesn’t rest on one person’s afternoon.' }
         ]
     },
     'verified-test-report': {
@@ -360,7 +459,7 @@ export const servicePages = {
         status: 'From $350 · Join the list',
         points: [
             { title: 'A named setup', text: 'The exact build, chip, macOS, host and plug-in format.' },
-            { title: 'Agreed checks', text: 'Install, validate, load presets, reopen a project and render.' },
+            { title: 'Agreed checks', text: 'Install, validate, load presets, reopen a saved project and render. Validation alone isn’t the test.' },
             { title: 'A private report', text: 'Steps to reproduce each failure. Private unless you agree otherwise.' }
         ],
         form: {
@@ -373,7 +472,8 @@ export const servicePages = {
         },
         faq: [
             { question: 'Can I buy a badge?', answer: 'No. You get a test report, and the result is whatever the test shows.' },
-            { question: 'Can you cover AU, VST3 and AAX?', answer: 'Each host and format is scoped separately. Start with the one your customers use most.' }
+            { question: 'Can you cover AU, VST3 and AAX?', answer: 'Each host and format is scoped separately. Start with the one your customers use most.' },
+            { question: 'Why not just say Universal Binary?', answer: 'Producers already check that themselves. What they can’t check is whether a saved project reopens with its presets. That’s what the report records.' }
         ]
     },
     'abandoned-app-revival': {
@@ -401,7 +501,8 @@ export const servicePages = {
         },
         faq: [
             { question: 'Will joining bring the app back?', answer: 'Not by itself. We use requests to spot repeated needs and check what’s practical and permitted.' },
-            { question: 'Can I send you an installer or license key?', answer: 'Please don’t. Start with the name, version and what you need it for.' }
+            { question: 'Can I send you an installer or license key?', answer: 'Please don’t. Start with the name, version and what you need it for.' },
+            { question: 'Should I keep an old Mac for it in the meantime?', answer: 'If it’s the only thing that opens your files, yes. Export what you can to open formats now, whatever happens here.' }
         ]
     }
 }

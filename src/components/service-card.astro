@@ -1,13 +1,14 @@
 ---
-// One service call to action. Copy and variants live in helpers/service-offers.js.
+// One service call to action. Copy and headline pools live in helpers/service-offers.js.
 import {
     fillServiceCopy,
+    getCardVariants,
     serviceCards,
     serviceRequestsEndpoint
 } from '~/helpers/service-offers.js'
 
 interface Props {
-    type: 'audio' | 'audio-native' | 'daw-native' | 'revival'
+    type: 'audio' | 'daw' | 'logic-native' | 'revival'
     appName?: string
     appSlug?: string
     // Rendered hidden and shown later by page script (home search)
@@ -18,15 +19,17 @@ const { type, appName = '', appSlug = '', startHidden = false } = Astro.props
 const card = serviceCards[ type ]
 const fill = text => fillServiceCopy( text, { app: appName || 'this app' } )
 const formKind = type === 'revival' ? 'revival' : 'waitlist'
-const variantIds = card.variants.map( variant => variant.id ).join( ' ' )
+const variants = getCardVariants( type )
+const variantIds = variants.map( variant => variant.id ).join( ' ' )
 
-// Picks a sticky variant per visitor and shows only its headline.
+// Picks one variant per browser per experiment (uniform among active variants)
+// and shows only its headline. The choice is kept under the experiment id, so the
+// browser sees the same variant on every page and card type in that experiment.
 // Inline so the chosen headline is shown before first paint.
 const applyVariantScript = `
 window.diaSvcApply = window.diaSvcApply || function ( card ) {
-    var type = card.getAttribute( 'data-svc-card' )
     var ids = ( card.getAttribute( 'data-svc-variants' ) || '' ).split( ' ' )
-    var key = 'dia-svc-variant:' + type
+    var key = 'dia-svc-x:' + ( card.getAttribute( 'data-svc-experiment' ) || card.getAttribute( 'data-svc-card' ) )
     var chosen = null
     try { chosen = localStorage.getItem( key ) } catch ( e ) {}
     if ( ids.indexOf( chosen ) === -1 ) {
@@ -47,12 +50,12 @@ if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApp
     data-svc-offer={ card.offer }
     data-svc-variants={ variantIds }
     data-svc-experiment={ card.experiment }
-    data-svc-variant={ card.variants[0].id }
+    data-svc-variant={ variants[0].id }
     data-svc-app={ appSlug }
     hidden={ startHidden }
 >
     <p class="svc-headline">
-        { card.variants.map( ( variant, index ) => (
+        { variants.map( ( variant, index ) => (
             <span data-v={ variant.id } hidden={ index !== 0 }>{ fill( variant.headline ) }</span>
         ) ) }
     </p>
