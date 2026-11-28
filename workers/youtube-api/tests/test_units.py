@@ -1,11 +1,13 @@
 """CPython unit tests. Run: python3 -I tests/test_units.py (after scripts/vendor.sh)."""
 
 import gzip
+import json
 import sys
+import time
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, call, patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
@@ -484,29 +486,168 @@ class SnapshotTests(unittest.TestCase):
         self.assertEqual(snip["thumbnails"]["default"]["url"], "https://i.ytimg.com/vi/3SG5e4z-Ygg/default.jpg")
 
 
-def load_updater():
-    # The Workers SDK runs under Pyodide. The entrypoint tests replace its I/O.
-    workers = SimpleNamespace(Response=object, WorkerEntrypoint=object)
-    with patch.dict(sys.modules, {"workers": workers}):
+class UpdaterTests(unittest.IsolatedAsyncioTestCase):
+    PLAYLIST = "PLaaaaaaaaaaaa"
+    VIDEO = "3SG5e4z-Ygg"
+
+    def setUp(self):
+        # Replace the Pyodide bindings while running the updater itself under CPython.
+        workers = SimpleNamespace(Response=object, WorkerEntrypoint=object)
+        self.enterContext(patch.dict(sys.modules, {"workers": workers}))
+        import sources
         import updater
-    return updater
+        import wutil
+        self.updater = updater
+        self.worker = updater.Default()
+        self.state = snapshot.empty_state()
+        self.objects = {updater.SNAPSHOT_KEY: "{}"}
+        self.kv = SimpleNamespace(get=AsyncMock(return_value=None), put=AsyncMock(), delete=AsyncMock())
+        self.worker.env = SimpleNamespace(POINTERS=self.kv, WHEELS=SimpleNamespace(
+            get=self.r2_get, head=self.r2_get, put=self.r2_put))
+        self.enterContext(patch.object(sources, "SOURCES", [{"id": self.PLAYLIST, "name": "Test"}]))
+        self.enterContext(patch.object(wutil, "js_obj", side_effect=lambda value: value))
+        self.enterContext(patch.object(wutil, "js_bytes", side_effect=lambda value: value))
+        self.enterContext(patch.object(updater, "json_response", side_effect=lambda data, **_: data))
+        self.release = self.enterContext(patch.object(updater, "run_daily"))
+        self.extract = self.enterContext(patch.object(updater, "run_extract"))
 
+    async def r2_get(self, key):
+        if key in self.objects:
+            body = self.objects[key]
+            encoded = body.encode() if isinstance(body, str) else body
+            return SimpleNamespace(etag=str(hash(body)), body=body, text=AsyncMock(return_value=body),
+                                   arrayBuffer=AsyncMock(return_value=encoded))
 
-class ScheduleTests(unittest.IsolatedAsyncioTestCase):
+    async def r2_put(self, key, body, options):
+        only_if = options.get("onlyIf", {})
+        if only_if.get("etagDoesNotMatch") == "*" and key in self.objects:
+            return None
+        if "etagMatches" in only_if:
+            current = await self.r2_get(key)
+            if current is None or only_if["etagMatches"] != current.etag:
+                return None
+        self.objects[key] = body
+        return await self.r2_get(key)
+
+    def set_playlist(self, *videos, batch=None):
+        self.objects[self.updater.SNAPSHOT_STATE_KEY] = json.dumps(self.state)
+        listing = {"id": self.PLAYLIST, "items": [
+            {"id": vid, "index": index} for index, vid in enumerate(videos, 1)]}
+        calls = [(200, {"ok": True, "data": listing})]
+        if batch is not None:
+            calls.append(batch)
+        self.extract.side_effect = calls
+
+    async def scheduled(self):
+        await self.worker.scheduled(SimpleNamespace(cron=self.updater.DAILY_CRON))
+
+    async def completion(self, outcome, *, blocked=0):
+        status = await self.worker.admin("/admin/status", "GET", {})
+        events = status["events"]
+        self.assertEqual(events["counts"]["snapshot_run"], 1)
+        self.assertEqual(events["counts"]["youtube_blocked"], blocked)
+        self.assertEqual(events["snapshot_run_outcomes"], {outcome: 1})
+        event, = [e for e in events["recent"] if e["kind"] == "snapshot_run"]
+        stored = [key for key in self.objects if "-snapshot_run-" in key]
+        self.assertEqual(len(stored), 1)
+        self.assertEqual(json.loads(self.objects[stored[0]]), event)
+        self.assertGreaterEqual(event["detail"]["elapsed_ms"], 0)
+        return event["detail"]
+
     async def test_only_daily_cron_checks_release_then_forces_sweep(self):
-        updater = load_updater()
-        worker = updater.Default()
-        worker.env = object()
         jobs = AsyncMock()
-        with patch.multiple(updater, run_daily=jobs.release, snapshot_step=jobs.snapshot):
-            await worker.scheduled(SimpleNamespace(cron="41 * * * *"))
-            jobs.assert_not_called()
+        with patch.multiple(self.updater, run_daily=jobs.release, snapshot_step=jobs.snapshot):
+            await self.worker.scheduled(SimpleNamespace(cron="41 * * * *"))
             self.assertEqual(jobs.mock_calls, [])
-            await worker.scheduled(SimpleNamespace(cron=updater.DAILY_CRON))
+            await self.scheduled()
         self.assertEqual(jobs.mock_calls, [
-            unittest.mock.call.release(worker.env, promote=True),
-            unittest.mock.call.snapshot(worker.env, sweep=True),
+            call.release(self.worker.env, promote=True),
+            call.snapshot(self.worker.env, sweep=True, scheduled=True),
         ])
+
+    async def test_challenge_records_completion_and_block_event_without_publishing(self):
+        self.set_playlist(self.VIDEO, batch=(200, {"results": {
+            self.VIDEO: {"ok": False, "class": canary.YOUTUBE_BLOCKED}}}))
+        await self.scheduled()
+        detail = await self.completion("blocked", blocked=1)
+        self.assertEqual(detail["planned"], {"new": 1, "refresh": 0})
+        self.assertEqual(detail["extracted"], {"ok": 0, "failed": 0, "blocked": 1, "invalid": 0})
+        self.assertIn("stopped early", detail["stopped"])
+        self.assertFalse(detail["published"])
+        self.assertEqual(self.objects[self.updater.SNAPSHOT_KEY], "{}")
+        challenge, = [key for key in self.objects if "-youtube_blocked-" in key]
+        self.assertEqual(json.loads(self.objects[challenge])["detail"], detail)
+        self.extract.assert_awaited_with(self.worker.env, "videos", self.updater.bundled_pointer(),
+                                         ids=[self.VIDEO], stop_when_blocked=True)
+
+    async def test_idle_records_completion_even_if_release_job_raises(self):
+        self.set_playlist()
+        self.release.side_effect = OSError("release storage failed")
+        with self.assertRaises(OSError):
+            await self.scheduled()
+        detail = await self.completion("idle")
+        self.assertEqual(detail["sweep"], {"ok": 1, "failed": 0})
+        self.assertIsNone(detail["stopped"])
+        self.assertFalse(detail["published"])
+
+    async def test_partial_publish_still_records_the_challenge(self):
+        other = "yLVcRkFtEcA"
+        self.set_playlist(self.VIDEO, other, batch=(200, {"results": {
+            self.VIDEO: {"ok": True, "data": SchemaTests.GOOD},
+            other: {"ok": False, "class": canary.YOUTUBE_BLOCKED}}}))
+        await self.scheduled()
+        detail = await self.completion("blocked", blocked=1)
+        self.assertTrue(detail["published"])
+        self.assertEqual(detail["extracted"]["ok"], 1)
+        self.assertEqual(detail["pending_new"], 1)
+        self.assertEqual(list(json.loads(self.objects[self.updater.SNAPSHOT_KEY])), [self.VIDEO])
+
+    async def test_lock_skip_records_completion_and_leaves_lock_alone(self):
+        self.kv.get.side_effect = {self.updater.SNAPSHOT_LOCK: json.dumps({"at": time.time()})}.get
+        await self.scheduled()
+        detail = await self.completion("skipped")
+        self.assertIn("another snapshot run started", detail["stopped"])
+        self.extract.assert_not_awaited()
+        self.kv.delete.assert_not_awaited()
+
+    async def test_failure_records_completion_and_releases_lock(self):
+        with self.assertRaisesRegex(RuntimeError, "no snapshot state"):
+            await self.scheduled()
+        detail = await self.completion("failed")
+        self.assertEqual(detail["stopped"], "snapshot step raised RuntimeError")
+        self.kv.delete.assert_awaited_once_with(self.updater.SNAPSHOT_LOCK)
+
+    async def test_failed_batch_records_failed_outcome(self):
+        self.set_playlist(self.VIDEO, batch=(502, {"error": "bad gateway"}))
+        await self.scheduled()
+        detail = await self.completion("failed")
+        self.assertEqual(detail["stopped"], "extractor batch failed")
+        self.assertEqual(detail["planned"]["new"], 1)
+
+    async def test_coverage_hold_records_completion(self):
+        other = "yLVcRkFtEcA"
+        self.state["playlists"][self.PLAYLIST] = {"ids": [self.VIDEO, other]}
+        self.state["videos"] = {vid: {"s": 1, "h": time.time()} for vid in (self.VIDEO, other)}
+        self.set_playlist(self.VIDEO)
+        await self.scheduled()
+        detail = await self.completion("held")
+        self.assertIn("coverage would drop", detail["stopped"])
+        self.assertFalse(detail["published"])
+
+    async def test_status_rollup_retries_a_concurrent_write(self):
+        self.set_playlist()
+        key = self.updater.events.SUMMARY_KEY
+        put = self.r2_put
+
+        async def concurrent_put(name, body, options):
+            if name == key and key not in self.objects:
+                self.objects[key] = json.dumps({"counts": {"pointer_changed": 1}, "recent": []})
+            return await put(name, body, options)
+
+        self.worker.env.WHEELS.put = concurrent_put
+        await self.scheduled()
+        await self.completion("idle")
+        self.assertEqual(json.loads(self.objects[key])["counts"]["pointer_changed"], 1)
 
 
 if __name__ == "__main__":

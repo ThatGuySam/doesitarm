@@ -118,6 +118,11 @@ sweep. Three historical playlists no longer exist on YouTube (status lists them 
 - Publishing is skipped, and `snapshot_held` logged, if the video count would drop
   below 90% of the previous count. The previous file is kept as
   `snapshot/youtube-videos.prev.json`. Status: `snapshot/status.json` and `/admin/status`.
+- Every scheduled snapshot step records a `snapshot_run` event with its outcome,
+  elapsed time, counts and any early stop reason. A YouTube challenge that stops
+  hydration also records `youtube_blocked`, even when nothing was published.
+  `/admin/status` exposes totals in `events.counts` and a breakdown of scheduled
+  snapshots in `events.snapshot_run_outcomes`.
 
 ## Releases: how yt-dlp updates itself
 
@@ -145,8 +150,8 @@ Daily at 01:37 UTC, before refreshing the snapshot, the updater:
 Only the cron promotes. Pointers: KV `doesitarm-youtube-pointers` (`pointer:active`,
 `wheel:<version>`, `run:latest`, `run:index`); run records in R2 `runs/`; events in R2
 `events/` (`pointer_changed`, `canary_failed`, `candidate_rejected`, `daily_error`,
-`egress_blocked`, `extractor_invalid`, `snapshot_held`, `snapshot_published`), counted in
-`/admin/status`.
+`egress_blocked`, `extractor_invalid`, `snapshot_held`, `snapshot_published`,
+`snapshot_run`, `youtube_blocked`), counted in `/admin/status`.
 
 ## Operations
 

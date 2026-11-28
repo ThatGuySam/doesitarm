@@ -60,14 +60,16 @@ def raw(binding):
     return getattr(binding, "_binding", binding)
 
 
-async def r2_put(bucket, key, body, content_type="application/json; charset=utf-8", custom=None):
+async def r2_put(bucket, key, body, content_type="application/json; charset=utf-8", custom=None, *, only_if=None):
     """R2 put through the raw binding. body: str, bytes or a JS stream."""
     if isinstance(body, (bytes, bytearray)):
         body = js_bytes(body)
     options = {"httpMetadata": {"contentType": content_type}}
     if custom:
         options["customMetadata"] = custom
-    await raw(bucket).put(key, body, js_obj(options))
+    if only_if:
+        options["onlyIf"] = only_if
+    return await raw(bucket).put(key, body, js_obj(options))
 
 
 async def kv_json(namespace, key):

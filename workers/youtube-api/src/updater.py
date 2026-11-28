@@ -290,19 +290,64 @@ async def save_run(env, record):
 SNAPSHOT_LOCK = "lock:snapshot"
 
 
-async def snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
+async def snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN, *, scheduled=False):
     """Run one snapshot step unless another is running (KV lock, 20 minutes)."""
-    lock = await kv_json(env.POINTERS, SNAPSHOT_LOCK)
-    if lock and time.time() - lock.get("at", 0) < 1200:
-        return {"skipped": f"another snapshot run started at {now_iso(lock['at'])}"}
-    await kv_put_json(env.POINTERS, SNAPSHOT_LOCK, {"at": time.time()}, ttl=1200)
+    started = time.time()
+    counts = {"ok": 0, "failed": 0, "blocked": 0, "invalid": 0}
+    status = {"started": now_iso(started), "extracted": counts}
+    error = None
     try:
-        return await _snapshot_step(env, sweep, max_videos)
+        lock = await kv_json(env.POINTERS, SNAPSHOT_LOCK)
+        if lock and time.time() - lock.get("at", 0) < 1200:
+            status["skipped"] = f"another snapshot run started at {now_iso(lock['at'])}"
+            return {"skipped": status["skipped"]}
+        await kv_put_json(env.POINTERS, SNAPSHOT_LOCK, {"at": time.time()}, ttl=1200)
+        try:
+            return await _snapshot_step(env, sweep, max_videos, status)
+        finally:
+            await env.POINTERS.delete(SNAPSHOT_LOCK)
+    except Exception as err:  # noqa: BLE001 - record the outcome and let the error propagate
+        error = type(err).__name__
+        raise
     finally:
-        await env.POINTERS.delete(SNAPSHOT_LOCK)
+        if scheduled or counts["blocked"]:
+            await record_snapshot_run(env, status, started, scheduled, error)
 
 
-async def _snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
+async def record_snapshot_run(env, status, started, scheduled, error):
+    stopped = status.get("stopped")
+    if error or "batch_error" in status:
+        outcome = "failed"
+        stopped = stopped or (f"snapshot step raised {error}" if error else "extractor batch failed")
+    elif "skipped" in status:
+        outcome = "skipped"
+        stopped = status["skipped"]
+    elif stopped:
+        outcome = "blocked"
+    elif status.get("held"):
+        outcome = "held"
+        stopped = status["reason"]
+    else:
+        outcome = "published" if status.get("published") else "idle"
+    sweep = status.get("sweep", {})
+    detail = {
+        "started": status["started"],
+        "elapsed_ms": round((time.time() - started) * 1000),
+        "outcome": outcome,
+        "stopped": stopped,
+        "published": status.get("published", False),
+        "sweep": {"ok": sweep.get("ok", 0), "failed": sweep.get("failed", 0)},
+        "planned": status.get("planned", {"new": 0, "refresh": 0}),
+        "extracted": status["extracted"],
+        "pending_new": status.get("pending_new"),
+    }
+    if status["extracted"]["blocked"]:
+        await events.record(env.WHEELS, "youtube_blocked", detail)
+    if scheduled:
+        await events.record(env.WHEELS, "snapshot_run", detail)
+
+
+async def _snapshot_step(env, sweep, max_videos, status):
     """One incremental snapshot run: sweep playlists if due, extract new and stale
     videos within budget, rewrite only the shards that changed, and publish if
     coverage holds. Returns a status dict (also saved to snapshot/status.json)."""
@@ -315,7 +360,6 @@ async def _snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
     state = await r2_json(env.WHEELS, SNAPSHOT_STATE_KEY)
     if state is None:
         raise RuntimeError("no snapshot state; upload the seed shards first (README)")
-    status = {"started": now_iso(now)}
     pointer = await active_pointer(env)
     before_members = snap.membership(SOURCES, state)
     before_count, _ = snap.summary(state, before_members)
@@ -350,7 +394,7 @@ async def _snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
     status["planned"] = {"new": len(new_ids), "refresh": len(refresh_ids)}
     todo = [(vid, True) for vid in new_ids] + [(vid, False) for vid in refresh_ids]
     results = {}
-    counts = {"ok": 0, "failed": 0, "blocked": 0, "invalid": 0}
+    counts = status["extracted"]
     ytdlp_version = pointer.get("version")
     for start in range(0, len(todo), VIDEOS_PER_CALL):
         chunk = todo[start:start + VIDEOS_PER_CALL]
@@ -382,7 +426,6 @@ async def _snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
         if blocked:
             status["stopped"] = "YouTube is challenging this egress; stopped early"
             break
-    status["extracted"] = counts
     if counts["invalid"]:
         await events.record(env.WHEELS, "extractor_invalid", {"caller": "snapshot", "count": counts["invalid"]})
 
@@ -391,7 +434,7 @@ async def _snapshot_step(env, sweep=None, max_videos=VIDEOS_PER_RUN):
                  or (vid in results and results[vid][0].get("ok") and results[vid][1])}
     status["videos"] = len(projected)
     if not snap.coverage_ok(before_count, len(projected)):
-        status.update(published=False,
+        status.update(published=False, held=True,
                       reason=f"coverage would drop from {before_count} to {len(projected)}; kept the previous snapshot")
         await events.record(env.WHEELS, "snapshot_held", {"previous": before_count, "new": len(projected)})
         status["finished"] = now_iso()
@@ -483,7 +526,7 @@ class Default(WorkerEntrypoint):
             try:
                 await run_daily(self.env, promote=True)
             finally:
-                await snapshot_step(self.env, sweep=True)
+                await snapshot_step(self.env, sweep=True, scheduled=True)
 
     async def internal_event(self, request):
         """Events reported by the API (it has no storage of its own)."""
