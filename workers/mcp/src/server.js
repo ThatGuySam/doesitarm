@@ -113,7 +113,7 @@ const INPUT_SCHEMAS = {
     },
     list_categories: {},
     list_by_category: {
-        category: z.string().min( 1 ).max( 100 ).describe( 'Category slug or label from list_categories, such as music-and-audio-tools or Homebrew.' ),
+        category: z.string().min( 1 ).max( 100 ).describe( 'Category slug or label, such as music-and-audio-tools or Homebrew.' ),
         status: STATUS.optional().describe( STATUS_DESCRIPTION ),
         limit: limitSchema( 100, 25, 'Maximum listings per page, from 1 to 100. Defaults to 25.' ),
         offset: z.number().int().min( 0 ).default( 0 ).describe( 'Number of matching listings to skip. Defaults to 0. For the next page, use nextOffset with the same category and status. A null nextOffset means the last page.' ),
