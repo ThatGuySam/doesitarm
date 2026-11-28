@@ -1,10 +1,13 @@
 import { crash, memoryPressure } from './crash-journal.js';
-import { fileJob, FolderLimitError, folderStats, skipped, walkDirectory, walkFileList, yieldToPage } from './folder-walk.js';
+import {
+  fileJob, FolderCrashGuardError, folderCrashGuard, FolderLimitError, folderStats, skipped,
+  walkDirectory, walkFileList, yieldToPage,
+} from './folder-walk.js';
 import { notify } from './notifications.js';
 
 const number = new Intl.NumberFormat();
-const MAX_FLAT_FILES = 512;
-const MAX_FOLDER_ROWS = 8192;
+const FALLBACK_FLAT_FILE_LIMIT = 512;
+const FALLBACK_FOLDER_ROW_LIMIT = 8192;
 const MEMORY_LIMIT = 0.92;
 const FEWER_FOLDERS = 'Your results so far are kept. Drag fewer folders, or one subfolder at a time.';
 class MemoryPressureError extends Error {
@@ -23,7 +26,6 @@ export function recoverableFolderError(error) {
 const FOLDER_GUIDANCE = 'Drag your folder here. If the browser cannot read it, drag smaller subfolders or individual .app bundles. You can also select an app archive.';
 
 function captureDrop(transfer) {
-  if (transfer.items?.length > MAX_FLAT_FILES) return {};
   const sources = [];
   for (const item of transfer.items ?? []) {
     if (item.kind !== 'file') continue;
@@ -71,6 +73,8 @@ export function bindLocalInputs({ view, mode }) {
   let active;
   let picker = false;
   const canPickDirectory = typeof window.showDirectoryPicker === 'function';
+  const flatFileLimit = canPickDirectory ? Infinity : FALLBACK_FLAT_FILE_LIMIT;
+  const folderRowLimit = canPickDirectory ? Infinity : FALLBACK_FOLDER_ROW_LIMIT;
   flatPicker.hidden = canPickDirectory;
 
   function reading(text) {
@@ -96,7 +100,7 @@ export function bindLocalInputs({ view, mode }) {
     const discovered = new Set();
     const stats = folderStats(method);
     stats.folder_name = folderName;
-    const run = view.beginFolder(stats, mode(), { resultLimit: MAX_FOLDER_ROWS, recoverable: true });
+    const run = view.beginFolder(stats, mode(), { resultLimit: folderRowLimit, recoverable: true });
     const jobs = [];
     async function flush() {
       if (!jobs.length) return;
@@ -126,7 +130,7 @@ export function bindLocalInputs({ view, mode }) {
             skipped(stats, 'duplicate_path', job.label);
             return;
           }
-          if (discovered.size >= MAX_FOLDER_ROWS) throw new FolderLimitError();
+          if (discovered.size >= folderRowLimit) throw new FolderLimitError();
           discovered.add(job.label);
           if (job.kind === 'bundle') run.appCount += 1;
           jobs.push(job);
@@ -134,24 +138,38 @@ export function bindLocalInputs({ view, mode }) {
         },
       });
       await flush();
-      if (stats.skipped_entries.unreadable || stats.skipped_entries.permission_denied) {
+      const { unreadable, permission_denied, bundle_artifact_limit, nested_path_limit } = stats.skipped_entries;
+      if (unreadable || permission_denied) {
+        stats.partial = true;
         notify.error('The browser could not read some entries.', FEWER_FOLDERS);
       }
-      if (stats.partial) notify.error('Some bundle members exceeded the scan limit.', 'Scan the affected apps in smaller selections for more detail.');
-      else if (!discovered.size) notify.info('No apps, Mach-O files, or supported archives were found.');
+      if (bundle_artifact_limit || nested_path_limit) {
+        notify.error('Some bundle members exceeded the scan limit.', 'Scan the affected apps in smaller selections for more detail.');
+      } else if (!stats.partial && !discovered.size) {
+        notify.info('No apps, Mach-O files, or supported archives were found.');
+      }
     } catch (error) {
       if (!controller.signal.aborted) {
         stats.partial = true;
-        const reason = recoverableFolderError(error);
-        if (error instanceof FolderLimitError) {
-          notify.error('This selection reached the scan limit.', 'Scan smaller subfolders to check the remaining apps.');
-        } else if (reason === 'memory_pressure' || reason === 'out_of_memory') {
-          notify.error('The browser is running low on memory, so reading stopped early.', FEWER_FOLDERS);
+        if (error instanceof FolderCrashGuardError) {
+          const count = stats.skipped_entries.browser_crash_guard;
+          const skippedLabel = `${number.format(count)} ${count === 1 ? 'entry' : 'entries'}`;
+          const apps = error.unfinishedApps;
+          const unfinished = apps ? ` Left out ${number.format(apps)} unfinished app ${apps === 1 ? 'bundle' : 'bundles'}.` : '';
+          notify.error('The folder scan stopped at the browser crash guard.',
+            `The guard allows ${number.format(error.limit)} ${error.units} per drop. Skipped at least ${skippedLabel}.${unfinished} Drag smaller subfolders or individual apps to continue.`);
         } else {
-          notify.error('The browser could not finish reading this selection.', FEWER_FOLDERS);
+          const reason = recoverableFolderError(error);
+          if (error instanceof FolderLimitError) {
+            notify.error('This selection reached the scan limit.', 'Scan smaller subfolders to check the remaining apps.');
+          } else if (reason === 'memory_pressure' || reason === 'out_of_memory') {
+            notify.error('The browser is running low on memory, so reading stopped early.', FEWER_FOLDERS);
+          } else {
+            notify.error('The browser could not finish reading this selection.', FEWER_FOLDERS);
+          }
+          skipped(stats, reason, stats.folder_name);
+          crash.error('folder_read_error', error, { reason, recovered: true });
         }
-        skipped(stats, reason, stats.folder_name);
-        crash.error('folder_read_error', error, { reason, recovered: true });
         await flush().catch(() => {});
       }
     } finally {
@@ -195,11 +213,13 @@ export function bindLocalInputs({ view, mode }) {
   });
 
   files.addEventListener('change', () => {
-    if (files.files.length > MAX_FLAT_FILES) {
-      notify.error('Too many files selected.', 'Select up to 512 files at a time, or drag their folder here.');
-    } else {
-      view.add(Array.from(files.files, (file) => fileJob(file)));
+    const count = Math.min(files.files.length, flatFileLimit);
+    const remaining = files.files.length - count;
+    if (remaining) {
+      notify.error('The file selection reached the browser crash guard.',
+        `Skipped ${number.format(remaining)} ${remaining === 1 ? 'file' : 'files'}. Select up to ${flatFileLimit} files at a time, or drag smaller subfolders here.`);
     }
+    view.add(Array.from({ length: count }, (_, index) => fileJob(files.files[index])));
     files.value = '';
   });
 
@@ -232,13 +252,18 @@ export function bindLocalInputs({ view, mode }) {
     document.querySelector('.dia-scanner').classList.remove('drag-active');
     dropZone.classList.remove('dragging');
     if (!dropZone.contains(event.target)) return;
-    const { sources, files: dropped } = captureDrop(event.dataTransfer);
+    const transfer = event.dataTransfer;
+    if (transfer.items?.length > flatFileLimit) {
+      notify.error('Too many items dropped.', `Drop up to ${flatFileLimit} items at a time, or drop their parent folder.`);
+      return;
+    }
+    const { sources, files: dropped } = captureDrop(transfer);
     // The drop's data store closes on return. Only native entry promises and
     // explicit files captured above are used after that point.
     if (!sources) {
-      if (dropped?.length > MAX_FLAT_FILES || !dropped) {
-        notify.error('Too many items dropped.', 'Drop up to 512 items at a time, or drop their parent folder.');
-      } else if (dropped.length) {
+      if (dropped?.length > flatFileLimit) {
+        notify.error('Too many files dropped.', `Drop up to ${flatFileLimit} files at a time, or drag smaller subfolders here.`);
+      } else if (dropped?.length) {
         const selection = Array.from(dropped);
         void discover('DataTransfer.files', selection.length, (options) => walkFileList(selection, options));
       } else {
@@ -247,22 +272,37 @@ export function bindLocalInputs({ view, mode }) {
       return;
     }
     void discover('drop', 0, async (options) => {
+      if (!canPickDirectory) options.crashGuard = folderCrashGuard(options.stats);
       const methods = new Set();
-      for (const { handle, entry, file } of sources) {
-        options.signal.throwIfAborted();
-        const resolved = await preferHandle(handle, entry ?? file, options.signal);
-        options.signal.throwIfAborted();
-        if (resolved) {
-          methods.add('getAsFileSystemHandle');
-          await walkDirectory(resolved, 'handle', options);
-        } else if (entry) {
-          methods.add('webkitGetAsEntry');
-          await walkDirectory(entry, 'entry', options);
-        } else if (file) {
-          methods.add('DataTransfer.files');
-          options.stats.files_seen += 1;
-          await options.onJob(fileJob(file));
+      let index = 0;
+      try {
+        for (; index < sources.length; index += 1) {
+          const { handle, entry, file } = sources[index];
+          options.signal.throwIfAborted();
+          const resolved = await preferHandle(handle, entry ?? file, options.signal);
+          options.signal.throwIfAborted();
+          if (resolved) {
+            methods.add('getAsFileSystemHandle');
+            await walkDirectory(resolved, 'handle', options);
+          } else if (entry) {
+            methods.add('webkitGetAsEntry');
+            await walkDirectory(entry, 'entry', options);
+          } else if (file) {
+            methods.add('DataTransfer.files');
+            options.crashGuard?.(file.name, false);
+            options.stats.files_seen += 1;
+            await options.onJob(fileJob(file));
+          }
         }
+      } catch (error) {
+        if (error instanceof FolderCrashGuardError) {
+          for (let i = index + 1; i < sources.length; i += 1) {
+            const { entry, file } = sources[i];
+            skipped(options.stats, 'browser_crash_guard', entry?.name ?? file?.name);
+          }
+        }
+        throw error;
+      } finally {
         options.stats.method = [...methods].join(', ') || 'drop';
       }
     });

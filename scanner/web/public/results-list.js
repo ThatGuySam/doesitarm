@@ -274,6 +274,9 @@ export class ResultsList {
     const capacity = (run.resultLimit ?? Infinity) - run.rows.length;
     if (jobs.length > capacity) {
       run.stats.partial = true;
+      if (!run.stats.skipped_entries.folder_result_limit) {
+        notify.error('This selection reached the scan limit.', 'Scan smaller subfolders to check the remaining apps.');
+      }
       for (const job of jobs.slice(capacity)) skipped(run.stats, 'folder_result_limit', job.label);
       jobs = jobs.slice(0, capacity);
       if (!jobs.length) return;
@@ -395,6 +398,9 @@ export class ResultsList {
       } else if (row.status === 'source_error' && !run.reportedReadError) {
         run.reportedReadError = true;
         notify.error('The scanner could not read part of this selection.', 'Open the failed results for details.');
+      } else if (row.status === 'limit_reached' && !run.reportedScanLimit) {
+        run.reportedScanLimit = true;
+        notify.error('Part of this selection reached a scan limit.', 'Open the affected results for details.');
       }
       if (row.size == null && row.kind === 'url' && row.result.total_size > 0) row.size = row.result.total_size;
       this.#invalidateInventories(row, run);

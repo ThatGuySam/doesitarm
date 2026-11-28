@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import test from 'node:test';
 import { startPreview } from '../scripts/serve.mjs';
@@ -51,5 +52,54 @@ test('Firefox Select Apps gives persistent folder guidance and the flat picker c
     await chooser.setFiles(fileURLToPath(new URL('../../fixtures/thin.macho', import.meta.url)));
     await page.getByText(/1 of 1 finished/).first().waitFor();
     assert.equal(chooserCount, 1);
+  });
+});
+
+test('Firefox keeps 100 discovered apps and reports the folder entries skipped by the crash guard', { timeout: 45_000 }, async () => {
+  await withFirefox(async (page) => {
+    const thin = await readFile(new URL('../../fixtures/thin.macho', import.meta.url));
+    await page.addInitScript((binary) => {
+      function directory(name, children) {
+        return {
+          name, isDirectory: true,
+          createReader() {
+            let hasRead = false;
+            return { readEntries: (read) => {
+              read(hasRead ? [] : children);
+              hasRead = true;
+            } };
+          },
+        };
+      }
+      function entry(name, data) {
+        return { name, file: (read) => read(new File([data], name)) };
+      }
+      const plist = '<?xml version="1.0"?><plist version="1.0"><dict><key>CFBundleExecutable</key><string>Run</string></dict></plist>';
+      const apps = Array.from({ length: 105 }, (_, index) => directory(`App ${index}.app`, [
+        directory('Contents', [entry('Info.plist', plist), directory('MacOS', [entry('Run', new Uint8Array(binary))])]),
+      ]));
+      window.dropApplications = () => {
+        const transfer = new DataTransfer();
+        transfer.items.add(new File([], 'Applications'));
+        DataTransferItem.prototype.webkitGetAsEntry = () => directory('Applications', apps);
+        document.getElementById('drop-zone').dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
+      };
+    }, [...thin]);
+    await page.reload();
+    await page.locator('#drop-zone[data-entry]').waitFor();
+    await page.evaluate(() => window.dropApplications());
+
+    const guard = page.locator('[data-sonner-toast]').filter({ hasText: 'browser crash guard' });
+    await guard.getByText(/Skipped at least 5 entries/).waitFor();
+    assert.match(await guard.innerText(), /Drag smaller subfolders or individual apps/);
+    await page.getByText(/100 of 100 finished/).first().waitFor({ timeout: 25_000 });
+    assert.match(await page.locator('#results-count').innerText(), /Found 100 apps.*Partial folder scan/);
+
+    await page.addInitScript(() => { window.showDirectoryPicker = async () => null; });
+    await page.reload();
+    await page.locator('#drop-zone[data-entry]').waitFor();
+    await page.evaluate(() => window.dropApplications());
+    await page.getByText(/105 of 105 finished/).first().waitFor({ timeout: 25_000 });
+    assert.equal(await guard.count(), 0);
   });
 });

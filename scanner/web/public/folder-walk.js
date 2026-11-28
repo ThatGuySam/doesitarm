@@ -12,6 +12,33 @@ const MAGIC = new Set([
 
 export class FolderLimitError extends Error {}
 
+// Leave headroom below the successful 300,000-file, 169-bundle run in FFCRASH.md.
+export const FOLDER_CRASH_GUARD = Object.freeze({ entries: 100_000, appBundles: 100 });
+
+export class FolderCrashGuardError extends Error {
+  constructor(limit, units) {
+    super('The browser crash guard stopped folder discovery.');
+    this.limit = limit;
+    this.units = units;
+    this.unfinishedApps = 0;
+  }
+}
+
+export function folderCrashGuard(stats, limits = FOLDER_CRASH_GUARD) {
+  let apps = 0;
+  return (path, directory) => {
+    const app = directory && BUNDLE.test(path);
+    const entries = stats.files_seen + stats.directories_seen;
+    if (entries >= limits.entries || (app && apps >= limits.appBundles)) {
+      stats.partial = true;
+      skipped(stats, 'browser_crash_guard', path);
+      if (entries >= limits.entries) throw new FolderCrashGuardError(limits.entries, 'files and folders');
+      throw new FolderCrashGuardError(limits.appBundles, 'app bundles');
+    }
+    if (app) apps += 1;
+  };
+}
+
 export const yieldToPage = () => globalThis.scheduler?.yield?.() ??
   new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -324,12 +351,15 @@ function entryChild(entry, name, method) {
   return new Promise((resolve, reject) => entry[method](name, {}, resolve, reject));
 }
 
-async function* entryChildren(entry) {
+async function* entryChildren(entry, frame) {
   const reader = entry.createReader();
   while (true) {
     const batch = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
     if (!batch.length) return;
-    yield* batch;
+    for (let index = 0; index < batch.length; index += 1) {
+      frame.unvisited = batch.length - index - 1;
+      yield batch[index];
+    }
   }
 }
 
@@ -360,7 +390,7 @@ const adapters = {
 };
 
 export async function walkDirectory(root, method, options) {
-  const { stats } = options;
+  const { stats, crashGuard } = options;
   const adapter = adapters[method];
   const flow = discoveryCallbacks(options);
   const probes = new Probes(flow, stats);
@@ -369,6 +399,7 @@ export async function walkDirectory(root, method, options) {
 
   async function visit(entry, path, parent, direct) {
     const directory = adapter.isDirectory(entry);
+    crashGuard?.(path, directory);
     const relative = parent && path.slice(parent.label.length + 1);
     if (parent) bundleEntry(parent, relative, directory ? 'directory' : 'file', null,
       directory ? undefined : () => adapter.getFile(entry));
@@ -424,11 +455,13 @@ export async function walkDirectory(root, method, options) {
       bundle = bundleAt(path, parent?.label ?? null, (parts) => adapter.open(entry, parts));
       recordNested(parent, path, stats);
     }
-    stack.push({ entry, path, bundle, parent: bundle ?? parent, cursor: adapter.children(entry) });
+    const frame = { entry, path, bundle, parent: bundle ?? parent, unvisited: 0 };
+    frame.cursor = adapter.children(entry, frame);
+    stack.push(frame);
   }
 
-  await visit(root, root.name, null, true);
   try {
+    await visit(root, root.name, null, true);
     while (stack.length) {
       flow.check();
       const top = stack.at(-1);
@@ -454,6 +487,17 @@ export async function walkDirectory(root, method, options) {
       if (wait) await wait;
     }
     await probes.drain();
+  } catch (error) {
+    if (error instanceof FolderCrashGuardError) {
+      // Count entries already returned in directory batches. Reading more to
+      // get a total would repeat the work that the guard is trying to avoid.
+      for (const frame of stack) {
+        stats.skipped_entries.browser_crash_guard += frame.unvisited;
+        if (frame.bundle) error.unfinishedApps += 1;
+      }
+      await probes.drain();
+    }
+    throw error;
   } finally {
     for (const { cursor } of stack.reverse()) await cursor.return?.();
   }

@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import v8 from 'node:v8';
 import vm from 'node:vm';
-import { folderStats, walkDirectory } from '../public/folder-walk.js';
+import { FOLDER_CRASH_GUARD, FolderCrashGuardError, folderCrashGuard, folderStats, walkDirectory } from '../public/folder-walk.js';
 
 // Firefox on macOS crashed when a 300,000-file Applications folder went
 // through <input webkitdirectory>: the browser builds one File per file in its
@@ -79,4 +79,18 @@ test('a 300,000-file, 169-bundle walk keeps per-bundle state only', { timeout: 1
   assert.ok(jobs.every(({ artifacts }) => !artifacts));
   assert.ok(retained < 32 * 1024 * 1024, `retained ${(retained / 1048576).toFixed(1)} MiB after the walk`);
   assert.ok(peak < 192 * 1024 * 1024, `peak ${(peak / 1048576).toFixed(1)} MiB during the walk`);
+});
+
+test('the default crash guard stops the 300,000-file fixture at 100,000 entries', { timeout: 30_000 }, async () => {
+  const counts = { opened: 0 };
+  const stats = folderStats('handle');
+  let completeApps = 0;
+  await assert.rejects(walkDirectory(lazyApplications(counts), 'handle', {
+    stats,
+    crashGuard: folderCrashGuard(stats),
+    onJob(job) { if (job.kind === 'bundle') completeApps += 1; },
+  }), (error) => error instanceof FolderCrashGuardError && error.limit === 100_000);
+  assert.equal(stats.files_seen + stats.directories_seen, 100_000);
+  assert.ok(counts.opened < 100_000);
+  assert.ok(completeApps > 0 && completeApps < FOLDER_CRASH_GUARD.appBundles);
 });
