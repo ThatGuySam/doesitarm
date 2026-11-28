@@ -51,6 +51,12 @@ const result = JSON.parse(await scan(BigInt(file.size), 0n, async (offset, lengt
 
 The same callback can use `FileReaderSync` in a worker or await a validated fetch range. Browser fetches also require permission from the download origin through CORS.
 
+## Scan installed audio plug-ins
+
+Open **Scan audio plug-ins** on the browser scanner. In Finder, open **Go to Folder** with Shift–Command–G. Start with `/Library/Audio/Plug-Ins/Components` or `~/Library/Audio/Plug-Ins/Components` for Audio Units, then drag that folder onto the scanner. For VST2, VST3 or CLAP, drag the corresponding `VST`, `VST3` or `CLAP` subfolder from either `Audio/Plug-Ins` location. For AAX, use `/Library/Application Support/Avid/Audio/Plug-Ins`. **Choose folder** works where the browser exposes the directory picker and grants access.
+
+The browser reports the submitted roots it could scan, read in part or had to skip. Each plug-in row describes the executable named by `CFBundleExecutable` in `Contents/MacOS`. It uses bundle metadata, AU component declarations and optional VST3 module info. The verdict describes verified executable slices. DAW loading, licensing and session recall require a host check. Use the CSV or JSON plug-in export to share those results without paths. JSON also includes available AU and VST3 identities. [MCP connector design](PLUGIN-MCP.md)
+
 ## Read the results
 
 - `architectures` describes the declared main executable. Each slice reports its CPU type and subtype, offset and size, deployment target, and code-signature load-command presence.
