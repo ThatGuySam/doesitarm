@@ -24,6 +24,14 @@ Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Th
 claude mcp add --transport http doesitarm https://mcp.doesitarm.com/mcp
 ```
 
+**Gemini CLI:**
+
+```sh
+gemini extensions install https://github.com/ThatGuySam/doesitarm
+```
+
+Confirm the extension install. Run `gemini mcp list` to check the `doesitarm` connection.
+
 **Cursor** (`~/.cursor/mcp.json`):
 
 ```json

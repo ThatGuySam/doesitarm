@@ -1,0 +1,12 @@
+{
+  "name": "doesitarm",
+  "version": "1.0.0",
+  "description": "Check reported Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.",
+  "mcpServers": {
+    "doesitarm": {
+      "type": "http",
+      "url": "https://mcp.doesitarm.com/mcp"
+    }
+  },
+  "contextFileName": "plugins/gemini/GEMINI.md"
+}
