@@ -1,0 +1,29 @@
+{
+  "/app/ableton": {
+    "auv2": ["native", "apple-au-translation", "rosetta"],
+    "auv3": ["native"],
+    "vst2": ["native", "rosetta"],
+    "vst3": ["native", "rosetta"]
+  },
+  "/app/avid-pro-tools": { "aax": ["native", "rosetta"] },
+  "/app/cubase": { "vst2": ["rosetta"], "vst3": ["native", "rosetta"] },
+  "/app/final-cut-pro": { "auv2": ["native", "apple-au-translation"], "auv3": ["native"] },
+  "/app/fl-studio": {
+    "auv2": ["native", "apple-au-translation", "rosetta"],
+    "clap": ["native"],
+    "vst2": ["native", "vendor-bridge", "rosetta"],
+    "vst3": ["native", "vendor-bridge", "rosetta"]
+  },
+  "/app/garageband": { "auv2": ["native"] },
+  "/app/logic-pro": {
+    "auv2": ["native", "apple-au-translation", "rosetta"],
+    "auv3": ["native"]
+  },
+  "/app/nuendo": { "vst2": ["rosetta"], "vst3": ["native", "rosetta"] },
+  "/app/reaper": {
+    "auv2": ["native"],
+    "clap": ["native"],
+    "vst2": ["native", "vendor-bridge"],
+    "vst3": ["native", "vendor-bridge"]
+  }
+}
