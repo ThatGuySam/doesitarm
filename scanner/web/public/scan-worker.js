@@ -320,8 +320,9 @@ async function requestWorker(url, resolvedDownload) {
   }
   try {
     const response = await fetch(endpoint, options);
-    if (response.headers.get('Content-Type')?.includes('application/json')) {
-      const result = await response.clone().json().catch(() => null);
+    const json = response.headers.get('Content-Type')?.includes('application/json');
+    if (json) {
+      const result = await response.json().catch(() => null);
       if (typeof result?.status === 'string' && Array.isArray(result.architectures)) {
         if (response.status === 429) result.error_class = 'rate_limit';
         return result;
@@ -332,8 +333,7 @@ async function requestWorker(url, resolvedDownload) {
     }
 
     // Cloudflare can terminate an isolate before our handler can serialize a result.
-    if (response.status === 503 || response.status === 504 || response.status === 500 ||
-        response.status === 502 || response.status === 520 || response.status === 522) {
+    if (!json && [500, 502, 503, 504, 520, 522].includes(response.status)) {
       const error = await response.text();
       if (/\b1102\b|exceeded resource limits/i.test(error)) {
         return emptyResult('limit_reached', 'Cloudflare ended this scan at its CPU or memory limit.');

@@ -61,3 +61,18 @@ test('the live text becomes visible if the toaster is missing', (t) => {
   assert.equal(announcement.textContent, 'No apps were found.');
   assert.equal(announcement.classList.has('visually-hidden'), false);
 });
+
+test('a recovery toast closes after its dismissal is saved', async (t) => {
+  const { list } = documentFixture(t);
+  const { promise, resolve } = Promise.withResolvers();
+  const onDismiss = t.mock.fn(() => promise);
+  notify.error('The last scan ended unexpectedly.', null, { onDismiss });
+  const close = list.children[0].children[1];
+  close.click();
+  close.click();
+  assert.equal(onDismiss.mock.callCount(), 1);
+  assert.equal(list.children.length, 1);
+  resolve();
+  await promise;
+  assert.equal(list.children.length, 0);
+});

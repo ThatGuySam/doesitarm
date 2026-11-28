@@ -44,6 +44,7 @@ test('a scan that never reached its clean end is offered as a crash report', { t
     assert.ok(lines.some((line) => line.type === 'sample'));
     assert.doesNotMatch(JSON.stringify(lines), /jane/);
     await reopened.getByRole('button', { name: 'Dismiss' }).click();
+    await notice.waitFor({ state: 'detached' });
     await reopened.reload();
     await reopened.waitForTimeout(500);
     assert.equal(await reopened.locator('#crash-notice').isHidden(), true);

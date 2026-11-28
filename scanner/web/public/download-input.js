@@ -234,7 +234,7 @@ export function bindDownloadInput({ view, remember }) {
         }
       } else {
         const message = MESSAGES[result.reason] ?? 'No public macOS file could be verified. Try the publisher’s direct download link.';
-        const handoff = result.reason === 'app_store' || result.decision === 'gated';
+        const handoff = result.reason === 'app_store' || result.reason === 'vendor_action';
         status(handoff ? message : '');
         if (!handoff) notify.error('Could not find a download to scan.', message);
         if (result.reason === 'app_store' && result.handoff) {

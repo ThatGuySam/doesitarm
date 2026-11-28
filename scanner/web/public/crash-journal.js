@@ -291,7 +291,7 @@ export async function uncleanSessions() {
 
 export async function discardSessions(ids) {
   const db = await database();
-  const transaction = db.transaction(STORE, 'readwrite');
+  const transaction = db.transaction(STORE, 'readwrite', { durability: 'strict' });
   const done = new Promise((resolve, reject) => {
     transaction.oncomplete = resolve;
     transaction.onabort = () => reject(transaction.error);
@@ -347,7 +347,7 @@ export async function showCrashNotice() {
   notify.error('The last scan ended unexpectedly.', null, {
     id: 'crash-notice',
     action: download,
-    onDismiss: () => void discardSessions(sessions.map(({ id }) => id)).catch(() => {
+    onDismiss: () => discardSessions(sessions.map(({ id }) => id)).catch(() => {
       notify.error('The browser could not discard the crash report.');
     }),
   });

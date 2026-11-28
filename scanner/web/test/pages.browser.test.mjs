@@ -31,8 +31,11 @@ test('device-aware entry and phase changes in a real Chromium page', { timeout: 
     fromSource: true,
     api: async (request) => {
       const path = new URL(request.url).pathname;
-      const target = (await request.json()).url;
+      const target = request.method === 'GET' ? new URL(request.url).searchParams.get('url') : (await request.json()).url;
       fetched.push([path, target]);
+      if (target.endsWith('/limited') || target.endsWith('/limited.dmg')) {
+        return Response.json(emptyResult('limit_reached', 'Too many scans. Try again in a minute.'), { status: 429 });
+      }
       if (path === '/api/scan-download') {
         await new Promise((resolve) => { resolveScan = resolve; });
         return Response.json(emptyResult('complete', null, 1024));
@@ -146,6 +149,29 @@ test('device-aware entry and phase changes in a real Chromium page', { timeout: 
       assert.deepEqual(fetched.at(-1), ['/api/scan-download', artifacts[0].url]);
     } finally {
       await context.close();
+    }
+  });
+
+  await t.test('reports both resolver and scan API rate limits in the toaster', async () => {
+    const page = await browser.newPage();
+    try {
+      // Keep the browser's direct download attempt local to this test.
+      await page.route(`${publisher}/limited.dmg`, (route) => route.abort());
+      await page.goto(url);
+      const input = page.getByLabel(entryCopy);
+      const submit = page.getByRole('button', { name: 'Scan URL', exact: true });
+      const toast = page.locator('[data-sonner-toast]').filter({ hasText: 'Download requests are rate limited.' });
+      for (const path of ['/limited', '/limited.dmg']) {
+        await input.fill(publisher + path);
+        await submit.click();
+        await toast.waitFor();
+        assert.match(await toast.innerText(), /Try again in a minute/);
+        await toast.getByRole('button', { name: /^Dismiss/ }).click();
+        await toast.waitFor({ state: 'detached' });
+      }
+      assert.deepEqual(fetched.slice(-2), [['/api/resolve', publisher + '/limited'], ['/api/scan', publisher + '/limited.dmg']]);
+    } finally {
+      await page.close();
     }
   });
 });

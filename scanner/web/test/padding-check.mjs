@@ -3,7 +3,7 @@
 //   node test/padding-check.mjs [--target standalone|layout] [--url URL] [--out file.json] [--shots dir]
 //        [--widths desktop,tablet,phone] [--levels minimal,more,research] [--states a,b] [--allow-fail]
 import { copyFileSync, mkdirSync, mkdtempSync, rmSync, truncateSync, writeFileSync } from 'node:fs';
-import { homedir } from 'node:os';
+import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import { startPreview } from '../scripts/serve.mjs';
@@ -206,7 +206,7 @@ export async function overPadding(allStats) {
 
 export async function runCheck({ target = 'standalone', url: liveUrl, widths = Object.keys(WIDTHS), levels = LEVELS, states = Object.keys(STATES), shots, layoutRoute } = {}) {
   await requireBrowserHeadroom();
-  const scratch = mkdtempSync(join(homedir(), '.cache', 'doesitarm-padding-'));
+  const scratch = mkdtempSync(join(tmpdir(), 'doesitarm-padding-'));
   const files = { inputs: inputs(scratch), bogus: join(scratch, 'notes.txt') };
   writeFileSync(files.bogus, 'not an executable');
   const delay = (await import('node:fs')).readFileSync(new URL('../scripts/ux-delay-worker.js', import.meta.url), 'utf8');

@@ -33,7 +33,12 @@ function show(type, title, detail, { id, action, onDismiss } = {}) {
   const close = part('button', 'data-close-button', '×');
   close.type = 'button';
   close.setAttribute('aria-label', `Dismiss ${title}`);
-  close.addEventListener('click', () => {
+  let dismissing = false;
+  close.addEventListener('click', async () => {
+    if (dismissing) return;
+    dismissing = true;
+    const pending = onDismiss?.();
+    if (pending) await pending;
     const restoreFocus = toast.contains(document.activeElement);
     const next = toast.nextElementSibling ?? toast.previousElementSibling;
     toast.remove();
@@ -42,7 +47,6 @@ function show(type, title, detail, { id, action, onDismiss } = {}) {
       target?.focus({ preventScroll: true });
     }
     if (announcement?.textContent === message) announcement.textContent = '';
-    onDismiss?.();
   });
   toast.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
