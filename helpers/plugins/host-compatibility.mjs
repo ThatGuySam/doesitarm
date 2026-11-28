@@ -4,6 +4,7 @@ import outcomes from '../../data/plugins/host-outcomes.json' with { type: 'json'
 import profiles from '../../data/plugins/host-profiles.json' with { type: 'json' }
 import { assetFor, productById } from './catalog.mjs'
 
+const exactHostVersion = /^v?\d+(?:\.\d+)+(?:[-+][a-z0-9.-]+)?$/i
 const isText = value => typeof value === 'string' && value.trim().length > 0
 function isDate (value) {
     if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
@@ -61,7 +62,7 @@ export function qualifiesHostMatch ({ product, release, group, build, profile, r
     if (!product?.indexable || !rule || !profile || !outcome || !build || !group || !release) return false
     if (outcome.wrapper || !['documented', 'conditional'].includes(rule.status)) return false
     if (profile.capabilityId !== rule.id || profile.endpoint !== rule.endpoint || !isSource(rule.sourceUrl)) return false
-    if (profile.review !== 'reviewed' || !isText(profile.edition) || !isText(profile.hostVersion) || !isSource(profile.sourceUrl)) return false
+    if (profile.review !== 'reviewed' || !isText(profile.edition) || !exactHostVersion.test(profile.hostVersion ?? '') || !isSource(profile.sourceUrl)) return false
     if (!['effect', 'instrument', 'note_effect', 'AudioSuite', 'sequence_render', 'playback_instrument',
         'mixer_effect', 'analysis_effect', 'playback_dsp', 'midi'].includes(outcome.role)) return false
     if (!isText(outcome.componentId) || !isText(outcome.insertContext) || outcome.insertContext !== profile.insertContext

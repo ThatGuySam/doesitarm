@@ -10,7 +10,7 @@
 
 .plugin-page a:focus-visible,
 .plugin-page :is(button, select, summary):focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid oklch(83% 0.09 280);
     outline-offset: 3px;
 }
 

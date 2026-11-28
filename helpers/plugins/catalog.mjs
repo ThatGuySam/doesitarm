@@ -1,3 +1,4 @@
+import identity from '../../data/plugins/identity.json' with { type: 'json' }
 import catalog from '../../data/plugins.json' with { type: 'json' }
 
 export const directoryPath = '/audio-plugins/'
@@ -33,6 +34,10 @@ export const productById = new Map(products.map(product => [product.id, product]
 export const vendorFor = product => catalog.vendors[product.vendorId]
 export const assetFor = build => catalog.assets[build.assetId]
 export const productPath = product => `/plugin/${product.slug}/`
+export function redirectForProductSlug (slug) {
+    if (!Object.hasOwn(identity.redirects, slug)) return null
+    return productPath(productBySlug.get(identity.redirects[slug]))
+}
 export const buildAnchor = build => `build-${build.id}`
 export const vendorPath = vendor => `${directoryPath}?vendor=${encodeURIComponent(vendor.slug)}`
 

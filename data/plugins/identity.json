@@ -1,18 +1,46 @@
 {
   "vendors": {
-    "asb2m10": { "name": "Digital Suburban", "url": "https://github.com/asb2m10/dexed" },
-    "ryukau": { "name": "Uhhyou", "url": "https://github.com/ryukau/LV2Plugins" },
-    "surge-synthesizer": { "name": "Surge Synth Team", "url": "https://surge-synthesizer.github.io/" },
-    "zamaudio": { "name": "ZamAudio", "url": "https://github.com/zamaudio/zam-plugins" }
+    "asb2m10": {
+      "name": "Digital Suburban",
+      "url": "https://github.com/asb2m10/dexed"
+    },
+    "ryukau": {
+      "name": "Uhhyou",
+      "url": "https://github.com/ryukau/LV2Plugins"
+    },
+    "surge-synthesizer": {
+      "name": "Surge Synth Team",
+      "url": "https://surge-synthesizer.github.io/"
+    },
+    "zamaudio": {
+      "name": "ZamAudio",
+      "url": "https://github.com/zamaudio/zam-plugins"
+    }
   },
   "products": {
-    "asb2m10/Dexed": { "standalone": true, "url": "https://asb2m10.github.io/dexed/" },
-    "baconpaul/Six Sines": { "standalone": true },
-    "DamRsn/NeuralNote": { "standalone": true },
-    "Decent Samples/DecentSampler": { "name": "Decent Sampler", "standalone": true },
-    "plugdata-team/plugdata": { "standalone": true },
-    "surge-synthesizer/Surge XT": { "standalone": true },
-    "ZL-Audio/ZL Equalizer 2": { "standalone": true }
+    "asb2m10/Dexed": {
+      "standalone": true,
+      "url": "https://asb2m10.github.io/dexed/"
+    },
+    "baconpaul/Six Sines": {
+      "standalone": true
+    },
+    "DamRsn/NeuralNote": {
+      "standalone": true
+    },
+    "Decent Samples/DecentSampler": {
+      "name": "Decent Sampler",
+      "standalone": true
+    },
+    "plugdata-team/plugdata": {
+      "standalone": true
+    },
+    "surge-synthesizer/Surge XT": {
+      "standalone": true
+    },
+    "ZL-Audio/ZL Equalizer 2": {
+      "standalone": true
+    }
   },
   "auxiliary": [
     {
@@ -23,5 +51,8 @@
       "product": "LoudMax",
       "reason": "VST3 module embedded in the LoudMax Audio Unit bundle"
     }
-  ]
+  ],
+  "redirects": {
+    "decentsampler": "decent-sampler"
+  }
 }

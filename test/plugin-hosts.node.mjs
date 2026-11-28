@@ -4,7 +4,7 @@ import capabilities from '../data/plugins/host-capabilities.json' with { type: '
 import {
     collectVerifiedHostMatches, qualifiesHostMatch, hostCapabilitiesForFormat, verifiedPluginsForHost
 } from '../helpers/plugins/host-compatibility.mjs'
-import { matchesFilters, productBySlug, productSummary, products } from '../helpers/plugins/catalog.mjs'
+import { matchesFilters, productBySlug, productSummary, products, redirectForProductSlug } from '../helpers/plugins/catalog.mjs'
 
 const sourceUrl = 'https://example.com/exact-test-record'
 
@@ -69,6 +69,7 @@ test('host edition, format, role and insert requirements remain bound to the dem
     const input = fixture()
     assert.equal(qualifiesHostMatch({ ...input, outcome: { ...input.outcome, fulfilledRequirements: [] } }), false)
     assert.equal(qualifiesHostMatch({ ...input, profile: { ...input.profile, edition: '' } }), false)
+    assert.equal(qualifiesHostMatch({ ...input, profile: { ...input.profile, hostVersion: '12.4+' } }), false)
     assert.equal(qualifiesHostMatch({ ...input, rule: { ...input.rule, status: 'hold' } }), false)
 })
 
@@ -154,4 +155,10 @@ test('search records and sitemap derive from the same canonical products', async
     assert.ok(renderPluginSitemap(origin).includes('<loc>https://doesitarm.com/plugin/dexed/</loc>'))
     const index = addPluginSitemapToIndex('<sitemapindex><sitemap><loc>https://doesitarm.com/sitemap-0.xml</loc></sitemap></sitemapindex>', origin)
     assert.equal(addPluginSitemapToIndex(index, origin), index)
+})
+
+test('only explicitly recorded slug aliases redirect to a canonical product', () => {
+    assert.equal(redirectForProductSlug('decentsampler'), '/plugin/decent-sampler/')
+    assert.equal(redirectForProductSlug('constructor'), null)
+    assert.equal(redirectForProductSlug('decent-sampler'), null)
 })

@@ -7,10 +7,13 @@ import BuildTable from '~/src/components/plugins/build-table.astro'
 import ProductHosts from '~/src/components/plugins/product-hosts.astro'
 import ServiceCard from '~/src/components/service-card.astro'
 import {
-    directoryPath, formats, productBySlug, productPath, productReleases, productSummary, releaseName, vendorFor, vendorPath
+    directoryPath, formats, productBySlug, productPath, productReleases, productSummary, redirectForProductSlug, releaseName, vendorFor, vendorPath
 } from '~/helpers/plugins/catalog.mjs'
 
-const plugin = productBySlug.get(Astro.params.slug ?? '')
+const slug = Astro.params.slug ?? ''
+const redirect = redirectForProductSlug(slug)
+if (redirect) return Astro.redirect(redirect, 301)
+const plugin = productBySlug.get(slug)
 if (!plugin) return Astro.rewrite('/404')
 const pathname = productPath(plugin)
 const canonical = new URL(pathname, Astro.site).href
@@ -69,6 +72,7 @@ reportUrl.searchParams.set('body', 'Plug-in version and format:\nPublisher or ev
                 <h1 class="title text-3xl md:text-4xl font-hairline text-white">{ plugin.name }</h1>
                 <a class="plugin-link text-sm" href={ vendorPath(vendor) } rel="nofollow">{ vendor.name }</a>
             </div>
+            { plugin.aliases.length > 0 && <p class="text-sm text-gray-400">Also known as { plugin.aliases.join(', ') }</p> }
             <h2 class="status-headline" data-testid="status-headline">{ summary.headline }</h2>
             <p class="text-sm text-gray-300">
                 Scanned { highlightedFormats.join(', ') } builds from { selectedRelease.charAt(0).toLowerCase() + selectedRelease.slice(1) }.

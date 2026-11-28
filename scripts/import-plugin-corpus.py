@@ -261,8 +261,12 @@ def make_catalog(rows, identities, checked_on, published_on, ledger=None,
         product["lastModified"] = original.get("lastModified") if unchanged else published_on
         products.append(product)
 
-    if len({product["slug"] for product in products}) != len(products):
+    product_slugs = {product["slug"] for product in products}
+    if len(product_slugs) != len(products):
         raise ValueError("Product slugs collide")
+    for alias, target in identities.get("redirects", {}).items():
+        if not alias or slugify(alias) != alias or alias in product_slugs or target not in product_slugs:
+            raise ValueError(f"Invalid product slug redirect: {alias} -> {target}")
     if len({vendor["slug"] for vendor in vendors.values()}) != len(vendors):
         raise ValueError("Vendor slugs collide")
     products.sort(key=lambda product: (product["name"].casefold(), product["slug"]))
