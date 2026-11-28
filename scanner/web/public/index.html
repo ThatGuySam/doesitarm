@@ -38,6 +38,19 @@
             <button type="button" id="choose-flat-files" class="quiet-button" hidden>Select files or archives</button>
           </div>
         </details>
+        <details id="plugin-folders" class="inline-details">
+          <summary>Scan audio plug-ins</summary>
+          <div class="panel">
+            <p>In Finder, press <kbd>⇧⌘G</kbd> (Go to Folder). Open one of these paths and drag the folder here.</p>
+            <ul>
+              <li>Audio Units (AU) <code>/Library/Audio/Plug-Ins/Components</code> or <code>~/Library/Audio/Plug-Ins/Components</code></li>
+              <li>VST2, VST3 or CLAP. Open <code>/Library/Audio/Plug-Ins</code> or <code>~/Library/Audio/Plug-Ins</code>, then drag <code>VST</code>, <code>VST3</code> or <code>CLAP</code>.</li>
+              <li>AAX <code>/Library/Application Support/Avid/Audio/Plug-Ins</code></li>
+            </ul>
+            <p id="plugin-picker-hint" hidden>You can also use <strong>Choose folder</strong>. If it blocks <code>~/Library</code>, drag the format folder from Finder.</p>
+            <p>Custom plug-in folders work by drag and drop too. The scan checks the declared executable’s architecture. Host loading and activation need a separate check.</p>
+          </div>
+        </details>
         <div id="scan-options" class="more-actions">
           <details id="more-options" class="inline-details">
             <summary>More options</summary>
@@ -88,6 +101,7 @@
         <span aria-hidden="true" hidden></span><span aria-hidden="true"></span>
         <span class="visually-hidden" role="status"></span>
       </div>
+      <p id="scan-roots" class="hint" role="status" hidden></p>
       <p id="input-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
       <section class="scanner-notifications" aria-label="Scanner notifications">
         <ol data-sonner-toaster role="list"></ol>
@@ -104,6 +118,10 @@
       <svg id="outcome-strip" class="outcome-strip" role="img" aria-label="" viewBox="0 0 100 10" preserveAspectRatio="none"></svg>
       <p id="batch-notice" class="visually-hidden" role="status"></p>
       <p id="timer-notice" class="visually-hidden" role="status"></p>
+      <div id="plugin-exports" hidden>
+        <button type="button" id="export-plugins-csv" class="quiet-button">Export plug-ins as CSV</button>
+        <button type="button" id="export-plugins-json" class="quiet-button">Export plug-ins as JSON</button>
+      </div>
       <ul id="scan-results" class="result-list" role="list"></ul>
     </section>
 

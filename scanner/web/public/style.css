@@ -584,3 +584,12 @@
   background: var(--darkest);
   font: inherit;
 }
+
+.dia-scanner #plugin-folders { font-size: .8rem; }
+.dia-scanner #plugin-folders[open] { inline-size: min(100%, 42rem); }
+.dia-scanner #plugin-folders .panel { overflow-wrap: anywhere; }
+.dia-scanner #plugin-folders ul { margin-block: .6rem; padding-inline-start: 1.3rem; }
+.dia-scanner #plugin-folders li + li,
+.dia-scanner #plugin-folders p + p { margin-block-start: .35rem; }
+.dia-scanner #scan-roots { max-inline-size: 100%; overflow-wrap: anywhere; }
+.dia-scanner #plugin-exports { margin-block: var(--sp-2); }

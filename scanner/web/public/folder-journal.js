@@ -55,9 +55,9 @@ export class FolderJournal {
   #detailBytes = 0;
 
   snapshot(row) {
-    const { id, label, kind, parentBundlePath, started, ended, source, result,
+    const { id, label, kind, format, parentBundlePath, started, ended, source, result,
       evidence, directoryListings, relativeCandidates, nestedArtifacts } = row;
-    const base = { id, label, kind, parentBundlePath, started, ended, source, result };
+    const base = { id, label, kind, format, parentBundlePath, started, ended, source, result };
     if (this.#detailBytes < MAX_DETAIL_BYTES) {
       const data = stringifyRedacted({ ...base, evidence, directoryListings, relativeCandidates, nestedArtifacts });
       const bytes = data.length * 2;
@@ -66,11 +66,11 @@ export class FolderJournal {
         return data;
       }
     }
-    const { status, format, architectures, error, error_class, executable_path, executable_size,
+    const { status, format: resultFormat, architectures, error, error_class, executable_path, executable_size,
       bundle_role, name, bundle_id, version, min_macos, bytes_read, total_size } = result;
     return stringifyRedacted({
       ...base,
-      result: { status, format, architectures, error, error_class, executable_path, executable_size,
+      result: { status, format: resultFormat, architectures, error, error_class, executable_path, executable_size,
         bundle_role, name, bundle_id, version, min_macos, bytes_read, total_size },
       evidence: { info_plist_path: evidence?.info_plist_path, info_plist_size: evidence?.info_plist_size },
       diagnosticsTruncated: true,

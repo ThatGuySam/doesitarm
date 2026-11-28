@@ -1,6 +1,6 @@
 import { crash, memoryPressure } from './crash-journal.js';
 import {
-  fileJob, FolderCrashGuardError, folderCrashGuard, FolderLimitError, folderStats, skipped,
+  fileJob, FolderCrashGuardError, folderCrashGuard, FolderLimitError, folderStats, recordRoot, skipped,
   walkDirectory, walkFileList, yieldToPage,
 } from './folder-walk.js';
 import { notify } from './notifications.js';
@@ -23,7 +23,7 @@ export function recoverableFolderError(error) {
   return `enumeration_error:${error?.name ?? 'Error'}`;
 }
 
-const FOLDER_GUIDANCE = 'Drag your folder here. If the browser cannot read it, drag smaller subfolders or individual .app bundles. You can also select an app archive.';
+const FOLDER_GUIDANCE = 'Drag your folder here. If the browser cannot read it, drag smaller subfolders or individual app or plug-in bundles. You can also select an app archive.';
 
 function captureDrop(transfer) {
   const sources = [];
@@ -76,6 +76,7 @@ export function bindLocalInputs({ view, mode }) {
   const flatFileLimit = canPickDirectory ? Infinity : FALLBACK_FLAT_FILE_LIMIT;
   const folderRowLimit = canPickDirectory ? Infinity : FALLBACK_FOLDER_ROW_LIMIT;
   flatPicker.hidden = canPickDirectory;
+  get('plugin-picker-hint').hidden = !canPickDirectory;
 
   function reading(text) {
     if (label.textContent !== text) label.textContent = text;
@@ -126,13 +127,15 @@ export function bindLocalInputs({ view, mode }) {
           return flush();
         },
         onJob(job) {
-          if (discovered.has(job.label)) {
+          // Two dropped roots can both be named Components and contain different copies.
+          if (job.kind !== 'plugin' && discovered.has(job.label)) {
             skipped(stats, 'duplicate_path', job.label);
             return;
           }
-          if (discovered.size >= folderRowLimit) throw new FolderLimitError();
-          discovered.add(job.label);
+          if (discovered.size + run.pluginCount >= folderRowLimit) throw new FolderLimitError();
+          if (job.kind !== 'plugin') discovered.add(job.label);
           if (job.kind === 'bundle') run.appCount += 1;
+          if (job.kind === 'plugin') run.pluginCount += 1;
           jobs.push(job);
           if (jobs.length >= 16) return flush();
         },
@@ -144,9 +147,9 @@ export function bindLocalInputs({ view, mode }) {
         notify.error('The browser could not read some entries.', FEWER_FOLDERS);
       }
       if (bundle_artifact_limit || nested_path_limit) {
-        notify.error('Some bundle members exceeded the scan limit.', 'Scan the affected apps in smaller selections for more detail.');
-      } else if (!stats.partial && !discovered.size) {
-        notify.info('No apps, Mach-O files, or supported archives were found.');
+        notify.error('Some bundle members exceeded the scan limit.', 'Scan the affected bundles in smaller selections for more detail.');
+      } else if (!stats.partial && !discovered.size && !run.pluginCount) {
+        notify.info('No apps, audio plug-ins, Mach-O files, or supported archives were found.');
       }
     } catch (error) {
       if (!controller.signal.aborted) {
@@ -291,15 +294,19 @@ export function bindLocalInputs({ view, mode }) {
             methods.add('DataTransfer.files');
             options.crashGuard?.(file.name, false);
             options.stats.files_seen += 1;
-            await options.onJob(fileJob(file));
+            const job = fileJob(file);
+            if (job.opaque) recordRoot(options.stats, job.label, 'skipped');
+            await options.onJob(job);
+          } else {
+            recordRoot(options.stats, null, 'skipped');
           }
         }
       } catch (error) {
-        if (error instanceof FolderCrashGuardError) {
-          for (let i = index + 1; i < sources.length; i += 1) {
-            const { entry, file } = sources[i];
+        for (const { entry, file } of sources.slice(index + 1)) {
+          if (error instanceof FolderCrashGuardError) {
             skipped(options.stats, 'browser_crash_guard', entry?.name ?? file?.name);
           }
+          if (entry?.isDirectory || (!entry && !file)) recordRoot(options.stats, entry?.name ?? null, 'skipped');
         }
         throw error;
       } finally {

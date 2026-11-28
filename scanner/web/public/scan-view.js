@@ -4,6 +4,8 @@ import { inventoryDetails } from './inventory-view.js';
 import { formatDuration } from './scan-progress.js';
 import { rowStatus } from './tail-state.js';
 import { notify } from './notifications.js';
+import { pluginFormats } from './bundle-kind.js';
+import { pluginRow, pluginVerdict } from './plugin-result.js';
 import {
   formatSeconds, formatSize, rowPhrase,
 } from './scan-totals.js';
@@ -48,6 +50,15 @@ const isIntel = (name) => ['x86_64', 'x86_64h', 'i386'].includes(name);
 
 export function verdict(result) {
   if (result.windows) return windowsVerdict(result.windows);
+  if (pluginFormats.has(result.format)) {
+    switch (pluginVerdict(result)) {
+      case 'universal': return { tone: 'native', icon: '✓', text: 'Universal · Apple Silicon and Intel' };
+      case 'native': return { tone: 'native', icon: '✓', text: 'Apple Silicon native' };
+      case 'intel-only': return { tone: 'intel', icon: '◆', text: 'Intel-only plug-in' };
+      case 'legacy': return { tone: 'unknown', icon: '?', text: 'Legacy architecture only' };
+      default: return { tone: 'unknown', icon: '?', text: 'Unknown plug-in architecture' };
+    }
+  }
   if (result.status !== 'complete') {
     return { tone: 'unknown', icon: '?', text: `Unknown — ${reasons[result.status] ?? result.status}` };
   }
@@ -103,7 +114,7 @@ export class ScanCards {
   create(row) {
     const el = get('result-card').content.firstElementChild.cloneNode(true);
     const heading = el.querySelector('h3');
-    const label = redactPath(row.label);
+    const label = redactPath(row.kind === 'plugin' ? row.label.split('/').at(-1) : row.label);
     heading.textContent = label;
     heading.id = `scan-${row.id}`;
     const monogram = el.querySelector('.result-monogram');
@@ -171,6 +182,11 @@ export class ScanCards {
 
   #showResult(row, card, elapsed) {
     const { result } = row;
+    const pluginFormat = pluginFormats.get(result.format);
+    if (pluginFormat) {
+      card.heading.textContent = `${redactPath(result.name || card.heading.textContent)} · ${pluginFormat}`;
+      card.dialogButton.setAttribute('aria-label', `View full scan details for ${card.heading.textContent}`);
+    }
     card.el.querySelector('.result-time').textContent = formatSeconds(elapsed);
     const { tone, icon, text } = verdict(result);
     const line = card.el.querySelector('.result-verdict');
@@ -197,6 +213,7 @@ export class ScanCards {
     const details = card.el.querySelector('.result-details');
     const values = {
       ...result,
+      format: pluginFormat ?? result.format,
       architectures: arch,
       signing: signing(result),
       source: row.source,
@@ -205,6 +222,7 @@ export class ScanCards {
     };
     for (const field of details.querySelectorAll('dd')) {
       const key = field.dataset.field;
+      if (pluginFormat && key === 'version') field.previousElementSibling.textContent = 'Plug-in version';
       const windowsKey = { bundle_id: 'publisher', min_macos: 'installer_kind', signing: 'bootstrapper_architecture' }[key];
       if (result.windows && windowsKey) {
         field.previousElementSibling.textContent = {
@@ -218,9 +236,9 @@ export class ScanCards {
     details.querySelector('.result-speed').textContent = result.status === 'complete'
       ? rowPhrase({ size: row.size, read: row.bytes, elapsedMs: elapsed })
       : `Stopped after ${formatSeconds(elapsed)}, reading ${formatSize(row.bytes)}. Not counted in the scanned total.`;
-    if (result.error) {
+    if (result.error || result.module_info_error) {
       const error = details.querySelector('.result-error');
-      error.textContent = redactPath(result.error);
+      error.textContent = redactPath([result.error, result.module_info_error].filter(Boolean).join(' '));
       error.hidden = false;
     }
     details.hidden = false;
@@ -284,13 +302,14 @@ export class ScanCards {
     const { result } = row;
     if (!dialog || !result) return;
     this.#dialogTrigger = card.dialogButton;
-    get('scan-dialog-title').textContent = `Scan details for ${redactPath(row.label)}`;
+    const pluginFormat = pluginFormats.get(result.format);
+    get('scan-dialog-title').textContent = `Scan details for ${pluginFormat ? card.heading.textContent : redactPath(row.label)}`;
     const elapsed = row.started === null ? 0 : row.ended - row.started;
     const facts = [
       ['Verdict', verdict(result).text],
       ['Status', statuses[result.status] ?? result.status],
-      ['Source', [row.source, result.format].filter(Boolean).join(' · ')],
-      ['Full size', row.size > 0 ? `${formatSize(row.size)} (${row.size.toLocaleString()} B)` : 'Unknown'],
+      ['Source', [row.source, pluginFormat ?? result.format].filter(Boolean).join(' · ')],
+      [pluginFormat ? 'Selected files size' : 'Full size', row.size > 0 ? `${formatSize(row.size)} (${row.size.toLocaleString()} B)` : 'Unknown'],
       ['Wall time', formatSeconds(elapsed)],
       ['Speed', result.status === 'complete' ? rowPhrase({ size: row.size, read: row.bytes, elapsedMs: elapsed }) : 'Not counted'],
       ['Bytes read', `${row.bytes.toLocaleString()} B in ${result.reads ?? 0} reads`],
@@ -307,6 +326,12 @@ export class ScanCards {
         ['Architecture evidence', result.windows.architecture_source || '—'],
       ] : [['Min macOS', result.min_macos || '—']]),
     ];
+    if (pluginFormat) {
+      facts.push(['Bundle ID', result.bundle_id || '—'], ['Plug-in version', result.version || '—']);
+      if (result.audio_components?.length) facts.push(['AU registrations', result.audio_components.length.toString()]);
+      if (result.vst3_module_info) facts.push(['VST3 classes', result.vst3_module_info.classes.length.toString()]);
+      if (result.module_info_error) facts.push(['VST3 metadata', result.module_info_error]);
+    }
     if (result.error) facts.push(['Error', result.error]);
     const list = get('dialog-facts');
     list.replaceChildren(...facts.map(([term, value]) => {
@@ -319,10 +344,13 @@ export class ScanCards {
       return wrap;
     }));
     const review = get('dialog-review');
-    review.href = `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${encodeURIComponent(redactPath(result.name || row.label))}`;
-    review.setAttribute('aria-label', `Request a review of ${redactPath(row.label)}`);
+    review.parentElement.hidden = Boolean(pluginFormat);
+    if (!pluginFormat) {
+      review.href = `https://github.com/ThatGuySam/doesitarm/issues?q=is%3Aissue+${encodeURIComponent(redactPath(result.name || row.label))}`;
+      review.setAttribute('aria-label', `Request a review of ${redactPath(row.label)}`);
+    }
     get('dialog-json').open = false;
-    get('dialog-json').querySelector('pre').textContent = stringifyRedacted({ ...result, ...this.#inventoryField(row) }, 2);
+    get('dialog-json').querySelector('pre').textContent = stringifyRedacted(pluginFormat ? pluginRow(row) : { ...result, ...this.#inventoryField(row) }, 2);
     dialog.showModal();
     get('scan-dialog-title').focus();
   }

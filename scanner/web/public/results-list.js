@@ -5,6 +5,7 @@ import { FolderJournal } from './folder-journal.js';
 import { showSavedFolders } from './folder-recovery.js';
 import { folderStats, skipped, timeSlice } from './folder-walk.js';
 import { notify } from './notifications.js';
+import { pluginExport } from './plugin-result.js';
 import { formatDuration, estimateBatch, estimateRemaining, recordSample } from './scan-progress.js';
 import { emptyResult } from './scan-result.js';
 import { get, ScanCards, statuses, verdict } from './scan-view.js';
@@ -105,6 +106,7 @@ export class ResultsList {
   #discoveries = 0;
   #artifactListings = new Set();
   #latestFolder;
+  #pluginRows = [];
   #skeleton;
   #tools;
   #diagnostics;
@@ -120,6 +122,9 @@ export class ResultsList {
   constructor(pool, mode) {
     this.#pool = pool;
     this.#mode = mode;
+    for (const format of ['csv', 'json']) {
+      get(`export-plugins-${format}`).addEventListener('click', () => void this.#downloadPlugins(format));
+    }
     crash.attach(() => this.crashSnapshot(), buildInfo);
     this.#cards = new ScanCards((id) => {
       this.#pool.cancel(id);
@@ -213,7 +218,7 @@ export class ResultsList {
     crash.begin({ drop: 'drop', 'DataTransfer.files': 'drop', showDirectoryPicker: 'picker', URL: 'url', 'file picker': 'file-picker' }[stats.method] ?? stats.method);
     const run = {
       stats, mode, profile, started: performance.now(), enumerated: null, firstScan: null, lastScan: null,
-      ended: null, canceled: false, appCount: 0, bytes: 0, active: 0, peak: 0, finished: 0,
+      ended: null, canceled: false, appCount: 0, pluginCount: 0, bytes: 0, active: 0, peak: 0, finished: 0,
       pending: 0, listing: 0, rows: [], children: new Map(), bundles: new Map(), bundleCoverage: new Map(), modes: new Set([this.#modeLabel(mode)]),
     };
     const { field, input } = this.#runsByChoice;
@@ -299,7 +304,7 @@ export class ResultsList {
     };
     for (const job of jobs) {
       const row = {
-        id: ++this.#nextId, label: job.label, kind: job.kind,
+        id: ++this.#nextId, label: job.label, kind: job.kind, format: job.format,
         parentBundlePath: job.parentBundlePath ?? null, size: job.file?.size ?? job.size,
         directoryListings: job.directoryListings, relativeCandidates: job.relativeCandidates,
         nestedArtifacts: job.nestedArtifacts, bytes: 0, planned: null,
@@ -402,7 +407,9 @@ export class ResultsList {
         run.reportedScanLimit = true;
         notify.error('Part of this selection reached a scan limit.', 'Open the affected results for details.');
       }
-      if (row.size == null && row.kind === 'url' && row.result.total_size > 0) row.size = row.result.total_size;
+      if (row.size == null && ['url', 'plugin'].includes(row.kind) && row.result.total_size > 0) {
+        row.size = row.result.total_size;
+      }
       this.#invalidateInventories(row, run);
       row.source = event.source ?? null;
       row.evidence = event.evidence;
@@ -434,6 +441,7 @@ export class ResultsList {
     this.#pending.delete(row.id);
     this.#queueProgress.dispatchEvent(new Event('settled'));
     row.settled = performance.now();
+    if (row.kind === 'plugin') this.#pluginRows.push(row);
     run.finished += 1;
     run.pending -= 1;
     this.#finishRun(run);
@@ -495,7 +503,7 @@ export class ResultsList {
         // A picked bundle's known size includes all direct files. Reconcile
         // members such as archives that finished before their bundle did.
         totals.scanned -= run.bundleCoverage.get(row.label) ?? 0;
-      } else if (row.parentBundlePath) {
+      } else if (row.parentBundlePath && row.kind !== 'plugin') {
         const parent = run.bundles.get(row.parentBundlePath);
         source.sizeAlreadyCounted = parent?.status === 'complete' && parent.size > 0;
         if (!source.sizeAlreadyCounted) {
@@ -642,6 +650,9 @@ export class ResultsList {
     if (this.#busy) return;
     this.#rowCount = 0;
     this.#runs = [];
+    this.#pluginRows = [];
+    get('plugin-exports').hidden = true;
+    get('scan-roots').hidden = true;
     this.#runsByChoice.input.replaceChildren();
     this.#diagnostics.reset();
     this.#tools.open = false;
@@ -732,6 +743,39 @@ export class ResultsList {
       'No results match these filters.');
   }
 
+  async #downloadPlugins(format) {
+    const button = get(`export-plugins-${format}`);
+    button.disabled = true;
+    try {
+      const blob = await pluginExport(this.#pluginRows.slice(), format, timeSlice());
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `doesitarm-plug-ins.${format}`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    } catch {
+      notify.error('Could not export the plug-in results.');
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  #renderRoots(folder) {
+    const label = get('scan-roots');
+    const roots = folder?.enumerated != null ? folder.stats.roots : [];
+    const lines = [];
+    for (const [status, text] of [['scanned', 'Scanned'], ['partial', 'Partially scanned'], ['skipped', 'Skipped']]) {
+      const matching = roots.filter((root) => root.status === status);
+      if (!matching.length) continue;
+      const names = matching.slice(0, 6).map(({ name }) => redactPath(name) || 'name unavailable');
+      if (matching.length > names.length) names.push('…');
+      lines.push(`${text} ${number.format(matching.length)} (${names.join(', ')})`);
+    }
+    label.hidden = !lines.length;
+    setText(label, lines.join(' · '));
+  }
+
   #updateDiagnostics() {
     const run = this.#runs[Number(this.#runsByChoice.input.value)];
     this.#diagnostics.update(run?.finished ?? 0);
@@ -758,8 +802,13 @@ export class ResultsList {
 
     const counts = [];
     const folder = this.#latestFolder;
+    this.#renderRoots(folder);
+    get('plugin-exports').hidden = !this.#pluginRows.length;
     if (folder?.enumerated != null && folder.appCount) {
       counts.push(`Found ${number.format(folder.appCount)} apps in ${number.format(folder.stats.files_seen)} files`);
+    }
+    if (folder?.enumerated != null && folder.pluginCount) {
+      counts.push(`Found ${number.format(folder.pluginCount)} ${folder.pluginCount === 1 ? 'plug-in' : 'plug-ins'}`);
     }
     if (folder?.stats.partial) counts.push('Partial folder scan');
     const queued = this.#pending.size - this.#active.size;

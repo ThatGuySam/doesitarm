@@ -1,3 +1,4 @@
+import { pluginRow } from './plugin-result.js';
 import { observedInventory } from './bundle-inventory.js';
 import { timeSlice } from './folder-walk.js';
 import { crash } from './crash-journal.js';
@@ -77,6 +78,7 @@ export async function runHeader(run, finished, longTasks) {
 }
 
 export function resultRecord(row, full, cutoff) {
+  if (row.kind === 'plugin') return pluginRow(row);
   const { result, evidence } = row;
   const displayPath = row.label;
   const parent = row.parentBundlePath;
