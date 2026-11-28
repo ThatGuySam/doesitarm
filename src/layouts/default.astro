@@ -10,7 +10,7 @@ import { rosettaLaunchEnabled } from '~/helpers/rosetta-launch.js'
 
 import Navbar from '~/components/navbar.vue'
 import AllUpdatesSubscribe from '~/components/all-updates-subscribe.vue'
-import GoogleAnalytics from '~/src/components/google-analytics.astro'
+import CookieConsent from '~/src/components/cookie-consent.astro'
 
 const {
     // headTitle,
@@ -35,12 +35,11 @@ const currentYear = String( new Date().getFullYear() )
         <title>{ pageHead.title }</title>
         <Fragment set:html={ pageHead.allHeadMarkup } />
 
-        <GoogleAnalytics />
-
     </head>
     <body>
 
         <div class="app-wrapper text-gray-300 bg-gradient-to-bl from-dark to-darker bg-fixed">
+            <CookieConsent />
             <Navbar rosettaLaunchEnabled={ rosettaLaunchEnabled } />
             <div class="app-main min-h-screen flex items-center">
                 <slot />
@@ -75,6 +74,7 @@ const currentYear = String( new Date().getFullYear() )
                     <p class="text-center text-sm leading-6 text-gray-400 space-x-4">
                         <a href="/privacy" class="underline">Privacy Policy</a>
                         <a href="/terms" class="underline">Terms of Use</a>
+                        <button type="button" class="underline" data-cookie-settings aria-controls="cookie-consent" hidden>Cookie settings</button>
                     </p>
                 </div>
             </footer>

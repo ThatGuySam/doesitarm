@@ -3,7 +3,7 @@ import '~/assets/css/tailwind.css'
 
 import { PageHead } from '~/helpers/config-node.js'
 
-import GoogleAnalytics from '~/src/components/google-analytics.astro'
+import CookieConsent from '~/src/components/cookie-consent.astro'
 
 const {
     // headTitle,
@@ -26,10 +26,13 @@ const pageHead = new PageHead({
         <title>{ pageHead.title }</title>
         <Fragment set:html={ pageHead.allHeadMarkup } />
 
-        <GoogleAnalytics />
     </head>
     <body>
         <slot />
+        <CookieConsent />
+        <footer class="fixed bottom-0 right-0 z-10">
+            <button type="button" class="px-2 py-1 text-xs text-white bg-black underline" data-cookie-settings aria-controls="cookie-consent" hidden>Cookie settings</button>
+        </footer>
     </body>
 </html>
 

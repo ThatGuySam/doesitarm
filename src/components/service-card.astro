@@ -21,7 +21,7 @@ const formKind = type === 'revival' ? 'revival' : 'waitlist'
 const variantIds = card.variants.map( variant => variant.id ).join( ' ' )
 
 // Picks a sticky variant per visitor and shows only its headline.
-// Inline so the chosen headline is shown before first paint.
+// The browser module applies the variant after analytics is enabled.
 const applyVariantScript = `
 window.diaSvcApply = window.diaSvcApply || function ( card ) {
     var type = card.getAttribute( 'data-svc-card' )
@@ -37,8 +37,6 @@ window.diaSvcApply = window.diaSvcApply || function ( card ) {
     var spans = card.querySelectorAll( '[data-v]' )
     for ( var i = 0; i < spans.length; i++ ) spans[i].hidden = spans[i].getAttribute( 'data-v' ) !== chosen
 }
-var diaSvcCard = document.currentScript && document.currentScript.previousElementSibling
-if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApply( diaSvcCard )
 `
 ---
 <div

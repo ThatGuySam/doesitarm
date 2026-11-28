@@ -62,6 +62,7 @@
 
 
 .carbon-inline-wide {
+    display: block;
     height: 90px;
 
     font-size: 0.55rem;

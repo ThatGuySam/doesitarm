@@ -86,42 +86,9 @@ export const nuxtHead = {
             rel: 'icon',
             type: 'image/x-icon',
             href: '/favicon.ico'
-        },
-
-        // Gtag Preconnect
-        {
-            rel: 'preconnect',
-            href: 'https://www.googletagmanager.com'
-        },
-
-        // Carbon Preconnects
-        {
-            rel: 'preconnect',
-            href: 'https://cdn.carbonads.com'
-        },
-        {
-            rel: 'preconnect',
-            href: 'https://srv.carbonads.net'
-        },
-        {
-            rel: 'preconnect',
-            href: 'https://cdn4.buysellads.net'
-        },
+        }
     ],
-
-    script: [
-        // // Carbon Ads
-        // // https://sell.buysellads.com/zones/1294/ad-tags#z=js
-        // {
-        //     // <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom" id="_carbonads_js"></script>
-        //     src: 'https://cdn.carbonads.com/carbon.js?serve=CK7DVK3M&placement=doesitarmcom',
-        //     async: true,
-        //     type: 'text/javascript',
-        //     id: '_carbonads_js',
-        //     class: 'include-on-static carbon-inline-wide',
-        //     body: true
-        // }
-    ]
+    script: []
 }
 
 

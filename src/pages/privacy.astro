@@ -3,6 +3,7 @@ import { applyResponseDefaults } from '~/helpers/astro/request.js'
 
 import Layout from '~/src/layouts/default.astro'
 import LegalPage from '~/src/components/legal-page.astro'
+import { dataRecipients } from '~/helpers/data-recipients.js'
 import { INFO_PLIST_ALLOWED_KEYS, MAX_VALUE_LENGTH } from '~/helpers/scan-allowlist.js'
 
 // One row per key in helpers/scan-allowlist.js, so this table cannot drift from what the scanner sends.
@@ -44,13 +45,11 @@ applyResponseDefaults( Astro )
         <h3>Visiting the website</h3>
         <ul>
             <li><strong>Hosting logs.</strong> The site runs on Cloudflare, and a few data functions run on Vercel. Like any web host, they process your IP address, browser user agent and the pages you request so they can deliver the site and protect it from abuse. Their logs are kept under their own policies.</li>
-            <li><strong>Analytics.</strong> We use Google Analytics to understand which pages are useful. It sets cookies and collects the pages you visit, the referring site, your browser and device type, and your approximate location. It also records clicks and form submissions on our service offers.</li>
-            <li><strong>Offer tests.</strong> On some pages we test different headlines for our service offers. Your browser's local storage remembers which headline you saw. We count views, clicks and submissions with only the offer, the headline version and the page path. No IP address, user agent or email address is stored with those counts.</li>
+            <li><strong>Analytics and ads.</strong> We measure visits and service offer interactions, test offer headlines, and show ads on some pages. The table below describes the providers and what they receive.</li>
             <li><strong>Search.</strong> Site search runs in your browser. Your search terms are not sent to us.</li>
-            <li><strong>Ads and affiliate links.</strong> Some pages show an ad from Carbon Ads, which loads from Carbon's servers and may receive your IP address, browser details and the page you are on. Some links are affiliate links, for example to Amazon. If you click one and buy something, the retailer may pay us a commission and may set its own cookies. We do not get personal information about you from these partners.</li>
-            <li><strong>Videos.</strong> Video thumbnails load from YouTube's image servers. The YouTube player loads when you press play, using YouTube's privacy-enhanced (no-cookie) domain where we can. Google's privacy policy applies to YouTube.</li>
+            <li><strong>Affiliate links.</strong> If you follow an affiliate link and make a purchase, we may earn a commission. The destination may set its own cookies.</li>
         </ul>
-        <p>You can block cookies, analytics and ads in your browser or with a content blocker. The site still works.</p>
+        <p>In the EU, the rest of the European Economic Area, the UK and Switzerland, analytics and ad scripts stay off until you select <strong>Accept</strong> in the cookie banner. We apply the same rule when we can't determine your region. <strong>Reject</strong> keeps them off. Your choice is saved in your browser's local storage. Use <strong>Cookie settings</strong> in the footer to change it at any time.</p>
 
         <h3>Email signups</h3>
         <ul>
@@ -100,15 +99,30 @@ applyResponseDefaults( Astro )
         <h3>Emailing us and contributing</h3>
         <p>If you email us, we keep the conversation so we can refer back to it. If you suggest an app on GitHub, your post is public on GitHub and GitHub's privacy policy applies.</p>
 
-        <h2>Who we share data with</h2>
-        <p>We use these service providers to run Does It ARM. Each one handles data only for the purposes above:</p>
-        <ul>
-            <li><strong>Cloudflare:</strong> hosting, databases, the MCP server and email delivery.</li>
-            <li><strong>Vercel:</strong> data functions, including the scan report store.</li>
-            <li><strong>Google:</strong> Google Analytics, Google Sheets (scan reports) and YouTube.</li>
-            <li><strong>Kit:</strong> the newsletter.</li>
-            <li><strong>Carbon Ads and affiliate partners:</strong> ads and affiliate links, as described above.</li>
-        </ul>
+        <h2 id="data-recipients">Who we share data with</h2>
+        <div class="recipient-table" tabindex="0" role="region" aria-labelledby="data-recipients">
+            <table class="legal-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Recipient</th>
+                        <th scope="col">Purpose and data</th>
+                        <th scope="col">Cookies and EU consent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    { dataRecipients.map( recipient => (
+                        <tr>
+                            <th scope="row">
+                                <a href={ recipient.privacyPolicy }>{ recipient.name }<span class="sr-only"> privacy policy</span></a>
+                                <span class="surfaces">{ recipient.surfaces.join( ', ' ) }</span>
+                            </th>
+                            <td>{ recipient.purpose } { recipient.data }</td>
+                            <td><strong class="category">{ recipient.consentCategory }</strong>{ recipient.cookies } { recipient.euConsent }</td>
+                        </tr>
+                    ) ) }
+                </tbody>
+            </table>
+        </div>
         <p>We may also share information if the law requires it, to protect Does It ARM or its users from abuse, or as part of a transfer if Does It ARM changes hands. In that last case, this policy would continue to apply to data collected under it. The compatibility list itself is public, and anyone may use it.</p>
         <p><strong>We do not sell your personal data.</strong></p>
 
@@ -123,7 +137,7 @@ applyResponseDefaults( Astro )
 
         <h2>Your rights</h2>
         <p>Wherever you live, you can ask us to tell you what personal data we have about you, to correct it, to delete it, or to stop using it. Email <a href="mailto:hello@doesitarm.com">hello@doesitarm.com</a>. We may need to confirm the request comes from you, for example by replying from the email address involved.</p>
-        <p>If you are in the European Economic Area, the UK or Switzerland, the GDPR gives you the rights to access, correct, delete, restrict, object to and move your personal data, and to complain to your data protection authority. We rely on your consent for the newsletter and alerts, and you can withdraw it at any time. We rely on our legitimate interests to run and protect the site and to collect app details from the scanner. You have the right to object to that, as described above.</p>
+        <p>If you are in the European Economic Area, the UK or Switzerland, you can access, correct, delete, restrict, object to and move your personal data, and complain to your data protection authority. We rely on your consent for analytics and ads in these regions and for the newsletter and alerts. You can withdraw it at any time. We rely on our legitimate interests to run and protect the site and to collect app details from the scanner. You have the right to object to that, as described above.</p>
 
         <h2>Children</h2>
         <p>Does It ARM is not directed at children under 13 (or under 16 in the EEA and UK). We do not knowingly collect their personal data. If you think a child has given us personal data, email us and we will delete it.</p>
@@ -142,3 +156,37 @@ applyResponseDefaults( Astro )
 
     </LegalPage>
 </Layout>
+
+<style>
+    .recipient-table {
+        max-width: 100%;
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+    .recipient-table:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+    .recipient-table .legal-table {
+        display: table;
+        min-width: 35rem;
+        margin-bottom: 0;
+    }
+    .recipient-table th[scope="row"] {
+        position: sticky;
+        inset-inline-start: 0;
+        width: 9rem;
+        background: #171a21;
+        padding-inline-start: 0.5rem;
+    }
+    .surfaces {
+        display: block;
+        margin-top: 0.25rem;
+        color: #d1d5db;
+        font-weight: normal;
+    }
+    .category {
+        display: block;
+        text-transform: capitalize;
+    }
+</style>

@@ -1,4 +1,5 @@
 import { handle } from '@astrojs/cloudflare/handler'
+import { cookieRegionPath, requiresCookieConsent } from '../../helpers/cookie-consent.js'
 
 const scannerPage = '/apple-silicon-app-test'
 const scannerApi = new Set([ '/api/scan', '/api/resolve', '/api/scan-download' ])
@@ -80,11 +81,16 @@ function mountScanner ( page, fragment ) {
 
 export default {
     async fetch ( request, env, context ) {
+        const url = new URL( request.url )
+        const { pathname, searchParams } = url
+        // Keep the visitor-specific flag out of shared HTML caches.
+        if ( request.method === 'GET' && pathname === cookieRegionPath ) {
+            return uncached( Response.json( { consentRequired: requiresCookieConsent( request.cf ) } ) )
+        }
+
         const scanner = env.SCANNER_V3
         if ( !scanner ) return handle( request, env, context )
 
-        const url = new URL( request.url )
-        const { pathname, searchParams } = url
         if ( scannerApi.has( pathname ) ) {
             return uncached( await fetchScanner( scanner, request, url ) )
         }

@@ -35,6 +35,8 @@ export function getBrowserId () {
 }
 
 export function sendEvent ( event, card, variant, control = '', experiment = '' ) {
+    if ( !window.diaOptionalTrackingAllowed ) return
+
     const payload = JSON.stringify( {
         event,
         card,
@@ -167,15 +169,14 @@ const formObserver = typeof IntersectionObserver === 'function'
 export function refreshServiceCards () {
     for ( const card of document.querySelectorAll( '[data-svc-card]' ) ) {
         if ( seen.has( card ) ) continue
-        // Page-level forms carry data-svc-card too, but have no headline to test
-        if ( card.hasAttribute( 'data-svc-variants' ) && typeof window.diaSvcApply === 'function' ) window.diaSvcApply( card )
         if ( card.hasAttribute( 'data-svc-page' ) ) {
             seen.add( card )
             // Service page forms are always visible, so get the widget ready as they near the viewport
             if ( formObserver ) card.querySelectorAll( '[data-svc-form]' ).forEach( form => formObserver.observe( form ) )
             continue
         }
-        if ( card.hidden ) continue
+        if ( card.hidden || !window.diaOptionalTrackingAllowed ) continue
+        if ( card.hasAttribute( 'data-svc-variants' ) && typeof window.diaSvcApply === 'function' ) window.diaSvcApply( card )
         seen.add( card )
         if ( observer ) observer.observe( card )
     }
@@ -243,6 +244,7 @@ export function initServiceCards ( { eventsEndpoint, turnstileSiteKey = '' } ) {
     // Vue hydration can replace slot content, so look again once it settles
     window.addEventListener( 'load', () => setTimeout( refreshServiceCards, 1000 ) )
     document.addEventListener( 'dia-svc-refresh', refreshServiceCards )
+    document.addEventListener( 'dia-optional-tracking', refreshServiceCards )
 
     document.addEventListener( 'focusin', event => {
         const form = event.target instanceof Element && event.target.closest( '[data-svc-form]' )
@@ -298,5 +300,7 @@ export function initServicePage ( options ) {
     }
 
     initServiceCards( options )
-    sendEvent( 'impression', 'service-page', variant, '', experiment )
+    const sendImpression = () => sendEvent( 'impression', 'service-page', variant, '', experiment )
+    if ( window.diaOptionalTrackingAllowed ) sendImpression()
+    else document.addEventListener( 'dia-optional-tracking', sendImpression, { once: true } )
 }

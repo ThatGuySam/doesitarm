@@ -42,15 +42,17 @@ describe( 'netlify config helpers', () => {
 })
 
 describe( 'page head links', () => {
-    it( 'adds a self-canonical without dropping preconnect links', () => {
+    it( 'adds a self-canonical without preconnecting to optional tracking vendors', () => {
         const pageHead = new PageHead({
             domain: 'https://doesitarm.com',
-            pathname: '/device/2026-macbook-neo-a18-pro'
+            pathname: '/device/2026-macbook-neo-a18-pro',
+            link: [ { rel: 'preconnect', href: 'https://example.com' } ]
         })
 
         expect( pageHead.linkMarkup ).toContain(
             '<link rel="canonical" href="https://doesitarm.com/device/2026-macbook-neo-a18-pro">'
         )
-        expect( pageHead.linkMarkup.match( /rel="preconnect"/gu ) ).toHaveLength( 4 )
+        expect( pageHead.linkMarkup ).toContain( '<link rel="preconnect" href="https://example.com">' )
+        expect( pageHead.linkMarkup ).not.toMatch( /googletagmanager|carbonads|buysellads/ )
     })
 })

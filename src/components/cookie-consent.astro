@@ -1,0 +1,66 @@
+---
+import { cookieBannerConsent, dataRecipients } from '~/helpers/data-recipients.js'
+import { gaMeasurementId } from '~/helpers/constants.js'
+
+const vendors = dataRecipients.filter( recipient => recipient.euConsent === cookieBannerConsent ).map( recipient => recipient.name )
+---
+<aside id="cookie-consent" class="cookie-consent" aria-label="Cookie settings" aria-describedby="cookie-vendors" data-measurement-id={ gaMeasurementId } hidden>
+    <p>Allow analytics and ads? <a href="/privacy">Privacy Policy</a></p>
+    <span class="sr-only" id="cookie-vendors">Used by { new Intl.ListFormat( 'en' ).format( vendors ) }.</span>
+    <div class="cookie-actions">
+        <button type="button" data-cookie-choice="accept">Accept</button>
+        <button type="button" data-cookie-choice="reject">Reject</button>
+    </div>
+</aside>
+
+<script>
+    import { initCookieConsent } from '~/helpers/cookie-consent-browser.js'
+
+    initCookieConsent( window )
+</script>
+
+<style>
+    .cookie-consent {
+        position: fixed;
+        inset: auto 0 max(0.75rem, env(safe-area-inset-bottom)) 0;
+        z-index: 110;
+        margin-inline: auto;
+        width: fit-content;
+        max-width: calc(100% - 1.5rem);
+        padding: 0.625rem 0.75rem;
+        border: 1px solid #4b5563;
+        border-radius: 0.5rem;
+        background: #171a21;
+        color: #e5e7eb;
+        font-size: 0.875rem;
+    }
+    .cookie-consent:not([hidden]) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 1rem;
+    }
+    .cookie-consent a {
+        text-decoration: underline;
+    }
+    .cookie-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .cookie-actions button {
+        min-height: 2rem;
+        min-width: 4.5rem;
+        padding: 0.25rem 0.75rem;
+        border: 1px solid #9ca3af;
+        border-radius: 0.25rem;
+        background: #374151;
+        color: #fff;
+    }
+    .cookie-actions button:hover {
+        background: #4b5563;
+    }
+    .cookie-consent :focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+</style>

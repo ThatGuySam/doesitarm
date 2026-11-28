@@ -11,7 +11,6 @@
         <div class="ratio-wrapper w-full max-w-4xl">
             <div
                 class="relative overflow-hidden w-full pb-16/9"
-                @pointerover.once="warmConnections()"
             >
                 <div
                     v-if="playerLoaded === false"
@@ -148,8 +147,7 @@ export default {
             player: null,
             playing: false,
             progressInterval: null,
-            playerTime: 0,
-            preconnected: false
+            playerTime: 0
         }
     },
     computed: {
@@ -235,19 +233,6 @@ export default {
             })
         }
     },
-    mounted () {
-        // Set frame ID here so that it's the same when Youtube API looks for it
-        // this.frameId = `youtube-bg-${this._uid}`
-
-        this.detectAutoplay()
-            .then( ({ willAutoplay }) => {
-                // If we're allowed to autoplay
-                // then start loading the player
-                if ( willAutoplay === true ) {
-                    this.startPlayerLoad()
-                }
-            })
-    },
     methods: {
         scrollRow ( timestamp ) {
 
@@ -262,20 +247,6 @@ export default {
             const newScrollPosition = timestampButton.offsetLeft - timestampsScroller.offsetLeft
 
             timestampsScroller.scroll({ left: newScrollPosition, behavior: 'smooth' })
-        },
-
-        async detectAutoplay () {
-
-            if ( !process.client ) return { willAutoplay: false }
-
-            const { default: canAutoPlay } = await import('can-autoplay')
-
-            const willAutoplay = await canAutoPlay.video()
-            // const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
-
-            return {
-                willAutoplay: willAutoplay.result
-            }
         },
 
         async seekTo (timestampInSeconds) {
@@ -298,36 +269,6 @@ export default {
         //         this.player.playVideo()
         //     })
         // },
-
-        addPrefetch(kind, url, as) {
-            // console.log('prefetching', url)
-
-            const linkEl = document.createElement('link')
-
-            linkEl.rel = kind
-            linkEl.href = url
-
-            if (as) {
-                linkEl.as = as;
-            }
-
-            document.head.append(linkEl)
-        },
-
-        warmConnections() {
-            if (this.preconnected) return
-
-            // The iframe document and most of its subresources come right off youtube.com
-            this.addPrefetch('preconnect', 'https://www.youtube-nocookie.com')
-            // The botguard script is fetched off from google.com
-            this.addPrefetch('preconnect', 'https://www.google.com')
-
-            // Not certain if these ad related domains are in the critical path. Could verify with domain-specific throttling.
-            this.addPrefetch('preconnect', 'https://googleads.g.doubleclick.net')
-            this.addPrefetch('preconnect', 'https://static.doubleclick.net')
-
-            this.preconnected = true
-        },
 
         async startPlayerLoad () {
             this.playerLoaded = true

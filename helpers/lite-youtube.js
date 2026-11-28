@@ -1,8 +1,5 @@
 // https://github.com/paulirish/lite-youtube-embed/blob/master/src/lite-yt-embed.js
 
-import canAutoPlay from 'can-autoplay'
-
-
 /**
  * A lightweight youtube embed. Still should feel the same to the user, just MUCH faster to initialize and paint.
  *
@@ -34,7 +31,6 @@ class LiteYTEmbed extends HTMLElement {
         this.playing = false
         this.progressInterval = null
         this.playerTime = 0
-        this.preconnected = false
 
         this.highlightedTimestampElement = null
     }
@@ -46,18 +42,6 @@ class LiteYTEmbed extends HTMLElement {
 
         this.playerContainer = this.querySelector('.player-container')
         this.playerPoster = this.querySelector('.player-poster')
-
-        // console.log('canAutoPlay from connectedCallback', canAutoPlay)
-
-        // console.log('video', this.video)
-        // console.log('this.playerContainer', this.playerContainer)
-
-
-        // Start watchers here
-
-
-        // On hover (or tap), warm up the TCP connections we're (likely) about to use.
-        this.playerContainer.addEventListener('pointerover', this.warmConnections, {once: true})
 
         if ( this.hasTimestamps() ) {
             // Array.from( this.querySelectorAll(`.player-timestamps [time]`) )
@@ -78,61 +62,7 @@ class LiteYTEmbed extends HTMLElement {
             this.startPlayerLoad()
         })
 
-
-        // Mounted
-
-        this.detectAutoplay()
-            .then( ({ willAutoplay }) => {
-                // console.log('willAutoplay', willAutoplay)
-
-                // If we're allowed to autoplay
-                // then start loading the player
-                if ( willAutoplay === true ) {
-                    this.startPlayerLoad()
-                }
-            })
     }
-
-    // // TODO: Support the the user changing the [videoid] attribute
-    // attributeChangedCallback() {
-    // }
-
-    /**
-     * Add a <link rel={preload | preconnect} ...> to the head
-     */
-    // static c(kind, url, as) {
-    //     const linkEl = document.createElement('link')
-    //     linkEl.rel = kind
-    //     linkEl.href = url
-    //     if (as) {
-    //         linkEl.as = as
-    //     }
-    //     document.head.append(linkEl)
-    // }
-
-    /**
-     * Begin pre-connecting to warm up the iframe load
-     * Since the embed's network requests load within its iframe,
-     *   preload/prefetch'ing them outside the iframe will only cause double-downloads.
-     * So, the best we can do is warm up a few connections to origins that are in the critical path.
-     *
-     * Maybe `<link rel=preload as=document>` would work, but it's unsupported: http://crbug.com/593267
-     * But TBH, I don't think it'll happen soon with Site Isolation and split caches adding serious complexity.
-     */
-    // static warmConnections() {
-    //     if (LiteYTEmbed.preconnected) return
-
-    //     // The iframe document and most of its subresources come right off youtube.com
-    //     LiteYTEmbed.addPrefetch('preconnect', 'https://www.youtube-nocookie.com')
-    //     // The botguard script is fetched off from google.com
-    //     LiteYTEmbed.addPrefetch('preconnect', 'https://www.google.com')
-
-    //     // Not certain if these ad related domains are in the critical path. Could verify with domain-specific throttling.
-    //     LiteYTEmbed.addPrefetch('preconnect', 'https://googleads.g.doubleclick.net')
-    //     LiteYTEmbed.addPrefetch('preconnect', 'https://static.doubleclick.net')
-
-    //     LiteYTEmbed.preconnected = true
-    // }
 
     addIframe() {
         const classNames = 'absolute inset-0 h-full w-full object-cover'
@@ -280,20 +210,6 @@ class LiteYTEmbed extends HTMLElement {
         timestampsScroller.scroll({ left: newScrollPosition, behavior: 'smooth' })
     }
 
-    detectAutoplay = async () => {
-
-        // if ( !process.client ) return { willAutoplay: false }
-
-        // const { default: canAutoPlay } = await import('can-autoplay')
-
-        const willAutoplay = await canAutoPlay.video()
-        // const willAutoplayMuted = await canAutoPlay.video({ muted: true, inline: true })
-
-        return {
-            willAutoplay: willAutoplay.result
-        }
-    }
-
     seekTo = async (timestampInSeconds) => {
 
         if (this.playerLoaded === false) {
@@ -314,38 +230,6 @@ class LiteYTEmbed extends HTMLElement {
     //         this.player.playVideo()
     //     })
     // },
-
-    addPrefetch = (kind, url, as) => {
-        // console.log('prefetching', url)
-
-        const linkEl = document.createElement('link')
-
-        linkEl.rel = kind
-        linkEl.href = url
-
-        if (as) {
-            linkEl.as = as;
-        }
-
-        document.head.append(linkEl)
-    }
-
-    warmConnections = () => {
-        if (this.preconnected) return
-
-        console.log('Warming connections')
-
-        // The iframe document and most of its subresources come right off youtube.com
-        this.addPrefetch('preconnect', 'https://www.youtube-nocookie.com')
-        // The botguard script is fetched off from google.com
-        this.addPrefetch('preconnect', 'https://www.google.com')
-
-        // Not certain if these ad related domains are in the critical path. Could verify with domain-specific throttling.
-        this.addPrefetch('preconnect', 'https://googleads.g.doubleclick.net')
-        this.addPrefetch('preconnect', 'https://static.doubleclick.net')
-
-        this.preconnected = true
-    }
 
     startPlayerLoad = async () => {
         // console.log('Starting player load')
