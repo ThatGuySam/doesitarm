@@ -62,55 +62,56 @@ const adName = (() => {
 ---
 <section class="container space-y-8 pt-28 pb-16 md:pt-32">
 
-    <div class="intro-content flex flex-col items-center text-center min-h-3/4-screen md:min-h-0 gap-8">
+    <div class="intro-content flex flex-col items-center gap-14 text-center md:gap-16">
 
-        <h1
-            class="title text-sm md:text-lg font-medium text-gray-400"
-            set:html={ details.mainHeading }
-        />
-
-        <h2 class="subtitle status-headline" data-testid="status-headline">
-            { details.subtitle }
-        </h2>
-
-        <ListingMeta listing={ listing } />
-
-        { details.isGame && (
-            <ThomasCredit />
-        )}
-
-        <!-- <AllUpdatesSubscribe
-            client:visible
-        /> -->
-
-        <RelatedLinks listing={ listing } />
-
-        <slot />
-
-        { ( serviceCardType || listing.status !== 'native' ) && <div class="service-slot w-full flex flex-col items-center gap-3">
-            { serviceCardType && (
-                <ServiceCard
-                    type={ serviceCardType }
-                    appName={ listing.name }
-                    appSlug={ getListingSlug( listing ) }
+        <div class="flex w-full max-w-[40rem] flex-col gap-5">
+            <header class="listing-answer flex flex-col items-center gap-3">
+                <h1
+                    class="title text-sm md:text-lg font-medium text-gray-400"
+                    set:html={ details.mainHeading }
                 />
+
+                <h2 class="subtitle status-headline" data-testid="status-headline">
+                    { details.subtitle }
+                </h2>
+
+                <ListingMeta listing={ listing } />
+            </header>
+
+            <div class="listing-actions flex flex-col items-center gap-5">
+                <!-- <AllUpdatesSubscribe
+                    client:visible
+                /> -->
+
+                <RelatedLinks listing={ listing } />
+
+                <slot />
+
+                { ( serviceCardType || listing.status !== 'native' ) && <div class="service-slot w-full flex flex-col items-center gap-3">
+                    { serviceCardType && (
+                        <ServiceCard
+                            type={ serviceCardType }
+                            appName={ listing.name }
+                            appSlug={ getListingSlug( listing ) }
+                        />
+                    )}
+
+                    <Virtualization listing={ listing } />
+                </div> }
+
+                <AdInline name={ adName } />
+            </div>
+        </div>
+
+        <div class="flex w-full flex-col gap-14">
+            { details.isGame && (
+                <ThomasCredit />
             )}
 
-            <Virtualization listing={ listing } />
-        </div> }
+            <Devices listing={ listing } />
 
-        <AdInline
-            name={ adName }
-        />
-
-        <Devices
-            listing={ listing }
-        />
-
-        <RelatedVideos
-            listing={ listing }
-        />
-
+            <RelatedVideos listing={ listing } />
+        </div>
     </div>
 
     <Bundles

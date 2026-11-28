@@ -12,7 +12,7 @@ const listFormatter = new Intl.ListFormat('en', { style: 'short', type: 'disjunc
 
 ---
 { ( hasMultipleAliases || lastUpdatedFriendly ) && (
-    <small class:list={ [ 'listing-meta text-xs text-gray-400', { '-mt-4': !hasMultipleAliases } ] }>
+    <small class="listing-meta text-xs text-gray-400">
         { hasMultipleAliases && <>May also be known as { listFormatter.format( listing.aliases ) }</> }
         { hasMultipleAliases && lastUpdatedFriendly && <span aria-hidden="true"> · </span> }
         { lastUpdatedFriendly && <time datetime={ listing.lastUpdated.raw }>Updated { lastUpdatedFriendly }</time> }
