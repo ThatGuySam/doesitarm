@@ -21,7 +21,7 @@ export const SERVER_DESCRIPTION = 'Check Apple Silicon compatibility for Mac app
 // Registry name, also reported as the runtime serverInfo.name so the
 // protocol identity, server.json and the server card agree.
 export const SERVER_NAME = 'com.doesitarm/mcp'
-export const SERVER_VERSION = '1.4.0'
+export const SERVER_VERSION = '1.4.1'
 
 export const SERVER_ICONS = [
     { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] },
@@ -169,18 +169,21 @@ const HANDLERS = {
     check_inventory: checkInventory,
 }
 
-function wrap ( name, handler, data ) {
-    return async ( args ) => {
+function wrap ( name, handler, data, markToolResult ) {
+    return async ( args, { requestId } ) => {
         try {
             const { text, data: structured } = await handler( args || {}, data )
+            markToolResult?.( requestId, 'ok' )
             return {
                 content: [ { type: 'text', text } ],
                 structuredContent: structured,
             }
         } catch ( error ) {
             if ( error instanceof ToolInputError ) {
+                markToolResult?.( requestId, 'invalid' )
                 return { isError: true, content: [ { type: 'text', text: error.message } ] }
             }
+            markToolResult?.( requestId, 'error' )
             if ( name === 'check_inventory' ) console.error( 'doesitarm-mcp check_inventory failed' )
             else console.error( `doesitarm-mcp ${ name } failed:`, error )
             return { isError: true, content: [ { type: 'text', text: UNAVAILABLE_TEXT } ] }
@@ -188,7 +191,7 @@ function wrap ( name, handler, data ) {
     }
 }
 
-export function createMcpServer ( data ) {
+export function createMcpServer ( data, markToolResult ) {
     const server = new McpServer( SERVER_INFO, { instructions: SERVER_INSTRUCTIONS } )
 
     for ( const name of TOOL_NAMES ) {
@@ -199,7 +202,7 @@ export function createMcpServer ( data ) {
             inputSchema: INPUT_SCHEMAS[ name ],
             outputSchema: OUTPUT_SCHEMAS[ name ],
             annotations: { title, ...READ_ONLY },
-        }, wrap( name, HANDLERS[ name ], data ) )
+        }, wrap( name, HANDLERS[ name ], data, markToolResult ) )
     }
 
     // The tool list is fixed and this stateless server has no stream for

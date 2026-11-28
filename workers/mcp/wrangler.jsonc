@@ -12,6 +12,9 @@
   "vars": {
     "PUBLIC_API_DOMAIN": "https://api.doesitarm.com"
   },
+  "analytics_engine_datasets": [
+    { "binding": "MCP_USAGE", "dataset": "doesitarm_mcp_usage" }
+  ],
   "ratelimits": [
     {
       "name": "MCP_RATE_LIMIT",

@@ -89,6 +89,7 @@ applyResponseDefaults( Astro )
 
         <h3>The MCP server and inventory API</h3>
         <p>The Does It ARM MCP server lets AI assistants look up compatibility data. The REST inventory endpoint at <code>mcp.doesitarm.com/v1/inventory</code> provides the same inventory check over HTTP. Both are read-only and require no account.</p>
+        <p>We count tool calls and inventory requests by tool or route, AI client when available, and country to understand usage while keeping what you ask or send out of the analytics.</p>
         <ul>
             <li>We do not store, cache, or log what you send to the MCP tools or REST inventory endpoint, including raw export files. We use device IDs or labels only to count devices in the current request. Device details are removed from results.</li>
             <li>Your IP address is used briefly to limit MCP and REST traffic to a combined 120 requests a minute per IP address. It is not stored by us.</li>

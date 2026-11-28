@@ -95,9 +95,9 @@ export async function handleInventoryUpload ( request, params, data ) {
             throw new InventoryUploadError( 'Inventory upload could not be read.' )
         }
         const result = await checkInventory( { ...input, limit, offset, format }, data )
-        return json( result.data )
+        return { response: json( result.data ), rows: result.data.counts.received }
     } catch ( error ) {
-        if ( error instanceof ToolInputError ) return json( { error: error.message }, error.status ?? 400 )
-        return json( { error: UNAVAILABLE_TEXT }, 503 )
+        if ( error instanceof ToolInputError ) return { response: json( { error: error.message }, error.status ?? 400 ) }
+        return { response: json( { error: UNAVAILABLE_TEXT }, 503 ) }
     }
 }

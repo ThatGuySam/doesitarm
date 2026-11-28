@@ -9,6 +9,7 @@ import { createDataSource } from './data.js'
 import { handleInventoryUpload } from './inventory-http.js'
 import { RAW_LIMITS } from './raw-inventory.js'
 import { SERVER_DESCRIPTION, SERVER_ICONS, SERVER_INFO, SERVER_INSTRUCTIONS, SERVER_NAME, SERVER_VERSION, TOOL_COPY, TOOL_NAMES, createMcpServer } from './server.js'
+import { INVENTORY_ROUTE, observeToolUsage, usageWriter } from './usage.js'
 
 const CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
@@ -156,7 +157,6 @@ async function handleMcp ( request, env ) {
         return json( { jsonrpc: '2.0', id: null, error: { code: -32000, message: 'Rate limit exceeded. Try again in a minute.' } }, 429, { 'Retry-After': '60', 'Cache-Control': 'no-store' } )
     }
 
-    const server = createMcpServer( dataSource( env ) )
     const transport = new WebStandardStreamableHTTPServerTransport({
         sessionIdGenerator: undefined,
         enableJsonResponse: true,
@@ -164,26 +164,38 @@ async function handleMcp ( request, env ) {
         maxRequestBodySize: 6 * RAW_LIMITS.maxBytes + 16 * 1024,
     })
 
+    const markToolResult = env?.MCP_USAGE && observeToolUsage( transport, usageWriter( env.MCP_USAGE, request ) )
+    const server = createMcpServer( dataSource( env ), markToolResult )
     await server.connect( transport )
     return transport.handleRequest( request )
+}
+
+async function handleInventory ( request, url, env ) {
+    if ( request.method === 'OPTIONS' ) return { response: new Response( null, { status: 204 } ) }
+    if ( request.method !== 'POST' ) {
+        return { response: json( { error: 'Method not allowed. Use POST.' }, 405, { Allow: 'POST, OPTIONS', 'Cache-Control': 'no-store' } ) }
+    }
+    if ( await rateLimited( request, env ) ) {
+        return { response: json( { error: 'Rate limit exceeded. Try again in a minute.' }, 429, { 'Retry-After': '60', 'Cache-Control': 'no-store' } ) }
+    }
+    return handleInventoryUpload( request, url.searchParams, dataSource( env ) )
 }
 
 export async function handleRequest ( request, env = {} ) {
     const url = new URL( request.url )
     const origin = url.origin
 
-    if ( request.method === 'OPTIONS' ) {
-        return new Response( null, { status: 204, headers: CORS_HEADERS } )
+    if ( url.pathname === INVENTORY_ROUTE ) {
+        const started = Date.now()
+        const { response, rows } = await handleInventory( request, url, env )
+        const status = response.status
+        const result = response.ok ? 'ok' : status === 429 || status >= 500 ? 'error' : 'invalid'
+        if ( env?.MCP_USAGE ) usageWriter( env.MCP_USAGE, request )( INVENTORY_ROUTE, result, started, { rows } )
+        return withCors( response )
     }
 
-    if ( url.pathname === '/v1/inventory' ) {
-        if ( request.method !== 'POST' ) {
-            return withCors( json( { error: 'Method not allowed. Use POST.' }, 405, { Allow: 'POST, OPTIONS', 'Cache-Control': 'no-store' } ) )
-        }
-        if ( await rateLimited( request, env ) ) {
-            return withCors( json( { error: 'Rate limit exceeded. Try again in a minute.' }, 429, { 'Retry-After': '60', 'Cache-Control': 'no-store' } ) )
-        }
-        return withCors( await handleInventoryUpload( request, url.searchParams, dataSource( env ) ) )
+    if ( request.method === 'OPTIONS' ) {
+        return new Response( null, { status: 204, headers: CORS_HEADERS } )
     }
 
     if ( url.pathname === '/mcp/server-card' && ( request.method === 'GET' || request.method === 'HEAD' ) ) {

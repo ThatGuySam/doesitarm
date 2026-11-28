@@ -150,6 +150,8 @@ When the batch has unknown rows, `scanner_reference` holds a fixed reference to 
 
 ### Data handling
 
+We count tool calls and inventory requests by tool or route, AI client when available, and country to understand usage while keeping what you ask or send out of the analytics.
+
 The Worker processes MCP inputs and REST uploads in memory and does not log, cache, or store them. Device IDs or labels are used only for counting within the request. Device values, including paths, users and serials, are excluded from results and errors. Worker invocation logs are disabled, and only public catalog data is cached. An MCP client or AI assistant can see an export sent through it. The local importer keeps the raw export on the workstation and sends only reviewed app tuples.
 
 ## REST inventory API

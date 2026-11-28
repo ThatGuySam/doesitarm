@@ -64,7 +64,7 @@ async function callValid ( name, args = {} ) {
 
 describe( 'server identity', () => {
     it( 'reports identity, instructions and fixed tool list', () => {
-        expect( client.getServerVersion() ).toMatchObject({ name: 'com.doesitarm/mcp', title: 'Does It ARM', version: '1.4.0', description: SERVER_DESCRIPTION })
+        expect( client.getServerVersion() ).toMatchObject({ name: 'com.doesitarm/mcp', title: 'Does It ARM', version: '1.4.1', description: SERVER_DESCRIPTION })
         expect( client.getServerVersion().icons ).toEqual([ { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] } ])
         expect( client.getInstructions() ).toBe( SERVER_INSTRUCTIONS )
         expect( SERVER_INSTRUCTIONS.length ).toBeLessThan( 512 )
@@ -218,7 +218,7 @@ describe( 'legacy server card', () => {
         const card = await response.json()
         expect( card.$schema ).toBeUndefined()
         expect( card.capabilities ).toBeUndefined()
-        expect( card.serverInfo.version ).toBe('1.4.0')
+        expect( card.serverInfo.version ).toBe('1.4.1')
         expect( card.serverInfo.name ).toBe('com.doesitarm/mcp')
         expect( card.serverInfo.icons ).toEqual( SERVER_ICONS )
         expect( card.description ).toBe( SERVER_DESCRIPTION )
