@@ -1,9 +1,11 @@
+import { bundleKind } from './bundle-kind.js';
+
 const MAX_LISTING = 64;
 const SLICE_MS = 8;
 const PROBE_BATCH = 64;
 const MAX_BUNDLE_ARTIFACTS = 1024;
 const MAX_NESTED_PATHS = 1024;
-const BUNDLE = /\.app$/i;
+const isApp = (path) => bundleKind(path) === 'app';
 const ARCHIVE = /\.(?:dmg|zip|pkg|tar(?:\.(?:gz|xz|bz2))?|tgz)$/i;
 const MAGIC = new Set([
   0xfeedface, 0xcefaedfe, 0xfeedfacf, 0xcffaedfe,
@@ -27,7 +29,7 @@ export class FolderCrashGuardError extends Error {
 export function folderCrashGuard(stats, limits = FOLDER_CRASH_GUARD) {
   let apps = 0;
   return (path, directory) => {
-    const app = directory && BUNDLE.test(path);
+    const app = directory && isApp(path);
     const entries = stats.files_seen + stats.directories_seen;
     if (entries >= limits.entries || (app && apps >= limits.appBundles)) {
       stats.partial = true;
@@ -52,7 +54,7 @@ export function timeSlice() {
 
 export function folderStats(method) {
   return {
-    method, folder_name: null, files_seen: 0, directories_seen: 0,
+    method, folder_name: null, roots: [], files_seen: 0, directories_seen: 0,
     skipped_entries: {}, skip_examples: [], skip_examples_truncated: false, symlink_metadata_available: false,
   };
 }
@@ -66,6 +68,42 @@ export function skipped(stats, reason, path = null) {
 function skippedError(stats, error, path) {
   skipped(stats, error?.name === 'NotAllowedError' || error?.name === 'SecurityError'
     ? 'permission_denied' : 'unreadable', path);
+}
+
+// These are only the roots the browser actually delivered.
+export function recordRoot(stats, name, status) {
+  const root = { name, status };
+  stats.roots.push(root);
+  return root;
+}
+
+async function optionalMember(open, paths) {
+  for (const path of paths) {
+    try {
+      const file = await open(path);
+      if (file) return { file, path };
+    } catch (error) {
+      if (error?.name !== 'NotFoundError') throw error;
+    }
+  }
+  return null;
+}
+
+const PLUGIN_PLISTS = ['Contents/Info.plist', 'Info.plist'];
+const VST3_MODULE_INFO = ['Contents/Resources/moduleinfo.json', 'Contents/moduleinfo.json'];
+
+function pluginJob(label, format, open, stats, parentBundlePath) {
+  return {
+    kind: 'plugin', label, format, parentBundlePath,
+    getPluginPlist: () => optionalMember(open, PLUGIN_PLISTS),
+    getModuleInfo: format === 'vst3' ? () => optionalMember(open, VST3_MODULE_INFO) : undefined,
+    getExecutable: open,
+    recordError: (error) => skippedError(stats, error, label),
+  };
+}
+
+function opaquePlugin(label, format) {
+  return { kind: 'plugin', format, label, opaque: true };
 }
 
 function bundleAt(label, parent, open) {
@@ -126,7 +164,7 @@ function recordNested(bundle, path, stats) {
 function bundleJob(bundle, stats) {
   const { label, parent, entries, open, plistPath } = bundle;
   const base = label.length + 1;
-  const wrapper = bundle.nestedArtifacts.some((path) => BUNDLE.test(path) && path.slice(base).startsWith('Wrapper/'));
+  const wrapper = bundle.nestedArtifacts.some((path) => isApp(path) && path.slice(base).startsWith('Wrapper/'));
   const resources = bundle.hasResources && !bundle.hasExecutableCandidates && !bundle.nestedArtifacts.length;
   return {
     kind: 'bundle', label, size: bundle.size, parentBundlePath: parent,
@@ -167,6 +205,8 @@ function bundleJob(bundle, stats) {
 }
 
 export function fileJob(file, label = file.name, parentBundlePath = null, probe = false) {
+  const format = bundleKind(label);
+  if (format && format !== 'app') return opaquePlugin(label, format);
   return { kind: 'file', file, label, parentBundlePath, probe };
 }
 
@@ -274,6 +314,7 @@ export async function walkFileList(files, options) {
   const flow = discoveryCallbacks(options);
   const probes = new Probes(flow, stats, true);
   const bundles = new Map();
+  const roots = new Map();
   const directories = new Map();
   let previous = '';
   let parent = null;
@@ -286,7 +327,11 @@ export async function walkFileList(files, options) {
     const dir = split < 0 ? '' : path.slice(0, split);
     const name = path.slice(split + 1);
     stats.files_seen += 1;
-    if (i === 0 && split >= 0) stats.folder_name = path.split('/', 1)[0];
+    if (split >= 0) {
+      const root = path.split('/', 1)[0];
+      stats.folder_name ??= root;
+      if (!roots.has(root)) roots.set(root, recordRoot(stats, root, 'partial'));
+    }
 
     if (dir !== previous) {
       previous = dir;
@@ -300,9 +345,11 @@ export async function walkFileList(files, options) {
             parent = directories.get(next);
           } else {
             stats.directories_seen += 1;
-            if (parent) bundleEntry(parent, next.slice(parent.label.length + 1), 'directory');
-            if (BUNDLE.test(part)) {
+            if (parent && !parent.pluginFormat) bundleEntry(parent, next.slice(parent.label.length + 1), 'directory');
+            const format = !parent?.pluginFormat && bundleKind(part);
+            if (format) {
               const bundle = bundleAt(next, parent?.label ?? null, null);
+              if (format !== 'app') bundle.pluginFormat = format;
               recordNested(parent, next, stats);
               bundles.set(next, bundle);
               parent = bundle;
@@ -315,14 +362,24 @@ export async function walkFileList(files, options) {
     }
 
     const relative = parent && path.slice(parent.label.length + 1);
+    if (parent?.pluginFormat) {
+      if (bundlePlist(relative) || VST3_MODULE_INFO.includes(relative) ||
+          /^Contents\/MacOS\/[^/]+$/.test(relative)) parent.entries.set(relative, file);
+      const wait = flow.pause();
+      if (wait) await wait;
+      continue;
+    }
     const size = file.size;
     if (parent) {
       parent.size = (parent.size ?? 0) + size;
       bundleEntry(parent, relative, 'file', file);
     }
-    if (ARCHIVE.test(name)) {
+    const format = bundleKind(name);
+    if (ARCHIVE.test(name) || (format && format !== 'app')) {
       recordNested(parent, path, stats);
-      const wait = flow.job(fileJob(file, path, parent?.label));
+      const job = fileJob(file, path, parent?.label);
+      if (job.opaque && split < 0) recordRoot(stats, name, 'skipped');
+      const wait = flow.job(job);
       if (wait) await wait;
     } else if (!bundlePlist(relative) && size >= 4 && worthProbing(name)) {
       const wait = probes.add(() => file, path, parent);
@@ -336,10 +393,16 @@ export async function walkFileList(files, options) {
   await probes.drain();
   for (const bundle of bundles.values()) {
     flow.check();
-    const queued = flow.job(bundleJob(bundle, stats));
+    const job = bundle.pluginFormat
+      ? pluginJob(bundle.label, bundle.pluginFormat, (path) => bundle.entries.get(path), stats, bundle.parent)
+      : bundleJob(bundle, stats);
+    const queued = flow.job(job);
     if (queued) await queued;
     const wait = flow.pause();
     if (wait) await wait;
+  }
+  if (!stats.skipped_entries.permission_denied && !stats.skipped_entries.unreadable) {
+    for (const root of roots.values()) root.status = 'scanned';
   }
 }
 
@@ -396,17 +459,27 @@ export async function walkDirectory(root, method, options) {
   const probes = new Probes(flow, stats);
   const stack = [];
   stats.folder_name ??= root.name;
+  const rootRecord = adapter.isDirectory(root) ? recordRoot(stats, root.name, 'skipped') : null;
+  const skipCount = () => Object.values(stats.skipped_entries).reduce((sum, count) => sum + count, 0);
+  const priorSkips = rootRecord && skipCount();
+  let enteredRoot = false;
 
   async function visit(entry, path, parent, direct) {
     const directory = adapter.isDirectory(entry);
     crashGuard?.(path, directory);
+    if (direct) enteredRoot = true;
+    const format = bundleKind(entry.name);
     const relative = parent && path.slice(parent.label.length + 1);
     if (parent) bundleEntry(parent, relative, directory ? 'directory' : 'file', null,
       directory ? undefined : () => adapter.getFile(entry));
     if (!directory) {
       stats.files_seen += 1;
       const openFile = () => adapter.getFile(entry);
-      if (direct || ARCHIVE.test(entry.name)) {
+      if (format && format !== 'app') {
+        if (direct) recordRoot(stats, root.name, 'skipped');
+        const queued = flow.job(opaquePlugin(path, format));
+        if (queued) await queued;
+      } else if (direct || ARCHIVE.test(entry.name)) {
         let size;
         try {
           size = (await openFile()).size;
@@ -430,6 +503,13 @@ export async function walkDirectory(root, method, options) {
     }
 
     stats.directories_seen += 1;
+    if (format && format !== 'app') {
+      recordNested(parent, path, stats);
+      const open = (relative) => adapter.open(entry, relative.split('/'));
+      const queued = flow.job(pluginJob(path, format, open, stats, parent?.label));
+      if (queued) await queued;
+      return;
+    }
     // The APIs do not expose inode or symlink metadata. isSameEntry catches an
     // ancestor alias when the browser exposes one. A depth guard bounds others.
     if (stack.length >= 256) {
@@ -451,7 +531,7 @@ export async function walkDirectory(root, method, options) {
       }
     }
     let bundle = null;
-    if (BUNDLE.test(entry.name)) {
+    if (format === 'app') {
       bundle = bundleAt(path, parent?.label ?? null, (parts) => adapter.open(entry, parts));
       recordNested(parent, path, stats);
     }
@@ -460,6 +540,7 @@ export async function walkDirectory(root, method, options) {
     stack.push(frame);
   }
 
+  let readRoot = false;
   try {
     await visit(root, root.name, null, true);
     while (stack.length) {
@@ -471,6 +552,7 @@ export async function walkDirectory(root, method, options) {
       } catch (error) {
         skippedError(stats, error, top.path);
       }
+      if (top.entry === root && step) readRoot = true;
       if (step && !step.done) {
         const child = step.value;
         await visit(child, `${top.path}/${child.name}`, top.parent, false);
@@ -487,7 +569,14 @@ export async function walkDirectory(root, method, options) {
       if (wait) await wait;
     }
     await probes.drain();
+    if (rootRecord) {
+      const format = bundleKind(root.name);
+      rootRecord.status = readRoot || (format && format !== 'app')
+        ? skipCount() > priorSkips ? 'partial' : 'scanned'
+        : 'skipped';
+    }
   } catch (error) {
+    if (rootRecord && enteredRoot) rootRecord.status = 'partial';
     if (error instanceof FolderCrashGuardError) {
       // Count entries already returned in directory batches. Reading more to
       // get a total would repeat the work that the guard is trying to avoid.

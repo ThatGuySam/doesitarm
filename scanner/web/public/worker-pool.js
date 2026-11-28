@@ -129,11 +129,21 @@ export class ScanPool {
       const [plist, listings] = kind === 'bundle'
         ? await Promise.all([job.getPlist(), job.getDirectoryListings?.()])
         : [];
+      let pluginPlist, moduleInfo, moduleInfoError;
+      if (kind === 'plugin' && !job.opaque) {
+        pluginPlist = await job.getPluginPlist();
+        try {
+          moduleInfo = await job.getModuleInfo?.();
+        } catch {
+          moduleInfoError = 'The browser could not open the VST3 moduleinfo.';
+        }
+      }
       if (slot.task !== task) return;
       task.listings = listings;
       slot.worker.postMessage({
         id,
-        job: { kind, label, file, url, forceWorker, resolvedDownload, plist, probe, parentBundlePath, plistPath, roleHint },
+        job: { kind, label, file, url, forceWorker, resolvedDownload, plist, probe, parentBundlePath, plistPath, roleHint,
+          format: job.format, opaque: job.opaque, pluginPlist, moduleInfo, moduleInfoError },
         passive: this.#mode.passive,
       });
     } catch (cause) {
@@ -141,10 +151,11 @@ export class ScanPool {
       job.recordError?.(cause);
       const error = job.kind === 'bundle'
         ? 'The browser could not open Info.plist in this app folder.'
-        : 'The browser could not open this input.';
+        : job.kind === 'plugin' ? 'The browser could not open Info.plist in this plug-in bundle.' :
+          'The browser could not open this input.';
       this.#idle(slot);
       const errorClass = permissionError(cause) ? 'permission_denied' :
-        job.kind === 'bundle' ? 'unreadable_info_plist' : 'unreadable_input';
+        ['bundle', 'plugin'].includes(job.kind) ? 'unreadable_info_plist' : 'unreadable_input';
       this.#finishError(task, error, errorClass);
     }
   }
@@ -159,7 +170,7 @@ export class ScanPool {
       } catch (cause) {
         if (cause?.name !== 'NotFoundError') throw cause;
       }
-      if (!file && path.startsWith('Contents/MacOS/MacOS/')) {
+      if (!file && task.job.kind === 'bundle' && path.startsWith('Contents/MacOS/MacOS/')) {
         const alias = path.replace('Contents/MacOS/MacOS/', 'Contents/MacOS/');
         file = await task.job.getExecutable(alias);
         if (file) {
@@ -182,6 +193,11 @@ export class ScanPool {
     if (job.kind === 'bundle') {
       result.format = 'app';
       result.bundle_path = job.label;
+    } else if (job.kind === 'plugin') {
+      result.platform = 'macos';
+      result.format = job.format;
+      result.bundle_kind = 'audio_plugin';
+      result.name = job.label.split('/').at(-1);
     }
     task.update({
       type: 'done',

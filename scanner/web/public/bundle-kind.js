@@ -16,7 +16,7 @@ export const pluginFormats = new Map([
 ]);
 
 export function bundleKind(path) {
-  const leaf = path.split('/').at(-1);
+  const leaf = path.slice(path.lastIndexOf('/') + 1);
   const dot = leaf.lastIndexOf('.');
   if (dot < 1 || leaf.startsWith('._')) return null;
   return bundleFormats.get(leaf.slice(dot + 1).toLowerCase()) ?? null;

@@ -1,4 +1,4 @@
-import init, { local_bundle_metadata, scan, scan_diagnostic } from './pkg/scan_wasm.js';
+import init, { local_bundle_metadata, scan, scan_diagnostic, vst3_module_info } from './pkg/scan_wasm.js';
 import { machoEvidence } from './macho-evidence.js';
 import { Coverage } from './coverage.js';
 import { scanRemote } from './range-scan.js';
@@ -47,7 +47,7 @@ self.addEventListener('message', async ({ data }) => {
   const evidence = job.kind === 'url' ? null : { read_log: [] };
   let result;
   try {
-    if (job.kind !== 'url' || !job.forceWorker) await init();
+    if (!job.opaque && (job.kind !== 'url' || !job.forceWorker)) await init();
     if (job.kind === 'file') {
       if (job.probe) {
         logRead(evidence, {
@@ -57,6 +57,8 @@ self.addEventListener('message', async ({ data }) => {
       result = await scanFile(job.file, job.label, progress, evidence);
     } else if (job.kind === 'bundle') {
       result = await scanBundle(job, progress, id, evidence);
+    } else if (job.kind === 'plugin') {
+      result = await scanPlugin(job, progress, id, evidence);
     } else {
       if (!job.forceWorker) {
         const direct = await scanRemote({
@@ -89,8 +91,10 @@ self.addEventListener('message', async ({ data }) => {
   } catch (error) {
     const limited = error instanceof WebAssembly.RuntimeError;
     const message = limited ? 'The scanner could not continue within its Wasm resources.' :
+      job.kind === 'plugin' ? 'The browser could not read the plug-in bundle.' :
       error instanceof Error ? error.message : String(error);
     result = emptyResult(limited ? 'limit_reached' : 'source_error', message, total);
+    if (job.kind === 'plugin') Object.assign(result, pluginIdentity(job));
     result.bytes_read = bytes;
   }
   self.postMessage({ type: 'done', id, result, source, bytes, evidence });
@@ -131,7 +135,9 @@ async function capturePrefix(file, path, evidence, onRead) {
   }
 }
 
-async function scanFile(file, path, progress, evidence, declared = false) {
+async function scanFile(file, path, progress, evidence, mode = 'auto') {
+  const declared = mode === 'app';
+  const plugin = mode === 'plugin';
   // Unique bytes of this file touched so far. Re-reading a range does not count again.
   const covered = new Coverage(file.size);
   let sourceError;
@@ -189,6 +195,13 @@ async function scanFile(file, path, progress, evidence, declared = false) {
     }
   };
   let magic = !declared && file.size >= 4 ? await readAt(0n, 4) : null;
+  if (plugin && !macho.recognized) {
+    return {
+      ...emptyResult('invalid', 'CFBundleExecutable does not have a Mach-O header.', file.size),
+      error_class: 'executable_not_macho',
+      bytes_read: covered.bytes, bytes_requested: covered.bytes, reads: magic ? 1 : 0,
+    };
+  }
   const readSource = (offset, length) => {
     if (magic && offset === 0n && length === 4) {
       const cached = magic;
@@ -205,7 +218,7 @@ async function scanFile(file, path, progress, evidence, declared = false) {
   const diagnostic = result.diagnostic;
   delete result.diagnostic;
   if (sourceError) result.error = sourceError;
-  if (declared || result.format === 'macho') {
+  if (!plugin && (declared || result.format === 'macho')) {
     const capturedScript = await capturePrefix(file, path, evidence, (length) => {
       covered.add(0, length);
       progress(covered.bytes, file.size, planned);
@@ -261,11 +274,8 @@ async function scanBundle(job, progress, id, evidence) {
   const fallback = executable_resolution === 'bundle_name_fallback';
   if (!executable_relative_path || (metadata.error && !fallback)) return bundle;
 
-  const { file: executable, errorClass, path: resolvedPath, resolution } = await new Promise((resolve) => {
-    executableRequest = { id, resolve };
-    self.postMessage({ type: 'executable-needed', id, path: executable_relative_path });
-  });
-  executableRequest = undefined;
+  const { file: executable, errorClass, path: resolvedPath, resolution } =
+    await requestExecutable(id, executable_relative_path);
   if (!executable) {
     if (fallback && !errorClass) return bundle;
     return {
@@ -280,7 +290,7 @@ async function scanBundle(job, progress, id, evidence) {
   const path = `${label}/${resolvedPath ?? executable_relative_path}`;
   const totalSize = plist.size + executable.size;
   const result = await scanFile(executable, path, (read, size, planned) =>
-    progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned), evidence, true);
+    progress(plist.size + read, plist.size + size, planned === null ? null : plist.size + planned), evidence, 'app');
   if (result.status !== 'script' && result.format && result.format !== 'macho') {
     result.status = 'invalid';
     result.error_class = 'executable_not_macho';
@@ -304,6 +314,114 @@ async function scanBundle(job, progress, id, evidence) {
     decoded_bytes: result.decoded_bytes,
     reads: metadata.reads + result.reads,
     total_size: totalSize,
+  };
+}
+
+async function requestExecutable(id, path) {
+  const answer = await new Promise((resolve) => {
+    executableRequest = { id, resolve };
+    self.postMessage({ type: 'executable-needed', id, path });
+  });
+  executableRequest = undefined;
+  return answer;
+}
+
+function pluginIdentity({ format, label }) {
+  return { platform: 'macos', format, bundle_kind: 'audio_plugin', name: label.split('/').at(-1) };
+}
+
+async function scanPlugin(job, progress, id, evidence) {
+  const identity = pluginIdentity(job);
+  if (job.opaque) {
+    return {
+      ...emptyResult('source_error', 'The browser delivered this bundle as a file. Drag the folder containing it.'),
+      ...identity, error_class: 'opaque_plugin_bundle',
+    };
+  }
+
+  let read = 0;
+  let reads = 0;
+  let total = (job.pluginPlist?.file.size ?? 0) + (job.moduleInfo?.file.size ?? 0);
+  async function readMetadata({ file, path }, purpose) {
+    const waiting = yieldForPassive();
+    if (waiting) await waiting;
+    const record = { path: `${job.label}/${path}`, offset: 0, length: file.size, purpose, outcome: 'error' };
+    logRead(evidence, record);
+    reads++;
+    const data = new Uint8Array(await file.arrayBuffer());
+    record.outcome = 'ok';
+    read += data.byteLength;
+    progress(read, total);
+    return data;
+  }
+
+  let metadata = {
+    ...emptyResult('not_found', 'The plug-in bundle has no readable Info.plist.'),
+    error_class: 'missing_info_plist',
+  };
+  let executablePath;
+  let audioComponents;
+  const plist = job.pluginPlist;
+  if (plist) {
+    evidence.info_plist_path = plist.path;
+    evidence.info_plist_size = plist.file.size;
+    if (plist.file.size > 2 * MIB) {
+      metadata = { ...emptyResult('limit_reached', 'Info.plist exceeds 2 MiB.'), error_class: 'plist_size_limit' };
+    } else {
+      const bytes = await readMetadata(plist, 'info_plist');
+      const parsed = JSON.parse(local_bundle_metadata(bytes, job.label, plist.path, false, ''));
+      metadata = { ...parsed.result, error_class: parsed.error_class };
+      executablePath = parsed.executable_relative_path;
+      audioComponents = parsed.audio_components;
+    }
+  }
+
+  let moduleInfo;
+  let moduleInfoError = job.moduleInfoError;
+  if (job.moduleInfo) {
+    if (job.moduleInfo.file.size > 2 * MIB) {
+      moduleInfoError = 'VST3 moduleinfo exceeds 2 MiB.';
+    } else {
+      try {
+        const bytes = await readMetadata(job.moduleInfo, 'vst3_module_info');
+        moduleInfo = JSON.parse(vst3_module_info(bytes));
+      } catch {
+        moduleInfoError = 'The VST3 moduleinfo could not be read as JSON5.';
+      }
+    }
+  }
+  const plugin = {
+    ...metadata, ...identity,
+    bundle_path: job.label,
+    name: metadata.name || moduleInfo?.name || identity.name,
+    version: metadata.version || moduleInfo?.version || null,
+    audio_components: audioComponents,
+    vst3_module_info: moduleInfo,
+    module_info_error: moduleInfoError,
+    reads, bytes_read: read, bytes_requested: read, total_size: total,
+  };
+  if (!executablePath || metadata.error) return plugin;
+
+  const { file, errorClass } = await requestExecutable(id, executablePath);
+  if (!file) {
+    return {
+      ...plugin, status: errorClass ? 'source_error' : 'no_executable',
+      error_class: errorClass ?? 'missing_executable_file',
+      error: errorClass ? 'The browser could not open the plug-in executable.' :
+        'The executable named in Info.plist is missing from Contents/MacOS.',
+    };
+  }
+  const path = `${job.label}/${executablePath}`;
+  total += file.size;
+  const result = await scanFile(file, path, (bytes, _size, planned) =>
+    progress(read + bytes, total, planned === null ? null : read + planned), evidence, 'plugin');
+  return {
+    ...plugin,
+    status: result.status, error: result.error, error_class: result.error_class ?? null,
+    architectures: result.architectures, min_macos: metadata.min_macos ?? result.min_macos,
+    executable_path: path, executable_resolution: 'declared', executable_size: file.size,
+    reads: reads + result.reads, bytes_read: read + result.bytes_read,
+    bytes_requested: read + result.bytes_requested, total_size: total,
   };
 }
 
