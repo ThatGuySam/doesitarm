@@ -1,0 +1,188 @@
+---
+// One service call to action. Copy and variants live in helpers/service-offers.js.
+import {
+    fillServiceCopy,
+    serviceCards,
+    serviceRequestsEndpoint
+} from '~/helpers/service-offers.js'
+
+interface Props {
+    type: 'audio' | 'audio-native' | 'revival'
+    appName?: string
+    appSlug?: string
+    // Rendered hidden and shown later by page script (home search)
+    startHidden?: boolean
+}
+
+const { type, appName = '', appSlug = '', startHidden = false } = Astro.props
+const card = serviceCards[ type ]
+const fill = text => fillServiceCopy( text, { app: appName || 'this app' } )
+const formKind = type === 'revival' ? 'revival' : 'waitlist'
+const variantIds = card.variants.map( variant => variant.id ).join( ' ' )
+
+// Picks a sticky variant per visitor and shows only its headline.
+// Inline so the chosen headline is shown before first paint.
+const applyVariantScript = `
+window.diaSvcApply = window.diaSvcApply || function ( card ) {
+    var type = card.getAttribute( 'data-svc-card' )
+    var ids = ( card.getAttribute( 'data-svc-variants' ) || '' ).split( ' ' )
+    var key = 'dia-svc-variant:' + type
+    var chosen = null
+    try { chosen = localStorage.getItem( key ) } catch ( e ) {}
+    if ( ids.indexOf( chosen ) === -1 ) {
+        chosen = ids[ Math.floor( Math.random() * ids.length ) ]
+        try { localStorage.setItem( key, chosen ) } catch ( e ) {}
+    }
+    card.setAttribute( 'data-svc-variant', chosen )
+    var spans = card.querySelectorAll( '[data-v]' )
+    for ( var i = 0; i < spans.length; i++ ) spans[i].hidden = spans[i].getAttribute( 'data-v' ) !== chosen
+}
+var diaSvcCard = document.currentScript && document.currentScript.previousElementSibling
+if ( diaSvcCard && diaSvcCard.hasAttribute( 'data-svc-card' ) ) window.diaSvcApply( diaSvcCard )
+`
+---
+<div
+    class="svc-card"
+    data-svc-card={ type }
+    data-svc-offer={ card.offer }
+    data-svc-variants={ variantIds }
+    data-svc-variant={ card.variants[0].id }
+    data-svc-app={ appSlug }
+    hidden={ startHidden }
+>
+    <p class="svc-headline">
+        { card.variants.map( ( variant, index ) => (
+            <span data-v={ variant.id } hidden={ index !== 0 }>{ fill( variant.headline ) }</span>
+        ) ) }
+    </p>
+    <p class="svc-subhead">{ fill( card.subhead ) }</p>
+    <div class="svc-actions">
+        { card.primary.href ? (
+            <a class="svc-button" href={ card.primary.href } data-svc-control="primary">{ card.primary.label }</a>
+        ) : (
+            <button type="button" class="svc-button" data-svc-control="primary" data-svc-open>{ card.primary.label }</button>
+        ) }
+        { card.secondary && (
+            <button type="button" class="svc-link" data-svc-control="secondary" data-svc-open>{ card.secondary.label }</button>
+        ) }
+    </div>
+    <form class="svc-form" action={ serviceRequestsEndpoint } method="post" data-svc-form hidden>
+        <input type="hidden" name="offer" value={ card.offer } />
+        <input type="hidden" name="kind" value={ formKind } />
+        <input type="hidden" name="app" value={ type === 'revival' ? appSlug : '' } />
+        <input type="text" name="website" autocomplete="off" hidden tabindex="-1" />
+        <label class="svc-label">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" maxlength="254" required placeholder="you@example.com" />
+        </label>
+        { type === 'revival' && (
+            <label class="svc-label">
+                <span>What do you still use it for? (optional)</span>
+                <input type="text" name="note" maxlength="500" />
+            </label>
+        ) }
+        <button type="submit" class="svc-button">{ type === 'revival' ? 'Count me in' : 'Email me' }</button>
+        <p class="svc-status" role="status" data-svc-status></p>
+    </form>
+</div>
+<script is:inline set:html={ applyVariantScript }></script>
+
+<script>
+    import { serviceEventsEndpoint } from '~/helpers/service-offers.js'
+    import { initServiceCards } from '~/helpers/service-cards-browser.js'
+
+    initServiceCards( { eventsEndpoint: serviceEventsEndpoint } )
+</script>
+
+<style>
+    .svc-card {
+        width: 100%;
+        max-width: 40rem;
+        margin: 0 auto;
+        text-align: left;
+        color: #fff;
+        border: 1px solid rgba(129, 140, 248, 0.55);
+        border-radius: 14px;
+        padding: 14px 18px;
+        background: linear-gradient(180deg, rgba(67, 56, 202, 0.28), rgba(17, 24, 39, 0.6));
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .svc-card[hidden] { display: none; }
+    .svc-headline {
+        font-size: 1.125rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 0 0 2px;
+    }
+    .svc-subhead {
+        font-size: 0.875rem;
+        line-height: 1.45;
+        color: #d1d5db;
+        margin: 0 0 10px;
+    }
+    .svc-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 14px;
+    }
+    .svc-button {
+        display: inline-block;
+        background: #6366f1;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.875rem;
+        line-height: 1.25;
+        padding: 8px 14px;
+        border-radius: 9px;
+        text-decoration: none;
+        border: 0;
+        cursor: pointer;
+    }
+    .svc-button:hover { background: #818cf8; }
+    .svc-button:focus-visible, .svc-link:focus-visible { outline: 2px solid #c7d2fe; outline-offset: 2px; }
+    .svc-link {
+        color: #c7d2fe;
+        font-size: 0.875rem;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        padding: 8px 0;
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+    .svc-link:hover { color: #fff; }
+    .svc-form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .svc-form[hidden] { display: none; }
+    .svc-label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1 1 14rem;
+        font-size: 0.75rem;
+        color: #c7d2fe;
+    }
+    .svc-label input {
+        width: 100%;
+        min-width: 0;
+        border-radius: 8px;
+        border: 1px solid rgba(165, 180, 252, 0.5);
+        background: rgba(17, 24, 39, 0.7);
+        color: #fff;
+        font-size: 0.875rem;
+        padding: 7px 10px;
+    }
+    .svc-status {
+        flex-basis: 100%;
+        font-size: 0.8125rem;
+        color: #d1d5db;
+        margin: 0;
+    }
+    .svc-status:empty { display: none; }
+</style>

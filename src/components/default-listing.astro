@@ -10,6 +10,8 @@ import Aliases from '~/src/components/listing-parts/aliases.astro'
 import ThomasCredit from '~/components/thomas-credit.vue'
 import RelatedLinks from '~/src/components/listing-parts/related-links.astro'
 import Virtualization from './listing-parts/virtualization.astro'
+import ServiceCard from '~/src/components/service-card.astro'
+import { getListingSlug, getServiceCardType } from '~/helpers/service-offers.js'
 import AdInline from '~/components/ad-inline.vue'
 import Devices from '~/src/components/listing-parts/devices.astro'
 import RelatedVideos from '~/src/components/listing-parts/related-videos.astro'
@@ -31,6 +33,9 @@ const {
 } = Astro.props
 
 const details = new ListingDetails( listing )
+
+// At most one service card per listing. Games and formulas get none.
+const serviceCardType = getServiceCardType( listing )
 
 
 const adName = (() => {
@@ -87,7 +92,17 @@ const adName = (() => {
 
         <slot />
 
-        <Virtualization listing={ listing } />
+        { ( serviceCardType || listing.status !== 'native' ) && <div class="service-slot w-full flex flex-col items-center gap-3">
+            { serviceCardType && (
+                <ServiceCard
+                    type={ serviceCardType }
+                    appName={ listing.name }
+                    appSlug={ getListingSlug( listing ) }
+                />
+            )}
+
+            <Virtualization listing={ listing } />
+        </div> }
 
         <AdInline
             name={ adName }

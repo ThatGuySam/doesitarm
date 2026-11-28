@@ -18,6 +18,11 @@
       "name": "INTEREST_EMAIL_RATE_LIMIT",
       "namespace_id": "3510322",
       "simple": { "limit": 3, "period": 60 }
+    },
+    {
+      "name": "SERVICE_EVENT_RATE_LIMIT",
+      "namespace_id": "3510323",
+      "simple": { "limit": 60, "period": 60 }
     }
   ],
   "d1_databases": [

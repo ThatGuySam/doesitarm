@@ -18,6 +18,7 @@ import Search from '~/components/search-stork.vue'
 // import ListSummary from '~/components/list-summary.vue'
 // import ListEndButtons from '~/components/list-end-buttons.vue'
 import CarbonInline from '~/components/carbon-inline.vue'
+import ServiceCard from '~/src/components/service-card.astro'
 
 // SSR (not prerendered) for the cf.doesitarm.com Cloudflare preview: this page
 // does top-level data fetching, which workerd forbids in global scope during
@@ -61,6 +62,10 @@ const allAppsSummary = await DoesItAPI('all-apps-summary').get()
 
                 client:load
             >
+                <!-- Shown only while the search looks audio related -->
+                <div class="w-full pb-6" data-home-service hidden>
+                    <ServiceCard type="audio" />
+                </div>
                 <CarbonInline
                     class="carbon-inline-wide"
                 />
@@ -81,3 +86,24 @@ const allAppsSummary = await DoesItAPI('all-apps-summary').get()
 	-->
 
 </Layout>
+
+<script>
+    import { isAudioSearchQuery } from '~/helpers/service-offers.js'
+
+    function updateHomeService ( query ) {
+        const slot = document.querySelector<HTMLElement>( '[data-home-service]' )
+        if ( !slot ) return
+        const show = isAudioSearchQuery( query )
+        if ( slot.hidden === !show ) return
+        slot.hidden = !show
+        document.dispatchEvent( new Event( 'dia-svc-refresh' ) )
+    }
+
+    document.addEventListener( 'input', event => {
+        const target = event.target
+        if ( target instanceof HTMLInputElement && target.id === 'search' ) updateHomeService( target.value )
+    } )
+
+    const initialQuery = document.querySelector<HTMLInputElement>( '#search' )?.value
+    if ( initialQuery ) updateHomeService( initialQuery )
+</script>

@@ -20,6 +20,8 @@ import {
 import Layout from '../../layouts/default.astro'
 import Search from '~/components/search-stork.vue'
 import AdInline from '~/components/ad-inline.vue'
+import ServiceCard from '~/src/components/service-card.astro'
+import { audioCategorySlug } from '~/helpers/service-offers.js'
 
 
 // Get type and slug from the request path
@@ -123,6 +125,11 @@ const adName = (() => {
 
                 client:load
             >
+                { categorySlug === audioCategorySlug && (
+                    <div class="w-full pb-6">
+                        <ServiceCard type="audio" />
+                    </div>
+                )}
                 <AdInline
                     name={ adName }
                 />

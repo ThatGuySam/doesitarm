@@ -1,100 +1,35 @@
 ---
-import { ensureListingDetails } from '~/helpers/listing-page.js'
-
-// import LinkButton from '~/components/link-button.js'
-import Heading from './heading.astro'
-
+// Subdued Parallels links for listings that are not native.
+// The service card (src/components/service-card.astro) takes the main slot.
 const {
   listing
 } = Astro.props
 
-
-const details = ensureListingDetails( listing )
-
-const isNonNative = listing.status !== 'native'// && details.isGame
-
-// Example: Adobe+Photoshop
-const listingUrlFirendlyName = encodeURIComponent( listing.name )
+const isNonNative = listing.status !== 'native'
 
 const links = [
     {
-        label: '🔄 CrossOver Compatibility',
-        href: `https://www.codeweavers.com/compatibility?browse=&ad=912&app_desc=&company=&rating=&platform=&date_start=&date_end=&search=app&name=${ listingUrlFirendlyName }#results`
-    },
-    {
-        label: '🔄 CrossOver Performance',
-        href: 'https://www.codeweavers.com/blog/jnewman/2020/11/23/more-crossover-m1-goodness-see-3-different-windows-games-running?ad=912'
-    },
-    {
-        label: '⏸ Parallels Compatibility',
+        label: 'Parallels compatibility',
         href: 'https://prf.hn/l/pRelBQ5'
     },
     {
-        label: '⏸ Parallels Performance',
+        label: 'Parallels performance',
         href: 'https://prf.hn/l/J9G0JeM'
     }
 ]
-
-
-
-const totalLinks = links.length
 ---
 { isNonNative && (
-    <div
-        class="related-videos w-full"
-    >
-        <div class="flex justify-center gap-3">
-            <Heading text="📦 Virtualization Support" />
-            <div
-                class="group w-0"
-            >
-                <div class="md:relative">
-                    <button class="h-5 text-xs bg-white-2 flex justify-center items-center outline-0 neumorphic-shadow rounded-full px-2">?</button>
-                    <div
-                        class={[
-                            'text-sm bg-black/60 backdrop-blur-lg',
-                            'opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none',
-                            'absolute left-1/2 right-1/2 md:-translate-x-1/2 bottom-0 md:bottom-10 z-10',
-                            'w-screen',
-                            'md:max-w-xs p-6 -mx-1/2-screen md:mx-0'
-                        ].join(' ')}
-                    >With Virtualization you can run apps on Apple Silicon Macs even if they are normally completely unsupported, such as Windows-only Apps, at the cost of some performance drop vs Native support. </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <span class="relative z-0 inline-flex text-center md:flex-row flex-col shadow-sm md:divide-x md:divide-y-0 divide-y divide-gray-700 border border-gray-300 rounded-md bg-darker md:py-3 md:px-0 px-4">
-            { links.map( (link, i) => {
-
-                return (
-                    <a
-                        type="button"
-                        href={ link.href }
-                        class={ [
-                            'relative text-xs inline-flex justify-center items-center font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
-                            'text-white group',
-                        ].join(' ')}
-                    >
-                        <div
-                            class={[
-                                'inner-link group-hover:bg-indigo-400 group-active:bg-indigo-600 rounded-md px-4 md:py-2 md:mx-0 md:-my-3',
-                                'py-3 -mx-4',
-                                // First Link
-                                // i === 0 && 'rounded-l-md',
-                                // Not first Link
-                                i !== 0 ? 'md:-ml-px' : '',
-                                // Last Link
-                                // i === totalLinks - 1 ? 'rounded-r-md' : ''
-                            ].join(' ')}
-                        >
-                            { link.label }
-                        </div>
-                    </a>
-                )
-                }
-            )}
-        </span>
-    </div>
+    <p class="virtualization-links text-xs text-gray-400" data-testid="virtualization-links">
+        <span>Run Windows apps instead: </span>
+        { links.map( ( link, i ) => (
+            <>
+                { i !== 0 && <span aria-hidden="true"> · </span> }
+                <a
+                    href={ link.href }
+                    rel="sponsored noopener"
+                    class="underline hover:text-white"
+                >{ link.label }</a>
+            </>
+        ) ) }
+    </p>
 )}

@@ -3,6 +3,14 @@ import { handleUnsubscribe, saveInterest, subscriptionPage, tokenPattern } from 
 import { subscribeToKit } from './kit.js'
 import { acceptRosettaReview, previewRosettaReview, runRosettaCheck } from './notifications.js'
 import { rosettaLaunchEnabled, rosettaSignupsClosedMessage } from '../../../helpers/rosetta-launch.js'
+import {
+    parseServiceEvent,
+    parseServiceRequest,
+    saveServiceEvent,
+    saveServiceRequest,
+    serviceEventsPath,
+    serviceRequestsPath
+} from './services.js'
 
 const allowedOrigins = new Set([
     'https://doesitarm.com',
@@ -288,6 +296,52 @@ async function handleInterestRequest ( request, env, context ) {
     return interestResponse( request )
 }
 
+async function handleServiceEvent ( request, env ) {
+    const connection = request.headers.get( 'CF-Connecting-IP' ) || 'unavailable'
+    if ( env.SERVICE_EVENT_RATE_LIMIT ) {
+        const limit = await env.SERVICE_EVENT_RATE_LIMIT.limit( { key: await rateLimitKey( connection ) } )
+        if ( !limit.success ) return makeJsonResponse( request, { error: 'Too many events.', ok: false }, 429 )
+    }
+
+    // sendBeacon posts text/plain, so read the body as JSON whatever its type.
+    const bodyText = await readSubscriptionBody( request )
+    let body = null
+    try {
+        body = bodyText === null ? null : JSON.parse( bodyText )
+    } catch {
+        body = null
+    }
+
+    const serviceEvent = parseServiceEvent( body )
+    if ( !serviceEvent ) return makeJsonResponse( request, { error: 'Invalid event.', ok: false }, 422 )
+
+    await saveServiceEvent( env.SUBSCRIPTIONS_DB, serviceEvent )
+    return makeJsonResponse( request, { ok: true } )
+}
+
+async function handleServiceRequest ( request, env ) {
+    const tooManyRequests = () => makeJsonResponse( request, {
+        error: 'Too many attempts. Try again in a minute.', ok: false
+    }, 429, { 'Retry-After': '60' } )
+
+    const connection = request.headers.get( 'CF-Connecting-IP' ) || 'unavailable'
+    const ipLimit = await env.INTEREST_IP_RATE_LIMIT.limit( { key: await rateLimitKey( connection ) } )
+    if ( !ipLimit.success ) return tooManyRequests()
+
+    const parsed = await parseSubscription( request, true )
+    if ( parsed.error ) return makeJsonResponse( request, { error: parsed.error, ok: false }, parsed.status )
+    if ( parsed.honeypot ) return makeJsonResponse( request, { ok: true } )
+
+    const emailLimit = await env.INTEREST_EMAIL_RATE_LIMIT.limit( { key: await rateLimitKey( parsed.email ) } )
+    if ( !emailLimit.success ) return tooManyRequests()
+
+    const serviceRequest = parseServiceRequest( parsed.body, parsed.email )
+    if ( !serviceRequest ) return makeJsonResponse( request, { error: 'Check the form and try again.', ok: false }, 422 )
+
+    await saveServiceRequest( env.SUBSCRIPTIONS_DB, serviceRequest )
+    return makeJsonResponse( request, { ok: true } )
+}
+
 async function hasCheckAuthorization ( request, secret ) {
     const authorization = request.headers.get( 'Authorization' ) || ''
     if ( !secret || !authorization.startsWith( 'Bearer ' ) || authorization.length > 512 ) {
@@ -422,14 +476,16 @@ export async function handleRequest ( request, env, context ) {
         return makeJsonResponse( request, { ok: status === 200, ...result }, status )
     }
 
-    if ( pathname !== subscriptionPath && pathname !== healthPath && pathname !== interestPath ) {
+    if ( pathname !== subscriptionPath && pathname !== healthPath && pathname !== interestPath &&
+        pathname !== serviceEventsPath && pathname !== serviceRequestsPath ) {
         return makeJsonResponse( request, {
             error: 'Not found.',
             ok: false
         }, 404 )
     }
 
-    if ( !isAllowedOrigin( request, pathname === interestPath ) ) {
+    const originRequired = pathname === interestPath || pathname === serviceEventsPath || pathname === serviceRequestsPath
+    if ( !isAllowedOrigin( request, originRequired ) ) {
         if ( pathname === interestPath && request.method === 'POST' ) {
             return interestResponse( request, 'Origin is not allowed.', 403 )
         }
@@ -469,6 +525,9 @@ export async function handleRequest ( request, env, context ) {
 
         return await handleInterestRequest( request, env, context )
     }
+
+    if ( pathname === serviceEventsPath ) return await handleServiceEvent( request, env )
+    if ( pathname === serviceRequestsPath ) return await handleServiceRequest( request, env )
 
     return await handleSubscriptionRequest( request, env )
 }

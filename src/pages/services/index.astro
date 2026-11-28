@@ -1,0 +1,39 @@
+---
+// Services index. Copy lives in helpers/service-offers.js (servicesIndex).
+import { applyResponseDefaults } from '~/helpers/astro/request.js'
+import { servicesIndex as page } from '~/helpers/service-offers.js'
+
+import Layout from '~/src/layouts/default.astro'
+
+applyResponseDefaults( Astro )
+---
+<Layout
+    headOptions={ {
+        title: 'Services - Does It ARM',
+        description: page.intro,
+        pathname: '/services/'
+    } }
+>
+    <main class="container py-32 w-full">
+        <div class="max-w-3xl mx-auto space-y-12">
+            <section class="text-center space-y-4">
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ page.title }</h1>
+                <p class="subtitle md:text-xl text-gray-300">{ page.intro }</p>
+            </section>
+
+            <section class="grid gap-4 md:grid-cols-2">
+                { page.offers.map( offer => (
+                    <a
+                        href={ offer.href }
+                        class="block rounded-xl border border-gray-700 hover:border-indigo-400 bg-gradient-to-br from-darker to-dark p-6 space-y-3 transition-colors"
+                    >
+                        <h2 class="text-xl font-bold text-white">{ offer.title }</h2>
+                        <p class="text-sm text-gray-300 leading-relaxed">{ offer.text }</p>
+                        <p class="text-xs text-indigo-300">{ offer.status }</p>
+                        <span class="inline-block text-sm font-semibold text-white underline">{ offer.cta } →</span>
+                    </a>
+                ) ) }
+            </section>
+        </div>
+    </main>
+</Layout>
