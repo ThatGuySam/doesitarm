@@ -60,7 +60,7 @@ export function configureScannerEntry() {
   }
   deviceFiles.querySelector('summary').addEventListener('click', () => { if (!deviceFiles.open) remember('files'); });
   urlDetails.querySelector('summary').addEventListener('click', () => remember(urlDetails.open ? 'files' : 'url'));
-  for (const id of ['choose-files', 'choose-folder']) get(id).addEventListener('click', () => remember('files'));
+  for (const id of ['choose-files', 'choose-folder', 'choose-flat-files']) get(id).addEventListener('click', () => remember('files'));
   return { remember };
 }
 

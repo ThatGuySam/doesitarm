@@ -64,11 +64,14 @@ export function bindLocalInputs({ view, mode }) {
   const get = (id) => document.getElementById(id);
   const files = get('files');
   const chooser = get('choose-folder');
+  const flatPicker = get('choose-flat-files');
   const dropZone = get('drop-zone');
   const loader = get('folder-loader');
   const [throbber, label, announcement] = loader.children;
   let active;
   let picker = false;
+  const canPickDirectory = typeof window.showDirectoryPicker === 'function';
+  flatPicker.hidden = canPickDirectory;
 
   function reading(text) {
     if (label.textContent !== text) label.textContent = text;
@@ -164,7 +167,11 @@ export function bindLocalInputs({ view, mode }) {
     notify.info('Scan canceled.', 'Your finished results are kept.');
     reading('');
   });
-  get('choose-files').addEventListener('click', () => files.click());
+  get('choose-files').addEventListener('click', () => {
+    if (canPickDirectory) files.click();
+    else notify.info('Drag and drop apps to scan them.', FOLDER_GUIDANCE);
+  });
+  flatPicker.addEventListener('click', () => files.click());
   chooser.addEventListener('click', async () => {
     if (picker) return;
     if (typeof window.showDirectoryPicker !== 'function') {
