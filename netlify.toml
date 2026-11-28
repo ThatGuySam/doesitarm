@@ -61,6 +61,18 @@
   status = 301
 
 
+# App name aliases
+[[redirects]]
+  from = "/app/obs-studio"
+  to = "/app/obs/"
+  status = 301
+
+[[redirects]]
+  from = "/app/visual-studio-code"
+  to = "/app/vs-code/"
+  status = 301
+
+
 # imac redirect
 [[redirects]]
   from = "/device/apple-silicon-imac"

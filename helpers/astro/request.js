@@ -62,3 +62,10 @@ export async function catchRedirectResponse ( Astro ) {
 
     return null
 }
+
+export async function renderNotFound ( Astro ) {
+    const response = await Astro.rewrite( '/404' )
+    response.headers.set( 'Cache-Control', 'no-store' )
+
+    return response
+}

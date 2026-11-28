@@ -88,3 +88,15 @@ export function generateAPI ( {
 }
 
 export const DoesItAPI = generateAPI()
+
+export async function getListing ( type, slug ) {
+    if ( !slug ) return null
+
+    try {
+        return await DoesItAPI[ type ]( slug ).get()
+    } catch ( error ) {
+        if ( error?.response?.status === 404 ) return null
+
+        throw error
+    }
+}
