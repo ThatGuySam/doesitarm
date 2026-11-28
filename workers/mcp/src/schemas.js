@@ -90,6 +90,33 @@ const listingDetail = z.looseObject({
     officialSources: z.array( z.looseObject({ label: z.string(), url: z.string() }) ).optional(),
 })
 
+const inventoryStatus = z.enum([ 'native', 'rosetta', 'unsupported', 'unknown' ])
+
+const inventoryFinding = z.looseObject({
+    row: z.number().describe( 'One-based input row (CSV data row, excluding the header) of the first row with this identity, version and build.' ),
+    duplicate_rows: z.number().describe( 'Additional input rows collapsed into this one.' ),
+    match: z.enum([ 'bundle_id', 'name', 'alias', 'ambiguous', 'none' ]).describe( 'How the row was matched to the catalog. Only bundle_id establishes identity for a status.' ),
+    status: inventoryStatus,
+    unknown_reason: z.enum([ 'unlisted', 'ambiguous_identity', 'bundle_id_conflict', 'version_missing', 'version_unverified', 'conflicting_variants', 'stale_evidence', 'insufficient_evidence' ]).nullable().describe( 'Why status is unknown. Null otherwise.' ),
+    target_assessment: z.enum([ 'rosetta_available_if_installed', 'rosetta_unavailable', 'explicitly_unsupported', 'needs_validation', 'unknown' ]).nullable().describe( 'Assessment for target_macos. Null when no target was given.' ),
+    requested_version: z.string().nullable(),
+    requested_build: z.string().nullable(),
+    evidence: z.looseObject({
+        basis: z.enum([ 'catalog_statement', 'binary_architecture', 'vendor_statement', 'runtime_test' ]).describe( 'catalog_statement: the listing reports native support as of observed_version. binary_architecture: a catalog scan of exactly observed_version found these Mach-O architectures.' ),
+        observed_version: z.string().nullable(),
+        observed_build: z.string().nullable(),
+        observed_at: z.string().nullable(),
+        architectures: z.array( z.string() ),
+        source_url: z.string(),
+    }).nullable(),
+    catalog_hint: z.looseObject({
+        title: z.string(),
+        url: z.string(),
+        reported_status: status,
+    }).nullable().describe( 'Latest catalog listing and status for triage. It does not describe the installed version.' ),
+    candidates: z.array( z.looseObject({ title: z.string(), url: z.string() }) ).describe( 'Up to three catalog listings for an ambiguous or conflicting row.' ),
+})
+
 export const OUTPUT_SCHEMAS = {
     search_apps: z.looseObject({
         query: z.string(),
@@ -145,5 +172,32 @@ export const OUTPUT_SCHEMAS = {
 
     list_devices: z.looseObject({
         results: z.array( deviceSummary ),
+    }),
+
+    check_inventory: z.looseObject({
+        catalog_revision: z.string().describe( 'Catalog revision these results come from. Pass it back with later pages.' ),
+        target_macos: z.number().nullable(),
+        counts: z.looseObject({
+            received: z.number(),
+            accepted: z.number(),
+            invalid: z.number(),
+            duplicates: z.number(),
+            unique: z.number(),
+            native: z.number(),
+            rosetta: z.number(),
+            unsupported: z.number(),
+            unknown: z.number(),
+        }).describe( 'Whole-batch counts: received = accepted + invalid, unique = accepted - duplicates, and the four statuses sum to unique.' ),
+        invalid_rows: z.array( z.looseObject({ row: z.number(), code: z.enum([ 'missing_identity', 'invalid_field' ]) }) ).describe( 'Up to 10 invalid row numbers with reason codes.' ),
+        filtered_count: z.number().describe( 'Unique rows matching filter.' ),
+        results: z.array( inventoryFinding ).describe( 'One page of unique rows in input order.' ),
+        next_offset: z.number().nullable().describe( 'Offset of the next page, or null on the last page.' ),
+        scanner_reference: z.looseObject({
+            title: z.string(),
+            url: z.string(),
+            scope: z.string(),
+            catalog_submission: z.string(),
+            unknown_rows: z.number(),
+        }).nullable().describe( 'Fixed Does It ARM App Scanner v3 (preview) reference, present when the batch has unknown rows. Scanner results stay on the local Mac; catalog_submission is unavailable.' ),
     }),
 }

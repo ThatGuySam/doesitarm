@@ -56,7 +56,7 @@ async function call ( name, args ) {
 
 console.log( `Smoke testing ${ endpoint }` )
 
-const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.2.0' } } )
+const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.3.0' } } )
 check( 'initialize', init.result.serverInfo?.name === 'com.doesitarm/mcp', `${ init.result.serverInfo?.name } ${ init.result.serverInfo?.version }, protocol ${ init.result.protocolVersion }` )
 check( 'initialize icons', init.result.serverInfo?.icons?.[0]?.mimeType === 'image/png', init.result.serverInfo?.icons?.[0]?.src )
 check( 'initialize description and instructions', Boolean( init.result.serverInfo?.description ) && /Apple Silicon/.test( init.result.instructions || '' ), init.result.serverInfo?.description )
@@ -64,7 +64,7 @@ check( 'initialize description and instructions', Boolean( init.result.serverInf
 const list = await rpc( 'tools/list', {} )
 const tools = list.result.tools
 const names = tools.map( tool => tool.name )
-check( 'tools/list', names.length === 7, names.join(', ') )
+check( 'tools/list', names.length === 8 && names.includes('check_inventory'), names.join(', ') )
 for ( const tool of tools ) {
     outputSchemas[ tool.name ] = tool.outputSchema
     check( `${ tool.name } metadata`, Boolean( tool.title ) && tool.annotations?.title === tool.title && tool.annotations?.readOnlyHint === true && tool.outputSchema?.type === 'object', tool.title )
@@ -102,6 +102,27 @@ check( 'check_apps all blank is a recoverable error', blank.result.isError === t
 
 const range = await call( 'search_apps', { query: 'Spotify', limit: 500 } )
 check( 'search_apps limit out of range names the field', range.result.isError === true && range.text.includes('limit must be a whole number from 1 to 50'), range.text.split('\n').pop() )
+
+const SCANNER_URL = 'https://doesitarm.com/apple-silicon-app-test/?v=3'
+const inventoryRows = [
+    { name: 'Slack', bundle_id: 'com.tinyspeck.slackmacgap', version: '4.41.105' },
+    { name: 'Docker', bundle_id: 'com.docker.docker', version: '4.36.0' },
+    { name: 'Spotify', bundle_id: 'com.spotify.client', version: '1.2.7.1277.g2b3ce637' },
+    { name: 'Microsoft Word', version: '16.89' },
+    { name: 'Smoke Test Internal Tool', bundle_id: 'com.example.smoke-internal', version: '1.0' },
+    { name: 'Slack', bundle_id: 'com.tinyspeck.slackmacgap', version: '4.41.105' },
+]
+const inventory = await call( 'check_inventory', { rows: inventoryRows, target_macos: 28 } )
+const counts = inventory.result.structuredContent?.counts || {}
+check( 'check_inventory mixed batch counts', counts.received === 6 && counts.duplicates === 1 && counts.unique === 5 && counts.native >= 2 && counts.unknown >= 2 && counts.native + counts.rosetta + counts.unsupported + counts.unknown === counts.unique, JSON.stringify( counts ) )
+check( 'check_inventory matches by bundle ID first', inventory.result.structuredContent?.results?.[0]?.match === 'bundle_id' && inventory.result.structuredContent.results[0].catalog_hint?.url === 'https://doesitarm.com/app/slack', inventory.text.split('\n')[2] )
+check( 'check_inventory scanner reference is the fixed URL', inventory.result.structuredContent?.scanner_reference?.url === SCANNER_URL && inventory.result.structuredContent.scanner_reference.catalog_submission === 'unavailable', inventory.result.structuredContent?.scanner_reference?.url )
+
+const csvInventory = await call( 'check_inventory', { csv: 'name,bundle_identifier,bundle_short_version,bundle_version\nSlack,com.tinyspeck.slackmacgap,4.41.105,441050\n' } )
+check( 'check_inventory osquery CSV', csvInventory.result.structuredContent?.counts?.native === 1 && csvInventory.result.structuredContent.scanner_reference === null, csvInventory.text.split('\n')[0] )
+
+const badHeader = await call( 'check_inventory', { csv: 'name,hostname\nSlack,smoke-host' } )
+check( 'check_inventory unknown header is a recoverable error without the value', badHeader.result.isError === true && badHeader.text.includes('column 2 is not recognized') && !badHeader.text.includes('smoke-host'), badHeader.text.slice( 0, 80 ) )
 
 console.log( failures === 0 ? 'All smoke checks passed.' : `${ failures } smoke check(s) failed.` )
 process.exit( failures === 0 ? 0 : 1 )

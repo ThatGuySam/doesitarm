@@ -1,0 +1,74 @@
+{
+  "name": "Legacy Tool",
+  "aliases": [
+    "Legacy Tool"
+  ],
+  "status": "rosetta",
+  "bundleIds": [
+    "com.example.legacytool"
+  ],
+  "lastUpdated": {
+    "raw": "2026-11-20T00:00:00Z",
+    "timestamp": 1795132800000
+  },
+  "text": "✳️ Yes, works via Rosetta 2",
+  "slug": "legacy-tool",
+  "endpoint": "/app/legacy-tool",
+  "category": {
+    "label": "Productivity Tools",
+    "slug": "productivity-tools"
+  },
+  "tags": [],
+  "relatedLinks": [],
+  "bundles": [
+    [
+      "com.example.legacytool",
+      [
+        [
+          "3.0",
+          {
+            "Date": "2025-01-01T00:00:00.000Z",
+            "Filename": "Legacy Tool.app.zip",
+            "App Version": "3.0",
+            "Result": "✅",
+            "Macho Meta": {
+              "architectures": [
+                {
+                  "processorType": "X86",
+                  "bits": "64-bit"
+                },
+                {
+                  "processorType": "ARM",
+                  "bits": "64-bit"
+                }
+              ]
+            },
+            "Info Plist": {
+              "CFBundleIdentifier": "com.example.legacytool"
+            }
+          }
+        ],
+        [
+          "2.0",
+          {
+            "Date": "2025-01-01T00:00:00.000Z",
+            "Filename": "Legacy Tool.app.zip",
+            "App Version": "2.0",
+            "Result": "🔶",
+            "Macho Meta": {
+              "architectures": [
+                {
+                  "processorType": "X86",
+                  "bits": "64-bit"
+                }
+              ]
+            },
+            "Info Plist": {
+              "CFBundleIdentifier": "com.example.legacytool"
+            }
+          }
+        ]
+      ]
+    ]
+  ]
+}

@@ -13,13 +13,14 @@ import {
     recentUpdates,
     searchApps,
 } from './tools.js'
+import { FIELD_LIMITS, FILTERS, INVENTORY_LIMITS, TARGETS, checkInventory } from './inventory.js'
 
 export const SERVER_DESCRIPTION = 'Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.'
 
 // Registry name, also reported as the runtime serverInfo.name so the
 // protocol identity, server.json and the server card agree.
 export const SERVER_NAME = 'com.doesitarm/mcp'
-export const SERVER_VERSION = '1.2.0'
+export const SERVER_VERSION = '1.3.0'
 
 export const SERVER_ICONS = [
     { src: 'https://doesitarm.com/images/mcp-icon-256.png', mimeType: 'image/png', sizes: [ '256x256' ] },
@@ -87,6 +88,10 @@ export const TOOL_COPY = {
         title: 'List Apple Silicon Mac Models',
         description: 'Find the Apple Silicon Mac models covered by Does It ARM. Returns model names, chips, availability dates when present, and links to the device pages. The listing detail tool can read a selected device page.',
     },
+    check_inventory: {
+        title: 'Check Mac App Inventory for Apple Silicon',
+        description: `Checks up to ${ INVENTORY_LIMITS.maxRows } installed macOS app rows from an inventory export against Does It ARM's public catalog. Matches by bundle ID and installed version where evidence is available. Returns counts for native, Rosetta, unsupported, and unknown, with evidence and paged results for Mac migration or macOS upgrade planning. Version evidence comes from the catalog's version-scoped native statements and its ten most recent scanned versions per bundle ID. Rows matched by name alone stay unknown, with the latest listing as a hint.`,
+    },
 }
 
 export const TOOL_NAMES = Object.keys( TOOL_COPY )
@@ -117,6 +122,34 @@ const INPUT_SCHEMAS = {
         limit: limitSchema( 100, 20, 'Maximum updated app listings to return, from 1 to 100. Defaults to 20.' ),
     },
     list_devices: {},
+    check_inventory: inventoryInputSchema(),
+}
+
+function inventoryInputSchema () {
+    const field = ( name, description ) => z.string({ error: `${ name } must be a string.` }).optional().describe( `${ description } Up to ${ FIELD_LIMITS[ name ] } characters after trimming; longer values mark the row invalid.` )
+    const rowsError = `rows must be an array of 1 to ${ INVENTORY_LIMITS.maxRows } objects with only name, bundle_id, version, build and publisher string fields.`
+    const offsetError = `offset must be a whole number from 0 to ${ INVENTORY_LIMITS.maxOffset }. Omit it to start at 0.`
+
+    return z.strictObject({
+        rows: z.array( z.strictObject({
+            name: field( 'name', 'App name as shown in the inventory, such as Slack or Slack.app.' ),
+            bundle_id: field( 'bundle_id', 'CFBundleIdentifier, such as com.tinyspeck.slackmacgap. Matched before the name.' ),
+            version: field( 'version', 'Installed CFBundleShortVersionString, as a string.' ),
+            build: field( 'build', 'Installed CFBundleVersion, as a string.' ),
+            publisher: field( 'publisher', 'Publisher or vendor name. Used only to group rows that have no bundle ID.' ),
+        }, { error: rowsError }), { error: rowsError }).min( 1, { error: rowsError } ).max( INVENTORY_LIMITS.maxRows, { error: rowsError } ).optional()
+            .describe( `Structured inventory rows, 1 to ${ INVENTORY_LIMITS.maxRows }. Each row needs a nonblank name or bundle_id. Provide rows or csv, not both.` ),
+        csv: z.string({ error: 'csv must be a string.' }).max( INVENTORY_LIMITS.maxInputBytes, { error: `csv must be at most ${ INVENTORY_LIMITS.maxInputBytes } bytes of UTF-8 text.` } ).optional()
+            .describe( `Headered CSV or TSV text with at most ${ INVENTORY_LIMITS.maxRows } data rows and ${ INVENTORY_LIMITS.maxInputBytes / 1024 } KiB. Headers: name, bundle_id, version, build, publisher, or the export aliases listed in the docs (osquery bundle_identifier, bundle_short_version, bundle_version; Jamf/Iru bundleId, cfBundleShortVersionString, cfBundleVersion; Intune ApplicationName, ApplicationVersion, ApplicationPublisher). Other columns are rejected. Provide rows or csv, not both.` ),
+        target_macos: z.union( TARGETS.map( value => z.literal( value ) ), { error: `target_macos must be one of ${ TARGETS.join(', ') }. Omit it for architecture evidence only.` } ).optional()
+            .describe( 'macOS major version to assess, 26, 27 or 28. 28 is the first release without general-purpose Rosetta 2. Omit for architecture evidence only.' ),
+        filter: z.enum( FILTERS, { error: `filter must be one of ${ FILTERS.join(', ') }.` } ).default( 'all' ).describe( 'Return only rows with this status. Defaults to all. Counts always cover the whole batch.' ),
+        offset: z.number({ error: offsetError }).int({ error: offsetError }).min( 0, { error: offsetError } ).max( INVENTORY_LIMITS.maxOffset, { error: offsetError } ).default( 0 )
+            .describe( 'Number of filtered unique rows to skip. Defaults to 0. For the next page, resend the same rows or csv, target_macos, filter and catalog_revision with next_offset.' ),
+        limit: limitSchema( INVENTORY_LIMITS.maxLimit, INVENTORY_LIMITS.defaultLimit, `Maximum rows per page, from 1 to ${ INVENTORY_LIMITS.maxLimit }. Defaults to ${ INVENTORY_LIMITS.defaultLimit }.` ),
+        catalog_revision: z.string({ error: 'catalog_revision must be a string.' }).max( INVENTORY_LIMITS.maxRevisionLength, { error: `catalog_revision must be at most ${ INVENTORY_LIMITS.maxRevisionLength } characters.` } ).optional()
+            .describe( 'catalog_revision from the first page. A changed catalog returns an error so pages are not mixed across revisions.' ),
+    })
 }
 
 const HANDLERS = {
@@ -127,6 +160,7 @@ const HANDLERS = {
     list_by_category: listByCategory,
     recent_updates: recentUpdates,
     list_devices: listDevices,
+    check_inventory: checkInventory,
 }
 
 function wrap ( name, handler, data ) {

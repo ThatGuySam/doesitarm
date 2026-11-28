@@ -6,7 +6,7 @@ Software listings are under `/app/`, `/game/`, and `/formula/` on https://doesit
 
 ## MCP server
 
-- [Does It ARM MCP server](https://mcp.doesitarm.com/mcp): check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Public, read-only Streamable HTTP endpoint, no account. Tools: search_apps, get_app, check_apps, list_categories, list_by_category, recent_updates, list_devices.
+- [Does It ARM MCP server](https://mcp.doesitarm.com/mcp): check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. Public, read-only Streamable HTTP endpoint, no account. Tools: search_apps, get_app, check_apps, list_categories, list_by_category, recent_updates, list_devices, check_inventory (up to 250 rows from a Mac app inventory export, matched by bundle ID first).
 - [Install guide](https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md): Claude Code `claude mcp add --transport http doesitarm https://mcp.doesitarm.com/mcp`
 
 ## Browse

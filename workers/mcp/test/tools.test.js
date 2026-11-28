@@ -189,7 +189,7 @@ describe( 'Worker HTTP handler', () => {
 
         const list = await post({ jsonrpc: '2.0', id: 2, method: 'tools/list' })
         const tools = ( await list.json() ).result.tools
-        expect( tools.map( tool => tool.name ).sort() ).toEqual([ 'check_apps', 'get_app', 'list_by_category', 'list_categories', 'list_devices', 'recent_updates', 'search_apps' ])
+        expect( tools.map( tool => tool.name ).sort() ).toEqual([ 'check_apps', 'check_inventory', 'get_app', 'list_by_category', 'list_categories', 'list_devices', 'recent_updates', 'search_apps' ])
         expect( tools.every( tool => tool.annotations.readOnlyHint === true ) ).toBe( true )
     })
 })

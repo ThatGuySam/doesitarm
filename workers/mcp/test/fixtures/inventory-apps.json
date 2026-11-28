@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Slack",
+    "aliases": [
+      "Slack",
+      "Tinyspeck Slackmacgap"
+    ],
+    "status": "native",
+    "bundleIds": [
+      "com.tinyspeck.slackmacgap"
+    ],
+    "lastUpdated": {
+      "raw": "2026-11-20T00:00:00Z",
+      "timestamp": 1795132800000
+    },
+    "text": "✅ Yes, Full Native Apple Silicon Support as of 4.13.0",
+    "slug": "slack",
+    "endpoint": "/app/slack",
+    "category": {
+      "label": "Productivity Tools",
+      "slug": "productivity-tools"
+    },
+    "tags": [],
+    "relatedLinks": []
+  },
+  {
+    "name": "Zoom",
+    "aliases": [
+      "zoom.us",
+      "zoom"
+    ],
+    "status": "native",
+    "bundleIds": [
+      "us.zoom.xos"
+    ],
+    "lastUpdated": {
+      "raw": "2026-11-20T00:00:00Z",
+      "timestamp": 1795132800000
+    },
+    "text": "✅ Yes, full native Apple Silicon support as of 5.4.7 (59780.1220)",
+    "slug": "zoom",
+    "endpoint": "/app/zoom",
+    "category": {
+      "label": "Productivity Tools",
+      "slug": "productivity-tools"
+    },
+    "tags": [],
+    "relatedLinks": []
+  },
+  {
+    "name": "Microsoft Word",
+    "aliases": [
+      "Microsoft Word"
+    ],
+    "status": "native",
+    "bundleIds": [],
+    "lastUpdated": {
+      "raw": "2026-11-20T00:00:00Z",
+      "timestamp": 1795132800000
+    },
+    "text": "✅ Yes, Full Native Apple Silicon Support as of v16.44",
+    "slug": "microsoft-word",
+    "endpoint": "/app/microsoft-word",
+    "category": {
+      "label": "Productivity Tools",
+      "slug": "productivity-tools"
+    },
+    "tags": [],
+    "relatedLinks": []
+  },
+  {
+    "name": "Legacy Tool",
+    "aliases": [
+      "Legacy Tool"
+    ],
+    "status": "rosetta",
+    "bundleIds": [
+      "com.example.legacytool"
+    ],
+    "lastUpdated": {
+      "raw": "2026-11-20T00:00:00Z",
+      "timestamp": 1795132800000
+    },
+    "text": "✳️ Yes, works via Rosetta 2",
+    "slug": "legacy-tool",
+    "endpoint": "/app/legacy-tool",
+    "category": {
+      "label": "Productivity Tools",
+      "slug": "productivity-tools"
+    },
+    "tags": [],
+    "relatedLinks": []
+  },
+  {
+    "name": "Notes Pro",
+    "aliases": [
+      "Notes Pro",
+      "Shared Notes"
+    ],
+    "status": "native",
+    "bundleIds": [
+      "com.example.notespro"
+    ],
+    "lastUpdated": {
+      "raw": "2026-11-20T00:00:00Z",
+      "timestamp": 1795132800000
+    },
+    "text": "✅ Native Apple Silicon Support reported as of v2.0",
+    "slug": "notes-pro",
+    "endpoint": "/app/notes-pro",
+    "category": {
+      "label": "Productivity Tools",
+      "slug": "productivity-tools"
+    },
+    "tags": [],
+    "relatedLinks": []
+  },
+  {
+    "name": "Notes Plus",
+    "aliases": [
+      "Notes Plus",
+      "Shared Notes"
+    ],
+    "status": "native",
+    "bundleIds": [
+      "com.example.notesplus"
+    ],
+    "lastUpdated": {
+      "raw": "2026-11-20T00:00:00Z",
+      "timestamp": 1795132800000
+    },
+    "text": "✅ Native Apple Silicon Support reported as of v3.0",
+    "slug": "notes-plus",
+    "endpoint": "/app/notes-plus",
+    "category": {
+      "label": "Productivity Tools",
+      "slug": "productivity-tools"
+    },
+    "tags": [],
+    "relatedLinks": []
+  }
+]

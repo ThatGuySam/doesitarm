@@ -130,6 +130,15 @@ function versionHistory ( bundles ) {
         })
 }
 
+// The same ten-version projection get_app returns, for one bundle ID: version
+// strings and derived architecture names only. Scan dates and file names are
+// left out, as everywhere else in MCP output.
+export function scannedVersions ( raw, bundleId ) {
+    const wanted = String( bundleId ).toLowerCase()
+    const bundle = versionHistory( raw?.bundles ).find( entry => entry.bundleId.toLowerCase() === wanted )
+    return bundle ? bundle.versions.map( ({ version, architectures }) => ({ version, architectures }) ) : []
+}
+
 function deviceSupport ( list ) {
     if ( !Array.isArray( list ) ) return []
 
