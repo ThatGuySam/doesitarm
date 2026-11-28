@@ -1,0 +1,63 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "doesitarm",
+  "version": "1.0.0",
+  "description": "Look up Apple Silicon compatibility for Mac apps, games, and Homebrew packages.",
+  "author": {
+    "name": "Sam Carlton Creative LLC",
+    "email": "hello@doesitarm.com",
+    "url": "https://doesitarm.com"
+  },
+  "homepage": "https://doesitarm.com",
+  "repository": "https://github.com/ThatGuySam/doesitarm",
+  "license": "Apache-2.0",
+  "keywords": ["Apple Silicon", "Mac app compatibility", "macOS", "Rosetta 2", "Homebrew", "M-series Mac", "IT inventory"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Does It ARM",
+        "shortDescription": "Apple Silicon compatibility",
+        "longDescription": "Check whether a Mac app or game runs on Apple Silicon. Look up reported native support, Rosetta compatibility, and other supported ways to run software where the catalog has evidence. Find Homebrew formula entries and related compatibility videos, check a list of apps at once, or check a software inventory export. Results come from the public Does It ARM catalog and link back to the relevant pages. Access is free and read-only, with no account required. Coverage varies by application, version, and macOS release.",
+        "developerName": "Sam Carlton Creative LLC",
+        "category": "Developer Tools",
+        "capabilities": ["Search apps", "Check app lists", "Check software inventories"],
+        "websiteURL": "https://doesitarm.com",
+        "supportURL": "https://github.com/ThatGuySam/doesitarm/issues",
+        "privacyPolicyURL": "https://doesitarm.com/privacy",
+        "termsOfServiceURL": "https://doesitarm.com/terms",
+        "defaultPrompt": [
+          "Does Blender run natively on Apple Silicon?",
+          "Check these apps for Apple Silicon support: Slack, Zoom, Photoshop, Logic Pro, Docker",
+          "Which Mac games run natively on Apple Silicon?"
+        ],
+        "brandColor": "#1F2937",
+        "brandColorDark": "#9CA3AF",
+        "composerIcon": "./assets/icon.png",
+        "composerIconDark": "./assets/icon-dark.png",
+        "logo": "./assets/logo.png",
+        "logoDark": "./assets/logo-dark.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {"description": "Look up one app", "prompt": "Does Blender run natively on Apple Silicon?", "tools_triggered": "get_app", "expected_behavior": "Report Blender's Apple Silicon status from the catalog with a link to https://doesitarm.com/app/blender."},
+            {"description": "Check a list of apps", "prompt": "Check these apps for Apple Silicon support: Slack, Zoom, Photoshop, Logic Pro, Docker", "tools_triggered": "check_apps", "expected_behavior": "Return a status for each app (for example Slack native as of 4.13.0) with links to each listing."},
+            {"description": "Check an inventory export", "prompt": "Check this inventory for Apple Silicon support:\nname,bundle_id,version\nDocker,com.docker.docker,4.36.0\nSlack,com.tinyspeck.slackmacgap,4.41.105", "tools_triggered": "check_inventory", "expected_behavior": "Return counts of native, Rosetta and unknown rows and a per-row result with listing links."},
+            {"description": "Search when the name is unclear", "prompt": "Is there an Apple Silicon version of the VLC media player?", "tools_triggered": "search_apps, get_app", "expected_behavior": "Find the VLC listing and report its status with a link."},
+            {"description": "Handle an app that is not listed", "prompt": "Does Zzyzx Internal Payroll Tool run on Apple Silicon?", "tools_triggered": "check_apps", "expected_behavior": "Say the app is not listed in the catalog and that its compatibility is unknown from this source, without inventing a status."}
+          ],
+          "negative": [
+            {"description": "Unsupported payment", "prompt": "Buy me a new MacBook Pro."},
+            {"description": "Unsupported write", "prompt": "Mark Photoshop as unsupported in the Does It ARM catalog."},
+            {"description": "Out of scope", "prompt": "Book a flight to Chicago for tomorrow."}
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin does not sell products or process payments."
+      },
+      "publication": {
+        "release_notes": "Initial release: look up Apple Silicon compatibility for Mac apps, games and Homebrew packages, check lists of apps, and check software inventory exports."
+      }
+    }
+  }
+}

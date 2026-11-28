@@ -1,4 +1,4 @@
-import { parse } from 'csv-parse/sync';
+import { parse } from 'csv-parse/browser/esm/sync';
 import { parsePlist } from './plist.mjs';
 
 const trim = value => typeof value === 'string' ? value.trim() : '';
@@ -100,7 +100,10 @@ const csvProfiles = {
       const record = Object.fromEntries(
         ['name', 'bundle_identifier', 'bundle_short_version', 'bundle_version', 'version'].map(key => [key, unwrapFleet(get(key))]),
       );
-      return osqueryRecord(record, { label: get('host_display_name'), fetchedAt: get('last_fetched'), verifiedVersion: o.verifiedVersion });
+      return osqueryRecord(record, {
+        device: get('host_id'), label: get('host_display_name'),
+        fetchedAt: get('last_fetched'), verifiedVersion: o.verifiedVersion,
+      });
     },
   },
   'jumpcloud-system-app': {
@@ -145,62 +148,118 @@ const csvProfiles = {
 
 export const publicFields = ['name', 'bundle_id', 'version', 'build', 'publisher'];
 
-function parseCsv(text, delimiter) {
-  return parse(text, { delimiter, trim: true, relax_column_count: true, info: true });
+const powershellPreamble = /^#TYPE[^\r\n]*(?:\r\n|\n|\r)/;
+const delimiters = [',', '\t', ';'];
+const firstHeader = text => /[^\s\r\n][^\r\n]*/.exec(text)?.[0] ?? '';
+
+function parseCsv(text, delimiter, on_record) {
+  return parse(text, { delimiter, trim: true, relax_column_count: true, info: true, on_record });
+}
+
+function headerFields(header, delimiter) {
+  try {
+    return parseCsv(header, delimiter)[0]?.record ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export const rawFormats = [
+  'jamf-pro-applications', 'jamf-pro-inventory', 'iru-prism-apps',
+  'intune-discovered-apps', 'fleet-csv', 'jumpcloud-system-app',
+  'munkireport-applications', 'system-profiler-json',
+];
+
+export function detectCsvProfile(input) {
+  const preamble = powershellPreamble.exec(input);
+  const header = firstHeader(preamble ? input.slice(preamble[0].length) : input);
+  const matches = [];
+  for (const delimiter of delimiters) {
+    const fields = headerFields(header, delimiter);
+    for (const format of rawFormats) {
+      if (preamble && format !== 'jumpcloud-system-app') continue;
+      // App-only osquery and Prism files also match the generic CSV profile.
+      if (format === 'fleet-csv' && !has(fields, 'host_display_name', 'host_id')) continue;
+      if (format === 'iru-prism-apps' && !has(fields, 'device__name', 'device_id', 'device__id', 'serial_number')) continue;
+      if (csvProfiles[format]?.matches(fields, {})) matches.push({ format, delimiter });
+    }
+  }
+  return matches.length === 1 ? matches[0] : null;
+}
+
+function jamfComputers(root) {
+  return Array.isArray(root) ? root : root?.results ?? [root];
+}
+
+export function detectJsonProfile(root) {
+  if (Array.isArray(root?.SPApplicationsDataType)) return 'system-profiler-json';
+  const computers = jamfComputers(root);
+  if (Array.isArray(computers) && computers.some(computer => Array.isArray(computer?.applications))) {
+    return 'jamf-pro-inventory';
+  }
+  return null;
+}
+
+export class InventoryRowLimitError extends Error {}
+
+function rowBudget(maxRows) {
+  let remaining = maxRows ?? Infinity;
+  return (rows = 1) => {
+    remaining -= rows;
+    if (remaining < 0) throw new InventoryRowLimitError(`Inventory accepts at most ${maxRows} raw rows.`);
+  };
 }
 
 function csvRecords(format, input, options, unresolved) {
   const profile = csvProfiles[format];
-  const preamble = /^#TYPE[^\r\n]*(?:\r\n|\n|\r)/.exec(input);
+  const preamble = powershellPreamble.exec(input);
   if (preamble && format !== 'jumpcloud-system-app') throw new Error('A PowerShell preamble requires the jumpcloud-system-app profile.');
   const text = preamble ? input.slice(preamble[0].length) : input;
-  const firstHeader = text.split(/\r\n|\n|\r/).find(line => line.trim()) || '';
-  const delimiters = (options.delimiter ? [options.delimiter] : [',', '\t', ';']).filter(delimiter => {
-    try {
-      const header = parseCsv(firstHeader, delimiter)[0]?.record ?? [];
-      return profile.matches(header, options);
-    } catch {
-      return false;
-    }
-  });
-  if (delimiters.length !== 1) {
-    throw new Error(delimiters.length > 1 ? 'Ambiguous delimiter. Specify --delimiter.' : 'Headers do not match the selected profile or delimiter.');
+  const header = firstHeader(text);
+  const matches = (options.delimiter ? [options.delimiter] : delimiters)
+    .filter(delimiter => profile.matches(headerFields(header, delimiter), options));
+  if (matches.length !== 1) {
+    throw new Error(matches.length > 1 ? 'Ambiguous delimiter. Specify --delimiter.' : 'Headers do not match the selected profile or delimiter.');
   }
 
-  let records;
-  try {
-    records = parseCsv(text, delimiters[0]);
-  } catch (error) {
-    throw new Error(`Malformed delimited inventory near line ${Number.isInteger(error.lines) ? error.lines : '?'}.`);
-  }
-
-  const start = records.findIndex(entry => !blank(entry.record));
-  const headers = records[start].record;
+  let headers;
   const indexes = new Map();
-  headers.forEach((name, index) => indexes.set(name, [...(indexes.get(name) ?? []), index]));
-  const duplicates = [...indexes].filter(([name, positions]) => name && positions.length > 1).map(([name]) => name);
-  if (format !== 'mapped-csv' && (duplicates.length > 1 || (duplicates.length === 1 &&
-      (format !== 'munkireport-applications' || duplicates[0] !== 'Name')))) {
-    throw new Error('Duplicate headers require an explicit column mapping.');
-  }
-
   const state = { group: null, filtered: Symbol(), headerOnly: Symbol() };
-  return records.slice(start + 1).flatMap(({ record, info }) => {
-    const ref = info.lines + (preamble ? 1 : 0);
-    if (blank(record)) {
-      state.group = null;
-      return [];
+  const consume = rowBudget(options.maxRows);
+  try {
+    return parseCsv(text, matches[0], ({ record, info }) => {
+      if (!headers) {
+        if (blank(record)) return null;
+        headers = record;
+        headers.forEach((name, index) => indexes.set(name, [...(indexes.get(name) ?? []), index]));
+        const duplicates = [...indexes].filter(([name, positions]) => name && positions.length > 1).map(([name]) => name);
+        if (format !== 'mapped-csv' && duplicates.some(name => format !== 'munkireport-applications' || name !== 'Name')) {
+          throw new Error('Duplicate headers require an explicit column mapping.');
+        }
+        return null;
+      }
+      consume();
+      const ref = info.lines + (preamble ? 1 : 0);
+      if (blank(record)) {
+        state.group = null;
+        return null;
+      }
+      if (record.length !== headers.length) {
+        state.group = null;
+        unresolved.push({ row: ref, reason: 'column_count' });
+        return null;
+      }
+      const get = (field, occurrence = 0) => record[typeof field === 'number' ? field - 1 : indexes.get(field)?.[occurrence]];
+      const result = profile.row(get, state, options);
+      if (!result) unresolved.push({ row: ref, reason: 'unresolved_continuation' });
+      return result && result !== state.filtered && result !== state.headerOnly ? { ...result, ref } : null;
+    });
+  } catch (error) {
+    if (error.code?.startsWith('CSV_')) {
+      throw new Error(`Malformed delimited inventory near line ${Number.isInteger(error.lines) ? error.lines : '?'}.`);
     }
-    if (record.length !== headers.length) {
-      state.group = null;
-      unresolved.push({ row: ref, reason: 'column_count' });
-      return [];
-    }
-    const get = (field, occurrence = 0) => record[typeof field === 'number' ? field - 1 : indexes.get(field)?.[occurrence]];
-    const result = profile.row(get, state, options);
-    if (!result) unresolved.push({ row: ref, reason: 'unresolved_continuation' });
-    return result && result !== state.filtered && result !== state.headerOnly ? [{ ...result, ref }] : [];
-  });
+    throw error;
+  }
 }
 
 function systemProfiler(root, xml, options) {
@@ -211,8 +270,10 @@ function systemProfiler(root, xml, options) {
     throw new Error('System Information report lacks SPApplicationsDataType.');
   }
   const records = [];
+  const consume = rowBudget(options.maxRows);
   function visit(apps, depth) {
     if (depth > 32) throw new Error('System Information app nesting exceeds 32 levels.');
+    consume(apps.length);
     for (const app of apps) {
       // A named node with only child items is a container, not an app.
       if (trim(app._name) && (!Object.hasOwn(app, '_items') || app.path || app.version || app.arch_kind)) {
@@ -240,12 +301,17 @@ function addigyDevice(app) {
 }
 
 const jsonProfiles = {
-  'jamf-pro-inventory': (root, o) => objects(Array.isArray(root) ? root : root?.results ?? [root]).flatMap(
-    computer => objects(computer.applications).map(app => makeRecord({
-      name: app.name, bundle_id: app.bundleId, version: app.cfBundleShortVersionString || (o.verifiedVersion ? app.version : undefined),
-      build: app.cfBundleVersion,
-    }, { device: computer.id })),
-  ),
+  'jamf-pro-inventory': (root, o) => {
+    const consume = rowBudget(o.maxRows);
+    return objects(jamfComputers(root)).flatMap(computer => {
+      const apps = computer.applications;
+      if (Array.isArray(apps)) consume(apps.length);
+      return objects(apps).map(app => makeRecord({
+        name: app.name, bundle_id: app.bundleId, version: app.cfBundleShortVersionString || (o.verifiedVersion ? app.version : undefined),
+        build: app.cfBundleVersion,
+      }, { device: computer.id }));
+    });
+  },
   'iru-prism-json': (root, o) => objects(Array.isArray(root) ? root : root?.results).map(app => makeRecord({
     name: app.name, bundle_id: app.bundle_id, version: app.short_version, build: o.verifiedBuild ? app.version : undefined,
   }, { device: app.device_id || app.device__id || app.serial_number })),
@@ -298,6 +364,6 @@ export function parseInventory(format, text, options = {}) {
   }
   if (Object.hasOwn(csvProfiles, format)) return { records: csvRecords(format, text, options, unresolved), unresolved };
   if (!Object.hasOwn(jsonProfiles, format)) throw new Error('Unknown inventory format. See --help.');
-  const root = format === 'system-profiler-plist' ? parsePlist(text) : readJson(text);
+  const root = format === 'system-profiler-plist' ? parsePlist(text) : typeof text === 'string' ? readJson(text) : text;
   return { records: jsonProfiles[format](root, options).map((record, index) => ({ ...record, ref: index + 1 })), unresolved };
 }

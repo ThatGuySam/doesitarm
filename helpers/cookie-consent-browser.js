@@ -73,9 +73,10 @@ export async function initCookieConsent ( window ) {
     const banner = document.getElementById( 'cookie-consent' )
     const settings = document.querySelector( '[data-cookie-settings]' )
     const { measurementId } = banner.dataset
-    const consentRequired = await regionRequiresConsent( window )
-    const gtag = queueGoogleTag( window )
-    if ( consentRequired ) gtag( 'consent', 'default', googleDenied )
+    const preview = new URLSearchParams( window.location.search ).get( 'cookie-banner' ) === 'preview'
+    const consentRequired = preview || await regionRequiresConsent( window )
+    const gtag = preview ? null : queueGoogleTag( window )
+    if ( consentRequired ) gtag?.( 'consent', 'default', googleDenied )
 
     let trackingStarted = false
     let choice = null
@@ -87,8 +88,9 @@ export async function initCookieConsent ( window ) {
 
     function applyChoice ( value ) {
         choice = value === 'accept' || value === 'reject' ? value : null
-        const allowed = shouldLoadOptionalTracking( consentRequired, choice )
         banner.hidden = !consentRequired || choice !== null
+        if ( preview ) return
+        const allowed = shouldLoadOptionalTracking( consentRequired, choice )
 
         if ( allowed && !trackingStarted ) {
             trackingStarted = true
@@ -104,7 +106,7 @@ export async function initCookieConsent ( window ) {
         }
     }
 
-    applyChoice( readChoice() )
+    applyChoice( preview ? null : readChoice() )
     if ( !consentRequired ) return
 
     settings.hidden = false
@@ -117,12 +119,16 @@ export async function initCookieConsent ( window ) {
     for ( const button of banner.querySelectorAll( '[data-cookie-choice]' ) ) {
         button.addEventListener( 'click', () => {
             const value = button.dataset.cookieChoice
-            try { window.localStorage.setItem( cookieChoiceKey, value ) } catch {}
+            if ( !preview ) {
+                try { window.localStorage.setItem( cookieChoiceKey, value ) } catch {}
+            }
             applyChoice( value )
             if ( openedFromSettings ) settings.focus( { preventScroll: true } )
             openedFromSettings = false
         } )
     }
+
+    if ( preview ) return
 
     window.addEventListener( 'storage', event => {
         if ( event.key === cookieChoiceKey || event.key === null ) applyChoice( readChoice() )

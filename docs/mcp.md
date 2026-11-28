@@ -3,11 +3,12 @@
 Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae. The public Does It ARM [MCP](https://modelcontextprotocol.io) server is read-only and requires no account. Connect over Streamable HTTP at `https://mcp.doesitarm.com/mcp`.
 
 - Endpoint (Streamable HTTP): `https://mcp.doesitarm.com/mcp`
+- Inventory REST endpoint: `POST https://mcp.doesitarm.com/v1/inventory`
 - Fallback: `https://doesitarm-mcp.samcarlton.workers.dev/mcp`
 - Info page: <https://mcp.doesitarm.com/>
 - Server card: <https://mcp.doesitarm.com/mcp/server-card> (experimental extension format; see [Server card](#server-card))
 - Legacy server card: <https://mcp.doesitarm.com/.well-known/mcp/server-card.json> (kept for existing readers)
-- Privacy Policy: <https://doesitarm.com/privacy> (the server stores no tool inputs; see "The MCP server")
+- Privacy Policy: <https://doesitarm.com/privacy> (see “The MCP server and inventory API”)
 - Terms of Use: <https://doesitarm.com/terms>
 
 ## Install
@@ -53,7 +54,7 @@ Server `com.doesitarm/mcp` version 1.3.0. The live `tools/list` response is the 
 | `list_by_category` | Browse Compatibility by Category | One category page, optional `status` filter, `limit` (1–100, default 25) and `offset`. Pass `nextOffset` back as `offset` for the next page; `null` means the last page. |
 | `recent_updates` | List Recent App Compatibility Updates | Most recently updated Mac app listings, newest first. `limit` 1–100, default 20. |
 | `list_devices` | List Apple Silicon Mac Models | Mac models with device pages: names, chips, availability dates and links. |
-| `check_inventory` | Check Mac App Inventory for Apple Silicon | Check up to 250 installed app rows from an inventory export (structured `rows` or headered `csv`), bundle ID first. Returns whole-batch counts for native, Rosetta, unsupported and unknown, plus paged per-row results with evidence and listing links. See [Bulk inventory](#bulk-inventory-check_inventory). |
+| `check_inventory` | Check Mac App Inventory for Apple Silicon | Check raw Mac app exports or app-only rows against the catalog, bundle ID first. Returns compatibility totals, paged app/version/build results with evidence and listing links, and device counts for raw exports when available. See [Bulk inventory](#bulk-inventory-check_inventory). |
 
 Statuses: `native` (native support), `rosetta` (Rosetta 2), `no` (unsupported), `no-in-progress` (support in progress), `unreported` (native support has yet to be reported). A name that is not listed means compatibility is unknown from this catalog, not that the software is unsupported.
 
@@ -63,7 +64,7 @@ Every tool is marked read-only (`readOnlyHint: true`, `destructiveHint: false`, 
 
 Each result is a short Markdown text plus `structuredContent`, and every tool declares an `outputSchema` that the structured result matches. `get_app` and `list_by_category` have a `found` flag: `found: false` means no listing or unknown category, and is an ordinary result, not an error. A search with no match returns `total: 0`.
 
-Recoverable argument problems come back as `isError: true` with the field and valid range, for example `limit must be a whole number from 1 to 50. Omit it to use the default of 10.` If the catalog API fails, the tool returns `The Does It ARM catalog is temporarily unavailable. Retry in a moment, or consult https://doesitarm.com/.` and the details go to the Worker logs. Rate-limited requests get HTTP 429 with `Retry-After`.
+Recoverable argument problems come back as `isError: true` with the field and valid range, for example `limit must be a whole number from 1 to 50. Omit it to use the default of 10.` If the catalog API fails, the tool returns `The Does It ARM catalog is temporarily unavailable. Retry in a moment, or consult https://doesitarm.com/.` Rate-limited requests get HTTP 429 with `Retry-After`.
 
 ### Examples
 
@@ -77,7 +78,7 @@ If an app you need is not listed, you can request it at <https://github.com/That
 
 ## Bulk inventory (`check_inventory`)
 
-`check_inventory` checks a reviewed Mac app inventory against the public app catalog. Start with the [local inventory importer](../tools/inventory-import/README.md) for Jamf Pro, Iru Prism, Intune, Fleet, JumpCloud, MunkiReport, and System Information exports. It writes a local projection for review, groups duplicates, and retains device counts and app architecture on the workstation. After removing private app tuples, use `--dry-run` to inspect the request, `--emit` to export rows JSON or CSV, or `--lookup` to join catalog evidence to the local report.
+`check_inventory` accepts raw Mac app exports and app-only rows. The [local inventory importer](../tools/inventory-import/README.md) can prepare an app-only projection for review on the workstation and join catalog evidence back to a local report.
 
 The [Does It ARM inventory Agent Skill](../skills/doesitarm-inventory/SKILL.md) guides the same review and lookup in Claude Code or Codex. Copy its directory into your project's `.claude/skills/` or `.agents/skills/` respectively.
 
@@ -85,18 +86,39 @@ For a simple lookup of up to 50 titles, use `check_apps`.
 
 ### Input and limits
 
-Send exactly one of `rows` or `csv`. Undeclared arguments and row fields are rejected.
+The input is exactly one of `rows`, `csv`, or `json`. Undeclared arguments and fields inside `rows` are rejected.
 
 | Argument | Rules |
 | --- | --- |
 | `rows` | 1–250 objects with optional string fields `name` (≤160 characters), `bundle_id` (≤255), `version` (≤80), `build` (≤80), `publisher` (≤160). Each row needs a nonblank `name` or `bundle_id`. Versions are strings, so leading zeroes and suffixes survive. |
-| `csv` | Headered CSV or TSV, at most 250 data rows and 64 KiB of UTF-8. Accepts a BOM, CRLF and quoted fields; blank lines are skipped. Headers are matched case-insensitively, ignoring spaces and punctuation, against the allowlist below. Any other column (host, serial, user) is rejected, and two headers that map to the same field are an error. |
+| `csv` | A supported raw delimited export, or app-only CSV or TSV with the headers below. |
+| `json` | Jamf Pro inventory or `system_profiler` JSON as text, an object, or an array. Keep versions and builds as strings. |
+| `format` | Optional raw export profile for `csv` or `json`. Omit it to detect the profile from the file headers or JSON shape. |
 | `target_macos` | Optional 26, 27 or 28. Adds a `target_assessment` per row. 28 is the first release without general-purpose Rosetta 2, so a Rosetta row gets `rosetta_unavailable`. Omit it for architecture evidence only. |
 | `filter` | `all` (default), `native`, `rosetta`, `unsupported` or `unknown`. Counts always cover the whole batch. |
-| `offset`, `limit` | `offset` 0–249 (default 0), `limit` 1–50 (default 20), over unique rows in input order. For the next page, resend the same batch, target and filter with `next_offset` and the first page's `catalog_revision`. |
+| `offset`, `limit` | `offset` defaults to 0 and can be as high as 4999 for raw exports or 249 for app-only inputs. `limit` is 1–50 and defaults to 20. Pages follow input order. The next page uses the same input, target and filter with `next_offset` and the first page's `catalog_revision`. |
 | `catalog_revision` | Optional, from the first page. If the catalog has changed since, the call returns an error and the batch restarts at offset 0. |
 
-Serialized arguments are capped at 96 KiB. Rows with a missing identity or an over-long field are listed in `invalid_rows` by row number and code (`missing_identity`, `invalid_field`), up to 10, with the full count in `counts.invalid`. Errors name the field, row number or bound and never repeat submitted values.
+Recognized raw exports allow up to 1 MiB and 5,000 raw data records before grouping. App-only `rows`, CSV and TSV allow up to 250 rows and 64 KiB of UTF-8 input, with 96 KiB for serialized MCP arguments. Invalid records are reported by row number and code in `invalid_rows`, up to 10, with the full count in `counts.invalid`. Validation errors identify the field, row number or bound without repeating the submitted values.
+
+#### Raw export profiles
+
+| Format | Report |
+| --- | --- |
+| `jamf-pro-applications` | Jamf Pro Applications CSV with `Application Name`, `Version` and `Computer Name`, including continuation rows. |
+| `jamf-pro-inventory` | Jamf Pro v4 computer inventory JSON with `applications` on a computer, in an array of computers, or under `results`. |
+| `iru-prism-apps` | Iru (Kandji) Prism Apps CSV with `name`, `bundle_id` and `short_version`. Auto-detection also looks for a device column. |
+| `intune-discovered-apps` | Intune discovered apps CSV with `ApplicationName`, `ApplicationVersion` and `Platform`. The adapter selects macOS rows. |
+| `fleet-csv` | Fleet osquery apps CSV with `name`, `bundle_identifier` and `bundle_short_version`. Auto-detection also looks for `host_id` or `host_display_name`. |
+| `jumpcloud-system-app` | JumpCloud `Get-JCSystemApp` CSV with system ID, OS and software fields. The adapter selects macOS rows. |
+| `munkireport-applications` | English MunkiReport Applications CSV with both `Name` columns, `Serial Number`, `Bundle ID`, `Bundle Version` and `Architecture`. |
+| `system-profiler-json` | Output of `system_profiler SPApplicationsDataType -json` from one Mac. |
+
+The importer’s [profile guide](../tools/inventory-import/README.md#input-profiles) records which vendor shapes were checked against synthetic fixtures and which still need tenant verification.
+
+#### App-only CSV headers
+
+App-only CSV or TSV accepts a BOM, CRLF and quoted fields. Headers are matched case-insensitively, ignoring spaces and punctuation. Extra columns and two headers that map to the same field cause a validation error.
 
 | Field | Accepted headers |
 | --- | --- |
@@ -119,35 +141,33 @@ A generic `version` column is always read as the short version, never as the bui
    - Everything else is `unknown`: `version_missing`, `version_unverified` (no version-scoped evidence for that version, including versions older than the "as of" version) or `insufficient_evidence` (listing not yet reported).
 5. `catalog_hint` always shows the latest listing status for triage and is never applied to the installed version. Listings reported as Rosetta or unsupported rarely name a version, so those rows usually stay `unknown` with that status in the hint. `unsupported` needs version-scoped evidence, which the current catalog does not have, so expect it to be 0 for now.
 
-Rows are deduplicated by bundle ID (or name plus publisher) plus version and build. Counts are app/version/build rows, not devices: `received = accepted + invalid`, `unique = accepted - duplicates`, and the four status counts sum to `unique`. Each result has the first input `row` (one-based, excluding the CSV header) and `duplicate_rows`. Results do not repeat the submitted name, so keep the row numbers to join results back to your export.
+Rows are deduplicated by bundle ID (or name plus publisher), version and build. The top-level status counts measure tuples. `received = accepted + invalid`, `unique = accepted - duplicates`, and the four status counts sum to `unique`. Each result identifies the first input `row` and lists `duplicate_rows`. For raw CSV, `row` is the file line where that record ends. For other inputs, it is the one-based app row position. App-only results join back to the submitted app by row number.
+
+Raw results include the detected or selected `format`, the `app` identity, and a `device_count` for each tuple. Counts come from distinct device IDs, distinct labels where IDs are absent (provisional), or an unambiguous provider count. A `system_profiler` export counts as one Mac. `null` indicates insufficient information to count devices reliably. A device may appear in several tuples.
 
 When the batch has unknown rows, `scanner_reference` holds a fixed reference to [Does It ARM App Scanner v3 (preview)](https://doesitarm.com/apple-silicon-app-test/?v=3), which inspects Mach-O architectures of selected Mac apps or folders locally and can export the results to a file. Scanner results stay on that Mac and are not added to the public catalog (`catalog_submission: "unavailable"`). The reference never contains values from the input.
 
 ### Data handling
 
-Rows go to the Worker only as tool arguments. The Worker does not log, cache or store them: Worker invocation logs are off, error logs carry only upstream catalog errors, and the edge cache holds only the public catalog JSON. The assistant you call the tool from still sees the rows, so remove names of sensitive in-house software and all host, user and serial columns before sending.
+The Worker processes MCP inputs and REST uploads in memory and does not log, cache, or store them. Device IDs or labels are used only for counting within the request. Device values, including paths, users and serials, are excluded from results and errors. Worker invocation logs are disabled, and only public catalog data is cached. An MCP client or AI assistant can see an export sent through it. The local importer keeps the raw export on the workstation and sends only reviewed app tuples.
 
-### Inventory export recipes
+## REST inventory API
 
-**Fleet or osquery.** In Fleet, use a macOS-scoped report: **Reports → Add report**, paste the query, run it on the Mac test cohort and select **Export results**. Keep only the four selected columns (Fleet adds host columns to some exports; `check_inventory` rejects them) and check the rows for internal app names before sending.
+`POST https://mcp.doesitarm.com/v1/inventory` accepts a raw file body with `Content-Type: text/csv` or `application/json`, or a multipart upload with one file field named `file`. Direct and multipart files accept UTF-8 and BOM-marked UTF-16. The [raw export profiles](#raw-export-profiles) and limits are the same as for MCP. The JSON response body matches the tool’s `structuredContent`.
 
-```sql
-SELECT DISTINCT
-  trim(name) AS name,
-  NULLIF(trim(bundle_identifier), '') AS bundle_id,
-  NULLIF(trim(bundle_short_version), '') AS version,
-  NULLIF(trim(bundle_version), '') AS build
-FROM apps
-WHERE length(trim(COALESCE(name, ''))) > 0
-   OR length(trim(COALESCE(bundle_identifier, ''))) > 0
-ORDER BY name, bundle_id, version, build;
+Optional query parameters are `format`, `limit` and `offset`. A later page sends the same file with `offset` set to `next_offset`. CORS allows any origin. MCP and REST share the 120-requests-per-minute limit per IP. Errors return a JSON object with an `error` message, including HTTP 413 for oversized raw uploads and HTTP 429 when rate limited.
+
+```sh
+curl -H 'Content-Type: text/csv' --data-binary @fleet-report.csv \
+  'https://mcp.doesitarm.com/v1/inventory?format=fleet-csv&limit=20'
+
+system_profiler SPApplicationsDataType -json > apps.json
+curl -H 'Content-Type: application/json' --data-binary @apps.json \
+  'https://mcp.doesitarm.com/v1/inventory'
+
+curl -F 'file=@jamf-applications.csv;type=text/csv' \
+  'https://mcp.doesitarm.com/v1/inventory?format=jamf-pro-applications&limit=20&offset=20'
 ```
-
-On a single Mac with osquery installed, run `osqueryi`, then `.headers on` and `.mode csv`, then the query, and paste the output (headers included, no shell prompt) as `csv`. The `apps` table covers app bundles in known paths and collects identity only; plug-ins and helpers need a separate architecture audit. References: [Fleet reports](https://fleetdm.com/guides/reports), [Fleet apps table](https://fleetdm.com/tables/apps), [osqueryi](https://osquery.readthedocs.io/en/stable/introduction/using-osqueryi/).
-
-**Jamf Pro or Iru (Kandji).** Export installed applications with the bundle ID and version columns, then rename or keep headers from the allowlist above (`bundleId`, `cfBundleShortVersionString`, `cfBundleVersion`, or Prism `bundle_id`, `short_version`). Delete computer, serial and user columns first.
-
-**Microsoft Intune.** The discovered-apps export has `ApplicationName`, `ApplicationVersion` and `ApplicationPublisher`, which map to `name`, `version` and `publisher`. It has no bundle IDs, so its rows stay `unknown` with a catalog hint; a Fleet or osquery export from a sample Mac gives version-scoped answers.
 
 ## What it returns, and what it leaves out
 
@@ -159,7 +179,7 @@ It never returns raw scan data (Info.plist contents, Mach-O metadata), upload fi
 
 ## How it works
 
-The Worker lives in [`workers/mcp`](../workers/mcp). It is stateless and reads the same public JSON the site is built from (`https://api.doesitarm.com/app-list.json`, `/game-list.json`, `/homebrew-list.json`, `/device-list.json`, `/api/kind/index.json` and the per-listing `/api/<kind>/<slug>.json`). Responses from the API are cached at the edge for 10 minutes. Each IP is limited to 120 MCP requests a minute.
+The Worker lives in [`workers/mcp`](../workers/mcp). It is stateless and reads the same public JSON the site is built from (`https://api.doesitarm.com/app-list.json`, `/game-list.json`, `/homebrew-list.json`, `/device-list.json`, `/api/kind/index.json` and the per-listing `/api/<kind>/<slug>.json`). Public catalog responses are cached at the edge for 10 minutes.
 
 ```sh
 cd workers/mcp
@@ -169,7 +189,7 @@ node scripts/smoke.mjs https://mcp.doesitarm.com/mcp   # live check
 npx wrangler deploy                             # manual deploy
 ```
 
-Pushes to `master` that touch `workers/mcp/**` run the tests, deploy, and smoke test the live endpoint (`.github/workflows/deploy-cloudflare-mcp.yml`).
+Pushes to `master` that touch `workers/mcp/**` or `tools/inventory-import/**` run the Worker tests, deploy, and smoke test the live endpoint (`.github/workflows/deploy-cloudflare-mcp.yml`).
 
 ## Server card
 
@@ -181,4 +201,4 @@ Since 1.2.0 the runtime `serverInfo.name` is `com.doesitarm/mcp` (it was `doesit
 
 ## Registry entry
 
-`workers/mcp/server.json` is the entry for the [official MCP registry](https://registry.modelcontextprotocol.io) as `com.doesitarm/mcp` (domain auth over HTTP at doesitarm.com). It validates against the 2025-12-11 server schema and its name, version and icon match the runtime `serverInfo`. Version 1.2.0 was the first published version; 1.3.0 adds `check_inventory`. Registry versions are immutable, so bump the version in `server.json`, `src/server.js`, `package.json` and the `package-lock.json` root together before publishing. A new tool means MCP hosts that pin tool lists (enterprise tenants, directories) need a tool rescan.
+`workers/mcp/server.json` is the entry for the [official MCP registry](https://registry.modelcontextprotocol.io) as `com.doesitarm/mcp` (domain auth over HTTP at doesitarm.com). It validates against the 2025-12-11 server schema and its name, version and icon match the runtime `serverInfo`. Version 1.2.0 was the first published version. Version 1.3.0 added `check_inventory`. Version 1.4.0 adds raw export support and the REST inventory endpoint. Registry versions are immutable, so bump the version in `server.json`, `src/server.js`, `package.json` and the `package-lock.json` root together before publishing. MCP hosts that pin tool definitions may need a rescan.

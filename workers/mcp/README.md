@@ -6,22 +6,23 @@ See [docs/mcp.md](../../docs/mcp.md) for install snippets, tools, data rules and
 
 ## Bulk inventory
 
-Use the [local inventory importer](../../tools/inventory-import/README.md) to prepare and review MDM exports before lookup. The [inventory Agent Skill](../../skills/doesitarm-inventory/SKILL.md) documents the workflow for Claude Code and Codex.
+The [local inventory importer](../../tools/inventory-import/README.md) prepares a reviewed app-only projection and uses the same adapters as the Worker. The [inventory Agent Skill](../../skills/doesitarm-inventory/SKILL.md) documents that workflow for Claude Code and Codex.
 
-`check_inventory` checks up to 250 rows from a Mac app inventory export (structured `rows` or a headered CSV/TSV string, 64 KiB max), matching bundle ID first. It returns whole-batch counts for native, Rosetta, unsupported and unknown plus paged per-row results with evidence and listing links. Name-only rows stay unknown with the latest listing as a hint. Batches with unknown rows include a fixed reference to [App Scanner v3 (preview)](https://doesitarm.com/apple-silicon-app-test/?v=3), whose local scan results are not added to the public catalog. Rows are not logged or cached.
+`check_inventory` accepts up to 250 app-only rows or 5,000 raw export records (1 MiB). Eight [raw profiles](../../docs/mcp.md#raw-export-profiles) cover Jamf Pro CSV and JSON, Iru Prism, Intune, Fleet, JumpCloud, MunkiReport, and `system_profiler` JSON. Format detection is automatic when `format` is omitted. Compatibility results are paged by app, version and build. Raw exports include device counts when the report provides enough information.
 
-Fleet / osquery export (paste the CSV with headers as `csv`):
+## REST inventory API
 
-```sql
-SELECT DISTINCT
-  trim(name) AS name,
-  NULLIF(trim(bundle_identifier), '') AS bundle_id,
-  NULLIF(trim(bundle_short_version), '') AS version,
-  NULLIF(trim(bundle_version), '') AS build
-FROM apps
-WHERE length(trim(COALESCE(name, ''))) > 0
-   OR length(trim(COALESCE(bundle_identifier, ''))) > 0
-ORDER BY name, bundle_id, version, build;
+`POST https://mcp.doesitarm.com/v1/inventory` returns the same JSON as `check_inventory`’s `structuredContent`. It supports CORS and shares the MCP rate limit of 120 requests per minute per IP. The Worker does not store, cache, or log uploads. Device IDs and labels are used only to count devices during a request.
+
+```sh
+curl -H 'Content-Type: text/csv' --data-binary @fleet-report.csv \
+  'https://mcp.doesitarm.com/v1/inventory?format=fleet-csv&limit=20'
+
+curl -H 'Content-Type: application/json' --data-binary @system-profiler.json \
+  'https://mcp.doesitarm.com/v1/inventory'
+
+curl -F 'file=@jamf-applications.csv;type=text/csv' \
+  'https://mcp.doesitarm.com/v1/inventory?offset=20'
 ```
 
-Header aliases, limits, statuses and the Jamf, Iru and Intune recipes are in [docs/mcp.md](../../docs/mcp.md#bulk-inventory-check_inventory).
+The next page sends the same file with `offset` set to `next_offset`. See the [API reference](../../docs/mcp.md#rest-inventory-api) for limits and count semantics.

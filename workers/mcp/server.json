@@ -3,7 +3,7 @@
   "name": "com.doesitarm/mcp",
   "title": "Does It ARM",
   "description": "Check Apple Silicon compatibility for Mac apps, games, and Homebrew formulae.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "websiteUrl": "https://doesitarm.com",
   "icons": [
     {

@@ -30,7 +30,7 @@ describe( 'cookie consent region', () => {
 } )
 
 describe( 'optional tracking', () => {
-    function createPage ( decision, savedChoice ) {
+    function createPage ( decision, savedChoice, search = '' ) {
         const { window } = new JSDOM( `
             <aside id="cookie-consent" data-measurement-id="G-TEST" hidden>
                 <button data-cookie-choice="accept">Accept</button>
@@ -38,7 +38,7 @@ describe( 'optional tracking', () => {
             </aside>
             <doesitarm-carbon-ad></doesitarm-carbon-ad>
             <button data-cookie-settings hidden>Cookie settings</button>
-        `, { url: 'https://doesitarm.com' } )
+        `, { url: `https://doesitarm.com/${ search }` } )
         window.AbortSignal = AbortSignal
         window.fetch = vi.fn( async () => {
             if ( decision === undefined ) throw new Error( 'No region response' )
@@ -93,6 +93,26 @@ describe( 'optional tracking', () => {
         } ] )
         expect( update ).toEqual( [ 'consent', 'update', { ...defaults[2], analytics_storage: 'granted' } ] )
         page.window.close()
+    } )
+
+    it.each( [ [ 'accept', null ], [ 'reject', 'accept' ] ] )( 'previews a %s click with saved choice %s without enabling tracking', async ( action, savedChoice ) => {
+        const page = createPage( false, savedChoice, '?cookie-banner=preview' )
+        const { window, banner, settings } = page
+        window.document.cookie = '_ga=previous; Path=/'
+        await initCookieConsent( window )
+        expect( window.fetch ).not.toHaveBeenCalled()
+        expect( banner.hidden ).toBe( false )
+        expect( settings.hidden ).toBe( false )
+        banner.querySelector( `[data-cookie-choice="${ action }"]` ).click()
+        expect( banner.hidden ).toBe( true )
+        expect( window.localStorage.getItem( cookieChoiceKey ) ).toBe( savedChoice )
+        expect( window.document.cookie ).toBe( '_ga=previous' )
+        settings.click()
+        expect( banner.hidden ).toBe( false )
+        expect( page.scripts() ).toEqual( [] )
+        expect( window.dataLayer ).toBeUndefined()
+        expect( window.diaOptionalTrackingAllowed ).toBeUndefined()
+        window.close()
     } )
 
     it.each( [ [ true, 'accept' ], [ false, null ] ] )( 'loads immediately after the region decision (%s, %s)', async ( decision, choice ) => {

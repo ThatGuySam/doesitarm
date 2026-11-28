@@ -3,6 +3,11 @@
   "private": true,
   "type": "module",
   "license": "MIT",
+  "exports": {
+    "./formats": "./formats.mjs",
+    "./inventory": "./inventory.mjs"
+  },
+  "files": ["formats.mjs", "inventory.mjs", "plist.mjs"],
   "engines": { "node": ">=22" },
   "scripts": { "test": "node --test test/*.test.mjs" },
   "dependencies": {

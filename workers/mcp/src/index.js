@@ -4,6 +4,8 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 
 import { createDataSource } from './data.js'
+import { handleInventoryUpload } from './inventory-http.js'
+import { RAW_LIMITS } from './raw-inventory.js'
 import { SERVER_DESCRIPTION, SERVER_ICONS, SERVER_INFO, SERVER_INSTRUCTIONS, SERVER_NAME, SERVER_VERSION, TOOL_COPY, TOOL_NAMES, createMcpServer } from './server.js'
 
 const CORS_HEADERS = {
@@ -102,6 +104,10 @@ function infoPage ( origin ) {
 <pre>claude mcp add --transport http doesitarm ${ endpoint }</pre>
 <p><b>Cursor</b> (<code>~/.cursor/mcp.json</code>) / <b>VS Code</b> (<code>.vscode/mcp.json</code>, use <code>"servers"</code>)</p>
 <pre>{ "mcpServers": { "doesitarm": { "url": "${ endpoint }" } } }</pre>
+<h2>Inventory REST API</h2>
+<p><code>POST ${ origin }/v1/inventory</code> checks raw Mac app exports. The response is the same JSON returned by <code>check_inventory</code>. Uploads are processed in memory and are never stored, cached, or logged.</p>
+<pre>curl -H 'Content-Type: text/csv' --data-binary @inventory.csv '${ origin }/v1/inventory'</pre>
+<p><a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md#rest-inventory-api">Supported formats and upload examples</a></p>
 <h2>Tools</h2>
 <ul>${ TOOL_NAMES.map( name => `<li><code>${ name }</code> — ${ TOOL_COPY[ name ].title }</li>` ).join('') }</ul>
 <p>Results link back to the matching doesitarm.com page. Docs: <a href="https://github.com/ThatGuySam/doesitarm/blob/master/docs/mcp.md">docs/mcp.md</a> · <a href="/mcp/server-card">server card</a> · <a href="/.well-known/mcp/server-card.json">legacy server card</a></p>
@@ -120,6 +126,10 @@ async function rateLimited ( request, env ) {
     } catch {
         return false
     }
+}
+
+function dataSource ( env ) {
+    return sharedData ||= createDataSource({ apiUrl: env?.PUBLIC_API_DOMAIN })
 }
 
 async function handleMcp ( request, env ) {
@@ -144,11 +154,12 @@ async function handleMcp ( request, env ) {
         return json( { jsonrpc: '2.0', id: null, error: { code: -32000, message: 'Rate limit exceeded. Try again in a minute.' } }, 429, { 'Retry-After': '60', 'Cache-Control': 'no-store' } )
     }
 
-    sharedData = sharedData || createDataSource({ apiUrl: env?.PUBLIC_API_DOMAIN })
-    const server = createMcpServer( sharedData )
+    const server = createMcpServer( dataSource( env ) )
     const transport = new WebStandardStreamableHTTPServerTransport({
         sessionIdGenerator: undefined,
         enableJsonResponse: true,
+        // JSON-RPC can escape each raw text byte to a six-byte sequence.
+        maxRequestBodySize: 6 * RAW_LIMITS.maxBytes + 16 * 1024,
     })
 
     await server.connect( transport )
@@ -163,13 +174,27 @@ export async function handleRequest ( request, env = {} ) {
         return new Response( null, { status: 204, headers: CORS_HEADERS } )
     }
 
+    if ( url.pathname === '/v1/inventory' ) {
+        if ( request.method !== 'POST' ) {
+            return withCors( json( { error: 'Method not allowed. Use POST.' }, 405, { Allow: 'POST, OPTIONS', 'Cache-Control': 'no-store' } ) )
+        }
+        if ( await rateLimited( request, env ) ) {
+            return withCors( json( { error: 'Rate limit exceeded. Try again in a minute.' }, 429, { 'Retry-After': '60', 'Cache-Control': 'no-store' } ) )
+        }
+        return withCors( await handleInventoryUpload( request, url.searchParams, dataSource( env ) ) )
+    }
+
     if ( url.pathname === '/mcp/server-card' && ( request.method === 'GET' || request.method === 'HEAD' ) ) {
         return withCors( json( serverCardV1(), 200, { 'Content-Type': `${ SERVER_CARD_CONTENT_TYPE }; charset=utf-8` } ) )
     }
 
     if ( url.pathname === '/mcp' || url.pathname === '/mcp/' ) {
         const response = await handleMcp( request, env )
-        if ( response ) return withCors( response )
+        if ( response ) {
+            const result = withCors( response )
+            if ( request.method === 'POST' ) result.headers.set( 'Cache-Control', 'no-store' )
+            return result
+        }
         return withCors( infoPage( origin ) )
     }
 
@@ -190,8 +215,4 @@ export async function handleRequest ( request, env = {} ) {
     }
 
     return withCors( new Response( 'Not found. The MCP endpoint is /mcp.', { status: 404 } ) )
-}
-
-export default {
-    fetch: ( request, env ) => handleRequest( request, env ),
 }

@@ -56,7 +56,7 @@ async function call ( name, args ) {
 
 console.log( `Smoke testing ${ endpoint }` )
 
-const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.3.0' } } )
+const init = await rpc( 'initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'doesitarm-smoke', version: '1.4.0' } } )
 check( 'initialize', init.result.serverInfo?.name === 'com.doesitarm/mcp', `${ init.result.serverInfo?.name } ${ init.result.serverInfo?.version }, protocol ${ init.result.protocolVersion }` )
 check( 'initialize icons', init.result.serverInfo?.icons?.[0]?.mimeType === 'image/png', init.result.serverInfo?.icons?.[0]?.src )
 check( 'initialize description and instructions', Boolean( init.result.serverInfo?.description ) && /Apple Silicon/.test( init.result.instructions || '' ), init.result.serverInfo?.description )
@@ -123,6 +123,18 @@ check( 'check_inventory osquery CSV', csvInventory.result.structuredContent?.cou
 
 const badHeader = await call( 'check_inventory', { csv: 'name,hostname\nSlack,smoke-host' } )
 check( 'check_inventory unknown header is a recoverable error without the value', badHeader.result.isError === true && badHeader.text.includes('column 2 is not recognized') && !badHeader.text.includes('smoke-host'), badHeader.text.slice( 0, 80 ) )
+
+const csv = 'host_id,name,bundle_identifier,bundle_short_version\nsmoke-device-one,Slack,com.tinyspeck.slackmacgap,4.41.105\nsmoke-device-two,Slack,com.tinyspeck.slackmacgap,4.41.105\n'
+const rawInventory = await call( 'check_inventory', { csv } )
+const upload = await fetch( new URL( '/v1/inventory', endpoint ), {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/csv' },
+    body: csv,
+})
+const uploaded = await upload.text()
+check( 'raw MCP and REST inventory agree', upload.ok && JSON.stringify( JSON.parse( uploaded ) ) === JSON.stringify( rawInventory.result.structuredContent ) )
+check( 'raw inventory returns device counts without identifiers', rawInventory.result.structuredContent?.results?.[0]?.device_count === 2 && !rawInventory.raw.includes('smoke-device-') && !uploaded.includes('smoke-device-') )
+check( 'REST inventory has CORS and no-store', upload.headers.get('Access-Control-Allow-Origin') === '*' && upload.headers.get('Cache-Control') === 'no-store' )
 
 console.log( failures === 0 ? 'All smoke checks passed.' : `${ failures } smoke check(s) failed.` )
 process.exit( failures === 0 ? 0 : 1 )

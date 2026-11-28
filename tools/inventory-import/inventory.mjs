@@ -15,7 +15,7 @@ export function publicRow(input) {
   return row.name || row.bundle_id ? row : null;
 }
 
-function tupleKey(row) {
+export function tupleKey(row) {
   const identity = row.bundle_id ? ['id', row.bundle_id.toLowerCase()]
     : ['name', normalizedName(row.name), normalizedName(row.publisher)];
   return JSON.stringify([identity, row.version ?? '', row.build ?? '']);
@@ -29,7 +29,7 @@ const architectureKinds = new Map([
 ]);
 const outsideMac = new Set(['ios', 'other', 'web']);
 
-function count(records) {
+export function countDevices(records) {
   const devices = new Set(records.map(record => record.device).filter(Boolean));
   const labels = new Set(records.map(record => record.label).filter(Boolean));
   if (records.every(record => record.device)) return { kind: 'distinct_devices', count: devices.size };
@@ -72,8 +72,8 @@ export function groupInventory({ records, unresolved }, source, cohort) {
       return {
         row,
         identity_confidence: row.bundle_id ? 'bundle_id' : 'name_publisher',
-        devices: count(installs),
-        architecture: Object.fromEntries([...architectures].map(([kind, subset]) => [kind, count(subset)])),
+        devices: countDevices(installs),
+        architecture: Object.fromEntries([...architectures].map(([kind, subset]) => [kind, countDevices(subset)])),
         lookup_eligible: [...architectures.keys()].some(kind => !outsideMac.has(kind)),
         source_rows: installs.map(record => record.ref),
         ...(sourceCounts.length ? { source_counts: sourceCounts } : {}),
