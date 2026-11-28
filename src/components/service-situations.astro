@@ -1,0 +1,49 @@
+---
+interface Props {
+    rescueControl?: string
+}
+
+const { rescueControl } = Astro.props
+---
+<ul role="list" class="service-situations">
+    <li>
+        <strong>Seeing “Support Ending for Intel-based Apps”?</strong>
+        <p>That alert can be triggered by an app or a background component. We check which of the plug-in versions you rely on still need Rosetta and what you can update before you move.</p>
+    </li>
+    <li>
+        <strong>Seeing “you need to install Rosetta”?</strong>
+        <p>macOS can show this when you open Intel software on an Apple Silicon Mac. In the audit, we check your plug-in versions for a native update, a Rosetta requirement or an unresolved dependency.</p>
+    </li>
+    <li>
+        <strong>Buying a new Mac or updating macOS?</strong>
+        <p>Pick one Logic project you need to keep working. We test a copy against one target setup and tell you what to update, bounce to audio or leave on the old Mac for now.</p>
+    </li>
+    <li>
+        <strong>A plug-in validates but still won’t load in your project?</strong>
+        <p>We check whether an agreed plug-in opens in a copy of your Logic session and whether the saved sound and settings you name load.</p>
+    </li>
+    <li>
+        <strong>An old project already won’t open?</strong>
+        <p>If it still opens on another Mac, export stems there first. If you need more help, join the <a href="/services/audio-session-rescue/" data-svc-control={ rescueControl }>Old session rescue waitlist</a>. We’ll ask about your last working setup and scope what might be recoverable from a copy.</p>
+    </li>
+</ul>
+
+<style>
+    .service-situations li + li {
+        border-block-start: 1px solid rgb(165 180 252 / 20%);
+        margin-block-start: 0.75rem;
+        padding-block-start: 0.75rem;
+    }
+    strong { color: #fff; }
+    p {
+        color: #d1d5db;
+        margin-block-start: 0.25rem;
+    }
+    a {
+        color: #c7d2fe;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+    a:hover { color: #fff; }
+    a:focus-visible { outline: 2px solid #c7d2fe; outline-offset: 2px; }
+</style>

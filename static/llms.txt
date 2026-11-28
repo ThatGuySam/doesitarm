@@ -18,6 +18,11 @@ Software listings are under `/app/`, `/game/`, and `/formula/` on https://doesit
 - [Benchmarks](https://doesitarm.com/benchmarks)
 - [Apple Silicon App Test](https://doesitarm.com/apple-silicon-app-test/)
 
+## Services
+
+- [Logic upgrade audit](https://doesitarm.com/services/studio-upgrade-audit/) — Scoped paid check of one Logic session and up to 15 plug-in versions for a Mac or macOS upgrade. Does It ARM is taking scope requests.
+- [Old session rescue](https://doesitarm.com/services/audio-session-rescue/) — Waitlist for assessing what can be recovered from a copy of an older session that no longer opens.
+
 ## Request an app
 
 - [GitHub issues](https://github.com/ThatGuySam/doesitarm/issues)

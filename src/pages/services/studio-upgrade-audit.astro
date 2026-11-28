@@ -1,31 +1,59 @@
 ---
 // Logic upgrade audit. Copy lives in helpers/service-offers.js (auditPage).
 import { applyResponseDefaults } from '~/helpers/astro/request.js'
-import { auditPage as page, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
+import { auditPage as page, auditPagePath, serviceRequestsEndpoint } from '~/helpers/service-offers.js'
 
+import ServiceSituations from '~/src/components/service-situations.astro'
 import Layout from '~/src/layouts/default.astro'
 import '~/assets/css/service-page.css'
 
 applyResponseDefaults( Astro )
+
+const url = new URL( auditPagePath, Astro.site ).href
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${ url }#service`,
+    name: page.title,
+    url,
+    description: page.scopeSummary,
+    provider: {
+        '@type': 'Organization',
+        name: 'Does It ARM',
+        url: Astro.site?.href
+    },
+    offers: {
+        '@type': 'Offer',
+        '@id': `${ url }#offer`,
+        url,
+        description: page.price
+    }
+}
 ---
 <Layout
     headOptions={ {
         title: `${ page.title } for Apple Silicon Macs - Does It ARM`,
         description: page.subhead,
-        pathname: '/services/studio-upgrade-audit/'
+        pathname: auditPagePath
     } }
 >
+    <script is:inline type="application/ld+json" set:html={ JSON.stringify( structuredData ) } />
     <main class="svc-page container py-32 w-full" data-svc-card="service-page" data-svc-page data-svc-variant="direct">
         <div class="max-w-3xl mx-auto space-y-16">
 
             <section class="space-y-6 text-center">
-                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ page.headline }</h1>
-                <p class="subtitle md:text-xl text-gray-300">{ page.subhead }</p>
+                <h1 class="title text-3xl md:text-5xl font-hairline leading-tight">{ page.title }</h1>
+                <p class="subtitle md:text-xl text-gray-300">{ page.scopeSummary }</p>
                 <p class="text-white font-semibold">{ page.price }</p>
                 <div class="flex flex-wrap justify-center items-center gap-4">
                     <a href="#scope" class="svc-page-button" data-svc-control="primary">{ page.primary }</a>
                     <a href="#waitlist" class="text-indigo-200 underline hover:text-white" data-svc-control="secondary">{ page.secondary }</a>
                 </div>
+            </section>
+
+            <section id="common-situations" aria-labelledby="common-situations-title" class="svc-panel space-y-4">
+                <h2 id="common-situations-title" class="text-2xl font-bold text-white">When this helps</h2>
+                <ServiceSituations />
             </section>
 
             <!-- Media slot: set auditPage.media.src in helpers/service-offers.js to show a screenshot or video. Renders nothing until then. -->

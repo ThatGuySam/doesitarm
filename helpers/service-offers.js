@@ -283,8 +283,8 @@ export function fillServiceCopy ( text, { app = '' } = {} ) {
 // Copy for the audit page
 export const auditPage = {
     title: 'Logic upgrade audit',
-    headline: 'Will your Logic sessions reopen after the upgrade?',
     subhead: 'We reopen a copy of one Logic session and check the plug-ins it needs to play. Then you get a plan: update, print or wait.',
+    scopeSummary: 'We check a copy of one Logic session and up to 15 plug-in versions on one Mac with one target macOS and Logic version.',
     price: '$500 scoped audit',
     primary: 'Check my Logic setup',
     secondary: 'Email me when audits open',
